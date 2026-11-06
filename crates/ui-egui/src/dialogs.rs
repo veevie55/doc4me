@@ -2679,7 +2679,8 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                             || crate::i18n::lowercase(&crate::i18n::location(c.location)).contains(&localized_q))
                 })
                 .collect();
-            hits.truncate(14);
+            // Keep common Insert actions visible when a new symbol command matches the same path.
+            hits.truncate(15);
             let mut close = false;
             for c in hits {
                 let sc = crate::widgets::shortcut_text(app, c.id);

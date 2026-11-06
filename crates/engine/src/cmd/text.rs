@@ -44,7 +44,7 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("text.nbsp", "Nonbreaking Space", "Insert › Symbols", |s, _| ins_char(s, NBSP)).key("Mod+Shift+Space"),
         // Microsoft's list: Alt+Shift+Minus (Ctrl+Shift+Minus is Subscript, Ctrl+Minus Zoom Out).
         CommandSpec::new("text.nbHyphen", "Nonbreaking Hyphen", "Insert › Symbols", |s, _| ins_char(s, NB_HYPHEN)).key("Alt+Shift+-"),
-        // Word uses Ctrl+Alt+Minus for this; the keypad distinction from Em Dash isn't modeled.
+        // The main-row Ctrl+Alt+Minus inserts this; the UI routes keypad subtract to Em Dash.
         CommandSpec::new("text.optionalHyphen", "Optional Hyphen", "Insert › Symbols", |s, _| ins_char(s, SOFT_HYPHEN)).key("Mod+Alt+-"),
         // Alt+X on Windows and Linux; macOS has no default (Option+X types a character there).
         CommandSpec::new("text.toggleUnicode", "Toggle Unicode Character", "Editing", toggle_unicode).key(if cfg!(target_os = "macos") {
@@ -53,6 +53,7 @@ pub fn specs() -> Vec<CommandSpec> {
             "Alt+X"
         }),
         CommandSpec::new("text.emDash", "Em Dash", "Insert › Symbols", |s, _| ins_char(s, '—')),
+        CommandSpec::new("text.enDash", "En Dash", "Insert › Symbols", |s, _| ins_char(s, '–')),
         // On macOS Option+G / R / 2 / ; type these directly, so Word for Mac has no Cmd shortcut.
         // Ctrl+Alt+C copies formatting in Word for Windows now; (c) still AutoCorrects to ©.
         CommandSpec::new("text.copyright", "Copyright Sign", "Insert › Symbols", |s, _| ins_char(s, '©')),

@@ -1196,19 +1196,24 @@ fn key_from_winit_key(key: &winit::keyboard::Key) -> Option<egui::Key> {
     }
 }
 
-/// Preserve numpad subtract's physical location without changing the logical key. `egui::Key`
-/// has no NumpadSubtract variant, so physical `Num0` is a sentinel only when the logical key is
-/// `Minus`; a real numpad zero has logical `Num0` and remains unambiguous. The app recognizes the
-/// pair `(key: Minus, physical_key: Num0)` for Word's Ctrl+Alt+numpad-minus shortcut.
+/// Preserve keypad subtract and divide without changing their logical keys. `egui::Key` has no
+/// keypad operator variants, so physical `Num0` is a sentinel when paired with logical `Minus` or
+/// `Slash`; a real numpad zero has logical `Num0` and remains unambiguous.
 fn keys_from_event(logical: &winit::keyboard::Key, physical: &winit::keyboard::PhysicalKey) -> (Option<egui::Key>, Option<egui::Key>) {
     use winit::keyboard::{KeyCode, PhysicalKey};
 
+    // NumLock-off Numpad5 is reported as the logical Clear key on Windows. egui has no Clear
+    // variant, so reserve the pair (logical Num0, physical Num5) for that event; NumLock-on 5
+    // remains (Num5, Num5), and ordinary Num0 remains (Num0, Num0).
+    let numpad5_clear = matches!(logical, winit::keyboard::Key::Named(winit::keyboard::NamedKey::Clear))
+        && matches!(physical, PhysicalKey::Code(KeyCode::Numpad5));
+    let logical = if numpad5_clear { Some(egui::Key::Num0) } else { key_from_winit_key(logical) };
     let physical = match physical {
-        PhysicalKey::Code(KeyCode::NumpadSubtract) => Some(egui::Key::Num0),
+        PhysicalKey::Code(KeyCode::NumpadSubtract | KeyCode::NumpadDivide) => Some(egui::Key::Num0),
         PhysicalKey::Code(keycode) => key_from_key_code(*keycode),
         PhysicalKey::Unidentified(_) => None,
     };
-    (key_from_winit_key(logical), physical)
+    (logical, physical)
 }
 
 fn key_from_named_key(named_key: winit::keyboard::NamedKey) -> Option<egui::Key> {
@@ -2034,5 +2039,30 @@ mod physical_key_tests {
         let (logical, physical) = keys_from_event(&Key::Character("-".into()), &PhysicalKey::Code(KeyCode::Minus));
         assert_eq!(logical, Some(egui::Key::Minus));
         assert_eq!(physical, Some(egui::Key::Minus));
+    }
+
+    #[test]
+    fn keypad_divide_keeps_logical_slash_and_has_distinct_physical_sentinel() {
+        let (logical, physical) = keys_from_event(&Key::Character("/".into()), &PhysicalKey::Code(KeyCode::NumpadDivide));
+        assert_eq!(logical, Some(egui::Key::Slash));
+        assert_eq!(physical, Some(egui::Key::Num0));
+
+        let (logical, physical) = keys_from_event(&Key::Character("/".into()), &PhysicalKey::Code(KeyCode::Slash));
+        assert_eq!(logical, Some(egui::Key::Slash));
+        assert_eq!(physical, Some(egui::Key::Slash));
+    }
+
+    #[test]
+    fn numlock_off_keypad_five_keeps_clear_distinct_from_digit_five() {
+        let (logical, physical) = keys_from_event(
+            &Key::Named(winit::keyboard::NamedKey::Clear),
+            &PhysicalKey::Code(KeyCode::Numpad5),
+        );
+        assert_eq!(logical, Some(egui::Key::Num0));
+        assert_eq!(physical, Some(egui::Key::Num5));
+
+        let (logical, physical) = keys_from_event(&Key::Character("5".into()), &PhysicalKey::Code(KeyCode::Numpad5));
+        assert_eq!(logical, Some(egui::Key::Num5));
+        assert_eq!(physical, Some(egui::Key::Num5));
     }
 }
