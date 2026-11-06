@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, page-count matches 175/222, page-boundary matches 97/222, languages 68/95 catalog-key checks and shortcuts 276/280. Current source maps 72/95 language rows and 216/228 dialog rows (12 deferred; 7 excluded), pending report refresh; `manual.tsv` changes ARM64 to fail. Language key coverage is not a translation-quality measure.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, page-count matches 175/222, page-boundary matches 97/222, languages 68/95 catalog-key checks and shortcuts 276/280. Current source has 22 deferred rows, maps 72/95 language rows and 216/228 dialog rows (12 deferred; 7 excluded); ARM64 `plat-002` passes from verified run 42262956358. A fresh report is pending after run 42262955486 was canceled before measuring the updated row. Language key coverage is not a translation-quality measure.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -16,14 +16,14 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | Ribbon/menu catalog coverage | **500 / 500 (100%)** | **measured 2026-11-06**: `cargo xtask parity` (re-derived from `crates/engine/src/catalog.rs` against every `CommandSpec::new` id; identical to the checked-in `parity-checklist.md`) |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **90.5%** | **latest official measurement**: Windows run 42211564189, source `84db9fc`, report commit `beea45d` ([readiness.md](readiness.md)); all 222 documents, 93.1% without the report's 23 deferred checks. The current working tree changed `plat-002` to fail, so a new no-deferred score awaits report regeneration. |
+| **Ready for real work** (full target) | **90.5%** | **latest official measurement**: Windows run 42211564189, source `84db9fc`, report commit `beea45d` ([readiness.md](readiness.md)); all 222 documents, 93.1% without the report's 23 deferred checks. Current source has 22 deferred rows, and ARM64 `plat-002` passes from run 42262956358; a fresh report is pending because run 42262955486 was canceled before measuring the updated row. |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
 | Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
 | Commands | 727 registered engine command specs (+ `ui.*` commands in the front end) | verified by `doc4me-cli commands --json`, 2026-11-06 |
-| Tests | 2,074 `#[test]` attributes | measured source count, 2026-11-06 |
-| Code | 216,361 lines of Rust in crates, apps and xtask | measured (`wc -l` over `.rs` files, 2026-11-06) |
+| Tests | 2,068 standalone `#[test]` attributes | measured with `rg -n '^\s*#\[test\]' crates apps xtask`, excluding comments and literal examples, 2026-11-06 |
+| Code | 216,540 lines of Rust in crates, apps and xtask | measured (`wc -l` over `.rs` files, 2026-11-06) |
 
 **Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
 
@@ -126,8 +126,9 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 Measured 2026-11-06 on Windows (run 42211564189; see [readiness.md](readiness.md), check sets and rules
 in [readiness/README.md](readiness/README.md)): the weights of the dimension table over fixed
 pass/fail check sets and all 222 real-world documents. The report says 93.1% excluding 23 deferred
-rows. The current working tree changed `plat-002` from deferred to fail, so no refreshed no-deferred
-number is available yet. The language component is based on catalog key-row presence, not whether
+rows. Current source has 22 deferred rows and records ARM64 `plat-002` as pass from verified run
+42262956358. Readiness run 42262955486 was canceled because it would measure the pre-pass row; no
+refreshed no-deferred number is available until the fresh run completes. The language component is based on catalog key-row presence, not whether
 values translate English or on translation accuracy. Before the first measurement it was estimated
 as the additive weighted sum over the [dimension table](#by-dimension): **0.30·68 + 0.20·60 + 0.15·55 +
 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 + 0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (range 55–63%). No
@@ -269,6 +270,7 @@ can be used without committing Word output.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-06 | minor | Latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key rows, shortcuts 276/280. Current `manual.tsv` records a later ARM64 failure; report refresh is pending. |
+| 2026-11-06 | minor | Current `manual.tsv` records ARM64 `plat-002` as pass after run 42262956358 verified MSI and portable ZIP; current deferred count is 22. Run 42262955486 was canceled before measuring the pass, so the fresh readiness report remains pending and the 90.5% / 93.1% official figures still refer to run 42211564189. |
 | 2026-11-01 | minor | Map classic New Toolbar, Customize Menu Bar and Customize Menus to the tested Customize Ribbon replacement; dialogs 187/228, readiness 86.0% (88.5% without deferred) |
 | 2026-11-01 | minor | Map legacy `wdDialogToolsAdvancedSettings` to the tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without deferred) |
 | 2026-11-01 | minor | Syncthing two-peer DOCX save-in-place and sync/reopen verified; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |

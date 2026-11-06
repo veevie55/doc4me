@@ -45,7 +45,9 @@ investigation; the generated report remains capped at 40 failures per set.
   that the application does not own, and Word dialogs for Microsoft services, Windows components or
   another platform (Outlook, Exchange, OLE servers, ActiveX, Mac OS publish and subscribe). A build
   is deferred only until the owner requests it; Windows arm64 was requested and attempted in
-  November 2026 and is now recorded as `fail` in `manual.tsv` after run 42213688289. Each row's note
+  November 2026 and is now recorded as `pass` in `manual.tsv` after run 42262956358 built and
+  verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
+  canceled before it could measure the updated row, so a fresh readiness report is pending. Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the
