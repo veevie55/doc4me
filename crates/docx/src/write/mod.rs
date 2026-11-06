@@ -392,6 +392,10 @@ pub(crate) fn write_parts(doc: &Document, flavor: Flavor) -> Result<Vec<(String,
 
     rels.add(rt::STYLES, "styles.xml", false);
     push_part(&mut entries, &mut overrides, "word/styles.xml", styles_xml(doc), &format!("{CT_WML}styles+xml"), PartRels::default());
+    if !doc.font_aliases.is_empty() {
+        rels.add(rt::FONT_TABLE, "fontTable.xml", false);
+        push_part(&mut entries, &mut overrides, "word/fontTable.xml", font_table_xml(doc), &format!("{CT_WML}fontTable+xml"), PartRels::default());
+    }
     if !doc.numbering.nums.is_empty() || !doc.numbering.abstracts.is_empty() {
         rels.add(rt::NUMBERING, "numbering.xml", false);
         push_part(&mut entries, &mut overrides, "word/numbering.xml", numbering_xml(doc), &format!("{CT_WML}numbering+xml"), PartRels::default());
@@ -728,6 +732,20 @@ fn styles_xml(doc: &Document) -> Vec<u8> {
         style_xml(&mut w, st);
     }
     w.close("w:styles");
+    w.into_bytes()
+}
+
+/// Only the alternate font names used by the layout engine are modeled. Other font-table details
+/// (embedded fonts and signatures) remain outside Doc4Me's DOCX support.
+fn font_table_xml(doc: &Document) -> Vec<u8> {
+    let mut w = W::new();
+    w.open("w:fonts", &[("xmlns:w", "http://schemas.openxmlformats.org/wordprocessingml/2006/main")]);
+    for alias in doc.font_aliases.values() {
+        w.open("w:font", &[("w:name", &alias.font)]);
+        w.empty("w:altName", &[("w:val", &alias.alternate)]);
+        w.close("w:font");
+    }
+    w.close("w:fonts");
     w.into_bytes()
 }
 

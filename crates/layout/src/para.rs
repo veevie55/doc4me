@@ -1,6 +1,7 @@
 //! Paragraph layout: resolve runs, shape them into clusters, break lines (first-fit, as word
 //! processors do), place tabs, list labels and alignment.
 
+use std::borrow::Cow;
 use std::collections::VecDeque;
 use std::sync::Arc;
 
@@ -22,6 +23,8 @@ pub struct StyleRun {
     pub size: f32,
     pub synth_bold: bool,
     pub synth_italic: bool,
+    /// The requested family was missing, including when its DOCX `w:altName` was used.
+    pub substituted: bool,
     pub rc: Arc<ResolvedChar>,
     /// Line ascent/descent at this size, points.
     pub ascent: f32,
@@ -471,6 +474,22 @@ struct Builder<'a> {
     keep_with_next: Vec<usize>,
 }
 
+/// Use a DOCX font-table alternate only when the requested family is unavailable. Keep the
+/// original name in `ResolvedChar` so formatting and round-trip serialization stay unchanged.
+pub(crate) fn font_for_document<'a>(doc: &'a Document, family: &'a str) -> Cow<'a, str> {
+    font_for_aliases(&doc.font_aliases, family)
+}
+
+/// Use a DOCX font-table alternate only when the requested family isn't installed.
+pub(crate) fn font_for_aliases<'a>(aliases: &'a std::collections::BTreeMap<String, doc4me_doc::FontAlias>, family: &'a str) -> Cow<'a, str> {
+    if doc4me_fonts::FontDb::global().has_family(family) {
+        return Cow::Borrowed(family);
+    }
+    let key = family.trim().to_lowercase();
+    let Some(alias) = aliases.get(&key).filter(|alias| !alias.alternate.trim().is_empty()) else { return Cow::Borrowed(family) };
+    Cow::Borrowed(&alias.alternate)
+}
+
 /// What a piece of text is shaped as: one face, case, script formatting and direction.
 #[derive(Clone, Copy)]
 struct SegKey {
@@ -637,9 +656,11 @@ impl<'a> Builder<'a> {
     /// [`Self::style`] for Thai (or other complex-script) text when `thai`: a substitute with a
     /// [`MetricFit`](doc4me_fonts::word::MetricFit) scales Thai and Latin letters apart.
     fn style_for(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool, thai: bool) -> u16 {
-        let r = doc4me_fonts::word::resolve(&rc.font, rc.bold, rc.italic);
+        let family = font_for_document(self.env.doc, &rc.font);
+        let r = doc4me_fonts::word::resolve(&family, rc.bold, rc.italic);
+        let substituted = r.substituted || !family.eq_ignore_ascii_case(&rc.font);
         let face = face_override.unwrap_or(r.face);
-        let fit = if face_override.is_none() { doc4me_fonts::word::metric_fit(&rc.font, rc.bold, rc.italic) } else { None };
+        let fit = if face_override.is_none() { doc4me_fonts::word::metric_fit(&family, rc.bold, rc.italic) } else { None };
         let glyph_scale = fit.map_or(1.0, |f| f.scale(thai));
         // The display list reads every run's format (link target, strike kind, underline colour,
         // baseline shift…) from its StyleRun, so runs share one only when their formats are equal.
@@ -669,7 +690,7 @@ impl<'a> Builder<'a> {
         // A substitute standing in for another font takes that font's line spacing.
         let ((a, d), k) = match fit {
             Some(f) => (f.line(), size as f64),
-            None if face_override.is_none() => (doc4me_fonts::word::single_line(&rc.font, &face, r.substituted, size as f64), 1.0),
+            None if face_override.is_none() => (doc4me_fonts::word::single_line(&family, &face, r.substituted, size as f64), 1.0),
             None => (doc4me_fonts::word::line_metrics(&face), size as f64 / face.upem.max(1.0)),
         };
         // A fallback face (letters the requested font lacks) is emboldened or slanted when it has
@@ -683,6 +704,7 @@ impl<'a> Builder<'a> {
             size,
             synth_bold,
             synth_italic,
+            substituted,
             rc: rc.clone(),
             ascent: (a * k) as f32,
             descent: (d * k) as f32,
@@ -710,15 +732,22 @@ impl<'a> Builder<'a> {
         // Complex-script characters (Persian, Arabic…) use the run's complex-script font, size,
         // bold and italic.
         let rc_cs: Option<Arc<ResolvedChar>> = text.chars().any(|c| rc.uses_complex(c)).then(|| Arc::new(rc.complex()));
-        let primary = doc4me_fonts::word::resolve(&rc.font, rc.bold, rc.italic).face;
-        let primary_cs = rc_cs.as_ref().map(|r| doc4me_fonts::word::resolve(&r.font, r.bold, r.italic).face);
+        let primary_family = font_for_document(self.env.doc, &rc.font);
+        let primary = doc4me_fonts::word::resolve(&primary_family, rc.bold, rc.italic).face;
+        let primary_cs = rc_cs.as_ref().map(|r| {
+            let family = font_for_document(self.env.doc, &r.font);
+            doc4me_fonts::word::resolve(&family, r.bold, r.italic).face
+        });
         // Chinese, Japanese and Korean characters use the run's East Asian font (`w:eastAsia`) when
         // it is installed and has them.
         let primary_ea = rc
             .font_ea
             .as_ref()
             .filter(|f| !f.eq_ignore_ascii_case(&rc.font) && text.chars().any(east_asian))
-            .map(|f| doc4me_fonts::word::resolve(f, rc.bold, rc.italic))
+            .map(|f| {
+                let family = font_for_document(self.env.doc, f);
+                doc4me_fonts::word::resolve(&family, rc.bold, rc.italic)
+            })
             .filter(|r| !r.substituted)
             .map(|r| r.face);
         let use_levels = para_text && !self.levels.is_empty();
@@ -1478,7 +1507,16 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
                         }
                         Some(InlineObject::Equation { linear, display, math }) => {
                             let avail = (env.width - rp.indent_left.max(0.0) - rp.indent_right.max(0.0)).max(12.0);
-                            let ml = crate::math::layout_equation(math, linear, &rc, *display, avail, &math_props, &mut eq_counter);
+                            let ml = crate::math::layout_equation_with_font_aliases(
+                                math,
+                                linear,
+                                &rc,
+                                *display,
+                                avail,
+                                &math_props,
+                                &doc.font_aliases,
+                                &mut eq_counter,
+                            );
                             let st = b.styles.get(si as usize);
                             // The line is at least as tall as the text around it.
                             let (a, d) = st.map(|s| (s.ascent, s.descent)).unwrap_or((0.0, 0.0));
@@ -1617,7 +1655,8 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         // A Symbol/Wingdings bullet (U+F0B7…) without that font installed, or in a face that has
         // no glyph at the private-use code: draw the standard character instead, since a
         // substitute has another glyph, or none, there.
-        let r = doc4me_fonts::word::resolve(&rc.font, rc.bold, rc.italic);
+        let family = font_for_document(env.doc, &rc.font);
+        let r = doc4me_fonts::word::resolve(&family, rc.bold, rc.italic);
         let text: String = text
             .chars()
             .map(|c| match doc4me_fonts::word::symbol_font_char(&rc.font, c) {
@@ -1723,8 +1762,7 @@ const SUBSTITUTE_SLACK: f32 = 0.03;
 /// with no break opportunity yet: the last cluster of its word when the whole word, in a
 /// substitute font, overflows by at most [`SUBSTITUTE_SLACK`] of the line's text so far.
 fn slack_word(pl: &ParaLayout, j: usize, x: f32, line_x: f32, right_edge: f32) -> Option<usize> {
-    let substituted =
-        |style: u16| pl.styles.get(style as usize).is_some_and(|st| doc4me_fonts::word::resolve(&st.rc.font, st.rc.bold, st.rc.italic).substituted);
+    let substituted = |style: u16| pl.styles.get(style as usize).is_some_and(|st| st.substituted);
     let mut end_x = x;
     let mut k = j;
     loop {

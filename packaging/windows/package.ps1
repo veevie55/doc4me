@@ -88,6 +88,9 @@ if (-not $SkipBuild) {
     $env:CMAKE_ASM_COMPILER_TARGET = $Target
     $env:CMAKE_TRY_COMPILE_TARGET_TYPE = 'STATIC_LIBRARY'
     $env:GGML_NATIVE = 'OFF'
+    # Match whisper/ggml's C/C++ CRT to Rust's +crt-static; CMP0091 makes CMake honor it.
+    $env:CMAKE_POLICY_DEFAULT_CMP0091 = 'NEW'
+    $env:CMAKE_MSVC_RUNTIME_LIBRARY = 'MultiThreaded'
     # clang-cl disables C++ exceptions by default; ggml's GGUF reader uses try/catch.
     $previousCxxFlags = $env:CXXFLAGS
     $env:CXXFLAGS = if ([string]::IsNullOrWhiteSpace($previousCxxFlags)) { '/EHsc' } else { "$previousCxxFlags /EHsc" }

@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-01 · **Last updated:** 2026-11-01 · **Change:** minor (222/222 documents preserve measured structure through round-trip; pagination checks are 162/222 page counts and 87/222 page boundaries; formatting comparison with Word remains open) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: all 222 documents preserve measured structure through round-trip; pagination is 175/222 page counts and 97/222 page boundaries; current font-substitution changes pass all six CI steps and await Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -9,9 +9,11 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (2026-11-01, `cargo xtask readiness --corpus`): all
+with Word on real-world files. What is checked (latest official Windows run 42211564189): all
 222 documents open and remain stable and preserve measured structure through save and reopen,
-and 162 match Word's page count; the separate page-break check passes 87/222. A text box
+175 match Word's page count; the separate page-boundary check passes 97/222. Current DOCX
+`w:altName` font-substitution support has round-trip and rendering regressions, awaiting a Windows
+corpus rerun. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
 
@@ -168,6 +170,7 @@ raise readiness estimates. No Word-derived files are fixtures.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-06 | minor | Latest official Windows run 42211564189: DOCX open, round-trip and stability remain 222/222; page counts 175/222 and page boundaries 97/222. Current DOCX `w:altName` font fallback work passes all six CI steps and awaits Windows remeasurement. |
 | 2026-11-01 | minor | Leading page breaks in table rows no longer add a blank page; corpus page-count checks rise to 162/222 while page-boundary checks remain 87/222; govuk-003 matches page count but not page boundaries |
 | 2026-11-01 | minor | Preserve omitted row grid columns (`w:gridBefore`/`w:gridAfter`) through DOCX round-trip; the corpus pagination checks rise to 161/222 page counts and 87/222 page breaks |
 | 2026-11-01 | minor | DOCX corpus round-trip 222/222 after reading text boxes before nested images; formatting comparison with Word remains open |

@@ -1368,13 +1368,14 @@ pub(crate) fn text_glyphs(doc: &Document, r: Rect, it: &GraphicItem, alpha: f32,
     if !rect.iter().chain([&size]).all(|v| v.is_finite()) {
         return Vec::new();
     }
-    let family = font.as_deref().filter(|f| !f.is_empty()).unwrap_or(&doc.settings.minor_font);
+    let requested_family = font.as_deref().filter(|f| !f.is_empty()).unwrap_or(&doc.settings.minor_font);
+    let family = crate::para::font_for_document(doc, requested_family);
     let size = size.clamp(1.0, 400.0);
-    let resolved = doc4me_fonts::word::resolve(family, *bold, false);
+    let resolved = doc4me_fonts::word::resolve(&family, *bold, false);
     let face = resolved.face.get();
     // TH Sarabun New and its kin, drawn with Sarabun: Thai and Latin letters are scaled apart and
     // every cluster is set on the original font's width, as in a paragraph (`Builder::shape_with`).
-    let fit = doc4me_fonts::word::metric_fit(family, *bold, false);
+    let fit = doc4me_fonts::word::metric_fit(&family, *bold, false);
     let is_thai = |c: char| ('\u{0E00}'..='\u{0E7F}').contains(&c);
     let mut runs: Vec<(&str, bool)> = Vec::new();
     let (mut start, mut cur) = (0, None);

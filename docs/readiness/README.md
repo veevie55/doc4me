@@ -41,14 +41,15 @@ investigation; the generated report remains capped at 40 failures per set.
   removed to move the number. A row out of scope stays with `check` = `excluded` and the reason.
 - A row whose check can't be made or met in a development session waits with `status` =
   `deferred` until the owner asks for it (owner's rule of 2026-10-27): checks only the owner's own
-  hardware or Windows PC can make (a printer, pen, microphone, scanner, several monitors, a
-  numeric keypad, Windows' input methods), builds the owner hasn't asked for (Windows arm64 and the
-  other platforms, 2026-10-26), and Word's dialogs for Microsoft services, Windows components or
-  another platform (Outlook, Exchange, OLE servers, ActiveX, Mac OS publish and subscribe). Its
-  note or evidence says why and what it was before. A deferred row counts as not passing in the
-  measured number; `readiness.md` also gives the number without the deferred rows (each check
-  set's pass rate over its rows that aren't deferred), the target for the work that isn't waiting
-  on the owner. Both targets are 100%.
+  hardware can make (a printer, pen, microphone, scanner or several monitors), OS input behaviors
+  that the application does not own, and Word dialogs for Microsoft services, Windows components or
+  another platform (Outlook, Exchange, OLE servers, ActiveX, Mac OS publish and subscribe). A build
+  is deferred only until the owner requests it; Windows arm64 was requested and attempted in
+  November 2026 and is now recorded as `fail` in `manual.tsv` after run 42213688289. Each row's note
+  or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
+  the measured number; `readiness.md` also gives the number without the deferred rows (each check
+  set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the
+  owner. Both targets are 100%.
 - The number counts as final once the corpus checks have run on at least 200 documents.
 
 ## Files
@@ -57,7 +58,7 @@ investigation; the generated report remains capped at 40 failures per set.
 |---|---|---|---|
 | `shortcuts.tsv` | Word for Windows' default keyboard shortcuts, 329 rows | Microsoft's [Keyboard shortcuts in Word](https://support.microsoft.com/en-us/office/keyboard-shortcuts-in-word-95ef89dd-7142-4b50-afb2-f762f663ceb2), Windows tab, as published on 2026-10-25; rows listing several keys (the function-key table) split into one row per key | `registry`: one of the row's `chord`s (separated by `\|`, written as Doc4Me writes shortcuts, `Mod` for Ctrl) is bound to `command`, directly or, with Shift, as a caret move Shift extends; `manual`: `status` is `pass` |
 | `dialogs.tsv` | Word's dialog boxes, 235 rows | Microsoft's [WdWordDialog enumeration](https://learn.microsoft.com/en-us/office/vba/api/word.wdworddialog) | `registry`: `command` (Doc4Me's equivalent dialog) exists; `manual`: `status` is `pass` |
-| `languages.tsv` | Microsoft 365 Apps' interface languages, 95 rows | Microsoft's [languages, culture codes and companion proofing languages](https://learn.microsoft.com/en-us/microsoft-365-apps/deploy/overview-deploying-languages-microsoft-365-apps) | `catalog` names a file in `crates/ui-egui/src/i18n` holding at least 95% of the interface strings any catalog holds (English always passes) |
+| `languages.tsv` | Microsoft 365 Apps' interface languages, 95 rows | Microsoft's [languages, culture codes and companion proofing languages](https://learn.microsoft.com/en-us/microsoft-365-apps/deploy/overview-deploying-languages-microsoft-365-apps) | `catalog` names a file in `crates/ui-egui/src/i18n` whose set of unique keys covers at least 95% of the union of unique keys parsed from every `*.tsv` in that directory (English always passes). The current check measures key presence only; it does not check whether values are translations of English or assess their accuracy. Any extra TSV in the directory can change the denominator. |
 | `performance.tsv` | Timing checks on generated documents (about 20, 100 and 500 pages of English text), and typing and scrolling in the window | Fixed limits | The median of three runs is within `threshold_ms`; rows measured `manual` are checked by hand in the app (`status`) |
 | `manual.tsv` | Stability, platform, ecosystem and hardware checks done by hand | Gaps, hardware parity | `status` is `pass`, with `date` and `evidence` |
 | `corpus.tsv` | Real-world documents with a reference PDF made by Microsoft Word | GOV.UK publications (Open Government Licence v3.0) and Zenodo records under a Creative Commons licence that publish the same document as `.docx` and as a PDF (on Zenodo, files of the same name) whose Producer or Creator is Microsoft Word (or Acrobat PDFMaker for Word, which also prints through Word's layout), with at least 90% of their words in common, 1–80 pages; the licence is in each row. A row whose PDF is published under another file name (once the format markers `pdf`, `word` and `docx`, a copy number and separators are set aside) stays with `check` = `excluded` and the names in `note`: it isn't shown to be the same document (an online and a print edition, a braille transcript, a later version) | See the corpus checks below |

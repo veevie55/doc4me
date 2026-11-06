@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42178240013: readiness 90.4% / 93.1% without 26 deferred; dialogs 210/222, page-count matches 175/222 and page-boundary matches 97/222, languages 68/95; three keypad behaviors added locally pending Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, page-count matches 175/222, page-boundary matches 97/222, languages 68/95 catalog-key checks and shortcuts 276/280. Current `manual.tsv` changes ARM64 to fail and awaits report refresh; language key coverage is not a translation-quality measure.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -16,14 +16,14 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | Ribbon/menu catalog coverage | **499 / 499 (100%)** | **measured**: `cargo xtask parity` (re-derived from `crates/engine/src/catalog.rs` against every `CommandSpec::new` id; identical to the checked-in `parity-checklist.md`) |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **90.4%** | **measured** 2026-11-06 on Windows, run 42178240013 ([readiness.md](readiness.md)): the fixed check sets and all 222 real-world documents; 93.1% without 26 deferred checks |
+| **Ready for real work** (full target) | **90.5%** | **latest official measurement**: Windows run 42211564189, source `84db9fc`, report commit `beea45d` ([readiness.md](readiness.md)); all 222 documents, 93.1% without the report's 23 deferred checks. The current working tree changed `plat-002` to fail, so a new no-deferred score awaits report regeneration. |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
 | Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
-| Commands | 625 engine commands (+ `ui.*` commands in the front end) | measured (source count, 2026-10-25) |
-| Tests | 1,816 tests | measured (source count, 2026-10-25) |
-| Code | ~188,000 lines of Rust in crates, apps and xtask | measured (source count, 2026-10-25) |
+| Commands | 720 engine commands (+ `ui.*` commands in the front end) | measured (`doc4me-cli commands --json`, 2026-11-06) |
+| Tests | 2,049 tests | measured (`#[test]` source count, 2026-11-06) |
+| Code | 213,242 lines of Rust in crates, apps and xtask | measured (`wc -l` over `.rs` files, 2026-11-06) |
 
 **Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
 
@@ -50,11 +50,13 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 - Word's file formats, ribbon, dialogs and keyboard shortcuts from Microsoft's public documentation
   and our knowledge of Word for Windows and Mac (Microsoft 365). Windows-only features (PDF Reflow
   open, Works/WordPerfect import) are counted, because a Word user on Windows expects them.
-- Doc4Me as it is on origin/main today: source (catalog, command registry, readers/writers,
-  layout), tests, the i18n catalogs, open issues (62) and open PRs (~45), git history.
-- **Not done this pass:** opening real-world .docx files in both apps and comparing pages. There is
-  no real-world corpus in the repo (Word-produced files can't be committed), and the disk budget
-  ruled out building. That comparison is the first gap in [`gaps.md`](gaps.md).
+- The latest measured source, `84db9fc`, and the current working tree: command registry, readers and
+  writers, layout, tests and i18n catalogs. The working tree contains changes not yet included in a
+  Windows readiness report; see [`handoff.md`](../handoff.md). The latest report has 222 corpus
+  documents with Word-made reference PDFs.
+- **Not done this pass:** opening the corpus in Word and Doc4Me side by side for direct UI/page
+  comparison. The readiness harness compares Doc4Me output with the saved Word-made PDFs; it does
+  not execute Word itself. Corpus scope and its limits are in [`gaps.md`](gaps.md).
 
 ## Feature areas
 
@@ -99,7 +101,7 @@ what still stops real work. The stage follows the full number and the core-workf
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **90.4%** (measured) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, dialog depth, 27 languages below the 95% threshold, and owner-deferred hardware/platform/service checks; plus everything below |
+| Full target (ready for real work) | **90.5%** (latest official report) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, dialog depth, 27 locale rows failing catalog-key coverage, and owner-deferred hardware/service checks; language translation quality is not measured. |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
@@ -113,18 +115,20 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 
 | Discount | Mainstream | Essentials | Evidence |
 |---|---|---|---|
-| Interaction fidelity | ×0.93 | — | Typing pinned to Word (`tests_typing.rs`), ribbon, keytips, mini-toolbar; 54 modal dialogs, and the latest Windows shortcut set passes 273/280 rows with 7 deferred; picture/shape handling complaints (#82, #142) |
+| Interaction fidelity | ×0.93 | — | Typing pinned to Word (`tests_typing.rs`), ribbon, keytips, mini-toolbar; 54 modal dialogs, and the latest official Windows shortcut set passes 276/280 rows with 4 deferred; picture/shape handling complaints (#82, #142) |
 | Discoverability and UI clarity | — | ×0.95 | Word-style ribbon a Word user already knows, command search, keytips; some newer pane strings and tooltips terse or untranslated |
 | Stability on real machines | ×0.90 | ×0.90 (launch and install) | Never-crash standard, hostile-param fuzzing, panic guard; but open startup crash on Intel UHD (#170), freezes (#77, #59, #31), Windows writes fail without admin (#218), installer conflicts with other Crafting Apps (#64, #73, #106, #51); 5 days of field history |
 | Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 222 real-world documents open, stay stable and preserve their measured structure through save and reopen. Pagination matches Word's page count on 175 of 222 and every page's first/last word on 97; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
 | Product | **×0.753** | **×0.787** | |
 
-### Full target (ready for real work): 90.4% measured
+### Full target (ready for real work): 90.5% latest official measurement
 
-Measured 2026-11-06 on Windows (run 42178240013; see [readiness.md](readiness.md), check sets and rules
+Measured 2026-11-06 on Windows (run 42211564189; see [readiness.md](readiness.md), check sets and rules
 in [readiness/README.md](readiness/README.md)): the weights of the dimension table over fixed
-pass/fail check sets and all 222 real-world documents. The number excluding 26 deferred rows is
-88.5%. Before the first measurement it was estimated
+pass/fail check sets and all 222 real-world documents. The report says 93.1% excluding 23 deferred
+rows. The current working tree changed `plat-002` from deferred to fail, so no refreshed no-deferred
+number is available yet. The language component is based on catalog key-row presence, not whether
+values translate English or on translation accuracy. Before the first measurement it was estimated
 as the additive weighted sum over the [dimension table](#by-dimension): **0.30·68 + 0.20·60 + 0.15·55 +
 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 + 0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (range 55–63%). No
 multiplicative discounts: stability, file formats, layout and UI are weighted dimensions here.
@@ -202,19 +206,19 @@ Word. Their weighted sum is the **full ready for real work** number.
 | Dimension | Weight | Parity | Hours to full | Doc | Evidence |
 |---|---|---|---|---|---|
 | Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
-| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | DOCX opens in Word and round-trips our own tests; all 222 real-world documents open and preserve measured structure through save and reopen (2026-11-01); formatting not compared yet; charts, SmartArt, OLE and encrypted files are lost or refused (content controls kept since #381) |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | DOCX opens in Word and round-trips our own tests; latest Windows run 42211564189 confirms all 222 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet; charts, SmartArt, OLE and encrypted files are lost or refused (content controls kept since #381) |
 | Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); no column balancing, footnote continuation or document grid; compatibility modes beyond 15 partial |
-| UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, 125 shortcuts; 16 modal dialogs against Word's ~100; no ribbon/keyboard customization |
+| UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, and the latest official Windows shortcut result of 276/280 with 4 deferred (all non-deferred rows pass); 54 modal dialogs against Word's ~100; keyboard/ribbon customization is present |
 | Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
 | Performance | 5% | 75% | 10–20 | [layout-parity.md](layout-parity.md) | 61 ms cold layout and 1.4 ms relayout on a 188-page document (measured 2026-10-06, not re-run); font picker freezes fixed in #233; no large real-world documents measured |
-| Localization | 4% | 27% | 75–120 + native review | [localization-parity.md](localization-parity.md) | 19 UI languages (Word 30); 6 of the 12 key languages shipped (hi, ar, id, ko, vi, pt-PT missing); English, Polish and Thai proofing |
+| Localization | 4% | 27% | 75–120 + native review | [localization-parity.md](localization-parity.md) | 65 registered choices: English source plus 64 TSV catalogs, one English UK (`en-gb`) and 63 non-English language catalogs; 8 of 11 non-English key-language rows map to 9 TSV catalogs, while Hindi, Arabic and Korean have none. Readiness's 68/95 only checks catalog key rows, not translation quality; English, Polish and Thai proofing |
 | Platforms | 3% | 95% | 5–10 | [ROADMAP.md](../ROADMAP.md) | Doc4Me releases a Windows x64 MSI and portable zip (unsigned until the owner adds a certificate); the macOS, Linux, FreeBSD and web packaging scripts come from WordCraft and run locally, with no Doc4Me release yet. Beyond Word on Linux, BSD and the web once released; Word's iPad/iPhone/Android apps are out of scope |
 | Hardware | 1% | 40% | 20–40 | [hardware-parity.md](hardware-parity.md) | No native printing on desktop, no pen/ink, no dictation; GPU drawing and HiDPI fine. Ink hours are in the Features row (Draw tab) |
 | Ecosystem and plugins | 2% | replacements in place | — | [gaps.md](gaps.md) | Microsoft's own systems are out of scope (owner decision, 2026-10-25): VBA execution, Office add-ins and the Office Store, OneDrive/SharePoint and Microsoft co-authoring. Open replacements: Zotero built in, macros record/play commands (`.docm` VBA kept, never run, #172), Doc4Me's own add-in catalog (Get Add-ins), cloud storage through folders synced by Nextcloud Desktop or Syncthing. No EndNote/Mendeley plugins |
 | AI features | 0% | beyond Word for external agents | — | [gaps.md](gaps.md) | Beyond Word for external agents (MCP, CLI). No in-app AI provider: out of scope (owner decision, 2026-10-25) |
 
 **Ready for real work ≈ 0.30·68 + 0.20·60 + 0.15·55 + 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 +
-0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 90.4% now, with each dimension's measured
+0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 90.5% in the latest official Windows report, with each dimension's measured
 score in [readiness.md](readiness.md)).
 
 ## Methodology
@@ -231,9 +235,10 @@ score in [readiness.md](readiness.md)).
   reverted to align with the standard; no new evidence.
 - **Why the hours went up** from "120–150 h to 100%" (2026-10-06): that figure left out
   localization, multilingual proofing, ecosystem, hardware, PDF Reflow and `.doc` writing, and
-  priced DOCX corpus fidelity at 10 h. The new evidence is the Word bundle inventory (30 UI
-  languages, 120 proofing tools, 12 bibliography styles), the 62 open issues (crashes, freezes,
-  RTL reports) and the size of comparable work actually done (below).
+  priced DOCX corpus fidelity at 10 h. The evidence includes the Word bundle inventory (30 UI
+  languages, 120 proofing tools, 12 bibliography styles), the last available issue inventory (62
+  open reports, including crashes, freezes and RTL reports; issue tracking is now disabled) and
+  the size of comparable work actually done (below).
 
 ### Calibration of hours (from this repo's history)
 
@@ -263,7 +268,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-06 | minor | Windows run 42178240013: readiness 90.4% / 93.1% without 26 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95. |
+| 2026-11-06 | minor | Latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key rows, shortcuts 276/280. Current `manual.tsv` records a later ARM64 failure; report refresh is pending. |
 | 2026-11-01 | minor | Map classic New Toolbar, Customize Menu Bar and Customize Menus to the tested Customize Ribbon replacement; dialogs 187/228, readiness 86.0% (88.5% without deferred) |
 | 2026-11-01 | minor | Map legacy `wdDialogToolsAdvancedSettings` to the tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without deferred) |
 | 2026-11-01 | minor | Syncthing two-peer DOCX save-in-place and sync/reopen verified; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |

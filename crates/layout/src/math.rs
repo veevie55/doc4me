@@ -8,6 +8,7 @@
 //!
 //! Coordinates: x right from the equation's left edge, y *up* from its baseline.
 
+use std::collections::BTreeMap;
 use std::sync::Arc;
 
 use doc4me_doc::math::{
@@ -187,6 +188,21 @@ pub fn layout_equation(
     props: &MathProps,
     counter: &mut u32,
 ) -> MathLayout {
+    layout_equation_with_font_aliases(math, linear, rc, display, avail, props, &BTreeMap::new(), counter)
+}
+
+/// Lay out an equation using its document's alternate names for unavailable fonts. The math
+/// tree and its retained source markup are left untouched so the requested font still round-trips.
+pub fn layout_equation_with_font_aliases(
+    math: &doc4me_doc::math::Math,
+    linear: &str,
+    rc: &ResolvedChar,
+    display: bool,
+    avail: f32,
+    props: &MathProps,
+    font_aliases: &BTreeMap<String, doc4me_doc::FontAlias>,
+    counter: &mut u32,
+) -> MathLayout {
     let parsed;
     let nodes: &Arg = if math.nodes.is_empty() && !math.linear {
         parsed = parse_linear(linear);
@@ -207,6 +223,7 @@ pub fn layout_equation(
         base,
         color,
         text_font: rc.font.clone(),
+        font_aliases,
         nodes: 0,
         path: Vec::new(),
         node_stack: Vec::new(),
@@ -347,13 +364,14 @@ impl Bx {
     }
 }
 
-struct Ctx {
+struct Ctx<'a> {
     face: FaceRef,
     t: Option<Arc<MathTable>>,
     upem: f32,
     base: f32,
     color: Rgb,
     text_font: String,
+    font_aliases: &'a BTreeMap<String, doc4me_doc::FontAlias>,
     /// Nodes laid out so far (caps work on hostile input).
     nodes: usize,
     /// The argument being laid out (for caret slots).
@@ -456,7 +474,7 @@ fn wide_accent(c: char) -> bool {
     )
 }
 
-impl Ctx {
+impl Ctx<'_> {
     fn scale(&self, level: u8) -> f32 {
         let (s1, s2) = match &self.t {
             Some(t) => (t.script_percent, t.script_script_percent),
@@ -691,7 +709,8 @@ impl Ctx {
         let color = r.color.unwrap_or(self.color);
         if r.nor {
             // Normal text: the text font, upright unless asked.
-            let fam = r.font.clone().filter(|f| !f.eq_ignore_ascii_case("Cambria Math")).unwrap_or_else(|| self.text_font.clone());
+            let requested = r.font.clone().filter(|f| !f.eq_ignore_ascii_case("Cambria Math")).unwrap_or_else(|| self.text_font.clone());
+            let fam = crate::para::font_for_aliases(self.font_aliases, &requested);
             let (bold, italic) = match r.sty {
                 Some(MSty::Bold) => (true, false),
                 Some(MSty::Italic) => (false, true),
@@ -2145,6 +2164,28 @@ mod tests {
         assert_eq!(th.len(), 2, "a Latin run and a Thai run: {th:?}");
         assert!((th[0] - 20.0 * fit.scale(false)).abs() < 1e-3 && (th[1] - 20.0 * fit.scale(true)).abs() < 1e-3, "{th:?}");
         assert!(sizes("Sarabun").iter().all(|s| (*s - 20.0).abs() < 1e-3));
+    }
+
+    #[test]
+    fn normal_text_in_equations_uses_document_font_alt_names_without_rewriting_the_math() {
+        use doc4me_doc::math::*;
+        let requested = "Doc4Me Missing Math Font B18D";
+        assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+        let mut aliases = BTreeMap::new();
+        aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+        let math = Math {
+            nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(requested.into()), ..Default::default() })],
+            ..Default::default()
+        };
+        let layout = layout_equation_with_font_aliases(&math, "", &rc(), false, 400.0, &MathProps::default(), &aliases, &mut 0);
+        let face = layout
+            .items
+            .iter()
+            .find_map(|item| if let MItem::Glyphs { face, .. } = item { Some(face) } else { None })
+            .expect("normal math text has glyphs");
+        assert_eq!(face.family, "Source Sans 3");
+        let MNode::Run(run) = &math.nodes[0] else { panic!("the source math run is unchanged") };
+        assert_eq!(run.font.as_deref(), Some(requested));
     }
 
     #[test]

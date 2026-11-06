@@ -49,8 +49,9 @@ impl eframe::App for App {
         self.0.logic(ctx);
         self.3.show(frame);
         let prev = self.0.ui.window;
-        self.0.ui.window = ctx.input(|i| WindowGeometry::track(prev, i.viewport(), i.viewport_rect().size()));
-        if let Some(pos) = ctx.input(|i| take_rescue(&mut self.1, i.viewport())) {
+        let pixels_per_point = ctx.pixels_per_point();
+        self.0.ui.window = ctx.input(|i| WindowGeometry::track(prev, i.viewport(), i.viewport_rect().size(), pixels_per_point));
+        if let Some(pos) = ctx.input(|i| take_rescue(&mut self.1, i.viewport(), pixels_per_point)) {
             ctx.send_viewport_cmd(egui::ViewportCommand::OuterPosition(pos));
         }
         // The window's close button: with unsaved changes, ask first (`WordApp::close_requested`).
