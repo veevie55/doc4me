@@ -341,6 +341,29 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
             let _ = app.execute("ui.tocOptions", json!({}));
             continue;
         }
+        if app.ui.citation_options_pending
+            && let egui::Event::Key { key: Key::Space, pressed: true, .. } = &e
+        {
+            app.ui.citation_options_pending = false;
+            let _ = app.execute("ui.citationOptions", json!({}));
+            app.canvas.swallow_text = true;
+            continue;
+        }
+        if app.ui.citation_options_pending && matches!(&e, egui::Event::Key { pressed: true, .. }) {
+            app.ui.citation_options_pending = false;
+        }
+        // In Word, Alt+Shift+F12 selects the citation options control and Space opens it.
+        // Keep this separate from TOC, whose context opens its own options menu on the chord.
+        if let egui::Event::Key { key: Key::F12, pressed: true, modifiers, .. } = &e
+            && modifiers.alt
+            && modifiers.shift
+            && !modifiers.command
+            && !modifiers.ctrl
+            && crate::citation_options::caret_in_citation_content(app)
+        {
+            app.ui.citation_options_pending = true;
+            continue;
+        }
         // An Alt shortcut (Alt+Shift+D, Alt+F7…) may also send its key's text; it isn't typed.
         match &e {
             egui::Event::Key { pressed: true, .. } => app.canvas.swallow_text = false,

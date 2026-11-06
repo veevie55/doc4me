@@ -201,7 +201,7 @@ ks-199	Review a document	Turn change tracking on or off.	Ctrl+Shift+E	Mod+Shift+
 ks-200	Review a document	Close the Reviewing Pane.	Alt+Shift+C	Alt+Shift+C	view.closeReviewingPane	registry		Review › Reviewing Pane (new pane; UI test reviewing_pane_lists_and_accepts_changes)
 ks-201	Work with references, citations, and indexing	Mark a table of contents entry.	Alt+Shift+O	Alt+Shift+O	references.markTocEntry	registry		
 ks-202	Work with references, citations, and indexing	Mark a table of authorities entry (citation).	Alt+Shift+I	Alt+Shift+I	references.markCitation	registry		
-ks-203	Work with references, citations, and indexing	Choose citation options.	Alt+Shift+F12, Spacebar	Alt+Shift+F12,Space	-	manual	fail	
+ks-203	Work with references, citations, and indexing	Choose citation options.	Alt+Shift+F12, Spacebar	Alt+Shift+F12,Space	-	manual	pass	`citation_options` UI tests: only built-in CITATION/BIBLIOGRAPHY fields open the menu; Alt+Shift+F12 then Space opens it without inserting a space; choosing MLA changes the citation style. TOC keeps its own Alt+Shift+F12 menu.
 ks-204	Work with references, citations, and indexing	Mark an index entry.	Alt+Shift+X	Alt+Shift+X	references.markEntry	registry		
 ks-205	Work with references, citations, and indexing	Insert a footnote.	Ctrl+Alt+F	Mod+Alt+F	references.footnote	registry		
 ks-206	Work with references, citations, and indexing	Insert an endnote.	Ctrl+Alt+D	Mod+Alt+D	references.endnote	registry		

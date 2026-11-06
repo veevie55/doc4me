@@ -17,6 +17,8 @@
 
 - **แยกปุ่มลบแป้นตัวเลขจากปุ่มลบแถวหลักใน keyboard event** (`vendor/egui-winit`, `crates/ui-egui/src/keys.rs`, readiness `ks-163`): คง logical `Minus` สำหรับ keymap เดิมและส่ง physical keypad subtract แยกผ่าน sentinel ที่ตรวจได้; Ctrl+Alt+Minus แถวหลักยังเป็น Optional Hyphen ส่วน Ctrl+Alt+NumpadSubtract เป็น Em Dash. Vendored `egui-winit` 0.36.2 ภายใต้ไลเซนส์เดิมของ dependency; ไม่เปลี่ยนเอกสาร .docx. ตรวจด้วย conversion test ของ vendor และ UI regression ที่ยืนยันทั้งสองผลลัพธ์.
 
+- **เปิดตัวเลือก citation ตามบริบทด้วย Alt+Shift+F12, Space** (`crates/ui-egui/src/citation_options.rs`, readiness `ks-203`): ใช้เฉพาะ built-in `CITATION`/`BIBLIOGRAPHY` fields; เมนูเรียก Update Field และเลือก citation style ที่รองรับ. Space ใน chord ถูกใช้เปิดเมนู ไม่แทรกลงเอกสาร; TOC ยังคงเมนูของตัวเอง. ไม่จับ ADDIN fields ของ Zotero/Mendeley. ตรวจด้วย UI tests สำหรับบริบท citation/bibliography, เปลี่ยน style, ใช้ chord และไม่แทรก Space.
+
 - **เพิ่ม catalog ภาษา isiXhosa, isiZulu, Kinyarwanda และ Sesotho sa Leboa** (`crates/ui-egui/src/i18n/{xh,zu,rw,nso}.tsv`, registry และ `docs/readiness/languages.tsv`): เพิ่ม 2,985 รายการต่อภาษา พร้อมตรวจ source keys, placeholders, ellipses และ glyph ใน Inter. Catalog แต่ละไฟล์ระบุชัดว่าแปลด้วย Google Translate และต้องตรวจคำศัพท์โดยเจ้าของภาษาก่อนเผยแพร่; ไม่มี English fallback ใน catalog. ไม่เปลี่ยน .docx เดิม, ภาษาไทย หรือการติดตั้ง. ตรวจด้วย i18n suite 61 tests ซึ่งผ่าน.
 
 - **จับคู่ Format Callout รุ่นเดิมกับ Format Shape** (`docs/readiness/dialogs.tsv`, `dlg-052`): Format Shape ปัจจุบันเปิดบน callout ที่เลือกและปรับ fill, outline และขนาดได้; leader geometry และ auto-attach แบบ Word รุ่นเก่าไม่รองรับ จึงบันทึกข้อจำกัดไว้ตรง readiness row. Windows run 42133507843 ยืนยัน dialogs 208/220 และ 100% เมื่อไม่นับ deferred.
