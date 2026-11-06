@@ -1,6 +1,6 @@
 # Thai interface
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Thai catalog now has 2,985 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Thai catalog now has 3,031 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
 
 Choose **File › Options › Interface language › ไทย**, or follow a Thai system display language
 (`th`, `th-TH`, `th_TH.UTF-8`). The catalog code is `th`; `ui.language` with `{"value":"th"}`
@@ -9,7 +9,7 @@ launch while the preference is `auto`. Document text, command ids, CLI/MCP/contr
 file paths do not change, and new documents keep US English as their editing language (Thai text
 is proofed whatever its language).
 
-`crates/ui-egui/src/i18n/th.tsv` has all 2,985 unique parsed keys of the other catalogs. The tests in
+`crates/ui-egui/src/i18n/th.tsv` has all 3,031 unique parsed keys of the other catalogs. The tests in
 `crates/ui-egui/src/i18n/tests.rs` (`thai_*`) check the locales, the coverage, the font coverage
 (bundled Sarabun) and that every entry is typed cleanly: no Thai digits, no `...`, no letters of
 other scripts, and no mark from Doc4Me's own Thai proofing.

@@ -3002,3 +3002,49 @@
 	Hanja to Hangul	Hanja kepada Hangul
 	Put the caret in Korean text to choose its Hanja.	Letakkan karet dalam teks Korea untuk memilih Hanjanya.
 	The selection, or the whole document when nothing is selected.	Pemilihan, atau seluruh dokumen apabila tiada apa-apa dipilih.
+	Add frame	Add frame
+	Attributes:	Attributes:
+	Border color:	Border color:
+	Border width:	Border width:
+	Choose how the custom XML editor displays names and removes schema references.	Choose how the custom XML editor displays names and removes schema references.
+	Confirm before removing a schema reference	Confirm before removing a schema reference
+	Elements:	Elements:
+	Enter an absolute HTTP(S) or URN schema URI.	Enter an absolute HTTP(S) or URN schema URI.
+	Frame URL	Frame URL
+	Frame borders:	Frame borders:
+	Frame spacing:	Frame spacing:
+	Frames:	Frames:
+	Frameset Properties	Frameset Properties
+	Hide	Hide
+	Margin height:	Margin height:
+	Margin width:	Margin width:
+	No resize	No resize
+	No schema references	No schema references
+	Optional	Optional
+	Optional, 0–1000	Optional, 0–1000
+	Pixels (0–100)	Pixels (0–100)
+	Remove Attribute	Remove Attribute
+	Remove schema reference {schema}?	Remove schema reference {schema}?
+	Rows:	Rows:
+	Schema Library	Schema Library
+	Schema URI:	Schema URI:
+	Schemas:	Schemas:
+	Scrolling:	Scrolling:
+	Select a custom XML store with editable datastore properties first.	Select a custom XML store with editable datastore properties first.
+	Select an XML element to add, change, or remove one of its attributes.	Select an XML element to add, change, or remove one of its attributes.
+	Selected element: {name}	Selected element: {name}
+	Set Attribute	Set Attribute
+	Show namespace URIs beside XML names	Show namespace URIs beside XML names
+	Store: {store}	Store: {store}
+	This XML store is preserved but cannot be edited here.	This XML store is preserved but cannot be edited here.
+	This document has no custom XML stores.	This document has no custom XML stores.
+	This store has no datastore properties part for schema references.	This store has no datastore properties part for schema references.
+	This store has no elements available for editing.	This store has no elements available for editing.
+	Value:	Value:
+	View and manage schema references associated with custom XML stores.	View and manage schema references associated with custom XML stores.
+	XML Element Attributes	XML Element Attributes
+	XML Options	XML Options
+	e.g. 25%,*	e.g. 25%,*
+	e.g. 30%,*	e.g. 30%,*
+	Web	Web
+	XML	XML

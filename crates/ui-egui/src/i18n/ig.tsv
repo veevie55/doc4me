@@ -1,0 +1,3033 @@
+# Igbo (ig) interface catalog; AI-generated with Google Translate from English source meanings only; not native-reviewed. Endpoint: translate.googleapis.com/translate_a/single (public gtx); generated 2026-11-06.
+# Columns: context<TAB>English source<TAB>translation. Preserve placeholders and escaped controls.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	"a" ma ọ bụ "an" tupu okwu na-esote; mkpoputa Polish “w/we” na “z/ze”.
+	% of all commits	% nke ihe niile eme
+	(All)	(Niile)
+	(Custom)	(Omenala)
+	(no style)	(enweghị ụdị)
+	(no suggestions)	(enweghị ntụnye)
+	(none)	(o nweghị)
+	(normal text)	(ederede nkịtị)
+	(not matched)	(anaghị adakọ)
+	(picture or object)	(foto ma ọ bụ ihe)
+	*Bold* and _italic_ with real formatting	* Obi ike* na _italic_ nwere ezigbo nhazi
+	0 or More Characters	0 ma ọ bụ karịa agwa
+	1. Formatting restrictions	1. Mgbochi nhazi
+	1. Main document	1. Isi akwụkwọ
+	1.5 Line Spacing	1.5 Ogologo ahịrị
+	1/4 Em Space	1/4 Em Oghere
+	1×2 Empty Matrix	1 × 2 Matrix efu
+	1×3 Empty Matrix	1 × 3 Matrix efu
+	2. Data source	2. Isi iyi data
+	2. Editing restrictions	2. Mgbochi edezi
+	2×1 Empty Matrix	2 × 1 Matrix efu
+	2×2 Determinant	2×2 Kpebisie ike
+	2×2 Empty Matrix	2 × 2 Matrix efu
+	2×2 Identity Matrix	2 × 2 Identity Matrix
+	2×2 Identity Matrix (sparse)	2×2 Identity Matrix (sparse)
+	2×2 Matrix in Brackets	2 × 2 Matrix na Brackets
+	2×2 Matrix in Double Bars	2 × 2 Matrix na Ogwe abụọ
+	2×2 Matrix in Parentheses	2×2 Matrix na Parenttheses
+	2×3 Empty Matrix	2 × 3 Matrix efu
+	3-D	3-D
+	3. Merge the data with the document	3. Jikọọ data na akwụkwọ
+	3. Start enforcement	3. Malite mmanye
+	3D Models	Ụdị 3D
+	3×1 Empty Matrix	3 × 1 Matrix efu
+	3×2 Empty Matrix	3 × 2 Matrix efu
+	3×3 Empty Matrix	3 × 3 Matrix efu
+	3×3 Identity Matrix	3 × 3 Identity Matrix
+	3×3 Identity Matrix (sparse)	3×3 Identity Matrix (sparse)
+	5,000 characters a day; give an email address for 50,000.	mkpụrụedemede 5,000 kwa ụbọchị; nye adreesị email maka 50,000.
+	<< Less	<< Obere
+	<< Remove	<< Wepu
+	A file dialog is already open.	Mkparịta ụka faịlụ emepeela.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Ihe nhazi okwu efu, mepere emepe nke edere site na ọkọ na Rust.\nDabere na WordCraft site n'aka otu ArtCraft.
+	A header source holds the field names for a data source without a header row.	Isi mmalite nkụnye eji isi mee na-ejide aha ubi maka isi iyi data na-enweghị ahịrị nkụnye eji isi mee.
+	A mail merge field	Ogige njikọ mail
+	A new document lists the commands with their shortcuts.	Akwụkwọ ọhụrụ depụtara iwu ndị ahụ na ụzọ mkpirisi ha.
+	A numbered sequence (figures, tables…)	Usoro nwere nọmba (ọnụọgụ, tebụl…)
+	A password is required to open this document.	Achọrọ paswọọdụ iji mepee akwụkwọ a.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Oghere tupu akara edemede, akara okpukpu abụọ, rịkọm Polish tupu njikọ.
+	A table of contents	Tebụl nke ọdịnaya
+	A table's rows keep the same columns here.	Ahịrị okpokoro na-edobe otu ogidi ebe a.
+	A xor B	A xor B
+	A, B, C, …	A, B, C,…
+	a, b, c, …	a, b, c,…
+	AaBbCcDd	AaBbCcDd
+	AaBbYyZz	AaBYyZz
+	About	Ihe gbasara
+	About Doc4Me	Ihe gbasara Doc4Me
+	Above Chart	N'elu Chart
+	Above the item	N'elu ihe ahụ
+	Absolute position	Ọnọdụ zuru oke
+	Absolute value cases	Ikpe uru zuru oke
+	Accent	Ụda olu
+	Accent Gradient	Gradient olu
+	Accent with Reflection	Ụda olu na ntụgharị uche
+	Accent {n}	Ụda olu {n}
+	Accents	Ngwa olu
+	Accept	Nabata
+	Accept All	Nabata All
+	Accept All Changes	Nabata Mgbanwe Niile
+	Accept or Reject Changes	Nabata ma ọ bụ jụ Mgbanwe
+	Accept This Change	Nabata mgbanwe a
+	Accessed on	Enwetara na
+	Accessibility	Nnweta
+	Accessibility Pane	Pane nnweta
+	Acute	Nnukwu
+	Add	Tinye
+	Add >>	Tinye >>
+	Add a comment	Tinye okwu
+	Add a Table	Tinye okpokoro
+	Add at least one field.	Tinye opekata mpe otu ubi.
+	Add caption when inserting:	Tinye nkọwa okwu mgbe ị na-etinye:
+	Add Chart Element	Tinye ihe Chart
+	Add Field	Tinye Ubi
+	Add Field Name	Tinye Aha ubi
+	Add Font…	Tinye Font…
+	Add line numbering	Tinye nọmba ahịrị
+	Add New Placeholder	Tinye ebe ọhụrụ
+	Add New Placeholder…	Tinye ebe ọhụrụ…
+	Add New Source…	Tinye Isi mmalite ọhụrụ…
+	Add Object to Selection	Tinye ihe na Nhọrọ
+	Add Pen	Tinye Pen
+	Add Row	Tinye Ahịrị
+	Add Series	Tinye usoro
+	Add Shape	Tinye Ụdị
+	Add Space Before Paragraph	Tinye Oghere Tupu Paragraf
+	Add space between Asian and Latin text	Tinye oghere n'etiti ederede Asia na Latin
+	Add space between Asian text and numbers	Tinye oghere n'etiti ederede Asia na ọnụọgụ
+	Add tab stop at:	Tinye nkwụsị taabụ na:
+	Add Text	Tinye Ederede
+	Add the chapter number	Tinye nọmba isiakwụkwọ
+	Add to Dictionary	Tinye na ọkọwa okwu
+	Add to Document	Tinye na Document
+	Add to Quick Access Toolbar	Tinye na ogwe ngwaọrụ ịnweta ngwa ngwa
+	Add to Style Gallery	Tinye na gallery Style
+	Add-ins	Ihe mgbakwunye
+	Add/Edit\nBibliography	Tinye/Dezie\n Akwụkwọ akụkọ
+	Add/Edit\nCitation	Tinye/Dezie\nCitation
+	Add\nNote	Tinye\n Cheta
+	Add\nPen	Tinye\nPen
+	Add\nShape	Tinye\nShape
+	Added	agbakwunyere
+	Added Fonts	Fonts agbakwunyere
+	Address	adreesị
+	Address Block	Mgbochi adreesị
+	Address labels	akara adreesị
+	Address:	adreesị:
+	Address\nBlock	Adreesị\nMgbochi
+	Adjust	Gbanwee
+	Advanced	Nke dị elu
+	Advanced Find	Chọta nke dị elu
+	Advanced Find…	Nchọta di elu…
+	After:	Mgbe:
+	Agents	Ndị nnọchi anya
+	Align	Hazie
+	Align Bottom Center	Hazie ala Center
+	Align Bottom Left	Hazie ala akaekpe
+	Align Bottom Right	Hazie ala aka nri
+	Align Center	Nhazi Center
+	Align Center Left	Hazie etiti akaekpe
+	Align Center Right	Hazie etiti aka nri
+	Align Left	Hazie akaekpe
+	Align Right	Hazie Right
+	Align Text	Hazie Ederede
+	Align Top Center	Hazie Top Center
+	Align Top Left	Hazie elu akaekpe
+	Align Top Right	Hazie n'elu aka nri
+	Aligned at:	Ejikọtara na:
+	Alignment	Nhazi
+	Alignment:	Nhazi:
+	All	Ha niile
+	All - Linear	All - Linear
+	All - Professional	All - Ọkachamara
+	All Borders	Oke niile
+	All Caps	All Caps
+	All caps	Okpu niile
+	All Commands	Iwu niile
+	All files	Faịlụ niile
+	All Levels	Ọkwa niile
+	All Markup	Markup niile
+	All pages	Ibe niile
+	All pages in the range	Ibe niile dị na oke
+	All records	Ihe ndekọ niile
+	All symbol sets	Ntọala akara niile
+	Allow Doc4Me to use online services	Kwe ka Doc4Me jiri ọrụ ịntanetị
+	Allow hanging punctuation	Kwe ka akara edemede kwụgidere
+	Allow Latin text to wrap in the middle of a word	Kwe ka ederede Latin kechie n'etiti okwu
+	Allow line breaks	Kwe ka agbajie ahịrị
+	Allow overlap	Kwe ka ndakota
+	Allow row to break across pages	Kwe ka ahịrị gbasaa n'ofe ibe
+	Alphabetical	Ụdị mkpụrụedemede
+	Alt Text	Ederede Alt
+	Alt text	Alt ederede
+	Alt Text Pane	Alt Text Pane
+	Alt:	Alt:
+	Alt\nText	Alt\nText
+	And	Na
+	Angle Brackets	Akara akara
+	Angle Brackets with Separator	Mpempe akụkụ nwere Separator
+	Angle Brackets with Two Separators	Angle Brackets nwere nkewa abụọ
+	Animate the caret (it glides and fades)	Mee ka nlekọta ahụ dị ndụ (ọ na-egbuke egbuke ma na-agwụ)
+	Animation	Anụmanụ
+	Animation effects:	Mmetụta animation:
+	Annotation Reference	Ntuziaka nkọwa
+	Annotation Subject	Isiokwu nkọwa
+	Annotation Text	Ederede nkọwa
+	Another file	Faịlụ ọzọ
+	Any Character	Omume ọ bụla
+	Any Digit	Ọnụọgụ ọ bụla
+	Any Letter	Akwụkwọ ozi ọ bụla
+	Anyone can open this document. Encrypt it with a password to keep it private.	Onye ọ bụla nwere ike imepe akwụkwọ a. Jiri okwuntughe zoo ya ka ọ debe ya na nzuzo.
+	Anyone who opens the document will need this password.	Onye ọ bụla mepere akwụkwọ ahụ ga-achọ paswọọdụ a.
+	APA	APA
+	API key (if the server needs one)	Igodo API (ọ bụrụ na ihe nkesa chọrọ otu)
+	Apply	Tinye
+	Apply as you type	Tinye ka ị na-apịpị
+	Apply Asian line-breaking rules (kinsoku)	Tinye iwu imebi ahịrị Asia (kinsoku)
+	Apply Character Style	Tinye Ụdị Ụdị
+	Apply formatting to:	Tinye nhazi na:
+	Apply special formats to	Tinye usoro pụrụ iche na
+	Apply Style	Tinye Ụdị
+	Apply Styles	Tinye Ụdị
+	Apply to:	Tinye akwụkwọ na:
+	Arabic	Arabic
+	Arch Down	Arch Down
+	Arch Up	Arch Up
+	Area	Mpaghara
+	Around	Gburugburu
+	Arrange	Hazie
+	Arrange All	Hazie All
+	Arrange\nAll	Hazie\nAll
+	Arrow	Ụka
+	Arrows	Àkú
+	Artistic Effects	Mmetụta nka
+	As Recommended	Dị ka akwadoro
+	As you type	Ka ị na-apịpị
+	ASAP	ASAP
+	Ascending	Na-arịgo
+	Asian text font:	Ederede Eshia:
+	Asian Typography	Ederede Asia
+	Assign	ekenye
+	At least	Opekempe
+	At least {n}	Opekempe {n}
+	Atelier	Atelier
+	Atmosphere	Ikuku
+	Attach Template	Tinye Template
+	Attach…	Tinye…
+	Author	Odee
+	Auto	Akpaaka
+	AutoCaption	Nkọwapụta akpaaka
+	AutoCaption…	Okwu akpaaka…
+	AutoComplete	Mezue akpaaka
+	AutoCorrect	Dezie onwe ya
+	AutoCorrect Options	Nhọrọ akpaaka
+	AutoFit	AutoFit
+	AutoFit Contents	Ọdịnaya AutoFit
+	AutoFit Window	Window AutoFit
+	AutoFormat	Ụdị akpaaka
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	AutoFormat (Ctrl+Alt+K) na-ahazi paragraf ahọpụtara, ma ọ bụ akwụkwọ niile.
+	AutoFormat and Review Changes…	Mgbanwe akpaaka na nyocha…
+	AutoFormat As You Type	AutoFormat ka ị na-ede
+	AutoFormat changed {count} paragraphs	AutoFormat gbanwere paragraf {count}
+	AutoFormat Now	AutoFormat Ugbu a
+	Automatic	Akpaaka
+	Automatic ({language})	Akpaaka ({language})
+	Automatic bulleted lists	Ndepụta mgbọ akpaaka
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Na-esote asụsụ sistemụ gị na-akpaghị aka. NchNhr na iwu mgbanwe; akwụkwọ gị adịghị.
+	Automatic numbered lists	Ndepụta ọnụọgụ akpaghị aka
+	Automatic Table 1 (3 levels)	Tebụl akpaaka 1 (ọkwa 3)
+	Automatic Table 2 (2 levels)	Tebụl akpaaka 2 (ọkwa 2)
+	Automatically hyphenate document	Mechie akwụkwọ na-akpaghị aka
+	Automatically Update Document Styles	Melite ụdị akwụkwọ na-akpaghị aka
+	Automatically update document styles	Melite ụdị akwụkwọ na-akpaghị aka
+	AutoSave	Nchekwa akpaaka
+	AutoSave documents you have saved in Doc4Me	Nchekwa akpaaka ị chekwaa na Doc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Nchekwa akpaaka dara: {error}. Chekwaa akwụkwọ ka ịgbanwuo AutoSave azụ.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSave adịghị na ihe nchọgharị: ọ nweghị ike ide na faịlụ gị. Chekwaa nbudata otu oyiri.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	AutoSave na-edobe naanị faịlụ .docx, .odt na .rtf; {name} enweghị ike idobe nhazi niile. Chekwa dị ka .docx ka ịgbanwuo AutoSave.
+	AutoSave saves every change to the file (needs a saved document)	AutoSave na-echekwa mgbanwe ọ bụla na faịlụ (chọrọ akwụkwọ echekwara)
+	AutoSave writes your changes to the file a moment after you stop typing.	AutoSave na-ede mgbanwe gị na faịlụ ahụ obere oge ka ịkwụsịchara dee.
+	AutoText	Ederede akpaaka
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7.17" × 10.12"
+	Back	Azu
+	Backspace	Oghere azụ
+	Balloons	Balloons
+	Banded Columns	Ogidi ndị gbachiri agbachi
+	Banded Rows	Ahịrị gbakọtara
+	Bar	Ogwe
+	Base text:	Ederede ntọala:
+	Based on: {style}	Dabere na: {style}
+	Baseline Dots	Ntụpọ ntọala
+	Basic Cycle	okirikiri isi
+	Basic List	Ndepụta ntọala
+	Basic Math	Isi mgbakọ na mwepụ
+	Basic Matrix	Isi Matrix
+	Basic Process	Usoro ntọala
+	Basic Pyramid	Pyramid bụ isi
+	Basic Radial	Radial ntọala
+	Basic Venn	Isi Venn
+	Bayes' rule	Ọchịchị Bayes
+	Before:	Tupu:
+	Beginning of Word	Mmalite nke Okwu
+	Behind Text	N'azụ Ederede
+	Below text	Ederede n'okpuru
+	Below the item	N'okpuru ihe ahụ
+	Between	N'etiti
+	Bibliography	Akwụkwọ akụkọ
+	Binary assets added	Akụ ọnụọgụ abụọ agbakwunyere
+	Binary assets removed	Ewepụrụ akụ ọnụọgụ abụọ
+	Binomial Coefficient	ọnụọgụ ọnụọgụ abụọ
+	Binomial Coefficient (angle)	Ọnụọgụ binomial (akuku)
+	Binomial Coefficient with Angle Brackets	Ọnụọgụ binomial nwere braket akụkụ
+	Binomial expansion of (x+a)ⁿ	Mgbasawanye binomial nke (x+a)
+	Blank	Oghere
+	Blank (Three Columns)	Oghere (Ogidi atọ)
+	Blank document	Akwụkwọ efu
+	Blank Page	Ibe efu
+	Block\nAuthors	Block\nNdị ode akwụkwọ
+	Blue:	Acha anụnụ anụnụ:
+	Body Text	Ederede Isi
+	Body text in a short paragraph to show spacing.	Ederede ahụ n'ime obere paragraf iji gosi oghere.
+	Bold	Obi ike
+	Book	Akwụkwọ
+	Book Title	Aha akwụkwọ
+	Book title	Aha akwụkwọ
+	Bookmark	Bookmark
+	Bookmark name:	Aha ibe edokọbara:
+	Border lines	Ahịrị oke
+	Border Painter	Ihe osise oke ala
+	Border\nPainter	Border\nPainter
+	Borders	Oke
+	Borders and Shading	Oke na Shading
+	Borders and Shading…	Oke na ndo…
+	Border…	Oke…
+	Both Sides	Akụkụ abụọ
+	Both sides	Akụkụ abụọ
+	Bottom	N'okpuru
+	Bottom Border	Oke ala
+	Bottom Margin	Oke ala
+	Bottom of Page	N'okpuru ibe
+	Bottom of the Window	N'okpuru Ohere
+	Bottom:	N'okpuru:
+	Box	Igbe
+	Boxed Formula	Ụdị igbe igbe
+	Boxed Formula (example)	Ụdị igbe (atụ)
+	Boxed Formulas	Ụdị igbe igbe
+	Braces	Ihe nkwado
+	Braces with Separator	Ihe nkwado nwere Separator
+	Bracket	Bracket
+	Brackets	Brackets
+	Brackets with Separators	Brackets nwere Separators
+	Break Link	Mebie njikọ
+	Breaks	Nkwụsị
+	Breve	Breve
+	Brightness, contrast and transparency change the picture from how it looks now.	Icha ọkụ, ọdịiche na nghọta na-agbanwe foto ahụ site na ka ọ dị ugbu a.
+	Brightness:	Icha ọkụ:
+	Bring Forward	Weta n'ihu
+	Browse in Doc4Me…	Chọgharịa na Doc4Me…
+	Browse…	Chọgharịa…
+	Build table of figures from:	Mepụta tebụl ọnụ ọgụgụ site na:
+	Building Block Gallery Content Control	Njikwa ọdịnaya osisi ihe mgbochi ụlọ
+	Built from the style or table entry fields chosen in Options.	Ewuru site na ụdị ma ọ bụ mpaghara ntinye tebụl ahọpụtara na Nhọrọ.
+	Built-In	Ewunyere
+	Built-in Heading styles	Ụdị isi eji arụ ọrụ
+	Built-in style	Ụdị arụnyere n'ime ya
+	Built-in styles can't be deleted.	Enweghị ike ihichapụ ụdị arụnyere n'ime ya.
+	Bullet	Mgbo
+	Bullet Library	Ọbá akwụkwọ mgbo
+	Bullets	Mgbọ
+	By author	Site n'aka onye edemede
+	By:	Site na:
+	Calendar	Kalenda
+	Can't be deleted	Enweghị ike ihichapụ
+	Cancel	Kagbuo
+	Canvas Member	Onye otu Canvas
+	Capitalization	Isi ego
+	Capitalize Each Word	Mee ka okwu ọ bụla buru ibu
+	Capitalize first letter of sentences	Mepụta mkpụrụedemede mbụ nke ahịrịokwu
+	Capitalize first letter of table cells	Mepụta mkpụrụedemede mbụ nke mkpụrụ ndụ tebụl
+	Capitalize names of days	Wepụta aha ụbọchị n'isi
+	Capitalize the first word of a sentence	Mepụta mkpụrụokwu mbụ nke ahịrịokwu
+	Caption	Isi okwu
+	Caption label:	Akara edemede:
+	Caption Numbering	Ọnụọgụ isiokwu
+	Caption text	Ederede edemede
+	Caption:	Nkọwa okwu:
+	Captions	Nkọwa okwu
+	Caret Character	Omume nlekọta
+	Case changes	Mgbanwe ikpe
+	Cases	Okwu
+	Cases (Three Conditions)	Ọnọdụ (Ọnọdụ atọ)
+	Cases (Two Conditions)	Okwu (ọnọdụ abụọ)
+	Cases and Stacks	Okwu na ngwugwu
+	Catalog	Katalọgụ
+	Categories	Otu
+	Categories:	Otu:
+	Category	Otu
+	Category {n}	Otu {n}
+	Category:	Otu:
+	Category…	Otu…
+	Ceiling	Ụlọ elu
+	Cell	Cell
+	Cell Margins	Oke cell
+	Cell margins	Oke cell
+	Cell Options	Nhọrọ cell
+	Cell Size	Nha cell
+	Cell\nMargins	Cell\nMargins
+	Center	Ebe etiti
+	Centered	Gbadoro anya
+	Centered as Group	Ebe etiti dị ka otu
+	Centimeters	Centimita
+	Change	Gbanwee
+	Change Case	Gbanwee ikpe
+	Change Chart Type	Gbanwee Ụdị chaatị
+	Change Colors	Gbanwee agba
+	Change in y over change in x	Gbanwee na y karịa mgbanwe na x
+	Change Layout	Gbanwee okirikiri nhọrọ ukwuu
+	Change List Level	Gbanwee Ọkwa Ndepụta
+	Change Password…	Gbanwee okwuntughe…
+	Change Picture	Gbanwee Foto
+	Change Picture…	Gbanwee foto…
+	Change Shape	Gbanwee ọdịdị
+	Change Structure	Gbanwee Ọdịdị
+	Change to Display	Gbanwee gaa na Ngosipụta
+	Change to Inline	Gbanwee na Inline
+	Change to Level 1	Gbanwee n'ọkwa 1
+	Change to Level 2	Gbanwee n'ọkwa 2
+	Change to Level 3	Gbanwee n'ọkwa 3
+	Change to Level 4	Gbanwee n'ọkwa 4
+	Change to Level 5	Gbanwee n'ọkwa 5
+	Change to Level 6	Gbanwee n'ọkwa 6
+	Change to Level 7	Gbanwee n'ọkwa 7
+	Change to Level 8	Gbanwee n'ọkwa 8
+	Change to Level 9	Gbanwee n'ọkwa 9
+	Change\nChart Type	Gbanwee\nỤdị eserese
+	Change\nColors	Gbanwee\nAgba
+	Changed	Gbanwee
+	Changed lines:	Ahịrị gbanwere:
+	Changes	Mgbanwe
+	Changes with highlighting	Mgbanwe site na ime ka ọ pụta ìhè
+	Changes without highlighting	Mgbanwe na-enweghị pụta ìhè
+	Chapter in a book	Isi n'akwụkwọ
+	Chapters begin at:	Isiakwụkwọ na-amalite na:
+	Character	agwa
+	Character Border	Oke agwa
+	Character code:	Koodu njirimara:
+	Character in Range	Omume dị na Range
+	Character level	Ọkwa agwa
+	Character Position	Ọnọdụ agwa
+	Character Scale	Ọnụ ọgụgụ agwa
+	Character Shading	Ngosipụta agwa
+	Character Spacing	Ogologo agwa
+	Character spacing	Oghere agwa
+	Character style	Ụdị agwa
+	Characters	Ndị agwa
+	Characters (no spaces)	Ihe odide (enweghị oghere)
+	Characters (with spaces)	Ndị agwa (nwere oghere)
+	Characters per line:	Ụmụ agwa kwa ahịrị:
+	Chart	Chart
+	Chart Design	Nhazi eserese
+	Chart Layouts	Nhazi eserese
+	Chart Title	Aha eserese
+	Check	Lelee
+	Check Accessibility	Lelee nnweta
+	Check Box Content Control	Lelee njikwa ọdịnaya igbe
+	Check Compatibility	Lelee ndakọrịta
+	Check Errors…	Lelee mperi…
+	Check for Errors	Lelee maka mperi
+	Check Spelling as You Type	Lelee mkpụrụ okwu ka ị na-apị
+	Check spelling as you type	Lelee mkpoputa ka ị na-apịpị
+	Check\nAccessibility	Lelee\nNnweta
+	Checked styles are allowed:	A na-anabata ụdị enyochala:
+	Checked symbol	Akara atụnyere
+	Chevron Down	Chevron ala
+	Chevron Up	Chevron Up
+	Chicago	Chicago
+	Chinese (Simplified)	Chinese (Adị mfe)
+	Chinese (Traditional)	Chinese (omenala)
+	Choose a command	Họrọ iwu
+	Choose a shortcut	Họrọ ụzọ mkpirisi
+	Choose List Item	Họrọ Ihe Ndepụta
+	Choose the sheet that holds the recipients.	Họrọ mpempe akwụkwọ na-ejide ndị nnata.
+	Circle	Gburugburu
+	Circle area from its radius	Mpaghara gburugburu site na radius ya
+	Circled Dot	Ntụpọ okirikiri
+	Circled Plus	Circled Plus
+	Circled Times	Oge okirikiri
+	Citation marked.	Akanyere ngụsị akwụkwọ.
+	Citation Style	Ụdị nrụtụ aka
+	Citations	Nkọwapụta
+	Citations & Bibliography	Nkọwapụta & Akwụkwọ edemede
+	City	Obodo
+	Clear	Kpochapụ
+	Clear All	Kpochapụ ihe niile
+	Clear All Formatting	Kpochapụ nhazi niile
+	Clear Character Formatting	Kpochapụ nhazi agwa
+	Clear Character Style	Kpochapụ Ụdị agwa
+	Clear Formatting Level	Kpochapụ ọkwa nhazi
+	Clear Paragraph Formatting	Kpochapụ nhazi paragraf
+	Click a border between two cells to merge them. Esc stops.	Pịa oke n'etiti sel abụọ iji jikọta ha. Esc kwụsịrị.
+	Click an item to paste it.	Pịa otu ihe ka mado ya.
+	Click level to modify:	Pịa ọkwa iji gbanwee:
+	Click the empty text box the text should continue in (Esc cancels)	Pịa igbe ederede efu ederede kwesịrị ịga n'ihu na (Esc kagburu)
+	Click to switch back to inserting	Pịa ka ịgbanwee laghachi na ntinye
+	Clipboard	Klipbọọdụ
+	Clipboard Contents	Ọdịnaya Clipbọọdụ
+	Clipboard Items	Ihe klipbọọdụ
+	Clipboard Pane	Mpempe mpempe akwụkwọ
+	Close	Mechie
+	Close Equation	Mechie nha nha
+	Close Header and Footer	Mechie nkụnye eji isi mee na n'okpuru
+	Close Outline View	Mechie Nlele Nlebanya
+	Close Outline\nView	Mechie ihe ngosi\nView
+	Close Reviewing Pane	Mechie Pane Nlele
+	Clustered Bar	Ogwe gbakọtara
+	Clustered Column	Kọlụm gbakọtara
+	Col #:	Kọl #:
+	Collapse	daa
+	Collapse Selection	daa Nhọrọ
+	Collapse the Ribbon	Kwatuo Ribbon ahụ
+	Collate copies	Kpọkọtanụ akwụkwọ
+	Collect entries from:	Anakọta ndenye site na:
+	Colon Equal	Colon Haha
+	Color	Agba
+	Color model:	Ụdị agba:
+	Color only	Naanị agba
+	Color:	Agba:
+	Color: {color}	Agba: {color}
+	Colorful	Nke mara mma
+	Colors	Agba
+	Colors:	Agba:
+	Column	Ogidi
+	Column Break	Nkwụsị nke kọlụm
+	Column Selection	Nhọrọ kọlụm
+	Column selection: the arrow keys extend the block, Esc ends it	Nhọrọ kọlụm: igodo akụ na-agbatị ngọngọ, Esc mechie ya
+	Column width	Obosara kọlụm
+	Column:	Ogidi:
+	Columns	Ogidi
+	Columns:	Ogidi:
+	Combine	Jikọta
+	Combine Documents	Jikọta akwụkwọ
+	Combo Box Content Control	Njikwa Ọdịnaya Ngwakọta Igbe
+	Commands	Iwu
+	Commands:	Iwu:
+	Comment	Ikwu
+	Comments	Okwu
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Comments n'akụkụ ibe ọ bụla na esoro mgbanwe na PDFs, mbipụta na oyiyi; ndepụta nkọwa na njedebe nke ibe weebụ, Markdown na ederede.
+	Comments on version	Okwu na ụdị
+	Comments Pane	Okwu Pane
+	Commits	Na-ekwe
+	Common Accent Objects	Ihe ngwoolu nkịtị
+	Common Brackets	Brackets nkịtị
+	Common Fractions	Akụkụ ndị nkịtị
+	Common Functions	Ọrụ ndị nkịtị
+	Common Large Operators	Ndị na-arụ ọrụ buru ibu
+	Common Operator Structures	Ụdị ndị na-arụ ọrụ nkịtị
+	Common Operators	Ndị na-arụ ọrụ nkịtị
+	Common Radicals	Radicals nkịtị
+	Common Subscripts and Superscripts	Ndebanye aha nkịtị na akwụkwọ edemede
+	Communication	Nkwukọrịta
+	Compact	Kọmpat
+	Company	Ụlọ ọrụ
+	Compare	Tulee
+	Compare Documents	Tulee akwụkwọ
+	Compare to	Tulee ya
+	Compared: {changes} changes	Tụnyere: mgbanwe {changes}
+	Comparing with another file needs the desktop app.	Tụnyere faịlụ ọzọ chọrọ ngwa desktọpụ.
+	Comparison	Ntụnyere
+	Comparison settings	Ntọala atụnyere
+	Compatibility mode: {version}	Ụdị ndakọrịta: {version}
+	Compatibility Options	Nhọrọ ndakọrịta
+	Compatibility Options…	Nhọrọ ndakọrịta…
+	Compress Pictures	Mkpakọ Foto
+	Compress punctuation at the start of a line	Tinye akara akara na mmalite nke ahịrị
+	Condensed	Ejikọtara ya
+	Conference	Nzukọ
+	Conference paper	Akwụkwọ ogbako
+	CONFIDENTIAL	Nzuzo
+	Confirm password:	Kwenye paswọọdụ:
+	Connect Shapes	Jikọọ Ụdị
+	Constitutional Provisions	Usoro iwu
+	Container Title	Aha akpa
+	Contains	Nwere
+	Content Control at Selection	Njikwa ọdịnaya na Nhọrọ
+	Content Control Properties	Njirimara njikwa ọdịnaya
+	Contents can't be edited	Enweghị ike idezi ọdịnaya
+	Context	Okwu
+	Contextual	Ihe gbasara okwu
+	Continuous	Na-aga n'ihu
+	Continuous numbering	Ọnụọgụ na-aga n'ihu
+	Contour Integral	Contour Integral
+	Contour Integral with Limits	Contour Integral nwere oke
+	Contour Integral with Stacked Limits	Contour Integral nwere oke chịkọbara
+	Contour Integrals	Contour Integrals
+	Contrast:	Ntughari:
+	Contributors	Ndị ntinye aka
+	Controls	Njikwa
+	Conversions	Ntughari
+	Convert	Tugharia
+	Convert between built-up and linear form	Tụgharịa n'etiti ụdị arụnyere na ahịrị
+	Convert Notes	Tugharia ndetu
+	Convert Permanently	Tụgharịa na-adịgide adịgide
+	Convert Text to Table	Tụgharịa ederede gaa na tebụl
+	Convert Text to Table…	Tụgharịa ederede gaa na tebụl…
+	Convert to Arabic Digits	Tụgharịa gaa na ọnụọgụ Arabik
+	Convert to Shapes	Tụgharịa ka ọ bụrụ Ụdị
+	Convert to Text	Tụgharịa gaa na Ederede
+	Convert to Thai Digits	Tụgharịa ka ọ bụrụ ọnụọgụ Thai
+	Copies	Ụdị
+	Coproduct	Ngwaahịa
+	Coproduct with Limits	Ngwaahịa nwere oke
+	Coproduct with Lower Limit	Ngwaahịa nwere obere oke
+	Coproduct with Subscript-Superscript Limits	Ngwaahịa nwere oke ndebanye aha-Superscript
+	Copy	Detuo
+	Copy Formatting	Detuo Nhazi
+	Copy of the text a bookmark marks	Detuo ederede a akara ibe edokọbara
+	Copy Styles	Detuo Ụdị
+	Copy Text	Detuo Ederede
+	Copy to where?	Detuo n'ebe ebe?
+	Copyright	Nwebiisinka
+	Copyright Sign	Akara ikike nwebisiinka
+	Corrections	Mmezi
+	Cosecant Function	Ọrụ Cosecant
+	Cosine 2x	Kosin 2x
+	Cosine Function	Ọrụ Cosine
+	Cotangent Function	arụrụ arụrụ arụ
+	Couldn't add {name}: {reason}	Enweghị ike itinye {name}: {reason}
+	Couldn't download the picture: {reason}	Enweghị ike ibudata foto a: {reason}
+	Couldn't download {name}: {error}	Enweghị ike ibudata {name}: {error}
+	Couldn't get the add-in list: {reason}	Enweghị ike ịnweta ndepụta ntinye: {reason}
+	Couldn't make Doc4Me the default: {error}	Enweghị ike ịme Doc4Me ka ọ bụrụ ndabara: {error}
+	Couldn't open {path}: {error}	Enweghị ike imepe {path}: {error}
+	Couldn't search: {reason}	Enweghị ike ịchọ: {reason}
+	Couldn't translate: {reason}	Enweghị ike ịtụgharị asụsụ: {reason}
+	Count by:	gua site:
+	Count words in text boxes and notes	Gụọ okwu n'igbe ederede na ndetu
+	Country	Obodo
+	Courtesy Title	Aha nkwanye ugwu
+	Cover Page	Ibe mkpuchi
+	Craft	Nkà
+	Create	Mepụta
+	Create a Style	Mepụta Ụdị
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Mepụta ndepụta mmekọrịta nke akwụkwọ gị.\n\nỌ bụ ụzọ dị mma iji chekwaa ebe ị nọ ma ọ bụ megharịa ọdịnaya gị ngwa ngwa.\n\n Iji malite, gaa na taabụ Home wee tinye ụdị isi na isiokwu dị na akwụkwọ gị.
+	Create Data Source…	Mepụta Isi mmalite Data…
+	Create Graphic	Mepụta eserese
+	Create Header Source	Mepụta Isi mmalite nkụnye eji isi mee
+	Create Link	Mepụta njikọ
+	Create New Style	Mepụta Ụdị Ọhụrụ
+	Create Source	Mepụta Isi Iyi
+	Create…	Mepụta…
+	Crop	Kpoo ihe ubi
+	Cross-reference	Ntụtụ aka
+	Cross-reference:	Ntụtụ aka:
+	Cube Root	Mgbọrọgwụ Cube
+	Current	Ugbu a
+	Current - Linear	Ugbu a - Linear
+	Current - Professional	Ugbu a - Ọkachamara
+	Current keyboard settings	Ntọala ahụigodo dị ugbu a
+	Current page	Ibe dị ugbu a
+	Current Position	Ọnọdụ dị ugbu a
+	Current record	Ndekọ ugbu a
+	Current style: {style}	Ụdị dị ugbu a: {style}
+	Curved Arrow Connector	Njikọ akụ agbagọ
+	Curved Connector	Njikọ eriri
+	Custom	Omenala
+	Custom dictionary	Akwụkwọ ọkọwa okwu omenala
+	Custom Margins…	Oke omenala…
+	Custom mark:	Akara omenala:
+	Custom range	Omenala nso
+	Custom Table of Contents	Omenala okpokoro ọdịnaya
+	Custom Table of Contents…	Tebụlụ ọdịnaya omenala…
+	Custom Watermark	Omenala Watermark
+	Custom Watermark…	Watermark omenala…
+	Customize	Hazie
+	Customize Keyboard	Hazie ahụigodo
+	Customize Quick Access Toolbar	Hazie ogwe ngwaọrụ ịnweta ngwa ngwa
+	Customize Quick Access Toolbar…	Hazie ogwe ngwaọrụ ịnweta ngwa ngwa…
+	Customize Ribbon	Hazie Ribbon
+	Customize the Ribbon…	Hazie Ribbon…
+	Customize…	Hazie…
+	Cut	Bee
+	Cut, copy, and paste	Bee, detuo, na mado
+	Cycle	okirikiri
+	Czech	Czech
+	Danish	Danish
+	Dark	Ọchịchịrị
+	Dark Mode	Ọnọdụ gbara ọchịchịrị
+	Dark page (white text on black)	Ibe gbara ọchịchịrị (ederede ọcha na ojii)
+	Dark with Shadow	Ọchịchịrị na onyinyo
+	Darkroom	Ime ụlọ gbara ọchịchịrị
+	Dashed	Akwụsịla
+	Data	Data
+	Data Labels	Akara data
+	Data source:	Ebe data:
+	Date	Ụbọchị
+	Date & Time	Ụbọchị & Oge
+	Date and Time	Ụbọchị na Oge
+	Date format	Ụdị ụbọchị
+	Date formats:	Ụdị ụbọchị:
+	Date Picker Content Control	Njikwa ọdịnaya akara ụbọchị
+	Day	Ụbọchị
+	Decimal	Decimal
+	Decorative objects only add visual interest: screen readers skip them.	Ihe ịchọ mma na-agbakwunye mmasị anya: ndị na-agụ ihuenyo na-amapụ ha.
+	Decrease Font Size	Wedata nha mkpụrụedemede
+	Decrease Indent	Wedata ntinye
+	Default	Ọdabara
+	Default Paragraph Font	Font Paragraf
+	Default tab stops:	Taabụ ndabara na-akwụsị:
+	Define New Bullet	Kọwaa mgbo ọhụrụ
+	Define New Multilevel List	Kọwaa ndepụta ọtụtụ ọkwa ọhụrụ
+	Define New Multilevel List…	Kọwaa ndepụta ọtụtụ ọkwa ọhụrụ…
+	Define New Number Format	Kọwaa Ụdị Nọmba Ọhụrụ
+	Deflate	Deflate
+	Delete	Hichapụ
+	Delete Back in Equation	Hichapụ azụ na nha nha
+	Delete Cells	Hichapụ Selụ
+	Delete Clipboard Item	Hichapụ ihe Klipbọọdụ
+	Delete Columns	Hichapụ kọlụm
+	Delete Comment	Hichapụ asịsa
+	Delete in Equation	Hichapụ na nha nha
+	Delete Label	Hichapụ akara
+	Delete Next Word	Hichapụ Okwu na-abịa
+	Delete Previous Word	Hichapụ Okwu gara aga
+	Delete Rows	Hichapụ ahịrị
+	Delete Selected Ink	Hichapụ ink ahọpụtara
+	Delete Style	Hichapụ Ụdị
+	Delete Table	Hichapụ tebụl
+	Delete Table Style	Hichapụ Ụdị tebụl
+	Deleted	ehichapụ
+	Deletions:	ihichapụ:
+	Delivery address:	Adreesị nnyefe:
+	Delta Equal To	Delta Ha nhata
+	Delta over arrow	Delta n'elu akụ
+	Demote	Wetuo ala
+	Demote to Body Text	Detuo na Ederede Ahụ
+	Derivative as a limit	Mwepụta dị ka oke
+	Descending	Na-arịda
+	Describe what this object shows, for people who can't see it.	Kọwaa ihe ihe a na-egosi, maka ndị na-enweghị ike ịhụ ya.
+	Describe what this table shows, for people who can't see it.	Kọwaa ihe tebụl a na-egosi, maka ndị na-enweghị ike ịhụ ya.
+	Description:	Nkọwa:
+	Design	Nhazi
+	Design Mode	Ụdị imewe
+	Detach Template	Wepụ Template
+	Detect language automatically	Chọpụta asụsụ na-akpaghị aka
+	Developer	Onye nrụpụta
+	development build	mmepe ewu
+	Diagonal	Diagonal
+	Diagonal Dots	Ntụpọ diagonal
+	Diamond	diamond
+	Dictate	Kpebie
+	Dictation isn't available here.	Nkọwa okwu adịghị ebe a.
+	Dictation stopped.	Akwụsịla nkwubi okwu.
+	Dictation stopped: {reason}	Nkwụsịtụ aka: {reason}
+	Different First Page	Ibe Mbụ dị iche
+	Different Odd & Even Pages	Ibe dị iche iche & ọbụna ibe
+	Differential	Ọdịiche
+	Differential theta	Theta dị iche iche
+	Differential x	Ihe dị iche x
+	Differential y	Ọdịiche y
+	Differentials	Ihe dị iche iche
+	Direct formatting	Nhazi ozugbo
+	Direction:	Ntuziaka:
+	Directory	Akwụkwọ ndekọ aha
+	Display	Ngosipụta
+	Display for Review	Ngosipụta maka nyocha
+	Display gridlines on screen	Gosi ahịrị grid na ihuenyo
+	Display name	Aha ngosi
+	Display text	Gosipụta ederede
+	Distance from surrounding text	Anya site na ederede gbara ya gburugburu
+	Distribute Columns	Kesaa Ogidi
+	Distribute letters	Kesaa mkpụrụedemede
+	Distribute Rows	Kesaa ahịrị
+	Distribute spacing	Kesaa oghere
+	Distributed	Kesara
+	Do Not Check Spelling or Grammar	Atulela mkpoputa ma ọ bụ ụtọ asụsụ
+	Do not check spelling or grammar	Elelela mkpoputa ma ọ bụ ụtọ asụsụ
+	DO NOT COPY	Eṅomila
+	Do Not Show in TOC	Egosiputala na TOC
+	Do you want to save changes to {name}?	Ịchọrọ ịchekwa mgbanwe na {name}?
+	Doc4Me	Doc4m
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me tinye-ins bụ ngwugwu macros efu sitere na katalọgụ ntinye Doc4Me. Ha nwere ike dezie akwụkwọ naanị.
+	Doc4Me is now the default app for Word documents.	Doc4Me bụ ngwa ndabara maka akwụkwọ Okwu.
+	Document	Akwụkwọ
+	Document End	Ọgwụgwụ akwụkwọ
+	Document Formatting	Nhazi akwụkwọ
+	Document Grid	Grid akwụkwọ
+	Document Information	Ozi akwụkwọ
+	Document Property	Ngwongwo akwụkwọ
+	Document Start	Mmalite akwụkwọ
+	Document template:	Ụdị akwụkwọ:
+	Document Text	Ederede akwụkwọ
+	Document Title	Aha akwụkwọ
+	Document1	Akwụkwọ1
+	Document\nPreferences	Document\n Mmasị
+	Documents	Akwụkwọ
+	Documents you open will show up here.	Akwụkwọ ị mepere ga-egosi ebe a.
+	Does not contain	Enweghị ya
+	DOI	DOI
+	Don't add space between paragraphs of the same style	Etinyekwala oghere n'etiti paragraf nke otu ụdị
+	Don't capitalize after:	Ejila nnukwu ego emechaa:
+	Don't hyphenate	Ejila nkwuchi okwu
+	Don't print blank lines when data fields are empty	Ebipụtala ahịrị oghere mgbe mpaghara data tọgbọrọ chakoo
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Agụkwala akwụkwọ Zotero, Mendeley ma ọ bụ EndNote na akwụkwọ ọgụgụ
+	Don't Save	Echekwala
+	Don't use HTML paragraph auto spacing	Ejila HTML paragraf akpaaka oghere
+	Dot	Ntụpọ
+	Dot dash	Ntụpọ ntụpọ
+	Dot-dash	ntụpọ ntụpọ
+	Dots	Ntụpọ
+	Dotted	Ntụpọ
+	Double	Ugboro abụọ
+	Double Bar	Ogwe okpukpu abụọ
+	Double Closing Quote	Okwu mmechi ugboro abụọ
+	Double Dot	Ntụpọ okpukpu abụọ
+	Double Integral	Ngwakọta okpukpu abụọ
+	Double Integral with Limits	Ngwakọta okpukpu abụọ nwere oke
+	Double Integral with Stacked Limits	Mgbakwunye okpukpu abụọ nwere oke echekwabara
+	Double Left Arrow with Text Above	Ụka akaekpe okpukpu abụọ nwere ederede n'elu
+	Double Left Arrow with Text Below	Ụka akaekpe okpukpu abụọ nwere ederede n'okpuru
+	Double Left Right Arrow with Text Above	Ụka aka ekpe okpukpu abụọ nwere ederede n'elu
+	Double Left Right Arrow with Text Below	Ụka aka ekpe okpukpu abụọ nwere ederede n'okpuru
+	Double Opening Quote	Okwu mmeghe ugboro abụọ
+	Double Right Arrow with Text Above	Ụka aka nri okpukpu abụọ nwere ederede n'elu
+	Double Right Arrow with Text Below	Ụka aka nri okpukpu abụọ nwere ederede n'okpuru
+	Double Spacing	Oghere abụọ
+	Double Square Brackets	Mpekere Square Ugboro abụọ
+	Double Strikethrough	Mkpịsị aka ugboro abụọ
+	Double strikethrough	Ntugharị ugboro abụọ
+	Double summation	Nchịkọta ugboro abụọ
+	Double Underline	N'okpuru akara ugboro abụọ
+	Double Vertical Bars	Ogwe kwụ ọtọ okpukpu abụọ
+	Doughnut	Donut
+	Down	Ala
+	Downloading the speech model ({mb} MB, once)…	Na-ebudata ụdị okwu ({mb} MB, otu ugboro)…
+	Downloading…	Na-ebudata…
+	DRAFT	DRAFT
+	Draft	Draft
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Dọrọ akụkụ anọ ka ise tebụl, ma ọ bụ ahịrị gafee sel iji kewaa ha. Esc kwụsịrị.
+	Draw	See
+	Draw Ink	See ink
+	Draw Table	See okpokoro
+	Draw\nTable	Draw\nTable
+	Drawing Canvas	Canvas na-ese
+	Drawing Grid	Grid osise
+	Drawing Tools	Ngwa osise
+	Drawing\nCanvas	Ihe osise\nCanvas
+	Drop Cap	Wepu okpu
+	Drop cap	Wepu okpu
+	Drop-Down List Content Control	Njikwa ọdịnaya ndetu-ala
+	Drops all formatting and pastes plain text.	Na-atụba nhazi niile na mado ederede dị larịị.
+	Dutch	Dutch
+	E-mail Messages	Ozi email
+	Edit Category	Dezie udi
+	Edit Comment	Dezie nkọwa
+	Edit Data	Dezie data
+	Edit Document	Dezie akwụkwọ
+	Edit Equation	Dezie nha nha
+	Edit Field Code	Dezie Koodu Ubi
+	Edit Field…	Dezie Ubi…
+	Edit Footer	Dezie n'okpuru
+	Edit Header	Dezie nkụnye eji isi mee
+	Edit Individual Documents…	Dezie akwụkwọ nkeonwe…
+	Edit Items	Dezie ihe
+	Edit Recipient List	Dezie ndepụta nnata
+	Edit Source	Dezie isi mmalite
+	Edit\nData	Dezie\nData
+	Edit\nRecipient List	Dezie\nNdepụta nnata
+	Edited	Edeziri
+	Editing	Na-edezi
+	Editing header/footer	Ndezi nkụnye eji isi mee/ụkwụ
+	Editing in this document is restricted.	Amachibidoro idezi na akwụkwọ a.
+	Editing — edit the document directly	Edezi - dezie akwụkwọ ozugbo
+	Edition	Mbipụta
+	Editor	Onye nchịkọta akụkọ
+	Edit…	Dezie…
+	Effects	Mmetụta
+	Elbow Arrow Connector	Njikọ akụ aka ikiaka
+	Elbow Connector	Njikọ aka aka
+	Ellipsis	Ellipsis
+	Em Dash	Em Dash
+	Em Space	Em Oghere
+	Email address (optional)	Adreesị ozi-e (nhọrọ)
+	Emboss	Embos
+	Emphasis	Nkwado
+	Empty Matrices	Matrices efu
+	En Dash	Na Dash
+	En Space	En Space
+	Enclose Characters	Tinye agwa
+	Enclosure	Mkpuchi
+	Encrypt with Password	Jiri okwuntughe zoo zoo
+	Encrypt with Password…	Jiri okwuntughe zoo zoo…
+	End of document	Ọgwụgwụ akwụkwọ
+	End of section	Ọgwụgwụ nke ngalaba
+	End of Word	Ọgwụgwụ nke Okwu
+	Endnote Reference	Ntuziaka ngwụcha
+	Endnote Text	Ederede ngwụcha
+	Endnotes	Ihe ndetu
+	Endnotes to footnotes	Ihe ngwụcha na ndetu ala ala peeji
+	English	Bekee
+	English (United Kingdom)	Bekee (United Kingdom)
+	English (United States)	Bekee (United States)
+	Engrave	Kanye
+	Enlarge symbol	Mewanye akara
+	Enter formatting for number:	Tinye nhazi maka nọmba:
+	Enter in Equation	Banye na nha nha
+	Enter page number:	Tinye nọmba ibe:
+	Enter the web address or embed code of an online video:	Tinye adreesị webụ ma ọ bụ koodu ntinye nke vidiyo ịntanetị:
+	Entry marked.	Akara akara ntinye.
+	Entry:	Ntinye
+	Envelope #10   4.12" × 9.50"	Envelopu #10 4.12" × 9.50"
+	Envelope Address	Adreesị envelopu
+	Envelope DL   4.33" × 8.66"	Envelopu DL 4.33" × 8.66"
+	Envelope Return	Nlaghachi nke envelopu
+	Envelope size:	Nha envelopu:
+	Envelopes	Envelopu
+	Equal by Definition	Haha site na nkọwa
+	Equal column width	Obosara kọlụm nhata
+	Equal Equal	Haha nhata
+	Equal to	Ha nhata
+	Equals:	Hakọrọ:
+	Equation	Nhata
+	Equation Gallery	Osisi nha nhata
+	Equation Info	Ozi nhatanha
+	Equation Number	Nọmba nha
+	Equation Options	Nhọrọ nha nhata
+	Erase Ink	Hichapụ Ink
+	Eraser	Nchicha
+	Errors ({n})	Njehie ({n})
+	Estonian	Estonia
+	Euler's identity	njirimara Euler
+	Even Page	Ọbụna Ibe
+	Even pages only	Ọbụna ibe naanị
+	Every change is recorded as a tracked change.	A na-edekọ mgbanwe ọ bụla dị ka mgbanwe edoro anya.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Iwu ọ bụla dị maka scripts na ndị nnọchite AI: gbaa 'doc4me-cli mcp' maka ihe nkesa MCP, ma ọ bụ malite ngwa ahụ na '--control <port>' maka ọwa njikwa JSON.
+	Every field needs a name.	Ala ọ bụla chọrọ aha.
+	Every font this document uses is installed.	A na-etinye mkpụrụedemede ọ bụla akwụkwọ a na-eji.
+	Everyone	Onye ọ bụla
+	Exactly	Kpọmkwem
+	Exactly {n}	Kpọmkwem {n}
+	Example: {sample}	Ọmụmaatụ: {sample}
+	Exceptions (optional)	Ewepu (nhọrọ)
+	Exceptions…	Ewezuga…
+	Executive   7.25" × 10.50"	Onye isi oche 7.25" × 10.50"
+	Exit	Wepụ
+	Expand	Gbasaa
+	Expand or Collapse Heading	Gbasaa ma ọ bụ daa isi
+	Expanded	Gbasaa
+	Exponential	Exponential
+	Exponential series	Usoro nkọwa
+	Export	Mbupụ
+	Export a copy to share (PDF, Word document)	Bupụ otu ka ọ kesaa (PDF, akwụkwọ Okwu)
+	Export Page as JPEG	Mbupụ ibe dị ka JPEG
+	Export Page as PNG	Mbupụ ibe dị ka PNG
+	Export PDF	Mbupụ PDF
+	Exported {path}	Ebupuru {path}
+	Expression	Nkwuputa
+	Extend Selection	Gbatịa Nhọrọ
+	Extend Selection by Units	Gbatịa Nhọrọ site na nkeji
+	Extra space	Oghere ọzọ
+	Extra spaces between words.	Oghere ndị ọzọ n'etiti okwu.
+	Field	Ubi
+	Field Click	Pịa ubi
+	Field code:	Koodu mpaghara:
+	Field Codes	Koodu mpaghara
+	Field codes:	Koodu mpaghara:
+	Field name	Aha ubi
+	Field name:	Aha ubi:
+	Field names must be different.	Aha mpaghara ga-adị iche.
+	Field names:	Aha mpaghara:
+	Field properties	Njirimara ubi
+	Field:	Ubi:
+	Fields	Ubi
+	Fields to insert:	Ogige itinye:
+	Fields:	Ubi:
+	Field…	Ubi…
+	Figure	Onyonyo
+	File	Faịlụ
+	File name:	Aha faịlụ:
+	Fill	Jupụta
+	Fill & Line	Jupụta & Ahịrị
+	Fill color:	Jupụta agba:
+	Fill:	Jupụta:
+	Filling in forms	Na-ejuputa ụdị
+	Film	Ihe nkiri
+	Filter and Sort	Nyo na hazie
+	Filter and Sort…	Nzacha ma hazie…
+	Filter Records	Ndekọ nzacha
+	Find	Chọta
+	Find and Replace	Chọta wee dochie
+	Find Next	Chọta Ọzọ
+	Find Next Editable Region	Chọta mpaghara na-esote edezi
+	Find Previous	Chọta Nke gara aga
+	Find Recipient	Chọta onye nnata
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Chọta na-ahọrọ paragraf na-esote gbanwere; Ọjụjụ na-eweghachi nke ahọpụtara azụ ka ọ dị.
+	Find What Expression	Chọta Ihe Okwu
+	Find What Text	Chọta Kedu Ederede
+	Find what:	Chọta ihe:
+	Find →	Chọta →
+	Find:	Chọta:
+	Finish	Mechaa
+	Finish & Merge	Mechaa & Jikota
+	Finish &\nMerge	Mechaa &\nMerge
+	Finished	Emechaala
+	Finnish	Asụsụ Finnish
+	First	Mbụ
+	First Cell in Column	Cell mbụ na kọlụm
+	First Cell in Row	Cell mbụ n'ahịrị
+	First Column	Kọlụm mbụ
+	First commit	Mbu ụzọ mee
+	First line	Ahịrị mbụ
+	First line:	Ahịrị mbụ:
+	First Name	Aha mbụ
+	First row of data contains column headers	Ahịrị mbụ nke data nwere nkụnye eji isi mee kọlụm
+	Fit	Kwesịrị ekwesị
+	Fit text	Ederede dabara adaba
+	Fix Position on Page	Idozi ọnọdụ na ibe
+	Fixed Column Width	Obosara kọlụm etinyere
+	Flip Horizontal	Tụgharịa kwụ ọtọ
+	Flip Vertical	Tụgharịa kwụ ọtọ
+	Floor	Ala
+	Focus	Lekwasị anya
+	Follow number with:	Soro nọmba na:
+	Font	Font
+	Font Color	Agba mkpụrụedemede
+	Font color	Agba mkpụrụedemede
+	Font color:	Agba mkpụrụedemede:
+	Font Dialog	Mkparịta ụka mkpụrụedemede
+	Font not installed	Awụnyeghị mkpụrụedemede
+	Font Size	Ogo mkpụrụedemede
+	Font Substitution	Mgbanwe Font
+	Font Substitution…	Mgbanwe mkpụrụedemede…
+	Font:	Font:
+	Font: {font}	Ihe odide: {font}
+	Fonts	Ụdị mkpụrụedemede
+	Font…	Font…
+	Footer	Onye n'okpuru
+	Footnote and Endnote	Ihe odide ala ala peeji na ngwụcha ngwụcha
+	Footnote Reference	Ntụtụ aka n'okpuru ala
+	Footnote Text	Ederede ederede
+	Footnotes	Ihe odide ala ala peeji
+	Footnotes and endnotes	Ihe odide ala ala peeji na njedebe
+	Footnotes to endnotes	Ihe odide ala ala na ndetu ngwụcha
+	Form Letters	Ụdị akwụkwọ ozi
+	Format	Usoro
+	Format Page Numbers	Hazie nọmba ibe
+	Format Page Numbers…	Hazie nọmba ibe…
+	Format Painter	Ọkpụkpọ ihe osise
+	Format Picture	Hazie Foto
+	Format Shape	Ụdị Ụdị
+	Format:	Usoro:
+	Formatted	Haziri
+	Formatted Text	Ederede ahaziri
+	Formatting	Nhazi
+	Formatting at Selection	Ịhazi na Nhọrọ
+	Formatting completed. You can now:	Emechara nhazi. Ị nwere ike ugbu a:
+	Formatting exceptions	Na-emepụta ewepu
+	Formatting marks	Ịhazi akara
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	A na-atụnyere nhazi nhazi, mgbanwe ikpe, oghere ọcha na tebụl; A na-edobe ntọala ndị ọzọ maka emechaa.
+	Formula	Usoro
+	Forward	Gawa n'ihu
+	Fraction	Mpekere
+	Fractions (1/2) as fraction characters (½)	Iberibe (1/2) dị ka mkpụrụedemede irighiri (½)
+	French	French
+	French (France)	French (France)
+	From	Site na
+	From text:	Site na ederede:
+	from Unicode (hex)	sitere na Unicode (hex)
+	From:	Site na:
+	Full page of the same label	Ibe zuru ezu nke otu akara
+	Function	Ọrụ
+	Functions	Ọrụ
+	Gallery	Ụlọ ihe ngosi nka
+	GB/T 7714	GB/T 7714
+	General	Izugbe
+	Geometry	Geometry
+	German	German
+	German (Germany)	German (Germany)
+	Get Add-ins	Nweta mgbakwunye
+	Get Data	Nweta data
+	Get Data…	Nweta data…
+	Getting ready…	Na-akwado…
+	Glow	Gwuo ọkụ
+	Glow Colors	Agba agba
+	Go Back	Laghachi azụ
+	Go To	Gaa na
+	Go to	Gaa na
+	Go To…	Gaa na…
+	Good afternoon	N'ehihie ọma
+	Good evening	Mgbede ọma
+	Good morning	Ututu oma
+	GOST (name sort)	GOST (ụdị aha)
+	GOST (title sort)	GOST (ụdị aha)
+	Grab bag	Jide akpa
+	Grammar	Ụtọ asụsụ
+	Grammar Settings	Ntọala ụtọ asụsụ
+	Graphic	Eserese
+	Grave	Ili
+	Greater than	Kariri
+	Greater than or equal	Karịrị ma ọ bụ nhata
+	Greek	Grik
+	Greek Letters	Akwụkwọ ozi Greek
+	Green:	Akwụkwọ ndụ akwụkwọ ndụ:
+	Greeting Line	Ahịrị ekele
+	Greeting\nLine	Ekele\nLine
+	Grid Settings	Ntọala Grid
+	Grid Table 1 Light	Okpokoro Grid 1 Ìhè
+	Grid Table 4 – Blue	Grid okpokoro 4 - Blue
+	Grid Table 4 – Green	Grid okpokoro 4 - Green
+	Grid Table 4 – Orange	Grid okpokoro 4 - oroma
+	Grid Table 4 – Purple	Grid okpokoro 4 - Purple
+	Gridlines	Gridline
+	Group	Otu
+	Grouping Character Above	Ịchịkọta agwa n'elu
+	Grouping Character Below	Ịchịkọta agwa N'okpuru
+	Grow Font 1 Point	Too Font 1 Point
+	H:	H:
+	Hanging Indent	Indent kwụgidere
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	Okpu
+	Header	nkụnye eji isi mee
+	Header & Footer	nkụnye eji isi mee & n'okpuru
+	Header Options	Nhọrọ nkụnye eji isi mee
+	Header Options:	Nhọrọ nkụnye eji isi mee:
+	Header Row	Ahịrị nkụnye eji isi mee
+	Header source: {file} (the next data source opened here takes its field names)	Isi mmalite: {file} (isi iyi data na-esote mepere ebe a na-ewere aha ubi ya)
+	Header/Footer Position	Ọnọdụ nkụnye eji isi mee/ụkwụ
+	Headers and footers	nkụnye eji isi mee na footers
+	Heading 1	Isi nke 1
+	Heading 2	Isi nke 2
+	Heading 3	Isi nke 3
+	Heading styles (levels 1–{n})	Ụdị isi (ọkwa 1–{n})
+	Heading {n}	Isi okwu {n}
+	Headings	Isi okwu
+	Heart	Obi
+	Hebrew	Hibru
+	Height:	Ogologo:
+	Help	Enyemaka
+	Hex:	Hex:
+	Hidden	Zoro ezo
+	Hidden text	Ederede zoro ezo
+	Hide Codes	Zoo Koodu
+	Hide from style lists	Zoo na ndepụta ụdị
+	Hide Ink	Zoo ink
+	Hide White Space	Zoo Oghere Ọcha
+	Hide\nInk	Zoo\nInk
+	Hierarchy	Ọchịchị
+	Highlight	Mee ka ọ pụta ìhè
+	Highlight Changes	Kwupụta Mgbanwe
+	Highlight changes in printed document	Gosipụta mgbanwe n'ime akwụkwọ ebipụta
+	Highlight changes on screen	Kwupụta mgbanwe na ihuenyo
+	Highlight Merge Fields	Gosipụta Ọgbakọ Njikọ
+	Highlight\nMerge Fields	Highlightly\nMerge ubi
+	Highlighter	Highlighter
+	Hindi	Hindi
+	Historical and Discretional	Akụkọ ihe mere eme na ezi uche
+	Hollow	Oghere
+	Home	Ụlọ
+	Home folder	Ebe nchekwa
+	Horizontal	Kehoraizin
+	Horizontal Line	Ahịrị kwụ ọtọ
+	Horizontal spacing:	Oghere kwụ ọtọ:
+	How many pages the whole document has	Kedu ibe akwụkwọ niile nwere
+	How many pages this section has	Kedu peeji nke ngalaba a nwere
+	How many words the document holds	Okwu ole akwụkwọ ahụ nwere
+	HTML Format	Ụdị HTML
+	Hue:	Hue:
+	Hungarian	Asụsụ Hungarian
+	Hyperbolic Cosecant Function	Ọrụ Hyperbolic Cosecant
+	Hyperbolic Cosine Function	Ọrụ Hyperbolic Cosine
+	Hyperbolic Cotangent Function	Ọrụ Mmepụta Hyperbolic
+	Hyperbolic Functions	Ọrụ Hyperbolic
+	Hyperbolic Secant Function	Ọrụ Secant Hyperbolic
+	Hyperbolic Sine Function	Ọrụ Sine Hyperbolic
+	Hyperbolic Tangent Function	Ọrụ Tangent Hyperbolic
+	Hyperlink	Hyperlink
+	Hyphenate at:	Kwuo okwu na:
+	Hyphenate words in CAPS	Tinye okwu n'ime CAPS
+	Hyphenation	Nkwugide okwu
+	Hyphenation Options…	Nhọrọ njigide…
+	Hyphenation zone:	Mpaghara njigide:
+	Hyphens (--) as dashes (—)	Akara akara (--) dị ka akara akara (-)
+	Hypotenuse	Hypotenuse
+	I, II, III, …	I, II, III,…
+	i, ii, iii, …	i, ii, ii,…
+	Icon Color	Agba akara ngosi
+	Icons	Akara ngosi
+	Identity Matrices	Matrices njirimara
+	IEEE	IEEE
+	If…Then…Else	Ọ bụrụ…Mgbe ahụ… ọzọ
+	If…Then…Else…	Ọ bụrụ…Mgbe ahụ… ọzọ…
+	Ignore All	Ileghara ihe niile anya
+	Ignore punctuation characters	Ileghara mkpụrụedemede akara edemede anya
+	Ignore web and file addresses	Ileghara webụ na adreesị faịlụ anya
+	Ignore white-space characters	Ileghara mkpụrụedemede oghere oghere anya
+	Ignore words in capitals	Ileghara okwu n'isi obodo anya
+	Ignore words with numbers	Ileghara okwu nwere ọnụọgụ anya
+	Illustrations	Ihe atụ
+	Immersive	Na-emikpu
+	Immersive Reader	Onye na-agụ ihe omimi
+	Immersive\nReader	Immersive\n Reader
+	In Default apps, choose Doc4Me for the document types you want it to open.	Na ngwa ndapụta, họrọ Doc4Me maka ụdị akwụkwọ ịchọrọ imepe.
+	In equations, typing a name after a backslash replaces it with its symbol.	N'ihe nhata, ịpị aha mgbe azụchara azụ jiri akara ya dochie ya.
+	In Front of Text	N'ihu Ederede
+	In Line with Text	N'ahịrị na ederede
+	Inches	Inches
+	Include label and number	Tinye akara na nọmba
+	Include level number from:	Tinye nọmba ọkwa site na:
+	Include page numbers	Tinye nọmba ibe
+	Increase Font Size	Mụbaa nha mkpụrụedemede
+	Increase Indent	Mụbaa ntinye
+	Indent	Indent
+	Indent from left:	Tinye n'aka ekpe:
+	Indentation	Ntinye
+	Indented	Etinyere
+	Indents	Indents
+	Indents and Spacing	Indents na oghere
+	Index	Index
+	Index and Tables	Index na Tebụl
+	Index Heading	Isi Index
+	Index {n}	Ndekọ {n}
+	Indonesian	Asụsụ Indonesian
+	Inflate	Bulie elu
+	Info	Ozi
+	Initials:	Mmalite:
+	Ink	Ink
+	Ink Equation	Ink nha nhata
+	Ink Replay	Ink Replay
+	Ink to Math	Ink na mgbakọ na mwepụ
+	Ink to Shape	Ink iji kpụrụ ya
+	Ink to\nMath	Ink ka \nMath
+	Ink to\nShape	Ink ruo \nShape
+	Ink\nReplay	Ink\nReplay
+	Inline	Inline
+	Input Format	Usoro ntinye
+	Insert	Fanye
+	Insert a 3D model from a file (.glb, .stl, .obj)	Tinye ụdị 3D site na faịlụ (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	Fanye akara ọhụrụ (Alt+=)
+	Insert Above	Tinye n'elu
+	Insert Below	Fanye N'okpuru
+	Insert Caption	Fanye isiokwu
+	Insert Cells	Fanye mkpụrụ ndụ
+	Insert Chart	Fanye eserese
+	Insert Citation	Fanye ntụaka
+	Insert Columns to the Left	Fanye kọlụm n'aka ekpe
+	Insert Columns to the Right	Fanye kọlụm n'aka nri
+	Insert Data	Fanye data
+	Insert Database	Fanye ọdụ data
+	Insert Database…	Fanye ọdụ data…
+	Insert Date Field	Fanye ogige ụbọchị
+	Insert Endnote	Fanye ndetu njedebe
+	Insert entire column	Fanye kọlụm dum
+	Insert entire row	Fanye ahịrị niile
+	Insert Footnote	Fanye ndetu ala ala
+	Insert Hyperlink	Fanye Hyperlink
+	Insert Index	Fanye Index
+	Insert Left	Fanye aka ekpe
+	Insert LISTNUM Field	Fanye ubi LISTNUM
+	Insert Merge Field	Fanye Ogige Njikọ
+	Insert Merge\nField	Fanye Merge\nUgbo
+	Insert New Equation	Fanye nha nha ọhụrụ
+	Insert one text or another, depending on a field's value.	Fanye otu ederede ma ọ bụ ọzọ, dabere na uru ubi.
+	Insert Page Field	Fanye Ubi ibe
+	Insert Right	Fanye aka nri
+	Insert Rows	Fanye ahịrị
+	Insert Rows Above	Fanye ahịrị n'elu
+	Insert Rows Below	Fanye ahịrị n'okpuru
+	Insert Shapes	Fanye Ụdị
+	Insert SmartArt	Fanye SmartArt
+	Insert Structure	Fanye Ọdịdị
+	Insert Symbol	Fanye akara
+	Insert Table	Fanye tebụl
+	Insert Table of Authorities	Fanye tebụl ndị ọchịchị
+	Insert Table of Figures	Fanye tebụl onyonyo
+	Insert Table…	Fanye tebụl…
+	Insert Time Field	Fanye Ogige Oge
+	Insert Video	Fanye vidiyo
+	Insert\nAbove	Fanye\n n'elu
+	Insert\nCaption	Tinye\nCaption
+	Insert\nCitation	Fanye\nCitation
+	Insert\nFootnote	Fanye\n ndetu ala ala
+	Inserted	Etinyere
+	Insertions and Deletions	Ntinye na nhichapụ
+	Insertions:	Ntinye:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Ntinye: {ins}, ihichapụ: {del}, na-akpali: {moves}, nhazi: {fmt}, nkọwa: {comments}
+	Inside	N'ime
+	Inside Borders	N'ime oke
+	Inside Margin	N'ime Margin
+	Inside:	N'ime:
+	Inspect Document	Nyochaa akwụkwọ
+	Inspect Styles at Selection	Nyochaa Ụdị na Nhọrọ
+	Institution	Ụlọ ọrụ
+	Integral	Mkpokọta
+	Integral of e^(−x²)	Ngwakọta nke e^(-x²)
+	Integral with Limits	Mgbakwunye na oke
+	Integral with Stacked Limits	Mkpịsị aka nwere oke ekpokọtara
+	Integrals	Ngwakọta
+	Intense Emphasis	Mkpesa siri ike
+	Intense Quote	Okwu siri ike
+	Intense Reference	ntụaka siri ike
+	Interface	Interface
+	Interface language	Asụsụ interface
+	Interface language:	Asụsụ ọnụ ụzọ:
+	Interface size:	Nha interface:
+	Interface Theme	Okwu Interface
+	Interface theme:	Isiokwu interface:
+	Interface\nTheme	Interface\n Isiokwu
+	Internet addresses as links	Adreesị ịntanetị dị ka njikọ
+	Intersection	Njikọta
+	Intersection with Limits	Njikọ na Oke
+	Intersection with Lower Limit	Njikọ na Lower Limit
+	Intersection with Subscript-Superscript Limits	Njikọ na oke ndebanye aha-Superscript
+	Inverse Cosecant Function	Inverse Cosecant Ọrụ
+	Inverse Cosine Function	Inverse Cosine Ọrụ
+	Inverse Cotangent Function	Ọrụ Cotangent Inverse
+	Inverse Functions	Ọrụ ntụgharị
+	Inverse Hyperbolic Cosecant Function	Inverse Hyperbolic Cosecant Ọrụ
+	Inverse Hyperbolic Cosine Function	Inverse Hyperbolic Cosine Ọrụ
+	Inverse Hyperbolic Cotangent Function	Inverse Hyperbolic Cotangent Ọrụ
+	Inverse Hyperbolic Functions	Ọrụ Hyperbolic Inverse
+	Inverse Hyperbolic Secant Function	Ọrụ Secant Hyperbolic Inverse
+	Inverse Hyperbolic Sine Function	Inverse Hyperbolic Sine Ọrụ
+	Inverse Hyperbolic Tangent Function	Inverse Hyperbolic Tangent Ọrụ
+	Inverse Secant Function	Inverse Secant Ọrụ
+	Inverse Sine Function	Inverse Sine Ọrụ
+	Inverse Tangent Function	Inverse Tangent Ọrụ
+	Ionosphere	Ionosphere
+	Is blank	Ọ bụ oghere
+	Is not blank	Ọ bụghị oghere
+	ISO 690 (author-date)	ISO 690 (ụbọchị odee)
+	ISO 690 (numerical)	ISO 690 (ọnụọgụ)
+	Issue	Okwu
+	it isn't a picture Doc4Me can read	ọ bụghị foto Doc4Me nwere ike ịgụ
+	Italian	Ịtali
+	Italic	Italic
+	Japanese	Japanese
+	Journal	Akwụkwọ akụkọ
+	Justification	Nkwenye
+	Justification of a display equation	Ngosipụta nke nhata ngosi
+	Justified	Kwesịrị ekwesị
+	Justify	Kpebie
+	Keep Lines Together	Debe Ahịrị ọnụ
+	Keep lines together	Debe ahịrị ọnụ
+	Keep Source Formatting	Debe usoro isi mmalite
+	Keep Text Only	Debe naanị ederede
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Debe paswọọdụ ebe nchekwa: na-enweghị ya ọ nweghị onye, gụnyere Doc4Me, nwere ike imepe akwụkwọ ahụ. Hapụ igbe abụọ ahụ ka ọ tọgbọrọ chakoo ka iwepu paswọọdụ.
+	Keep with Next	Nọgide na-esote
+	Keep with next	Nọgide na-esote
+	Keeps the fonts and formatting of the copied text.	Na-edobe mkpụrụedemede na nhazi nke ederede e depụtaghachiri.
+	Kerning for fonts:	Kerning maka mkpụrụedemede:
+	Keyboard shortcuts:	Ụzọ mkpirisi ahụigodo:
+	Keys for this command:	Igodo maka iwu a:
+	Keywords	Okwu
+	Korean	Korean
+	Label changes with:	Akara akara na-eji:
+	Label:	akara:
+	Labels	Akara aha
+	Landscape	Okirikiri ala
+	Language	Asụsụ
+	Language Preferences…	Mmasị asụsụ…
+	Language…	Asụsụ…
+	Large\nOperator	Akara mgbakọ\nukwu
+	Largest Only	Kachasị ukwuu naanị
+	Largest only	Kachasị ukwuu
+	Lasso	Lasso
+	Lasso Select	Lasso Họrọ
+	Last	Ikpeazụ
+	Last Cell in Column	Cell ikpeazụ na kọlụm
+	Last Cell in Row	Cell ikpeazụ n'ahịrị
+	Last Column	Kọlụm ikpeazụ
+	Last commit	Nkwenye ikpeazụ
+	Last Name	Aha ikpeazụ
+	Last, First; Last, First	Ikpeazụ, Mbụ; Ikpeazụ, Mbụ
+	Latin text font:	Ederede Latịn:
+	Layout	Nhazi
+	Layout options for this document	Nhọrọ nhazi maka akwụkwọ a
+	Layout Summary	Nchịkọta okirikiri nhọrọ ukwuu
+	Layouts	Nhazi
+	Leader	Onye ndu
+	Leave a recipient out of the merge when a field has this value.	Hapụ onye nnata na njikọta mgbe ubi nwere uru a.
+	Leave Equation	Hapụ nhata
+	Leave the equation (Esc)	Hapụ nhata (Esc)
+	Leave the label out of the caption	Hapụ akara n'akwụkwọ akụkọ
+	Left	Aka ekpe
+	Left Arrow with Text Above	Ụka aka ekpe nwere ederede n'elu
+	Left Arrow with Text Below	Ụka aka ekpe nwere ederede n'okpuru
+	Left Border	Oke aka ekpe
+	Left border	Oke aka ekpe
+	Left Bracket Twice	Aka ekpe ugboro abụọ
+	Left indent	Ntinye aka ekpe
+	Left Margin	Oke akaekpe
+	Left Only	Naanị aka ekpe
+	Left only	Naanị aka ekpe
+	Left Right Arrow Above	Ụka akaekpe akanri n'elu
+	Left Right Arrow with Text Above	Ụka akaekpe akanri nwere ederede n'elu
+	Left Right Arrow with Text Below	Ụka akaekpe akanri nwere ederede n'okpuru
+	Left Subscript-Superscript	Ndebanye aha aka ekpe-Ekebe
+	Left-to-right	Akaekpe-gaa-aka nri
+	Left-to-Right Text Direction	Ntuziaka ederede aka ekpe gaa akanri
+	Left:	Aka ekpe:
+	Leftwards Arrow Above	Ụka akaekpe n'elu
+	Leftwards Harpoon Above	Harpoon ekpe n'elu
+	Legal   8.50" × 14.00"	Iwu 8.50" × 14.00"
+	Legal style numbering	Nọmba ụdị iwu
+	Legend	Akụkọ mgbe ochie
+	Less than	Obere karịa
+	Less than or equal	Ihe na-erughị ma ọ bụ nhata
+	Letter	Akwụkwọ ozi
+	Letter   8.50" × 11.00"	Akwụkwọ ozi 8.50" × 11.00"
+	Letter headings	Isiokwu akwụkwọ ozi
+	Letter-Like Symbols	Akwụkwọ ozi dị ka akara
+	Letters	Akwụkwọ ozi
+	Level 1	Ọkwa 1
+	Level 2	Ọkwa 2
+	Level 3	Ọkwa 3
+	Level 4	Ọkwa 4
+	Level 5	Ọkwa 5
+	Level 6	Ọkwa 6
+	Level 7	Ọkwa 7
+	Level 8	Ọkwa 8
+	Level 9	Ọkwa 9
+	Level {n}	Ọkwa {n}
+	Level:	Ọkwa:
+	Levels:	Ọkwa:
+	LibreTranslate server (open source)	Ihe nkesa LibreTranslate (ebe mepere emepe)
+	Ligatures:	Ligatures:
+	Light	Ìhè
+	Light with Outline	Ìhè na nkọwa
+	Limit	Oke
+	Limit and\nLog	Oke na \nLog
+	Limit consecutive hyphens to:	Machie njigide n'usoro ka ọ bụrụ:
+	Limit Example	Oke Ihe Nlereanya
+	Limit formatting to a selection of styles	Machie nhazi na nhọrọ ụdị
+	Line	Ahịrị
+	Line and Page Breaks	Ahịrị na nkwụsị nke ibe
+	Line and Paragraph Spacing	Ahịrị na paragraf spacing
+	Line between	Ahịrị n'etiti
+	Line Break	Nkwụsịtụ ahịrị
+	Line breaking	Ịkwụsị ahịrị
+	Line delta	Line delta
+	Line End	Ọgwụgwụ ahịrị
+	Line Number	Nọmba ahịrị
+	Line Numbering Options…	Nhọrọ ọnụọgụ nọmba…
+	Line Numbers	Ọnụọgụ ahịrị
+	Line Spacing	Ogologo ahịrị
+	Line spacing	Ogologo ahịrị
+	Line Spacing Options…	Nhọrọ nke oghere ahịrị…
+	Line spacing:	Ogologo ahịrị:
+	Line Start	Ahịrị Mmalite
+	Line width:	Ogologo ahịrị:
+	Line:	Ahịrị:
+	Linear	Linear
+	Linear Fraction	Mpekere ahịrị
+	Lines	Ahịrị
+	Lines +/−	Ahịrị +/-
+	Lines added	Ahịrị agbakwunyere
+	Lines and characters	Ahịrị na agwa
+	Lines deleted	Ewepula ahịrị
+	Lines only	Naanị ahịrị
+	Lines per page:	Ahịrị kwa ibe:
+	Link	Njikọ
+	Link entries to their headings	Jikọọ ndenye na isiokwu ha
+	Link level to style:	Ọkwa njikọ na ụdị:
+	Link to Previous	Njikọ gara aga
+	Linked style (paragraph and character)	Ụdị ejikọrọ (paragraf na agwa)
+	Links	Njikọ
+	Links and References	Njikọ na ntụaka
+	Link…	Njikọ…
+	List	Ndepụta
+	List Commands	Ndepụta Iwu
+	List Definition	Nkọwapụta ndepụta
+	List entries	Ndenye ndenye
+	List Paragraph	Ndepụta paragraf
+	List styles	Ndepụta ụdị
+	List Table 3 – Blue	Ndepụta Tebụl 3 - Blue
+	List Table 3 – Green	Ndepụta Tebụl 3 - Green
+	List Table 3 – Orange	Ndepụta Tebụl 3 - oroma
+	List Table 3 – Purple	Ndepụta Tebụl 3 - Purple
+	Listening… speak now	Na-ege ntị… kwuo okwu ugbu a
+	Location	Ebe
+	Location: {path}	Ọnọdụ: {path}
+	Lock aspect ratio	Oke akụkụ mkpọchi
+	Lock Fields	Ogige mkpọchi
+	Logarithm	Logarithm
+	Logarithm with Base	Logarithm nwere Base
+	Logical AND	Ezi uche NA
+	Logical AND with Limits	Ezi uche NA nwere oke
+	Logical OR	Ezi uche OR
+	Logical OR with Limits	Ezi uche ma ọ bụ nwere oke
+	Long citation:	Ogologo ntụaka:
+	lowercase	obere okwu
+	Lum:	Lum:
+	Macros	Macros
+	Made from the author and year when empty	Emere site na onye edemede na afọ mgbe efu
+	Magazine or newspaper article	Akwụkwọ akụkọ ma ọ bụ akwụkwọ akụkọ
+	Mail Merge	Ngwakọta ozi
+	Mail Merge Helper	Onye enyemaka Njikọta ozi
+	Mail Merge Helper…	Onye enyemaka Njikọta ozi…
+	Mailing Labels	Mpempe akwụkwọ ozi
+	Mailings	Nzipu ozi
+	Main entry:	Isi ntinye:
+	Make Doc4Me the default for Word documents…	Mee Doc4Me ka ọ bụrụ nke ndabere maka akwụkwọ Okwu…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	Na-eme ka rịbọn, menus na dialog buru ibu ma ọ bụ pere mpe, n'elu ihe ngosi sistemụ gị. Mbugharị akwụkwọ dị iche.
+	Malay	Malay
+	Manage Sources	Jikwaa isi mmalite
+	Manage Styles	Jikwaa Ụdị
+	Manage Styles…	Jikwaa Ụdị…
+	Manual Hyphenation	Aka nkwugide
+	Manual hyphenation is complete.	Nkachikota aka zuru oke.
+	Manual Line Break	Nkwụsịtụ ahịrị akwụkwọ ntuziaka
+	Manual Page Break	Nkwụsị ibe akwụkwọ ntuziaka
+	Manual…	Akwụkwọ ntuziaka…
+	Many pages	Ọtụtụ ibe
+	Margin	Oke
+	Margins	Oke
+	Mark	Mark
+	Mark All	Mark All
+	Mark as decorative	Kaa akara dị ka ihe ịchọ mma
+	Mark Citation	Mark ntụaka
+	Mark Citation…	Mark ntụaka…
+	Mark Entry	Tinye akara
+	Mark Entry…	Kaa akara ntinye…
+	Mark grammar errors as you type	Kaa akara ndebiri ụtọ asụsụ ka ị na-apịpị
+	Mark Index Entry	Tinye akara ntinye aha
+	Mark selected text as:	Kaa ederede ahọpụtara ka:
+	Mark Table of Contents Entry	Kaa akara ntinye nke ọdịnaya
+	Mark\nCitation	Mark\nCitation
+	Mark\nEntry	Ntinye Mark\nZ
+	Markdown (*.md)	Akara akara (*.md)
+	Match case	Ikpe dakọtara
+	Match Fields	Mpaghara egwuregwu
+	Match prefix	Mgbakwunye ndakọrịta
+	Match suffix	Mgbakwunye dakọtara
+	Math AutoCorrect	Math AutoCorect
+	Math Input Control	Njikwa ntinye mgbakọ na mwepụ
+	Matrices with Brackets	Matrices nwere braket
+	Matrix	Matrix
+	Maximize	Bulie elu
+	Maximum	Kachasị
+	Maximum Example	Ihe Nlereanya kacha
+	Measured By	tụrụ ya site na
+	Measurement units:	Ngalaba nha:
+	Media	Mgbasa ozi
+	Merge	Jikota
+	Merge Cells	Jikọta mkpụrụ ndụ
+	Merge Formatting	Nhazi nhazi
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Merge Formatting mado ederede n'ụdị nhazi ebe ọ dakwasịrị, dị ka Debe ederede naanị.
+	Merge Record #	Jikota ndekọ #
+	Merge records	Jikọta ndekọ
+	Merge to New Document	Jikọọ na akwụkwọ ọhụrụ
+	Merge to Printer	Jikọọ na ngwa nbipute
+	Merge to:	Jikọọ na:
+	Merge type: {type}	Ụdị ngwakọta: {type}
+	Merged PRs	PRs jikọtara ọnụ
+	Merge…	Jikota…
+	Mesosphere	Mesosphere
+	Middle	N'etiti
+	Midline Dots	Ntụpọ etiti
+	Millimeters	Millimeters
+	Minimum	Opekempe
+	Minus Equal	Mwepu Nhata
+	Mirror indents	Ntinye enyo
+	Mirrored	Egosipụtara ya
+	Missing document font	Ụdị akwụkwọ na-efu
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT ma ọ bụ Apache-2.0. Nwebiisinka (c) Ndị otu ArtCraft 2026 na ndị nkwado WordCraft.
+	MLA	MLA
+	Model	Nlereanya
+	Models	Ụdị
+	Moderate	Na-agafeghị oke
+	Modify Style	Gbanwee Ụdị
+	Modify Table Style	Gbanwee Ụdị okpokoro
+	Modify Table Style…	Megharịa Ụdị Tebụl…
+	Modify…	Megharịa…
+	Mon	Mon
+	Month	Ọnwa
+	More >>	Ọzọ >>
+	More Colors…	Agba ndị ọzọ…
+	More Columns…	Ogidi ndị ọzọ…
+	More Commands…	Iwu ndị ọzọ…
+	More Symbols…	Akara ngosi ndị ọzọ…
+	More templates →	Ndebiri ndị ọzọ →
+	Move Down	Budata ala
+	Move in Equation	Gaa na nha nha
+	Move object with text	Jiri ederede bugharịa ihe
+	Move or Resize	Bugharịa ma ọ bụ megharịa nha
+	Move Paragraph Down	Bugharịa paragraf ala
+	Move Paragraph Up	Bugharịa paragraf n'elu
+	Move Past Citation	Bugharịa nrụtụ aka gara aga
+	Move Past\nCitation	Bugharịa Past\nCitation
+	Move Selected Ink	Bugharịa ink ahọpụtara
+	Move Text	Bugharịa Ederede
+	Move to where?	Kwaga ebee?
+	Move Up	Bulie elu
+	Move with Text	Jiri Ederede gaa
+	Move with text	Jiri ederede gaa
+	Moved from	E si na
+	Moved to	Akwagara na
+	Moves	Ngagharị
+	Multilevel List	Ndepụta ọtụtụ ọkwa
+	Multiple Pages	Otutu ibe
+	My Add-ins	Ihe mgbakwunye m
+	MyMemory (free, no account)	MyMemory (n'efu, enweghị akaụntụ)
+	Name	Aha
+	Name (A–Z)	Aha (A-Z)
+	Name of the file this document is saved as	Aha faịlụ echekwara akwụkwọ a ka
+	Name:	Aha:
+	Narrow  0.5" all	Dị warara 0.5 "niile
+	Natural Logarithm	Logarithm eke
+	Nature	Ọdịdị
+	Navigation	Nsoro ụzọ
+	Navigation Pane	Pane nsoroụzọ
+	Negated Relations	Mmekọrịta adịghị mma
+	New	Ọhụrụ
+	New Comment	Okwu ọhụrụ
+	New comments and tracked changes are recorded under this name and these initials.	A na-edekọ nkọwa ọhụrụ yana mgbanwe edoro anya n'okpuru aha a na mkpịrịsị ndị a.
+	New Document	Akwụkwọ ọhụrụ
+	New document	Akwụkwọ ọhụrụ
+	New Drawing Canvas	Canvas Ịse Ihe Ọhụrụ
+	New Entry	Ntinye ọhụrụ
+	New Folder	nchekwa ọhụrụ
+	New from Template	Ọhụrụ site na Template
+	New Group	Otu ọhụrụ
+	New Label	Akara ọhụrụ
+	New Label…	Akara ọhụrụ…
+	New Paragraph	Paragraf ọhụrụ
+	New shortcut:	Ụzọ mkpirisi ọhụrụ:
+	New Style…	Ụdị ọhụrụ…
+	New Tab	Tab ọhụrụ
+	New Table Style	Ụdị okpokoro ọhụrụ
+	New Table Style…	Ụdị tebụl ọhụrụ…
+	New Window	Window ọhụrụ
+	New word	Okwu ọhụrụ
+	New\nComment	Nkwupụta\nọhụrụ
+	New\nWindow	Window\nọhụrụ
+	New…	Ọhụrụ…
+	Next	Na-esote
+	Next Change	Mgbanwe ọzọ
+	Next Comment	Okwu na-esote
+	Next Field	Ubi na-esote
+	Next Footnote	Ihe odide ala ala ọzọ
+	Next Page	Ibe na-esote
+	Next Record	Ndekọ na-esote
+	Next Section	Nkebi na-esote
+	Next Sentence	Ahịrịokwu na-esote
+	Next sentence	Ahịrịokwu na-esote
+	Next Window	Ohere na-esote
+	No	Mba
+	No accessibility issues found.	Enweghị nsogbu nnweta ahụrụ.
+	No add-ins are listed yet.	Ọnweghị mgbakwunye edepụtabeghị.
+	No add-ins yet. Add one from the Store.	Enweghị mgbakwunye ma. Tinye otu site na Ụlọ Ahịa.
+	No Border	Enweghị oke
+	No changes (read only)	Enweghị mgbanwe (naanị ọgụgụ)
+	No Color	Enweghị Agba
+	No contributor data was built into this copy.	Ọ nweghị data ndị enyemaka etinyere na nnomi a.
+	No data source yet.	Enweghị isi iyi data.
+	No errors found: every merge field is in the recipient list.	Enweghị mperi ahụrụ: mpaghara njikọta ọ bụla dị na ndetu nnata.
+	No Fill	Enweghị njuputa
+	No Glow	Enweghị ọkụ
+	No grid	Enweghị grid
+	No icons match your search.	Enweghị akara ngosi dabara na ọchụchọ gị.
+	No limit	Enweghị oke
+	No Line	Enweghị ahịrị
+	No Markup	Enweghị akara
+	No model credits were built into this copy.	Enweghị kredit nlereanya etinyere na nnomi a.
+	No Outline	Enweghị nkọwa
+	No Paragraph Space	Enweghị Oghere Paragraf
+	No pictures found.	Enweghị foto ahụrụ.
+	No Reflection	Enweghị Ntụleghachi
+	No revisions	Enweghị nlegharị anya
+	No Shadow	Enweghị onyinyo
+	No Soft Edges	Enweghị akụkụ dị nro
+	No sources yet.	Enweghị isi mmalite.
+	No Spacing	Enweghị oghere
+	no speech program on this system	enweghị mmemme ikwu okwu na usoro a
+	No templates match your search.	Ọ nweghị ndebiri dabara na nchọ gị.
+	No Transform	Enweghị mgbanwe
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Enweghị okwu ma. Tinye n'akwụkwọ ọkọwa okwu na mkpụrụokwu azahieghị edenye ya ebe a.
+	No-Width Non Break	Enweghị obosara Enweghị ezumike
+	No-Width Optional Break	Nkwụsị nhọrọ enweghị obosara
+	Nonbreaking Hyphen	Akara anaghị agbaji
+	Nonbreaking Space	Oghere anaghị agbaji
+	None	Ọ dịghị
+	Normal	Nkịtị
+	Normal  1" all	Nkịtị 1" niile
+	Normal Indent	Indent nkịtị
+	Normal probability density	Njupụta nke puru omume nkịtị
+	Normal speed	Ọsọ nkịtị
+	Normal Style	Ụdị nkịtị
+	Normal Table	Okpokoro nkịtị
+	Normal Text	Ederede nkịtị
+	Normal Word Document	Akwụkwọ Okwu nkịtị
+	North	Ugwu
+	Norwegian (Bokmål)	Norwegian (Bokmål)
+	Not	Ọ bụghị
+	Not available right now	Ọ dịghị ugbu a
+	Not equal to	Haghị nhata
+	Not linked: click a text box	Ejikọtaghị ya: pịa igbe ederede
+	Not saved	Echekwaghị
+	Not saved yet	Echekwabeghị
+	Not used by any command	Iwu ọ bụla anaghị eji ya
+	Not {name}	Ọ bụghị {name}
+	Nothing	Ọ dịghị ihe
+	Nothing collected yet. Items you copy or cut appear here.	Ọnweghị ihe anakọtara. Ihe ndị ị detuo ma ọ bụ bee pụtara ebe a.
+	Now used by {command}	{command} na-eji ugbu a
+	Nudge	Kpatụ
+	Num Occurrences	Ọnụ Ọgụgụ Ememe
+	Number	Nọmba
+	Number alignment:	Nhazi nọmba:
+	Number format	Ụdị ọnụọgụgụ
+	Number of columns:	Ọnụọgụ nke kọlụm:
+	Number of rows:	Ọnụọgụ nke ahịrị:
+	Number of the page the field sits on	Ọnụọgụ nke ibe ubi ahụ na-anọdụ ala
+	Number of the section the field sits in	Ọnụọgụ nke ngalaba ubi a na-anọdụ ala
+	Number style for this level:	Ụdị ọnụọgụgụ maka ọkwa a:
+	Number the equation; the number sits at the right margin (or type # then the number)	Nọmba nha nha; Nọmba ahụ na-anọdụ n'akụkụ aka nri (ma ọ bụ pịnye # wee pịa nọmba)
+	Number type:	Ụdị ọnụọgụgụ:
+	Number:	Nọmba:
+	Numbering	Ọnụọgụgụ
+	Numbering:	Ọnụọgụgụ:
+	Numbering…	Ọnụọgụ…
+	Numerals	Ọnụọgụ
+	Numerals:	Ọnụọgụgụ:
+	n×n Identity Matrix	n × n Identity Matrix
+	n×n Matrix	n × n Matrix
+	Object	Ihe
+	Odd Page	Ihu ibe
+	Odd pages only	Naanị ibe ibe
+	Off	Gbanyụọ
+	Office	Ụlọ ọrụ
+	Office 2003 Default	Ọfịs 2003 Dabara
+	Offset (pt):	Akwụsịghị (pt):
+	Offset: Bottom	Nkwụsị: N'okpuru
+	Offset: Bottom Left	Nkwụsị: N'okpuru aka ekpe
+	Offset: Bottom Right	Nkwụsị: N'okpuru aka nri
+	Offset: Center	Akwụsịghị: Ebe etiti
+	Offset: Left	Nkwụsị: aka ekpe
+	Offset: Right	Ewepụ: Right
+	Offset: Top	Ewepụghị: Top
+	Offset: Top Left	Nkwụsị: elu akaekpe
+	Offset: Top Right	Nkwụsị: N'elu aka nri
+	OK	OK
+	Omit	Wepụ
+	On	Gbanye
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Na: caret na-efega n'ebe ọhụrụ ya mgbe ị na-apịpị ma ọ bụ jiri igodo akụ, na-egbuke egbuke ya na-ada. Gbanyụọ: ọ na-awụlikwa elu ma na-atụgharị ma gbanyụọ.
+	One	Otu
+	One half	Otu ọkara
+	One label per recipient	Otu akara maka onye nnata
+	One line per item. Enter adds an item.	Otu ahịrị kwa ihe. Tinye na-agbakwụnye otu ihe.
+	One Page	Otu ibe
+	Online Pictures	Foto dị n'ịntanetị
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Foto dị n'ịntanetị (Openverse), Tụgharịa asụsụ (MyMemory ma ọ bụ nkesa LibreTranslate gị), Nweta Add-ins na nbudata ụdị okwu Dictate na-ejikọ na ịntanetị, yana naanị mgbe ị na-eji ha. Agbanyụrụ, Doc4Me enweghị njikọ nke ya.
+	Online Pictures…	Foto dị n'ịntanetị…
+	Online services are turned off (File › Options › Trust Center).	Agbanyụrụ ọrụ ịntanetị (Faịlụ › Nhọrọ › Ebe ntụkwasị obi).
+	Online Video	Vidiyo dị n'ịntanetị
+	Only allow this kind of editing:	Naanị hapụ ụdị ndezi a:
+	Only comments can be added, except in regions marked editable.	Naanị nkọwa ka enwere ike ịgbakwunye, belụsọ na mpaghara akara nwere ike edezi.
+	Only form fields can be filled in.	Naanị oghere ụdị ka enwere ike imeju.
+	only https addresses can be used	naanị https adreesị nwere ike iji
+	Only pictures I may use commercially	Naanị foto m nwere ike iji zụọ ahịa
+	Only the allowed styles can be applied.	Naanị ụdị ekwenyere ka enwere ike itinye.
+	Only web (http, https) and email (mailto) links can be followed	Naanị webụ (http, https) na email (mailto) njikọ nwere ike iso
+	Open	Mepee
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Mepee faịlụ na ihe nchọgharị nke Doc4Me mgbe mkparịta ụka faịlụ sistemụ egosighi.
+	Open Data Source…	Mepee Ebe Data…
+	Open Hyperlink	Mepee hyperlink
+	OpenDocument Text (*.odt)	Ederede OpenDocument (*.odt)
+	Opening print dialog…	Na-emepe mkparịta akwụkwọ mbipụta…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Mepee faịlụ .docx, .doc, .rtf na .odt yana ndebiri Okwu na Doc4Me site ugbu a gawa.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Mepee Ntọala › Ngwa ndabara, ebe ị na-ahọrọ Doc4Me maka .docx yana ụdị akwụkwọ ndị ọzọ.
+	Open…	Mepee…
+	Operator	Onye ọrụ
+	Operator Structures	Nhazi onye ọrụ
+	Operators	Ndị na-arụ ọrụ
+	Optional Hyphen	Usoro akara nhọrọ
+	Options	Nhọrọ
+	Options…	Nhọrọ…
+	Or	Ma ọ bụ
+	Or save a copy in another format:	Ma ọ bụ chekwaa otu n'ụdị ọzọ:
+	Ordinals (1st) as superscript	Nkịtị (1st) dị ka mkpụrụedemede ukwu
+	Organizer	Onye nhazi
+	Organizer…	Onye nhazi…
+	Orientation	Nhazi
+	Original document	Akwụkwọ izizi
+	Other	Ndị ọzọ
+	Other Authorities	Ndị ọchịchị ndị ọzọ
+	Other Large Operators	Ndị ọrụ nnukwu ndị ọzọ
+	Other paragraph styles	Ụdị paragraf ndị ọzọ
+	Other styles and their TOC level:	Ụdị ndị ọzọ na ọkwa TOC ha:
+	Otherwise insert:	Ma ọ bụghị ya, tinye:
+	Outline	Nkọwapụta
+	Outline Level	Ọkwa ndepụta
+	Outline level	Ọkwa ndepụta
+	Outline levels	Nhazi ọkwa
+	Outline State	Nkọwapụta Steeti
+	Outline Tools	Ngwa ndepụta
+	Outlining	Na-akọwapụta
+	Outside	N'èzí
+	Outside border	Oke oke
+	Outside Borders	N'èzí oke
+	Outside Margin	N'èzí oke
+	Outside:	N'èzí:
+	Outward Brackets	Mpempe mpụta apụta
+	Oval	Oval
+	Overbar	Overbar
+	Overbars and Underbars	Overbars na Underbars
+	Overbrace	Ihe nkwado karịrị akarị
+	Overtype	Overtype
+	Overtype (typing replaces the characters after the caret)	Overtype (ịpịnye na-edochi mkpụrụedemede ka emechara nlekọta)
+	Page	Ibe
+	Page Background	Okirikiri ibe
+	Page Border	Oke ibe
+	Page Borders	Oke ibe
+	Page Break	Nkwụsị ibe
+	Page Break Before	Nkwụsị ibe mbụ
+	Page break before	Nkwụsị ibe mbụ
+	Page Breaks	Nkwụsị ibe
+	Page Color	Agba ibe
+	Page display	Ngosipụta ibe
+	Page Down	Ibe ala
+	Page image (*.jpg, *.jpeg)	Onyonyo ibe (*.jpg, *.jpeg)
+	Page image (*.png)	Foto ibe (*.png)
+	Page Movement	Mmegharị ibe
+	Page Number	Nọmba ibe
+	Page number style	Ụdị nọmba ibe
+	Page numbers at the right margin	Nọmba ibe n'akụkụ aka nri
+	Page on which a bookmarked passage falls	Ibe nke akụkụ ibe edokọbara dabara na ya
+	Page Setup	Ntọlite ibe
+	Page title	Aha ibe
+	Page Up	Ibe elu
+	Page Width	Obosara ibe
+	Page width	Obosara ibe
+	Page X of Y	Ibe X nke Y
+	Page {page}	Ibe {page}
+	Page {page} of {pages}	Ibe {page} nke {pages}
+	Page\nBorders	Oke\nIbe
+	Page\nColor	Ibe\nAgba
+	Page\nNumber	Ibe\nNumber
+	Pages	Ibe
+	Pages like 1-3, 5	Ibe dị ka 1-3, 5
+	Pages of bookmark:	Ibe ibe edokọbara:
+	Paragraph	Paragraf
+	Paragraph Character	Paragraf agwa
+	Paragraph Details	Nkọwa paragraf
+	Paragraph Down	Paragraf ala
+	Paragraph Mark	Paragraf Mark
+	Paragraph marks	Akara paragraf
+	Paragraph Settings	Ntọala paragraf
+	Paragraph Spacing	Paragraf spacing
+	Paragraph style	Ụdị paragraf
+	Paragraph Up	Paragraf Elu
+	Paragraphs	Paragraf
+	Paragraph…	Paragraf…
+	Parentheses	Ntụnye aka
+	Parentheses with Separator	Parenttheses nwere Separator
+	Partial Differential	Ihe dị iche iche
+	Password	Okwuntughe
+	Password:	Okwuntughe:
+	Paste	Tapawa
+	Paste All	Tapawa All
+	Paste as:	Tapawa dị ka:
+	Paste Clipboard Item	Tapawa ihe Klipbọọdụ
+	Paste Formatting	Mado nhazi
+	Paste Special	Tapawa Pụrụ Iche
+	Paste Special…	Mado Pụrụ Iche…
+	Paste Spike	Tapawa Spike
+	Paste: Keep Text Only	Tapawa: Debe naanị ederede
+	Paste: Merge Formatting	Tapawa: Nhazi nhazi
+	Pasting between documents:	Tapawa n'etiti akwụkwọ:
+	Pasting from other programs:	Mbufe site na mmemme ndị ọzọ:
+	Pasting within the same document:	Tapawa n'ime otu akwụkwọ:
+	Pause	Kwụsịtụ
+	Paused	Akwụsịla
+	PDF document (*.pdf)	Akwụkwọ PDF (*.pdf)
+	Pen	Pen
+	Pencil	Pensụl
+	Pens	Pensụl
+	People	Ndị mmadụ
+	Periodical	Nke oge
+	Personalize	Hazie
+	Phonetic Guide	Ntuziaka ụda olu
+	Pi Over 2	Pi karịrị 2
+	Picas	Picas
+	Pick a custom group (New Group makes one)	Họrọ otu omenala (Otu ọhụrụ na-eme otu)
+	Pick a field from the list	Họrọ ubi na ndetu
+	Picture	Foto
+	Picture Border	Oke foto
+	Picture Content Control	Njikwa ọdịnaya foto
+	Picture Format	Ụdị foto
+	Picture Styles	Ụdị foto
+	Pictures	Foto
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Foto sitere na Openverse. Sọpụrụ akwụkwọ ikike foto ọ bụla: Doc4Me na-agbakwụnye ahịrị kredit n'okpuru ya.
+	Pie	achịcha
+	Placeholder Name	Aha njide
+	Placeholder text	Ederede ebe nchekwa
+	Plain Table 1	Tebụl dị larịị 1
+	Plain text (*.txt)	Ederede dị larịị (*.txt)
+	Plain Text Content Control	Njikwa ọdịnaya ederede dị larịị
+	Play	Gwuo
+	Play Video	Kpọọ vidiyo
+	Play/Pause	Gwuo/kwụsịtụ
+	Plus Equal	gbakwunyere nhata
+	Points	Isi ihe
+	points and above	isi na n'elu
+	Polish	Polish
+	Portrait	Eserese
+	Portuguese (Brazil)	Portuguese (Brazil)
+	Portuguese (Portugal)	Portuguese (Portugal)
+	Position	Ọnọdụ
+	Position:	Ọkwa:
+	Positioning…	Na-edobe…
+	Possible spelling mistake	Enwere ike mpe mpe mpe mpe mpe mpe mpe ya
+	Postal Code	Koodu nzipu ozi
+	Power series of (1+x)ⁿ	Usoro ike nke (1+x)
+	Preferred width:	Obosara masịrị:
+	Preserve	Chekwaa
+	Preserve formatting during updates	Chekwaa nhazi n'oge mmelite
+	Presets	Ntọala
+	Press a key combination	Pịa ngwakọta igodo
+	Preview	Nhụchalụ
+	Preview Results	Nsonaazụ nlele
+	Preview\nResults	Nhụchalụ\n nsonaazụ
+	Previous	Nke gara aga
+	Previous 1 or More	1 gara aga ma ọ bụ karịa
+	Previous Change	Mgbanwe gara aga
+	Previous Comment	Okwu gara aga
+	Previous Field	Ubi gara aga
+	Previous Footnote	Ihe odide ala ala peeji gara aga
+	Previous Page	Ibe gara aga
+	Previous Record	Ndekọ gara aga
+	Previous Section	Nkeji gara aga
+	Previous Sentence	Ahịrịokwu gara aga
+	Previous sentence	Ahịrịokwu gara aga
+	Previous Window	Ohere gara aga
+	Print	Bipụta
+	Print blank lines when data fields are empty	Bipụta ahịrị oghere mgbe mpaghara data tọgbọrọ chakoo
+	Print Documents	Bipụta akwụkwọ
+	Print Documents…	Bipụta akwụkwọ…
+	Print failed: {error}	Bipute dara: {error}
+	Print Layout	Nhazi bipụta
+	Print Markup	Bipụta akara
+	Print the page color	Bipụta agba ibe
+	Print to PDF	Bipụta na PDF
+	Print\nLayout	Mbipụta\nLayout
+	Printer	Onye nbipute
+	Printing	Mbipụta
+	Process	Usoro
+	Product	Ngwaahịa
+	Product of A	Ngwaahịa nke A
+	Product with Limits	Ngwaahịa nwere oke
+	Product with Lower Limit	Ngwaahịa nwere oke ala
+	Product with Subscript-Superscript Limits	Ngwaahịa nwere oke ndebanye aha-Superscript
+	Products and Coproducts	Ngwaahịa na ngwaahịa
+	Professional	Ọkachamara
+	Promote	Kwalite
+	Promote to Heading 1	Kwalite na isi 1
+	Proofing	Ngosipụta
+	Proofing Issues	Okwu na-egosi
+	Proofing language	Asụsụ na-akwado
+	Properties	Njirimara
+	Protect	Chebe
+	Protect Document	Chebe akwụkwọ
+	PRs	PRs
+	pt	pt
+	Publisher	Onye mbipụta
+	Punctuation	Ederede
+	Put the caret in a content control first.	Tinye nlekọta ahụ na njikwa ọdịnaya nke mbụ.
+	Put the default commands back on the Quick Access Toolbar?	Tinyeghachi iwu ndabara na ogwe ngwaọrụ ịnweta ngwa ngwa?
+	Pyramid	Pyramid
+	Quadratic Root	Mgbọrọgwụ Quadrat
+	Query Options…	Nhọrọ ajụjụ…
+	Quick Access Toolbar	Ogwe ngwa ịnweta ngwa ngwa
+	Quick Parts	Akụkụ ngwa ngwa
+	Quick Tables	Tebụl ngwa ngwa
+	Quote	Kwuo okwu
+	Radical	Radikal
+	Radical with Degree	Radikal na Degree
+	Radicals	Radicals
+	Raised/lowered	Ebuliri/ wedata
+	Read Aloud	Gụpụta n'olu dara ụda
+	Read Aloud couldn't start the speech program: {reason}	Gụọ agụpụta enweghị ike ịmalite mmemme okwu: {reason}
+	Read Aloud couldn't start: {reason}	Gụọ agụpụta enweghị ike ịmalite: {reason}
+	Read Aloud isn't available in the browser	Gụọ agụpụta adịghị na ihe nchọgharị ahụ
+	Read Aloud Status	Gụọ ọnọdụ n'olu dara ụda
+	Read Aloud stopped: {reason}	Gụọ n'olu dara ụda kwụsịrị: {reason}
+	Read Mode	Ụdị ọgụgụ
+	Read\nAloud	Gụpụta\nn'olu
+	Read\nMode	Gụọ\nMode
+	Reading	Ọgụgụ
+	Reading Column Width	Obosara Kọlụm Ọgụgụ
+	Reading Highlight	Isi ihe Ọgụgụ
+	Reading Line Spacing	Ọpụpụ Ahịrị Ọgụgụ
+	Reading Mode	Ụkpụrụ Ọgụgụ
+	Reading Speed	Ọsọ Ọgụgụ
+	Reading Text Size	Nha Ederede Ọgụgụ
+	Reads the clipboard's rich text and keeps its formatting.	Na-agụ ederede bara ụba nke klipbọọdụ ma na-edobe nhazi ya.
+	Reads the clipboard's web content and keeps its formatting.	Na-agụ ọdịnaya webụ nke clipboard ma na-edobe nhazi ya.
+	Real name	Ezigbo aha
+	Recent	Na nso nso a
+	Recent Colors	Agba ndị na-adịbeghị anya
+	Recent documents to show:	Akwụkwọ ọhụrụ iji gosi:
+	Recently used symbols:	Akara ejiri nso nso a:
+	Recipient List	Ndepụta ndị nnata
+	Recipient lists	Ndepụta ndị nnata
+	Recipients: {count}	Ndị nnata: {count}
+	Recognized (you can correct it):	Aghọtara (ị nwere ike mezie ya):
+	Recognized Functions	Ọrụ amatara
+	Recognized Functions…	Ọrụ amatara…
+	Recolor a one-color picture, such as an icon	Tinyegharịa foto nwere otu agba, dị ka akara ngosi
+	Recolor Selected Ink	Ink ahọpụtara agbagharị agba
+	Record Macro	Dekọọ Macro
+	Recover Unsaved Documents	Weghachite akwụkwọ echekwara
+	Rectangle	Rektangulu
+	Red:	Uhie:
+	Redo	Megharịa
+	Reduce Hanging Indent	Welata aka nkwuba
+	References	Ntụaka
+	Reflection	Ntughari uche
+	Refresh	Weghachite ume
+	Registered	Edebara aha
+	Registered Sign	Akara edebanyere aha
+	Regular expressions	Okwu oge niile
+	Regulations	Iwu
+	Reject	Jụ
+	Reject All	Jụ ihe niile
+	Reject All Changes	Jụ Mgbanwe Niile
+	Reject Change	Jụ Mgbanwe
+	Relationship	Mmekọrịta
+	relative to	ikwu na
+	Relative to:	N'ihe metụtara:
+	Relaxed	zuru ike
+	Remove	Wepu
+	Remove Added Font	Wepu mkpụrụedemede agbakwunyere
+	Remove Background	Wepu ndabere
+	Remove Content Control	Wepu njikwa ọdịnaya
+	Remove every custom shortcut and restore the built-in keys?	Wepu ụzọ mkpirisi omenala ọ bụla wee weghachi igodo arụnyere?
+	Remove every custom tab and group and show all tabs again?	Wepu taabụ na otu omenala ọ bụla wee gosi taabụ niile ọzọ?
+	Remove field	Wepu ubi
+	Remove Field Name	Wepu Aha ubi
+	Remove Footer	Wepu n'okpuru
+	Remove from Quick Access Toolbar	Wepu na ogwe ngwa nnweta ngwa ngwa
+	Remove Header	Wepu nkụnye eji isi mee
+	Remove Hyperlink	Wepu hyperlink
+	Remove Password	Wepu okwuntughe
+	Remove Pen	Wepu Pen
+	Remove Positioning	Wepu Ọnọdụ
+	Remove recipient	Wepu onye nnata
+	Remove row	Wepu ahịrị
+	Remove series	Wepu usoro
+	Remove Space After Paragraph	Wepu Oghere Mgbe Paragraf gachara
+	Remove Table of Contents	Wepu okpokoro ọdịnaya
+	Remove the control once edited	Wepu njikwa ahụ ozugbo edeziri ya
+	Remove the space before the punctuation	Wepu oghere tupu akara edemede
+	Remove Watermark	Wepu Watermark
+	Rename Style	Nyegharịa Ụdị aha
+	Rename…	Nyegharịa aha…
+	Reopen	Mepee ọzọ
+	Repeat	Tinyegharịa
+	Repeat as header row on each page	Tinyegharịa dị ka ahịrị nkụnye eji isi mee na ibe ọ bụla
+	Repeat Header Rows	Tinyegharịa Ahịrị nkụnye eji isi mee
+	Repeated words	Okwu ugboro ugboro
+	Repeating Section Content Control	Njikwa ọdịnaya nke ngalaba na-emegharị ugboro ugboro
+	Replace	Dochie
+	Replace All	Dochie ihe niile
+	Replace as you type	Dochie ka ị na-apịpị
+	Replace Document Text	Dochie Ederede Akwụkwọ
+	Replace text as you type	Dochie ederede ka ị na-apịpị
+	Replace with:	Jiri: dochie
+	Replace:	Dochie:
+	Replay	Tinyegharịa
+	Reply	Zaghachi
+	Report	Akuko
+	Research	Nyocha
+	Researcher	Onye nyocha
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Onye nyocha chọrọ ọrụ ịntanetị; Doc4Me na-edobe akwụkwọ gị na-anọghị n'ịntanetị.
+	Reset	Tọgharia
+	Reset All	Tọgharịa Ha niile
+	Reset All…	Tọgharịa Ha niile…
+	Reset Character Formatting	Tọgharia nhazi agwa
+	Reset Crop	Tọgharịa ihe ubi
+	Reset Graphic	Tọgharia eserese
+	Reset Paragraph Formatting	Tọgharia nhazi paragraf
+	Reset Picture	Tọgharia foto
+	Reset to Normal	Tọgharia ka ọ dị mma
+	Reset\nGraphic	Tọgharịa \n eserese
+	Reset…	Tọgharia…
+	Resize Table by Dragging	Hazie tebụl site na ịdọrọ
+	Resolve	Kpebie
+	Resolved	Ekpebiri
+	Restart at 1	Malitegharịa ekwentị na 1
+	Restart Each Page	Malitegharịa ibe ọ bụla
+	Restart Each Section	Malitegharịa ngalaba ọ bụla
+	Restart list after:	Malitegharịa ndepụta mgbe:
+	Restore	Weghachite
+	Restore Defaults	Weghachite ndapụta
+	Restore Down	Weghachite ala
+	Restore to Normal Word Document	Weghachi na Akwụkwọ Okwu nkịtị
+	Restrict Editing	Machibido ndezi
+	Restrict\nEditing	Machibido ndezi\nE
+	Result	Nsonaazụ
+	Results	Nsonaazụ
+	Return address labels	Weghachite akara adreesị
+	Return address:	adreesị nlọghachi:
+	Reverse the order	Tugharia usoro
+	Review	Nyochaa
+	Review AutoFormat Changes	Nyochaa mgbanwe AutoFormat
+	Review Changes…	Nyochaa mgbanwe…
+	Reviewing	Na-enyocha
+	Reviewing Pane	Pane na-enyocha
+	Reviewing — edits become suggestions	Nyochaa - ndezi ga-abụ ntụnye
+	Revised document	Akwụkwọ edegharịrị
+	Revisions	Ndozigharị
+	Rewind	Weghachite
+	Ribbon	Ribọn
+	Ribbon and Quick Access Toolbar:	Ribbon na Toolbar nweta ngwa ngwa:
+	Ribbon tabs	Ribbon taabụ
+	Rich Text Content Control	Njikwa ọdịnaya ederede bara ọgaranya
+	Rich Text Format (*.rtf)	Ụdị ederede bara ọgaranya (*.rtf)
+	Rich Text Format (RTF)	Ụdị ederede bara ọgaranya (RTF)
+	Right	Right
+	Right (vertical)	Akanri ( vetikal)
+	Right align page numbers	Hazie nọmba ibe aka nri
+	Right Arrow with Text Above	Ụka akanri nwere ederede n'elu
+	Right Arrow with Text Below	Ụka akanri nwere ederede n'okpuru
+	Right Border	Oke aka nri
+	Right border	Oke aka nri
+	Right Bracket Twice	Aka nri ugboro abụọ
+	Right indent	Ntinye aka nri
+	Right Margin	Oke aka nri
+	Right Only	Kwesịrị ekwesị naanị
+	Right only	Right naanị
+	Right-to-left	Akanri-ruo-akaekpe
+	Right-to-Left Section	Akụkụ aka nri-gaa-ekpe
+	Right-to-Left Table	Tebụl akanri gaa n'aka ekpe
+	Right-to-Left Text Direction	Ntuziaka ederede aka nri gaa n'aka ekpe
+	Right:	Right:
+	Rightwards Arrow Above	Ụka akanri n'elu
+	Rightwards Harpoon Above	Harpoon ziri ezi n'elu
+	Roots of ax²+bx+c	Mgbọrọgwụ nke ax²+bx+c
+	Rotate	Tugharia
+	Rotate all text 270°	Tụgharịa ederede niile 270°
+	Rotate all text 90°	Tụgharịa ederede niile 90°
+	Rotate Left 90°	Tụgharịa akaekpe 90°
+	Rotate Right 90°	Tụgharịa aka nri 90°
+	Rotation	Ntughari
+	Rotation:	Ntughari:
+	Rounded Rectangle	Rektangulu gburugburu
+	Row	Ahịrị
+	Row:	Ahịrị:
+	Rows & Columns	Ahịrị & Ogidi
+	Ruby text:	Ederede Ruby:
+	Ruler	Onye ọchịchị
+	Rules	Iwu
+	Run	Gbaa ọsọ
+	Run-in	Gbaa ọsọ
+	Russian	Russian
+	Résumé	Résumé
+	Same as the whole table	Otu dị ka tebụl dum
+	SAMPLE	Nlereanya
+	Sat:	Satọde:
+	Save	Chekwa
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Chekwaa otu n'ụdị ọzọ. Mbipụta na-aga site na PDF ị nwere ike ibipụta site na onye ọ bụla na-ekiri ya.
+	Save As	Chekwa dị ka
+	Save as Template	Chekwa dị ka Template
+	Save documents	Chekwa akwụkwọ
+	Save the document to turn on AutoSave	Chekwaa akwụkwọ ka ịgbanwuo AutoSave
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Chekwaa akwụkwọ ka ịgbanwuo AutoSave (anaghị edegharị faịlụ ị meghere naanị ruo mgbe ịchekwaa ya)
+	Save these pages as PDF…	Chekwaa ibe ndị a ka PDF…
+	Save Version	Chekwa ụdị
+	Saved	Echekwara
+	Scale	Ọnụ ọgụgụ
+	Scale Drawing	Ihe osise
+	Scatter	Gbasaa
+	Screen Clipping	Mpịachi ihuenyo
+	Screen clipping didn't work: {reason}	Ibichi ihuenyo arụghị ọrụ: {reason}
+	Screen clipping ended without a picture.	Ibichi ihuenyo kwụsịrị na-enweghị foto.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Mwepu ihuenyo adịghị ebe a. Detuo foto nke ihuenyo, wee mado ya.
+	Screenshot	nseta ihuenyo
+	Script	Ederede
+	Scripts	Ederede
+	Scroll ribbon left	Pịgharịa rịbọn aka ekpe
+	Scroll ribbon right	Pịrị rịbọn nri
+	Search	Chọọ
+	Search Commands	Chọọ Iwu
+	Search commands and help	Chọọ iwu wee nyere aka
+	Search document	Chọọ akwụkwọ
+	Search for templates	Chọọ ndebiri
+	Search icons	Chọọ akara ngosi
+	Search Openverse (Creative Commons pictures)	Chọọ Openverse (Foto ndị na-emepụta ihe)
+	Search Options	Nhọrọ ọchụchọ
+	Searching…	Na-achọ…
+	Secant Function	Ọrụ Secant
+	Section Break	Nkwụsị nke ngalaba
+	Section Breaks	Nkwụsị nke ngalaba
+	Section Character	Njirimara ngalaba
+	Section direction:	Ntuziaka ngalaba:
+	Section Mark	Mark ngalaba
+	Section Properties	Njirimara ngalaba
+	Sections	Akụkụ
+	See	Lee
+	Select	Họrọ
+	Select a picture, shape, chart or table to describe it.	Họrọ eserese, udi, eserese ma ọ bụ tebụl iji kọwaa ya.
+	Select All	Họrọ Ha niile
+	Select Cell	Họrọ Cell
+	Select Floating Shapes	Họrọ Ụdị Na-ese n'elu mmiri
+	Select Heading and Content	Họrọ Isi na Ọdịnaya
+	Select Line	Họrọ Ahịrị
+	Select Objects	Họrọ Ihe
+	Select Paragraph	Họrọ paragraf
+	Select Range	Họrọ Oke
+	Select Recipients	Họrọ ndị nnata
+	Select recipients first to choose from their fields.	Họrọ ndị nnata ka ha buru ụzọ họrọ n'ubi ha.
+	Select recipients first to match their fields.	Họrọ ndị nnata ka ha kwekọọ n'ubi ha.
+	Select Row	Họrọ Ahịrị
+	Select Sentence	Họrọ Ahịrịokwu
+	Select Table	Họrọ Tebụl
+	Select Text	Họrọ Ederede
+	Select text in the document to translate it.	Họrọ ederede n'ime akwụkwọ iji tụgharịa asụsụ ya.
+	Select Text with Similar Formatting	Họrọ ederede nwere ụdị nhazi
+	Select text, then tick who can still edit it.	Họrọ ederede, wee pịa onye ka nwere ike dezie ya.
+	Select the part of the screen to insert.	Họrọ akụkụ ihuenyo ka itinye.
+	Select Word	Họrọ Okwu
+	Select\nRecipients	Họrọ\nndị nnata
+	Selected Fields	Ubi ahọpụtara
+	Selected pages	Ibe ndị ahọpụtara
+	Selection	Nhọrọ
+	Selection Pane	Pane nhọrọ
+	Send Backward	Ziga azụ azụ
+	Send the document straight to the system print dialog, or save a copy in another format below.	Zipụ akwụkwọ ahụ ozugbo na mkparịta ụka mbipụta sistemụ, ma ọ bụ chekwaa otu n'ụdị ọzọ dị n'okpuru.
+	Sentence	Ahịrịokwu
+	Sentence case.	Ikpe ikpe.
+	Separator:	Nkewa:
+	Sequence name:	Aha usoro:
+	Serbian	Asụsụ Serbian
+	Serbian (Cyrillic)	Serbian (Cyrillic)
+	Serbian (Latin)	Serbian (Latin)
+	Series name	Aha usoro
+	Series {n}	Usoro {n}
+	Server address (https://…)	Adreesị nkesa (https://…)
+	Set	Tọọ
+	Set As Default	Tọọ dị ka nke an-kpọ
+	Set as Default	Tọọ dị ka nke an-kpọ
+	Set Caret	Tọọ Nlekọta
+	Set Character Formatting	Tọọ nhazi agwa
+	Set Date	Tọọ ụbọchị
+	Set Equation	Tọọ nhata
+	Set Numbering Value	Tọọ Uru Ọnụọgụgụ
+	Set Paragraph Formatting	Tọọ nhazi paragraf
+	Set Proofing Language…	Tọọ Asụsụ Ngosipụta…
+	Setting:	Ntọala:
+	Settings…	Ntọala…
+	Shading	Ido
+	Shadow	Onyunyo
+	Shadow, glow and soft edges	Onyunyo, ọkụ na akụkụ dị nro
+	Shape Effects	Mmetụta Ụdị
+	Shape Fill	Jupụta ọdịdị
+	Shape Format	Ụdị Ụdị
+	Shape Outline	Nkọwapụta nhazi
+	Shape Styles	Ụdị Ụdị
+	Shapes	Ụdị
+	Share	Kekọrịta
+	Sheet:	Mpempe akwụkwọ:
+	Shift cells down	Megharịa mkpụrụ ndụ ala
+	Shift cells right	Tụgharịa sel nri
+	Shift+Tab	Shift+Taabụ
+	Shipping labels	Aha mbupu
+	Short citation:	Ntụtu aka dị mkpirikpi:
+	Shortcut key:	Igodo ụzọ mkpirisi:
+	Show	Gosi
+	Show all formatting marks	Gosi akara nhazi niile
+	Show All Levels	Gosi ọkwa niile
+	Show all revisions inline	Gosi ngbanwe niile n'ịntanetị
+	Show changes at:	Gosi mgbanwe na:
+	Show changes in:	Gosi mgbanwe na:
+	Show Comments	Gosi nkọwa
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Gosi akwụkwọ nwere agba ha tụgharịrị, dị ka View › Gbanwee Ụdị. Ịchekwa, mbipụta na PDF adịghị agbanwe agbanwe.
+	Show every bibliography field	Gosi mpaghara akwụkwọ akụkọ ọ bụla
+	Show First Line Only	Gosi naanị ahịrị mbụ
+	Show in the Styles gallery	Gosi na gallery Styles
+	Show KeyTips (Alt or F10)	Gosi ndụmọdụ igodo (Alt ma ọ bụ F10)
+	Show Level	Gosi ọkwa
+	Show Level 1	Gosi Ọkwa 1
+	Show Level 2	Gosi Ọkwa 2
+	Show Level 3	Gosi Ọkwa 3
+	Show Level 4	Gosi Ọkwa 4
+	Show Level 5	Gosi Ọkwa 5
+	Show Level 6	Gosi ọkwa 6
+	Show Level 7	Gosi Ọkwa 7
+	Show Level 8	Gosi Ọkwa 8
+	Show Level 9	Gosi Ọkwa 9
+	Show Markup	Gosi akara
+	Show Notes	Gosi ndetu
+	Show only comments and formatting in balloons	Gosi naanị nkọwa na nhazi na balloons
+	Show or Hide Style	Gosi ma ọ bụ zoo Ụdị
+	Show page numbers	Gosi nọmba ibe
+	Show revisions in balloons	Gosi nyocha na balloons
+	Show rulers	Gosi ndị ọchịchị
+	Show Text Formatting	Gosi nhazi ederede
+	Show the equation in the line of text	Gosi nhata n'ahịrị ederede
+	Show the equation on a line of its own	Gosi nhata n'ahịrị nke ya
+	Show the mini toolbar when text is selected	Gosi obere ngwaọrụ mgbe ahọpụtara ederede
+	Show/Hide ¶	Gosi/ Zoo ¶
+	Show\nComments	Gosi\nNkwupụta
+	Showing the first {count} items.	Na-egosi ihe mbụ {count}.
+	Shows a tree: each item below the item it belongs to.	Na-egosi osisi: ihe ọ bụla n'okpuru ihe ọ nwere.
+	Shows items around a central idea: the first item is the centre.	Na-egosi ihe n'akụkụ echiche etiti: ihe mbụ bụ etiti.
+	Shows items of equal weight as blocks in rows.	Na-egosi ihe nha nha nha dị ka ngọngọ n'ahịrị.
+	Shows overlapping ideas as overlapping circles.	Na-egosi echiche ndị kpuchiri ekpuchi dị ka okirikiri dakọtara.
+	Shows parts of a whole as quadrants.	Na-egosi akụkụ nke mkpokọta dị ka akụkụ anọ.
+	Shows parts that build on each other, largest at the bottom.	Na-egosi akụkụ ndị na-ewuli onwe ha elu, nke kachasị na ala.
+	Shows steps in order, left to right, with arrows between them.	Na-egosi usoro n'usoro, aka ekpe gaa n'aka nri, nwere akụ n'etiti ha.
+	Shows steps that repeat, around a circle.	Na-egosi nzọụkwụ na-emegharị, gburugburu gburugburu.
+	Shrink Font 1 Point	Mechie Font 1 Point
+	Shrink Selection	Mechie Nhọrọ
+	Shrink text	Mechie ederede
+	Side to Side	Akụkụ n'akụkụ
+	Side\nto Side	Akụkụ\nna akụkụ
+	Sides of a right triangle	Akụkụ triangle ziri ezi
+	Signature Line	Ahịrị mbinye aka
+	Sine and cosine series of f(x)	Sine na usoro cosine nke f(x)
+	Sine Function	Ọrụ Sine
+	Sine theta	Sine theta
+	Single	Naanị otu
+	Single Brackets	Otu akara aka
+	Single Closing Quote	Otu okwu mmechi
+	Single label	Otu akara
+	Single Left Angle	Otu akụkụ akaekpe
+	Single Left Bar	Otu Ogwe akaekpe
+	Single Left Brace	Otu ihe nkwado aka ekpe
+	Single Left Bracket	Otu akara akaekpe
+	Single Left Parenthesis	Otu akụkụ akaekpe ekpe
+	Single Opening Quote	Otu okwu mmeghe
+	Single Right Brace	Otu ihe nkwado aka nri
+	Single Right Bracket	Otu akara aka nri
+	Single Right Parenthesis	Otu akụkụ aka nri otu
+	Single Spacing	Otu oghere
+	SIST02	SIST02
+	Site name	Aha saịtị
+	Size	Nha
+	Size (pt):	Nha (pt):
+	Size and Crop…	Nha na ihe ubi…
+	Size:	Nha:
+	Sketchbook	Akwụkwọ eserese
+	Skewed Fraction	Iberibe Skewed
+	Skip citations & bibliography	Mafere ntụaka na akwụkwọ ọgụgụ
+	Skip Citations and Bibliography	Mafere ntụaka na akwụkwọ ọgụgụ
+	Skip Record If	Mafere ndekọ Ọ bụrụ
+	Skip Record If…	Mafere ndekọ Ọ bụrụ…
+	Slant Down	Slant Down
+	Slant Up	Slant Up
+	Small Caps	Obere okpu
+	Small caps	Obere okpu
+	Small change	Obere mgbanwe
+	Smart quotes instead of straight quotes	Ntụtuta smart kama ịtụ okwu kwụ ọtọ
+	SmartArt	SmartArt
+	SmartArt Design	Nhazi SmartArt
+	SmartArt Styles	Ụdị SmartArt
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Mpịakọta nke ọma na mbugharị, yana menus na bọtịnụ na-adaba na-egosi mgbanwe ọ bụla ozugbo.
+	Soft Edges	Ọnụ dị nro
+	Soft Glow	Glow dị nro
+	Solid Accent	Ụda siri ike
+	Sort	Hazie
+	Sort by	Hazie site na
+	Sort order:	Hazie usoro:
+	Sort Records	Hazie ndekọ
+	Source code: github.com/chatraweechai/doc4me	Koodu isi mmalite: github.com/chatraweechai/doc4me
+	Source Manager	Onye njikwa isi mmalite
+	Source type:	Ụdị isi mmalite:
+	Sources in this document:	Isi mmalite dị na akwụkwọ a:
+	South	Ndịda
+	Space	Oghere
+	Space after	Oghere mgbe
+	Space after: {pt} pt	Oghere mgbe: {pt} pt
+	Space before	Oghere tupu
+	Space before/after:	Oghere tupu/mgbe emechara:
+	Space before: {pt} pt	Oghere tupu: {pt} pt
+	Spaces	Oghere
+	Spacing	Oghere anya
+	Spacing (pt):	Ọpụrụiche (pt):
+	Spacing:	Ọpụrụiche:
+	Spanish	Spanish
+	Spanish (Mexico)	Spanish (Mexico)
+	Spanish (Spain)	Spanish (Spain)
+	Sparse Matrices	Matrices dị obere
+	Special	Pụrụ iche
+	Special Characters	Ụmụ agwa pụrụ iche
+	Specify height:	Kọwaa elu:
+	Speech	Okwu
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	A na-amata okwu na kọmputa a (whisper.cpp); ọ dịghị ihe na-eziga online.
+	Speed	Ọsọ
+	Spelling	Nsụsụ
+	Spelling & Grammar	Ọsụsụ & Ụtọasụsụ
+	Spelling &\nGrammar	Nsụsụ &\nAnụmanụ
+	Spelling and grammar are checked in English (United States).	A na-enyocha asụpe na ụtọ asụsụ na Bekee (United States).
+	Spelling Suggestions	Aro nsụpe
+	Spike	Ọgba
+	Split	Kewaa
+	Split apart page break and paragraph mark	Kewaa nkwụsịtụ ibe na akara paragraf
+	Split Cells	Ekewaa Selụ
+	Split Table	Tebụl gbawara
+	Spreadsheet Table	Tebụl mpempe akwụkwọ
+	Square	Square
+	Square Root	Mgbọrọgwụ Square
+	Square Root with Degree	Mgbọrọgwụ Square nwere ogo
+	Square Union	Square Union
+	Stack Object	Ihe ngwugwu
+	Stack Object (Three)	Ihe ngwugwu (atọ)
+	Stacked	Akwadoro
+	Stacked Bar	Ogwe akwakọbara
+	Stacked Column	Kọlụm ekpokọtara
+	Stacked Fraction	Mpekere ekpokọbara
+	Stacked, no bar	Akwadoro, enweghị mmanya
+	Standard	Ọkọlọtọ
+	Standard and Contextual	Ọkọlọtọ na Okwu
+	Standard Colors	Agba agba
+	Standard Only	Ọkọlọtọ naanị
+	Star	Kpakpando
+	Start at:	Malite na:
+	Start Enforcing Protection	Malite ịmanye nchekwa
+	Start Mail Merge	Malite Ngwakọta ozi
+	Start Mail\nMerge	Malite Mail\nMerge
+	State	Steeti
+	Statement   5.50" × 8.50"	Nkwupụta 5.50" × 8.50"
+	Statistics	Ọnụọgụ
+	Status Bar	Ogwe ọnọdụ
+	Statutes	Iwu
+	Stop	Kwụsị
+	Stop Protection	Kwụsị Nchekwa
+	Stop Reading	Kwụsị ịgụ ihe
+	Stopped	Akwụsịla
+	Store	Ụlọ ahịa
+	Straight Arrow Connector	Njikọ akụ kwụ ọtọ
+	Straight Connector	Njikọ kwụ ọtọ
+	Strikethrough	Mkpebi
+	Stroke {n} of {total}	Stroke {n} nke {total}
+	Strong	siri ike
+	Structure Actions	Omume ihe owuwu
+	Structures	Ihe owuwu
+	Studio	Ụlọ ihe nkiri
+	Studio cover	Ihe mkpuchi Studio
+	Studio handbook (sample)	Akwụkwọ ntuziaka Studio (nlele)
+	Style	Ụdị
+	Style based on:	Ụdị dabere na:
+	Style Inspector	Onye nyocha ụdị
+	Style Set	Nhazi Ụdị
+	Style:	Ụdị:
+	Style: APA	Ụdị: APA
+	Style: {style}	Ụdị: {style}
+	Styles	Ụdị
+	Styles Pane	Pane ụdị
+	Styles:	Ụdị:
+	Subentry:	Ebe nchekwa:
+	Subject	Isiokwu
+	Subscript	Ndebanye aha
+	Subscript-Superscript	Ndebanye aha-Superscript
+	Subscripts and Superscripts	Ndebanye aha na Superscripts
+	Subset:	Nkebi:
+	Substituted font	Font edochiri
+	Subtitle	Ndepụta Okwu
+	Subtle Emphasis	Ntụkwasị obi dị nro
+	Subtle Reference	Ntuziaka aghụghọ
+	Sum	Nchikota
+	Sum of cosines	Nchikota nke cosines
+	Sum or difference of sines	Nchikota ma ọ bụ ọdịiche nke sines
+	Summation	Nchịkọta
+	Summation from 0 to n	Nchịkọta sitere na 0 ruo n
+	Summation over binomials	Nchịkọta nke binomials
+	Summation with Limits	Nchịkọta nwere oke
+	Summation with Lower Limit	Nchịkọta nwere obere oke
+	Summation with Subscript Limit	Nchịkọta nwere oke ndebanye aha
+	Summation with Subscript-Superscript Limits	Nchịkọta na oke ndebanye aha-Superscript
+	Summations	Nchịkọta
+	Superscript	Ebube
+	Suppress line numbers	Wepụ nọmba ahịrị
+	Surface Integral	Ngwakọta dị n'elu
+	Surface Integral with Limits	Mkpokọta elu na oke
+	Surface Integral with Stacked Limits	Mkpokọta dị n'elu ya na oke chịkọbara
+	Swap footnotes and endnotes	Gbanwee ndetu ala ala peeji na ndetu ngwụcha
+	Swedish	Swedish
+	Switch Modes	Gbanwee Ụdị
+	Switch Windows	Gbanwee Windows
+	Switch\nModes	Switch\nModes
+	Symbol	Akara
+	Symbol Font	Font akara
+	Symbols	Akara
+	Synchronous Scrolling	Mpịakọta ọnụ
+	Synonyms	Ụdị okwu
+	System	Sistemu
+	Tab	Tab
+	Tab Character	Njirimara Tab
+	Tab character	agwa tab
+	Tab characters	Ụmụ agwa tab
+	Tab leader:	Onye ndu tab:
+	Tab stop position:	Ọkwa nkwụsị taabụ:
+	Tab stops to be cleared:	Tab na-akwụsị ka ihichapụ:
+	Table	Tebụl
+	Table AutoFormat	Isiokwu AutoFormat
+	Table AutoFormat…	Tebụl AutoFormat…
+	Table Column Width	Obosara kọlụm okpokoro
+	Table Design	Nhazi tebụl
+	Table direction:	Ntuziaka tebụl:
+	Table entry fields	Ogige ntinye tebụl
+	Table Grid	Grid tebụl
+	Table identifier:	Ihe nchọpụta tebụl:
+	Table Layout	Nhazi okpokoro
+	Table of Authorities	Tebụl ndị ọchịchị
+	Table of Contents	Isiokwu ọdịnaya
+	Table of Contents Options	Nhọrọ nke ọdịnaya
+	Table of Contents Styles	Isiokwu ọdịnaya Styles
+	Table of Figures	Tebụl nke onyonyo
+	Table of Figures Options	Tebụl nke Nhọrọ Nhọrọ
+	Table of\nContents	Tebụl nke \n ọdịnaya
+	Table Positioning	Ndokwa tebụl
+	Table Properties	Njirimara tebụl
+	Table Row Height	Okpokoro Ahịrị Elu
+	Table style	Ụdị okpokoro
+	Table Style Options	Nhọrọ Ụdị Tebụl
+	Table Styles	Ụdị okpokoro
+	Table styles:	Ụdị tebụl:
+	Tables	Tebụl
+	Tabloid   11.00" × 17.00"	Tabloid 11.00" × 17.00"
+	Tabs	Taabụ
+	Tabs…	Taabụ…
+	Tabular List	Ndepụta Tabular
+	Tag	Mkpado
+	Tangent formula	Usoro tangent
+	Tangent Function	Ọrụ Tangent
+	TC entry fields	Oghere ntinye TC
+	Technology	Nkà na ụzụ
+	Templates	Ụdị
+	Templates and Add-ins	Templates na Tinye-ins
+	Text	Ederede
+	Text Box	Igbe ederede
+	Text boxes	Igbe ederede
+	Text Direction	Ntuziaka ederede
+	Text Effects	Mmetụta ederede
+	Text Effects and Typography	Mmetụta ederede na ederede
+	Text Fill	Mpempe ederede
+	Text from File	Ederede si na faịlụ
+	Text Highlight Color	Ederede Highlight Agba
+	Text indent at:	Ntinye ederede na:
+	Text isn't squeezed to fit its cell yet.	Enwebeghị ederede ka ọ dabara na cell ya.
+	Text Outline	Nkọwa ederede
+	Text over Colon Equal	Ederede n'elu Colon Equal
+	Text over Equal	Ederede n'elu nha nhata
+	Text Pane	Mpempe ederede
+	Text size	Ogo ederede
+	Text snaps to characters	Ederede na-adaba na mkpụrụedemede
+	Text to display:	Ederede iji gosi:
+	Text Wrapping	Mkpuchi ederede
+	Text wrapping:	Mkpuchi ederede:
+	Text:	Ederede:
+	Text\nBox	Text\nBox
+	Text\nDirection	Ntuziaka\nederede
+	Thai	Thai
+	Thai Distributed	Ekesara Thai
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Ụdị ahụ anaghị edebe ihe niile, ya mere akwụkwọ ahụ ka na-emeghe. Chekwaa ya ka akwụkwọ Okwu (.docx) ka ọ gaa n'ihu.
+	That isn't the web address or embed code of an online video.	Nke ahụ abụghị adreesị webụ ma ọ bụ koodu agbakwunyere nke vidiyo ịntanetị.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Okwuntughe ahụ ezighi ezi. Lelee ya (mkpụrụokwu mbanye nwere mmetụta nke ikpe) wee nwaa ọzọ.
+	The clipboard is empty.	Klipbọọdụ ahụ tọgbọ chakoo.
+	The date it is today	Ụbọchị ọ bụ taa
+	The document contains no tracked changes.	Akwụkwọ ahụ enweghị mgbanwe edoro anya.
+	The document has no bookmarks yet.	Akwụkwọ ahụ enweghị ibe edokọbara.
+	The document is read only, except for regions marked editable.	A na-agụ naanị akwụkwọ a, ewezuga mpaghara nwere akara nwere ike dezie.
+	The document will be saved with a password. Save it to protect it.	A ga-eji paswọọdụ chekwaa akwụkwọ ahụ. Chekwaa ya iji chebe ya.
+	The first word of a sentence starts with a capital.	Okwu mbụ nke ahịrịokwu na-amalite n'isi.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	A na-eji ego kwa ụbọchị n'efu (gbalịa ọzọ echi, ma ọ bụ nye adreesị ozi-e)
+	the LibreTranslate server	ihe nkesa LibreTranslate
+	The Mail Merge Helper sets up a merge in three steps.	Onye inyeaka njikota ozi na-ahazi njikọ n'ime usoro atọ.
+	The new style takes the formatting of the current paragraph.	Ụdị ọhụrụ ahụ na-ewe nhazi nke paragraf dị ugbu a.
+	The password is optional; without it anyone can stop the protection.	Okwuntughe bụ nhọrọ; na-enweghị ya onye ọ bụla nwere ike ịkwụsị nchebe.
+	The password is removed. Save the document to keep the change.	Ewepula paswọọdụ. Chekwaa akwụkwọ ahụ ka idowe mgbanwe ahụ.
+	The passwords don't match.	Okwuntughe ndị ahụ adabaghị.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	A na-ahọrọ ngwa nbipute, mbipụta nwere akụkụ abụọ na ibe maka mpempe akwụkwọ na mkparịta ụka ahụ.
+	The recipient-list field that fills each part of an address block and greeting line.	Ogige ndepụta nnata na-ejupụta akụkụ ọ bụla nke ngọngọ adreesị na ahịrị ekele.
+	The same word twice in a row.	Otu okwu ugboro abụọ n'usoro.
+	The spelling and grammar check is complete.	Nlele mkpoputa na ụtọasụsụ ezuola.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Mkparịta ụka faịlụ sistemụ adịghị, yabụ Doc4Me gosipụtara nke ya. Iji nweta mkparịta ụka sistemụ, wụnye portal onye na-ahọrọ faịlụ (dị ka xdg-desktop-portal-gtk) ma ọ bụ zenity.
+	The text is sent to {service} to be translated.	A na-ezigara ederede na {service} ka atụgharịa ya.
+	The time right now	Oge ugbu a
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Vidiyo na-egosi dị ka foto na akwụkwọ. Pịa ya ugboro abụọ ka ikiri ya na ihe nchọgharị gị.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	A na-atụgharị akwụkwọ ahụ dum ka ọ bụrụ akwụkwọ ọhụrụ, nke dochie nke a. Buru ụzọ chekwaa ọrụ gị.
+	Theme Colors	Agba isiokwu
+	Theme Fonts	Ederede isiokwu
+	Theme List	Ndepụta isiokwu
+	Themes	Gburugburu
+	Then by	Mgbe ahụ site
+	Then insert:	Wee tinye:
+	There's no text to translate.	Enweghị ederede ịsụgharị.
+	Thesaurus	Thesaurus
+	These marks show even when Show/Hide ¶ is off.	Akara ndị a na-egosi ọbụlagodi mgbe Gosi/ Zoo ¶ gbanyụrụ.
+	These merge fields aren't in the recipient list:	Ogige ngwakọta ndị a adịghị na ndepụta nnata:
+	These settings will be used for new documents.	A ga-eji ntọala ndị a maka akwụkwọ ọhụrụ.
+	Thick	Oke
+	Thickness	Ọkpụrụkpụ
+	This Device…	Ngwaọrụ a…
+	This document	Akwụkwọ a
+	This field has no options.	Ogige a enweghị nhọrọ.
+	This folder can't be read: {error}	Enweghị ike ịgụ folda a: {error}
+	This font has no characters to show.	Ụdị mkpụrụedemede a enweghị mkpụrụedemede ọ ga-egosi.
+	This page	Ibe a
+	This password type isn't supported.	Anaghị akwado ụdị okwuntughe a.
+	This point forward	Nke a n'ihu
+	This section	Nkebi a
+	Three	Atọ
+	Through	Site na
+	Tight	Ejigide
+	Tilde	Tilde
+	Tips ({n})	Ndụmọdụ ({n})
+	Title	Aha
+	Title from the document properties	Aha sitere na akụrụngwa akwụkwọ
+	Title:	Aha:
+	To	Iji
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Ka imepe akwụkwọ Okwu na Doc4Me na ndabara: họrọ otu na Finder, họrọ Faịlụ › Nweta Ama, họrọ Doc4Me n'okpuru Mepee ya, wee pịa Gbanwee niile.
+	To:	Iji:
+	TOA Heading	Isi TOA
+	TOC Heading	Isi TOC
+	TOC {n}	TOC {n}
+	Today	Taa
+	tOGGLE cASE	TOGGLE ikpe
+	Toggle Check Box	Gbanwee igbe nlele
+	Toggle Field Codes	Gbanwee Koodu Ubi
+	Toggle Unicode Character	Gbanwee àgwà Unicode
+	Tools	Ngwa
+	Top	N'elu
+	Top and Bottom	N'elu na ala
+	Top Border	Oke oke
+	Top Margin	Oke oke
+	Top of Next Page	Elu nke ibe na-esote
+	Top of Page	Elu ibe
+	Top of Previous Page	Elu nke ibe gara aga
+	Top of the Window	N'elu windo
+	Top:	N'elu:
+	Total	Mkpokọta
+	Total Row	Mkpokọta Ahịrị
+	Track Changes	Soro mgbanwe
+	Track Changes Options	Sochie nhọrọ mgbanwe
+	Track changes while editing	Sochie mgbanwe mgbe ị na-edezi
+	Track Changes: On	Sochie mgbanwe: Gbanye
+	Track formatting	Sochie nhazi usoro
+	Track\nChanges	Track\nMgbanwe
+	Track\nChanges ✓	Track\nMgbanwe ✓
+	Tracked changes	Achọpụtara mgbanwe
+	Tracking	Ndepụta
+	Trademark	Akara ahia
+	Trademark Sign	Akara ahia
+	Transform	Gbanwee
+	Translate	Tụgharịa asụsụ
+	Translate Document	Tụgharịa asụsụ akwụkwọ
+	Translating {done} of {total}	Ịsụgharị {done} nke {total}
+	Translation service	Ọrụ ntụgharị asụsụ
+	Translator	Onye ntụgharị asụsụ
+	Transparency	nghọta
+	Transparency:	nghọta:
+	Transport	Ụgbọ njem
+	Treatises	Ọgwụgwọ
+	Triangle	Triangle
+	Triangle Down	Triangle gbada
+	Triangle Up	Triangle Up
+	Trigonometric Functions	Ọrụ Trigonometric
+	Triple	Atọ atọ
+	Triple Dot	Dot atọ
+	Triple Integral	Triple Integral
+	Triple Integral with Limits	Ngwakọta Triple nwere oke
+	Triple Integral with Stacked Limits	Ngwakọta Triple nwere oke chịkọbara
+	Trust Center	Ebe ntụkwasị obi
+	Tue	Tue
+	Turabian	Turabian
+	Turkish	Turkish
+	Two	Abụọ
+	Type	Ụdị
+	Type a command, e.g. "insert table"	Pịnye iwu, dịka. "tinye tebụl"
+	Type a New List	Pịnye Ndepụta Ọhụrụ
+	Type a New List…	Pịnye Ndepụta Ọhụrụ…
+	Type at least one recipient.	Pịnye opekata mpe otu onye nnata.
+	Type equations in LaTeX	Pịnye nha nha na LaTeX
+	Type equations in the linear format (UnicodeMath)	Pịnye nha nha n'ụdị ahịrị (UnicodeMath)
+	Type in Equation	Pịnye na nha nha
+	Type normal (non-math) text in the equation	Pịnye ederede nkịtị (na-abụghị mgbakọ na mwepụ) n'usoro
+	Type Text	Ụdị Ederede
+	Type the categories down the side and a column of values per series.	Pịnye edemede ala n'akụkụ yana kọlụm ụkpụrụ kwa usoro.
+	Type the field's name and its switches, for example PAGE \\* roman.	Pịnye aha ubi na mgba ọkụ ya, dịka ọmụmaatụ PAGE \\* roman.
+	Type the password to stop the protection.	Pịnye paswọọdụ ka ịkwụsị nchedo.
+	Type the recipients, or load them from a file.	Pịnye ndị nnata, ma ọ bụ bunye ha na faịlụ.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Pịnye aha mkpado nke isi mmalite. Ị nwere ike tinyekwuo ozi na isi mmalite a ma emechaa site na idezi isi iyi.
+	Type:	Ụdị:
+	Typing	Mpempe akwụkwọ
+	Typing replaces selected text	Mpi na-anọchi ederede ahọpụtara
+	Ukrainian	onye Ukraine
+	Unchecked symbol	Akara enweghị akara
+	Underbar	N'okpuru ụlọ mmanya
+	Underbrace	Ihe nkwado dị n'okpuru
+	Underline	Kanye akara
+	Underline color	Kanye akara agba
+	Underline Words Only	Kanye akara naanị Okwu
+	Undo	Megharịa
+	Undo Stroke	Wepu Stroke
+	Undo {action}	Wepu {action}
+	Unformatted Text	Ederede edeghị ede
+	Ungroup	Wepu aha
+	Union	Njikọ
+	Union of intersections	Njikọ nke njikọ
+	Union with Limits	Njikọ nwere oke
+	Union with Lower Limit	Njikọ nwere obere oke
+	Union with Plus	Njikọ na Plus
+	Union with Subscript-Superscript Limits	Njikọ nwere oke subscript-Superscript
+	Unions and Intersections	Njikọ na njikọ
+	Unlink Fields	Kwụpụ ogige
+	Unlink\nCitations	Unlink\nCitations
+	Unlock Fields	Mepee Ubi
+	Up	Elu
+	Up Diagonal Dots	Ntụpọ diagonal elu
+	Up one level	N'elu otu larịị
+	Update Field	Mmelite Ubi
+	Update fields before printing	Melite mpaghara tupu ibipụta ya
+	Update Index	Melite Index
+	Update Style to Match Selection	Melite Ụdị ka ọ dabara na Nhọrọ
+	Update Styles from Template	Melite Ụdị site na Template
+	Update Table	Melite tebụl
+	Update Table of Figures	Melite tebụl onyonyo
+	Update to Match	Mmelite ka ọ dabara
+	Update to Match Selection	Melite na Nhọrọ dakọtara
+	UPPERCASE	Karịrị elu
+	URGENT	Ngwa ngwa
+	URL	URL
+	Use "a" before a consonant sound	Jiri "a" tupu ụda consonant
+	Use "an" before a vowel sound	Jiri "an" tupu ụda ụdaume
+	Use an Existing List…	Jiri Ndepụta dị…
+	Use passim (five or more pages)	Jiri passim (ibe ise ma ọ bụ karịa)
+	Use system setting	Jiri ntọala sistemụ
+	Use the Insert key to switch overtype on and off	Jiri igodo Fanye ka ịgbanwuo ma gbanyụọ overtype
+	Use wildcards	Jiri akara egwu
+	User Name	Aha njirimara
+	User name:	Aha njirimara:
+	Username	Aha njirimara
+	Value	Uru
+	Vector A	Vector A
+	Vector AB	Ụgwọ nke ụlọ ọrụ Vector AB
+	Version	Ụdị
+	Version History	Akụkọ ụdị
+	Version {version} ({build})	Ụdị {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	A na-edobe ụdịdị mgbe akwụkwọ ahụ mepere (faịlụ .docx enweghị nsụgharị).
+	Vertical	kwụ ọtọ
+	Vertical Alignment	Nkwekọrịta kwụ ọtọ
+	Vertical alignment:	Ndozi kwụ ọtọ:
+	Vertical Bars	Ogwe kwụ ọtọ
+	Vertical Dots	ntụpọ kwụ ọtọ
+	Vertical spacing:	Oghere kwụ ọtọ:
+	Vietnamese	Vietnamese
+	View	Lelee
+	View Alt Text…	Lelee Alt Ederede…
+	View Gridlines	Lelee Gridline
+	View Side by Side	Lelee akụkụ n'akụkụ
+	View State	Lelee steeti
+	Views	Echiche
+	Visual effects	Mmetụta anya
+	Voice	Olu
+	Volume	Olu
+	Volume Integral	Mkpokọta olu
+	Volume Integral with Limits	Mkpokọta olu nwere oke
+	Volume Integral with Stacked Limits	Mkpokọta olu nwere oke ekpokọtara
+	W:	W:
+	Waiting for Zotero…	Na-eche Zotero…
+	Warm Gradient with Outline	Ọkụ gradient nwere nkọwa
+	Warnings ({n})	Ịdọ aka ná ntị ({n})
+	Watermark	Watermark
+	Wave	Ifufe
+	Weather	Ihu igwe
+	web access isn't available here	ohere weebụ adịghị ebe a
+	Web Layout	Nhazi Weebụ
+	Web page (*.html)	Ibe weebụ (*.html)
+	Web\nLayout	Web\nLayout
+	Website	Weebụsaịtị
+	Wed	Wed
+	Weight	Ibu
+	West	West
+	When merging records	Mgbe ị na-ejikọta ndekọ
+	When this document was first created	Mgbe mbụ e mepụtara akwụkwọ a
+	When this document was most recently printed	Mgbe ebipụtara akwụkwọ a kacha nso nso a
+	When this document was most recently saved	Mgbe echekwara akwụkwọ a kacha nso nso a
+	White Space	Oghere ọcha
+	White space	Oghere ọcha
+	Who the document properties name as author	Onye akwụkwọ akụrụngwa aha ya dị ka onye edemede
+	Whole document	Akwụkwọ dum
+	Whole page	Ibe dum
+	Whole Table	Okpokoro dum
+	Whole words	Okwu dum
+	Wide	Obosara
+	Widow/Orphan Control	Nwanyị di ya nwụrụ / njikwa ụmụ mgbei
+	Widow/Orphan control	Nwanyị di ya nwụrụ/Nchịkwa mgbei
+	Width and spacing	Obosara na oghere
+	Width:	Obosara
+	Wildcards (regex)	Kaadị ọhịa (regex)
+	Window	Ohere
+	With:	Ya na:
+	Word 2007	Okwu 2007
+	Word 2010	Okwu 2010
+	Word 2013 and later	Okwu 2013 na mgbe e mesịrị
+	Word 97–2003	Okwu 97–2003
+	Word Count	Ọnụọgụ okwu
+	Word document	Akwụkwọ okwu
+	Word document (*.docx)	Akwụkwọ okwu (*.docx)
+	Word forms	Ụdị okwu
+	Word Left	Okwu ekpe
+	Word level	Ọkwa okwu
+	Word Right	Okwu ziri ezi
+	Word XML Document (*.xml)	Akwụkwọ XML Okwu (* .xml)
+	WordArt	OkwuArt
+	WordArt Styles	Ụdị OkwuArt
+	Words	Okwu
+	Words only	Naanị okwu
+	Wrap Text	Kechie Ederede
+	Wrap text	Kechie ederede
+	Wrap Text Sides	Kechie akụkụ ederede
+	Wrap\nText	Wrap\n Ederede
+	Write & Insert Fields	Dee & Fanye ubi
+	Write a reply	Dee azịza
+	Write math here with the mouse or a pen.	Jiri òké ma ọ bụ mkpịsị akwụkwọ dee mgbakọ na mwepụ ebe a.
+	Writing Style: Grammar	Ụdị odee: Ụtọasụsụ
+	x bar	x mmanya
+	Year	Afọ
+	Yes	Ee
+	Yields	Na-amịpụta
+	Your changes will be lost if you don't save them.	Mgbanwe gị ga-efunahụ ma ọ bụrụ na ichekwaghị ha.
+	Your system doesn't report an animation setting, so animation effects stay on.	Sistemu gị anaghị akọpụta ntọala animation, yabụ mmetụta animation na-adịgide.
+	Your system has animation effects turned off.	Sistemu gị nwere mmetụta animation agbanyụrụ.
+	Your system has animation effects turned on.	Sistemu gị nwere mmetụta animation agbanwuru.
+	Zoom	Bugharịa
+	Zoom In	Bubata
+	Zoom Out	Mbupụ
+	Zoom to Page	Bugharịa gaa na ibe
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: akagbuola
+	Zotero: done	Zotero: emela
+	{cols}×{rows} Table	Okpokoro {cols}×{rows}
+	{contributors} contributors · {commits} commits	Ndị ntinye aka {contributors} · {commits} na-eme
+	{count} items highlighted	Ihe {count} mere ka ọ pụta ìhè
+	{count} of {total} pages will print	{count} nke ibe {total} ga-ebipụta
+	{count} paragraphs were changed.	Agbanwere paragraf {count}.
+	{count} records; fields: {fields}	{count} ndekọ; ubi: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	Awụnyeghị {fonts} na kọmpụta a, yabụ na egosiri akwụkwọ a na {with}. Ahịrị na ibe nwere ike ịgbaji n'ụzọ dị iche karịa n'ụdị mkpụrụedemede mbụ.
+	{group} settings	Ntọala {group}
+	{key}+Click to follow link	{key}+ Pịa ka iso njikọ
+	{language} is now the document's default language.	{language} bụ asụsụ ndabere akwụkwọ ahụ ugbu a.
+	{name} (Press ENTER to Insert)	{name} (Pịa ENTER ka itinye)
+	{name} already exists. Choose Save again to replace it.	{name} adịlarị. Họrọ Chekwa ọzọ iji dochie ya.
+	{name} can't be a folder's name.	{name} enweghị ike ịbụ aha nchekwa.
+	{name} is protected with a password.	{name} ejiri paswọọdụ chedo.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	Agbakwunyere {name}. Macros ya dị n'okpuru ihe mgbakwunye m na nlele › Macros.
+	{name} wasn't found.	{name} ahụghị.
+	{n} entries marked.	akara ndenye {n}.
+	{n} lines	Ahịrị {n}
+	{n} of {of} recipients	{n} nke ndị nnata {of}
+	{n} pt	{n} pt
+	{n} records	{n} ndekọ
+	{n} revisions	Ntụgharị {n}
+	{selected} of {words} words	{selected} nke okwu {words}
+	{size} pt	{size} pt
+	{words} words	Okwu {words}
+	{w} × {h} in	{w} × {h} n'ime
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	"{text}" ({row}, {series}) abụghị ọnụọgụ.
+	← Find	← Chọta
+	✓ None	✓ Ọ dịghị
+	➕ New comment	➕ Okwu ọhụrụ
+	📂  Browse…	📂 Chọgharịa…
+	Add Help Text…	Tinye ederede enyemaka…
+	AutoText entry:	Ntinye AutoText:
+	Calculate on exit	Gbakọọ na ọpụpụ
+	Calculation	Mgbakọ
+	Check Box Form Field	Lelee ubi Ụdị Igbe
+	Check Box Form Field Options	Lelee igbe Ụdị Nhọrọ mpaghara
+	Check box	Lelee igbe
+	Check box enabled	Agbanyere igbe nlele
+	Check box size:	Lelee nha igbe:
+	Checked	Atụlela
+	Current date	Ụbọchị dị ugbu a
+	Current time	Oge ugbu a
+	Default value:	Uru efu:
+	Drop-Down Form Field	Ogige Ụdị Mwepu-ala
+	Drop-Down Form Field Options	Nhọrọ Mpempe Mpempe Mbelata
+	Drop-down	Weda-ala
+	Drop-down enabled	Agbanyere mbudata
+	Drop-down item:	Ihe ewedara:
+	Fill In Form Field	Dejupụta mpaghara mpempe akwụkwọ
+	Fill-in enabled	Agbanyere njuputa
+	Form Field	Mpaghara Ụdị
+	Form Field Help Text	Ederede Enyemaka Ubi
+	Form Field Options	Ụdị Ụdị Nhọrọ
+	Form Field Shading	Ụdị Ubi Shading
+	Form Field at Selection	Mpempe akwụkwọ na Nhọrọ
+	Help Key (F1)	Igodo enyemaka (F1)
+	Insert Form Field	Fanye Ogige Ụdị
+	Items in drop-down list:	Ihe ndị dị na ndepụta ndọpụta:
+	Legacy Tools	Ngwa Ọkpụkpọ
+	Maximum length:	Ogologo kacha elu:
+	Next Form Field	Ogige Ụdị na-esote
+	Not checked	Achọpụtaghị ya
+	Put the caret on a form field first.	Buru ụzọ tinye nlekọta ahụ n'ubi ụdị.
+	Regular text	Ederede oge niile
+	Reset Form Fields	Tọgharia Ụdị Ụdị
+	Text Form Field	Mpaghara Ụdị Ederede
+	Text Form Field Options	Nhọrọ ubi Ụdị ederede
+	Type your own:	Pịnye nke gị:
+	Unlimited	Enweghị oke
+	Protected sections:	Akụkụ echedoro:
+	Section Protection	Nchekwa ngalaba
+	Section {n}	Nkebi {n}
+	Select sections…	Họrọ ngalaba…
+	AutoSummarize	Nchịkọta akpaaka
+	Create a new document and put the summary there	Mepụta akwụkwọ ọhụrụ wee tinye nchịkọta ebe ahụ
+	Highlight key points	Mee ka isi ihe pụta ìhè
+	Insert an executive summary or abstract at the top of the document	Fanye nchịkọta isi ma ọ bụ nkenke n'elu akwụkwọ ahụ
+	Length of summary	Ogologo nchịkọta
+	Percent of original:	Pasent nke izizi:
+	Summary: {words} of {of} words	Nchịkọta: {words} nke okwu {of}
+	Type of summary	Ụdị nchịkọta
+	Update document statistics	Melite ọnụ ọgụgụ akwụkwọ
+	{n} sentences	Ahịrịokwu {n}
+	{n} words or less	Okwu {n} ma ọ bụ obere
+	At:	Na:
+	Distance from text:	Anya site na ederede:
+	Format Frame	Ụdị Frame
+	Format Frame…	Nhazi Frame…
+	Frame	Frame
+	Frame…	Frame…
+	Insert Frame	Fanye Frame
+	Lock anchor	Mkpọchi arịlịka
+	Remove Frame	Wepu Frame
+	Text wrapping	Mkpuchi ederede
+	Chinese Conversion	Ntụgharị Chinese
+	Chinese Conversion…	Ntụgharị China…
+	Converted {n} characters	mkpụrụedemede {n} tụgharịrị
+	Simplified Chinese to Traditional Chinese	Chinese dị mfe ka ọ bụrụ Chinese omenala
+	Simplified to Traditional	Dị mfe ka ọ dị na omenala
+	Traditional Chinese to Simplified Chinese	Chinese omenala ka ọ dị mfe Chinese
+	Traditional to Simplified	Omenala ka Adị mfe
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Jiri Taiwan, Hong Kong SAR, na Macao SAR dị iche iche agwa
+	Asian Layout	Nhazi Asia
+	Fit Text	Ederede dabara adaba
+	Fit Text…	Ederede dabara…
+	Two Lines in One	Ahịrị abụọ n'otu
+	Two Lines in One…	Ahịrị abụọ n'otu…
+	New text width (pt):	Obosara ederede ọhụrụ (pt):
+	Enclose in brackets	Tinye na brackets
+	Bracket pair:	Otu njide:
+	Typography	Ederede
+	Character spacing control	Njikwa oghere agwa
+	Don't compress	Ejikọla
+	Compress punctuation only	Tinye naanị akara edemede
+	Compress punctuation and Japanese kana	Mpịakọta akara edemede na Japanese kana
+	First and last characters	Akpa na ikpeazụ
+	Strict	siri ike
+	Cannot start a line:	Enweghị ike ịmalite ahịrị:
+	Cannot end a line:	Enweghị ike ịkwụsị ahịrị:
+	Japanese Find Options	Nhọrọ ịchọta Japanese
+	Sounds like (Japanese)	Ọ dị ka (Japanese)
+	Match full/half width	Dakọtara zuru/ọkara obosara
+	Match hiragana/katakana	Dakọtara hiragana/katakana
+	Match small kana	Dakọtara obere kana
+	Match prolonged sound marks and dashes	Dakọtara akara ụda agbatịwo na ọwa
+	Japanese Consistency Checker	Ihe nleba anya nkwekọ nke Japanese
+	Japanese Consistency Checker…	Ndị Japan na-enyocha nkwekọ…
+	No inconsistent spellings were found.	Ọ nweghị mkpoputa na-ekwekọghị ekwekọ ahụghị.
+	Pick the spelling to keep in each group.	Họrọ mkpoputa ka idowe ya n'ìgwè ọ bụla.
+	Bidirectional text	Ederede akụkụ abụọ
+	Bidirectional Text	Ederede Bidirectional
+	Default direction:	Ntụzịaka izizi:
+	Cursor movement:	ngagharị cursor:
+	Logical	Ezi uche
+	Visual	Anya
+	Manage Fields	Jikwaa Ubi
+	File locations	Ebe faịlụ
+	File Locations	Ebe faịlụ
+	Documents:	Akwụkwọ:
+	Pictures:	Foto:
+	The system's choice	Nhọrọ nke usoro
+	Show Repairs	Gosi Ndozi
+	No repairs were needed.	Ọ dịghị nrụzi a chọrọ.
+	These problems were found and repaired when the document was opened:	Achọtara ma mezie nsogbu ndị a mgbe emepere akwụkwọ ahụ:
+	An unreadable entry in the file was skipped: {what}	Awụfere ntinye enweghị ike ịgụ na faịlụ ahụ: {what}
+	An unreadable part was left out: {what}	Ahapụpụrụ akụkụ a na-apụghị ịgụta ọnụ: {what}
+	Unreadable relationships were ignored: {what}	Agbagharaghị mmekọrịta ndị a na-agụghị ịgụ: {what}
+	A missing part of an embedded object was left out: {what}	Ahapụpụrụ akụkụ na-efu nke ihe agbakwunyere: {what}
+	Copy File	Detuo faịlụ
+	Find Files	Chọta faịlụ
+	Letter Wizard	Ọkachamara akwụkwọ ozi
+	Recipient's name:	Aha onye nnata:
+	Salutation:	Ekele:
+	Subject:	Isiokwu:
+	Complimentary closing:	Mmechi nnabata:
+	Sender's name:	Aha onye nzipu:
+	Job title:	Aha ọrụ:
+	Company:	Ụlọ ọrụ:
+	Enclosures:	Mkpuchi:
+	Cc:	CC:
+	Edit Links to Files	Dezie njikọ na faịlụ
+	Source file	Isi mmalite faịlụ
+	Locked	Akpọchiri
+	Change Source	Gbanwee Isi mmalite
+	This document has no links to files.	Akwụkwọ a enweghị njikọ na faịlụ.
+	Web options	Nhọrọ webụ
+	Web Options	Nhọrọ Weebụ
+	Allow PNG as a graphics format	Kwe ka PNG dị ka usoro eserese
+	Rely on CSS for font formatting	Dabere na CSS maka nhazi font
+	Rely on VML for displaying graphics in browsers	Dabere na VML maka igosipụta eserese na ihe nchọgharị
+	Organize supporting files in a folder	Hazie faịlụ na-akwado na nchekwa
+	Use long file names whenever possible	Jiri aha faịlụ ogologo oge ọ bụla enwere ike
+	Screen size:	Nha ihuenyo:
+	Pixels per inch:	Pixel kwa inch:
+	Hangul Hanja Conversion	Ntụgharị Hangul Hanja
+	Hangul Hanja Conversion…	Ntụgharị Hangul Hanja…
+	Hangul to Hanja	Hangul na Hanja
+	Hanja to Hangul	Hanja na Hangul
+	Put the caret in Korean text to choose its Hanja.	Tinye ihe nlekọta na ederede Korean ka ịhọrọ Hanja ya.
+	The selection, or the whole document when nothing is selected.	Nhọrọ, ma ọ bụ akwụkwọ dum mgbe ahọpụtaghị ihe ọ bụla.
+	Add frame	Add frame
+	Attributes:	Attributes:
+	Border color:	Border color:
+	Border width:	Border width:
+	Choose how the custom XML editor displays names and removes schema references.	Choose how the custom XML editor displays names and removes schema references.
+	Confirm before removing a schema reference	Confirm before removing a schema reference
+	Elements:	Elements:
+	Enter an absolute HTTP(S) or URN schema URI.	Enter an absolute HTTP(S) or URN schema URI.
+	Frame URL	Frame URL
+	Frame borders:	Frame borders:
+	Frame spacing:	Frame spacing:
+	Frames:	Frames:
+	Frameset Properties	Frameset Properties
+	Hide	Hide
+	Margin height:	Margin height:
+	Margin width:	Margin width:
+	No resize	No resize
+	No schema references	No schema references
+	Optional	Optional
+	Optional, 0–1000	Optional, 0–1000
+	Pixels (0–100)	Pixels (0–100)
+	Remove Attribute	Remove Attribute
+	Remove schema reference {schema}?	Remove schema reference {schema}?
+	Rows:	Rows:
+	Schema Library	Schema Library
+	Schema URI:	Schema URI:
+	Schemas:	Schemas:
+	Scrolling:	Scrolling:
+	Select a custom XML store with editable datastore properties first.	Select a custom XML store with editable datastore properties first.
+	Select an XML element to add, change, or remove one of its attributes.	Select an XML element to add, change, or remove one of its attributes.
+	Selected element: {name}	Selected element: {name}
+	Set Attribute	Set Attribute
+	Show namespace URIs beside XML names	Show namespace URIs beside XML names
+	Store: {store}	Store: {store}
+	This XML store is preserved but cannot be edited here.	This XML store is preserved but cannot be edited here.
+	This document has no custom XML stores.	This document has no custom XML stores.
+	This store has no datastore properties part for schema references.	This store has no datastore properties part for schema references.
+	This store has no elements available for editing.	This store has no elements available for editing.
+	Value:	Value:
+	View and manage schema references associated with custom XML stores.	View and manage schema references associated with custom XML stores.
+	XML Element Attributes	XML Element Attributes
+	XML Options	XML Options
+	e.g. 25%,*	e.g. 25%,*
+	e.g. 30%,*	e.g. 30%,*
+	Web	Web
+	XML	XML

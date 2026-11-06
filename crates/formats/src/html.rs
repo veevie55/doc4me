@@ -7,13 +7,14 @@
 //! (colspan/rowspan), `img` (`data:` URIs, other sources through a caller's [`ImageLoader`]), `blockquote`, `pre`, `font`, and the CSS
 //! properties `color`, `background-color`, `font-weight`, `font-style`, `font-size`,
 //! `font-family`, `text-decoration`, `vertical-align`, `text-align`, `white-space` and page
-//! breaks. Scripts and styles are skipped; nesting is capped.
+//! breaks. Legacy frameset dimensions, border settings, frame targets and no-frames fallback text
+//! are retained for HTML round-trip. Scripts and styles are skipped; nesting is capped.
 //!
 //! Export writes clean semantic HTML with inline CSS and pictures as `data:` URIs.
 
 use std::sync::Arc;
 
-use doc4me_doc::{Align, Document};
+use doc4me_doc::{Align, Document, HtmlFrame, HtmlFrameScrolling, HtmlFrameset};
 
 use crate::model::{
     self, Cell, FBlock, FTable, Flow, Fmt, Inline, Kind, ListInfo, Meta, Para, base64_encode, data_uri, make_img, mime_of, parse_color,
@@ -389,6 +390,7 @@ struct Builder<'r> {
     pre_tail: bool,
     meta: Meta,
     title: Option<String>,
+    frameset: Option<HtmlFrameset>,
 }
 
 fn is_void(n: &str) -> bool {
@@ -583,6 +585,7 @@ impl<'r> Builder<'r> {
             pre_tail: false,
             meta: Meta::default(),
             title: None,
+            frameset: None,
         }
     }
 
@@ -866,6 +869,47 @@ impl<'r> Builder<'r> {
             }
             _ => {}
         }
+        // Legacy frameset pages have no body of their own. Keep the page-level properties and
+        // frame URLs separately from the editable no-frames fallback content.
+        match name {
+            "frameset" => {
+                self.flush();
+                if self.frameset.is_none() {
+                    let number = |key: &str| attr(attrs, key).and_then(|v| v.trim().parse::<u16>().ok()).filter(|n| *n <= 100);
+                    let frame_border = attr(attrs, "frameborder").and_then(|v| match v.trim().to_ascii_lowercase().as_str() {
+                        "0" | "no" | "false" => Some(false),
+                        "1" | "yes" | "true" => Some(true),
+                        _ => None,
+                    });
+                    self.frameset = Some(HtmlFrameset {
+                        rows: attr(attrs, "rows").and_then(HtmlFrameset::clean_tracks),
+                        cols: attr(attrs, "cols").and_then(HtmlFrameset::clean_tracks),
+                        border: number("border"),
+                        frame_border,
+                        spacing: number("framespacing"),
+                        border_color: attr(attrs, "bordercolor").and_then(doc4me_doc::Rgb::parse),
+                        frames: Vec::new(),
+                    });
+                }
+                return;
+            }
+            "frame" => {
+                if let Some(frameset) = &mut self.frameset
+                    && frameset.frames.len() < doc4me_doc::MAX_HTML_FRAMES
+                {
+                    frameset.frames.push(HtmlFrame {
+                        src: attr(attrs, "src").unwrap_or("").to_string(),
+                        name: attr(attrs, "name").map(str::to_string),
+                        scrolling: attr(attrs, "scrolling").and_then(HtmlFrameScrolling::parse),
+                        margin_width: attr(attrs, "marginwidth").and_then(|v| v.trim().parse::<u16>().ok().filter(|n| *n <= 1000)),
+                        margin_height: attr(attrs, "marginheight").and_then(|v| v.trim().parse::<u16>().ok().filter(|n| *n <= 1000)),
+                        no_resize: attrs.iter().any(|(key, _)| key == "noresize"),
+                    });
+                }
+                return;
+            }
+            _ => {}
+        }
         let is_table_part = matches!(name, "tr" | "td" | "th");
         let in_table = self.tables.len() < model::MAX_DEPTH;
         // Implicit closes.
@@ -1101,7 +1145,11 @@ impl<'r> Builder<'r> {
         if let Some(t) = self.title.take() {
             self.meta.title = t;
         }
-        Flow { blocks, meta: self.meta }
+        let mut frameset = self.frameset;
+        if let Some(frameset) = &mut frameset {
+            frameset.sanitize();
+        }
+        Flow { blocks, meta: self.meta, frameset }
     }
 }
 
@@ -1462,10 +1510,59 @@ pub fn export_flow(flow: &Flow, lang: &str) -> String {
     out.push_str(
         "<style>\nbody{font-family:Sarabun,'TH Sarabun New',Aptos,Calibri,'Segoe UI',Tahoma,Arial,sans-serif;font-size:12pt;line-height:1.15;max-width:48em;margin:2em auto;padding:0 1em}\n\
          table{border-collapse:collapse;margin:0.5em 0}\nblockquote{margin:0.5em 2em;font-style:italic;color:#404040}\n\
-         pre{background:#f5f5f5;padding:0.5em;font-family:'Courier New',monospace;font-size:10pt}\n</style>\n</head>\n<body>\n",
+         pre{background:#f5f5f5;padding:0.5em;font-family:'Courier New',monospace;font-size:10pt}\n</style>\n</head>\n",
     );
-    blocks_html(&flow.blocks, &mut out, 0);
-    out.push_str("</body>\n</html>\n");
+    if let Some(frameset) = &flow.frameset {
+        let mut frameset = frameset.clone();
+        frameset.sanitize();
+        out.push_str("<frameset");
+        if let Some(rows) = &frameset.rows {
+            out.push_str(&format!(" rows=\"{}\"", esc(rows)));
+        }
+        if let Some(cols) = &frameset.cols {
+            out.push_str(&format!(" cols=\"{}\"", esc(cols)));
+        }
+        if let Some(border) = frameset.border {
+            out.push_str(&format!(" border=\"{border}\""));
+        }
+        if let Some(frame_border) = frameset.frame_border {
+            out.push_str(&format!(" frameborder=\"{}\"", u8::from(frame_border)));
+        }
+        if let Some(spacing) = frameset.spacing {
+            out.push_str(&format!(" framespacing=\"{spacing}\""));
+        }
+        if let Some(color) = frameset.border_color {
+            out.push_str(&format!(" bordercolor=\"#{}\"", color.hex()));
+        }
+        out.push_str(">\n");
+        for frame in &frameset.frames {
+            out.push_str(&format!("<frame src=\"{}\"", esc(&frame.src)));
+            if let Some(name) = &frame.name {
+                out.push_str(&format!(" name=\"{}\"", esc(name)));
+            }
+            if let Some(scrolling) = frame.scrolling {
+                out.push_str(&format!(" scrolling=\"{}\"", scrolling.as_str()));
+            }
+            if let Some(margin) = frame.margin_width {
+                out.push_str(&format!(" marginwidth=\"{margin}\""));
+            }
+            if let Some(margin) = frame.margin_height {
+                out.push_str(&format!(" marginheight=\"{margin}\""));
+            }
+            if frame.no_resize {
+                out.push_str(" noresize");
+            }
+            out.push_str(">\n");
+        }
+        out.push_str("</frameset>\n<noframes><body>\n");
+        blocks_html(&flow.blocks, &mut out, 0);
+        out.push_str("</body></noframes>\n");
+    } else {
+        out.push_str("<body>\n");
+        blocks_html(&flow.blocks, &mut out, 0);
+        out.push_str("</body>\n");
+    }
+    out.push_str("</html>\n");
     out
 }
 
@@ -1499,6 +1596,38 @@ mod tests {
         assert_eq!(table_style("<table border=1><tr><td>a</table>").as_deref(), Some("TableGrid"));
         assert_eq!(table_style("<table style='border:1px solid #000'><tr><td>a</table>").as_deref(), Some("TableGrid"));
         assert_eq!(table_style("<table><tr><td style='border:1px solid #999'>a</table>").as_deref(), Some("TableGrid"));
+    }
+
+    #[test]
+    fn legacy_frameset_properties_and_frame_targets_round_trip_as_html() {
+        let source = "<frameset rows='40%, 2*, 100' cols='70%,*' border='2' frameborder='no' framespacing='3' bordercolor='#aabbcc'><frame src='one.html?x=1&amp;y=2' name='top' scrolling='no' marginwidth='4' marginheight='5' noresize><frame src='javascript:alert(1)'></frameset><noframes><body><p>Fallback</p></body></noframes>";
+        let document = import(source);
+        let frameset = document.settings.html_frameset.as_ref().expect("the frameset page is retained");
+        assert_eq!(frameset.rows.as_deref(), Some("40%,2*,100"));
+        assert_eq!(frameset.cols.as_deref(), Some("70%,1*"));
+        assert_eq!(frameset.border, Some(2));
+        assert_eq!(frameset.frame_border, Some(false));
+        assert_eq!(frameset.spacing, Some(3));
+        assert_eq!(frameset.border_color, Some(doc4me_doc::Rgb(0xaa, 0xbb, 0xcc)));
+        assert_eq!(frameset.frames.len(), 1, "unsafe scripts are not kept as frame targets");
+        let frame = &frameset.frames[0];
+        assert_eq!(frame.src, "one.html?x=1&y=2");
+        assert_eq!(frame.name.as_deref(), Some("top"));
+        assert_eq!(frame.scrolling, Some(HtmlFrameScrolling::No));
+        assert_eq!((frame.margin_width, frame.margin_height, frame.no_resize), (Some(4), Some(5), true));
+        assert!(texts(&parse(source)).iter().any(|line| line.ends_with(":Fallback")));
+
+        let html = export(&document);
+        assert!(
+            html.contains("<frameset rows=\"40%,2*,100\" cols=\"70%,1*\" border=\"2\" frameborder=\"0\" framespacing=\"3\" bordercolor=\"#AABBCC\">")
+        );
+        assert!(html.contains("<frame src=\"one.html?x=1&amp;y=2\" name=\"top\" scrolling=\"no\" marginwidth=\"4\" marginheight=\"5\" noresize>"));
+        assert!(!html.contains("javascript:"));
+        assert!(html.contains("<noframes><body>"));
+        assert!(html.contains(">Fallback</p>"));
+
+        let reopened = import(&html);
+        assert_eq!(reopened.settings.html_frameset, document.settings.html_frameset);
     }
 
     #[test]

@@ -26,7 +26,9 @@ pub mod font;
 pub mod format;
 pub mod forms;
 pub mod frames;
+pub mod frameset;
 pub mod hanja;
+pub mod help;
 pub mod index;
 pub mod ink_shape;
 pub mod insert;
@@ -58,6 +60,7 @@ pub mod translate;
 pub mod typography;
 pub mod view;
 pub mod wordart;
+pub mod xml;
 
 use doc4me_doc::props::CharProps;
 use doc4me_doc::{Pos, Revision, RevisionKind, StoryRef};
@@ -120,6 +123,9 @@ pub fn registry() -> Registry {
     v.extend(forms::specs());
     v.extend(chinese::specs());
     v.extend(frames::specs());
+    v.extend(frameset::specs());
+    v.extend(help::specs());
+    v.extend(xml::specs());
     v.extend(summarize::specs());
     Registry::new(v)
 }

@@ -1864,7 +1864,10 @@ fn outlining(app: &mut WordApp, ui: &mut Ui) {
 
 fn help(app: &mut WordApp, ui: &mut Ui) {
     group(ui, "Help", None, app, |ui, app| {
-        big(ui, app, "help", "Help", "ui.dialog", json!({"name": "about"}), false);
+        big(ui, app, "help", "Help", "help.show", json!({}), false);
+    });
+    group(ui, "About Doc4Me", None, app, |ui, app| {
+        big(ui, app, "info", "About", "help.about", json!({}), false);
     });
     group(ui, "Agents", None, app, |ui, app| {
         big(ui, app, "macros", "Commands", "ui.dialog", json!({"name": "commands"}), false);

@@ -1218,6 +1218,7 @@ dependencies = [
  "image",
  "js-sys",
  "log",
+ "quick-xml",
  "regex",
  "regex-automata",
  "serde",

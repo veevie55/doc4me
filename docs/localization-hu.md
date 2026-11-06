@@ -1,6 +1,6 @@
 # Hungarian interface
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Hungarian catalog now has 2,985 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Hungarian catalog now has 3,031 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
 
 Choose **File › Options › Interface language › Magyar**, or follow a Hungarian system display
 language (`hu-HU`, `hu_HU.UTF-8`). The catalog code is `hu`; `ui.language` with `{"value":"hu"}`
@@ -8,7 +8,7 @@ selects it explicitly, and `DOC4ME_LANGUAGE=hu-HU` does the same for a headless 
 launch while the preference is `auto`. The choice is saved with the other interface settings.
 Document text, command ids, CLI/MCP/control responses and file paths do not change.
 
-`crates/ui-egui/src/i18n/hu.tsv` has 2,985 unique parsed keys: every key of the Russian catalog (built-in style
+`crates/ui-egui/src/i18n/hu.tsv` has 3,031 unique parsed keys: every key of the Russian catalog (built-in style
 names, equation gallery labels, paper sizes, watermarks and greetings included) plus the citation
 style names. It is written from the meaning of the English labels; no proprietary translation resources were consulted. The catalog
 format has no plural forms, and Hungarian doesn't need them: a noun after a number stays singular

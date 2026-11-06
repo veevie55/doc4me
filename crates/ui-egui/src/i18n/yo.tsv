@@ -1,0 +1,3037 @@
+# Yoruba (yo) interface catalog. AI-generated draft; native review is required before release.
+#   context<TAB>English source<TAB>translation
+# Context and English source are copied exactly from the English-meaning catalog template.
+# Escapes use \n, \t and \\; {name} placeholders and trailing ellipses are preserved.
+# Machine-generated from English source meanings with an English-to-Yoruba model.
+# Registered as an unreviewed draft; native Yoruba review is required before release.
+	(no style)	(ko si ara)
+	(no suggestions)	(ko si awọn imọran)
+	1.5 Line Spacing	1,5 Laini aaye
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Ọfẹ, ero isise ọrọ orisun ṣiṣi ti a kọ lati ibere ni Rust.\nDa lori WordCraft nipasẹ ẹgbẹ ArtCraft.
+	About	Nipa
+	About Doc4Me	Nipa Doc4Me
+	Accept	Gba
+	Accept All Changes	Gba Gbogbo Awọn iyipada
+	Accept This Change	Gba Iyipada yii
+	Accessibility	Ayewo
+	Add	Ṣafikun
+	Add a comment	Fi ọrọìwòye kun
+	Add a Table	Fi tabili kan kun
+	Add Object to Selection	Fi Nkan kun si Aṣayan
+	Add Space Before Paragraph	Fi Space Ṣaaju ki o to ìpínrọ
+	Add space between Asian and Latin text	Fi aaye kun laarin ọrọ Asia ati Latin
+	Add space between Asian text and numbers	Fi aaye kun laarin ọrọ Asia ati awọn nọmba
+	Add tab stop at:	Fi taabu duro ni:
+	Add Text	Fi Ọrọ kun
+	Add to Dictionary	Ṣafikun si Iwe-itumọ
+	Add to Style Gallery	Fi si Style Gallery
+	Address Block	Àkọsílẹ adirẹsi
+	Address:	Adirẹsi:
+	Address\nBlock	Adirẹsi\nBlock
+	Adjust	Ṣatunṣe
+	Advanced	Ni ilọsiwaju
+	After:	Lẹhin:
+	Agents	Òjíṣẹ
+	Align	Parapọ
+	Align Left	Align Osi
+	Align Right	Deede ọtun
+	Aligned at:	Deedee ni:
+	Alignment	Titete
+	All Borders	Gbogbo Aala
+	All Caps	Gbogbo Caps
+	All caps	Gbogbo awọn fila
+	All Markup	Gbogbo Markup
+	Allow hanging punctuation	Gba aami ifamisi adiye
+	Allow Latin text to wrap in the middle of a word	Gba ọrọ Latin laaye lati fi ipari si aarin ọrọ kan
+	Alt Text	Alt Ọrọ
+	Apply Asian line-breaking rules (kinsoku)	Waye awọn ofin fifọ laini Asia (kinsoku)
+	Apply Character Style	Waye Ohun kikọ Style
+	Apply Style	Waye Style
+	Apply Styles	Waye Styles
+	Arrange	Ṣeto
+	Arrange\nAll	Ṣeto\nGbogbo
+	Arrow	Ọfà
+	Artistic Effects	Awọn ipa iṣẹ ọna
+	As you type	Bi o ṣe tẹ
+	Asian text font:	Fonti ọrọ Asia:
+	Asian Typography	Asia Typography
+	Author	Onkọwe
+	AutoCorrect Options	Awọn aṣayan Aifọwọyi
+	AutoFit	AutoFit
+	AutoFit Contents	Awọn akoonu AutoFit
+	AutoFit Window	Ferese AutoFit
+	AutoSave writes your changes to the file a moment after you stop typing.	AutoSave kọ awọn ayipada rẹ si faili ni iṣẹju diẹ lẹhin ti o da titẹ duro.
+	Automatic	Laifọwọyi
+	Automatic ({language})	Aifọwọyi ({language})
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Aifọwọyi tẹle ede eto rẹ. Awọn akojọ aṣayan ati awọn aṣẹ yipada; awọn iwe aṣẹ rẹ ko.
+	Automatic Table 1 (3 levels)	Tabili aifọwọyi 1 (awọn ipele 3)
+	Automatic Table 2 (2 levels)	Laifọwọyi Table 2 (2 awọn ipele)
+	AutoSave	AutoSave
+	AutoSave documents you have saved in Doc4Me	Awọn iwe aṣẹ AutoSave ti o ti fipamọ ni Doc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSave kuna: {error}. Fi iwe pamọ lati tan AutoSave pada.
+	Balloons	Fọnnu
+	Bottom Margin	Isalẹ ala
+	Centimeters	Sentimita
+	Check spelling as you type	Ṣayẹwo akọtọ bi o ṣe tẹ
+	Click a border between two cells to merge them. Esc stops.	Tẹ aala laarin awọn sẹẹli meji lati dapọ wọn. Esc duro.
+	Bullet	Ibọn
+	By author	Nipa onkowe
+	Changed lines:	Awọn ila ti o yipada:
+	Click level to modify:	Tẹ ipele lati yipada:
+	Click to switch back to inserting	Tẹ lati yipada pada si fifi sii
+	Color only	Awọ nikan
+	Compress punctuation at the start of a line	Fi aami ifamisi funmorawon ni ibẹrẹ ila kan
+	Couldn't make Doc4Me the default: {error}	Ko le ṣe Doc4Me aiyipada: {error}
+	Custom dictionary	Aṣa dictionary
+	Dark page (white text on black)	Oju-iwe dudu (ọrọ funfun lori dudu)
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Fa onigun mẹta lati fa tabili kan, tabi laini kọja awọn sẹẹli lati pin wọn. Esc duro.
+	Draw Table	Fa Table
+	Define New Multilevel List	Setumo New Multilevel Akojọ
+	Define New Multilevel List…	Setumo New Multilevel Akojọ…
+	Deletions:	Awọn piparẹ:
+	Edit Comment	Ṣatunkọ Ọrọìwòye
+	Enter formatting for number:	Tẹ ọna kika fun nọmba:
+	Follow number with:	Tẹle nọmba pẹlu:
+	Formatting	Akoonu
+	Formatting marks	Akoonu iṣmiṣ
+	Hidden text	Farasin ọrọ
+	Ignore web and file addresses	Foju wẹẹbu ati awọn adirẹsi faili
+	Ignore words in capitals	Foju awọn ọrọ ni awọn nla
+	Ignore words with numbers	Foju awọn ọrọ pẹlu awọn nọmba
+	Inches	Inṣi
+	Formatting exceptions	Awọn imukuro kika
+	Include level number from:	Fi nọmba ipele kun lati:
+	Initials:	Awọn ibẹrẹ:
+	Ink	Inki
+	Insertions and Deletions	Awọn ifibọ ati piparẹ
+	Insertions:	Awọn ifibọ:
+	Interface	Ni wiwo
+	Interface language	Ede wiwo
+	Inside:	Inu:
+	Latin text font:	Fonti ọrọ Latin:
+	Left border	Aala osi
+	In Default apps, choose Doc4Me for the document types you want it to open.	Ninu awọn ohun elo Aiyipada, yan Doc4Me fun awọn iru iwe ti o fẹ ki o ṣii.
+	Left Margin	Osi ala
+	Indents and Spacing	Indents ati Aye
+	Legal style numbering	Nọmba ara ofin
+	Line breaking	Laini fifọ
+	Link level to style:	Ipele ọna asopọ si ara:
+	List Definition	Akojọ Definition
+	Mark grammar errors as you type	Samisi awọn aṣiṣe girama bi o ṣe tẹ
+	Measurement units:	Awọn iwọn wiwọn:
+	Millimeters	Milimita
+	Mirror indents	Digi indents
+	More templates →	Awọn awoṣe diẹ sii →
+	New comments and tracked changes are recorded under this name and these initials.	Awọn asọye tuntun ati awọn ayipada itọpa ti wa ni igbasilẹ labẹ orukọ yii ati awọn ibẹrẹ wọnyi.
+	New word	Ọrọ tuntun
+	No templates match your search.	Ko si awọn awoṣe ti o baamu wiwa rẹ.
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Ko si awọn ọrọ sibẹsibẹ. Ṣafikun si Iwe-itumọ lori ọrọ ti ko tọ fi sii nibi.
+	Nothing	Ohunkohun
+	Number alignment:	Titete nọmba:
+	Number format	Nọmba kika
+	Number style for this level:	Ara nọmba fun ipele yii:
+	Outside border	Ita aala
+	Make Doc4Me the default for Word documents…	Ṣe Doc4Me aiyipada fun awọn iwe aṣẹ Ọrọ…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Ṣii .docx, .doc, .rtf ati awọn faili.odt ati awọn awoṣe Ọrọ pẹlu Doc4Me lati isisiyi lọ.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Ṣii Awọn Eto 2 Awọn ohun elo Aiyipada, nibiti o ti yan Doc4Me fun .docx ati awọn iru iwe miiran.
+	Overtype	Overtype
+	Overtype (typing replaces the characters after the caret)	Overtype (titẹ rọpo awọn ohun kikọ lẹhin abojuto)
+	Page display	Ifihan oju-iwe
+	Paragraph marks	Ìpínrọ iṣmiṣ
+	Personalize	Teleni
+	Picas	Picasa
+	Points	Ojuami
+	Print the page color	Tẹjade awọ oju-iwe naa
+	Printing	Titẹ sita
+	Proofing language	Ede ẹri
+	Recent documents to show:	Awọn iwe aṣẹ aipẹ lati ṣafihan:
+	Remove	Yọ
+	Outside:	Ita:
+	Reopen	Tun
+	Restart list after:	Tun akojọ lẹhin:
+	Right border	Ọtun aala
+	Right Margin	Ọtun ala
+	Base text:	Ọrọ ipilẹ:
+	Distribute letters	Awọn lẹta pinpin
+	Distribute spacing	Aye pinpin
+	Offset (pt):	Aiṣedeede (pt):
+	Phonetic Guide	Itọsọna foonu
+	Right (vertical)	Ọtun (inaro)
+	Ruby text:	Ruby ọrọ:
+	Save documents	Fi awọn iwe aṣẹ pamọ
+	Search for templates	Wa fun awọn awoṣe
+	Show all revisions inline	Ṣe afihan gbogbo awọn atunyẹwo inline
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Ṣe afihan awọn iwe aṣẹ pẹlu awọn awọ wọn ti yipada, bii Wo 4 Awọn ipo Yipada. Fifipamọ, titẹ sita ati awọn PDF ko yipada.
+	AutoSave saves every change to the file (needs a saved document)	AutoSave fipamọ gbogbo iyipada si faili naa (nilo iwe ti o fipamọ)
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSave ko si ninu ẹrọ aṣawakiri: ko le kọ si awọn faili rẹ. Fi ẹda kan pamọ.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	AutoSave nikan ntọju .docx, .odt ati awọn faili.rtf; {name} ko le tọju gbogbo ọna kika. Fipamọ bi .docx lati tan AutoSave.
+	Save the document to turn on AutoSave	Fi iwe pamọ lati tan AutoSave
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Fi iwe naa pamọ lati tan AutoSave (faili ti o ti ṣii nikan ko tun kọ titi iwọ o fi fipamọ)
+	AutoText	AutoText
+	Backspace	Aye afẹyinti
+	Banded Columns	Awọn ọwọn Banded
+	Banded Rows	Awọn ori ila Banded
+	Before:	Ṣaaju:
+	Bibliography	Iwe itan
+	Binary assets added	Alakomeji ìní kun
+	Binary assets removed	Alakomeji ìní kuro
+	Blank	Òfo
+	Blank (Three Columns)	Òfo (Ọwọn Mẹta)
+	Blank document	Ofo iwe
+	Blank Page	Ofo Page
+	Block\nAuthors	Àkọsílẹ\nAwọn onkọwe
+	Bold	Igboya
+	Bookmark	Bukumaaki
+	Bookmark name:	Orukọ bukumaaki:
+	Border Painter	Aala Oluyaworan
+	Border\nPainter	Aala\nOluyaworan
+	Borders	Aala
+	Show the mini toolbar when text is selected	Ṣe afihan ọpa irinṣẹ kekere nigbati ọrọ ba yan
+	Spaces	Aaye
+	Spelling	Sipeli
+	Spelling and grammar are checked in English (United States).	Akọtọ ati girama jẹ ayẹwo ni Gẹẹsi (Amẹrika).
+	Tab characters	Taabu ohun kikọ
+	Tab stop position:	Taabu iduro ipo:
+	Default tab stops:	Aiyipada taabu iduro:
+	Tab stops to be cleared:	Taabu duro lati sọ di mimọ:
+	All	Gbogbo
+	Decimal	Eleemewa
+	Bar	Pẹpẹ
+	Leader	Olori
+	Set	Ṣeto
+	Page Border	Aala Page
+	Apply to:	Waye si:
+	These marks show even when Show/Hide ¶ is off.	Awọn ami wọnyi fihan paapaa nigbati Show/Tọju <TAG5> wa ni pipa.
+	Typing replaces selected text	Titẹ rọpo ọrọ ti a yan
+	Update fields before printing	Awọn aaye imudojuiwọn ṣaaju titẹ sita
+	Use the Insert key to switch overtype on and off	Lo bọtini Fi sii lati yi overtype tan ati pa
+	Whole document	Gbogbo iwe
+	This section	Yi apakan
+	Fill	Kun
+	Setting:	Eto:
+	3-D	3-D
+	Custom	Aṣa
+	Style:	Ara:
+	Dot dash	Aami daaṣi
+	Triple	Meteta
+	Between	Laarin
+	Borders and Shading	Awọn aala ati iboji
+	Tabs…	Awọn taabu…
+	Borders and Shading…	Awọn aala ati iboji…
+	Bottom Border	Isalẹ Aala
+	Bottom of Page	Isalẹ ti Page
+	Bottom:	Isalẹ:
+	Box	Apoti
+	Breaks	Fi opin si
+	Bring Forward	Mu Siwaju
+	Bullet Library	Bullet Library
+	Bullets	Awako
+	Calendar	Kalẹnda
+	Cancel	Fagilee
+	Capitalize Each Word	Capitalize Ọrọ kọọkan
+	Captions	Igbekun
+	Cell Margins	Cell ala
+	Cell Size	Iwọn sẹẹli
+	Cell\nMargins	Cell\nala
+	Center	Aarin
+	Change	Ayipada
+	Change Case	Ayipada Case
+	Change List Level	Yi Akojọ Ipele
+	Change Picture	Yi Aworan pada
+	Change Shape	Yi Apẹrẹ
+	Changes	Ayipada
+	Character Position	Ipo kikọ
+	Character Scale	Asekale kikọ
+	Character Shading	Iboji ohun kikọ
+	Character Spacing	Aaye ohun kikọ
+	Character Border	Ohun kikọ Aala
+	Characters (no spaces)	Awọn ohun kikọ (ko si awọn aaye)
+	Characters (with spaces)	Awọn ohun kikọ (pẹlu awọn aaye)
+	Chart	Aworan atọka
+	Check Accessibility	Ṣayẹwo Wiwọle
+	Check Compatibility	Ṣayẹwo Ibamu
+	Check for Errors	Ṣayẹwo fun Awọn aṣiṣe
+	Check Spelling as You Type	Ṣayẹwo Spelling bi O Iru
+	Check\nAccessibility	Ṣayẹwo\nWiwọle
+	Citation Style	Itọkasi Style
+	Citations & Bibliography	Awọn itọka & Iwe-akọọlẹ
+	Clear	Ko
+	Clear All Formatting	Ko Gbogbo kika
+	Clipboard	Agekuru ọkọ
+	Clipboard Pane	Clipboard Pane
+	Clipboard Items	Clipboard Nkan
+	Paste Clipboard Item	Lẹẹ Clipboard Nkan
+	Paste All	Lẹẹ Gbogbo
+	Delete Clipboard Item	Pa Ohun kan Clipboard rẹ
+	Clear All	Ko Gbogbo
+	Click an item to paste it.	Tẹ ohun kan lati lẹẹmọ.
+	Nothing collected yet. Items you copy or cut appear here.	Ko si ohun ti a gba sibẹsibẹ. Awọn nkan ti o daakọ tabi ge han nibi.
+	(picture or object)	(aworan tabi ohun)
+	Close	Sunmọ
+	Close Header and Footer	Pa akọsori ati ẹlẹsẹ
+	Collapse Selection	Collapse Yiyan
+	Color	Awọ
+	Color:	Awọ:
+	Colors	Awọn awọ
+	Column	Ọwọn
+	Column Break	Bireki ọwọn
+	Columns	Ọwọn
+	Combine	Darapọ
+	Commands	Ofin
+	Comment	Ọrọìwòye
+	Comments	Le
+	Comments Pane	Comments Pane
+	Compact	Iwapọ
+	Compare	Afiwe
+	Compress Pictures	Compress Pictures
+	Continuous	Lemọlemọfún
+	Convert	Yipada
+	Convert Text to Table	Yipada Ọrọ si Tabili
+	Convert Text to Table…	Yipada Ọrọ si Tabili…
+	Convert to Text	Yipada si Ọrọ
+	Copy	Daakọ
+	Copy Formatting	Daakọ kika
+	Corrections	Awọn atunṣe
+	Count words in text boxes and notes	Ka awọn ọrọ ninu awọn apoti ọrọ ati awọn akọsilẹ
+	Couldn't download {name}: {error}	Ko le ṣe igbasilẹ {name}: {error}
+	Cover Page	Oju-iwe Ideri
+	Create	Ṣẹda
+	Create a Style	Ṣẹda Aṣa kan
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Ṣẹda ilana ibaraenisepo ti iwe rẹ.\n\nO jẹ ọna ti o dara julọ lati tọju abala ibi ti o wa tabi yarayara gbe akoonu rẹ ni ayika.\n\nLati bẹrẹ, lọ si taabu Ile ati lo awọn aṣa akọle si awọn akọle ninu iwe rẹ.
+	Create New Style	Ṣẹda New Style
+	Crop	Irugbin
+	Cross-reference	Itọkasi-agbelebu
+	Current Position	Ipo lọwọlọwọ
+	Current style: {style}	Ara lọwọlọwọ: {style}
+	Custom Margins…	Awọn ala aṣa…
+	Custom Watermark	Aṣa Watermark
+	Custom Watermark…	Aṣa Watermark…
+	Customize Quick Access Toolbar	Ṣe akanṣe Ọpa Irinṣẹ Wiwọle Yara
+	Cut	Ge
+	Dark Mode	Ipo Dudu
+	Dashed	Fọ
+	Data	Data
+	Date & Time	Ọjọ & Akoko
+	Decrease Font Size	Dinku Font Iwọn
+	Decrease Indent	Idinku Indent
+	Default	Aiyipada
+	Define New Bullet	Setumo New Bullet
+	Define New Number Format	Setumo New Number kika
+	Delete	Paarẹ
+	Delete Cells	Pa Awọn sẹẹli rẹ
+	Delete Columns	Pa Awọn Ọwọn rẹ
+	Delete Comment	Pa Ọrọìwòye rẹ
+	Delete Next Word	Pa Ọrọ atẹle rẹ
+	Delete Previous Word	Pa Ọrọ iṣaaju rẹ
+	Delete Rows	Pa Awọn ori ila rẹ
+	Delete Style	Pa Style
+	Delete Table	Pa Table
+	Design	Apẹrẹ
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Lati ṣii awọn iwe aṣẹ Ọrọ pẹlu Doc4Me nipasẹ aiyipada: yan ọkan ninu Oluwari, yan Faili ral Gba Alaye, mu Doc4Me labẹ Ṣii pẹlu, lẹhinna tẹ Yipada Gbogbo.
+	Doc4Me is now the default app for Word documents.	Doc4Me jẹ ohun elo aiyipada fun awọn iwe aṣẹ Ọrọ.
+	development build	idagbasoke kọ
+	Diagonal	Akọ-ede
+	Diamond	Okuta iyebiye
+	Dictate	Sọ
+	Different First Page	Oriṣiriṣi Oju-iwe akọkọ
+	Different Odd & Even Pages	Iyatọ Odd & Ani Awọn oju-iwe
+	Display	Ifihan
+	Display for Review	Ifihan fun Review
+	Distribute Columns	Pinpin Ọwọn
+	Distribute Rows	Awọn ori ila pinpin
+	Distributed	Pin
+	Thai	Thai
+	Thai Distributed	Thai Pinpin
+	Do Not Show in TOC	Maṣe Fihan ni TOC
+	Do you want to save changes to {name}?	Ṣe o fẹ lati fi awọn ayipada pamọ si {name}?
+	Don't Save	Maṣe Fipamọ
+	Document End	Ipari iwe
+	Document Formatting	Iwe kika
+	Document Property	Ohun-ini iwe
+	Document Start	Ibẹrẹ iwe
+	Document Text	Ọrọ iwe
+	Document Title	Akọle iwe
+	Documents you open will show up here.	Awọn iwe aṣẹ ti o ṣii yoo han nibi.
+	Dot-dash	Dot-dash
+	Dotted	Ti aami
+	Double	Meji
+	Double Spacing	Aye Meji
+	Double Strikethrough	Double Strikethrough
+	Double Underline	Ilọpo meji
+	Down	Isalẹ
+	Draft	Akọpamọ
+	Draw	Fa
+	Drawing Tools	Awọn irinṣẹ iyaworan
+	Drawing\nCanvas	Yiya\nKanfasi
+	Drop Cap	Fila silẹ
+	Edit Footer	Ṣatunkọ Ẹsẹ
+	Edit Header	Akọsori Ṣatunkọ
+	Edit Recipient List	Akojọ Olugba Ṣatunkọ
+	Edit\nRecipient List	Ṣatunkọ\nAkojọ Olugba
+	Edited	Satunkọ
+	Editing	Ṣiṣatunṣe
+	Editing header/footer	Akọsori ṣiṣatunkọ/ẹsẹ
+	Editing — edit the document directly	Ṣiṣatunṣe & Ṣatunkọ iwe naa taara
+	Editor	Olootu
+	Effects	Igbelaruge
+	Emboss	Emboss
+	Encrypt with Password	Ti paroko pẹlu Ọrọigbaniwọle
+	English (United States)	English (United States)
+	Engrave	Engrave
+	Enter page number:	Tẹ nọmba oju-iwe sii:
+	Envelopes	Apoowe
+	Equation	Idogba
+	Eraser	Ohun iparẹ
+	Even Page	Paapaa Oju-iwe
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Gbogbo aṣẹ wa si awọn iwe afọwọkọ ati awọn aṣoju AI: ṣiṣe `doc4me-cli mcp` fun olupin MCP kan, tabi bẹrẹ ohun elo naa pẹlu iṣakoso-` <port>` fun ikanni iṣakoso JSON.
+	Export	Okeere
+	Export a copy to share (PDF, Word document)	Ṣe okeere ẹda kan lati pin (PDF, Iwe Ọrọ)
+	Export Page as PNG	Oju-iwe okeere bi PNG
+	Export Page as JPEG	Oju-iwe okeere bi JPEG
+	Export PDF	PDF okeere
+	Exported {path}	Ti gbejade {path}
+	Extend Selection	Fa Aṣayan
+	Extend Selection by Units	Fa Yiyan nipa Units
+	Field	Aaye
+	File	Faili
+	Find	Ri
+	Find and Replace	Wa ati Rọpo
+	Find Next	Wa Next
+	Find Previous	Wa Ti tẹlẹ
+	Find Recipient	Wa Olugba
+	Find what:	Wa kini:
+	Finish	Pari
+	Finish & Merge	Pari & Dapọ
+	Finish &\nMerge	Pari &\nIjọpọ
+	First Column	Ọwọn akọkọ
+	First commit	Akọkọ dá
+	First line:	Laini akọkọ:
+	Fixed Column Width	Iwọn Ọwọn Ti o wa titi
+	Focus	Idojukọ
+	Font	Fonti
+	Font Color	Font Awọ
+	Font color:	Font awọ:
+	Font Dialog	Font Dialog
+	Font Size	Font Iwọn
+	Font:	Font:
+	Fonts	Nkọwe
+	Footer	Ẹlẹsẹ
+	Footnote and Endnote	Akọsilẹ ẹsẹ ati Ipari
+	Footnotes	Awọn akọsilẹ ẹsẹ
+	Format	Ọna kika
+	Format Page Numbers	Ọna kika Page Awọn nọmba
+	Format Page Numbers…	Awọn nọmba oju-iwe kika…
+	Format Painter	Kika Oluyaworan
+	Formatting at Selection	Akoonu ni Yiyan
+	Formula	Agbekalẹ
+	General	Gbogboogbo
+	Go To	Lọ Lati
+	Go to	Lọ si
+	Grab bag	Gba apo
+	Greeting Line	Laini ikini
+	Greeting\nLine	Ẹ kí\nLine
+	Gridlines	Akoj ila
+	Group	Ẹgbẹ
+	Grow Font 1 Point	Dagba Font 1 Point
+	Hanging Indent	Adiye Indent
+	Header	Akọsori
+	Header & Footer	Akọsori & Ẹlẹsẹ
+	Header Row	Akọsori kana
+	Header/Footer Position	Akọsori/Ayanbon Ipo
+	Heading 1	Akori 1
+	Heading 2	Akori 2
+	Heading 3	Akori 3
+	Headings	Awọn akọle
+	Heart	Okan
+	Help	Iranlọwọ
+	Hidden	Farasin
+	Highlight Merge Fields	Ifojusi Dapọ Fields
+	Highlight\nMerge Fields	Ṣe afihan\nAwọn aaye Ijọpọ
+	Highlighter	Ga fẹẹrẹfẹ
+	Home	Ile
+	Horizontal	Petele
+	Horizontal Line	Petele Line
+	Hyphenation	Hyphenation
+	Icons	Awọn aami
+	Ignore All	Foju Gbogbo
+	Illustrations	Àkàwé
+	Immersive	Immersive
+	Immersive Reader	Immersive Reader
+	Immersive\nReader	Immersive\nReader
+	Increase Font Size	Alekun Font Iwon
+	Increase Indent	Alekun Indent
+	Indent	Indent
+	Indentation	Indenment
+	Indents	Indents
+	Index	Ìwé
+	Info	Alaye
+	Ink to\nMath	Inki si\nMath
+	Ink to\nShape	Inki si\nApẹrẹ
+	Ink\nReplay	Inki\nSisisẹsẹhin
+	Insert	Fi sii
+	Insert Above	Fi sii Loke
+	Insert Below	Fi sii isalẹ
+	Insert Caption	Fi sii Caption
+	Insert Citation	Fi sii Itọkasi
+	Insert Endnote	Fi Ipari Ipari sii
+	Insert Footnote	Fi Ẹsẹ sii
+	Insert Hyperlink	Fi Hyperlink sii
+	Insert Index	Atọka ifibọ
+	Insert Left	Fi sii Osi
+	Insert Merge Field	Fi aaye Ijọpọ sii
+	Insert Merge\nField	Fi sii Merge\nField
+	Insert Right	Fi sii ọtun
+	Insert Shapes	Fi awọn apẹrẹ sii
+	Insert Table	Fi sii Table
+	Insert Table of Authorities	Fi sii Tabili ti Awọn alaṣẹ
+	Insert Table of Figures	Fi sii Table of isiro
+	Insert Table…	Fi sii Tabili…
+	Insert\nAbove	Fi\nLoke
+	Insert\nCaption	Fi sii\nIfiweranṣẹ
+	Insert\nCitation	Fi sii\nItọkasi
+	Insert\nFootnote	Fi\nFootnote sii
+	Inside Borders	Inu aala
+	Inspect Document	Iwe ayewo
+	Interface language:	Ede interface:
+	Italic	Italic
+	Justify	Lare
+	Keep Lines Together	Jeki Lines Papo
+	Keep lines together	Jeki ila jọ
+	Keep Text Only	Jeki Ọrọ Nikan
+	Keep with Next	Jeki pẹlu Next
+	Keep with next	Jeki pẹlu tókàn
+	Labels	Awọn aami
+	Landscape	Ala-ilẹ
+	Language	Èdè
+	Lasso	Lasso
+	Last Column	Iwe Kẹhin
+	Last commit	Ikẹhin ifaramo
+	Layout	Ìfilélẹ
+	Layout Summary	Ifilelẹ Lakotan
+	Left	Osi
+	Left Border	Aala osi
+	Left:	Osi:
+	Letter	Lẹta
+	Line	Ila
+	Line and Page Breaks	Laini ati Page fi opin si
+	Line and Paragraph Spacing	Laini ati Paragraph Aye
+	Line Break	Bireki ila
+	Line delta	Delta ila
+	Line End	Ipari ila
+	Line Numbers	Awọn nọmba ila
+	Line Spacing	Aaye ila
+	Line Spacing Options…	Awọn aṣayan aaye Laini…
+	Line spacing:	Aaye ila:
+	Line Start	Ibẹrẹ ila
+	Lines	Ila
+	Lines added	Awọn ila kun
+	Lines deleted	Awọn ila ti paarẹ
+	Link	Ọna asopọ
+	Link to Previous	Ọna asopọ si Ti tẹlẹ
+	Links	Ìjápọ
+	Location: {path}	Ipo: {path}
+	lowercase	kekere
+	Macros	Makiro
+	Mailings	Ifiweranṣẹ
+	Manage Sources	Ṣakoso Awọn orisun
+	Many pages	Ọpọlọpọ awọn oju-iwe
+	Margins	Ala
+	Mark Citation	Mark Citation
+	Mark Entry	Samisi titẹsi
+	Mark\nCitation	Samisi\nItọkasi
+	Mark\nEntry	Samisi\nTitẹsi
+	Markdown (*.md)	Markdown (*.md)
+	Match case	Baramu irú
+	Match Fields	Awọn aaye Baramu
+	Matrix	Matrix
+	Merge	Dapọ
+	Merge Cells	Dapọ awọn sẹẹli
+	Merge Formatting	Dapọ kika
+	Merged PRs	Awọn PRs ti a dapọ
+	Mirrored	Gbọn
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT TABI Apache-2.0. Aṣẹ-lori-ara (c) 2026 Ẹgbẹ ArtCraft ati awọn oluranlọwọ WordCraft.
+	Moderate	Iwọntunwọnsi
+	Modify Style	Ṣatunṣe Style
+	Modify…	Ṣatunṣe…
+	Move or Resize	Gbe tabi Resize
+	Multilevel List	Multilevel Akojọ
+	Multiple Pages	Awọn oju-iwe pupọ
+	Name (A–Z)	Orukọ (A CHARZ)
+	Name:	Orukọ:
+	Narrow  0.5" all	Dín 0.5" gbogbo
+	Navigation	Lilọ kiri
+	Navigation Pane	Pane lilọ kiri
+	New	Titun
+	New Comment	Ọrọìwòye Tuntun
+	New from Template	Titun lati Awoṣe
+	New Paragraph	Ìpínrọ Tuntun
+	New Style…	Ara Tuntun…
+	New Window	Ferese Tuntun
+	New\nComment	New\nỌrọìwòye
+	New\nWindow	Ferese\nTuntun
+	Next	Next
+	Next Change	Next Change
+	Next Comment	Next Ọrọìwòye
+	Next Footnote	Next Footnote
+	Next Page	Oju-iwe atẹle
+	Next Record	Next Gba
+	Next Section	Next Abala
+	No Border	Ko si Aala
+	No Color	Ko si Awọ
+	No contributor data was built into this copy.	Ko si data olùkópa ti a ṣe sinu ẹda yii.
+	No Markup	Ko si Markup
+	No model credits were built into this copy.	Ko si awọn kirẹditi awoṣe ti a kọ sinu ẹda yii.
+	No Paragraph Space	Ko si aaye ìpínrọ
+	Nonbreaking Hyphen	Nonbreaking Hyphen
+	Nonbreaking Space	Nonbreaking Space
+	None	Ko si
+	Normal  1" all	Deede 1" gbogbo
+	Normal Style	Deede Style
+	Not available right now	Ko si ni bayi
+	Not saved	Ko fipamọ
+	Not saved yet	Ko ti fipamọ sibẹsibẹ
+	Nudge	Ihoho
+	Number of columns:	Nọmba awọn ọwọn:
+	Number of rows:	Nọmba awọn ori ila:
+	Numbering	Nọmba
+	Object	Nkan
+	Odd Page	Odd Oju-iwe
+	Office 2003 Default	Office 2003 aiyipada
+	OK	DARA
+	One	Ọkan
+	One Page	Oju-iwe kan
+	Only web (http, https) and email (mailto) links can be followed	Oju opo wẹẹbu nikan (http, https) ati awọn ọna asopọ imeeli (mailto) le tẹle
+	Open	Ṣii
+	OpenDocument Text (*.odt)	OpenDocument Text (*.odt)
+	Optional Hyphen	Iyan Hyphen
+	Copyright Sign	Aṣẹ-lori Ami
+	Ellipsis	Ellipsis
+	Em Dash	Em Dash
+	Insert Date Field	Fi aaye Ọjọ sii
+	Insert Page Field	Fi aaye Oju-iwe sii
+	Insert Time Field	Fi sii Time Field
+	Registered Sign	Aami aami
+	Reset Character Formatting	Tunto kikọ kika
+	Reset Paragraph Formatting	Tunto Ìpínrọ kika
+	Trademark Sign	Aami Iṣowo
+	Options	Awọn aṣayan
+	Orientation	Iṣalaye
+	Outline	Ìla
+	Outline Level	Ìla Ipele
+	Outside Borders	Ita aala
+	Oval	Ofali
+	Page	Oju-iwe
+	Page Background	Oju-iwe abẹlẹ
+	Page Borders	Awọn aala oju-iwe
+	Page Break	Isinmi iwe
+	Page Break Before	Isinmi Oju-iwe Ṣaaju
+	Page break before	Isinmi oju-iwe ṣaaju
+	Page Breaks	Oju-iwe Fifọ
+	Page Color	Awọ Oju-iwe
+	Page Down	Oju-iwe isalẹ
+	Page image (*.png)	Aworan oju-iwe (*.png)
+	Page image (*.jpg, *.jpeg)	Aworan oju-iwe (*.jpg, *.jpeg)
+	Page Movement	Page Movement
+	Page Number	Nọmba oju-iwe
+	Page Setup	Eto Oju-iwe
+	Page Up	Oju-iwe Up
+	Page Width	Iwọn Oju-iwe
+	Page width	Iwọn oju-iwe
+	Page X of Y	Oju-iwe X ti Y
+	Page {page}	Oju-iwe {page}
+	Page {page} of {pages}	Oju-iwe {page} ti {pages}
+	Page\nBorders	Oju-iwe\nAala
+	Page\nColor	Oju-iwe\nAwọ
+	Page\nNumber	Oju-iwe\nNọmba
+	Pages	Òwú
+	Paragraph	Ìpínrọ
+	Paragraph Details	Ìpínrọ Awọn alaye
+	Paragraph Down	Ìpínrọ isalẹ
+	Paragraph Settings	Ìpínrọ Eto
+	Paragraph Spacing	Aye Ìpínrọ
+	Paragraph Up	Ìpínrọ Up
+	Paragraphs	Ìpínrọ
+	Paste	Lẹẹmọ
+	Paste Formatting	Lẹẹ kika
+	Paste: Keep Text Only	Lẹẹmọ: Jeki Ọrọ Nikan
+	Paste: Merge Formatting	Lẹẹmọ: Dapọ kika
+	PDF document (*.pdf)	iwe PDF (*.pdf)
+	Pen	Ikọwe
+	Pencil	Ikọwe
+	Picture Border	Aala aworan
+	Picture Format	Aworan kika
+	Picture Styles	Aworan Styles
+	Pictures	Awọn aworan
+	Plain text (*.txt)	Ọrọ itele (*.txt)
+	Portrait	Aworan
+	Position	Ipo
+	Preview Results	Awọn abajade Awotẹlẹ
+	Preview\nResults	Awotẹlẹ\nAwọn esi
+	Previous	Ti tẹlẹ
+	Previous Change	Iyipada iṣaaju
+	Previous Comment	Ọrọìwòye ti tẹlẹ
+	Previous Record	Igbasilẹ iṣaaju
+	Previous Section	Abala ti tẹlẹ
+	Print	Tẹjade
+	Print Layout	Ifilelẹ titẹjade
+	Print\nLayout	Tẹjade\nÌfilélẹ
+	Proofing	Àmúdájú
+	Proofing Issues	Awọn oran Imudaniloju
+	Properties	Ohun-ini
+	Protect	Daabobo
+	Protect Document	Dabobo Iwe
+	Quick Access Toolbar	Ọpa irinṣẹ Wiwọle Yara
+	Quick Parts	Awọn ẹya iyara
+	Quick Tables	Awọn tabili iyara
+	Read Aloud	Ka soke
+	Read Mode	Ipo kika
+	Read\nAloud	Ka\nAloud
+	Read\nMode	Ka\nIpo
+	Recent	Laipe
+	Record Macro	Ṣe igbasilẹ Makiro
+	Recover Unsaved Documents	Bọsipọ Awọn iwe aṣẹ ti a ko fipamọ
+	Rectangle	Onigun
+	Redo	Pupa
+	Reduce Hanging Indent	Din adiye Indent
+	References	Itọkasi
+	Reject	Kọ
+	Reject All Changes	Kọ Gbogbo Ayipada
+	Reject Change	Kọ Change
+	Relaxed	Sinmi
+	Remove Background	Yọ abẹlẹ kuro
+	Remove Footer	Yọ Ẹsẹ kuro
+	Remove Header	Yọ akọsori kuro
+	Remove Hyperlink	Yọ Hyperlink
+	Remove Space After Paragraph	Yọ Space Lẹhin Ìpínrọ
+	Remove Table of Contents	Yọ Tabili Awọn akoonu kuro
+	Remove Watermark	Yọ Watermark
+	Repeat	Tun
+	Repeat Header Rows	Tun awọn ori ila akọsori ṣe
+	Replace	Rọpo
+	Replace All	Rọpo Gbogbo
+	Replace Document Text	Rọpo Iwe Ọrọ
+	Replace with:	Rọpo pẹlu:
+	Replay	Tun ṣe
+	Reply	Fesi
+	Report	Iroyin
+	Research	Iwadi
+	Researcher	Oniwadi
+	Reset Picture	Tun Aworan
+	Resolve	Yanjú
+	Resolved	Pinnu
+	Restart at 1	Tun bẹrẹ ni 1
+	Restart Each Page	Tun Oju-iwe kọọkan bẹrẹ
+	Restart Each Section	Tun Abala kọọkan bẹrẹ
+	Restrict Editing	Idinamọ Ṣiṣatunṣe
+	Restrict\nEditing	Ihamọ\nṢiṣatunṣe
+	Results	Awọn esi
+	Reverse the order	Yiyipada ibere
+	Review	Atunwo
+	Reviewing	Agbeyewo
+	Reviewing Pane	Atunwo Pane
+	Reviewing — edits become suggestions	Atunwo 12 awọn atunṣe di awọn imọran
+	Rich Text Format (*.rtf)	Ọna kika Ọrọ ọlọrọ (*.rtf)
+	Right	Ọtun
+	Right Border	Aala ọtun
+	Right-to-Left Text Direction	Itọsọna Ọrọ Ọtun-si-Osi
+	Left-to-Right Text Direction	Itọsọna Ọrọ Osi-si-Ọtun
+	Right:	Ọtun:
+	Rotate	Yiyi
+	Rounded Rectangle	Yika onigun
+	Rows & Columns	Awọn ori ila & Awọn ọwọn
+	Ruler	Olori
+	Rules	Ofin
+	Résumé	Ré Sumé
+	Save	Fipamọ
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Fi ẹda kan pamọ ni ọna kika miiran. Titẹ sita lọ nipasẹ PDF o le tẹ sita lati ọdọ oluwo eyikeyi.
+	Save As	Fipamọ Bi
+	Save as Template	Fipamọ bi Awoṣe
+	Saved	Ti fipamọ
+	Search Commands	Awọn aṣẹ wiwa
+	Search commands and help	Wa awọn aṣẹ ati iranlọwọ
+	Search document	Iwe wiwa
+	Section Breaks	Abala Fifọ
+	Section Properties	Abala Properties
+	Sections	Apa
+	Select	Ÿàyàn
+	Select All	Yan Gbogbo
+	Select Cell	Yan Cell
+	Select Line	Yan Line
+	Select Objects	Yan Awọn nkan
+	Select Paragraph	Yan Ìpínrọ
+	Select Range	Yan Ibiti
+	Select Recipients	Yan Awọn olugba
+	Select Row	Yan kana
+	Select Sentence	Yan Gbolohun
+	Select Table	Yan Table
+	Select Text	Yan Ọrọ
+	Select Text with Similar Formatting	Yan Ọrọ pẹlu ọna kika ti o jọra
+	Select Word	Yan Ọrọ
+	Select\nRecipients	Yan\nawọn olugba
+	Selection	Aṣayan
+	Selection Pane	Pane yiyan
+	Send Backward	Firanṣẹ sẹhin
+	Sentence case.	Ẹjọ gbolohun.
+	Set as Default	Ṣeto bi Aiyipada
+	Set Caret	Ṣeto Abojuto
+	Set Character Formatting	Ṣeto kikọ kikọ
+	Set Numbering Value	Ṣeto Iye Nọmba
+	Set Paragraph Formatting	Ṣeto Paragraph kika
+	Shading	Iboji
+	Shadow	Ojiji
+	Shape Fill	Apẹrẹ Kun
+	Shape Format	Apẹrẹ kika
+	Shape Outline	Apẹrẹ Ìla
+	Shape Styles	Apẹrẹ Styles
+	Shapes	Ni nitobi
+	Share	Pin
+	Shift+Tab	Yi lọ yi bọ + Tab
+	Show	Ifihan
+	Show all formatting marks	Ṣe afihan gbogbo awọn ami kika
+	Show Comments	Show Comments
+	Show Markup	Ṣe afihan Markup
+	Show Notes	Fihan Awọn akọsilẹ
+	Show only comments and formatting in balloons	Ṣe afihan awọn asọye nikan ati kika ni awọn fọndugbẹ
+	Show revisions in balloons	Ṣe afihan awọn atunyẹwo ni awọn fọndugbẹ
+	Show rulers	Fi awọn olori han
+	Animation	Iwara
+	Animate the caret (it glides and fades)	Animate awọn itoju (o glides ati ipare)
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Lori: awọn abojuto glides si awọn oniwe-titun ibi nigba ti o ba tẹ tabi lo awọn bọtini itọka, ati awọn oniwe-seju ipare. Paa: o fo ati seju lori ati pa.
+	Show/Hide ¶	Fihan/Tọju <
+	Show\nComments	Ṣe afihan\nComments
+	Shrink Font 1 Point	Isunki Font 1 Point
+	Side to Side	Ẹgbẹ si Ẹgbẹ
+	Side\nto Side	Apa\nsi Apa
+	Signature Line	Ibuwọlu Line
+	Single	Nikan
+	Single Spacing	Aye Nikan
+	Size	Iwọn
+	Size (pt):	Iwọn (pt):
+	Size:	Iwọn:
+	Small Caps	Awọn fila kekere
+	Small caps	Awọn fila kekere
+	SmartArt	SmartArt
+	Sort	Too
+	Source code: github.com/chatraweechai/doc4me	Orisun koodu: github.com/chatraweechai/doc4me
+	Space	Aaye
+	Space before/after:	Aaye ṣaaju/lẹhin:
+	Spacing	Aye
+	Spacing (pt):	Aaye (pt):
+	Speech	Ọrọ
+	Spelling & Grammar	Akọtọ & Giramu
+	Spelling &\nGrammar	Spelling &\nGrammar
+	Spelling Suggestions	Akọtọ Awọn imọran
+	Split	Pin
+	Split Cells	Pipin ẹyin
+	Split Table	Pipin Table
+	Spreadsheet Table	Itankale Table
+	Standard Colors	Standard awọ
+	Star	Irawọ
+	Start at:	Bẹrẹ ni:
+	Start Mail Merge	Bẹrẹ Mail Dapọ
+	Start Mail\nMerge	Bẹrẹ Mail\nDapọ
+	Statistics	Statistics
+	Status Bar	Pẹpẹ ipo
+	Strikethrough	Idasesile
+	Studio cover	Ideri Studio
+	Studio handbook (sample)	Studio amudani (ayẹwo)
+	Style	Ara
+	Style based on:	Ara da lori:
+	Style Set	Ara Ṣeto
+	Style: {style}	Ara: {style}
+	Styles	Aṣa
+	Styles Pane	Styles Pane
+	Subscript	Alabapin
+	Superscript	Superscript
+	Switch Modes	Yipada Awọn ipo
+	Switch\nModes	Yipada\nAwọn ipo
+	Symbol	Aami
+	Symbols	Aami
+	Synonyms	Synonyms
+	Tab	Taabu
+	Tab character	Taabu ohun kikọ
+	Table	Tabili
+	Table Column Width	Table ọwọn Iwọn
+	Table Design	Tabili Design
+	Table Layout	Ifilelẹ tabili
+	Table of Authorities	Tabili ti alaṣẹ
+	Table of Contents	Tabili ti Awọn akoonu
+	Table of\nContents	Tabili ti\nAwọn akoonu
+	Table Properties	Table Properties
+	Table Row Height	Table kana Giga
+	Table Style Options	Table Style Aw
+	Table Styles	Table Styles
+	Tables	Tabili
+	Tabs	Awọn taabu
+	Tabular List	Tabular Akojọ
+	Text	Ọrọ
+	Text Box	Apoti ọrọ
+	Text Direction	Itọsọna Ọrọ
+	Text Effects	Awọn ipa ọrọ
+	Text Effects and Typography	Awọn ipa ọrọ ati Typography
+	Text from File	Ọrọ lati Faili
+	Text Highlight Color	Text Highlight Awọ
+	Text indent at:	Ọrọ indent ni:
+	Text to display:	Ọrọ lati ṣafihan:
+	Text Wrapping	Ipari ọrọ
+	Text:	Ọrọ:
+	Text\nBox	Ọrọ\nApoti
+	Text\nDirection	Ọrọ\nItọsọna
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Ọna kika yẹn ko tọju ohun gbogbo, nitorinaa iwe naa ṣi ṣi silẹ. Fipamọ bi iwe Ọrọ (.docx) lati tẹsiwaju.
+	The new style takes the formatting of the current paragraph.	Ara tuntun gba ọna kika ti paragira lọwọlọwọ.
+	Theme Colors	Akori Awọn awọ
+	Theme Fonts	Akori Fonts
+	Theme List	Akori Akojọ
+	Themes	Awọn akori
+	Thesaurus	Thesaurus
+	Thick	Nipọn
+	Three	Mẹta
+	Tight	Ṣinṣin
+	Top Border	Top Aala
+	Top Margin	Oke ala
+	Top of Page	Oke ti Page
+	Top:	Oke:
+	Total Row	Lapapọ kana
+	Track Changes	Awọn iyipada orin
+	Track Changes Options	Tọpinpin Ayipada Aw
+	Track Changes: On	Awọn iyipada orin: Lori
+	Track formatting	Ọna kika
+	Tracking	Titele
+	Translate	Tumọ
+	Transparency	Akoyawo
+	Triangle	Onigun mẹta
+	Two	Meji
+	Type a command, e.g. "insert table"	Tẹ aṣẹ kan, fun apẹẹrẹ "fi tabili sii"
+	Type Text	Iru Ọrọ
+	Underline	Underline
+	Underline Words Only	Awọn Ọrọ abẹlẹ Nikan
+	Undo	Yi pada
+	Undo {action}	Yipada {action}
+	Ungroup	Ungroup
+	Up	Soke
+	Update Field	Imudojuiwọn Field
+	Update Index	Atọka imudojuiwọn
+	Update Style to Match Selection	Imudojuiwọn Style to baramu Yiyan
+	Update Table	Imudojuiwọn Table
+	Update Table of Figures	Imudojuiwọn Table of isiro
+	Update to Match	Imudojuiwọn si Baramu
+	Update to Match Selection	Imudojuiwọn si Aṣayan Baramu
+	UPPERCASE	OKE IRÚ
+	User Name	Orukọ olumulo
+	User name:	Orukọ olumulo:
+	Version History	Itan Ẹya
+	Version {version} ({build})	Ẹya {version} ({build})
+	Vertical	Inaro
+	Vertical Alignment	Inaro titete
+	View	Wiwo
+	View Gridlines	Wo Gridlines
+	View State	Wo Ipinle
+	Views	Wiwo
+	Voice	Ohùn
+	Watermark	Omi ami
+	Wave	Igbi
+	Web Layout	Ifilelẹ wẹẹbu
+	Web page (*.html)	Oju-iwe wẹẹbu (*.html)
+	Web\nLayout	Web\nÌfilélẹ
+	Whole page	Gbogbo iwe
+	Whole words	Gbogbo ọrọ
+	Wide	Jakejado
+	Widow/Orphan Control	Opó/Orphan Iṣakoso
+	Widow/Orphan control	Opó/Orphan Iṣakoso
+	Window	Ferese
+	Word Count	Nọmba Ọrọ
+	Word document (*.docx)	Iwe ọrọ (*.docx)
+	Word XML Document (*.xml)	Ọrọ XML Iwe (*.xml)
+	Word Left	Ọrọ Osi
+	Word Right	Ọrọ ọtun
+	WordArt	WordArt
+	Doc4Me	Doc4Me
+	Words	Ọrọ
+	Words only	Awọn ọrọ nikan
+	Wrap Text	Ipari Ọrọ
+	Wrap\nText	Fi ipari si\nỌrọ
+	Write & Insert Fields	Kọ & Fi sii Awọn aaye
+	Write a reply	Kọ esi kan
+	Zoom	Sun
+	Zoom In	Sun-un Ni
+	Zoom Out	Sun Jade
+	{group} settings	{group} eto
+	{key}+Click to follow link	{key}+ Tẹ ọna asopọ
+	Browse…	Ṣawakiri…
+	{words} words	{words} awọn ọrọ
+	{selected} of {words} words	{selected} ninu {words} ọrọ
+	Direction:	Itọsọna:
+	Right-to-left	Ọtun-si-osi
+	Left-to-right	Osi-si-ọtun
+	Zotero	Zotero
+	Citations	Ja iwe
+	Document	Iwe aṣẹ
+	Add/Edit\nCitation	Ṣafikun/Ṣatunkọ\nItọkasi
+	Add\nNote	Fi\nAkọsilẹ
+	Add/Edit\nBibliography	Ṣafikun/Ṣatunkọ\nBibliography
+	Refresh	Sọdọtun
+	Document\nPreferences	Iwe\nAwọn ayanfẹ
+	Unlink\nCitations	Unlink\nAwọn itọkasi
+	Waiting for Zotero…	Nduro fun Zotero…
+	Zotero: done	Zotero: ṣe
+	Zotero: cancelled	Zotero: fagilee
+	Yes	Bẹẹni
+	No	Rara
+	Move Past Citation	Gbe Ti o ti kọja Itọkasi
+	Move Past\nCitation	Gbe\nItọkasi ti o kọja
+	Next Sentence	Next gbolohun
+	Previous Sentence	Gbolohun ti tẹlẹ
+	Next sentence	Next gbolohun
+	Previous sentence	Ti tẹlẹ gbolohun
+	Play/Pause	Play/Daduro
+	Read Aloud Status	Ka Ipo Aloud
+	Reading Speed	Iyara kika
+	Skip Citations and Bibliography	Rekọja Awọn Itọkasi ati Iwe-akọọlẹ
+	Skip citations & bibliography	Rekọja awọn itọka & iwe-itumọ
+	Stop Reading	Duro Kika
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Maṣe ka Zotero, Mendeley tabi awọn itọka EndNote ati awọn iwe-itumọ
+	Play	Mu ṣiṣẹ
+	Pause	Duro
+	Stop	Duro
+	Sentence	Gbolohun
+	Paused	Duro
+	Finished	Ti pari
+	Stopped	Duro
+	Speed	Iyara
+	Normal speed	Iyara deede
+	Your changes will be lost if you don't save them.	Awọn ayipada rẹ yoo sọnu ti o ko ba gba wọn là.
+	Scroll ribbon left	Yi lọ tẹẹrẹ osi
+	Scroll ribbon right	Yi lọ tẹẹrẹ ọtun
+	Change Structure	Yi Be
+	Change to Display	Yipada si Ifihan
+	Change to Inline	Yipada si Inline
+	Conversions	Awọn iyipada
+	Delete Back in Equation	Pa Pada ni Idogba
+	Delete in Equation	Parẹ ni Idogba
+	Edit Equation	Ṣatunkọ Idogba
+	Enter in Equation	Wọle ni Idogba
+	Equation Gallery	Equation Gallery
+	Equation Info	Alaye idogba
+	Equation Number	Nọmba idogba
+	Input Format	Igbewọle kika
+	Insert Structure	Fi sii Be
+	Insert Symbol	Fi Aami sii
+	Justification	Idalare
+	Leave Equation	Fi idogba silẹ
+	Move in Equation	Gbe ni idogba
+	Normal Text	Ọrọ deede
+	Set Equation	Ṣeto Idogba
+	Structure Actions	Igbekale Actions
+	Structures	Ẹya
+	Tools	Irinṣẹ
+	Type in Equation	Iru ni idogba
+	Inline	Opopo
+	Number	Nọmba
+	Close Equation	Sunmọ Idogba
+	Insert New Equation	Fi Idogba Tuntun sii
+	Built-In	Itumọ ti-Ni
+	Professional	Ọjọgbọn
+	Linear	Laini
+	Fraction	Ida
+	Script	Iwe afọwọkọ
+	Radical	Ti ipilẹṣẹ
+	Integral	Àkópọ
+	Large\nOperator	Tobi\nonišẹ
+	Bracket	Akọmọ
+	Function	Iṣẹ
+	Accent	Asẹnti
+	Limit and\nLog	Idiwọn ati\nWọle
+	Operator	Onišẹ
+	Equation Options	Awọn aṣayan Idogba
+	All symbol sets	Gbogbo aami tosaaju
+	Send the document straight to the system print dialog, or save a copy in another format below.	Firanṣẹ iwe naa taara si ibaraẹnisọrọ titẹjade eto, tabi fi ẹda kan pamọ ni ọna kika miiran ni isalẹ.
+	Or save a copy in another format:	Tabi fi ẹda kan pamọ ni ọna kika miiran:
+	Opening print dialog…	Ifọrọwerọ titẹjade ṣiṣi…
+	Print failed: {error}	Tẹjade kuna: {error}
+	Couldn't open {path}: {error}	Ko le ṣii {path}: {error}
+	Column Selection	Aṣayan ọwọn
+	Style Inspector	Aṣayẹwo ara
+	Inspect Styles at Selection	Ṣayẹwo Styles ni Yiyan
+	Clear Formatting Level	Ko Ipele kika
+	Characters	Ohun kikọ
+	Direct formatting	Taara kika
+	Reset to Normal	Tunto si Deede
+	Clear Paragraph Formatting	Ko o Ìpínrọ kika
+	Clear Character Style	Ko ohun kikọ ara
+	Clear Character Formatting	Ko o kikọ kika
+	Paste Special	Lẹẹ Pataki
+	Paste Special…	Lẹẹ Pataki…
+	Paste as:	Lẹẹmọ bi:
+	The clipboard is empty.	Awọn agekuru ti ṣofo.
+	Formatted Text	Ọrọ kika
+	Rich Text Format (RTF)	Ọna kika Ọrọ ọlọrọ (RTF)
+	HTML Format	HTML kika
+	Unformatted Text	Ọrọ ti a ko ṣe alaye
+	Result	Esi
+	Keeps the fonts and formatting of the copied text.	Ntọju awọn nkọwe ati tito akoonu ti ọrọ ti a daakọ.
+	Reads the clipboard's rich text and keeps its formatting.	Ka ọrọ ọlọrọ agekuru naa ki o tọju ọna kika rẹ.
+	Reads the clipboard's web content and keeps its formatting.	Ka akoonu oju opo wẹẹbu agekuru naa ki o tọju ọna kika rẹ.
+	Drops all formatting and pastes plain text.	Ju gbogbo kika silẹ ki o si lẹẹmọ ọrọ itele.
+	Advanced Find	To ti ni ilọsiwaju Wa
+	Advanced Find…	To ti ni ilọsiwaju Wa…
+	Go To…	Lọ si…
+	Reading Highlight	Ifojusi kika
+	New Table Style	New Table Style
+	Modify Table Style	Ṣatunṣe Table Style
+	New Table Style…	Aṣa Tabili Tuntun…
+	Modify Table Style…	Ṣatunṣe Aṣa Tabili…
+	Apply formatting to:	Waye kika si:
+	Whole Table	Gbogbo Table
+	Fill color:	Kun awọ:
+	{count} items highlighted	{count} awọn ohun kan afihan
+	{n} pt	{n} pt
+	Not {name}	Kii ṣe {name}
+	Level {n}	Ipele {n}
+	Body Text	Ara Ọrọ
+	{n} lines	{n} ila
+	At least {n}	O kere ju {n}
+	Exactly {n}	Gangan {n}
+	Centered	Dojukọ
+	Character spacing	Aaye ohun kikọ
+	Don't add space between paragraphs of the same style	Maṣe fi aaye kun laarin awọn paragira ti ara kanna
+	Don't hyphenate	Maṣe sọ di mimọ
+	Double strikethrough	Double strikethrough
+	Drop cap	Fila silẹ
+	First line	Laini akọkọ
+	Font color	Font awọ
+	Highlight	Fihan
+	Justified	Lare
+	Left indent	Indent osi
+	Line spacing	Aaye ila
+	Outline level	Ìla ipele
+	Raised/lowered	Dide/lọ silẹ
+	Right indent	Indent ọtun
+	Scale	Asekale
+	Space after	Aaye lẹhin
+	Space before	Aaye ṣaaju
+	Suppress line numbers	Tẹ awọn nọmba ila
+	Underline color	Underline awọ
+	Letters	Awọn lẹta
+	E-mail Messages	Awọn ifiranṣẹ imeeli
+	Directory	Iwe itọsọna
+	Normal Word Document	Deede Ọrọ Iwe
+	If…Then…Else…	Ti… Lẹhinna…Else…
+	If…Then…Else	Ti… Lẹhinna…Else
+	Merge Record #	Dapọ Igbasilẹ #
+	Skip Record If…	Rekọja Igbasilẹ Ti…
+	Skip Record If	Rekọja Igbasilẹ Ti
+	Equals:	Dogba:
+	Then insert:	Lẹhinna fi sii:
+	Otherwise insert:	Bibẹẹkọ fi sii:
+	Courtesy Title	Akọle iteriba
+	First Name	Orukọ akọkọ
+	Last Name	Orukọ idile
+	Company	Ile-iṣẹ
+	Address	Adirẹsi
+	City	Ilu
+	State	Ipinle
+	Postal Code	Koodu ifiweranse
+	Country	Orilẹ-ede
+	(not matched)	(ko baamu)
+	Leave a recipient out of the merge when a field has this value.	Fi olugba silẹ kuro ni apapọ nigbati aaye kan ba ni iye yii.
+	Insert one text or another, depending on a field's value.	Fi ọrọ kan sii tabi omiiran, da lori iye aaye kan.
+	Select recipients first to match their fields.	Yan awọn olugba ni akọkọ lati baamu awọn aaye wọn.
+	The recipient-list field that fills each part of an address block and greeting line.	Aaye atokọ olugba ti o kun apakan kọọkan ti bulọọki adirẹsi ati laini ikini.
+	No errors found: every merge field is in the recipient list.	Ko si awọn aṣiṣe ti a rii: gbogbo aaye apapọ wa ninu atokọ olugba.
+	These merge fields aren't in the recipient list:	Awọn aaye idapọ wọnyi ko si ninu atokọ olugba:
+	Add at least one field.	Ṣafikun o kere ju aaye kan.
+	Add Field	Fi aaye kun
+	Every field needs a name.	Gbogbo aaye nilo orukọ kan.
+	Field name	Orukọ aaye
+	Field names must be different.	Awọn orukọ aaye gbọdọ yatọ.
+	Fields:	Awọn aaye:
+	Field:	Aaye:
+	Find:	Wa:
+	New Entry	Titun titẹsi
+	Recipient List	Akojọ olugba
+	Recipients: {count}	Awọn olugba: {count}
+	Remove field	Yọ aaye
+	Remove recipient	Yọ olugba kuro
+	Select recipients first to choose from their fields.	Yan awọn olugba ni akọkọ lati yan lati awọn aaye wọn.
+	Type a New List…	Tẹ Akojọ Tuntun…
+	Type at least one recipient.	Tẹ o kere ju olugba kan.
+	Type the recipients, or load them from a file.	Tẹ awọn olugba, tabi gbe wọn lati faili kan.
+	Use an Existing List…	Lo Akojọ ti o wa tẹlẹ…
+	Choose the sheet that holds the recipients.	Yan dì ti o di awọn olugba mu.
+	First row of data contains column headers	Oju ila akọkọ ti data ni awọn akọle ọwọn ninu
+	Interface theme:	Akori wiwo:
+	Interface\nTheme	Ni wiwo\nAkori
+	Interface Theme	Akori wiwo
+	Light	Ina
+	Dark	Dudu
+	Use system setting	Eto eto lilo
+	A file dialog is already open.	Ifọrọwerọ faili ti ṣii tẹlẹ.
+	Height:	Giga: Giga
+	Width:	Iwọn:
+	Row	Ila
+	Cell	Sẹẹli
+	Preferred width:	Iwọn ti o fẹ:
+	Alignment:	Titete:
+	Indent from left:	Indent lati osi:
+	Specify height:	Specify iga:
+	Exactly	Gangan
+	At least	O kere ju
+	Allow row to break across pages	Gba ila laaye lati ya kọja awọn oju-iwe
+	Repeat as header row on each page	Tun ṣe bi ila akọsori lori oju-iwe kọọkan
+	Vertical alignment:	Titete inaro:
+	Top	Oke
+	Bottom	Isalẹ
+	Alt text	Alt ọrọ
+	Alt:	Alt:
+	W:	W:
+	H:	H:
+	Reset	Tun
+	Reset Crop	Tun Irugbin
+	Insert a new equation (Alt+=)	Fi idogba tuntun sii (Alt+=)
+	Leave the equation (Esc)	Fi idogba silẹ (Esc)
+	Preview	Awotẹlẹ
+	Draw Ink	Fa Inki
+	Erase Ink	Pa Inki kuro
+	Hide Ink	Tọju Inki
+	Hide\nInk	Tọju\nInki
+	Pens	Awọn aaye
+	Thickness	Sisanra
+	(All)	(Gbogbo)
+	(none)	(ko si)
+	(normal text)	(ọrọ deede)
+	1/4 Em Space	1/4 Em Space
+	A mail merge field	A mail dapọ aaye
+	A numbered sequence (figures, tables…)	Ọkọọkan nọmba kan (awọn isiro, awọn tabili…)
+	A table of contents	A tabili ti awọn akoonu ti
+	Categories:	Awọn ẹka:
+	Character	Ohun kikọ
+	Character code:	Koodu ohun kikọ:
+	Col #:	Kọl #:
+	Copyright	Aṣẹkọ
+	Date and Time	Ọjọ ati Akoko
+	Date formats:	Awọn ọna kika ọjọ:
+	Description:	Apejuwe:
+	Document Information	Alaye iwe
+	Double Closing Quote	Ilọpo meji
+	Double Opening Quote	Double šiši Quote
+	En Dash	En Dash
+	Em Space	Em Space
+	En Space	En Space
+	Equal column width	Dogba ọwọn iwọn
+	Field Codes	Awọn koodu aaye
+	Field code:	Koodu aaye:
+	Field codes:	Awọn koodu aaye:
+	Field name:	Orukọ aaye:
+	Field names:	Awọn orukọ aaye:
+	Field properties	Awọn ohun-ini aaye
+	Field…	Aaye…
+	Format:	Ọna kika:
+	Hide Codes	Tọju Awọn koodu
+	Index and Tables	Atọka ati tabili
+	Line between	Laini laarin
+	Links and References	Awọn ọna asopọ ati Awọn itọkasi
+	Mail Merge	Mail Dapọ
+	More Columns…	Awọn ọwọn diẹ sii…
+	More Symbols…	Diẹ aami…
+	No-Width Non Break	Ko si-Width Non Bireki
+	No-Width Optional Break	Ko si-Width Iyan Bireki
+	Paragraph Mark	Ìpínrọ Mark
+	Pick a field from the list	Mu aaye kan lati inu atokọ naa
+	Preserve formatting during updates	Ṣetọju ọna kika lakoko awọn imudojuiwọn
+	Presets	Tito
+	Recently used symbols:	Awọn aami ti a lo laipe:
+	Registered	Forukọsilẹ
+	Section Mark	Abala Mark
+	Sequence name:	Orukọ ọkọọkan:
+	Shortcut key:	Bọtini ọna abuja:
+	Single Closing Quote	Nikan Pipade Quote
+	Single Opening Quote	Nikan Nsii Quote
+	Spacing:	Aaye:
+	Special Characters	Pataki kikọ
+	Subset:	Subset:
+	The time right now	Akoko ni bayi
+	When this document was first created	Nigbati iwe yii ti kọkọ ṣẹda
+	When this document was most recently printed	Nigbati iwe yii ti tẹjade laipẹ julọ
+	When this document was most recently saved	Nigbati iwe yii ti fipamọ laipẹ julọ
+	The document has no bookmarks yet.	Iwe naa ko ni awọn bukumaaki sibẹsibẹ.
+	Who the document properties name as author	Tani awọn ohun-ini iwe naa lorukọ bi onkọwe
+	Name of the file this document is saved as	Orukọ faili naa ti fipamọ iwe yii bi
+	Title from the document properties	Akọle lati awọn ohun-ini iwe
+	How many pages the whole document has	Awọn oju-iwe melo ni gbogbo iwe-ipamọ ni
+	How many pages this section has	Awọn oju-iwe melo ni apakan yii ni
+	Number of the page the field sits on	Nọmba ti oju-iwe aaye naa joko lori
+	Number of the section the field sits in	Nọmba ti apakan aaye naa joko ni
+	How many words the document holds	Awọn ọrọ melo ni iwe-ipamọ naa mu
+	Page on which a bookmarked passage falls	Oju-iwe lori eyiti aye ti o samisi iwe ṣubu
+	Copy of the text a bookmark marks	Daakọ ọrọ naa jẹ ami bukumaaki kan
+	This field has no options.	Aaye yii ko ni awọn aṣayan.
+	This font has no characters to show.	Fonti yii ko ni awọn ohun kikọ lati ṣafihan.
+	This point forward	Aaye yi siwaju
+	The date it is today	Ọjọ ti o jẹ loni
+	Trademark	Aami-iṣowo
+	Type the field's name and its switches, for example PAGE \\* roman.	Tẹ orukọ aaye naa ati awọn iyipada rẹ, fun apẹẹrẹ PAGE \\* roman.
+	Width and spacing	Iwọn ati aye
+	from Unicode (hex)	lati Unicode (hex)
+	Shape Effects	Awọn ipa apẹrẹ
+	Glow	Fẹẹrẹ
+	Soft Edges	Asọ Edges
+	No Shadow	Ko si Ojiji
+	No Glow	Ko si Fẹ
+	No Soft Edges	Ko si Awọn eti Asọ
+	Glow Colors	Awọn awọ didan
+	Weight	Àdánù
+	Shadow, glow and soft edges	Ojiji, alábá ati rirọ egbegbe
+	Offset: Bottom Right	Aiṣedeede: Isalẹ Ọtun
+	Offset: Bottom	Aiṣedeede: Isalẹ
+	Offset: Bottom Left	Aiṣedeede: Isalẹ Osi
+	Offset: Right	Aiṣedeede: Ọtun
+	Offset: Center	Aiṣedeede: Ile-iṣẹ
+	Offset: Left	Aiṣedeede: Osi
+	Offset: Top Right	Aiṣedeede: Top Right
+	Offset: Top	Aiṣedeede: Top
+	Offset: Top Left	Aiṣedeede: Osi oke
+	Manage Styles	Ṣakoso Styles
+	Show or Hide Style	Fihan tabi Tọju Ara
+	Manage Styles…	Ṣakoso Awọn aṣa…
+	Sort order:	Ilana too:
+	As Recommended	Bi Niyanju
+	Alphabetical	Alfabeti
+	Font: {font}	Font: {font}
+	{size} pt	{size} pt
+	Color: {color}	Awọ: {color}
+	Space before: {pt} pt	Aaye ṣaaju: {pt} pt
+	Space after: {pt} pt	Aaye lẹhin: {pt} pt
+	Based on: {style}	Da lori: {style}
+	Paragraph style	Ìpínrọ ara
+	Character style	Ara ohun kikọ
+	Linked style (paragraph and character)	Ara ti o sopọ (ìpínrọ ati ohun kikọ)
+	Table style	Tabili ara
+	Built-in style	Itumọ ti ni ara
+	Show in the Styles gallery	Fihan ni Styles gallery
+	Hide from style lists	Tọju lati ara awọn akojọ
+	Built-in styles can't be deleted.	Awọn aza ti a ṣe sinu ko le paarẹ.
+	Delete Table Style	Pa Table Style
+	Password	Ọrọigbaniwọle
+	Password:	Ọrọigbaniwọle:
+	Confirm password:	Jẹrisi ọrọ igbaniwọle:
+	Encrypt with Password…	Ti paroko pẹlu Ọrọigbaniwọle…
+	Change Password…	Yi Ọrọigbaniwọle pada…
+	Remove Password	Yọ Ọrọigbaniwọle kuro
+	A password is required to open this document.	A nilo ọrọ igbaniwọle lati ṣii iwe yii.
+	Anyone can open this document. Encrypt it with a password to keep it private.	Ẹnikẹni le ṣii iwe yii. Fi ọrọ igbaniwọle pamọ pẹlu ọrọ igbaniwọle lati tọju rẹ ni ikọkọ.
+	Anyone who opens the document will need this password.	Ẹnikẹni ti o ba ṣii iwe naa yoo nilo ọrọ igbaniwọle yii.
+	{name} is protected with a password.	{name} ni aabo pẹlu ọrọ igbaniwọle kan.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Ọrọigbaniwọle yẹn ko tọ. Ṣayẹwo rẹ (awọn ọrọ igbaniwọle jẹ ifarabalẹ ọran) ki o gbiyanju lẹẹkansi.
+	The document will be saved with a password. Save it to protect it.	Iwe naa yoo wa ni fipamọ pẹlu ọrọ igbaniwọle kan. Fipamọ lati daabobo rẹ.
+	The password is removed. Save the document to keep the change.	Ọrọigbaniwọle ti yọ kuro. Fi iwe pamọ lati tọju iyipada naa.
+	The passwords don't match.	Awọn ọrọ igbaniwọle ko baramu.
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Jeki ọrọ igbaniwọle ni ibikan lailewu: laisi ko si ẹnikan, Doc4Me pẹlu, le ṣii iwe naa. Fi awọn apoti mejeeji silẹ ni ofo lati yọ ọrọ igbaniwọle kuro.
+	Align Top Left	Align Top osi
+	Align Top Center	Align Top Center
+	Align Top Right	Align Top ọtun
+	Align Center Left	Align Center osi
+	Align Center	Align Center
+	Align Center Right	Align Center ọtun
+	Align Bottom Left	Align Isalẹ Osi
+	Align Bottom Center	Align Isalẹ Center
+	Align Bottom Right	Align Isalẹ ọtun
+	{contributors} contributors · {commits} commits	{contributors} olùkópa · {commits} commits
+	{cols}×{rows} Table	{cols}×{rows} Tabili
+	AaBbYyZz	AaBbYyZz
+	pt	pt
+	Document1	Iwe 1
+	Username	Olumulo
+	Display name	Ifihan orukọ
+	Real name	Orukọ gidi
+	Name	Orukọ
+	PRs	PRs
+	Commits	Ṣe
+	First	Akọkọ
+	Last	Kẹhin
+	Model	Awoṣe
+	Version	Ti ikede
+	% of all commits	% ti gbogbo ṣe
+	Lines +/−	Awọn ila +/ -
+	Craft	Iṣẹ ọwọ
+	Studio	Situdio
+	Atelier	Atelier
+	Darkroom	Dudu yara
+	Gallery	Ile aworan
+	Sketchbook	Iwe afọwọya
+	Change Picture…	Yi Aworan pada…
+	Font…	Font…
+	Paragraph…	Ìpínrọ…
+	Link…	Ọna asopọ…
+	Size and Crop…	Iwọn ati Irugbin…
+	Insert Columns to the Left	Fi Awọn ọwọn sii si Osi
+	Insert Columns to the Right	Fi Awọn ọwọn sii si Ọtun
+	Insert Rows Above	Fi awọn ori ila sii Loke
+	Insert Rows Below	Fi awọn ori ila sii ni isalẹ
+	Mon	Mon
+	Tue	Ọjọ iṣẹgun
+	Wed	Ṣe igbeyawo
+	Sum	Apapọ
+	North	Ariwa
+	South	Guusu
+	West	Oorun
+	Total	Lapapọ
+	Draw\nTable	Fa\nTable
+	Rotation	Yiyi
+	Rotation:	Yiyi:
+	Rotate Right 90°	Yiyi ọtun 90°
+	Rotate Left 90°	Yiyi Osi 90°
+	Flip Vertical	Isipade inaro
+	Flip Horizontal	Isipade Petele
+	Move Paragraph Up	Gbe Ìpínrọ Up
+	Move Paragraph Down	Gbe ìpínrọ isalẹ
+	Promote	Igbelaruge
+	Demote	Muwalẹ
+	Go Back	Lọ Pada
+	Toggle Unicode Character	Toggle Unicode kikọ
+	Toggle Field Codes	Toggle Field Awọn koodu
+	Edit Field Code	Ṣatunkọ Field Code
+	Unlink Fields	Unlink Fields
+	Lock Fields	Awọn aaye titiipa
+	Unlock Fields	Ṣii Awọn aaye
+	Next Field	Next Field
+	Previous Field	Ti tẹlẹ Field
+	Selected Fields	Awọn aaye ti a yan
+	Edit Field…	Aaye Ṣatunkọ…
+	Formatted	Akoonu
+	Deleted	Pa
+	Interface size:	Iwọn wiwo:
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	Ṣe tẹẹrẹ, awọn akojọ aṣayan ati awọn ibaraẹnisọrọ tobi tabi kere si, lori oke iwọn ifihan eto rẹ. Sun-un iwe jẹ lọtọ.
+	Resize Table by Dragging	Ṣe iwọn Tabili nipasẹ Fa
+	Print Markup	Tẹjade Markup
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Awọn asọye lẹgbẹẹ oju-iwe kọọkan ati tọpa awọn ayipada ninu PDFs, awọn atẹjade ati awọn aworan; atokọ asọye ni opin awọn oju-iwe wẹẹbu, Markdown ati ọrọ.
+	1. Formatting restrictions	1. Awọn ihamọ kika
+	2. Editing restrictions	2. Awọn ihamọ ṣiṣatunṣe
+	3. Start enforcement	3. Bẹrẹ imuse
+	<< Less	<<Kekere
+	Another file	Faili miiran
+	Apply as you type	Waye bi o ṣe tẹ
+	AutoCorrect	AutoCorrect
+	AutoFormat As You Type	AutoFormat Bi O Iru
+	Automatic bulleted lists	Laifọwọyi bulleted awọn akojọ
+	Automatic numbered lists	Awọn atokọ nọmba aifọwọyi
+	Border lines	Aala ila
+	Capitalize first letter of sentences	Capitalize akọkọ lẹta ti awọn gbolohun ọrọ
+	Capitalize first letter of table cells	Capitalize lẹta akọkọ ti awọn sẹẹli tabili
+	Capitalize names of days	Capitalize awọn orukọ ti awọn ọjọ
+	Case changes	Irú ayipada
+	Character level	Ipele kikọ
+	Checked styles are allowed:	Awọn aza ti a ṣayẹwo ni a gba laaye:
+	Combine Documents	Darapọ Awọn iwe aṣẹ
+	Compare Documents	Afiwe Awọn iwe aṣẹ
+	Compared: {changes} changes	Akawe: {changes} ayipada
+	Comparing with another file needs the desktop app.	Ifiwera pẹlu faili miiran nilo ohun elo tabili tabili.
+	Comparison settings	Eto afiwe
+	Don't capitalize after:	Maṣe ṣe pataki lẹhin:
+	Editing in this document is restricted.	Ṣiṣatunṣe ninu iwe yii jẹ ihamọ.
+	Every change is recorded as a tracked change.	Gbogbo iyipada ti wa ni igbasilẹ bi iyipada ti a tọpa.
+	Everyone	Gbogbo eniyan
+	Exceptions (optional)	Awọn imukuro (aṣayan)
+	Exceptions…	Awọn imukuro…
+	Fields	Aaye
+	Filling in forms	Kikun ni awọn fọọmu
+	Find Next Editable Region	Wa Next Editable Region
+	Footnotes and endnotes	Awọn akọsilẹ ẹsẹ ati awọn akọsilẹ ipari
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Ọna kika, awọn iyipada ọran, aaye funfun ati awọn tabili ni a ṣe afiwe; awọn miiran eto ti wa ni pa fun nigbamii.
+	Fractions (1/2) as fraction characters (½)	Awọn ida (1/2) gẹgẹbi awọn ohun kikọ ida (½)
+	Headers and footers	Awọn akọle ati awọn ẹlẹsẹ
+	Hyphens (--) as dashes (—)	Hyphens (--) bi dashes (ni)
+	In equations, typing a name after a backslash replaces it with its symbol.	Ni awọn idogba, titẹ orukọ kan lẹhin ifẹhinti ẹhin rọpo rẹ pẹlu aami rẹ.
+	Internet addresses as links	Awọn adirẹsi Intanẹẹti bi awọn ọna asopọ
+	Label changes with:	Aami yipada pẹlu:
+	Limit formatting to a selection of styles	Idiwọn kika si yiyan ti awọn aza
+	Math AutoCorrect	Math AutoCorrect
+	More >>	Diẹ sii>>
+	Moves	Gbe
+	New document	Iwe tuntun
+	No changes (read only)	Ko si awọn ayipada (ka nikan)
+	Only allow this kind of editing:	Nikan gba iru ṣiṣatunkọ yii laaye:
+	Only comments can be added, except in regions marked editable.	Awọn asọye nikan ni a le ṣafikun, ayafi ni awọn agbegbe ti o samisi atunṣe.
+	Only form fields can be filled in.	Awọn aaye fọọmu nikan ni o le kun.
+	Only the allowed styles can be applied.	Awọn aza ti a gba laaye nikan ni a le lo.
+	Ordinals (1st) as superscript	Awọn ilana (1st) bi superscript
+	Original document	Atilẹba iwe
+	This password type isn't supported.	Iru ọrọ igbaniwọle yii ko ṣe atilẹyin.
+	Replace as you type	Rọpo bi o ṣe tẹ
+	Replace text as you type	Rọpo ọrọ bi o ṣe tẹ
+	Replace:	Rọpo:
+	Revised document	Tunwo iwe
+	Select text, then tick who can still edit it.	Yan ọrọ, lẹhinna fi ami si ẹniti o tun le ṣatunkọ rẹ.
+	Settings…	Eto…
+	Show changes at:	Ṣe afihan awọn ayipada ni:
+	Show changes in:	Ṣe afihan awọn ayipada ninu:
+	Smart quotes instead of straight quotes	Smart avvon dipo ti o tọ avvon
+	Start Enforcing Protection	Bẹrẹ Idaabobo Imudara
+	Stop Protection	Duro Idaabobo
+	Text boxes	Awọn apoti ọrọ
+	The document is read only, except for regions marked editable.	Iwe naa jẹ kika nikan, ayafi fun awọn agbegbe ti o samisi atunṣe.
+	The password is optional; without it anyone can stop the protection.	Ọrọigbaniwọle jẹ iyan; laisi rẹ ẹnikẹni le da aabo duro.
+	This document	Iwe yi
+	Tracked changes	Awọn ayipada ti a tọpa
+	Type the password to stop the protection.	Tẹ ọrọ igbaniwọle lati da aabo duro.
+	White space	Aaye funfun
+	With:	Pẹlu:
+	Word level	Ipele ọrọ
+	In Line with Text	Ni Laini pẹlu Ọrọ
+	Square	Onigun
+	Through	Nipasẹ
+	Top and Bottom	Oke ati Isalẹ
+	Behind Text	Lẹhin Ọrọ
+	In Front of Text	Ni Iwaju Ọrọ
+	Wrap Text Sides	Fi ipari si Awọn ẹgbẹ Ọrọ
+	Both Sides	Awọn ẹgbẹ mejeeji
+	Left Only	Osi Nikan
+	Right Only	Otun Nikan
+	Largest Only	Tobi Nikan
+	Customize Keyboard	Ṣe apẹrẹ Keyboard
+	Choose a command	Yan aṣẹ kan
+	Choose a shortcut	Yan ọna abuja kan
+	All Commands	Gbogbo Awọn aṣẹ
+	Commands:	Awọn aṣẹ:
+	Keys for this command:	Awọn bọtini fun aṣẹ yii:
+	New shortcut:	Ọna abuja tuntun:
+	Now used by {command}	Bayi lo nipasẹ {command}
+	Not used by any command	Ko lo nipa eyikeyi pipaṣẹ
+	Remove every custom shortcut and restore the built-in keys?	Yọ gbogbo ọna abuja aṣa kuro ki o mu awọn bọtini ti a ṣe sinu pada?
+	Assign	Sọtọ
+	Reset All…	Tun Gbogbo…
+	Press a key combination	Tẹ akojọpọ bọtini kan
+	Customize	Ṣe akanṣe
+	Keyboard shortcuts:	Awọn ọna abuja bọtini itẹwe:
+	Customize…	Ṣe akanṣe…
+	Customize Ribbon	Ṣe aṣa Ribbon
+	Add to Quick Access Toolbar	Ṣafikun si Ọpa Irinṣẹ Wiwọle Yara
+	Remove from Quick Access Toolbar	Yọ kuro lati Ọpa Ohun elo Wiwọle Yara
+	Customize the Ribbon…	Ṣe akanṣe Ribbon…
+	Customize Quick Access Toolbar…	Ṣe adaṣe Ọpa Irinṣẹ Wiwọle Yara…
+	More Commands…	Awọn aṣẹ diẹ sii…
+	Ribbon	Tẹẹrẹ
+	(Custom)	(Aṣa)
+	Remove every custom tab and group and show all tabs again?	Yọ gbogbo taabu aṣa ati ẹgbẹ kuro ki o ṣafihan gbogbo awọn taabu lẹẹkansi?
+	Put the default commands back on the Quick Access Toolbar?	Fi awọn pipaṣẹ aiyipada pada sori Ọpa Ohun elo Wiwọle Yara?
+	Reset…	Tunto…
+	Add >>	Fikun>>
+	<< Remove	<Yọ kuro
+	Pick a custom group (New Group makes one)	Mu ẹgbẹ aṣa kan (Ẹgbẹ Tuntun ṣe ọkan)
+	Ribbon tabs	Awọn taabu Ribbon
+	New Tab	Taabu Tuntun
+	New Group	Ẹgbẹ Tuntun
+	Rename…	Lorukọmii…
+	Ribbon and Quick Access Toolbar:	Ribbon ati Ọpa Ohun elo Wiwọle Yara:
+	Add Font…	Fi Font kun…
+	Added Fonts	Fi kun Fonts
+	Remove Added Font	Yọ Fikun Font
+	Recent Colors	Recent Awọn awọ
+	More Colors…	Awọn awọ diẹ sii…
+	Standard	Boṣewa
+	Current	Lọwọlọwọ
+	Colors:	Awọn awọ:
+	Color model:	Awoṣe awọ:
+	Red:	Pupa:
+	Green:	Alawọ ewe:
+	Blue:	Buluu: Buluu:
+	Hue:	Hue:
+	Sat:	Sat:
+	Lum:	Lum:
+	Hex:	Hex:
+	Accessibility Pane	Wiwọle Pane
+	Alt Text Pane	Alt Text Pane
+	Alt\nText	Alt\nỌrọ
+	View Alt Text…	Wo Alt Text…
+	Mark as decorative	Samisi bi ohun ọṣọ
+	Title:	Akọle:
+	Errors ({n})	Awọn aṣiṣe ({n})
+	Warnings ({n})	Awọn ikilọ ({n})
+	Tips ({n})	Awọn imọran ({n})
+	No accessibility issues found.	Ko si awọn ọran iraye si ti a rii.
+	Describe what this object shows, for people who can't see it.	Ṣe apejuwe ohun ti nkan yii fihan, fun awọn eniyan ti ko le rii.
+	Decorative objects only add visual interest: screen readers skip them.	Awọn ohun ọṣọ nikan ṣafikun iwulo wiwo: awọn oluka iboju foju wọn.
+	Describe what this table shows, for people who can't see it.	Ṣe apejuwe ohun ti tabili yii fihan, fun awọn eniyan ti ko le rii.
+	Select a picture, shape, chart or table to describe it.	Yan aworan kan, apẹrẹ, chart tabi tabili lati ṣe apejuwe rẹ.
+	Document Grid	Akoj iwe
+	No grid	Ko si akoj
+	Lines only	Awọn ila nikan
+	Lines and characters	Awọn ila ati awọn ohun kikọ
+	Text snaps to characters	Ọrọ snaps si ohun kikọ
+	Characters per line:	Awọn ohun kikọ fun ila:
+	Lines per page:	Awọn ila fun oju-iwe:
+	Moved from	Gbe lati
+	Moved to	Gbe si
+	Developer	Ndagba
+	Controls	Idari
+	Rich Text Content Control	Rich Text Akoonu Iṣakoso
+	Plain Text Content Control	Iṣakoso Akoonu Ọrọ Plain
+	Picture Content Control	Iṣakoso akoonu Aworan
+	Building Block Gallery Content Control	Building Block Gallery Akoonu Iṣakoso
+	Check Box Content Control	Ṣayẹwo Apoti akoonu Iṣakoso
+	Combo Box Content Control	Konbo Box akoonu Iṣakoso
+	Drop-Down List Content Control	Ju-isalẹ Akojọ Akoonu Iṣakoso
+	Date Picker Content Control	Ọjọ Picker Akoonu Iṣakoso
+	Repeating Section Content Control	Tun Abala Akoonu Iṣakoso
+	Design Mode	Ipo apẹrẹ
+	Content Control at Selection	Iṣakoso akoonu ni Aṣayan
+	Toggle Check Box	Apoti Ṣayẹwo Toggle
+	Choose List Item	Yan Akojọ Nkan
+	Set Date	Ṣeto Ọjọ
+	Remove Content Control	Yọ Iṣakoso akoonu kuro
+	Content Control Properties	Akoonu Iṣakoso Properties
+	Title	Akọle
+	Tag	Tag
+	Placeholder text	Ọrọ ibi ipamọ
+	Can't be deleted	Ko le paarẹ
+	Contents can't be edited	Awọn akoonu ko le ṣe atunṣe
+	Remove the control once edited	Yọ iṣakoso kuro ni kete ti satunkọ
+	Allow line breaks	Gba ila fi opin si
+	Date format	Ọjọ kika
+	Checked symbol	Ṣayẹwo aami
+	Unchecked symbol	Aami ti ko ṣayẹwo
+	List entries	Awọn titẹ sii akojọ
+	Display text	Ifihan ọrọ
+	Value	Iye
+	Today	Loni
+	Put the caret in a content control first.	Fi abojuto sinu iṣakoso akoonu ni akọkọ.
+	Right-to-Left Table	Ọtun-si-Osi Table
+	Right-to-Left Section	Abala Ọtun-si-Osi
+	Table direction:	Itọsọna tabili:
+	Section direction:	Itọsọna apakan:
+	Drawing Canvas	Iyaworan Kanfasi
+	New Drawing Canvas	Titun Yiya Kanfasi
+	Fit	Fit
+	Expand	Faagun
+	Scale Drawing	Iyaworan iwọn
+	Canvas Member	Kanfasi Egbe
+	Arrows	Ọfà
+	Communication	Ibaraẹnisọrọ
+	Office	Ọfiisi
+	People	Eniyan
+	Nature	Iseda
+	Weather	Oju ojo
+	Technology	Imọ-ẹrọ
+	Transport	Ọkọ
+	Icon Color	Aami Awọ
+	Search icons	Awọn aami wiwa
+	No icons match your search.	Ko si awọn aami ti o baamu wiwa rẹ.
+	Recolor a one-color picture, such as an icon	Ṣe awọ aworan awọ kan, gẹgẹbi aami kan
+	Enclose Characters	Paade Awọn kikọ
+	Shrink text	Ọrọ isunki
+	Enlarge symbol	Aami nla
+	Enclosure	Apade
+	Circle	Circle
+	Numerals:	Awọn nọmba:
+	Numerals	Iye
+	Arabic	Larubawa
+	Hindi	Hindi
+	Context	O tọ
+	System	Eto
+	Templates	Awọn awoṣe
+	Templates and Add-ins	Awọn awoṣe ati Awọn afikun
+	Attach Template	So Awoṣe
+	Detach Template	Ya awọn awoṣe
+	Automatically Update Document Styles	Awọn aṣa Iwe Imudojuiwọn Aifọwọyi
+	Update Styles from Template	Imudojuiwọn Styles lati awoṣe
+	Organizer	Oluṣeto
+	Copy Styles	Daakọ Styles
+	Rename Style	Lorukọmii Style
+	Document template:	Awoṣe iwe:
+	Attach…	So…
+	Automatically update document styles	Awọn aza iwe imudojuiwọn laifọwọyi
+	Organizer…	Oluṣeto…
+	Change Chart Type	Yi Chart Iru
+	Chart Design	Apẹrẹ apẹrẹ
+	Type	Oriṣi
+	Edit Data	Data Ṣatunkọ
+	Chart Title	Chart Title
+	Chart Layouts	Awọn ipalemo chart
+	Add Chart Element	Fi Chart Ano
+	Legend	Àlàyé
+	Data Labels	Data Labels
+	Above Chart	Loke Chart
+	Insert Chart	Fi Chart sii
+	Clustered Column	Ọwọn iṣupọ
+	Stacked Column	Tolera Ọwọn
+	Clustered Bar	Clustered Bar
+	Stacked Bar	Tolera Bar
+	Area	Agbegbe
+	Pie	Paii
+	Doughnut	Donut
+	Scatter	Tuka
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) kii ṣe nọmba kan.
+	Category {n}	Ẹka {n}
+	Series {n}	Jara {n}
+	Type the categories down the side and a column of values per series.	Tẹ awọn ẹka si isalẹ ẹgbẹ ati iwe ti awọn iye fun jara.
+	Categories	Isori
+	Series name	Series orukọ
+	Remove series	Yọ jara
+	Remove row	Yọ kana
+	Add Row	Fi kana
+	Add Series	Fi Series
+	Edit\nData	Ṣatunkọ\nData
+	Change\nChart Type	Yi\nChart Iru
+	Align Text	Align Ọrọ
+	Create Link	Ṣẹda Ọna asopọ
+	Break Link	Bireki Link
+	Rotate all text 90°	Yi gbogbo ọrọ pada 90°
+	Rotate all text 270°	Yi gbogbo ọrọ pada 270°
+	Stacked	Tolera
+	Middle	Arin
+	Click the empty text box the text should continue in (Esc cancels)	Tẹ apoti ọrọ ti o ṣofo ọrọ yẹ ki o tẹsiwaju ninu (Esc fagilee)
+	Not linked: click a text box	Ko sopọ: tẹ apoti ọrọ kan
+	Show KeyTips (Alt or F10)	Ṣe afihan KeyTips (Alt tabi F10)
+	Location	Ipo
+	Endnotes	Endnotes
+	Below text	Ni isalẹ ọrọ
+	End of section	Ipari ti apakan
+	End of document	Ipari iwe-ipamọ
+	Footnotes to endnotes	Awọn akọsilẹ ẹsẹ si awọn akọsilẹ ipari
+	Endnotes to footnotes	Awọn akọsilẹ ipari si awọn akọsilẹ ẹsẹ
+	Swap footnotes and endnotes	Siwopu footnotes ati endnotes
+	Custom mark:	Aami aṣa:
+	Continuous numbering	Nomba itesiwaju
+	Apply	Waye
+	Convert Notes	Yipada Awọn akọsilẹ
+	Reading	Kika
+	Reading Column Width	Kika Ọwọn Iwọn
+	Reading Line Spacing	Aaye ila kika
+	Reading Text Size	Iwọn Ọrọ kika
+	English (United Kingdom)	English (United Kingdom)
+	Polish	Pólándì
+	Do Not Check Spelling or Grammar	Maṣe Ṣayẹwo Akọtọ tabi Giramu
+	Documents	Iwe
+	Word document	Iwe ọrọ
+	All files	Gbogbo awọn faili
+	Recipient lists	Awọn akojọ olugba
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Ifọrọwerọ faili eto ko si, nitorinaa Doc4Me ṣe afihan tirẹ. Lati gba ibaraẹnisọrọ eto, fi sori ẹrọ ọna abawọle yiyan faili (bii xdg-desktop-portal-gtk) tabi zenity.
+	Up one level	Soke ipele kan
+	Home folder	folda ile
+	{name} wasn't found.	{name} ko ri.
+	{name} already exists. Choose Save again to replace it.	{name} ti wa tẹlẹ. Yan Fipamọ lẹẹkansi lati rọpo rẹ.
+	This folder can't be read: {error}	A ko le ka folda yii: {error}
+	Showing the first {count} items.	Fifihan awọn nkan {count} akọkọ.
+	File name:	Orukọ faili:
+	Browse in Doc4Me…	Ṣawakiri ni Doc4Me…
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Ṣii faili kan pẹlu ẹrọ aṣawakiri ti ara Doc4Me nigbati ibaraẹnisọrọ faili eto ko han.
+	Hide White Space	Tọju White Space
+	All pages	Gbogbo ojúewé
+	Current page	Oju-iwe lọwọlọwọ
+	Selected pages	Awọn oju-iwe ti a yan
+	Custom range	Aṣa ibiti o
+	All pages in the range	Gbogbo awọn oju-iwe ni ibiti
+	Odd pages only	Awọn oju-iwe aiṣedeede nikan
+	Even pages only	Paapaa awọn oju-iwe nikan
+	Copies	Daakọ
+	Collate copies	Ṣe akojọpọ awọn ẹda
+	Pages like 1-3, 5	Awọn oju-iwe bii 1-3, 5
+	{count} of {total} pages will print	{count} ti awọn oju-iwe {total} yoo tẹ sita
+	Save these pages as PDF…	Fi awọn oju-iwe wọnyi pamọ bi PDF…
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	Atẹwe, titẹ sita apa meji ati awọn oju-iwe fun dì ni a yan ninu ifọrọwerọ yẹn.
+	Previous Page	Oju-iwe iṣaaju
+	Print to PDF	Tẹjade si PDF
+	Add Shape	Fi Apẹrẹ
+	Change Colors	Yi Awọn awọ pada
+	Change Layout	Yi Ifilelẹ pada
+	Create Graphic	Ṣẹda Graphic
+	Edit Items	Ṣatunkọ Awọn nkan
+	Layouts	Ipalemo
+	Reset Graphic	Tunto Graphic
+	SmartArt Design	SmartArt Design
+	SmartArt Styles	SmartArt Styles
+	Text Pane	Ọrọ Pane
+	List	Akojọ
+	Process	Ilana
+	Cycle	Iyipo
+	Hierarchy	Olori
+	Relationship	Ibasepo
+	Pyramid	Jibiti
+	Basic List	Ipilẹ Akojọ
+	Basic Process	Ilana ipilẹ
+	Basic Cycle	Ipilẹ ọmọ
+	Basic Pyramid	Pyramid ipilẹ
+	Basic Radial	Radial ipilẹ
+	Basic Matrix	Ipilẹ Matrix
+	Basic Venn	Ipilẹ Venn
+	Shows items of equal weight as blocks in rows.	Ṣe afihan awọn ohun kan ti iwuwo dogba bi awọn bulọọki ni awọn ori ila.
+	Shows steps in order, left to right, with arrows between them.	Ṣe afihan awọn igbesẹ ni ibere, osi si otun, pẹlu awọn ọfa laarin wọn.
+	Shows steps that repeat, around a circle.	Ṣe afihan awọn igbesẹ ti o tun ṣe, ni ayika Circle kan.
+	Shows a tree: each item below the item it belongs to.	Ṣe afihan igi kan: ohun kọọkan ni isalẹ ohun ti o jẹ ti.
+	Shows parts that build on each other, largest at the bottom.	Ṣe afihan awọn ẹya ti o kọ lori ara wọn, ti o tobi julọ ni isalẹ.
+	Shows items around a central idea: the first item is the centre.	Ṣe afihan awọn ohun kan ni ayika imọran aarin: ohun akọkọ ni aarin.
+	Shows parts of a whole as quadrants.	Ṣe afihan awọn apakan ti odidi bi awọn igemerin.
+	Shows overlapping ideas as overlapping circles.	Ṣe afihan awọn imọran agbekọja bi awọn iyika agbekọja.
+	Accent {n}	Asẹnti {n}
+	Colorful	Awọ
+	Insert SmartArt	Fi SmartArt sii
+	One line per item. Enter adds an item.	Laini kan fun ohun kan. Tẹ afikun ohun kan.
+	Add\nShape	Fi\nApẹrẹ
+	Change\nColors	Yi awọn awọ\npada
+	Reset\nGraphic	Tunto\nAworan
+	Promote to Heading 1	Igbelaruge si Akọle 1
+	Demote to Body Text	Demote to Ara Ọrọ
+	Move Up	Gbe soke
+	Move Down	Gbe isalẹ
+	Collapse	Bi ṣubu
+	Expand or Collapse Heading	Faagun tabi Ti nlọ silẹ
+	Select Heading and Content	Yan Akọle ati Akoonu
+	Show Level	Ifihan Ipele
+	Show Level 1	Ifihan Ipele 1
+	Show Level 2	Ifihan Ipele 2
+	Show Level 3	Ifihan Ipele 3
+	Show Level 4	Ifihan Ipele 4
+	Show Level 5	Ifihan Ipele 5
+	Show Level 6	Ifihan Ipele 6
+	Show Level 7	Ifihan Ipele 7
+	Show Level 8	Ifihan Ipele 8
+	Show Level 9	Ifihan Ipele 9
+	Show All Levels	Fi Gbogbo Awọn ipele han
+	All Levels	Gbogbo Awọn ipele
+	Show First Line Only	Ṣe afihan Laini Akọkọ Nikan
+	Show Text Formatting	Ṣe afihan kika Ọrọ
+	Close Outline View	Pade Ìla Wiwo
+	Outline State	Ìla State
+	Outlining	Ilanasile
+	Outline Tools	Ìla Irinṣẹ
+	Close Outline\nView	Pade Ìla\nWo
+	A, B, C, …	A, B, C,…
+	Above the item	Loke nkan naa
+	Accessed on	Wọle si
+	Add New Source…	Fi Orisun Tuntun kun…
+	Add the chapter number	Fi nọmba ipin kun
+	Atmosphere	Afẹfẹ
+	Below the item	Ni isalẹ ohun kan
+	Book	Iwe
+	Book title	Akọle iwe
+	Caption	Akọle
+	Caption Numbering	Nọmba akọle
+	Caption text	Ọrọ akọle
+	Caption:	Akọle:
+	Chapter in a book	Abala ninu iwe kan
+	Chapters begin at:	Awọn ipin bẹrẹ ni:
+	Collect entries from:	Gba awọn titẹ sii lati:
+	Columns:	Awọn ọwọn:
+	Conference	Apejọ
+	Conference paper	Iwe alapejọ
+	Container Title	Apoti Title
+	Create Source	Ṣẹda Orisun
+	Cross-reference:	Itọkasi-agbelebu:
+	Custom Table of Contents…	Tabili Aṣa ti Awọn akoonu…
+	DOI	DOII
+	Day	Ọjọ
+	Delete Label	Pa Aami
+	Edit Source	Orisun Ṣatunkọ
+	Edition	Àtúnse
+	Edit…	Ṣatunkọ…
+	Entry marked.	Ti samisi titẹsi.
+	Example: {sample}	Apeere: {sample}
+	Figure	Àpere àwòrán
+	Film	Fiimu
+	Heading styles (levels 1–{n})	Awọn aza akọle (awọn ipele 1 EL{n})
+	Heading {n}	Akọle {n}
+	I, II, III, …	I, II, III,…
+	Include page numbers	Fi awọn nọmba oju-iwe kun
+	Indented	Intended
+	Institution	Igbekale
+	Ionosphere	Ionosphere
+	Issue	Oro
+	Journal	Iwe iroyin
+	Label:	Aami:
+	Last, First; Last, First	Kẹhin, Akọkọ; Kẹhin, Akọkọ
+	Leave the label out of the caption	Fi aami silẹ kuro ninu akọle naa
+	Letter headings	Awọn akọle lẹta
+	Levels:	Awọn ipele:
+	Link entries to their headings	Awọn titẹ sii ọna asopọ si awọn akọle wọn
+	Made from the author and year when empty	Ṣe lati onkowe ati odun nigba ti sofo
+	Magazine or newspaper article	Iwe irohin tabi nkan irohin
+	Main entry:	Akọsilẹ akọkọ:
+	Mark	Ami
+	Mark All	Samisi Gbogbo
+	Mark Entry…	Samisi titẹsi…
+	Mark Index Entry	Mark Atọka titẹsi
+	Mesosphere	Mesosphere
+	Month	Osu
+	New Label	Aami Tuntun
+	New Label…	Aami Tuntun…
+	New…	Titun…
+	No sources yet.	Ko si awọn orisun sibẹsibẹ.
+	Numbering…	Nọmba…
+	Options…	Awọn aṣayan…
+	Other	Miiran
+	Other styles and their TOC level:	Awọn aza miiran ati ipele TOC wọn:
+	Outline levels	Awọn ipele ilana
+	Page number style	Aṣa nọmba oju-iwe
+	Page numbers at the right margin	Awọn nọmba oju-iwe ni ala ọtun
+	Page title	Akọle iwe
+	Pages of bookmark:	Awọn oju-iwe ti bukumaaki:
+	Periodical	Igbakọọkan
+	Position:	Ipo:
+	Publisher	Akede
+	Run-in	Ṣiṣe-ni
+	See	Wo
+	Separator:	Oluyapa:
+	Show every bibliography field	Ṣe afihan gbogbo aaye iwe-itumọ
+	Site name	Orukọ aaye
+	Source Manager	Orisun Manager
+	Source type:	Orisun iru:
+	Sources in this document:	Awọn orisun ninu iwe yii:
+	Styles:	Awọn aṣa:
+	Subentry:	Subetry:
+	TC entry fields	awọn aaye titẹsi TC
+	Tab leader:	Olori taabu:
+	Table of Contents Options	Tabili Awọn aṣayan Awọn akoonu
+	Table of Contents Styles	Tabili ti Awọn aṣa Awọn akoonu
+	This page	Oju-iwe yii
+	Type:	Iru:
+	URL	URL
+	Volume	Iwọn didun
+	Website	Aaye ayelujara
+	Year	Odun
+	a, b, c, …	a, b, c,…
+	i, ii, iii, …	i, ii, iii,…
+	{n} entries marked.	{n} awọn titẹ sii samisi.
+	Lasso Select	Lasso Yan
+	Move Selected Ink	Gbe ti a ti yan Inki
+	Delete Selected Ink	Pa Inki ti a yan
+	Recolor Selected Ink	Recolor ti a ti yan inki
+	Add Pen	Fi Pen
+	Remove Pen	Yọ Pen
+	Ink to Shape	Inki to Apẹrẹ
+	Convert to Shapes	Yipada si Awọn apẹrẹ
+	Convert to Arabic Digits	Yipada si Awọn nọmba Larubawa
+	Convert to Thai Digits	Yipada si Awọn nọmba Thai
+	Ink Replay	Inki Tunṣe
+	Add\nPen	Fi\nPen
+	Rewind	Pada sẹhin
+	Forward	Siwaju
+	Stroke {n} of {total}	Stroke {n} ti {total}
+	Use wildcards	Lo wildcards
+	Special	Pataki
+	Match prefix	Apejuwe baramu
+	Match suffix	Suffix baramu
+	Ignore punctuation characters	Foju awọn ohun kikọ aami ifamisi
+	Ignore white-space characters	Foju awọn ohun kikọ aaye-funfun
+	Regular expressions	Awọn ikosile deede
+	Search Options	Awọn aṣayan wiwa
+	Tab Character	Taabu Ohun kikọ
+	Any Character	Eyikeyi ohun kikọ
+	Any Digit	Eyikeyi Nọmba
+	Any Letter	Eyikeyi Lẹta
+	Caret Character	Abojuto kikọ
+	Section Character	Abala kikọ
+	Paragraph Character	Ìpínrọ kikọ
+	Graphic	Ayaworan
+	Manual Line Break	Afowoyi Line Bireki
+	Manual Page Break	Afowoyi Page Bireki
+	Section Break	Iyapa Bireki
+	White Space	White Space
+	Clipboard Contents	Clipboard Awọn akoonu
+	Find What Text	Wa Ohun ti Ọrọ
+	Find What Expression	Wa Ohun Ikosile
+	Character in Range	Ohun kikọ ni Range
+	Beginning of Word	Ibẹrẹ Ọrọ
+	End of Word	Opin Oro
+	Expression	Ikosile
+	Not	Kii ṣe
+	Num Occurrences	Num Iṣẹlẹ
+	Previous 1 or More	Ti tẹlẹ 1 tabi Diẹ sii
+	0 or More Characters	0 tabi Die ohun kikọ
+	Move with Text	Gbe pẹlu Ọrọ
+	Fix Position on Page	Ipo Fix lori Oju-iwe
+	WordArt Styles	WordArt Styles
+	Text Fill	Ọrọ Kun
+	Text Outline	Ilana Ọrọ
+	Transform	Yipada
+	No Fill	Ko si Kun
+	No Outline	Ko si Ilana
+	Reflection	Otito
+	No Reflection	Ko si irisi
+	No Transform	Ko si Iyipada
+	Connect Shapes	Sopọ Awọn apẹrẹ
+	Straight Connector	Taara Asopọmọra
+	Straight Arrow Connector	Taara Arrow Asopọmọra
+	Elbow Connector	Igbonwo Asopọmọra
+	Elbow Arrow Connector	Igbonwo Arrow Asopọmọra
+	Curved Connector	Te Asopọmọra
+	Curved Arrow Connector	Te Arrow Asopọmọra
+	Arch Up	Dara soke
+	Arch Down	Arch Down
+	Slant Up	Slant Up
+	Slant Down	Slant isalẹ
+	Inflate	Fifẹ
+	Deflate	Deflate
+	Chevron Up	Chevron Up
+	Chevron Down	Chevron isalẹ
+	Triangle Up	Onigun Up
+	Triangle Down	Triangle Isalẹ
+	Solid Accent	Asẹnti ri to
+	Light with Outline	Imọlẹ pẹlu Ìla
+	Hollow	Ṣofo
+	Accent Gradient	Accent Gradient
+	Dark with Shadow	Dudu pẹlu Ojiji
+	Soft Glow	Asọ Glow
+	Accent with Reflection	Asẹnti pẹlu irisi
+	Warm Gradient with Outline	Gbona Gradient pẹlu Ìla
+	Add line numbering	Fi nọmba ila kun
+	Add to Document	Ṣafikun si Iwe-ipamọ
+	Address labels	Awọn aami adirẹsi
+	Auto	Apprehensive
+	Automatically hyphenate document	Laifọwọyi hyphenate iwe
+	Chinese (Simplified)	Kannada (Irọrun)
+	Chinese (Traditional)	Kannada (Aṣa)
+	Column:	Ọwọn:
+	Count by:	Ka nipa:
+	Czech	Czech
+	Danish	Danish
+	Delivery address:	Adirẹsi ifijiṣẹ:
+	Detect language automatically	Wa ede laifọwọyi
+	Do not check spelling or grammar	Maṣe ṣayẹwo akọtọ tabi girama
+	Dutch	Dutch
+	Envelope size:	Iwọn apoowe:
+	Estonian	Estonia
+	Finnish	Finnish
+	French (France)	Faranse (France)
+	From text:	Lati ọrọ:
+	Full page of the same label	Oju-iwe kikun ti aami kanna
+	German (Germany)	Jẹmánì (Germany)
+	Greek	Giriki
+	Hebrew	Heberu
+	Hyphenate at:	Hyphenate ni:
+	Hyphenate words in CAPS	Awọn ọrọ Hyphenate ni CAPS
+	Hyphenation Options…	Awọn aṣayan Hyphenation…
+	Hyphenation zone:	Agbegbe hyphenation:
+	Italian	Itali
+	Japanese	Japanese
+	Korean	Korean
+	Limit consecutive hyphens to:	Idiwọn awọn hyphens itẹlera si:
+	Line Numbering Options…	Awọn aṣayan Nọmba Laini…
+	Manual Hyphenation	Afọwọṣe Hyphenation
+	Manual hyphenation is complete.	Asopọmọra afọwọṣe ti pari.
+	Manual…	Afowoyi…
+	Mark selected text as:	Samisi ti a ti yan ọrọ bi:
+	New Document	Iwe Tuntun
+	No limit	Ko si opin
+	Norwegian (Bokmål)	Norwegian (Bokmål)
+	Numbering:	Nọmba:
+	Omit	Fi silẹ
+	One label per recipient	Aami kan fun olugba
+	Portuguese (Brazil)	Portuguese (Brazil)
+	Portuguese (Portugal)	Portuguese (Portugal)
+	Return address labels	Pada awọn aami adirẹsi
+	Return address:	Pada adirẹsi:
+	Row:	Row:
+	Russian	Russian
+	Serbian (Cyrillic)	Serbian (Cyrillic)
+	Serbian (Latin)	Serbian (Latin)
+	Set As Default	Ṣeto Bi Aiyipada
+	Shipping labels	Sowo akole
+	Single label	Aami ẹyọkan
+	Spanish (Mexico)	Spanish (Mexico)
+	Spanish (Spain)	Spanish (Spain)
+	Swedish	Swedish
+	Turkish	Turkish
+	Ukrainian	Yukirenia
+	{language} is now the document's default language.	{language} jẹ ede aiyipada iwe-ipamọ ni bayi.
+	Visual effects	Awọn ipa wiwo
+	Animation effects:	Awọn ipa ere idaraya:
+	On	Lori
+	Off	Paa
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Yiyi didan ati sisun, ati awọn akojọ aṣayan ati awọn bọtini ti o rọ sinu. Paa fihan gbogbo iyipada ni ẹẹkan.
+	Your system has animation effects turned on.	Eto rẹ ni awọn ipa ere idaraya ti wa ni titan.
+	Your system has animation effects turned off.	Eto rẹ ni awọn ipa ere idaraya ti wa ni pipa.
+	Your system doesn't report an animation setting, so animation effects stay on.	Eto rẹ ko ṣe ijabọ eto ere idaraya, nitorinaa awọn ipa ere idaraya duro lori.
+	Expanded	Ti fẹ
+	Condensed	Di
+	By:	Nipa:
+	Arrange All	Ṣeto Gbogbo
+	View Side by Side	Wo Apa nipa Side
+	Synchronous Scrolling	Yiyi Amuṣiṣẹpọ
+	Switch Windows	Yipada Windows
+	Screenshot	Sikirinifoto
+	Screen Clipping	Iboju gige
+	Select the part of the screen to insert.	Yan apakan iboju lati fi sii.
+	Screen clipping ended without a picture.	Iboju gige pari laisi aworan kan.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Ige iboju ko si nibi. Daakọ aworan iboju, lẹhinna lẹẹmọ rẹ.
+	Screen clipping didn't work: {reason}	Ige iboju ko ṣiṣẹ: {reason}
+	Media	Media
+	Online Video	Online Video
+	Insert Video	Fi Fidio sii
+	Play Video	Play Video
+	Enter the web address or embed code of an online video:	Tẹ adirẹsi wẹẹbu sii tabi koodu ifibọ ti fidio ori ayelujara:
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Fidio naa fihan bi aworan kan ninu iwe-ipamọ naa. Tẹ lẹẹmeji lati wo ninu ẹrọ aṣawakiri rẹ.
+	That isn't the web address or embed code of an online video.	Iyẹn kii ṣe adirẹsi wẹẹbu tabi koodu ifibọ ti fidio ori ayelujara.
+	3D Models	Awọn awoṣe 3D
+	Insert a 3D model from a file (.glb, .stl, .obj)	Fi awoṣe 3D sii lati faili kan (.glb, .stl, .obj)
+	Read Aloud isn't available in the browser	Ka Aloud ko si ninu ẹrọ aṣawakiri
+	Read Aloud couldn't start the speech program: {reason}	Ka Aloud ko le bẹrẹ eto ọrọ: {reason}
+	Read Aloud couldn't start: {reason}	Ka Aloud ko le bẹrẹ: {reason}
+	Read Aloud stopped: {reason}	Ka Aloud duro: {reason}
+	no speech program on this system	ko si eto ọrọ lori eto yii
+	Online Pictures	Awọn aworan ori ayelujara
+	This Device…	Ẹrọ yii…
+	Online Pictures…	Awọn aworan ori ayelujara…
+	Search Openverse (Creative Commons pictures)	Wa Openverse (Awọn aworan Creative Commons)
+	Search	Àwárí
+	Only pictures I may use commercially	Awọn aworan nikan ni MO le lo ni iṣowo
+	Searching…	Wiwa…
+	No pictures found.	Ko si awọn aworan ti a rii.
+	Downloading…	Gbigba lati ayelujara…
+	Couldn't search: {reason}	Ko le wa: {reason}
+	Couldn't download the picture: {reason}	Ko le ṣe igbasilẹ aworan naa: {reason}
+	it isn't a picture Doc4Me can read	kii ṣe aworan Doc4Me le ka
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Awọn aworan lati Openverse. Bọwọ fun iwe-aṣẹ aworan kọọkan: Doc4Me ṣafikun laini kirẹditi labẹ rẹ.
+	Translator	Onitumo
+	From	Lati
+	To	Si
+	Select text in the document to translate it.	Yan ọrọ ninu iwe-ipamọ lati tumọ rẹ.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	Gbogbo iwe naa ni a tumọ si iwe tuntun, eyiti o rọpo eyi. Fi iṣẹ rẹ pamọ ni akọkọ.
+	Translating {done} of {total}	Itumọ {done} ti {total}
+	Couldn't translate: {reason}	Ko le tumọ: {reason}
+	There's no text to translate.	Ko si ọrọ lati tumọ.
+	Translation service	Iṣẹ itumọ
+	MyMemory (free, no account)	MyMemory (ọfẹ, ko si akọọlẹ)
+	5,000 characters a day; give an email address for 50,000.	Awọn ohun kikọ 5,000 ni ọjọ kan; fun adirẹsi imeeli fun 50,000.
+	Email address (optional)	Adirẹsi imeeli (aṣayan)
+	LibreTranslate server (open source)	Olupin LibreTranslate (orisun ṣiṣi)
+	Server address (https://…)	Adirẹsi olupin (https://…)
+	API key (if the server needs one)	Bọtini API (ti olupin ba nilo ọkan)
+	the LibreTranslate server	olupin LibreTranslate
+	The text is sent to {service} to be translated.	A fi ọrọ ranṣẹ si {service} lati tumọ.
+	English	Gẹẹsi
+	Vietnamese	Vietnamese
+	Indonesian	Indonesian
+	Malay	Malay
+	French	Faranse
+	German	Jẹmánì
+	Spanish	Spani
+	Hungarian	Hungarian
+	Serbian	Serbian
+	the free daily allowance is used up (try again tomorrow, or give an email address)	ifunni ojoojumọ ọfẹ ni a lo (gbiyanju lẹẹkansi ni ọla, tabi fun adirẹsi imeeli)
+	Translate Document	Tumọ Iwe
+	Add-ins	Fi-ins
+	Get Add-ins	Gba Fikun-un
+	Store	Itaja
+	My Add-ins	Mi Fi-ins
+	Added	Fi kun
+	Run	Ṣiṣe
+	No add-ins are listed yet.	Ko si awọn afikun ti a ṣe akojọ sibẹsibẹ.
+	Couldn't get the add-in list: {reason}	Ko le gba atokọ afikun: {reason}
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} ni a fi kun. Awọn macros rẹ wa labẹ Awọn Fikun-un Mi ati Wo 2 MAL Macros.
+	Couldn't add {name}: {reason}	Ko le ṣafikun {name}: {reason}
+	No add-ins yet. Add one from the Store.	Ko si awọn afikun sibẹsibẹ. Fi ọkan kun lati Ile itaja.
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Awọn afikun Doc4Me jẹ awọn akopọ ọfẹ ti awọn macros lati katalogi afikun Doc4Me. Wọn le ṣatunkọ iwe nikan.
+	only https addresses can be used	awọn adirẹsi https nikan le ṣee lo
+	web access isn't available here	wiwọle wẹẹbu ko si nibi
+	Ink Equation	Inki Idogba
+	Ink to Math	Inki to Math
+	Math Input Control	Iṣakoso igbewọle Math
+	Undo Stroke	Undo Stroke
+	Write math here with the mouse or a pen.	Kọ isiro nibi pẹlu Asin tabi pen.
+	Recognized (you can correct it):	Ti idanimọ (o le ṣe atunṣe):
+	Dictation isn't available here.	Dictation ko si nibi.
+	Dictation stopped: {reason}	Dictation duro: {reason}
+	Dictation stopped.	Dictation duro.
+	Downloading the speech model ({mb} MB, once)…	Gbigba awoṣe ọrọ silẹ ({mb} MB, lẹẹkan)…
+	Getting ready…	N murasilẹ…
+	Listening… speak now	Nfeti… sọrọ ni bayi
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	Ọrọ ti wa ni mọ lori kọmputa yi (whisper.cpp); ko si ohun ti wa ni rán online.
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ko fi sori ẹrọ lori kọnputa yii, nitorinaa iwe yii han pẹlu {with}. Awọn ila ati awọn oju-iwe le fọ yatọ si pẹlu fonti atilẹba.
+	Font not installed	Font ko fi sori ẹrọ
+	Top of the Window	Oke ti Ferese
+	Bottom of the Window	Isalẹ ti Ferese
+	Top of Next Page	Oke ti Next Page
+	Top of Previous Page	Oke ti išaaju Page
+	Symbol Font	Aami Font
+	Shrink Selection	Isunki Yiyan
+	Previous Window	Ferese ti tẹlẹ
+	Next Window	Ferese Next
+	Previous Footnote	Akọsilẹ Ẹsẹ ti tẹlẹ
+	Last Cell in Row	Kẹhin Cell ni kana
+	Last Cell in Column	Cell kẹhin ni Ọwọn
+	First Cell in Row	First Cell ni kana
+	First Cell in Column	Ẹyin akọkọ ni Ọwọn
+	Insert LISTNUM Field	Fi LISTNUM Field sii
+	Collapse the Ribbon	Bi ṣubu Ribbon naa
+	1×2 Empty Matrix	1 × 2 Ofo Matrix
+	1×3 Empty Matrix	1 × 3 Ofo Matrix
+	2×1 Empty Matrix	2 × 1 Ofo Matrix
+	2×2 Determinant	2 × 2 Ipinnu
+	2×2 Empty Matrix	2 × 2 Ofo Matrix
+	2×2 Identity Matrix	2 × 2 Idanimọ Matrix
+	2×2 Identity Matrix (sparse)	2 × 2 Identity Matrix (sparse)
+	2×2 Matrix in Brackets	2 × 2 Matrix ni Brackets
+	2×2 Matrix in Double Bars	2 × 2 Matrix ni Double Ifi
+	2×2 Matrix in Parentheses	2 × 2 Matrix ni Awọn obi
+	2×3 Empty Matrix	2 × 3 Ofo Matrix
+	3×1 Empty Matrix	3 × 1 Ofo Matrix
+	3×2 Empty Matrix	3 × 2 Ofo Matrix
+	3×3 Empty Matrix	3 × 3 Ofo Matrix
+	3×3 Identity Matrix	3 × 3 Idanimọ Matrix
+	3×3 Identity Matrix (sparse)	3 × 3 Idanimọ Matrix (sparse)
+	A xor B	A xor B
+	APA	APA
+	ASAP	ASAP
+	AaBbCcDd	AaBbCcDd
+	Absolute value cases	Idi iye igba
+	Accents	Asẹnti
+	Acute	Wuyi
+	All - Linear	Gbogbo - Linear
+	All - Professional	Gbogbo - Ọjọgbọn
+	Angle Brackets	Awọn biraketi igun
+	Angle Brackets with Separator	Awọn biraketi igun pẹlu Iyapa
+	Angle Brackets with Two Separators	Awọn biraketi igun pẹlu Iyapa Meji
+	Annotation Reference	Itọkasi akọsilẹ
+	Annotation Subject	Koko-ọrọ asọye
+	Annotation Text	Ọrọ asọye
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7.17" × 10.12"
+	Baseline Dots	Awọn aami ipilẹ
+	Basic Math	Iṣiro ipilẹ
+	Bayes' rule	Bayes 'ofin
+	Binomial Coefficient	Olusọdipúpọ Binomial
+	Binomial Coefficient (angle)	Olusọdipúpọ Binomial (igun)
+	Binomial Coefficient with Angle Brackets	Olusọdipúpọ Binomial pẹlu Awọn biraketi Igun
+	Binomial expansion of (x+a)ⁿ	Imugboroosi binomial ti (x+a)n
+	Body text in a short paragraph to show spacing.	Ọrọ ti ara ni paragirafi kukuru lati ṣafihan aye.
+	Book Title	Iwe Title
+	Boxed Formula	Agbekalẹ apoti
+	Boxed Formula (example)	Agbekalẹ apoti (apẹẹrẹ)
+	Boxed Formulas	Awọn agbekalẹ apoti
+	Braces	Àmúró
+	Braces with Separator	Awọn àmúró pẹlu Iyapa
+	Brackets	Biraketi
+	Brackets with Separators	Awọn biraketi pẹlu Separators
+	Breve	Breve
+	CONFIDENTIAL	ASIRI
+	Capitalize the first word of a sentence	Ṣe pataki ọrọ akọkọ ti gbolohun kan
+	Cases (Three Conditions)	Awọn ọran (Awọn ipo mẹta)
+	Cases (Two Conditions)	Awọn ọran (Awọn ipo meji)
+	Cases and Stacks	Awọn ọran ati awọn akopọ
+	Category	Ẹka
+	Ceiling	Aja
+	Centered as Group	Ti dojukọ bi Ẹgbẹ
+	Change in y over change in x	Yipada ninu y lori iyipada ninu x
+	Change to Level 1	Yipada si Ipele 1
+	Change to Level 2	Yipada si Ipele 2
+	Change to Level 3	Yipada si Ipele 3
+	Change to Level 4	Yipada si Ipele 4
+	Change to Level 5	Yipada si Ipele 5
+	Change to Level 6	Yipada si Ipele 6
+	Change to Level 7	Yipada si Ipele 7
+	Change to Level 8	Yipada si Ipele 8
+	Change to Level 9	Yipada si Ipele 9
+	Check	Ṣayẹwo
+	Chicago	Chicago
+	Circle area from its radius	Circle agbegbe lati awọn oniwe-radius
+	Circled Dot	Aami iyika
+	Circled Plus	Circled Plus
+	Circled Times	Circled Times
+	Colon Equal	Colon Dogba
+	Column selection: the arrow keys extend the block, Esc ends it	Aṣayan ọwọn: awọn bọtini itọka fa bulọọki naa, Esc pari rẹ
+	Column width	Iwọn ọwọn
+	Common Accent Objects	Wọpọ Accent Nkan
+	Common Brackets	Wọpọ Brackets
+	Common Fractions	Awọn ida ti o wọpọ
+	Common Functions	Awọn iṣẹ ti o wọpọ
+	Common Large Operators	Wọpọ Tobi Awọn oniṣẹ
+	Common Operator Structures	Wọpọ onišẹ ẹya
+	Common Operators	Wọpọ Awọn oniṣẹ
+	Common Radicals	Wọpọ Radicals
+	Common Subscripts and Superscripts	Awọn alabapin ti o wọpọ ati Superscripts
+	Contour Integral	Contour Integral
+	Contour Integral with Limits	Contour Integral pẹlu ifilelẹ
+	Contour Integral with Stacked Limits	Contour Integral pẹlu tolera ifilelẹ
+	Contour Integrals	Contour Integrals
+	Contributors	Olùkópa
+	Convert between built-up and linear form	Yipada laarin itumọ-oke ati fọọmu laini
+	Coproduct	Àjọ yi
+	Coproduct with Limits	Coproduct pẹlu ifilelẹ
+	Coproduct with Lower Limit	Coproduct pẹlu Isalẹ iye to
+	Coproduct with Subscript-Superscript Limits	Ọja pẹlu Alabapin-Superscript Awọn ifilelẹ
+	Cosecant Function	Cosecant iṣẹ
+	Cosine 2x	Cosine 2x
+	Cosine Function	Cosine Iṣẹ
+	Cotangent Function	Cotangent Iṣẹ
+	Cube Root	Rube Gbongbo
+	Current - Linear	Lọwọlọwọ - Linear
+	Current - Professional	Lọwọlọwọ - Ọjọgbọn
+	DO NOT COPY	MAṢE DAAKỌ
+	DRAFT	OSERE
+	Default Paragraph Font	Aiyipada Ìpínrọ Font
+	Delta Equal To	Delta Dogba To
+	Delta over arrow	Delta lori itọka
+	Derivative as a limit	Itọsẹ bi opin
+	Diagonal Dots	Awọn aami onigun
+	Differential	Iyatọ
+	Differential theta	Theta iyatọ
+	Differential x	Iyatọ x
+	Differential y	Iyatọ y
+	Differentials	Iyato
+	Dot	Aami
+	Dots	Awọn aami
+	Double Bar	Pẹpẹ Meji
+	Double Dot	Aami Meji
+	Double Integral	Double Integral
+	Double Integral with Limits	Double Integral pẹlu ifilelẹ
+	Double Integral with Stacked Limits	Ilọpo meji pẹlu Awọn idiwọn tolera
+	Double Left Arrow with Text Above	Ọfà Osi Meji pẹlu Ọrọ Loke
+	Double Left Arrow with Text Below	Ọfà Osi Meji pẹlu Ọrọ Ni isalẹ
+	Double Left Right Arrow with Text Above	Ọfà Ọtun Osi Meji pẹlu Ọrọ Loke
+	Double Left Right Arrow with Text Below	Ọfà Ọtun Osi Meji pẹlu Ọrọ Ni isalẹ
+	Double Right Arrow with Text Above	Ọfà Ọtun Meji pẹlu Ọrọ Loke
+	Double Right Arrow with Text Below	Ọfà Ọtun Meji pẹlu Ọrọ Ni isalẹ
+	Double Square Brackets	Double Square biraketi
+	Double Vertical Bars	Double inaro Ifi
+	Double summation	Double akopọ
+	Edit Document	Iwe Ṣatunkọ
+	Emphasis	Tcnu
+	Empty Matrices	Ofo Matrices
+	Endnote Reference	Itọkasi ipari
+	Endnote Text	Ọrọ ipari
+	Envelope #10   4.12" × 9.50"	apoowe # 10 4.12" × 9.50"
+	Envelope Address	Adirẹsi apoowe
+	Envelope DL   4.33" × 8.66"	apoowe DL 4.33" × 8.66"
+	Envelope Return	Apoowe Pada
+	Equal Equal	Dogba Dogba
+	Equal by Definition	Dogba nipa Definition
+	Euler's identity	Euler ká idanimo
+	Executive   7.25" × 10.50"	Alase 7.25" × 10.50"
+	Exponential	Exponential
+	Exponential series	Exponential jara
+	Extra space	Aaye afikun
+	Floor	Ilẹ
+	Footnote Reference	Itọkasi akọsilẹ ẹsẹ
+	Footnote Text	Ọrọ akọsilẹ ẹsẹ
+	Functions	Awọn iṣẹ
+	GB/T 7714	GB/T 7714
+	GOST (name sort)	GOST (orukọ too)
+	GOST (title sort)	GOST (akọle too)
+	Geometry	Jiometirika
+	Good afternoon	E ku osan
+	Good evening	Ku irole
+	Good morning	E kaaro
+	Grave	Ibojì
+	Greek Letters	Awọn lẹta Giriki
+	Grid Table 1 Light	Akoj Table 1 Light
+	Grid Table 4 – Blue	Akoj Table 4 ŞE 4 Blue
+	Grid Table 4 – Green	Akoj Table 4 ŞE 4 Green
+	Grid Table 4 – Orange	Akoj Table 4 ŞUGA Orange
+	Grid Table 4 – Purple	Akoj Table 4 ÕRÙN eleyi ti
+	Grouping Character Above	Iṣakojọpọ kikọ Loke
+	Grouping Character Below	Iṣakojọpọ kikọ Ni isalẹ
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	Ijanilaya
+	Historical and Discretional	Itan ati Discretional
+	Hyperbolic Cosecant Function	Hyperbolic Cosecant Iṣẹ
+	Hyperbolic Cosine Function	Hyperbolic Cosine Iṣẹ
+	Hyperbolic Cotangent Function	Hyperbolic Cotangent Iṣẹ
+	Hyperbolic Functions	Awọn iṣẹ Hyperbolic
+	Hyperbolic Secant Function	Hyperbolic Secant Iṣẹ
+	Hyperbolic Sine Function	Hyperbolic Sine Iṣẹ
+	Hyperbolic Tangent Function	Hyperbolic Tangent Iṣẹ
+	Hyperlink	Hyperlink
+	Hypotenuse	Hypotenuse
+	IEEE	IEEE
+	ISO 690 (author-date)	ISO 690 (ọjọ onkọwe)
+	ISO 690 (numerical)	ISO 690 (nọmba)
+	Identity Matrices	Idanimọ Matrices
+	Index Heading	Akọle Atọka
+	Index {n}	Atọka {n}
+	Integral of e^(−x²)	Ijọpọ ti e^ (-x²)
+	Integral with Limits	Integral pẹlu ifilelẹ
+	Integral with Stacked Limits	Integral pẹlu tolera ifilelẹ
+	Integrals	Ṣepọ
+	Intense Emphasis	Itẹnumọ ti o lagbara
+	Intense Quote	Intense Quote
+	Intense Reference	Itọkasi ti o lagbara
+	Intersection	Ikorita
+	Intersection with Limits	Ikorita pẹlu ifilelẹ
+	Intersection with Lower Limit	Ikorita pẹlu Isalẹ iye to
+	Intersection with Subscript-Superscript Limits	Ikorita pẹlu Alabapin-Superscript ifilelẹ
+	Inverse Cosecant Function	Inverse Cosecant iṣẹ
+	Inverse Cosine Function	Inverse Cosine Iṣẹ
+	Inverse Cotangent Function	Inverse Cotangent Iṣẹ
+	Inverse Functions	Awọn iṣẹ onidakeji
+	Inverse Hyperbolic Cosecant Function	Inverse Hyperbolic Cosecant Iṣẹ
+	Inverse Hyperbolic Cosine Function	Inverse Hyperbolic Cosine Iṣẹ
+	Inverse Hyperbolic Cotangent Function	Inverse Hyperbolic Cotangent Iṣẹ
+	Inverse Hyperbolic Functions	Inverse Hyperbolic Awọn iṣẹ
+	Inverse Hyperbolic Secant Function	Inverse Hyperbolic Secant Iṣẹ
+	Inverse Hyperbolic Sine Function	Inverse Hyperbolic Sine Iṣẹ
+	Inverse Hyperbolic Tangent Function	Inverse Hyperbolic Tangent Iṣẹ
+	Inverse Secant Function	Inverse Secant Iṣẹ
+	Inverse Sine Function	Inverse Sine Iṣẹ
+	Inverse Tangent Function	Inverse Tangent iṣẹ
+	Justification of a display equation	Idalare idogba ifihan
+	Kerning for fonts:	Kerning fun awọn nkọwe:
+	Keywords	Awon
+	Left Arrow with Text Above	Ọfà osi pẹlu Ọrọ Loke
+	Left Arrow with Text Below	Ọfà osi pẹlu Ọrọ isalẹ
+	Left Bracket Twice	Osi akọmọ lemeji
+	Left Right Arrow Above	Osi ọtun Arrow Loke
+	Left Right Arrow with Text Above	Ọfà Ọtun Osi pẹlu Ọrọ Loke
+	Left Right Arrow with Text Below	Ọfà ọtun osi pẹlu Ọrọ isalẹ
+	Left Subscript-Superscript	Osi Alabapin-Superscript
+	Leftwards Arrow Above	Ọfà osi Loke
+	Leftwards Harpoon Above	Osi Harpoon Loke
+	Legal   8.50" × 14.00"	Ofin 8.50" × 14.00"
+	Letter   8.50" × 11.00"	Lẹta 8.50" × 11.00"
+	Letter-Like Symbols	Lẹta-Bi Awọn aami
+	Level 1	Ipele 1
+	Level 2	Ipele 2
+	Level 3	Ipele 3
+	Level 4	Ipele 4
+	Level 5	Ipele 5
+	Level 6	Ipele 6
+	Level 7	Ipele 7
+	Level 8	Ipele 8
+	Level 9	Ipele 9
+	Ligatures:	Ligatures:
+	Limit	Ifilelẹ lọ
+	Limit Example	Apeere Idiwọn
+	Line Number	Nọmba ila
+	Linear Fraction	Ida Laini
+	List Paragraph	Akojọ ìpínrọ
+	List Table 3 – Blue	Akojọ Table 3 Şe Blue
+	List Table 3 – Green	Akojọ Table 3 ŞE 3 Green
+	List Table 3 – Orange	Akojọ Table 3 ÕRÙN Orange
+	List Table 3 – Purple	Akojọ Table 3 Şe 3 Purple
+	Logarithm	Logarithm
+	Logarithm with Base	Logarithm pẹlu Base
+	Logical AND	Mogbonwa ATI
+	Logical AND with Limits	Mogbonwa ATI pẹlu ifilelẹ
+	Logical OR	Mogbonwa OR
+	Logical OR with Limits	Mogbonwa OR pẹlu ifilelẹ
+	MLA	MLA
+	Matrices with Brackets	Matrices pẹlu Brackets
+	Maximum	O pọju
+	Maximum Example	Apeere to pọju
+	Midline Dots	Awọn aami aarin
+	Minimum	Kere
+	Minus Equal	Iyokuro Dogba
+	Models	Awọn awoṣe
+	Natural Logarithm	Adayeba Logarithm
+	Negated Relations	Odi Relations
+	No Spacing	Ko si Aye
+	Normal	Deede
+	Normal Indent	Indent deede
+	Normal Table	Tabili deede
+	Normal probability density	Deede iṣeeṣe iwuwo
+	Number the equation; the number sits at the right margin (or type # then the number)	Nọmba idogba; nọmba naa joko ni ala ọtun (tabi tẹ # lẹhinna nọmba naa)
+	One half	Idaji kan
+	Operator Structures	Awọn ẹya oniṣẹ
+	Operators	Awọn oniṣẹ
+	Other Large Operators	Miiran Tobi Awọn oniṣẹ
+	Outward Brackets	Ita biraketi
+	Overbar	Overbarb
+	Overbars and Underbars	Overbars ati Underbars
+	Overbrace	Overbraced
+	Parentheses	Akomo
+	Parentheses with Separator	Awọn obi pẹlu Iyapa
+	Partial Differential	Iyatọ Apa kan
+	Pi Over 2	Pi Ju 2 lọ
+	Plain Table 1	Tabili pẹtẹlẹ 1
+	Plus Equal	Plus Dogba
+	Possible spelling mistake	Aṣiṣe akọtọ ti o ṣeeṣe
+	Power series of (1+x)ⁿ	Agbara jara ti (1+x)n
+	Product	Ọja
+	Product of A	Ọja ti A
+	Product with Limits	Ọja pẹlu ifilelẹ
+	Product with Lower Limit	Ọja pẹlu Isalẹ iye to
+	Product with Subscript-Superscript Limits	Ọja pẹlu Alabapin-Superscript ifilelẹ
+	Products and Coproducts	Awọn ọja ati Coproducts
+	Quadratic Root	Gbongbo kuadiratiki
+	Quote	Agbasọ
+	Radical with Degree	Radical pẹlu ìyí
+	Radicals	Ti ipilẹṣẹ
+	Reading Mode	Ipo kika
+	Remove the space before the punctuation	Yọ aaye kuro ṣaaju aami ifamisi
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Oluwadi nilo iṣẹ ori ayelujara; Doc4Me tọju awọn iwe aṣẹ rẹ offline.
+	Right Arrow with Text Above	Ọfà ọtun pẹlu Ọrọ Loke
+	Right Arrow with Text Below	Ọfà ọtun pẹlu Ọrọ isalẹ
+	Right Bracket Twice	Ọtun akọmọ lemeji
+	Rightwards Arrow Above	Ọtun Arrow Loke
+	Rightwards Harpoon Above	Harpoon ọtun Loke
+	Roots of ax²+bx+c	Awọn gbongbo ti ax²+bx+c
+	SAMPLE	APẸẸRẸ
+	SIST02	SIST02
+	Scripts	Iwe afọwọkọ
+	Secant Function	Secant Iṣẹ
+	Show the equation in the line of text	Ṣe afihan idogba ni laini ọrọ
+	Show the equation on a line of its own	Ṣe afihan idogba lori laini tirẹ
+	Sides of a right triangle	Awọn ẹgbẹ ti igun apa ọtun
+	Sine Function	Sine Iṣẹ
+	Sine and cosine series of f(x)	Sine ati cosine jara ti f(x)
+	Sine theta	Sine theta
+	Single Brackets	Nikan Brackets
+	Single Left Angle	Nikan Osi Angle
+	Single Left Bar	Nikan Osi Bar
+	Single Left Brace	Nikan Osi Àmúró
+	Single Left Bracket	Nikan Osi akọmọ
+	Single Left Parenthesis	Obi Osi Nikan
+	Single Right Brace	Nikan Ọtun Àmúró
+	Single Right Bracket	Nikan Ọtun akọmọ
+	Single Right Parenthesis	Obi Ọtun Nikan
+	Skewed Fraction	Ida Skewed
+	Small change	Iyipada kekere
+	Sparse Matrices	Sparse Matrices
+	Square Root	Gbongbo Square
+	Square Root with Degree	Gbongbo Square pẹlu ìyí
+	Square Union	Square Union
+	Stack Object	Akopọ Nkan
+	Stack Object (Three)	Nkan Akopọ (Mẹta)
+	Stacked Fraction	Tolera Ida
+	Stacked, no bar	Tolera, ko si igi
+	Standard Only	Standard Nikan
+	Standard and Contextual	Standard ati Contextual
+	Statement   5.50" × 8.50"	Gbólóhùn 5.50" × 8.50"
+	Strong	Lagbara
+	Style: APA	Ara: APA
+	Subject	Koko-ọrọ
+	Subscript-Superscript	Alabapin-Superscript
+	Subscripts and Superscripts	Awọn alabapin ati Superscripts
+	Subtitle	Atunkọ
+	Subtle Emphasis	Itẹnumọ arekereke
+	Subtle Reference	Itọkasi arekereke
+	Sum of cosines	Apapọ ti cosines
+	Sum or difference of sines	Apapọ tabi iyatọ ti sines
+	Summation	Akopọ
+	Summation from 0 to n	Akopọ lati 0 si n
+	Summation over binomials	Akopọ lori binomials
+	Summation with Limits	Akopọ pẹlu ifilelẹ
+	Summation with Lower Limit	Akopọ pẹlu Isalẹ iye to
+	Summation with Subscript Limit	Akopọ pẹlu Idiwọn Alabapin
+	Summation with Subscript-Superscript Limits	Akopọ pẹlu Alabapin-Superscript ifilelẹ
+	Summations	Akopọ
+	Surface Integral	Dada Integra
+	Surface Integral with Limits	Dada Integral pẹlu ifilelẹ
+	Surface Integral with Stacked Limits	Dada Integral pẹlu tolera ifilelẹ
+	TOA Heading	TOA Akori
+	TOC Heading	TOC Akori
+	TOC {n}	TOC {n}
+	Table Grid	Tabili Akoj
+	Table of Figures	Tabili ti isiro
+	Tabloid   11.00" × 17.00"	Tabloid 11.00" × 17.00"
+	Tangent Function	Tangent iṣẹ
+	Tangent formula	Tangent agbekalẹ
+	Text over Colon Equal	Ọrọ lori Colon Dogba
+	Text over Equal	Ọrọ lori Dogba
+	Text size	Iwọn ọrọ
+	The spelling and grammar check is complete.	Akọtọ ati ayẹwo girama ti pari.
+	These settings will be used for new documents.	Awọn eto wọnyi yoo ṣee lo fun awọn iwe aṣẹ tuntun.
+	Tilde	Tilde
+	Track\nChanges	Track\nAyipada
+	Track\nChanges ✓	Tọpinpin\nAwọn iyipada ✓
+	Trigonometric Functions	Awọn iṣẹ Trigonometric
+	Triple Dot	Aami Meta
+	Triple Integral	Meteta Integral
+	Triple Integral with Limits	Meteta Integral pẹlu ifilelẹ
+	Triple Integral with Stacked Limits	Meteta Integral pẹlu tolera ifilelẹ
+	Turabian	Turabian
+	Type equations in LaTeX	Iru awọn idogba ni LaTeX
+	Type equations in the linear format (UnicodeMath)	Iru awọn idogba ni ọna kika laini (UnicodeMath)
+	Type normal (non-math) text in the equation	Tẹ ọrọ deede (ti kii ṣe iṣiro) ni idogba
+	Typing	Titẹ
+	URGENT	AMOJUTO
+	Underbar	Labẹ bar
+	Underbrace	Underbrace
+	Union	Apapọ
+	Union of intersections	Union of intersections
+	Union with Limits	Iṣọkan pẹlu Awọn ifilelẹ
+	Union with Lower Limit	Union pẹlu Isalẹ iye to
+	Union with Plus	Iṣọkan pẹlu Plus
+	Union with Subscript-Superscript Limits	Iṣọkan pẹlu Awọn opin Alabapin-Superscript
+	Unions and Intersections	Unions ati Intersections
+	Up Diagonal Dots	Awọn aami onigun mẹrin soke
+	Use "a" before a consonant sound	Lo "a" ṣaaju ohun kọnsonanti kan
+	Use "an" before a vowel sound	Lo "an" ṣaaju ohun faweli kan
+	Vector A	Vector A
+	Vector AB	Vector AB
+	Vertical Bars	Inaro Ifi
+	Vertical Dots	Awọn aami inaro
+	Volume Integral	Iwọn didun Integral
+	Volume Integral with Limits	Integral Iwọn didun pẹlu Awọn ifilelẹ
+	Volume Integral with Stacked Limits	Integral Iwọn didun pẹlu Awọn ifilelẹ tolera
+	Wildcards (regex)	Wildcards (regex)
+	Yields	Ikore
+	n×n Identity Matrix	n × n Identity Matrix
+	n×n Matrix	n × n Matrix
+	points and above	ojuami ati loke
+	tOGGLE cASE	TOGGLE CASE
+	x bar	x pẹpẹ
+	{w} × {h} in	{w} × {h} in
+	{w} × {h} mm	{w} × {h} mm
+	✓ None	✓ Ko si
+	➕ New comment	<New ọrọìwòye
+	📂  Browse…	📂  Ṣawakiri…
+	Measured By	Tiwọn Nipa
+	Mark Table of Contents Entry	Samisi Table of akoonu titẹsi
+	Custom Table of Contents	Aṣa Table of akoonu
+	Type a New List	Tẹ Akojọ Tuntun kan
+	Accept or Reject Changes	Gba tabi Kọ Awọn iyipada
+	Highlight Changes	Ṣe afihan Awọn iyipada
+	List Commands	Awọn aṣẹ Akojọ
+	Entry:	Iwọle:
+	Table identifier:	Idanimọ tabili:
+	Level:	Ipele:
+	Date	Ọjọ
+	Inserted	Fi sii
+	Changes with highlighting	Awọn iyipada pẹlu afihan
+	Changes without highlighting	Awọn iyipada laisi afihan
+	The document contains no tracked changes.	Iwe naa ko ni awọn ayipada ti a tọpinpin.
+	Track changes while editing	Tọpinpin awọn ayipada lakoko ṣiṣatunṣe
+	Highlight changes on screen	Ṣe afihan awọn ayipada loju iboju
+	Highlight changes in printed document	Ṣe afihan awọn ayipada ninu iwe ti a tẹjade
+	Current keyboard settings	Awọn eto keyboard lọwọlọwọ
+	A new document lists the commands with their shortcuts.	Iwe tuntun ṣe atokọ awọn aṣẹ pẹlu awọn ọna abuja wọn.
+	Border…	Aala…
+	Language…	Ede…
+	Font Substitution…	Font Fidipo…
+	Compatibility Options…	Awọn aṣayan ibamu…
+	Add New Placeholder…	Ṣafikun Ibi Tuntun…
+	Drawing Grid	Iyaworan Akoj
+	Compatibility Options	Awọn aṣayan ibamu
+	Font Substitution	Font Fidipo
+	Insert Rows	Fi awọn ori ila sii
+	Insert Cells	Fi awọn sẹẹli sii
+	Placeholder Name	Placeholder Orukọ
+	Horizontal spacing:	Aye petele:
+	Vertical spacing:	Inaro aye:
+	Display gridlines on screen	Ṣe afihan awọn gridlines loju iboju
+	Compatibility mode: {version}	Ipo ibamu: {version}
+	Word 2013 and later	Ọrọ 2013 ati nigbamii
+	Word 2010	Ọrọ 2010
+	Word 2007	Ọrọ 2007
+	Word 97–2003	Ọrọ 97403
+	Layout options for this document	Awọn aṣayan iṣeto fun iwe-ipamọ yii
+	Don't use HTML paragraph auto spacing	Maṣe lo aaye aifọwọyi HTML
+	Split apart page break and paragraph mark	Pipin yato si isinmi oju-iwe ati ami paragirafi
+	Every font this document uses is installed.	Gbogbo fonti ti iwe yii nlo ti fi sori ẹrọ.
+	Missing document font	Font iwe ti o padanu
+	Substituted font	Font aropo
+	Convert Permanently	Yipada titilai
+	Shift cells right	Awọn sẹẹli iyipada ọtun
+	A table's rows keep the same columns here.	Awọn ori ila tabili kan tọju awọn ọwọn kanna nibi.
+	Shift cells down	Awọn sẹẹli yipada si isalẹ
+	Insert entire row	Fi gbogbo kana
+	Insert entire column	Fi gbogbo iwe sii
+	Number:	Nọmba:
+	Number type:	Nọmba oriṣi:
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Tẹ orukọ tag ti orisun naa. O le ṣafikun alaye diẹ sii si orisun yii nigbamii nipa ṣiṣatunṣe orisun naa.
+	Grid Settings	Akoj Eto
+	Add New Placeholder	Fi New Placeholder
+	Text wrapping:	Pipa ọrọ:
+	Around	Ni ayika
+	Positioning…	Ipo ipo…
+	Cell Options	Awọn aṣayan sẹẹli
+	Table Positioning	Table Positioning
+	Cell margins	Awọn ala sẹẹli
+	Same as the whole table	Kanna bi gbogbo tabili
+	Wrap text	Ipari ọrọ
+	Fit text	Fit ọrọ
+	Text isn't squeezed to fit its cell yet.	Ọrọ ko ni fun pọ lati baamu sẹẹli rẹ sibẹsibẹ.
+	Inside	Inu
+	Outside	Ita
+	Margin	Ala
+	Relative to:	Ojulumo si:
+	Distance from surrounding text	Ijinna lati ọrọ agbegbe
+	Move with text	Gbe pẹlu ọrọ
+	Allow overlap	Gba ni lqkan
+	Remove Positioning	Yọ Ipo kuro
+	AutoCaption	AutoCaption
+	AutoCaption…	AutoCaption…
+	Add caption when inserting:	Fi akọle kun nigbati o ba nfi sii:
+	Picture	Aworan
+	Spike	Iwasoke
+	Paste Spike	Lẹẹ Spike
+	Move Text	Gbe Ọrọ
+	Copy Text	Daakọ Ọrọ
+	Move to where?	Gbe lọ si ibiti?
+	Copy to where?	Daakọ si ibiti?
+	Select Floating Shapes	Yan Lilefoofo ni nitobi
+	Absolute position	Ipo pipe
+	Both sides	Ẹgbẹ mejeeji
+	Brightness, contrast and transparency change the picture from how it looks now.	Imọlẹ, itansan ati akoyawo yi aworan pada lati bi o ṣe n wo ni bayi.
+	Brightness:	Imọlẹ:
+	Contrast:	Iyatọ:
+	Fill & Line	Kun & Laini
+	Fill:	Fọwọsi:
+	Format Picture	Aworan kika
+	Format Shape	Ọna kika Apẹrẹ
+	Inside Margin	Inu ala
+	Largest only	Ti o tobi julọ nikan
+	Left only	Osi nikan
+	Line width:	Iwọn ila:
+	Line:	Laini:
+	Lock aspect ratio	Titiipa aspect ratio
+	Move object with text	Gbe nkan pẹlu ọrọ
+	No Line	Ko si Laini
+	Outside Margin	Ita ala
+	Right only	Otun nikan
+	Transparency:	Itumọ:
+	relative to	ojulumo si
+	Open Hyperlink	Ṣii Hyperlink
+	Back	Pada
+	Field Click	Aaye Tẹ
+	Close Reviewing Pane	Pa Atunwo Pane
+	Maximize	Mu
+	Restore Down	Pada si isalẹ
+	Exit	Jade
+	Revisions	Atunyẹwo
+	{n} revisions	{n} àtúnyẹwò
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Awọn ifibọ: {ins}, awọn piparẹ: {del}, awọn gbigbe: {moves}, ọna kika: {fmt}, awọn asọye: {comments}
+	No revisions	Ko si awọn atunyẹwo
+	Changed	Yi pada
+	Zoom to Page	Sun-un si Oju-iwe
+	Save Version	Fi Version pamọ
+	Comments on version	Comments lori version
+	Restore	Pada
+	Versions are kept while the document is open (a .docx file has no versions).	Awọn ẹya ti wa ni ipamọ lakoko ti iwe-ipamọ wa ni sisi (faili .docx ko ni awọn ẹya).
+	Set Proofing Language…	Ṣeto Ede Imudaniloju…
+	Language Preferences…	Awọn ayanfẹ ede…
+	Contextual	Contextual
+	Print Documents	Awọn iwe aṣẹ titẹjade
+	Edit Individual Documents…	Ṣatunkọ Awọn iwe aṣẹ Olukuluku…
+	Print Documents…	Awọn iwe atẹjade…
+	AutoComplete	AutoComplete
+	{name} (Press ENTER to Insert)	{name} (Tẹ TẸ sii lati fi sii)
+	Recognized Functions	Awọn iṣẹ ti a mọ
+	Recognized Functions…	Awọn iṣẹ ti a mọ…
+	Restore Defaults	Mu pada Defaults
+	Insert Database	Fi aaye data sii
+	Insert Database…	Fi aaye data sii…
+	Get Data…	Gba Data…
+	Data source:	Orisun data:
+	Fields to insert:	Awọn aaye lati fi sii:
+	Insert Data	Fi Data sii
+	All records	Gbogbo igbasilẹ
+	{n} records	{n} igbasilẹ
+	Filter and Sort	Àlẹmọ ati too
+	Filter and Sort…	Àlẹmọ ati too…
+	Filter Records	Àlẹmọ Records
+	Sort Records	Too Records
+	Comparison	Lafiwe
+	Compare to	Afiwera si
+	And	Ati
+	Or	Tabi
+	Equal to	Dogba si
+	Not equal to	Ko dogba si
+	Less than	Kere ju
+	Greater than	Ti o tobi ju
+	Less than or equal	Kere ju tabi dogba
+	Greater than or equal	Ti o tobi ju tabi dogba
+	Is blank	Ofo
+	Is not blank	Ko ṣofo
+	Contains	Ni
+	Does not contain	Ko si ninu
+	Sort by	Too nipa
+	Then by	Lẹhinna nipasẹ
+	Ascending	Gòkè
+	Descending	Sọkalẹ
+	Table AutoFormat	Table AutoFormat
+	Table AutoFormat…	Tabili AutoFormat…
+	Table styles:	Awọn aṣa tabili:
+	Apply special formats to	Waye awọn ọna kika pataki lati
+	Sheet:	Dì:
+	{n} of {of} recipients	{n} ninu {of} awọn olugba
+	New Folder	Folda Tuntun
+	{name} can't be a folder's name.	{name} ko le jẹ orukọ folda kan.
+	Trust Center	Ile-iṣẹ igbẹkẹle
+	Allow Doc4Me to use online services	Gba Doc4Me laaye lati lo awọn iṣẹ ori ayelujara
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Awọn aworan ori ayelujara (Openverse), Tumọ (MyMemory tabi olupin LibreTranslate rẹ), Gba Awọn afikun ati igbasilẹ ti awoṣe ọrọ Dictate sopọ si intanẹẹti, ati pe nigbati o ba lo wọn nikan. Paa, Doc4Me ko ṣe asopọ ti tirẹ.
+	Online services are turned off (File › Options › Trust Center).	Awọn iṣẹ ori ayelujara ti wa ni pipa (Faili 4 Awọn aṣayan 2 Ile-iṣẹ Igbẹkẹle).
+	Cut, copy, and paste	Ge, daakọ, ati lẹẹmọ
+	Pasting within the same document:	Gbigbe laarin iwe kanna:
+	Pasting between documents:	Pasting laarin awọn iwe aṣẹ:
+	Pasting from other programs:	Pasting lati awọn eto miiran:
+	Keep Source Formatting	Jeki Orisun kika
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Dapọ kika ọrọ lẹẹmọ ọrọ naa ni ọna kika nibiti o ti de, gẹgẹ bi Jeki Ọrọ Nikan ṣe.
+	AutoFormat	AutoFormat
+	Review AutoFormat Changes	Atunwo AutoFormat Ayipada
+	*Bold* and _italic_ with real formatting	* Agboya * ati _italic_ pẹlu ọna kika gidi
+	Accept All	Gba Gbogbo
+	Reject All	Kọ Gbogbo
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	AutoFormat (Ctrl+Alt+K) ṣe ọna kika awọn paragira ti o yan, tabi gbogbo iwe.
+	AutoFormat Now	AutoFormat Bayi
+	AutoFormat and Review Changes…	AutoFormat ati Awọn iyipada Atunwo…
+	AutoFormat changed {count} paragraphs	AutoFormat yipada {count} ìpínrọ
+	Built-in Heading styles	Awọn aza akọle ti a ṣe sinu
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Wa yan paragira ti o yipada atẹle; Kọ fi eyi ti o yan pada bi o ti jẹ.
+	Find →	Wa →
+	← Find	← Wa
+	Formatting completed. You can now:	Ti pari kika. O le ni bayi:
+	List styles	Akojọ aza
+	Other paragraph styles	Miiran ìpínrọ aza
+	Preserve	Se itoju
+	Review Changes…	Atunwo Awọn iyipada…
+	{count} paragraphs were changed.	{count} ìpínrọ won yi pada.
+	Merge to:	Dapọ si:
+	Printer	Itẹwe
+	Merge records	Dapọ igbasilẹ
+	Current record	Igbasilẹ lọwọlọwọ
+	From:	Lati:
+	To:	Si:
+	When merging records	Nigbati o ba dapọ awọn igbasilẹ
+	Don't print blank lines when data fields are empty	Maṣe tẹ awọn laini òfo nigbati awọn aaye data ba ṣofo
+	Print blank lines when data fields are empty	Tẹjade awọn laini òfo nigbati awọn aaye data ba ṣofo
+	Check Errors…	Ṣayẹwo Awọn aṣiṣe…
+	Query Options…	Awọn aṣayan ibeere…
+	The Mail Merge Helper sets up a merge in three steps.	Oluranlọwọ Ijọpọ Mail ṣeto akojọpọ kan ni awọn igbesẹ mẹta.
+	1. Main document	1. Iwe akọkọ
+	Restore to Normal Word Document	Pada si Iwe Ọrọ deede
+	Merge type: {type}	Iru idapọ: {type}
+	2. Data source	2. Data orisun
+	Get Data	Gba Data
+	Create Data Source…	Ṣẹda Orisun Data…
+	Open Data Source…	Ṣii Orisun Data…
+	No data source yet.	Ko si orisun data sibẹsibẹ.
+	{count} records; fields: {fields}	{count} igbasilẹ; awọn aaye: {fields}
+	Header Options:	Awọn aṣayan akọsori:
+	Header Options	Awọn aṣayan akọsori
+	Create…	Ṣẹda…
+	Open…	Ṣii…
+	Header source: {file} (the next data source opened here takes its field names)	Orisun akọsori: {file} (orisun data atẹle ti o ṣii nibi gba awọn orukọ aaye rẹ)
+	3. Merge the data with the document	3. Dapọ data pẹlu iwe
+	Merge…	Dapọ…
+	A header source holds the field names for a data source without a header row.	Orisun akọsori kan di awọn orukọ aaye fun orisun data laisi ila akọsori kan.
+	Add Field Name	Fi orukọ aaye kun
+	Remove Field Name	Yọ Orukọ aaye kuro
+	Mail Merge Helper…	Oluranlọwọ Ijọpọ Mail…
+	Mail Merge Helper	Mail parapo Oluranlọwọ
+	Merge to New Document	Dapọ si Iwe Tuntun
+	Merge to Printer	Dapọ si itẹwe
+	Create Header Source	Ṣẹda Orisun akọsori
+	Form Letters	Fọọmu Awọn lẹta
+	Mailing Labels	Ifiweranṣẹ Labels
+	Catalog	Katalogi
+	Caption label:	Aami akọle:
+	Include label and number	Fi aami ati nọmba kun
+	Built from the style or table entry fields chosen in Options.	Ti a ṣe lati ara tabi awọn aaye titẹsi tabili ti a yan ni Awọn aṣayan.
+	Show page numbers	Ṣe afihan awọn nọmba oju-iwe
+	Right align page numbers	Awọn nọmba oju-iwe titọ ọtun
+	Build table of figures from:	Kọ tabili awọn isiro lati:
+	Table entry fields	Awọn aaye titẹsi tabili
+	Category:	Ẹka:
+	Use passim (five or more pages)	Lo passim (awọn oju-iwe marun tabi diẹ sii)
+	Mark Citation…	Samisi Itọkasi…
+	Long citation:	Itọkasi gigun:
+	Short citation:	Itọkasi kukuru:
+	Category…	Ẹka…
+	Citation marked.	Itọkasi samisi.
+	Edit Category	Ẹka Ṣatunkọ
+	Table of Figures Options	Tabili ti isiro Aw
+	Cases	Igba
+	Statutes	Ìlana
+	Other Authorities	Awọn alaṣẹ miiran
+	Treatises	Itọju
+	Regulations	Ilana
+	Constitutional Provisions	T'olofin Ipese
+	Writing Style: Grammar	Ara kikọ: Giramu
+	Grammar Settings	Eto Giramu
+	Grammar	Gírámà
+	Capitalization	Capitalization
+	Repeated words	Awọn ọrọ atunwi
+	Word forms	Awọn fọọmu ọrọ
+	Punctuation	Ami ọrọ
+	Reset All	Tun Gbogbo
+	The first word of a sentence starts with a capital.	Ọrọ akọkọ ti gbolohun kan bẹrẹ pẹlu olu.
+	The same word twice in a row.	Ọrọ kanna lemeji ni ọna kan.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	"a" tabi "an" ṣaaju ọrọ ti o tẹle; Polish "w"/"awa", "z"/"ze".
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Aaye kan ṣaaju aami ifamisi, awọn ami ilọpo meji, aami idẹsẹ Polish ṣaaju awọn asopọ.
+	Extra spaces between words.	Awọn aaye afikun laarin awọn ọrọ.
+	Add Help Text…	Fi Ọrọ Iranlọwọ kun…
+	AutoText entry:	Akọsilẹ AutoText:
+	Calculate on exit	Ṣe iṣiro lori ijade
+	Calculation	Iṣiro
+	Check Box Form Field	Ṣayẹwo Box Fọọmù Field
+	Check Box Form Field Options	Ṣayẹwo Box Fọọmù Field Aw
+	Check box	Ṣayẹwo apoti
+	Check box enabled	Ṣayẹwo apoti sise
+	Check box size:	Ṣayẹwo iwọn apoti:
+	Checked	Ti ṣayẹwo
+	Current date	Ọjọ lọwọlọwọ
+	Current time	Akoko lọwọlọwọ
+	Default value:	Aiyipada iye:
+	Drop-Down Form Field	Ju-isalẹ Fọọmù Field
+	Drop-Down Form Field Options	Ju-isalẹ Fọọmù Field Aw
+	Drop-down	Silẹ-isalẹ
+	Drop-down enabled	Silẹ-isalẹ sise
+	Drop-down item:	Ohun kan ju silẹ:
+	Fill In Form Field	Kun Ni Fọọmu Field
+	Fill-in enabled	Kun-ni sise
+	Form Field	Fọọmu Field
+	Form Field Help Text	Fọọmu Field Iranlọwọ Ọrọ
+	Form Field Options	Fọọmu Field Aw
+	Form Field Shading	Fọọmù Field iboji
+	Form Field at Selection	Fọọmu aaye ni Aṣayan
+	Help Key (F1)	Bọtini Iranlọwọ (F1)
+	Insert Form Field	Fi aaye Fọọmu sii
+	Items in drop-down list:	Awọn nkan ti o wa ninu atokọ silẹ:
+	Legacy Tools	Legacy Irinṣẹ
+	Maximum length:	O pọju ipari:
+	Next Form Field	Next Fọọmù Field
+	Not checked	Ko ṣayẹwo
+	Put the caret on a form field first.	Fi itọju naa sori aaye fọọmu ni akọkọ.
+	Regular text	Ọrọ deede
+	Reset Form Fields	Tunto Fọọmù Fields
+	Text Form Field	Aaye Fọọmu Ọrọ
+	Text Form Field Options	Awọn aṣayan aaye Fọọmu Ọrọ
+	Type your own:	Tẹ tirẹ:
+	Unlimited	Ailopin
+	Protected sections:	Awọn apakan ti o ni aabo:
+	Section Protection	Idaabobo apakan
+	Section {n}	Abala {n}
+	Select sections…	Yan awọn apakan…
+	AutoSummarize	AutoSummarize
+	Create a new document and put the summary there	Ṣẹda iwe tuntun kan ki o fi akopọ sibẹ
+	Highlight key points	Ṣe afihan awọn aaye bọtini
+	Insert an executive summary or abstract at the top of the document	Fi akopọ alase kan sii tabi áljẹbrà ni oke iwe-ipamọ naa
+	Length of summary	Gigun ti Lakotan
+	Percent of original:	Ogorun ti atilẹba:
+	Summary: {words} of {of} words	Akopọ: {words} ninu {of} ọrọ
+	Type of summary	Iru Lakotan
+	Update document statistics	Awọn iṣiro iwe imudojuiwọn
+	{n} sentences	{n} awọn gbolohun ọrọ
+	{n} words or less	{n} ọrọ tabi kere si
+	At:	Ni:
+	Distance from text:	Ijinna lati ọrọ:
+	Format Frame	Fọọmu kika
+	Format Frame…	Fọọmu kika…
+	Frame	Fireemu
+	Frame…	Fireemu…
+	Insert Frame	Fi fireemu sii
+	Lock anchor	Titiipa oran
+	Remove Frame	Yọ fireemu
+	Text wrapping	Ọrọ murasilẹ
+	Chinese Conversion	Chinese Iyipada
+	Chinese Conversion…	Iyipada Kannada…
+	Converted {n} characters	Awọn ohun kikọ {n} yipada
+	Simplified Chinese to Traditional Chinese	Kannada ti o rọrun si Kannada Ibile
+	Simplified to Traditional	Irọrun si Ibile
+	Traditional Chinese to Simplified Chinese	Kannada Ibile si Kannada Irọrun
+	Traditional to Simplified	Ibile to Simplified
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Lo Taiwan, Hong Kong SAR, ati awọn iyatọ ohun kikọ Macao SAR
+	Asian Layout	Asia Ìfilélẹ
+	Fit Text	Fit Ọrọ
+	Fit Text…	Ọrọ Fit…
+	Two Lines in One	Awọn ila meji ni Ọkan
+	Two Lines in One…	Awọn ila meji ni Ọkan…
+	New text width (pt):	Iwọn ọrọ tuntun (pt):
+	Enclose in brackets	Paade ni biraketi
+	Bracket pair:	Bracket bata:
+	Typography	Typography
+	Character spacing control	Iṣakoso aye ohun kikọ
+	Don't compress	Maṣe rọpọ
+	Compress punctuation only	Awọn aami ifamisi funmorawon nikan
+	Compress punctuation and Japanese kana	Awọn aami ifamisi funmorawon ati Kana Japanese
+	First and last characters	Akọkọ ati ki o kẹhin ohun kikọ
+	Strict	Muna
+	Cannot start a line:	Ko le bẹrẹ ila kan:
+	Cannot end a line:	Ko le pari ila kan:
+	Japanese Find Options	Japanese Wa Awọn aṣayan
+	Sounds like (Japanese)	O dun bi (Japanese)
+	Match full/half width	Baramu full/idaji iwọn
+	Match hiragana/katakana	Baramu hiragana/katakana
+	Match small kana	Baramu kekere kana
+	Match prolonged sound marks and dashes	Baramu pẹ ohun aami ati dashes
+	Japanese Consistency Checker	Oluyẹwo Aitasera Japanese
+	Japanese Consistency Checker…	Oluyẹwo Aitasera Japanese…
+	No inconsistent spellings were found.	Ko si awọn akọtọ ti ko ni ibamu ti a rii.
+	Pick the spelling to keep in each group.	Mu akọtọ lati tọju ni ẹgbẹ kọọkan.
+	Bidirectional text	Ọrọ bidirectional
+	Bidirectional Text	Ọrọ Bidirectional
+	Default direction:	Aiyipada itọsọna:
+	Cursor movement:	Cursor ronu:
+	Logical	Mogbonwa
+	Visual	Wiwo
+	Manage Fields	Ṣakoso Awọn aaye
+	File locations	Awọn ipo faili
+	File Locations	Awọn ipo faili
+	Documents:	Awọn iwe aṣẹ:
+	Pictures:	Awọn aworan:
+	The system's choice	Aṣayan eto naa
+	Show Repairs	Ṣe afihan Awọn atunṣe
+	No repairs were needed.	Ko si atunṣe ti a nilo.
+	These problems were found and repaired when the document was opened:	Awọn iṣoro wọnyi ni a rii ati tunṣe nigbati iwe naa ṣii:
+	An unreadable entry in the file was skipped: {what}	Akọsilẹ ti a ko le ka ninu faili naa ni a fo: {what}
+	An unreadable part was left out: {what}	Apa kan ti a ko le ka ni a fi silẹ: {what}
+	Unreadable relationships were ignored: {what}	Awọn ibatan ti a ko le ka ni a kọbikita: {what}
+	A missing part of an embedded object was left out: {what}	Apa kan ti o padanu ti ohun ti a fi sii ni a fi silẹ: {what}
+	Copy File	Daakọ Faili
+	Find Files	Wa Awọn faili
+	Letter Wizard	Lẹta Oluṣeto
+	Recipient's name:	Orukọ olugba:
+	Salutation:	Ìkíni:
+	Subject:	Koko-ọrọ:
+	Complimentary closing:	Ipari pipe:
+	Sender's name:	Orukọ olufiranṣẹ:
+	Job title:	Akọle iṣẹ:
+	Company:	Ile-iṣẹ:
+	Enclosures:	Awọn apade:
+	Cc:	Cc:
+	Edit Links to Files	Ṣatunkọ Awọn ọna asopọ si Awọn faili
+	Source file	Orisun faili
+	Locked	Titiipa
+	Change Source	Yi Orisun
+	This document has no links to files.	Iwe yii ko ni awọn ọna asopọ si awọn faili.
+	Web options	Awọn aṣayan wẹẹbu
+	Web Options	Awọn aṣayan wẹẹbu
+	Allow PNG as a graphics format	Gba PNG laaye bi ọna kika eya aworan
+	Rely on CSS for font formatting	Gbekele CSS fun kika fonti
+	Rely on VML for displaying graphics in browsers	Gbẹkẹle VML fun iṣafihan awọn aworan ni awọn aṣawakiri
+	Organize supporting files in a folder	Ṣeto awọn faili atilẹyin ni folda kan
+	Use long file names whenever possible	Lo awọn orukọ faili gigun nigbakugba ti o ṣeeṣe
+	Screen size:	Iwọn iboju:
+	Pixels per inch:	Awọn piksẹli fun inch:
+	Hangul Hanja Conversion	Hangul Hanja Iyipada
+	Hangul Hanja Conversion…	Iyipada Hangul Hanja…
+	Hangul to Hanja	Hangul to Hanja
+	Hanja to Hangul	Hanja to Hangul
+	Put the caret in Korean text to choose its Hanja.	Fi abojuto sinu ọrọ Korean lati yan Hanja rẹ.
+	The selection, or the whole document when nothing is selected.	Aṣayan, tabi gbogbo iwe nigbati ko si ohun ti a yan.
+	Add frame	Add frame
+	Attributes:	Attributes:
+	Border color:	Border color:
+	Border width:	Border width:
+	Choose how the custom XML editor displays names and removes schema references.	Choose how the custom XML editor displays names and removes schema references.
+	Confirm before removing a schema reference	Confirm before removing a schema reference
+	Elements:	Elements:
+	Enter an absolute HTTP(S) or URN schema URI.	Enter an absolute HTTP(S) or URN schema URI.
+	Frame URL	Frame URL
+	Frame borders:	Frame borders:
+	Frame spacing:	Frame spacing:
+	Frames:	Frames:
+	Frameset Properties	Frameset Properties
+	Hide	Hide
+	Margin height:	Margin height:
+	Margin width:	Margin width:
+	No resize	No resize
+	No schema references	No schema references
+	Optional	Optional
+	Optional, 0–1000	Optional, 0–1000
+	Pixels (0–100)	Pixels (0–100)
+	Remove Attribute	Remove Attribute
+	Remove schema reference {schema}?	Remove schema reference {schema}?
+	Rows:	Rows:
+	Schema Library	Schema Library
+	Schema URI:	Schema URI:
+	Schemas:	Schemas:
+	Scrolling:	Scrolling:
+	Select a custom XML store with editable datastore properties first.	Select a custom XML store with editable datastore properties first.
+	Select an XML element to add, change, or remove one of its attributes.	Select an XML element to add, change, or remove one of its attributes.
+	Selected element: {name}	Selected element: {name}
+	Set Attribute	Set Attribute
+	Show namespace URIs beside XML names	Show namespace URIs beside XML names
+	Store: {store}	Store: {store}
+	This XML store is preserved but cannot be edited here.	This XML store is preserved but cannot be edited here.
+	This document has no custom XML stores.	This document has no custom XML stores.
+	This store has no datastore properties part for schema references.	This store has no datastore properties part for schema references.
+	This store has no elements available for editing.	This store has no elements available for editing.
+	Value:	Value:
+	View and manage schema references associated with custom XML stores.	View and manage schema references associated with custom XML stores.
+	XML Element Attributes	XML Element Attributes
+	XML Options	XML Options
+	e.g. 25%,*	e.g. 25%,*
+	e.g. 30%,*	e.g. 30%,*
+	Web	Web
+	XML	XML

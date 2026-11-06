@@ -1,0 +1,3035 @@
+# Wolof (wo) machine-generated interface translation draft.
+# Machine translation: Google Translate web endpoint (translate.googleapis.com, client=gtx), English to Wolof.
+# Generated 2026-11-06. Unreviewed; native-speaker review is required before registration.
+# Columns: context<TAB>English source key<TAB>Wolof translation. Context and source keys are preserved from en-gb.tsv.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	"a" wala "an" balaa baat bi ci topp; ci làkku Poloñ: "w"/"we", "z"/"ze".
+	% of all commits	% ci lépp luñu def
+	(All)	(Lepp)
+	(Custom)	(Personnalisé)
+	(no style)	(amul stil)
+	(no suggestions)	(amul xalaat)
+	(none)	(amul)
+	(normal text)	(tekst bu jaadu)
+	(not matched)	(mënul méngoo)
+	(picture or object)	(nataal wala mbir)
+	*Bold* and _italic_ with real formatting	*Bold* ak _italik_ ak formataasioŋ dëgg
+	0 or More Characters	0 wala yeneen araf
+	1. Formatting restrictions	1. Tegtal ci format
+	1. Main document	1. Këyit dafa am solo
+	1.5 Line Spacing	1.5 Diggante liiñ yi
+	1/4 Em Space	1/4 Em bayaal
+	1×2 Empty Matrix	1×2 matrix bu amul dara
+	1×3 Empty Matrix	1×3 matrix bu amul dara
+	2. Data source	2. Ibnu done
+	2. Editing restrictions	2. Soppali ay tënk
+	2×1 Empty Matrix	2×1 matrix bu amul dara
+	2×2 Determinant	2×2 luy dogal
+	2×2 Empty Matrix	2×2 matrix bu amul dara
+	2×2 Identity Matrix	2×2 matrix dàntite
+	2×2 Identity Matrix (sparse)	2×2 matrix dàntite (diis)
+	2×2 Matrix in Brackets	2×2 Matriks ci biir parenthèses
+	2×2 Matrix in Double Bars	2×2 matrix ci ñaari barab
+	2×2 Matrix in Parentheses	2×2 Matrix ci biir parantees
+	2×3 Empty Matrix	2×3 matrix bu amul dara
+	3-D	3-D
+	3. Merge the data with the document	3. Boole done yi ak këyit bi
+	3. Start enforcement	3. Tàmbali doolel
+	3D Models	Modèle 3D
+	3×1 Empty Matrix	3×1 matrix bu amul dara
+	3×2 Empty Matrix	3×2 matrix bu amul dara
+	3×3 Empty Matrix	3×3 matrix bu amul dara
+	3×3 Identity Matrix	3×3 matrix dàntite
+	3×3 Identity Matrix (sparse)	3×3 Matriks dàntite (diis)
+	5,000 characters a day; give an email address for 50,000.	5000 araf bis bu nekk; joxe ab adres email ngir 50,000.
+	<< Less	<< Lu néew
+	<< Remove	<< Dindi
+	A file dialog is already open.	Dialog fichier bi ubbeeku na xaat.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Processeur word bu amul fayda, ñu bind ko ci Rust ci noonu rek.\nDafa sukkandikoo ci Wordcraft bi ekipu Artcraft bi defar.
+	A header source holds the field names for a data source without a header row.	Boppu boppu dafay denc tur yi ngir source done bu amul benn liiñ boppu.
+	A mail merge field	Barabu boole mail
+	A new document lists the commands with their shortcuts.	Benn këyit bu bees dafay lim komand yi ak seeni gaawaay.
+	A numbered sequence (figures, tables…)	ab toppalante bu am nimero (figures, tablo…)
+	A password is required to open this document.	Soo bëggee ubbi këyit bii fàww nga am baatu-jàll.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Espaas balaa ponksioŋ, ñaari màrku, virgule polonais balaa konjonksioŋ yi.
+	A table of contents	Tablo ëmbiit li
+	A table's rows keep the same columns here.	Liiñ yi ci tablo bi dañuy wéy di nekk benn kolon fii.
+	A xor B	A x wala B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	AaBbCcDd
+	AaBbYyZz	AaBbYyZz
+	About	Lu jëm ci
+	About Doc4Me	Lu jëm ci Doc4Me
+	Above Chart	ci kaw tablo bi
+	Above the item	Ci kaw mbir mi
+	Absolute position	Position absolu
+	Absolute value cases	Cas valeur absolue
+	Accent	Aksan
+	Accent Gradient	Degradu aksan
+	Accent with Reflection	Aksan ak xalaat
+	Accent {n}	Aksan {n}
+	Accents	Aksan yi
+	Accept	Nangu
+	Accept All	Nangu lépp
+	Accept All Changes	Nangu bépp coppite
+	Accept or Reject Changes	Nangu wala Bañ Coppite yi
+	Accept This Change	Nangu coppite bii
+	Accessed on	dugg ci
+	Accessibility	Yomb jëfandikoo
+	Accessibility Pane	Panelu Yokkateg
+	Acute	Akut
+	Add	Yokk
+	Add >>	Yokk >>
+	Add a comment	Yokk ab komànteer
+	Add a Table	Yokk benn tablo
+	Add at least one field.	Yokk benn barab soo bëggee.
+	Add caption when inserting:	Yokk ab mbind sooy dugal:
+	Add Chart Element	Yokk elemen graafik
+	Add Field	Yokk barab
+	Add Field Name	Yokk turu barab
+	Add Font…	Yokk font…
+	Add line numbering	Yokk nimero ligne
+	Add New Placeholder	Yokk barab bu bees
+	Add New Placeholder…	Yokk barab bu bees…
+	Add New Source…	Yokk ab balluwaay bu bees…
+	Add Object to Selection	Yokk mbir ci tànneef
+	Add Pen	Yokk Bik
+	Add Row	Yokk liiñ
+	Add Series	Yokk ay seeri
+	Add Shape	Yokk jëmm
+	Add Space Before Paragraph	Yokk ay bayaal balaa paragraf
+	Add space between Asian and Latin text	Yokk bayaal ci digganté mbindu Asie ak Latin
+	Add space between Asian text and numbers	Yokk bayaal ci diggante mbindu asie ak nimero
+	Add tab stop at:	Yokk tab arrêt ci:
+	Add Text	Yokk mbind
+	Add the chapter number	Yokk ci nimero chapitre bi
+	Add to Dictionary	Yokk ci Dictionnaire
+	Add to Document	Yokk ci këyit
+	Add to Quick Access Toolbar	Yokk ci Toolbar Access Gaaw
+	Add to Style Gallery	Yokk ci Galëri stil
+	Add-ins	Yokkateg
+	Add/Edit\nBibliography	Yokk/Soppi\nBibliografi
+	Add/Edit\nCitation	Yokk/Soppi\nSitaasioŋ
+	Add\nNote	Yokk\nTegtal
+	Add\nPen	Yokk\nBik
+	Add\nShape	Yokk\nForm
+	Added	Yokk nañu ko
+	Added Fonts	Font yuñ yokk
+	Address	Adres
+	Address Block	Bloke adres
+	Address labels	Etiketu adres
+	Address:	Adres:
+	Address\nBlock	Adres\nBloke
+	Adjust	Defar
+	Advanced	Avance
+	Advanced Find	Seetlu bu xóot
+	Advanced Find…	Seetlu bu xóot…
+	After:	Ginaaw:
+	Agents	Agent yi
+	Align	Jubalal
+	Align Bottom Center	Jubalal digg bi ci suuf
+	Align Bottom Left	Align ci suufu cammoy
+	Align Bottom Right	Jubal ci suuf ci ndeyjoor
+	Align Center	Digg bi
+	Align Center Left	Jubalal digg bi ci cammoy bi
+	Align Center Right	Jubalal digg bi ci ndeyjoor
+	Align Left	Jubalal cammoy
+	Align Right	Jubal ci ndeyjoor
+	Align Text	Jubalal mbind mi
+	Align Top Center	Jubalal digg bi ci kaw
+	Align Top Left	Jubal ci kaw ci cammoy
+	Align Top Right	Jubal ci kaw ci ndeyjoor
+	Aligned at:	Ñu boole ci:
+	Alignment	Yokkateg
+	Alignment:	Liggéeyukaay:
+	All	Lépp
+	All - Linear	Lépp - Lineer
+	All - Professional	Lépp - Liggéeykat
+	All Borders	Frontier yépp
+	All Caps	Caps yépp
+	All caps	Caps yépp
+	All Commands	Ndigal yépp
+	All files	Dosie yépp
+	All Levels	Niveau yépp
+	All Markup	Markup yépp
+	All pages	xët yépp
+	All pages in the range	Xët yépp ci biir
+	All records	Done yépp
+	All symbol sets	Bépp ensemble màndarga
+	Allow Doc4Me to use online services	May Doc4Me mu jëfandikoo ay serwiis ci net bi
+	Allow hanging punctuation	Nangu ay ponksioŋ yuy tëdd
+	Allow Latin text to wrap in the middle of a word	May mbindu latin bi mu nekk ci diggu baat bi
+	Allow line breaks	May liiñ yi dagg
+	Allow overlap	May ñu jaxasoo
+	Allow row to break across pages	May liiñ bi mu xaajaloo ci xët yi
+	Alphabetical	Alfabet
+	Alt Text	Alt Bind
+	Alt text	Alt text
+	Alt Text Pane	Alt Panelu Teks
+	Alt:	Alt:
+	Alt\nText	Alt\nText
+	And	Ak
+	Angle Brackets	Brackets angle
+	Angle Brackets with Separator	Brackets à angle avec separateur
+	Angle Brackets with Two Separators	Brackets angle ak ñaari tàqalekat
+	Animate the caret (it glides and fades)	Animer le caret (dafay glisser et faide)
+	Animation	Animasioŋ
+	Animation effects:	Efe animaasioŋ:
+	Annotation Reference	Royuwaayu Tegtal
+	Annotation Subject	Sujet annotation
+	Annotation Text	Tekstu tegtal
+	Another file	Beneen dosiye
+	Any Character	Bépp araf
+	Any Digit	Bépp lim
+	Any Letter	Bépp bataaxal
+	Anyone can open this document. Encrypt it with a password to keep it private.	Ku nekk mën na ubbi këyit bii. Encrypte ko ak baatu-jàll ngir mu baña am kenn.
+	Anyone who opens the document will need this password.	Képp kuy ubbi këyit bi dinga soxla baatu-jàll bii.
+	APA	APA
+	API key (if the server needs one)	Caabi API (sudee serwër bi soxla ko)
+	Apply	Defal
+	Apply as you type	Jëfandikool sooy bind
+	Apply Asian line-breaking rules (kinsoku)	Jëfandikool sàrti dog liiñ bu Asie (kinsoku)
+	Apply Character Style	Jëfandikool stilu araf
+	Apply formatting to:	Jëfandikool formatage ci:
+	Apply special formats to	Jëfandikool formaa yu yam ci
+	Apply Style	Jëfandikool stil
+	Apply Styles	Jëfandikool stil yi
+	Apply to:	Demànd ci:
+	Arabic	Araab
+	Arch Down	Arch ci suuf
+	Arch Up	Arc Up
+	Area	Barab
+	Around	ci lu wër
+	Arrange	Defar
+	Arrange All	Raññe lépp
+	Arrange\nAll	Defar\nLépp
+	Arrow	Fett
+	Arrows	Fett yi
+	Artistic Effects	Efe artistik
+	As Recommended	Ni ñu ko digale
+	As you type	Sooy bind
+	ASAP	ASAP
+	Ascending	Yéeg
+	Asian text font:	Font bind asie:
+	Asian Typography	Tipograafi Asie
+	Assign	Jox
+	At least	Lu mu neew
+	At least {n}	Lu mu neew {n}
+	Atelier	atelier
+	Atmosphere	jawwu ji
+	Attach Template	Takkal ab modèle
+	Attach…	Takkal…
+	Author	Auteur
+	Auto	Auto
+	AutoCaption	Bindu otomatik
+	AutoCaption…	Bindu otomatik…
+	AutoComplete	yeggali sa bopp
+	AutoCorrect	Jubbanti sa bopp
+	AutoCorrect Options	Tànneefi jubbanti sa bopp
+	AutoFit	AutoFit
+	AutoFit Contents	Ëmbiit AutoFit
+	AutoFit Window	Palanteer AutoFit
+	AutoFormat	Format otomatik
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	Format otomatik (Ctrl+Alt+K) dafay formate paragraf yiñ tànn, wala këyit wi yépp.
+	AutoFormat and Review Changes…	Format otomatik ak xoolaat coppite yi…
+	AutoFormat As You Type	Format sa bopp sooy bind
+	AutoFormat changed {count} paragraphs	Format otomatik soppeeku na {count} paragraf
+	AutoFormat Now	Format otomatik leegi
+	Automatic	otomatik
+	Automatic ({language})	otomatik ({language})
+	Automatic bulleted lists	Limu bullet yi ci saa si
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Otomatik dafay topp làkku sa sistem. Menu yi ak komand yi dañuy soppiku; sa këyit duñu ko def.
+	Automatic numbered lists	Limu nimero otomatik
+	Automatic Table 1 (3 levels)	Tablo 1 (3 niveau)
+	Automatic Table 2 (2 levels)	Tablo 2 (2 niveau)
+	Automatically hyphenate document	Def tiire ci saasi ci këyit
+	Automatically Update Document Styles	Yeesal ci saasi stilu këyit
+	Automatically update document styles	Yeesal ci saasi stilu këyit
+	AutoSave	Sanc otomatik
+	AutoSave documents you have saved in Doc4Me	Sanc sa bopp këyit yi nga sanc ci Doc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Save automatik bi lajj: {error}. Sanc këyit bi ngir taalaat Sanc Autosave.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSave nekkul ci nawigatër bi: mënul bind ci say fichier. Sanc yebbi benn kopi.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Denc sa bopp du denc ludul .docx, .odt ak .rtf; {name} mënu tëye formatage yépp. Sanc ci .docx ngir taal Sanc sa bopp.
+	AutoSave saves every change to the file (needs a saved document)	AutoSave dafay denc bépp coppite ci fichier bi (dafa soxla këyit buñ denc)
+	AutoSave writes your changes to the file a moment after you stop typing.	AutoSave dafay bind coppite yi nga def ci fichier bi ab diir ginaaw boo xàddi bind.
+	AutoText	Bind otomatik
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10,12" × 14,33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7,17" × 10,12"
+	Back	Dellu
+	Backspace	Backspace
+	Balloons	Balon
+	Banded Columns	Kolon yu am bande
+	Banded Rows	Liiñ yu am bande
+	Bar	Bar
+	Base text:	Bind bu njëkk bi:
+	Based on: {style}	Dafa sukkandikoo ci: {style}
+	Baseline Dots	Tombi Base
+	Basic Cycle	Siklu bu yomb
+	Basic List	Limu Basic
+	Basic Math	Math bu yomb
+	Basic Matrix	Matriks bu yomb
+	Basic Process	Doxalin bu yomb
+	Basic Pyramid	Piramid bu yomb
+	Basic Radial	Radial bu yomb
+	Basic Venn	Venn bu yomb
+	Bayes' rule	Regle bu Bayes
+	Before:	Balaa:
+	Beginning of Word	ndoortelu kàddu
+	Behind Text	ci ginaaw mbind
+	Below text	Bind bi ci suuf
+	Below the item	Ci suufu mbir mi
+	Between	Diggante
+	Bibliography	Bibliografi
+	Binary assets added	Yokk nañu ay mbiri binaire
+	Binary assets removed	dindi nañu ay mbiri binër
+	Binomial Coefficient	Koeffisien binomial
+	Binomial Coefficient (angle)	Koeffisien Binomial (angle)
+	Binomial Coefficient with Angle Brackets	Koeffisien binomial ak parenthèses angle
+	Binomial expansion of (x+a)ⁿ	Yaatu binomial bu (x+a)9
+	Blank	Blank
+	Blank (Three Columns)	Blank (ñatti kolon)
+	Blank document	Këyit bu amul dara
+	Blank Page	Xët bu amul dara
+	Block\nAuthors	Bloke\nAuteur yi
+	Blue:	Bula:
+	Body Text	Tekstu yaram
+	Body text in a short paragraph to show spacing.	Mbindu yaram wi ci paragraf bu gàtt ngir wane diggante yi.
+	Bold	Bold
+	Book	Téere
+	Book Title	Titre du livre
+	Book title	Turu téere bi
+	Bookmark	Marke-page
+	Bookmark name:	Tur marque-page:
+	Border lines	Lignée bordure
+	Border Painter	Peintre de bordure
+	Border\nPainter	Frontière\nPeintre
+	Borders	Frontiere
+	Borders and Shading	Frontières ak lëndëm
+	Borders and Shading…	Frontières ak lëndëm…
+	Border…	Frontière…
+	Both Sides	Ñari pàcc yi
+	Both sides	Ñari pàcc yi
+	Bottom	Ci suuf
+	Bottom Border	Bordure bi ci suuf
+	Bottom Margin	Marge bi ci suuf
+	Bottom of Page	ci suufu xët wi
+	Bottom of the Window	Ci suufu palanteer bi
+	Bottom:	Ci suuf:
+	Box	Box
+	Boxed Formula	Formule boîte
+	Boxed Formula (example)	Formul buñ tënk (misaal)
+	Boxed Formulas	Formul yuñ boole
+	Braces	Braces
+	Braces with Separator	Braces ak separatër
+	Bracket	Bracket
+	Brackets	Parenthèses
+	Brackets with Separators	Brackets ak separatër
+	Break Link	Dagg lëkkalekaay bi
+	Breaks	pause
+	Breve	Breve
+	Brightness, contrast and transparency change the picture from how it looks now.	Leer gi, kontrast bi ak leer gi dañu soppi nataal bi ci nimu mel leegi.
+	Brightness:	Leer gi:
+	Bring Forward	Yobbu ci kanam
+	Browse in Doc4Me…	Saytu ci Doc4Me…
+	Browse…	Saytu…
+	Build table of figures from:	Defar tablo lim ci:
+	Building Block Gallery Content Control	Kontrolu ëmbiitu galëri bloku tabax
+	Built from the style or table entry fields chosen in Options.	Ñu ngi ko tabax ci barabi dugal stil wala tablo yiñ tànn ci Tànneef yi.
+	Built-In	Taax-ci biir
+	Built-in Heading styles	Stilu boppu yiñ tabax ci biir
+	Built-in style	Style buñ tabax ci biir
+	Built-in styles can't be deleted.	Mënu efaase stil yiñ tabax ci biir.
+	Bullet	bal
+	Bullet Library	Bibliothèque Bullet
+	Bullets	balas
+	By author	Auteur
+	By:	By:
+	Calendar	Almanak
+	Can't be deleted	Mënu ñu ko efaase
+	Cancel	Fomm
+	Canvas Member	Ndawu Canvas
+	Capitalization	Bindu yu mag
+	Capitalize Each Word	Bindal baat bu nekk ak majus
+	Capitalize first letter of sentences	Bindal arafu njëkk ci frase yi ak kapital
+	Capitalize first letter of table cells	Bindal arafu njëkk ci selil yi ci tablo bi
+	Capitalize names of days	Bindal tur yi ci bis yi ak majuscule
+	Capitalize the first word of a sentence	Bindal baat bi njëkk ci frase bi ak majuscule
+	Caption	Kapsioŋ
+	Caption label:	Etiketu kapsioŋ:
+	Caption Numbering	Nimero kapsioŋ
+	Caption text	Tekstu kapsioŋ
+	Caption:	Kapsioŋ:
+	Captions	Kapsioŋ
+	Caret Character	Karakteer Caret
+	Case changes	Coppite ci mbir yi
+	Cases	Case
+	Cases (Three Conditions)	Cases (ñatti sart)
+	Cases (Two Conditions)	Cases (ñaari sart)
+	Cases and Stacks	Case ak stack
+	Catalog	katalog
+	Categories	Kategori
+	Categories:	Xeet yi:
+	Category	Xeet
+	Category {n}	Xeet {n}
+	Category:	Xeet:
+	Category…	Xeet…
+	Ceiling	Plafond
+	Cell	Selul
+	Cell Margins	Marge selil
+	Cell margins	Marge selil
+	Cell Options	Tànneefi selil
+	Cell Size	Dayo selil bi
+	Cell\nMargins	Selul\nMarge
+	Center	Digg bi
+	Centered	ci digg bi
+	Centered as Group	Digg ni Groupe
+	Centimeters	Santimetr
+	Change	Coppite
+	Change Case	Soppi Case
+	Change Chart Type	Soppi xeetu tablo
+	Change Colors	Soppi melo yi
+	Change in y over change in x	Coppite ci y ci kaw coppite ci x
+	Change Layout	Soppi jëmmal
+	Change List Level	Soppi niveau limu
+	Change Password…	Soppi baatu-jàll…
+	Change Picture	Soppi nataal
+	Change Picture…	Soppi nataal…
+	Change Shape	Soppi jëmm
+	Change Structure	Soppi jumtukaay
+	Change to Display	Soppi ci Feeñ
+	Change to Inline	Soppi ci Inline
+	Change to Level 1	Coppite ci Niveau 1
+	Change to Level 2	Coppite ci ñaareelu dayo
+	Change to Level 3	Coppite ci 3 eelu dayo
+	Change to Level 4	Coppite ci 4 eelu dayo
+	Change to Level 5	Coppite ci 5 eelu dayo
+	Change to Level 6	Coppite ci 6 eelu dayo
+	Change to Level 7	Coppite ci 7 eelu dayo
+	Change to Level 8	Coppite ci Niveau 8
+	Change to Level 9	Coppite ci Niveau 9
+	Change\nChart Type	Coppite\nXeetu tablo
+	Change\nColors	Coppite\nKulòor yi
+	Changed	soppi
+	Changed lines:	Ligné yiñ soppi:
+	Changes	Coppite
+	Changes with highlighting	Coppite yi am ci tegalantoo
+	Changes without highlighting	Coppite yi te duñu teral
+	Chapter in a book	Chapitre ci benn téere
+	Chapters begin at:	Chapitre yi tàmbali ci:
+	Character	Jikko
+	Character Border	Bordu araf
+	Character code:	Kodu araf:
+	Character in Range	Arafu ci biir
+	Character level	Niveau caractère
+	Character Position	Posisioŋu araf bi
+	Character Scale	Eskalaaru araf
+	Character Shading	Ombre de caracter
+	Character Spacing	Diggante araf yi
+	Character spacing	Diggante araf yi
+	Character style	Stilu personage
+	Characters	Karakteer yi
+	Characters (no spaces)	Arafu (amul bayaal)
+	Characters (with spaces)	Arafu (ak ay bayaal)
+	Characters per line:	Arafu liiñ bu nekk:
+	Chart	Tablo
+	Chart Design	Design graafik
+	Chart Layouts	Layout graafik
+	Chart Title	Titre graphique
+	Check	Saytu
+	Check Accessibility	Saytu Yomb gi
+	Check Box Content Control	Box bi nga xool ëmbiit li
+	Check Compatibility	Saytu méngoo
+	Check Errors…	Saytu njuumte yi…
+	Check for Errors	Saytu njuumte yi
+	Check Spelling as You Type	Saytu ortograafi bi ngay bind
+	Check spelling as you type	Saytu ortograafi sooy bind
+	Check\nAccessibility	Saytu\nYomb jëfandikoo
+	Checked styles are allowed:	Style yuñ xool dañuy nangu:
+	Checked symbol	Mandarga buñ xool
+	Chevron Down	Chevron wàcci
+	Chevron Up	Chevron
+	Chicago	Chicago
+	Chinese (Simplified)	Chinois (ñu yomb)
+	Chinese (Traditional)	Chinois (Aada)
+	Choose a command	Tannal benn ndigal
+	Choose a shortcut	Tannal benn gaawaay
+	Choose List Item	Tannal limu mbir yi
+	Choose the sheet that holds the recipients.	Tannal këyit biy tëye ñi ngay jox bataaxal bi.
+	Circle	Circle
+	Circle area from its radius	Circle area ci rayon bi
+	Circled Dot	Tombu wërngël
+	Circled Plus	Plus buñ wër
+	Circled Times	Jamono yuñ wër
+	Citation marked.	Sitaasioŋ buñ màrkee.
+	Citation Style	Xeetu sitaasioŋ
+	Citations	Sitaasioŋ
+	Citations & Bibliography	Sitaasioŋ ak Bibliografi
+	City	City
+	Clear	Leer
+	Clear All	fomp lépp
+	Clear All Formatting	Futti formaaasioŋ yépp
+	Clear Character Formatting	fomp formatu araf yi
+	Clear Character Style	Leeral xeetu araf yi
+	Clear Formatting Level	Niveau formatage
+	Clear Paragraph Formatting	fomp formatu paragraf
+	Click a border between two cells to merge them. Esc stops.	Bësal ci peggu ñaari selil ngir boole leen. Esc taxaw.
+	Click an item to paste it.	Bësal benn mbir ngir tënk ko.
+	Click level to modify:	Bësal niveau ngir soppi:
+	Click the empty text box the text should continue in (Esc cancels)	Bësal ci barabu bind bi amul dara, bind bi dafa wara wéy ci (Esc dafay fomm)
+	Click to switch back to inserting	Bësal ngir dellu ci dugal
+	Clipboard	Clipboard
+	Clipboard Contents	Ëmbiitu clipboard
+	Clipboard Items	Ëmbeef ci clipboard
+	Clipboard Pane	Panelu clipboard
+	Close	Tëj
+	Close Equation	tëj ekwaasioŋ
+	Close Header and Footer	Tëj boppu ak suufu suuf
+	Close Outline View	Tëj xoolum rëdd
+	Close Outline\nView	Tëj rëdd\nXool
+	Close Reviewing Pane	Tëj Panelu Xoolaat
+	Clustered Bar	Bar buñ boole
+	Clustered Column	Kolon buñ boole
+	Col #:	Col #:
+	Collapse	Daanu
+	Collapse Selection	Collapse tànneef
+	Collapse the Ribbon	Dakkal ruban bi
+	Collate copies	boole ay kopi
+	Collect entries from:	Settal dugg ci:
+	Colon Equal	Colon yelloo
+	Color	Kulòor
+	Color model:	Modèle de couleur:
+	Color only	Kulòor kese
+	Color:	Kulòor:
+	Color: {color}	Kulòor: {color}
+	Colorful	Kulòor
+	Colors	Kulòor yi
+	Colors:	Kulòor yi:
+	Column	Kolon
+	Column Break	Kolon bu xaaj
+	Column Selection	Tannu kolon
+	Column selection: the arrow keys extend the block, Esc ends it	Tanneef kolon: butoŋu fett yi dañuy yokk blok bi, Esc moo koy jeexal
+	Column width	yaatuwaayu kolon
+	Column:	Kolon:
+	Columns	Kolon
+	Columns:	Kolon yi:
+	Combine	boole
+	Combine Documents	boole ay këyit
+	Combo Box Content Control	Kontrolu ëmbiitu Box Combo
+	Commands	Ndigal
+	Commands:	Komànd yi:
+	Comment	Xalaat
+	Comments	Xalaat
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Xalaat yi ci wetu xët bu nekk ak coppite yiñ topp ci PDF yi, impression yi ak nataal yi; limu komànteer yi ci njeexitalu xët web yi, Markdown ak mbind.
+	Comments on version	Xalaat ci weer
+	Comments Pane	Panelu Xalaat
+	Commits	Def
+	Common Accent Objects	Mbir yiñ gëna xam
+	Common Brackets	Parenthèses yuñ gëna xam
+	Common Fractions	fraksioŋ yu bari
+	Common Functions	Liggéey yiñ gëna xam
+	Common Large Operators	Operatër yu mag yiñ gëna xam
+	Common Operator Structures	Jariñu operatër yiñ gëna xam
+	Common Operators	Operatër yuñ gëna xam
+	Common Radicals	Radical yu bari
+	Common Subscripts and Superscripts	Abonne ak Superscript yuñ gëna xam
+	Communication	Jokkoo
+	Compact	Kompakt
+	Company	Sosiete
+	Compare	Teg leen
+	Compare Documents	Tegtale ay këyit
+	Compare to	Teg ko ak
+	Compared: {changes} changes	Teg ko: {changes} coppite
+	Comparing with another file needs the desktop app.	Sooy méngale ak beneen fichier fàww nga am aplikaasioŋu biro bi.
+	Comparison	Tegtale
+	Comparison settings	Jekkal méngale
+	Compatibility mode: {version}	Modu deggoo: {version}
+	Compatibility Options	Tànneefi deggoo
+	Compatibility Options…	Tànneefi deggoo…
+	Compress Pictures	Nataal yi
+	Compress punctuation at the start of a line	Dangay tënk ponksioŋ yi ci ndoorte liiñ bi
+	Condensed	Kondensé
+	Conference	ndaje
+	Conference paper	Këyitu ndaje
+	CONFIDENTIAL	KUMPUR
+	Confirm password:	Firndelal baatu-jàll bi:
+	Connect Shapes	boole jëmm yi
+	Constitutional Provisions	sàrti ndayu réew mi
+	Container Title	Titre conteneur
+	Contains	Dafa am
+	Content Control at Selection	Kontrolu ëmbiit ci tànneef
+	Content Control Properties	Màndarga yiy saytu ëmbiit li
+	Contents can't be edited	Mënu soppali ëmbiit li
+	Context	Kontekst
+	Contextual	Kontekstuel
+	Continuous	wéy
+	Continuous numbering	Nimero bu wéy
+	Contour Integral	Integral kontur
+	Contour Integral with Limits	Integral kontur ak ay yam
+	Contour Integral with Stacked Limits	Integral kontur ak ay yam yuñ dajale
+	Contour Integrals	Integraal kontur
+	Contrast:	Contrast:
+	Contributors	Ñi jàppale
+	Controls	Kontrol
+	Conversions	Soppi
+	Convert	Soppi
+	Convert between built-up and linear form	Soppi ci digganté formu tabax ak formu ligneer
+	Convert Notes	Soppi ay notu
+	Convert Permanently	Soppi ba fàww
+	Convert Text to Table	Soppi mbind ci tablo
+	Convert Text to Table…	Soppi mbind ci tablo…
+	Convert to Arabic Digits	Soppi ci Araab Digit
+	Convert to Shapes	Soppi ci jëmm
+	Convert to Text	Soppi ci Teks
+	Convert to Thai Digits	Soppi ci ay lim Thai
+	Copies	ay kopi
+	Coproduct	Coproduit
+	Coproduct with Limits	Coproduit ak ay yamaleg
+	Coproduct with Lower Limit	Coproduit ak yam bu gëna suufe
+	Coproduct with Subscript-Superscript Limits	Coproduit ak ay yamaleg Abonnement-Superscript
+	Copy	Kopie
+	Copy Formatting	Kopie formatage
+	Copy of the text a bookmark marks	Kopie mbind mi am màrku bookmark
+	Copy Styles	Kopie stil
+	Copy Text	Kopie mbind mi
+	Copy to where?	Kopie ci fan?
+	Copyright	Yelleefu moomeel
+	Copyright Sign	Màndarga yelleefu moomeel
+	Corrections	Jubbanti
+	Cosecant Function	Fonction Cosecant
+	Cosine 2x	kosinus 2x
+	Cosine Function	Fonction Cosinus
+	Cotangent Function	Fonction Kotangent
+	Couldn't add {name}: {reason}	Mënu ma yokk {name}: {reason}
+	Couldn't download the picture: {reason}	Mënu ma yebbi nataal bi: {reason}
+	Couldn't download {name}: {error}	Mënu ma yebbi {name}: {error}
+	Couldn't get the add-in list: {reason}	Mënu ma jot limu yokk yi: {reason}
+	Couldn't make Doc4Me the default: {error}	Mënu ñu def Doc4Me muy liñ jagleel: {error}
+	Couldn't open {path}: {error}	Mënu ma ubbi {path}: {error}
+	Couldn't search: {reason}	Mënu ñu seetee: {reason}
+	Couldn't translate: {reason}	Mënu ma tekki: {reason}
+	Count by:	Lim ci:
+	Count words in text boxes and notes	Lim kàddu yi ci biir boyet yi ak notu yi
+	Country	Réew
+	Courtesy Title	Titre bi
+	Cover Page	Xëtu Couverture
+	Craft	art
+	Create	Sosal
+	Create a Style	Sosal benn stil
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Sosal ab rëdd buy weccoo xalaat ci sa këyit.\n\nDina lay nga mëna topp fi nga nekk wala nga toxal sa ëmbiit ci saasi.\n\nSoo bëggee tàmbali, demal ci onglet Daara ju mag ji nga jëfandikoo stilu Boppu yi ci boppu yi ci sa këyit.
+	Create Data Source…	Sosal ab këru done…
+	Create Graphic	Sosal nataal
+	Create Header Source	Sosal Boppu Boppu
+	Create Link	Sosal lëkkalekaay
+	Create New Style	Sosal stil bu bees
+	Create Source	Sosal Source
+	Create…	Sosal…
+	Crop	Dagg
+	Cross-reference	Royuwaay buñ jaar
+	Cross-reference:	Royuwaay buñ jaar:
+	Cube Root	Racine Cube
+	Current	Leegi
+	Current - Linear	Courant - Lineer
+	Current - Professional	Leegi - Liggéeykat
+	Current keyboard settings	Jekkal klaweer bi fi nekk
+	Current page	Xët wi fi nekk
+	Current Position	Position bi fi nekk
+	Current record	Enregistrement bi fi nekk
+	Current style: {style}	Style bi fi nekk: {style}
+	Curved Arrow Connector	Konektëru fett bu xawa sëgg
+	Curved Connector	Konektër courbe
+	Custom	Personalisé
+	Custom dictionary	Diksionaar buñ personaaliseer
+	Custom Margins…	Marge yuñ personaalise…
+	Custom mark:	Màrk buñ jagleel:
+	Custom range	Gamme personnalisé
+	Custom Table of Contents	Table de contenu personnalisé
+	Custom Table of Contents…	Table de contenu personnalisé…
+	Custom Watermark	Figrana Personnalisé
+	Custom Watermark…	Figrana Personnalisé…
+	Customize	Personnaliser
+	Customize Keyboard	Personnaliser klaweer
+	Customize Quick Access Toolbar	Personalisé toolbar access rapide
+	Customize Quick Access Toolbar…	Personalisé toolbar access rapide…
+	Customize Ribbon	Personnaliser Ruban
+	Customize the Ribbon…	Personnaliser ruban bi…
+	Customize…	Personnaliser…
+	Cut	Dagg
+	Cut, copy, and paste	Dagg, kopie, te tënk
+	Cycle	Cycle
+	Czech	Tchek
+	Danish	Danois
+	Dark	Lëndëm
+	Dark Mode	Mode lëndëm
+	Dark page (white text on black)	Xët bu ñuul (bind bu weex ci kaw bu ñuul)
+	Dark with Shadow	Lëndëm ak lëndëm
+	Darkroom	Néeg bu lëndëm
+	Dashed	tracé
+	Data	Done
+	Data Labels	Etiketu done
+	Data source:	Ibnu done yi:
+	Date	Bis
+	Date & Time	Bis ak waxtu
+	Date and Time	Bis ak waxtu
+	Date format	Format bis
+	Date formats:	Format bis yi:
+	Date Picker Content Control	Kontrôlu ëmbiitu tànneef bis
+	Day	Bis
+	Decimal	Desimal
+	Decorative objects only add visual interest: screen readers skip them.	Ëmbeef dekoraasioŋ yi dañuy yokk solo rek: ñiy jàng ekraŋ dañu leen di sànni.
+	Decrease Font Size	Wàññil dayo font bi
+	Decrease Indent	Wàññil indent
+	Default	Default
+	Default Paragraph Font	Font paragraf biñ jagleel
+	Default tab stops:	Onglet biñ jagleel dafay taxaw:
+	Define New Bullet	Mandargal bullet bu bees
+	Define New Multilevel List	Mandargal limu niveau yu bari yu bees
+	Define New Multilevel List…	Mandargal limu niveau yu bari yu bees…
+	Define New Number Format	Mandargal formaa nimero bu bees
+	Deflate	Deflaat
+	Delete	efaase
+	Delete Back in Equation	efaase ci equation bi
+	Delete Cells	efaase selil yi
+	Delete Clipboard Item	efaase mbindu clipboard
+	Delete Columns	efaase ay kolon
+	Delete Comment	efaase komànteer
+	Delete in Equation	efaase ci ekwaasioŋ bi
+	Delete Label	efaase etiketu
+	Delete Next Word	efaase baat bi ci topp
+	Delete Previous Word	efaase Word bi njëkk
+	Delete Rows	efaase ay liiñ
+	Delete Selected Ink	efaase encre biñ tànn
+	Delete Style	efaase stil
+	Delete Table	efaase tablo bi
+	Delete Table Style	efaase stilu tablo
+	Deleted	efaase
+	Deletions:	efaase yi:
+	Delivery address:	Adres biñu koy yóbboo:
+	Delta Equal To	Delta méngoo ak
+	Delta over arrow	Delta ci kaw fett bi
+	Demote	Wàññi
+	Demote to Body Text	Wàññi ci Tekstu Yaram
+	Derivative as a limit	Derivé ni àpp
+	Descending	Wàcci
+	Describe what this object shows, for people who can't see it.	Waxñu li mbir mii di wane, ngir nit ñi ko mënu gis.
+	Describe what this table shows, for people who can't see it.	Waxñu li tablo bii di wone, ngir nit ñi ko mënu gis.
+	Description:	Tegtal:
+	Design	Design
+	Design Mode	Modu jëmmal
+	Detach Template	Detager modèle
+	Detect language automatically	Gis làkk wi ci saasi
+	Developer	Developpeur
+	development build	tabax yokkute
+	Diagonal	Diagonaal
+	Diagonal Dots	Tombi diagonaal
+	Diamond	Diamand
+	Dictate	Dikte
+	Dictation isn't available here.	Dictation amul fii.
+	Dictation stopped.	Dikte dafa taxaw.
+	Dictation stopped: {reason}	Dikte dafa taxaw: {reason}
+	Different First Page	Xët bu njëkk bu wuute
+	Different Odd & Even Pages	Xëti Odd ak Even yu wuute
+	Differential	wuute
+	Differential theta	Theta bu wuute
+	Differential x	x wuutale
+	Differential y	y wuutale
+	Differentials	wuute
+	Direct formatting	Format direct
+	Direction:	Jubluwaay bi:
+	Directory	Annuaire
+	Display	Wone
+	Display for Review	Wane ngir xoolaat
+	Display gridlines on screen	Woneel ligne griy yi ci ekraŋ bi
+	Display name	Tur wiñ koy wane
+	Display text	Wone mbind mi
+	Distance from surrounding text	Distance ak mbind mi ko wër
+	Distribute Columns	Séddale kolon yi
+	Distribute letters	Séddale ay bataaxal
+	Distribute Rows	Séddale liiñ yi
+	Distribute spacing	Séddale bayaal yi
+	Distributed	Séddale
+	Do Not Check Spelling or Grammar	Bul xool ortograafi wala grammer
+	Do not check spelling or grammar	Bul saytu ortograafi wala nàfar
+	DO NOT COPY	BU LEEN KOPIE
+	Do Not Show in TOC	Bul wane ci TOC
+	Do you want to save changes to {name}?	Bëgg nga denc coppite yi ci {name}?
+	Doc4Me	Doc4Ma
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Yokkateg Doc4Me ay paketu macro yu amul fayda lañu yu bawoo ci katalogu yokktekaayu Doc4Me. Mën nañu soppali këyit bi kese.
+	Doc4Me is now the default app for Word documents.	Doc4Me mooy aplikaasioŋ biñ jagleel dokimaa Word yi.
+	Document	Këyit
+	Document End	Jeexal këyit
+	Document Formatting	Format këyit
+	Document Grid	Griy këyit
+	Document Information	Leeral ci këyit
+	Document Property	Moomeelu këyit
+	Document Start	Tàmbali këyit
+	Document template:	Modèlu këyit:
+	Document Text	Bindu këyit
+	Document Title	Titre këyit bi
+	Document1	Dokument1
+	Document\nPreferences	Këyit\nTaamu
+	Documents	Këyit
+	Documents you open will show up here.	Këyitu liggéey yi nga ubbi dañuy feeñ fii.
+	Does not contain	Amul
+	DOI	DOI
+	Don't add space between paragraphs of the same style	Bul yokk bayaal ci diggante paragraf yu am benn stil
+	Don't capitalize after:	Bul bind alfabe yu mag ginaaw:
+	Don't hyphenate	Bul def tiire
+	Don't print blank lines when data fields are empty	Bul imprime ligne yu amul dara sudee barabu done yi amul dara
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Bul jàng Zotero, Mendeley wala EndNote
+	Don't Save	Bul denc
+	Don't use HTML paragraph auto spacing	Bul jëfandikoo bayaal paragraf HTML
+	Dot	Dot
+	Dot dash	Tombi tiire
+	Dot-dash	Tiire-tombi
+	Dots	Tombi
+	Dotted	Tombi
+	Double	Ñaari yoon
+	Double Bar	ñaari barab
+	Double Closing Quote	Devis buy tëj ñaari yoon
+	Double Dot	ñaari poñ
+	Double Integral	Ñaari Integral
+	Double Integral with Limits	Integral bu am ñaari àpp
+	Double Integral with Stacked Limits	Ñaari Integral ak ay Limit yuñ dajale
+	Double Left Arrow with Text Above	Ñaari fett bu cammoy ak mbind ci kaw
+	Double Left Arrow with Text Below	Ñaari fett bu cammoy ak mbind ci suuf
+	Double Left Right Arrow with Text Above	Ñaari fett bu cammoy bu ndeyjoor ak mbind ci kaw
+	Double Left Right Arrow with Text Below	Ñaari fett bu cammoy bu ndeyjoor ak mbind ci suuf
+	Double Opening Quote	Ñaari devis ubbite
+	Double Right Arrow with Text Above	Ñaari fett bu ndeyjoor ak mbind ci kaw
+	Double Right Arrow with Text Below	Ñaari fett bu ndeyjoor ak mbind ci suuf
+	Double Spacing	ñaari bayaal
+	Double Square Brackets	Ñaari parenthèses carrées
+	Double Strikethrough	Ñaari yoon
+	Double strikethrough	Ñaari yoon
+	Double summation	Ñaari lim
+	Double Underline	Ñaari rëdd
+	Double Vertical Bars	Ñaari baaraas yu taxaw
+	Doughnut	Beignet
+	Down	Down
+	Downloading the speech model ({mb} MB, once)…	Yebbi modelu wax ji ({mb} MB, benn yoon)…
+	Downloading…	Yebbi…
+	DRAFT	BROUET
+	Draft	Projet
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Sànni ab rektangul ngir desine ab tablo, wala ab liiñ ci selil yi ngir xaaj leen. Esc taxaw.
+	Draw	Desine
+	Draw Ink	Desine encre
+	Draw Table	Desine Tablo
+	Draw\nTable	Desine\nTablo
+	Drawing Canvas	Dessin toile
+	Drawing Grid	Grille dessin
+	Drawing Tools	Jumtukaayi rëdd
+	Drawing\nCanvas	Dessin\nToile
+	Drop Cap	Cap
+	Drop cap	Kap
+	Drop-Down List Content Control	Limu ëmbiit liy wàcci
+	Drops all formatting and pastes plain text.	Dafay bàyyi formatage yépp ba noppi tënk mbind bu leer.
+	Dutch	Neerlandais
+	E-mail Messages	bataaxal ci e-mail
+	Edit Category	Soppi kategori
+	Edit Comment	Soppi Xalaat
+	Edit Data	Soppi ay done
+	Edit Document	Soppi këyit
+	Edit Equation	Soppi ekwaasioŋ
+	Edit Field Code	Soppi kodu barab
+	Edit Field…	Soppi barab…
+	Edit Footer	Soppi foot
+	Edit Header	Soppi boppu
+	Edit Individual Documents…	Soppi këyitu benn-benn…
+	Edit Items	Soppi ay mbir
+	Edit Recipient List	Soppi limu jotkat yi
+	Edit Source	Soppi cosaan
+	Edit\nData	Soppi\nDone
+	Edit\nRecipient List	Soppi\nLimu ñiy jot
+	Edited	ñu soppali ko
+	Editing	Soppali
+	Editing header/footer	Soppi boppu/suuf
+	Editing in this document is restricted.	Soppi ci këyit bii dafay tënk.
+	Editing — edit the document directly	Soppi — soppali këyit bi ci saasi
+	Edition	Edisioŋ
+	Editor	Editër
+	Edit…	Soppi…
+	Effects	njeexte yi
+	Elbow Arrow Connector	Konektëru fett bu concou
+	Elbow Connector	Konektëru concou
+	Ellipsis	ellipse
+	Em Dash	Em Dash
+	Em Space	Em Espace
+	Email address (optional)	Adres email (mën nga ko bëgg)
+	Emboss	Relief
+	Emphasis	Tegtal
+	Empty Matrices	Matriks yu amul dara
+	En Dash	Dash
+	En Space	En Espace
+	Enclose Characters	tëj araf yi
+	Enclosure	boîtier
+	Encrypt with Password	Encrypter ak baatu-jàll
+	Encrypt with Password…	Encrypter ak baatu-jàll…
+	End of document	Jeexal këyit bi
+	End of section	Jeexal wàll wi
+	End of Word	Jeexal Word
+	Endnote Reference	Royuwaayu njeexte
+	Endnote Text	Tekstu njeexte
+	Endnotes	Notu njeexte
+	Endnotes to footnotes	Notu njeexte ci notu suuf
+	English	Wolof
+	English (United Kingdom)	English (Royaume-Uni)
+	English (United States)	Angale (Etats Unis)
+	Engrave	Gravure
+	Enlarge symbol	Yaatal màndarga
+	Enter formatting for number:	Bindal formataasu nimero bi:
+	Enter in Equation	Duggal ci ekwaasioŋ bi
+	Enter page number:	Bindal nimero xët wi:
+	Enter the web address or embed code of an online video:	Bindal adres web bi wala kodu wideo bi ci net bi:
+	Entry marked.	Duggal màrku.
+	Entry:	Duggal:
+	Envelope #10   4.12" × 9.50"	Enveloppe #10 4,12" × 9,50"
+	Envelope Address	Adresu mbar
+	Envelope DL   4.33" × 8.66"	Enveloppe DL 4,33" × 8,66"
+	Envelope Return	Delloosi Enveloppe
+	Envelope size:	Dayo enveloppe bi:
+	Envelopes	mbar
+	Equal by Definition	Dañuy méngoo ci li ñuy tekki
+	Equal column width	yaatuwaayu kolon bu tolloo
+	Equal Equal	Tolloo Tolloo
+	Equal to	Tolloo ak
+	Equals:	Tolloo:
+	Equation	Ekwaasioŋ
+	Equation Gallery	Galëri ekwaasioŋ
+	Equation Info	Leeral ci equation
+	Equation Number	Nimero ekwaasioŋ
+	Equation Options	tànneefi ekwaasioŋ
+	Erase Ink	effacer encre
+	Eraser	Gomme
+	Errors ({n})	Jumtukaay ({n})
+	Estonian	Estonie
+	Euler's identity	dàntite Euler
+	Even Page	Ba ci xët
+	Even pages only	Ba ci xët yi kese
+	Every change is recorded as a tracked change.	Bépp coppite dañu koy bind ni coppite buñ topp.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Bépp komand mën nañu ko jëfandikoo ci script yi ak agent IA yi: daw `doc4me-cli mcp` ngir serwër MCP, wala nga tàmbali aplikaasioŋ bi ak `--control <port>` ngir chaine de contrôle JSON.
+	Every field needs a name.	Bépp barab dafa wara am tur.
+	Every font this document uses is installed.	Bépp font bu këyit bii di jëfandikoo dañu ko samp.
+	Everyone	Ku nekk
+	Exactly	Exactement
+	Exactly {n}	Exactement {n}
+	Example: {sample}	Ci misaal: {sample}
+	Exceptions (optional)	Lu wuute (taamu)
+	Exceptions…	Lu wuute…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	Génn
+	Expand	Yaatalal
+	Expand or Collapse Heading	Yaatalal wala tëj boppu
+	Expanded	Yaatal
+	Exponential	Eksponensiaal
+	Exponential series	Série exponencial
+	Export	Export
+	Export a copy to share (PDF, Word document)	Yobbu benn kopi ngir séddoo (PDF, këyitu Word)
+	Export Page as JPEG	Export xët wi ci JPEG
+	Export Page as PNG	Export xët wi ci PNG
+	Export PDF	Exporter PDF
+	Exported {path}	Exporté {path}
+	Expression	Expression
+	Extend Selection	Yaatalal tànneef
+	Extend Selection by Units	Yaatalal tànneef ci benn-benn
+	Extra space	Barab bu gëna bari
+	Extra spaces between words.	Yokkateg bayaal ci diggante kàddu yi.
+	Field	Tool
+	Field Click	Kilike ci barab bi
+	Field code:	Kodu barab bi:
+	Field Codes	Kodu barab
+	Field codes:	Kodu tool yi:
+	Field name	Turu barab bi
+	Field name:	Turu barab bi:
+	Field names must be different.	Tur barab yi dañu wara wuute.
+	Field names:	Tur barab yi:
+	Field properties	Màndarga yi
+	Field:	Barab:
+	Fields	Tool
+	Fields to insert:	Barab yi nga wara dugal:
+	Fields:	Barab yi:
+	Field…	Tool…
+	Figure	Figure
+	File	Dosie
+	File name:	Tur dosie bi:
+	Fill	Feesal
+	Fill & Line	Feesal & Liiñ
+	Fill color:	Kulòoru feesal:
+	Fill:	Bindal:
+	Filling in forms	Bindal ay formileer
+	Film	Film
+	Filter and Sort	Seggal ak tànnal
+	Filter and Sort…	Seggal ak tànnal…
+	Filter Records	Segg ay dokimaa
+	Find	Seetal
+	Find and Replace	Wut te wecci
+	Find Next	Seetal ci topp
+	Find Next Editable Region	Seetal gox biñ mëna soppali
+	Find Previous	Seetal li njëkk
+	Find Recipient	Seetal ki koy jox
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Gëstu dafay tànnee paragraf biñ soppi ci topp; Reject dafay delloosi kiñ tànn nimu meloon.
+	Find What Expression	Wut ban fësal
+	Find What Text	Wut ban mbind
+	Find what:	Wut li:
+	Find →	Gëstu →
+	Find:	Seetal:
+	Finish	Jeexal
+	Finish & Merge	Jeexal & boole
+	Finish &\nMerge	Jeexal &\nboole
+	Finished	Jeexna
+	Finnish	Finlande
+	First	Bi njëkk
+	First Cell in Column	Selil bu njëkk ci kolon
+	First Cell in Row	Selil bu njëkk ci rang
+	First Column	Kolon bu njëkk
+	First commit	Commit bu njëkk
+	First line	Liiñ bu njëkk
+	First line:	Liiñ bu njëkk bi:
+	First Name	Tur wi njëkk
+	First row of data contains column headers	Liggéey bu njëkk ci done yi dafa am boppu kolon
+	Fit	Fit
+	Fit text	Fit text
+	Fix Position on Page	Defar barab bi ci xët wi
+	Fixed Column Width	yaatuwaayu kolon bu takku
+	Flip Horizontal	Flip ci tëdd
+	Flip Vertical	Flip Vertical
+	Floor	Etage
+	Focus	Focus
+	Follow number with:	Toppal nimero bi ak:
+	Font	Font
+	Font Color	Kulòoru font
+	Font color	Kulòoru font
+	Font color:	Kulòoru font bi:
+	Font Dialog	Dialog font
+	Font not installed	Font bi sampagul
+	Font Size	Dayo font bi
+	Font Substitution	Wecci font
+	Font Substitution…	Wecci font…
+	Font:	Font:
+	Font: {font}	Font: {font}
+	Fonts	Font yi
+	Font…	Font…
+	Footer	Foot
+	Footnote and Endnote	Notu ci suuf ak Notu ci njeexte
+	Footnote Reference	Royuwaayu notu
+	Footnote Text	Tekst ci suufu notu
+	Footnotes	Notu suuf
+	Footnotes and endnotes	Notu suuf ak notu njeexte
+	Footnotes to endnotes	Notu ci suufu notu njeexte
+	Form Letters	Formulaire bataaxal
+	Format	Format
+	Format Page Numbers	Format nimero xët yi
+	Format Page Numbers…	Format nimero xët yi…
+	Format Painter	Format peinture
+	Format Picture	Format nataal
+	Format Shape	Format jëmm
+	Format:	Format bi:
+	Formatted	Formaté
+	Formatted Text	Bind buñ formate
+	Formatting	Format
+	Formatting at Selection	Format ci tànneef
+	Formatting completed. You can now:	Format bi jeexna. Leegi mën nga:
+	Formatting exceptions	formatage exceptions
+	Formatting marks	Màrku format
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Dañuy méngale formatage bi, coppite yi am ci mbind yu ndaw yi, bayaal bu weex yi ak tablo yi; Yeneen jekkal yi dañu leen di denc ngir ëlëg.
+	Formula	Formul
+	Forward	Ci kanam
+	Fraction	fraksioŋ
+	Fractions (1/2) as fraction characters (½)	Fraction (1/2) ni arafu fraction (1⁄2)
+	French	Français
+	French (France)	Français (Français)
+	From	ci
+	From text:	Ci mbind mi:
+	from Unicode (hex)	ci Unicode (hex)
+	From:	Ci:
+	Full page of the same label	Xët wi yépp ci benn etiket bi
+	Function	Liggéey
+	Functions	Liggéey
+	Gallery	Galëri
+	GB/T 7714	GB/T 7714
+	General	General
+	Geometry	Geometri
+	German	Allemand
+	German (Germany)	Allemand (Allemagne)
+	Get Add-ins	Am ay yokk-yokk
+	Get Data	am ay done
+	Get Data…	am ay done…
+	Getting ready…	may waajal…
+	Glow	Glow
+	Glow Colors	Kulòor yiy melax
+	Go Back	Dellu
+	Go To	Demal ci
+	Go to	Demal ci
+	Go To…	Demal ci…
+	Good afternoon	Bokk ci guddi
+	Good evening	Guddi gu neex
+	Good morning	suba bu baax
+	GOST (name sort)	GOST (tuur yi ñuy tànn)
+	GOST (title sort)	GOST (titre sorte)
+	Grab bag	Grab sac
+	Grammar	Grammaire
+	Grammar Settings	Jekkal nàfar
+	Graphic	Grafik
+	Grave	Bàmmeel
+	Greater than	Lu gëna mag
+	Greater than or equal	Lu gëna mag wala luy méngoo
+	Greek	Gereg
+	Greek Letters	Arafu grek
+	Green:	wert:
+	Greeting Line	Liñu nuyu
+	Greeting\nLine	Nuyu\nLine
+	Grid Settings	jekkal griy
+	Grid Table 1 Light	Tablo Griy 1 Leer
+	Grid Table 4 – Blue	Tablo Griy 4 – Baxa
+	Grid Table 4 – Green	Tablo Griy 4 – Vert
+	Grid Table 4 – Orange	Tablo Griy 4 – Orange
+	Grid Table 4 – Purple	Tablo Griy 4 – Violet
+	Gridlines	ligne griy
+	Group	Groupe
+	Grouping Character Above	Groupement ci kaw
+	Grouping Character Below	Arafu grupu bi ci suuf
+	Grow Font 1 Point	Màgg Font 1 Point
+	H:	H:
+	Hanging Indent	Indent buy tëdd
+	Harvard (Anglia)	Harvard (Angleterre)
+	Hat	mbaxana
+	Header	Bopp
+	Header & Footer	Boppu & Suuf
+	Header Options	Tànneefi boppu
+	Header Options:	Tànneefi boppu:
+	Header Row	Boppu liiñ
+	Header source: {file} (the next data source opened here takes its field names)	Boppu boppu: {file} (done yi ci topp ñu ubbeeku fii dañuy jël ay tur barab)
+	Header/Footer Position	Position boppu/suuf
+	Headers and footers	Boppu ak suufu
+	Heading 1	Boppu 1
+	Heading 2	Boppu 2
+	Heading 3	Boppu 3
+	Heading styles (levels 1–{n})	Stilu boppu (niveau 1–{n})
+	Heading {n}	Boppu {n}
+	Headings	Boppu
+	Heart	xol
+	Hebrew	Hebreu
+	Height:	Gaawaay:
+	Help	Ndimbal
+	Hex:	Hex:
+	Hidden	nëbbu
+	Hidden text	Mbind mu nëbbu
+	Hide Codes	nëbb kod yi
+	Hide from style lists	nëbb ci limu stil yi
+	Hide Ink	nëbb encre
+	Hide White Space	nëbb barab bu weex
+	Hide\nInk	nëbb\nEncre
+	Hierarchy	Hiyerarsi
+	Highlight	Teg ci
+	Highlight Changes	Tegtal coppite yi
+	Highlight changes in printed document	Tegtal coppite yi am ci këyit biñ imprime
+	Highlight changes on screen	Teral coppite yi ci ekraŋ bi
+	Highlight Merge Fields	Tegtal boole barab yi
+	Highlight\nMerge Fields	Teg ci\nboole ay barab
+	Highlighter	Reliminateur
+	Hindi	Hindi
+	Historical and Discretional	Taarix ak tànneef
+	Hollow	Hollow
+	Home	Daara
+	Home folder	Dossier dalal
+	Horizontal	tëdd
+	Horizontal Line	Liiñ bu tëdd
+	Horizontal spacing:	Diggante bu tëdd:
+	How many pages the whole document has	Ñaata xët la këyit bi yépp am
+	How many pages this section has	Ñaata xët la wàll wii am
+	How many words the document holds	Ñaata baat la këyit bi mëna denc
+	HTML Format	Xeetu HTML
+	Hue:	Hue:
+	Hungarian	Hongrois
+	Hyperbolic Cosecant Function	Fonction Cosecant Hiperbolik
+	Hyperbolic Cosine Function	Fonction kosin hiperbolik
+	Hyperbolic Cotangent Function	Fonction Kotangent Hiperbolik
+	Hyperbolic Functions	Liggéeyu hiperbolik
+	Hyperbolic Secant Function	Liggéeyu sekant hiperbolik
+	Hyperbolic Sine Function	Fonction Sinus Hiperbolik
+	Hyperbolic Tangent Function	Fonction tangent hiperbolik
+	Hyperlink	Hyperlien
+	Hyphenate at:	Def tiire ci:
+	Hyphenate words in CAPS	Def tiire ci kàddu yi ci CAPS
+	Hyphenation	Tire
+	Hyphenation Options…	Tànneefi tiire…
+	Hyphenation zone:	Zone tiire:
+	Hyphens (--) as dashes (—)	Tiire (--) melni tiire (—)
+	Hypotenuse	Hipotenus
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	Man, ii, iii, …
+	Icon Color	Kulòoru ikon
+	Icons	ay ikon
+	Identity Matrices	Matrisu dàntite
+	IEEE	IEEE
+	If…Then…Else	Sudee…Ginaaw loolu…Else
+	If…Then…Else…	Sudee…Ginaaw loolu…Else…
+	Ignore All	Bàyyi lépp
+	Ignore punctuation characters	Baña bàyyi xel ci arafu ponksioŋ yi
+	Ignore web and file addresses	Bàyyi xel ci adres web yi ak fichier yi
+	Ignore white-space characters	Baña bàyyi xel ci arafu espace yu weex yi
+	Ignore words in capitals	Bàyyi xel ci kàddu yiñ bind ak yu mag
+	Ignore words with numbers	Baña bàyyi xel ci kàddu yi am nimero
+	Illustrations	ay misaal
+	Immersive	Immersif
+	Immersive Reader	Jàngalekat buy dugg
+	Immersive\nReader	Immersif\nJàngatkat
+	In Default apps, choose Doc4Me for the document types you want it to open.	Ci aplikaasioŋ yiñ jagleel, tannal Doc4Me ngir xeetu këyit yi nga bëgga ubbi.
+	In equations, typing a name after a backslash replaces it with its symbol.	Ci equation yi, soo bindee ab tur ci ginaaw ab backslash daf koy wecci ak ay simbolam.
+	In Front of Text	Ci kanamu mbind mi
+	In Line with Text	ci yoon wi ak mbind mi
+	Inches	pouces
+	Include label and number	Bokk ci etiket ak nimero
+	Include level number from:	Bokk ci nimero niveau bi ci:
+	Include page numbers	Bokk ci nimero xët yi
+	Increase Font Size	Yokk dayo font bi
+	Increase Indent	Yokk indent bi
+	Indent	Indent
+	Indent from left:	Indent ci cammoy bi:
+	Indentation	lëmu
+	Indented	Indenté
+	Indents	Indents
+	Indents and Spacing	Indents ak bayaal
+	Index	Index
+	Index and Tables	Index ak tablo
+	Index Heading	Boppu limu
+	Index {n}	Index {n}
+	Indonesian	Enndonesien
+	Inflate	Gonfla
+	Info	Leeral
+	Initials:	Inisial yi:
+	Ink	Encre
+	Ink Equation	Equation encre
+	Ink Replay	Replay encre
+	Ink to Math	Encre ci Math
+	Ink to Shape	Encre ngir joxe jëmm
+	Ink to\nMath	Encre à\nMath
+	Ink to\nShape	Encre à\nForm
+	Ink\nReplay	Encre\nDelloosi
+	Inline	Inline
+	Input Format	Format dugal
+	Insert	Dugalal
+	Insert a 3D model from a file (.glb, .stl, .obj)	Dugalal ab xeetu 3D ci ab fichier (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	Dugalal ab ekwaasioŋ bu bees (Alt+=)
+	Insert Above	Dugalal ci kaw
+	Insert Below	Dugalal ci suuf
+	Insert Caption	Dugalal kàddu
+	Insert Cells	Dugalal ay selil
+	Insert Chart	Dugalal tablo
+	Insert Citation	Dugalal Sitaasioŋ
+	Insert Columns to the Left	Dugalal kolon ci cammoy bi
+	Insert Columns to the Right	Dugalal kolon ci ndeyjoor
+	Insert Data	Dugalal ay done
+	Insert Database	Dugalal base de done
+	Insert Database…	Dugalal base de done…
+	Insert Date Field	Dugalal barabu bis
+	Insert Endnote	Dugalal notu njeexte
+	Insert entire column	Dugalal kolon bi yépp
+	Insert entire row	Dugalal liiñ bi yépp
+	Insert Footnote	Dugalal leeral ci suuf
+	Insert Hyperlink	Dugalal lëkkalekaay
+	Insert Index	Dugalal Index
+	Insert Left	Dugalal cammoy
+	Insert LISTNUM Field	Dugalal barabu LISTNUM
+	Insert Merge Field	Dugalal barabu boole
+	Insert Merge\nField	Dugalal boole\nTool
+	Insert New Equation	Dugalal equation bu bees
+	Insert one text or another, depending on a field's value.	Dugalal benn mbind wala beneen, lépp di aju ci valeur u barab bi.
+	Insert Page Field	Dugalal barabu xët
+	Insert Right	Dugalal ndeyjoor
+	Insert Rows	Dugalal ay liiñ
+	Insert Rows Above	Dugalal ay liiñ ci kaw
+	Insert Rows Below	Dugalal ay liiñ ci suuf
+	Insert Shapes	Dugalal ay jëmm
+	Insert SmartArt	Dugalal SmartArt
+	Insert Structure	Dugalal jumtukaay
+	Insert Symbol	Dugalal màndarga
+	Insert Table	Dugalal tablo
+	Insert Table of Authorities	Dugalal tablo kilifa yi
+	Insert Table of Figures	Dugalal tablo lim yi
+	Insert Table…	Dugalal tablo…
+	Insert Time Field	Dugalal barabu waxtu
+	Insert Video	Dugalal wideo
+	Insert\nAbove	Dugalal\nci kaw
+	Insert\nCaption	Dugalal\nKapsioŋ
+	Insert\nCitation	Dugalal\nSitaasioŋ
+	Insert\nFootnote	Dugalal\nNotu ci suuf
+	Inserted	Dugal nañu ko
+	Insertions and Deletions	Dugalal ak efaase
+	Insertions:	Duggal:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Duggal: {ins}, efaase: {del}, toxu: {moves}, formaate: {fmt}, komànteer yi: {comments}
+	Inside	Ci biir
+	Inside Borders	Ci biir ay fronceer
+	Inside Margin	Ci biir marge
+	Inside:	Ci biir:
+	Inspect Document	Saytu këyit
+	Inspect Styles at Selection	Saytu stil yi ci tànneef
+	Institution	Mbootaay
+	Integral	Integral
+	Integral of e^(−x²)	Integraal bu e^(-x2)
+	Integral with Limits	Integral ak ay yam
+	Integral with Stacked Limits	Integral ak ay yam yuñ dajale
+	Integrals	Integraal
+	Intense Emphasis	Tegtal bu tar
+	Intense Quote	Sitaasioŋ bu am doole
+	Intense Reference	Royuwaay bu am doole
+	Interface	interface
+	Interface language	Làkku interfaas
+	Interface language:	Làkku interfaas bi:
+	Interface size:	Dayo interface bi:
+	Interface Theme	Temu interfaasu
+	Interface theme:	Temu interfaasu bi:
+	Interface\nTheme	interface\nTema
+	Internet addresses as links	Adres internet yi dañu melni lëkkalekaay
+	Intersection	Daje
+	Intersection with Limits	Daje ak ay yam
+	Intersection with Lower Limit	Daje ak yam ci suuf
+	Intersection with Subscript-Superscript Limits	Daje ak ay yamaleg Abonnement-Superscript
+	Inverse Cosecant Function	Fonction Cosecant bu dëddu
+	Inverse Cosine Function	Fonction cosine inverse
+	Inverse Cotangent Function	Fonction kotangent bu dëddu
+	Inverse Functions	Fonction yu dëddu
+	Inverse Hyperbolic Cosecant Function	Fonction kosekant hiperbolik bu dëddu
+	Inverse Hyperbolic Cosine Function	Fonction cosine hiperbolik bu dëddu
+	Inverse Hyperbolic Cotangent Function	Fonction kotangent hiperbolik bu dëddu
+	Inverse Hyperbolic Functions	Fonction hiperbolique yu dëddu
+	Inverse Hyperbolic Secant Function	Fonction secant hiperbolique inverse
+	Inverse Hyperbolic Sine Function	Fonction sinus hiperbolik bu dëddu
+	Inverse Hyperbolic Tangent Function	Fonction tangent hiperbolik bu dëddu
+	Inverse Secant Function	Fonction secant bu dëddu
+	Inverse Sine Function	Fonction sinus bu dëddu
+	Inverse Tangent Function	Fonction tangent bu dëddu
+	Ionosphere	ionosfer
+	Is blank	Dafa amul dara
+	Is not blank	Du dara
+	ISO 690 (author-date)	ISO 690 (bisu bindkat bi)
+	ISO 690 (numerical)	ISO 690 (nimero)
+	Issue	jafe-jafe
+	it isn't a picture Doc4Me can read	du nataal bu Doc4Me mëna jàng
+	Italian	italien
+	Italic	Kursiv
+	Japanese	japonais
+	Journal	surnaal
+	Justification	Justification
+	Justification of a display equation	Justifikaasioŋ buy wane ekwaasioŋ bi
+	Justified	Justifié
+	Justify	Justifier
+	Keep Lines Together	Bokk ligne yi
+	Keep lines together	Fexeel boole ligne yi
+	Keep Source Formatting	Weyal formataasu cosaan
+	Keep Text Only	Denc mbind kese
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Def baatu-jàll bi fu wóor: su ko amul kenn, ba ci Doc4Me, mënul ubbi këyit wi. Bàyyil ñaari barab yi amul dara ngir dindi baatu-jàll bi.
+	Keep with Next	Weyal ak Next
+	Keep with next	Weyal ak li ci topp
+	Keeps the fonts and formatting of the copied text.	Dafay denc font yi ak formataasu mbind miñ kopie.
+	Kerning for fonts:	Kerning ngir font yi:
+	Keyboard shortcuts:	Gaawaayu klawieer:
+	Keys for this command:	Caabi ndigal bii:
+	Keywords	Baatu-caabi
+	Korean	Korean
+	Label changes with:	Coppite etiketu ak:
+	Label:	Etiketu:
+	Labels	Etiketu
+	Landscape	Paysage
+	Language	Làkk
+	Language Preferences…	Taamu làkk…
+	Language…	Làkk…
+	Large\nOperator	Lu rëy\nOperatër
+	Largest Only	Li gëna mag kese
+	Largest only	Li gëna mag kese
+	Lasso	Laso
+	Lasso Select	Tannal Lasso
+	Last	Mujjee
+	Last Cell in Column	Selil bu mujj ci kolon
+	Last Cell in Row	Selil bu mujj ci rang
+	Last Column	Kolon bu mujj
+	Last commit	Commit bu mujj
+	Last Name	Tur wi mujj
+	Last, First; Last, First	Mujjee, Njiitu; Mujjee, Njiitu
+	Latin text font:	Font bindu latin:
+	Layout	Layout
+	Layout options for this document	Tànneefi jëmmal këyit bii
+	Layout Summary	Résumé de layout
+	Layouts	Xeetu jëmmal
+	Leader	Njiit
+	Leave a recipient out of the merge when a field has this value.	Bàyyil jotkat bi ci bitti boole bi sudee barab bi amna valër bii.
+	Leave Equation	Bàyyil Equation
+	Leave the equation (Esc)	Bàyyil ekwaasioŋ bi (Esc)
+	Leave the label out of the caption	Bàyyil etiket bi ci biir kàddu yi
+	Left	Cammoy
+	Left Arrow with Text Above	Fett bu cammoy bi am mbind ci kaw
+	Left Arrow with Text Below	Fett bu cammoy bi am mbind ci suuf
+	Left Border	Frontière cammou
+	Left border	Frontière bu cammoy
+	Left Bracket Twice	Bracket gauche ñaari yoon
+	Left indent	Indent bu cammoy
+	Left Margin	Marge bu cammoy
+	Left Only	Cammoy rekk
+	Left only	Cammoy rek
+	Left Right Arrow Above	Fett bu cammoy bi ci kaw
+	Left Right Arrow with Text Above	Fett bu cammoy bi ak mbind mi ci kaw
+	Left Right Arrow with Text Below	Fett bu cammoy bu ndeyjoor ak mbind ci suuf
+	Left Subscript-Superscript	Abonnement bu cammoy-Superscript
+	Left-to-right	Cammoy-ndeyjoor
+	Left-to-Right Text Direction	Jubluwaayu mbind mi joge cammoñ dem ndeyjoor
+	Left:	Cammoy:
+	Leftwards Arrow Above	Fett bu cammoy bi ci kaw
+	Leftwards Harpoon Above	Harpoon ci kaw ci cammoy
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	Nimero stil legal
+	Legend	Legend
+	Less than	Lu néew ci
+	Less than or equal	Lu néew wala lu tollu ci
+	Letter	bataaxal
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	Boppu bataaxal
+	Letter-Like Symbols	Màndarga yu nuru araf
+	Letters	bataaxal
+	Level 1	Niveau 1
+	Level 2	Niveau 2
+	Level 3	Niveau 3
+	Level 4	Niveau 4
+	Level 5	Niveau 5
+	Level 6	Niveau 6
+	Level 7	Niveau 7
+	Level 8	Niveau 8
+	Level 9	Niveau 9
+	Level {n}	Niveau {n}
+	Level:	Niveau:
+	Levels:	Niveau yi:
+	LibreTranslate server (open source)	Serveur LibreTekki (balluwaay bu ubbeeku)
+	Ligatures:	Ligature:
+	Light	Leer
+	Light with Outline	Leer ak rëdd
+	Limit	Limite
+	Limit and\nLog	Limit ak\nLog
+	Limit consecutive hyphens to:	Limit tiire yu toppalante ci:
+	Limit Example	Misaalu yam
+	Limit formatting to a selection of styles	Xaarandil formatage ci tànneefi stil yi
+	Line	Line
+	Line and Page Breaks	Line ak xaaj xët
+	Line and Paragraph Spacing	Diggante liiñ yi ak paragraf yi
+	Line between	Ligne bi digganté
+	Line Break	Dagg ligne
+	Line breaking	Dagg rëdd
+	Line delta	Ligne delta
+	Line End	Jeexal liiñ
+	Line Number	Nimero liiñ
+	Line Numbering Options…	Tànneefi nimero ligne…
+	Line Numbers	Nimero ligne
+	Line Spacing	Diggante liiñ yi
+	Line spacing	Diggante liiñ yi
+	Line Spacing Options…	Tànneefi diggante liiñ yi…
+	Line spacing:	Diggante liiñ yi:
+	Line Start	Tambali ligne
+	Line width:	Yaatu liiñ bi:
+	Line:	Line:
+	Linear	Lineer
+	Linear Fraction	fraksioŋ ligneer
+	Lines	Lignes
+	Lines +/−	Lignées +/-
+	Lines added	Yokk nañu ay ligne
+	Lines and characters	Liiñ yi ak araf yi
+	Lines deleted	liiñ yiñ efaase
+	Lines only	Line yi kese
+	Lines per page:	Liiñ ci xët bu nekk:
+	Link	Lëkkalekaay
+	Link entries to their headings	Lëkkale duggal yi ak seeni boppu
+	Link level to style:	Niveau biy lëkkale stil bi:
+	Link to Previous	Lëkkalekaay ci li njëkk
+	Linked style (paragraph and character)	Xeetu lëkkaloo (paragraf ak araf)
+	Links	Lëkkalekaay
+	Links and References	Lëkkalekaay ak Royuwaay
+	Link…	Lëkkalekaay…
+	List	Limu
+	List Commands	Limu ndigal yi
+	List Definition	Limu Màndarga
+	List entries	Limu duggal yi
+	List Paragraph	Limu paragraf yi
+	List styles	Limu stil yi
+	List Table 3 – Blue	Limu Tablo 3 – Baxa
+	List Table 3 – Green	Limu tablo 3 – wert
+	List Table 3 – Orange	Limu Tablo 3 – Orange
+	List Table 3 – Purple	Limu Tablo 3 – Violet
+	Listening… speak now	Déglu… wax leegi
+	Location	Barab
+	Location: {path}	Barab: {path}
+	Lock aspect ratio	Rasio aspektu tëjug
+	Lock Fields	Tëjug barab yi
+	Logarithm	Logaritm
+	Logarithm with Base	Logaritm ak Baas
+	Logical AND	Logique AK
+	Logical AND with Limits	AK logique ak ay limite
+	Logical OR	Logique wala
+	Logical OR with Limits	wala logique ak ay limit
+	Long citation:	Sitaasioŋ bu gudd:
+	lowercase	alfabe yu ndaw
+	Lum:	Lum:
+	Macros	Makro yi
+	Made from the author and year when empty	Defar nañu ko ci bindkat bi ak at mi su amul dara
+	Magazine or newspaper article	Artiklu magazine wala surnaal
+	Mail Merge	boole mail
+	Mail Merge Helper	Ndimbalu boole mail
+	Mail Merge Helper…	Ndimbalu boole mail…
+	Mailing Labels	Etiketu mail
+	Mailings	bataaxal
+	Main entry:	Duggal bu mag bi:
+	Make Doc4Me the default for Word documents…	Defal Doc4Me muy dokimaa Word…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	Defal liiñ bi, mënu yi ak dialog yi gëna rëy wala gëna ndaw, ci kaw escaleer bi sa sistem di wane. Zoom këyit dafa wuute.
+	Malay	Malay
+	Manage Sources	Saytu ay balluwaay
+	Manage Styles	Saytu stil yi
+	Manage Styles…	Saytu stil yi…
+	Manual Hyphenation	Tire manuel
+	Manual hyphenation is complete.	Tiire manuel matna.
+	Manual Line Break	Dagg ligne manuel
+	Manual Page Break	Doggal xët ci loxo
+	Manual…	Manuel…
+	Many pages	Xët yu bari
+	Margin	Marge
+	Margins	Marge
+	Mark	Mark
+	Mark All	Markal lépp
+	Mark as decorative	Marke ni dekoratif
+	Mark Citation	Mark Sitaasioŋ
+	Mark Citation…	Mark Sitaasioŋ…
+	Mark Entry	Màrk Duggal
+	Mark Entry…	Màrk Duggal…
+	Mark grammar errors as you type	Sooy bind, nga màrke njuumti yi ci nàfar
+	Mark Index Entry	Marke Duggal Index
+	Mark selected text as:	Màrkeel mbind mi nga tànn ni:
+	Mark Table of Contents Entry	Markeel limu ëmbiit li
+	Mark\nCitation	Mark\nSitaasioŋ
+	Mark\nEntry	Mark\nDugg
+	Markdown (*.md)	Mark down (*.md)
+	Match case	méngoo
+	Match Fields	Barab yu méngoo
+	Match prefix	Delloosi prefix
+	Match suffix	Suffix bu méngoo
+	Math AutoCorrect	Math Correction automatique
+	Math Input Control	Kontrolu dugal math
+	Matrices with Brackets	matrix ak parenthèses
+	Matrix	Matriks
+	Maximize	Maximiser
+	Maximum	Maximum
+	Maximum Example	misaal bu gëna mag
+	Measured By	Natt ci
+	Measurement units:	Unité de mesure:
+	Media	Media
+	Merge	boole
+	Merge Cells	boole ay selil
+	Merge Formatting	boole formatage
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Format boole dafay tënk mbind mi ci format bimuy wàcci, ni ko Keep Text Only di defee.
+	Merge Record #	boole dokimaa #
+	Merge records	boole dokimaa
+	Merge to New Document	boole ci këyit bu bees
+	Merge to Printer	boole ci imprimante
+	Merge to:	boole ci:
+	Merge type: {type}	Xeetu boole: {type}
+	Merged PRs	PR yuñ boole
+	Merge…	boole…
+	Mesosphere	mesosfer
+	Middle	Digg
+	Midline Dots	Tombi liiñ bu digg
+	Millimeters	Milimeetar
+	Minimum	Lu gëna ndaw
+	Minus Equal	Minus Egal
+	Mirror indents	Seetu indents
+	Mirrored	Seetu
+	Missing document font	Font këyit dafa ñàkk
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT wala apache-2.0. Yelleefu moomeel (c) 2026 Ekipu ArtCraft ak ñi jàppale ci WordCraft.
+	MLA	MLA
+	Model	Modèle
+	Models	Model
+	Moderate	Moderate
+	Modify Style	Soppi stil
+	Modify Table Style	Soppi stilu tablo bi
+	Modify Table Style…	Soppi stilu tablo bi…
+	Modify…	Soppi…
+	Mon	Al
+	Month	Weer
+	More >>	Leneen >>
+	More Colors…	Yeneen Kulòor…
+	More Columns…	Yeneen kolon…
+	More Commands…	Yeneen ndigal…
+	More Symbols…	Yeneen màndarga…
+	More templates →	Yeneen modèle →
+	Move Down	Wàcci
+	Move in Equation	Toxu ci ekwaasioŋ bi
+	Move object with text	Toxal mbir ak mbind
+	Move or Resize	Toxal wala Soppi Dayo
+	Move Paragraph Down	Toxal paragraf bi ci suuf
+	Move Paragraph Up	Toxal paragraf bi ci kaw
+	Move Past Citation	Toxal Sitaasioŋ bi weesu
+	Move Past\nCitation	Demb\nSitaasioŋ
+	Move Selected Ink	Toxal encre biñ tànn
+	Move Text	Toxal mbind mi
+	Move to where?	Fan nga toxu?
+	Move Up	Dellu ci kaw
+	Move with Text	Toxal ak Teks
+	Move with text	Toxal ak mbind
+	Moved from	Toxu ci
+	Moved to	Toxu ci
+	Moves	Toxu
+	Multilevel List	Limu niveau yu bari
+	Multiple Pages	Xët yu bari
+	My Add-ins	Samay yokk
+	MyMemory (free, no account)	MyMemory (amul kontu)
+	Name	Tur
+	Name (A–Z)	Tur (A–Z)
+	Name of the file this document is saved as	Turu fichier biñ denc këyit bii
+	Name:	Tur:
+	Narrow  0.5" all	Narrow  0.5" all
+	Natural Logarithm	logaritm naturel
+	Nature	Nature
+	Navigation	Navigation
+	Navigation Pane	Panelu Navigation
+	Negated Relations	Relation yuñ bañ
+	New	Bees
+	New Comment	Xalaat bu bees
+	New comments and tracked changes are recorded under this name and these initials.	Xalaat yu bees ak coppite yiñ topp dañu leen di bind ci tur wii ak arafu njëkk yii.
+	New Document	Këyit bu bees
+	New document	Këyit bu bees
+	New Drawing Canvas	Toile bu bees
+	New Entry	Duggal bu bees
+	New Folder	Dosier bu bees
+	New from Template	Bees ci template bi
+	New Group	Groupe bu bees
+	New Label	Etiket bu bees
+	New Label…	Etiket bu bees…
+	New Paragraph	paragraf bu bees
+	New shortcut:	Gaawaay bu bees:
+	New Style…	Style bu bees…
+	New Tab	Onglet bu bees
+	New Table Style	Tablo bu bees
+	New Table Style…	Tablo bu bees…
+	New Window	Palanteer bu bees
+	New word	Baatu bees
+	New\nComment	Bees\nXalaat
+	New\nWindow	Bees\nPalanteer
+	New…	Bees…
+	Next	Next
+	Next Change	Coppite bu ci topp
+	Next Comment	Xalaat bi ci topp
+	Next Field	Barab bi ci topp
+	Next Footnote	Note bi ci topp
+	Next Page	xët wi ci topp
+	Next Record	Enregistrement bi ci topp
+	Next Section	Wàll wi ci topp
+	Next Sentence	frase bi ci topp
+	Next sentence	frase bi ci topp
+	Next Window	Palanteer bi ci topp
+	No	Déedet
+	No accessibility issues found.	Amul benn jafe-jafe ci yoriinu jëfandikoo gi.
+	No add-ins are listed yet.	Ba leegi amagul benn add-in.
+	No add-ins yet. Add one from the Store.	Ba leegi amul ay yokk-in. Yokk benn ci Màngasin bi.
+	No Border	Amul fronceer
+	No changes (read only)	Amul benn coppite (lire rek)
+	No Color	Amul Kulòor
+	No contributor data was built into this copy.	Amul benn done buñ tabax ci koppi bii.
+	No data source yet.	Ba leegi amul benn balluwaay.
+	No errors found: every merge field is in the recipient list.	Amul benn njuumte buñu gis: bépp barab buñ boole mingi ci limu jotkat yi.
+	No Fill	Amul fees
+	No Glow	Amul Leer
+	No grid	Amul griy
+	No icons match your search.	Amul benn icon bu méngoo ak li nga seet.
+	No limit	Amul àpp
+	No Line	Amul liiñ
+	No Markup	Amul marke
+	No model credits were built into this copy.	Amul benn xeetu crédit buñ tabax ci koppi bii.
+	No Outline	Amul benn rëdd
+	No Paragraph Space	Amul bayaalu paragraf
+	No pictures found.	Gisu ñu benn nataal.
+	No Reflection	Amul xalaat
+	No revisions	Amul benn coppite
+	No Shadow	Amul lëndëm
+	No Soft Edges	Amul boor yu nooy
+	No sources yet.	Ba leegi amul ay balluwaay.
+	No Spacing	Amul benn bayaal
+	no speech program on this system	amul prograamu wax ci sistem bii
+	No templates match your search.	Amul benn modèle bu méngoo ak li nga seet.
+	No Transform	Amul coppite
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Ba leegi amul kàddu. Yokk ci Dictionnaire ci baat buñu bind bu baaxul, daf koy def fii.
+	No-Width Non Break	amul-yaatu amul dogg
+	No-Width Optional Break	Break bu amul yaatuwaay
+	Nonbreaking Hyphen	Tire budul dagg
+	Nonbreaking Space	Espace budul dagg
+	None	Amul
+	Normal	Normal
+	Normal  1" all	normal 1" lépp
+	Normal Indent	Indent bu jaadu
+	Normal probability density	Densité probabilite bu jaar yoon
+	Normal speed	Gaawaay bu jaadu
+	Normal Style	Style bu jaadu
+	Normal Table	Tablo bu jaadu
+	Normal Text	Bind bu jaadu
+	Normal Word Document	Këyitu Word bu jaadu
+	North	gannaar
+	Norwegian (Bokmål)	Norvégien (Bokmål)
+	Not	Déet
+	Not available right now	Amul leegi
+	Not equal to	Du méngoo ak
+	Not linked: click a text box	Lëkkaloowul: bësal benn boyet
+	Not saved	Dañu ko denc
+	Not saved yet	Ba tay dencagul
+	Not used by any command	Benn ndigal jëfandikoo ko
+	Not {name}	Déet {name}
+	Nothing	dara
+	Nothing collected yet. Items you copy or cut appear here.	Ba tay dajale wuñu dara. Mbir yi nga kopie wala dagg dañuy feeñ fii.
+	Now used by {command}	Leegi ñu ngi koy jëfandikoo {command}
+	Nudge	Nudge
+	Num Occurrences	Limu xew-xew yi
+	Number	Nimero
+	Number alignment:	Liggéeyukaay nimero:
+	Number format	Format nimero
+	Number of columns:	Limu kolon yi:
+	Number of rows:	Limu liiñ yi:
+	Number of the page the field sits on	Nimero xët wi barab bi nekk
+	Number of the section the field sits in	Nimero wàll wi barab bi nekk
+	Number style for this level:	Stilu nimero ngir niveau bii:
+	Number the equation; the number sits at the right margin (or type # then the number)	Nimeré equation bi; nimero bi mingi toog ci marge bu ndeyjoor bi (wala nga bind # ginaaw ga nimero bi)
+	Number type:	Xeetu nimero:
+	Number:	Nimero:
+	Numbering	Nimero
+	Numbering:	Nimero:
+	Numbering…	Nimero…
+	Numerals	Ay lim
+	Numerals:	Nimero yi:
+	n×n Identity Matrix	n×n matrix dàntite
+	n×n Matrix	n×n Matriks
+	Object	Mbir
+	Odd Page	Xët bu jaxasoo
+	Odd pages only	Xët yu jaxasoo kese
+	Off	Def
+	Office	Bureau
+	Office 2003 Default	Office 2003
+	Offset (pt):	Deplacement (pt):
+	Offset: Bottom	Offset: Ci suuf
+	Offset: Bottom Left	Offset: Ci suufu cammoy
+	Offset: Bottom Right	Offset: Ci suufu ndeyjoor
+	Offset: Center	Offset: Digg
+	Offset: Left	Offset: Cammoy
+	Offset: Right	Offset: Ci ndeyjoor
+	Offset: Top	Offset: Ci kaw
+	Offset: Top Left	Offset: Ci kaw ci cammoy
+	Offset: Top Right	Offset: Ci kaw ci ndeyjoor
+	OK	OK
+	Omit	Bàyyi
+	On	On
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Taal: sooy bind wala nga jëfandikoo butoŋu fett yi, caret bi dafay dem ci barabam bu bees bi, ba noppi lim bi dafay jeex. Off: dafay tëb di bënn di taal ak di fay.
+	One	Benn
+	One half	Benn genn-wàll
+	One label per recipient	Benn etiketu jotkat bu nekk
+	One line per item. Enter adds an item.	Benn liiñ ci mbir mu nekk. Enter dafay yokk benn mbir.
+	One Page	Benn xëtt
+	Online Pictures	Nataal yi ci net bi
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Nataal yi ci net bi (Openverse), Tekki (MyMemory wala sa serwëru LibreTranslate), Am ay yokk-yokk ak yebbi xeetu kàddu Dictate boole ci net bi, te soo leen jëfandikoo rek. Suñu ko fay, Doc4Me du def benn lëkkaloo boppam.
+	Online Pictures…	Nataal yi ci net bi…
+	Online services are turned off (File › Options › Trust Center).	Liggéeyukaay yi ci net bi dañu leen fay (Fichier › Tànneef › Centre de confiance).
+	Online Video	Wideo ci net bi
+	Only allow this kind of editing:	May xeetu soppali yii kese:
+	Only comments can be added, except in regions marked editable.	Xalaat kese lañu mëna yokk, ludul ci gox yiñ màrkee ni mën nañu leen soppali.
+	Only form fields can be filled in.	Formileer bi kese lañu mëna joxe.
+	only https addresses can be used	adres https kese lañu mëna jëfandikoo
+	Only pictures I may use commercially	Nataal yi kese laa mëna jëfandikoo ngir jënd ak jaay
+	Only the allowed styles can be applied.	Stil yiñ may kese lañu mëna jëfandikoo.
+	Only web (http, https) and email (mailto) links can be followed	Lëkkalekaayu web bi (http, https) ak lëkkalekaayu imeel (mailto) kese ngay mëna topp
+	Open	Ubbi
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Ubbi ab fichier ak navigateur Doc4Me boppam sudee dialog fichier system bi feeñul.
+	Open Data Source…	ubbi ab këru done…
+	Open Hyperlink	Ubbi lëkkalekaay bi
+	OpenDocument Text (*.odt)	Bindu Document bu ubbeeku (*.odt)
+	Opening print dialog…	Ubbi dialog imprimeer…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Leegi dafay ubbi .docx, .doc, .rtf ak .odt ak ay gaaraasu Word ak Doc4Me.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Ubbi Jekkal › Aplikaasioŋ yiñ jagleel, nga tànnee Doc4Me ngir .docx ak yeneen xeeti këyit.
+	Open…	Ubbi…
+	Operator	Operatër
+	Operator Structures	Jariñu Operatër
+	Operators	Operatër yi
+	Optional Hyphen	Tire buñu mëna tànn
+	Options	tànneef
+	Options…	tànneef…
+	Or	Wala
+	Or save a copy in another format:	Wala nga denc ko ci beneen formaa:
+	Ordinals (1st) as superscript	Ordinaal (1er) ci kaw
+	Organizer	Organisatër
+	Organizer…	Organisatër…
+	Orientation	Jubluwaay
+	Original document	Këyit bu njëkk
+	Other	Leneen
+	Other Authorities	Yeneen njiit
+	Other Large Operators	Yeneen Operatër yu mag
+	Other paragraph styles	Yeneen xeeti paragraf
+	Other styles and their TOC level:	Yeneen stil ak seeni niveau TOC:
+	Otherwise insert:	Luko moy dugal:
+	Outline	Retur
+	Outline Level	Niveau de contour
+	Outline level	Niveau de contour
+	Outline levels	Niveau de contour
+	Outline State	Etat de contour
+	Outline Tools	Jumtukaayi rëdd
+	Outlining	Retur
+	Outside	Ci biti
+	Outside border	ci bitti fronceer
+	Outside Borders	ci bitti fronceer yi
+	Outside Margin	Marge bitti
+	Outside:	Ci biti:
+	Outward Brackets	Brackets yu génn
+	Oval	Oval
+	Overbar	Overbar
+	Overbars and Underbars	Bar ci kaw ak ci suuf
+	Overbrace	Brace
+	Overtype	Overtype
+	Overtype (typing replaces the characters after the caret)	Overtype (bind dafay wecci araf yi ci topp caret bi)
+	Page	Xët
+	Page Background	xët wi ci ginaaw
+	Page Border	Bordu xët
+	Page Borders	Bordu xët yi
+	Page Break	Xët bu xaaj
+	Page Break Before	Xët bu njëkk
+	Page break before	Taxawam xët balaa
+	Page Breaks	Xët yu xaaj
+	Page Color	Kulòoru xët
+	Page display	Feeñu xët
+	Page Down	xët wi wàcci
+	Page image (*.jpg, *.jpeg)	Nataalu xët (*.jpg, *.jpeg)
+	Page image (*.png)	Nataalu xët (*.png)
+	Page Movement	Xët buy yëngu
+	Page Number	Nimero xët
+	Page number style	Stilu nimero xët
+	Page numbers at the right margin	Nimero xët yi ci marge bu ndeyjoor bi
+	Page on which a bookmarked passage falls	Xët wi benn pàcc buñu def bookmark daanu
+	Page Setup	Tabb xët
+	Page title	Titre xët wi
+	Page Up	Xët wi yéeg
+	Page Width	yaatuwaayu xët wi
+	Page width	yaatuwaayu xët wi
+	Page X of Y	Xëtu X bu Y
+	Page {page}	Xët {page}
+	Page {page} of {pages}	Xët {page} de {pages}
+	Page\nBorders	Xët\nFrontiere
+	Page\nColor	Xët\nKulòor
+	Page\nNumber	Xët\nNimero
+	Pages	Xëti
+	Pages like 1-3, 5	Xët yu melni 1-3, 5
+	Pages of bookmark:	Xëti bookmark yi:
+	Paragraph	paragraf
+	Paragraph Character	Arafu paragraf
+	Paragraph Details	Ay leeral ci paragraf
+	Paragraph Down	paragraf ci suuf
+	Paragraph Mark	Màrku paragraf
+	Paragraph marks	Màrku paragraf
+	Paragraph Settings	Jekkal paragraf
+	Paragraph Spacing	Diggante ay paragraf
+	Paragraph style	Xeetu paragraf
+	Paragraph Up	paragraf ci kaw
+	Paragraphs	Paragraf
+	Paragraph…	paragraf…
+	Parentheses	Paranteis
+	Parentheses with Separator	Paranteis ak tàqalekaay
+	Partial Differential	Differensiaal bu xaaj
+	Password	Baatu-jàll
+	Password:	Baatu-jàll:
+	Paste	Teg
+	Paste All	Teg lépp
+	Paste as:	Teg ni:
+	Paste Clipboard Item	Teg mbir ci clipboard
+	Paste Formatting	formatage
+	Paste Special	Teg Special
+	Paste Special…	Teg Special…
+	Paste Spike	Teel Spike
+	Paste: Keep Text Only	Teg: Denc mbind kese
+	Paste: Merge Formatting	Tekk: Boole formatage
+	Pasting between documents:	Teg ci diggante këyit yi:
+	Pasting from other programs:	Yooyu ci yeneen prograam:
+	Pasting within the same document:	Teg ci benn këyit:
+	Pause	Noppalu
+	Paused	Noppalu
+	PDF document (*.pdf)	Këyitu PDF (*.pdf)
+	Pen	Bik
+	Pencil	Crayon
+	Pens	Bik
+	People	Nit ñi
+	Periodical	Jamono
+	Personalize	Personalisé
+	Phonetic Guide	Gitu fonetik
+	Pi Over 2	Pi Lu ëpp 2
+	Picas	Picas
+	Pick a custom group (New Group makes one)	Tannal benn groupe boo bëgg (Groupe bu bees bi dafay defar benn)
+	Pick a field from the list	Tannal benn barab ci lim bi
+	Picture	Nataal
+	Picture Border	Bordure nataal
+	Picture Content Control	Kontrolu ëmbiitu nataal
+	Picture Format	Format nataal
+	Picture Styles	Xeetu Nataal
+	Pictures	Nataal
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Nataal yu bawoo ci Openverse. Jox cër lisaas bu nataal bu nekk: Doc4Me dafay yokk benn liiñu kredi ci suufa nataal bi.
+	Pie	Pie
+	Placeholder Name	Tur barab
+	Placeholder text	Bindu barab
+	Plain Table 1	Tablo 1
+	Plain text (*.txt)	Bind bu leer (*.tekst)
+	Plain Text Content Control	Kontrolu ëmbiitu bind bu leer
+	Play	jouer
+	Play Video	Def wideo
+	Play/Pause	Leer/Pause
+	Plus Equal	Yokk Egal
+	Points	Points
+	points and above	poñ ak ci kaw
+	Polish	Polonais
+	Portrait	Nataal
+	Portuguese (Brazil)	Portugais (Brésil)
+	Portuguese (Portugal)	portugais (portugais)
+	Position	Position
+	Position:	Position:
+	Positioning…	positionnement…
+	Possible spelling mistake	Juumte ortograafi bu mëna am
+	Postal Code	Kodu postal
+	Power series of (1+x)ⁿ	Série puissance de (1+x)n
+	Preferred width:	Yaatu giñu taamu:
+	Preserve	Teg
+	Preserve formatting during updates	Fexe formatage bi ngay yeesal
+	Presets	Preset
+	Press a key combination	Bësal benn butoŋu boole
+	Preview	Avant-première
+	Preview Results	Xoolaat Resultaa yi
+	Preview\nResults	Avant-première\nResultaa yi
+	Previous	Bi njëkk
+	Previous 1 or More	bi njëkk wala lu ëpp
+	Previous Change	Coppite bu njëkk
+	Previous Comment	Xalaat bi njëkk
+	Previous Field	Barab bi njëkk
+	Previous Footnote	Footnote bi njëkk
+	Previous Page	Xët wi weesu
+	Previous Record	Enregistrement bi njëkk
+	Previous Section	Wàll wi weesu
+	Previous Sentence	Frase bi njëkk
+	Previous sentence	Phrase bi njëkk
+	Previous Window	Palanteer bi njëkk
+	Print	Imprimeer
+	Print blank lines when data fields are empty	Imprimeel ligne yu amul dara sudee barabu done yi amul dara
+	Print Documents	Imprime ay këyit
+	Print Documents…	Imprime ay këyit…
+	Print failed: {error}	Imprime bi lajj: {error}
+	Print Layout	Layout imprimeer
+	Print Markup	Markup imprimeer
+	Print the page color	Imprimeel melo xët wi
+	Print to PDF	Imprimeel ci PDF
+	Print\nLayout	Imprimeer\nLayout
+	Printer	Imprimante
+	Printing	Imprime
+	Process	Doxalin
+	Product	Produit
+	Product of A	Produit bu A
+	Product with Limits	Produit bu am ay yamaleg
+	Product with Lower Limit	Produit bu am àpp bu gëna ndaw
+	Product with Subscript-Superscript Limits	Produit bu am ay yamaleg Abonnement-Superscript
+	Products and Coproducts	Produit yi ak coproduit yi
+	Professional	Liggéeykat
+	Promote	Fàral
+	Promote to Heading 1	Yokk ci Boppu 1
+	Proofing	Revistasioŋ
+	Proofing Issues	Jafe-jafe yiy saytu
+	Proofing language	Làkku gëstu
+	Properties	Moomeel yi
+	Protect	Aar
+	Protect Document	Aar këyit
+	PRs	PRs
+	pt	pt
+	Publisher	Siiwalkat
+	Punctuation	Punksioŋ
+	Put the caret in a content control first.	Tegal caret bi ci biir kontre ëmbiit li njëkk.
+	Put the default commands back on the Quick Access Toolbar?	Delloosi komand yiñ jagleel ci Toolbar Access Gaaw?
+	Pyramid	Piramid
+	Quadratic Root	Rasin kwadratik
+	Query Options…	Tànneefi laaj…
+	Quick Access Toolbar	Barabu jumtukaayu dugg bu gaaw
+	Quick Parts	Piyees yu gaaw
+	Quick Tables	Tablo yu gaaw
+	Quote	Sitaasioŋ
+	Radical	Radikal
+	Radical with Degree	Radikal ak Diplôme
+	Radicals	Radikal yi
+	Raised/lowered	Yékkati/wàcci
+	Read Aloud	Lire ak baat bu kawe
+	Read Aloud couldn't start the speech program: {reason}	Liggéey ci kàddu yu kawe mënu tàmbali prograamu wax ji: {reason}
+	Read Aloud couldn't start: {reason}	Lire Aloud mënu tàmbali: {reason}
+	Read Aloud isn't available in the browser	Liggéey ci kàddu yu kawe amul ci nawigatër bi
+	Read Aloud Status	Liir ak kàddu yu kawe Status
+	Read Aloud stopped: {reason}	Liggéey ci kàddu yu kawe dafa taxaw: {reason}
+	Read Mode	Modu lire
+	Read\nAloud	Liir\nKawe
+	Read\nMode	Liir\nMode
+	Reading	Jàng
+	Reading Column Width	Liggéeyukaay kolon
+	Reading Highlight	Liggéey bu am solo
+	Reading Line Spacing	Liggéey ci diggante liiñ yi
+	Reading Mode	Modu jàng
+	Reading Speed	Gaawaayu jàng
+	Reading Text Size	Dayo Tekst bi ñuy jàng
+	Reads the clipboard's rich text and keeps its formatting.	Dafay jàng mbind yu bari yi ci clipboard bi ba noppi tëye formaatam.
+	Reads the clipboard's web content and keeps its formatting.	Dafay jàng ëmbiitu clipboard bi ba noppi tëye formaatam.
+	Real name	Tur dëgg
+	Recent	Bu yàggul dara
+	Recent Colors	Kulòor yu bees
+	Recent documents to show:	Këyit dañuy wane:
+	Recently used symbols:	Màndarga yiñ jëfandikoo bu yàggul:
+	Recipient List	Limu ñiy jot
+	Recipient lists	Limu ñiy jot
+	Recipients: {count}	Ñi koy jox: {count}
+	Recognized (you can correct it):	Xam nañu ko (mën nga ko seet):
+	Recognized Functions	Fonction yiñ xàmmee
+	Recognized Functions…	Fonction yiñ xàmmee…
+	Recolor a one-color picture, such as an icon	Melokaan nataal bu am benn melo, lu melni ikon
+	Recolor Selected Ink	Recolor Encre sélectionné
+	Record Macro	Enregistre macro
+	Recover Unsaved Documents	Delloosi këyit yiñ denc
+	Rectangle	Réctangle
+	Red:	Red:
+	Redo	Defaat
+	Reduce Hanging Indent	Wàññil indent buy tëdd
+	References	Royuwaay
+	Reflection	Xalaat
+	Refresh	Yeesal
+	Registered	Bindu
+	Registered Sign	Màndarga buñ bind
+	Regular expressions	Expression régulier
+	Regulations	Reglement
+	Reject	Bañ
+	Reject All	Bañ lépp
+	Reject All Changes	Bañ bépp coppite
+	Reject Change	Bañ coppite
+	Relationship	Relation
+	relative to	relatif ci
+	Relative to:	Lu jëm ci:
+	Relaxed	Relaxé
+	Remove	Dindi
+	Remove Added Font	Dindi font biñ yokk
+	Remove Background	Dindi ginaaw
+	Remove Content Control	Dindi ëmbiit li
+	Remove every custom shortcut and restore the built-in keys?	Dindi bépp gaawaay buñ jagleel ba noppi defaraat butoŋu yiñ tabax ci biir?
+	Remove every custom tab and group and show all tabs again?	Dindi bépp onglet ak groupe buñ jagleel te wanewaat onglet yépp?
+	Remove field	Dindi barab bi
+	Remove Field Name	Dindi Tur barab bi
+	Remove Footer	Dindi Footer
+	Remove from Quick Access Toolbar	Dindi ci Toolbar Access Gaaw
+	Remove Header	Dindi boppu bi
+	Remove Hyperlink	Dindi lëkkalekaay bi
+	Remove Password	Dindi baatu-jàll
+	Remove Pen	Dindi Bik bi
+	Remove Positioning	Dindi positionnement
+	Remove recipient	Dindi ki koy joxe
+	Remove row	Dindi liiñ bi
+	Remove series	Dindi seeri yi
+	Remove Space After Paragraph	Dindil bayaal ci ginaaw paragraf
+	Remove Table of Contents	Dindi ëmbiit li
+	Remove the control once edited	Dindil doxalal bi benn yoon buñu ko soppali
+	Remove the space before the punctuation	Dindil barab bi laata ponksioŋ bi
+	Remove Watermark	Dindi filigran
+	Rename Style	Soppi tur stil
+	Rename…	Soppi tur…
+	Reopen	Ubbiwaat
+	Repeat	Baamtu
+	Repeat as header row on each page	Baamtu ko ni boppu liiñ ci xët bu nekk
+	Repeat Header Rows	Baamtu liiñ yi
+	Repeated words	Baatu yu ñuy baamtu
+	Repeating Section Content Control	Baamtu wàll Kontrolu ëmbiitu
+	Replace	Wecci
+	Replace All	Wecci lépp
+	Replace as you type	Wecci sooy bind
+	Replace Document Text	Wecci mbindu këyit
+	Replace text as you type	Wecci mbind mi ngay bind
+	Replace with:	Wecci ko ak:
+	Replace:	Wecci:
+	Replay	Delloosi
+	Reply	Tontu
+	Report	Rapport
+	Research	Gëstu
+	Researcher	Gëstukat
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Gëstukat bi soxla na ab serwiis ci net bi; Doc4Me dafay tëye say këyit ci net bi.
+	Reset	Reset
+	Reset All	Reset lépp
+	Reset All…	Reset lépp…
+	Reset Character Formatting	Reset formatu araf yi
+	Reset Crop	Reset dagg
+	Reset Graphic	Reset Grafik
+	Reset Paragraph Formatting	Reset formatu paragraf
+	Reset Picture	Reset nataal
+	Reset to Normal	Reset ci Normal
+	Reset\nGraphic	Reset\nGrafik
+	Reset…	Reset…
+	Resize Table by Dragging	Soppi dayo tablo bi ci diri
+	Resolve	Faj
+	Resolved	saafara nañu ko
+	Restart at 1	Tambaliwaat ci 1
+	Restart Each Page	Tambaliwaat xët bu nekk
+	Restart Each Section	Tambaliwaat wàll wu nekk
+	Restart list after:	Tambaliwaat limu ginaaw:
+	Restore	Defaraat
+	Restore Defaults	Delloosi liñ jagleel
+	Restore Down	Defaraat ci suuf
+	Restore to Normal Word Document	Delloosi ci këyitu Word bu yàgg
+	Restrict Editing	tënk soppali
+	Restrict\nEditing	tënk\nSoppali
+	Result	Resultaa
+	Results	Resultaa yi
+	Return address labels	Delloosi etiketu adres yi
+	Return address:	Adres bi ngay delloo:
+	Reverse the order	Delloosi yoon wi
+	Review	Xoolaat
+	Review AutoFormat Changes	Xoolaat coppite yi am ci format otomatik
+	Review Changes…	Xoolaat coppite yi…
+	Reviewing	Xoolaat
+	Reviewing Pane	Panelu xoolaat
+	Reviewing — edits become suggestions	Xoolaat — soppali yi nekk nañu ay xalaat
+	Revised document	Këyit buñ xoolaat
+	Revisions	Xoolaat yi
+	Rewind	Rebobinage
+	Ribbon	Ruban
+	Ribbon and Quick Access Toolbar:	Ruban ak barabu jumtukaayu jëfandikoo gu gaaw:
+	Ribbon tabs	Onglet ruban
+	Rich Text Content Control	Kontrolu ëmbiitu bind bu am solo
+	Rich Text Format (*.rtf)	Format Teks Riche (*.rtf)
+	Rich Text Format (RTF)	Format bind bu am solo (RTF)
+	Right	Ndeyjoor
+	Right (vertical)	Ndeyjoor (takk)
+	Right align page numbers	Nimero xët yi nga jubal ci ndeyjoor
+	Right Arrow with Text Above	Fett bu ndeyjoor ak mbind ci kaw
+	Right Arrow with Text Below	Fett bu ndeyjoor ak mbind ci suuf
+	Right Border	Frontière bu ndeyjoor
+	Right border	Frontiere bu ndeyjoor
+	Right Bracket Twice	Bracket bu ndeyjoor ñaari yoon
+	Right indent	Indent bu ndeyjoor
+	Right Margin	Marge bu ndeyjoor
+	Right Only	Dëgg rek
+	Right only	Dëgg rek
+	Right-to-left	Ndeyjoor-cammoy
+	Right-to-Left Section	Seksioŋ bu ndeyjoor ba cammoy
+	Right-to-Left Table	Tablo bu ndeyjoor ba cammoy
+	Right-to-Left Text Direction	Jubluwaayu bind bu ndeyjoor ba cammoy
+	Right:	Ndeyjoor:
+	Rightwards Arrow Above	Fett bu ndeyjoor bi ci kaw
+	Rightwards Harpoon Above	Harpoon ci ndeyjoor ci kaw
+	Roots of ax²+bx+c	Racine de ax2+bx+c
+	Rotate	wëlbati
+	Rotate all text 270°	wëlbati mbind yépp 270°
+	Rotate all text 90°	wëlbati mbind yépp 90°
+	Rotate Left 90°	wëlbatiku ci cammoy bi 90°
+	Rotate Right 90°	wëlbatiku ci ndeyjoor 90°
+	Rotation	wëlbatiku
+	Rotation:	Rotaasioŋ:
+	Rounded Rectangle	Rektangul bu rond
+	Row	Raŋ
+	Row:	Row:
+	Rows & Columns	Liggéey ak Kolon
+	Ruby text:	Bindu Ruby:
+	Ruler	Regle
+	Rules	Regle
+	Run	Daw
+	Run-in	Dawal
+	Russian	Russe
+	Résumé	CV
+	Same as the whole table	Noonu la taabal bi yépp
+	SAMPLE	MISAL
+	Sat:	Samdi:
+	Save	Sanc
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Sanc benn kopi ci beneen formaa. Imprimeer dafay jaar ci PDF boo mëna imprimeer ci bépp seetaankat.
+	Save As	Sanc ni
+	Save as Template	Sanc ni modèle
+	Save documents	Sanc këyit
+	Save the document to turn on AutoSave	Sanc dokimaa ngir taal Sanc sa bopp
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Sanc dokimaa ngir taal AutoSave (fichier bi nga ubbi rek duñu ko binndaat ba nga ko sanc)
+	Save these pages as PDF…	Sanc xët yii ni PDF…
+	Save Version	Sanc wersioŋ bi
+	Saved	Dañu ko denc
+	Scale	Eskale
+	Scale Drawing	Dessin à échelle
+	Scatter	Tasaaroo
+	Screen Clipping	Dagg ekraŋ
+	Screen clipping didn't work: {reason}	Dagg ekraŋ bi doxul: {reason}
+	Screen clipping ended without a picture.	Dagg ekraŋ bi jeexna te amul nataal.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Dagg ekraŋ amul fii. Kopieel nataalu ekraŋ bi nga paste ko.
+	Screenshot	Nataalu ekraŋ
+	Script	Script
+	Scripts	Skript
+	Scroll ribbon left	Ruban scroll ci cammoy bi
+	Scroll ribbon right	Dellu ci liiñ bi ci ndeyjoor
+	Search	Seetal
+	Search Commands	Seetug ndigalu
+	Search commands and help	Seetal ndigal ak ndimbal
+	Search document	Seetlu këyit
+	Search for templates	Seetal ay template
+	Search icons	Seetal ay ikonu
+	Search Openverse (Creative Commons pictures)	Seetal Openverse (Nataali Créative Commons)
+	Search Options	Tànneefi seetlu
+	Searching…	Seetug…
+	Secant Function	Fonction Secant
+	Section Break	Taxawam xaaj
+	Section Breaks	Dakkal wàll
+	Section Character	Karaktëru wàll
+	Section direction:	Njàngalem wàll wi:
+	Section Mark	Màrku wàll
+	Section Properties	Màndarga yi ci wàll wi
+	Sections	Wàll yi
+	See	xoolal
+	Select	Tannal
+	Select a picture, shape, chart or table to describe it.	Tannal benn nataal, jëmm, tablo wala tablo ngir leeral ko.
+	Select All	Tannal lépp
+	Select Cell	Tannal selil
+	Select Floating Shapes	Tannal jëmm yuy féey
+	Select Heading and Content	Tannal Boppu ak Ëmbiit
+	Select Line	Tannal liiñ
+	Select Objects	Tannal mbir
+	Select Paragraph	Tannal paragraf
+	Select Range	Tannal Range
+	Select Recipients	Tannal Jotkat yi
+	Select recipients first to choose from their fields.	Tannal jotkat yi nga njëkka tànnee ci seeni barab.
+	Select recipients first to match their fields.	Tannal njëkk jotkat yi méngoo ak seeni barab.
+	Select Row	Tannal liiñ
+	Select Sentence	Tannal santaane
+	Select Table	Tannal Tablo
+	Select Text	Tannal Mbind
+	Select text in the document to translate it.	Tannal mbind mi nga bëgga tekki ci këyit bi.
+	Select Text with Similar Formatting	Tannal Mbind mu am formaasu noonu
+	Select text, then tick who can still edit it.	Tannal mbind mi, nga daal di rëdd kan moo ko mëna soppali.
+	Select the part of the screen to insert.	Tannal wàll wi nga bëgga dugal ci ekraŋ bi.
+	Select Word	Tannal Word
+	Select\nRecipients	Tannal\nKiy jot
+	Selected Fields	Barab yiñ tànn
+	Selected pages	Xëti tànneef
+	Selection	Tanneef
+	Selection Pane	Panelu tànneef
+	Send Backward	Yonnee ci ginaaw
+	Send the document straight to the system print dialog, or save a copy in another format below.	Yonnee dokimaa ci saasi ci dialog impression sistem bi, wala nga denc benn kopi ci beneen formaa ci suuf.
+	Sentence	frase
+	Sentence case.	Cas frase.
+	Separator:	Tàqalekat:
+	Sequence name:	Turu toppalante bi:
+	Serbian	Serbe
+	Serbian (Cyrillic)	Serbe (Sirilik)
+	Serbian (Latin)	Serbe (Latin)
+	Series name	Turu série bi
+	Series {n}	Série {n}
+	Server address (https://…)	Adres serwër (https://…)
+	Set	Set
+	Set As Default	Defal ko ni default
+	Set as Default	Defal ko ni default
+	Set Caret	Def Caret
+	Set Character Formatting	Defar formataasu araf yi
+	Set Date	Defal Bisu
+	Set Equation	Def equation
+	Set Numbering Value	Defal valeur nimero
+	Set Paragraph Formatting	Defar formataasu paragraf
+	Set Proofing Language…	Defar làkku korreksioŋ…
+	Setting:	Jekkal:
+	Settings…	Jekkal…
+	Shading	Ombre
+	Shadow	lëndëm
+	Shadow, glow and soft edges	lëndëm, leer ak boor yu nooy
+	Shape Effects	Efe jëmm
+	Shape Fill	Feesal jëmm
+	Shape Format	Format jëmm
+	Shape Outline	Formu kontur
+	Shape Styles	Xeetu jëmm
+	Shapes	Form yi
+	Share	Séddoo
+	Sheet:	Fiche:
+	Shift cells down	Toxal selil yi ci suuf
+	Shift cells right	Toxal selil yi ci ndeyjoor
+	Shift+Tab	Shift+Tab
+	Shipping labels	Etiketu yobbu
+	Short citation:	Citation bu gàtt:
+	Shortcut key:	Butoŋu gaawaay bi:
+	Show	Wone
+	Show all formatting marks	Waneel màrku formataas yépp
+	Show All Levels	Waneel niveau yépp
+	Show all revisions inline	Waneel bépp coppite ci liiñ bi
+	Show changes at:	Waneel coppite yi ci:
+	Show changes in:	Waneel coppite yi ci:
+	Show Comments	Wane ay komànteer
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Wane dokimaa yu am melo yuñ soppi, lu melni Xool › Soppi Mode. Dañuy denc, imprime ak PDF yi soppiku ñu.
+	Show every bibliography field	Waneel bépp barabu bibliografi
+	Show First Line Only	Waneel liiñ bu njëkk bi kese
+	Show in the Styles gallery	Waneel ci galëri stil yi
+	Show KeyTips (Alt or F10)	Waneel ay tegtal (Alt wala F10)
+	Show Level	Wane Niveau
+	Show Level 1	Wane Niveau 1
+	Show Level 2	Wane Niveau 2
+	Show Level 3	Waneel Niveau 3
+	Show Level 4	Wane Niveau 4
+	Show Level 5	Wane Niveau 5
+	Show Level 6	Wane Niveau 6
+	Show Level 7	Wane Niveau 7
+	Show Level 8	Wane Niveau 8
+	Show Level 9	Wane Niveau 9
+	Show Markup	Wane Markup
+	Show Notes	Wane ay notu
+	Show only comments and formatting in balloons	Waneel lenn ludul komànteer yi ak formaa yi ci balon yi
+	Show or Hide Style	Waneel wala nëbb stil
+	Show page numbers	Waneel nimero xët yi
+	Show revisions in balloons	Waneel coppite yi ci balon
+	Show rulers	Waneel regle yi
+	Show Text Formatting	Wane formataasu mbind mi
+	Show the equation in the line of text	Waneel equation bi ci liiñ bi
+	Show the equation on a line of its own	Waneel equation bi ci ligne boppam
+	Show the mini toolbar when text is selected	Waneel baraabu jumtukaay bu ndaw bi soo tànnee mbind
+	Show/Hide ¶	Wane/Nëbb ¶
+	Show\nComments	Wone\nXalaat
+	Showing the first {count} items.	Dafay wane li njëkk {count} ay mbir.
+	Shows a tree: each item below the item it belongs to.	Dafay wane garab: mbir mu nekk ci suufu mbir mi mu bokk.
+	Shows items around a central idea: the first item is the centre.	Dafay wane mbir yu wër xalaat bu mag bi: mbir mi njëkk mooy digg bi.
+	Shows items of equal weight as blocks in rows.	Dafay wane mbir yu tolloo diisaay ni ay blok ci rang.
+	Shows overlapping ideas as overlapping circles.	Dafay wane xalaat yuy jaxasoo ni cercle yuy jaxasoo.
+	Shows parts of a whole as quadrants.	Dafay wane pàcci mbir mu mat ni quadrants.
+	Shows parts that build on each other, largest at the bottom.	Dafay wane wàll yi tabax seen biir, li gëna mag ci suufa suuf.
+	Shows steps in order, left to right, with arrows between them.	Dafay wane jéego yi ñu toppalante, cammoñ dem ndeyjoor, amaale ay fett ci seen biir.
+	Shows steps that repeat, around a circle.	Dafay wane jéego yuy baamtu, ci wër ab wërngël.
+	Shrink Font 1 Point	Font bu ndaw 1 poñ
+	Shrink Selection	Tanneef bu ndaw
+	Shrink text	Wàññi mbind mi
+	Side to Side	genn wet ci genn wet
+	Side\nto Side	Side\nci wet gi
+	Sides of a right triangle	Side yu triangle bu jub
+	Signature Line	Liiñ bu siife
+	Sine and cosine series of f(x)	Série sinus et cosinus de f(x)
+	Sine Function	Fonction sinus
+	Sine theta	Teta sinusoidal
+	Single	Ku sësul
+	Single Brackets	benn parenthèse
+	Single Closing Quote	Benn devis buy tëj
+	Single label	Benn etiketu
+	Single Left Angle	Benn Angle Gauche
+	Single Left Bar	Benn bar bu cammoy
+	Single Left Brace	Benn brace cammoy
+	Single Left Bracket	Benn bracket bu cammoy
+	Single Left Parenthesis	Benn paranteis bu cammoy
+	Single Opening Quote	Benn sitaasioŋ ubbite
+	Single Right Brace	Benn brace bu ndeyjoor
+	Single Right Bracket	Benn bracket bu ndeyjoor
+	Single Right Parenthesis	Benn paranteis bu ndeyjoor
+	Single Spacing	Benn bayaal
+	SIST02	SIST02
+	Site name	Turu sitweb bi
+	Size	Dayo
+	Size (pt):	Dayo (pt):
+	Size and Crop…	Dayo ak dagg…
+	Size:	Dayo:
+	Sketchbook	Livre de croquis
+	Skewed Fraction	fraction skewed
+	Skip citations & bibliography	Jubal ci sitaasioŋ yi ak bibliografi
+	Skip Citations and Bibliography	Jubal ci sitaasioŋ yi ak bibliografi
+	Skip Record If	Jubal enregistrement sudee
+	Skip Record If…	Jubal enregistrement sudee…
+	Slant Down	Slant Down
+	Slant Up	Slant Up
+	Small Caps	Caps yu ndaw
+	Small caps	Caps yu ndaw
+	Small change	Coppite bu ndaw
+	Smart quotes instead of straight quotes	Sitaasioŋ yu am xel du sitaasioŋ yu jub
+	SmartArt	Art bu xarañ
+	SmartArt Design	Design SmartArt
+	SmartArt Styles	Xeetu art yu xarañ
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Défilé ak zoom bu neex, ak menus ak butoŋu fade in. Off dafay wane coppite bu nekk ci saasi.
+	Soft Edges	Boor yu nooy
+	Soft Glow	Glow bu woyof
+	Solid Accent	Accent bu dëgër
+	Sort	Sort
+	Sort by	Tàngale ci
+	Sort order:	Raññeel:
+	Sort Records	Tànn dokimaa
+	Source code: github.com/chatraweechai/doc4me	Kodu jëmmal:
+	Source Manager	Responsable Source
+	Source type:	Xeetu cosaan:
+	Sources in this document:	Boroom këyit bii:
+	South	Sud
+	Space	Espace
+	Space after	Espaas ginaaw
+	Space after: {pt} pt	Barab ginaaw: {pt} pt
+	Space before	Espaas balaa
+	Space before/after:	Espace balaa/ganaw:
+	Space before: {pt} pt	Barab balaa: {pt} pt
+	Spaces	Espace
+	Spacing	Diggante
+	Spacing (pt):	Diggante (pt):
+	Spacing:	Diggante:
+	Spanish	Español
+	Spanish (Mexico)	Español (Mexique)
+	Spanish (Spain)	Español (Espagne)
+	Sparse Matrices	Matriks yu néew doole
+	Special	Espesiaal
+	Special Characters	Personaas yu amul fenn
+	Specify height:	Mandargal kawewaay:
+	Speech	Kaddu
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	Ordinatër bii dafay xàmmee kàddu yi (whisper.cpp); duñu yonne dara ci net bi.
+	Speed	Gaawaay
+	Spelling	Ortograafi
+	Spelling & Grammar	Ortograafi ak Grammaire
+	Spelling &\nGrammar	Ortograafi &\nGrammaire
+	Spelling and grammar are checked in English (United States).	Ortograafi ak grammer lañuy saytu ci Àngle (Etats Unis).
+	Spelling Suggestions	Digle ci ortograafi
+	Spike	Spike
+	Split	Xaajale
+	Split apart page break and paragraph mark	Xaajaleel xët wi ak màrku paragraf bi
+	Split Cells	Xaajale selil yi
+	Split Table	Tablo xaaj
+	Spreadsheet Table	Tablo këyitu xayma
+	Square	Kaare
+	Square Root	Racine carrée
+	Square Root with Degree	Racine carrée ak degre
+	Square Union	Union carrée
+	Stack Object	Objet stack
+	Stack Object (Three)	Objet stack (ñett)
+	Stacked	ñu dajale
+	Stacked Bar	Bar buñ dajale
+	Stacked Column	Kolon buñ dajale
+	Stacked Fraction	fraksioŋ buñ dajale
+	Stacked, no bar	ñu dajaloo, amul barab
+	Standard	Standard
+	Standard and Contextual	Standard ak muy tekki
+	Standard Colors	Kulòor yiñ miin
+	Standard Only	Standard kese
+	Star	Biddéew
+	Start at:	Tàmbalil ci:
+	Start Enforcing Protection	Tambalil Aar
+	Start Mail Merge	Tambalil boole Mail
+	Start Mail\nMerge	Tambali Mail\nboole
+	State	Etat
+	Statement   5.50" × 8.50"	Déklarasioŋ 5,50" × 8,50"
+	Statistics	lim
+	Status Bar	Bar de statut
+	Statutes	Statut
+	Stop	Taxawal
+	Stop Protection	taxawal aar
+	Stop Reading	Bàyyi jàng
+	Stopped	taxaw
+	Store	Màngasin
+	Straight Arrow Connector	Konektëru fett bu jub
+	Straight Connector	Konektër bu jub
+	Strikethrough	Jaar ci
+	Stroke {n} of {total}	AVC {n} de {total}
+	Strong	Dëgër
+	Structure Actions	Jëfi jumtukaay
+	Structures	jumtukaay
+	Studio	Studio
+	Studio cover	Couverture studio
+	Studio handbook (sample)	Manuel de studio (exemple)
+	Style	Style
+	Style based on:	Style bu sukkandiko ci:
+	Style Inspector	inspectër stil
+	Style Set	Set stil
+	Style:	Style:
+	Style: APA	Xeetu: APA
+	Style: {style}	Style: {style}
+	Styles	Styles
+	Styles Pane	Panelu stil
+	Styles:	Stil yi:
+	Subentry:	Subentry:
+	Subject	Sujet
+	Subscript	Abone
+	Subscript-Superscript	Abonne-Superscript
+	Subscripts and Superscripts	Abonnement yi ak superscript yi
+	Subset:	Sous-ensemble:
+	Substituted font	Font buñ wecci
+	Subtitle	Sous-titre
+	Subtle Emphasis	Tegtal bu woyof
+	Subtle Reference	Royuwaay bu woyof
+	Sum	Sum
+	Sum of cosines	Tolluwaayu kosin yi
+	Sum or difference of sines	Tolluwaayu wala wuute ci sinus yi
+	Summation	Résumé
+	Summation from 0 to n	Somme de 0 à n
+	Summation over binomials	Résumé ci kaw binomial
+	Summation with Limits	Résumé ak ay limit
+	Summation with Lower Limit	Sommage ak yam bu gëna suufe
+	Summation with Subscript Limit	Résumé ak Limite Abone
+	Summation with Subscript-Superscript Limits	Résumé ak ay yamaleg Abonnement-Superscript
+	Summations	Résumé
+	Superscript	Supskript
+	Suppress line numbers	dindi nimero liiñ yi
+	Surface Integral	Intégral ci kaw suuf
+	Surface Integral with Limits	Integral bu am surface ak ay yam
+	Surface Integral with Stacked Limits	Integral surface ak ay limit yuñ dajale
+	Swap footnotes and endnotes	Weccoo notu suuf ak notu njeexte
+	Swedish	Suédois
+	Switch Modes	Coppite ci anam yi
+	Switch Windows	Soppi Windows
+	Switch\nModes	wecci\nModes
+	Symbol	màndarga
+	Symbol Font	Font màndarga
+	Symbols	Mandarga
+	Synchronous Scrolling	Défilement sinkron
+	Synonyms	Sinonim
+	System	Sistem
+	Tab	Tab
+	Tab Character	Arafu tab
+	Tab character	Karaktër tab
+	Tab characters	Arafu onglet
+	Tab leader:	Njiitu lëkkalekaay bi:
+	Tab stop position:	Position arrêt de onglet:
+	Tab stops to be cleared:	Tab dafay taxaw ngir fomp:
+	Table	Tablo
+	Table AutoFormat	Format otomatik tablo
+	Table AutoFormat…	Format otomatik tablo…
+	Table Column Width	Yaatu kolon tablo
+	Table Design	Design taabal
+	Table direction:	Jubluwaay taabal ji:
+	Table entry fields	Barabi dugal tablo
+	Table Grid	Tablo Griy
+	Table identifier:	Xammekaayu tablo bi:
+	Table Layout	Xeetu taabal
+	Table of Authorities	Tablo kilifa yi
+	Table of Contents	Ëmbiit li
+	Table of Contents Options	Tànneefi ëmbiit li
+	Table of Contents Styles	Tablo ëmbiit li
+	Table of Figures	Tablo lim yi
+	Table of Figures Options	Tablo tànneefi lim yi
+	Table of\nContents	Tablo\nËmbiit li
+	Table Positioning	Tablo bi
+	Table Properties	Màndarga tablo
+	Table Row Height	Hauteur de la ligne du table
+	Table style	Xeetu taabal
+	Table Style Options	Tànneefi xeetu tablo
+	Table Styles	Xeetu taabal
+	Table styles:	Xeetu taabal yi:
+	Tables	Tablo
+	Tabloid   11.00" × 17.00"	Tabloid 11.00" × 17.00"
+	Tabs	Onglet
+	Tabs…	Onglet…
+	Tabular List	Limu tablo
+	Tag	Tag
+	Tangent formula	Formul tangent
+	Tangent Function	Fonction tangent
+	TC entry fields	TC duggal
+	Technology	Xarala yu bees
+	Templates	Modèle
+	Templates and Add-ins	Modèle ak yokk-yokk
+	Text	Text
+	Text Box	Box Texte
+	Text boxes	Box de text
+	Text Direction	Jubluwaayu mbind mi
+	Text Effects	Efe mbind
+	Text Effects and Typography	Efe bind ak tipograafi
+	Text Fill	Feesal mbind
+	Text from File	Text bu bawoo ci fichier
+	Text Highlight Color	Kulòoru teralinu mbind
+	Text indent at:	Bind bi ci:
+	Text isn't squeezed to fit its cell yet.	Ba leegi tëragul mbind mi ngir mu mëna ànd ak selil bi.
+	Text Outline	Text bi
+	Text over Colon Equal	Text ci kaw ñaari poñ
+	Text over Equal	Text ci kaw Equal
+	Text Pane	Panelu Teks
+	Text size	Dayo mbind mi
+	Text snaps to characters	Text dafay jëm ci araf yi
+	Text to display:	Mbind mi ñuy wane:
+	Text Wrapping	Enveloppement de text
+	Text wrapping:	Enveloppement de text:
+	Text:	Text:
+	Text\nBox	Text\nBox
+	Text\nDirection	Text\nJubluwaay
+	Thai	Thai
+	Thai Distributed	Thai ñu séddale
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Format boobu du denc lépp, moo tax këyit bi dafay ubbeeku ba leegi. Sanc ko ci këyitu Word (.docx) ngir mëna dem.
+	That isn't the web address or embed code of an online video.	Loolu du adres web wala kodu wideo ci net bi.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Baatu-jàll boobu jaarul yoon. Saytu ko (baatu-jàll yi dañuy xàmmee arafu mag ak yu ndaw) nga jéemaat.
+	The clipboard is empty.	Clipboard bi amul dara.
+	The date it is today	Bis la tay
+	The document contains no tracked changes.	Dokument bi amul benn coppite buñu topp.
+	The document has no bookmarks yet.	Ba leegi këyit bi amagul ay bookmark.
+	The document is read only, except for regions marked editable.	Këyit dañuy jàng rek, lu ci dess ci gox yiñ màrkee ni mën nañu ko soppali.
+	The document will be saved with a password. Save it to protect it.	Dina ñu denc këyit bi ak baatu-jàll. Sanc ko ngir aar ko.
+	The first word of a sentence starts with a capital.	Baatu njëkk ci frase dafay tàmbali ci araf bu mag.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	ndimbal luñu la jox bis bu nekk jeexna (jéemaat suba bi, wala nga joxe ab adres email)
+	the LibreTranslate server	serwëru tekki Libre bi
+	The Mail Merge Helper sets up a merge in three steps.	Ndimbalu boole mail dafay defar boole ci ñatti jéego.
+	The new style takes the formatting of the current paragraph.	Style bu bees bi dafay jël formaasu paragraf bi fi nekk.
+	The password is optional; without it anyone can stop the protection.	Baatu-jàll bi mën nga ko tànn; ku ko amul, kenn mënul dakkal aar gi.
+	The password is removed. Save the document to keep the change.	Baatu-jàll bi dindi nañu ko. Sanc këyit bi ngir denc coppite yi.
+	The passwords don't match.	Baatu-jàll yi méngoo wuñu.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	Imprimante bi, imprime bi am ñaari wetu ak xët yi ci këyit bu nekk lañuy tànnee ci dialog bi.
+	The recipient-list field that fills each part of an address block and greeting line.	Limu jotkat yi nga xamni mooy feesal wàll wu nekk ci bloku adres bi ak liiñu nuyoo bi.
+	The same word twice in a row.	Benn baat bi ñaari yoon yu toppalante.
+	The spelling and grammar check is complete.	Saytu ortograafi ak nàfar matna.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Dialog fichier system bi amul, kon Doc4Me dafay wane boppam. Ngir am dialog sistem bi, dangay samp benn portaalu tànneef fichier (lu melni xdg-portal-desktop-gtk) wala zenity.
+	The text is sent to {service} to be translated.	Dañuy yónnee mbind mi ci {service} ñu tekki ko.
+	The time right now	Leegi mooy waxtu wi
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Wideo bi dafay nuru nataal ci këyit wi. Bësal ci ñaari yoon ngir seetaan ko ci sa nawigatër.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	Këyit yépp dañu koy tekki ci beneen këyit, buy wuutu bii. Njëkkal nga denc sa liggéey.
+	Theme Colors	Kulòoru tema
+	Theme Fonts	Tema Font
+	Theme List	Limu theme
+	Themes	Tem yi
+	Then by	Ginaaw loolu
+	Then insert:	Soo noppee nga dugal:
+	There's no text to translate.	Amul benn mbind buñu wara tekki.
+	Thesaurus	Tesaurus
+	These marks show even when Show/Hide ¶ is off.	Màrk yooyu dañuy wane doonte Show/Hide ¶ dafa dee.
+	These merge fields aren't in the recipient list:	Yii barabi boole nekkul ci limu jotkat yi:
+	These settings will be used for new documents.	Dina ñu jëfandikoo jekkal yii ci këyitu dokimaa yu bees yi.
+	Thick	Dëll
+	Thickness	Yaatu
+	This Device…	aparey bii…
+	This document	Këyit bii
+	This field has no options.	Barab bii amul tànneef.
+	This folder can't be read: {error}	Mënu ñu jàng dosiye bii: {error}
+	This font has no characters to show.	Font bii amul benn araf buñu wara wane.
+	This page	Xët wii
+	This password type isn't supported.	Xeetu baatu-jàll bii mënul ànd.
+	This point forward	Bii poñ ci kanam
+	This section	Wàll wii
+	Three	Ñatt
+	Through	Jaaraleko ci
+	Tight	Seere
+	Tilde	Tilde
+	Tips ({n})	Tips ({n})
+	Title	Titre
+	Title from the document properties	Titre ci màndarga yi ci këyit bi
+	Title:	Titre:
+	To	Ci
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Soo bëggee ubbi këyitu Word ak Doc4Me ci default: tannal benn ci Finder, tannal Fichier › Get Info, tannal Doc4Me ci suufu Ubbi ak, nga bës Soppi lépp.
+	To:	Ci:
+	TOA Heading	Boppu TOA
+	TOC Heading	Boppu TOC
+	TOC {n}	TOC {n}
+	Today	Tay
+	tOGGLE cASE	tOGGLE CASE
+	Toggle Check Box	Baxalal kaada
+	Toggle Field Codes	Bayi Kodu Barab
+	Toggle Unicode Character	Bayi arafu Unicode
+	Tools	Jumtukaay
+	Top	Top
+	Top and Bottom	Ci kaw ak ci suuf
+	Top Border	Frontière bi ci kaw
+	Top Margin	Marge bi gëna kawe
+	Top of Next Page	ci kaw xët wi ci topp
+	Top of Page	ci kaw xët wi
+	Top of Previous Page	ci kaw xët wi weesu
+	Top of the Window	ci kaw palanteer bi
+	Top:	Ci kaw:
+	Total	Total
+	Total Row	Total ligne
+	Track Changes	Topp coppite yi
+	Track Changes Options	Topp tànneefi coppite yi
+	Track changes while editing	Toppal coppite yi ngay soppali
+	Track Changes: On	Coppite yi ci topp: Ci
+	Track formatting	Topp formataasioŋ
+	Track\nChanges	topp\nCoppite
+	Track\nChanges ✓	topp\nCoppite yi ✓
+	Tracked changes	Coppite yiñ topp
+	Tracking	Topp
+	Trademark	Màrk
+	Trademark Sign	Màrku jënd ak jaay
+	Transform	Soppi
+	Translate	Tekki
+	Translate Document	Tekki këyit
+	Translating {done} of {total}	Tekki làkk {done} de {total}
+	Translation service	Tekkikatu làkk
+	Translator	Tekkikatu làkk
+	Transparency	Leer
+	Transparency:	Leer:
+	Transport	Transport
+	Treatises	Traités
+	Triangle	Ñatti kaar
+	Triangle Down	Triangle ci suuf
+	Triangle Up	Triangle ci kaw
+	Trigonometric Functions	Fonction trigonometrik
+	Triple	Ñatti yoon
+	Triple Dot	Ñatti Tombi
+	Triple Integral	Ñatti Integral
+	Triple Integral with Limits	Integral bu am ñatti àpp
+	Triple Integral with Stacked Limits	Ñatti Integral ak ay Limit yuñ dajale
+	Trust Center	Centre de confiance
+	Tue	Talaata
+	Turabian	Turabiyan
+	Turkish	Turc
+	Two	Ñaar
+	Type	Xeet
+	Type a command, e.g. "insert table"	Bindal benn komand, lu melni "dugalal taabal"
+	Type a New List	Bindal ab lim bu bees
+	Type a New List…	Bindal ab lim bu bees…
+	Type at least one recipient.	Bindal benn jotkat soo koy seet.
+	Type equations in LaTeX	Bindal ekwaasioŋ yi ci LaTeX
+	Type equations in the linear format (UnicodeMath)	Bindal ekwaasioŋ yi ci jëmm ju rëdd (UnicodeMath)
+	Type in Equation	Bindal ekwaasioŋ bi
+	Type normal (non-math) text in the equation	Bindal mbind bu jaar yoon (bu dul math) ci equation bi
+	Type Text	Bindal mbind
+	Type the categories down the side and a column of values per series.	Bindal kategori yi ci suufu wet gi ak benn kolon bu am valeur ci série bu nekk.
+	Type the field's name and its switches, for example PAGE \\* roman.	Bindal tur barab bi ak ay kommutatëram, ci misaal PAGE \\* roman.
+	Type the password to stop the protection.	Bindal baatu-jàll bi ngir dakkal aar gi.
+	Type the recipients, or load them from a file.	Bindal ñi ngay yónnee, wala nga jële leen ci benn fichier.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Bindal tur etiketu balluwaay bi. Soo soppee balluwaay bi, di nga mëna yokk yeneen leeral ci balluwaay bii.
+	Type:	Xeet:
+	Typing	Bind
+	Typing replaces selected text	Bind dafay wecci mbind miñ tànn
+	Ukrainian	Ukrainien
+	Unchecked symbol	Mandarga buñu xool
+	Underbar	Bar bi ci suuf
+	Underbrace	Sous-brace
+	Underline	Suuf
+	Underline color	Kulòoru rëdd
+	Underline Words Only	Sëñ ci suufu kàddu yi kese
+	Undo	Delloosi
+	Undo Stroke	Delloosi AVC
+	Undo {action}	Delloosi {action}
+	Unformatted Text	Text buñu formatewul
+	Ungroup	Degruppé
+	Union	Union
+	Union of intersections	Mbootaayu daje
+	Union with Limits	Mbootaay ak ay yam
+	Union with Lower Limit	Union ak Limite bu suufe
+	Union with Plus	Bokk ak Plus
+	Union with Subscript-Superscript Limits	Mbootaay ak ay yamaleg Abone-Superskript
+	Unions and Intersections	Mbootaay yi ak jaxasoo yi
+	Unlink Fields	Dindi barab yi
+	Unlink\nCitations	Dindi lëkkalekaay\nSitaasioŋ
+	Unlock Fields	Tijji barab yi
+	Up	Up
+	Up Diagonal Dots	Tombi diagonaal yu yéeg
+	Up one level	Yokk benn niveau
+	Update Field	Yeesal barab bi
+	Update fields before printing	Yeesal barab yi laata ngay imprime
+	Update Index	Yeesal Index bi
+	Update Style to Match Selection	Yeesal stilu ngir méngoo ak tànneef
+	Update Styles from Template	Yeesal stil yi ci modèle bi
+	Update Table	yeesal tablo bi
+	Update Table of Figures	yeesal tablo lim yi
+	Update to Match	yeesal ngir méngoo
+	Update to Match Selection	Yeesal ngir méngoo ak tànneef
+	UPPERCASE	MÀTTU MAG
+	URGENT	URGENT
+	URL	URL
+	Use "a" before a consonant sound	Jëfandikool "a" balaa son ab alfabe
+	Use "an" before a vowel sound	Use "an" before a vowel sound
+	Use an Existing List…	Jëfandikool ab lim bu fi nekk…
+	Use passim (five or more pages)	Jëfandikool passim (juróomi xët wala lu ëpp)
+	Use system setting	Jëfandikool jekkal sistem
+	Use the Insert key to switch overtype on and off	Jëfandikool butoŋu dugal ngir taal wala fay bind bu ëpp
+	Use wildcards	Jëfandikool ay joker
+	User Name	Tur jëfandikukat
+	User name:	Tur jëfandikukat:
+	Username	Tur jëfandikukat
+	Value	Valeur
+	Vector A	Vecteur A
+	Vector AB	Vecteur AB
+	Version	Weersioŋ
+	Version History	Jaar-jaaru wersioŋ
+	Version {version} ({build})	Weersioŋ {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	Version yi dañu leen di denc bi këyit bi ubbeeku (fichier .docx amul version).
+	Vertical	taxaw
+	Vertical Alignment	Jubluwaay bu taxaw
+	Vertical alignment:	Liggéeyukaay bu taxaw:
+	Vertical Bars	Bar yu taxaw
+	Vertical Dots	Tombi taxaw
+	Vertical spacing:	Diggante bu taxaw:
+	Vietnamese	Vietnamien
+	View	Xool
+	View Alt Text…	Xool Alt Text…
+	View Gridlines	Xoolal ligne griy yi
+	View Side by Side	xool ci wetu
+	View State	Xoolal réew mi
+	Views	Xool
+	Visual effects	Efe visuel yi
+	Voice	Baat
+	Volume	Volume
+	Volume Integral	Volume bu mat
+	Volume Integral with Limits	Volume bu mat te am ay yam
+	Volume Integral with Stacked Limits	Volume Integral ak ay yam yuñ dajale
+	W:	W:
+	Waiting for Zotero…	Xaar Zotero…
+	Warm Gradient with Outline	Degrade bu tàng ak rëdd
+	Warnings ({n})	Àrtu ({n})
+	Watermark	Figrana
+	Wave	Vague
+	Weather	Klimaa
+	web access isn't available here	jëfandikoo web bi amul fii
+	Web Layout	Xeetu Web bi
+	Web page (*.html)	Xëtu web (*.html)
+	Web\nLayout	Web\nLayout
+	Website	Sitweb
+	Wed	Alarba
+	Weight	Diisaay
+	West	Sowwu
+	When merging records	Sooy boole dokimaa
+	When this document was first created	Bi ñuy njëkka sos këyit bii
+	When this document was most recently printed	Kañ lañu mujjee imprime këyit bii
+	When this document was most recently saved	Kañ lañu mujjee denc këyit bii
+	White Space	Barab bu weex
+	White space	Barab bu weex
+	Who the document properties name as author	Kan mooy tuuru moomeeli këyit bi ni bindkat
+	Whole document	Këyit lëmm
+	Whole page	Xët wi yépp
+	Whole Table	Tablo bi yépp
+	Whole words	Baatu lëmm
+	Wide	Yaatu
+	Widow/Orphan Control	Kontrôlu jabar wala ëtt
+	Widow/Orphan control	Kontrôlu jabar wala mbokk
+	Width and spacing	Yaatu ak diggante
+	Width:	Yaatu:
+	Wildcards (regex)	Carte joker (regex)
+	Window	Palanteer
+	With:	Ak:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 ak yi ci topp
+	Word 97–2003	Baatu 97-2003
+	Word Count	Limu baat yi
+	Word document	Këyitu Word
+	Word document (*.docx)	Këyitu Word (*.doks)
+	Word forms	Formu baat
+	Word Left	Baatu cammoy
+	Word level	Niveau mot
+	Word Right	Word Right
+	Word XML Document (*.xml)	Këyitu Word XML (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt
+	Words	Baatu
+	Words only	Baatu rek
+	Wrap Text	Wrap Text
+	Wrap text	Wrap mbind
+	Wrap Text Sides	Wrap Text Sides
+	Wrap\nText	Wrap\nText
+	Write & Insert Fields	Bind & Dugalal ay barab
+	Write a reply	Bindal ab tontu
+	Write math here with the mouse or a pen.	Bindal fii math ak jiné wala bik.
+	Writing Style: Grammar	Xeetu bind: Grammaire
+	x bar	x baar
+	Year	At
+	Yes	Waaw
+	Yields	Ndax
+	Your changes will be lost if you don't save them.	Sa coppite yi dina ñu réer soo leen dencul.
+	Your system doesn't report an animation setting, so animation effects stay on.	Sa sistem du joxe benn jekkal animasioŋ, moo tax effet animation yi dañuy wéy di taal.
+	Your system has animation effects turned off.	Sa sistem dafa fay effet animation yi.
+	Your system has animation effects turned on.	Sa sistem taal na ay efekti animaasioŋ.
+	Zoom	Zoom
+	Zoom In	Zoom ci
+	Zoom Out	Zoom
+	Zoom to Page	Zoom ci xët wi
+	Zotero	Zotéro
+	Zotero: cancelled	Zotero: fomm nañu ko
+	Zotero: done	Zotero: defna
+	{cols}×{rows} Table	{cols}×{rows} Tablo
+	{contributors} contributors · {commits} commits	{contributors} jàppalekat yi · {commits} def
+	{count} items highlighted	{count} mbir yuñ tegal
+	{count} of {total} pages will print	{count} de {total} xët yi dina ñu imprime
+	{count} paragraphs were changed.	{count} paragraf yi lañu soppi.
+	{count} records; fields: {fields}	{count} dokimaa; barab yi: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} instalewul ci ordinatër bii, kon dokimaa bii dafay wane {with}. Ligné yi ak xët yi mën nañu dagg ci anam wu wuute ak font bi njëkk.
+	{group} settings	{group} jekkal
+	{key}+Click to follow link	{key}+Bësal ngir topp lëkkalekaay bi
+	{language} is now the document's default language.	{language} leegi mooy làkk wiñ jagleel këyit bi.
+	{name} (Press ENTER to Insert)	{name} (Bësal ENTER ngir dugal)
+	{name} already exists. Choose Save again to replace it.	{name} am na fi ba noppi. Tannal Savewaat ngir wecci ko.
+	{name} can't be a folder's name.	{name} mënul nekk turu dosiye.
+	{name} is protected with a password.	{name} aar nañu ko ci baatu-jàll.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} ñu yokk ko. Macro yi ñu ngi ci suufu Samay Add-ins ak Xool › Macro yi.
+	{name} wasn't found.	{name} gisu ñu ko.
+	{n} entries marked.	{n} duggal yiñ màrke.
+	{n} lines	{n} rëdd
+	{n} of {of} recipients	{n} de {of} jotkat yi
+	{n} pt	{n} pt
+	{n} records	{n} dokimaa
+	{n} revisions	{n} xoolaat
+	{selected} of {words} words	{selected} de {words} baat
+	{size} pt	{size} pt
+	{words} words	{words} baat
+	{w} × {h} in	{w} × {h} ci
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) du lim.
+	← Find	← Wut
+	✓ None	✓ Amul
+	➕ New comment	➕ Xalaat bu bees
+	📂  Browse…	📂 Saytu…
+	Add Help Text…	Yokk mbindu ndimbal…
+	AutoText entry:	Duggal Bind Otomatik:
+	Calculate on exit	Xaymal ci genn
+	Calculation	xayma
+	Check Box Form Field	Barabu Formulaire Box bi
+	Check Box Form Field Options	Tànneefi barabu Formileer
+	Check box	Box bi
+	Check box enabled	Box biñ tànn
+	Check box size:	Dayo boyet bi:
+	Checked	Saytu
+	Current date	Bis bi fi nekk
+	Current time	Waxtu bi fi nekk
+	Default value:	Valër biñ jagleel:
+	Drop-Down Form Field	Formulaire biy wàcci
+	Drop-Down Form Field Options	Tànneefi barabu formileer biy wàcci
+	Drop-down	Wàcci
+	Drop-down enabled	Drop-down bi tàmbali
+	Drop-down item:	Ëmbeef buy wàcci:
+	Fill In Form Field	Bindal barabu formileer bi
+	Fill-in enabled	Bind gi tàmbali
+	Form Field	Formulaire
+	Form Field Help Text	Formulaire Texte d'aide à champ
+	Form Field Options	Tànneefi barabu formileer
+	Form Field Shading	Formu ombre de champ
+	Form Field at Selection	Formu barabu tànneef
+	Help Key (F1)	Caabi ndimbal (F1)
+	Insert Form Field	Dugalal barabu formileer
+	Items in drop-down list:	Ëmbeef yi ci limu wàcci bi:
+	Legacy Tools	Jumtukaay yu yàgg
+	Maximum length:	Guddaay bi gëna mag:
+	Next Form Field	Formulaire bi ci topp
+	Not checked	Saytu wuñu ko
+	Put the caret on a form field first.	Defal caret bi njëkk ci barabu formileer bi.
+	Regular text	Bind bu yàgg
+	Reset Form Fields	Reset barabi formileer
+	Text Form Field	Formulaire Texte
+	Text Form Field Options	Tànneefi barabu formileeru bind
+	Type your own:	Bindal sa bopp:
+	Unlimited	amul àpp
+	Protected sections:	Wàll yiñ aar:
+	Section Protection	Aaru ci wàll wi
+	Section {n}	Wàll {n}
+	Select sections…	Tannal wàll yi…
+	AutoSummarize	Résumé automatique
+	Create a new document and put the summary there	Sosal ab këyit bu bees nga def ci ab tënk
+	Highlight key points	Teg ci poñ yu am solo yi
+	Insert an executive summary or abstract at the top of the document	Dugalal ab resumé wala abstract ci kaw këyit bi
+	Length of summary	Guddaayi fi ñuy tënk
+	Percent of original:	Pursàntaasu orginaal bi:
+	Summary: {words} of {of} words	Résumé: {words} de {of} baat
+	Type of summary	Xeetu tënk
+	Update document statistics	Yeesal lim yi ci këyit
+	{n} sentences	{n} frase
+	{n} words or less	{n} baat wala lu néew
+	At:	Ci:
+	Distance from text:	Diggante bi ak bind bi:
+	Format Frame	Format kaadar
+	Format Frame…	Format kaadar…
+	Frame	Kadre
+	Frame…	Kadre…
+	Insert Frame	Dugalal kaadar
+	Lock anchor	Ancre de fermeture
+	Remove Frame	Dindi kaadar bi
+	Text wrapping	Enveloppement de text
+	Chinese Conversion	soppi làkku chinois
+	Chinese Conversion…	soppi làkku chinois…
+	Converted {n} characters	soppi {n} araf yi
+	Simplified Chinese to Traditional Chinese	Chinois bu yomb dem ci Chinois cosaan
+	Simplified to Traditional	Yomb nañu ko def ci cosaan
+	Traditional Chinese to Simplified Chinese	Chinois cosaan ak chinois bu yomb
+	Traditional to Simplified	Aada ba Yomb
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Jëfandikool xeetu arafu SAR yu Taïwan, Hong Kong ak SAR yu Macao
+	Asian Layout	Layout Asie
+	Fit Text	Fit Text
+	Fit Text…	Fit Text…
+	Two Lines in One	Ñaari rëdd ci benn
+	Two Lines in One…	Ñaari rëdd ci benn…
+	New text width (pt):	Yaatu bind bu bees (pt):
+	Enclose in brackets	tëj ko ci biir parenthèses
+	Bracket pair:	Ñaari bracket:
+	Typography	Tipograafi
+	Character spacing control	Kontrolu diggante araf yi
+	Don't compress	Bul kompresse
+	Compress punctuation only	Dangay tënk ponksioŋ yi kese
+	Compress punctuation and Japanese kana	komprime ponksioŋ ak kana japonais
+	First and last characters	Arafu njëkk bi ak bu mujj bi
+	Strict	Jafe
+	Cannot start a line:	Mënul tàmbali benn liiñ:
+	Cannot end a line:	Mënul jeexal benn liiñ:
+	Japanese Find Options	Japon Seetal tànneef
+	Sounds like (Japanese)	Daa melni (Japonais)
+	Match full/half width	Match lëmm/gannaaw yaatuwaay
+	Match hiragana/katakana	méngale hiragana/katakana
+	Match small kana	Match kana bu ndaw
+	Match prolonged sound marks and dashes	Mengoo màrku son yu gudd yi ak tiire yi
+	Japanese Consistency Checker	Saytukat bu méngoo ci làkku japonais
+	Japanese Consistency Checker…	Saytukat bu méngoo ci làkku japonais…
+	No inconsistent spellings were found.	Amul benn ortograafi bu jaarul yoon.
+	Pick the spelling to keep in each group.	Tannal ortograafi bi nga bëgga tëye ci grupu bu nekk.
+	Bidirectional text	Bind bu am ñaari yoon
+	Bidirectional Text	Bind bu am ñaari yoon
+	Default direction:	Jubluwaay biñ jagleel:
+	Cursor movement:	Fexe curseur bi:
+	Logical	Logique
+	Visual	Gis-gis
+	Manage Fields	Saytu barab yi
+	File locations	Barabi fichier yi
+	File Locations	Barabu fichier yi
+	Documents:	Këyit:
+	Pictures:	Nataal yi:
+	The system's choice	Tanneef sistem bi
+	Show Repairs	Waneel defar yi
+	No repairs were needed.	Amul benn soxla defar.
+	These problems were found and repaired when the document was opened:	Jafe-jafe yii ñu ngi leen gis ba noppi saafara leen bi ñu ubbee këyit bi:
+	An unreadable entry in the file was skipped: {what}	Amna luñu sànni ci biir fichier bi te kenn mënu ko jàng: {what}
+	An unreadable part was left out: {what}	Dañu bàyyi benn wàll buñu mënul jàng: {what}
+	Unreadable relationships were ignored: {what}	Relation yiñ mënul jàng, dañu leen baña bàyyi xel ci: {what}
+	A missing part of an embedded object was left out: {what}	Dañu bàyyi benn wàll bu ñàkk ci benn mbir buñ samp: {what}
+	Copy File	Kopie fichier
+	Find Files	Seetal fichier yi
+	Letter Wizard	Assistant de lettre
+	Recipient's name:	Tur ki koy jox:
+	Salutation:	Nuyu:
+	Subject:	Mbir:
+	Complimentary closing:	Tëjug buy maye:
+	Sender's name:	Tur ki ko yónnee:
+	Job title:	Titre liggéey bi:
+	Company:	Société:
+	Enclosures:	Box yi:
+	Cc:	Cc:
+	Edit Links to Files	Soppi lëkkalekaay yi ci fichier yi
+	Source file	Dosie source
+	Locked	tëju
+	Change Source	Soppi cosaan
+	This document has no links to files.	Këyit bii amul benn lëkkalekaay ak ay fichier.
+	Web options	Tànneefi Web
+	Web Options	Tànneefi Web
+	Allow PNG as a graphics format	Nangu PNG muy formaa grafik
+	Rely on CSS for font formatting	Japp ci CSS ngir formate font yi
+	Rely on VML for displaying graphics in browsers	Japp ci VML ngir wane nataal yi ci nawigatër yi
+	Organize supporting files in a folder	Raññe fichier yiy jàppale ci benn dosiye
+	Use long file names whenever possible	Jëfandikool tur fichier yu gudd saa yu ko mënee
+	Screen size:	Dayo ekraŋ bi:
+	Pixels per inch:	Pixel ci puus bu nekk:
+	Hangul Hanja Conversion	Hangul Hanja
+	Hangul Hanja Conversion…	Hangul Hanja…
+	Hangul to Hanja	Hangul à Hanja
+	Hanja to Hangul	Hanja à Hangul
+	Put the caret in Korean text to choose its Hanja.	Tegal caret bi ci bind koreen ngir tànnee Hanja bi.
+	The selection, or the whole document when nothing is selected.	Tanneef bi, wala këyit bi yépp sudee tannewul dara.
+	Add frame	Yokk kaadar
+	Attributes:	Màndarga yi:
+	Border color:	Kulòoru bordure bi:
+	Border width:	Yaatu bordure bi:
+	Choose how the custom XML editor displays names and removes schema references.	Tannal ni editëru XML biñ personaaliseer di wane tur yi ak di dindi royuwaayi schema yi.
+	Confirm before removing a schema reference	Firndelal balaa ngay dindi ab royuwaay
+	Elements:	Ëlëm yi:
+	Enter an absolute HTTP(S) or URN schema URI.	Bindal ab URI HTTP(S) wala URN bu mat sëkk.
+	Frame URL	URL kaadar
+	Frame borders:	Frontiere kaadar:
+	Frame spacing:	Diggante kaadar yi:
+	Frames:	Kadre yi:
+	Frameset Properties	Màndarga yi Frameset
+	Hide	nëbb
+	Margin height:	Gaawaayu marge bi:
+	Margin width:	Yaatu marge bi:
+	No resize	Amul soppi dayo
+	No schema references	Amul royuwaayi schema
+	Optional	Facultatif
+	Optional, 0–1000	Taamu, 0–1000
+	Pixels (0–100)	Pixel yi (0 ba 100)
+	Remove Attribute	Dindi màndarga
+	Remove schema reference {schema}?	Dindi royuwaayu schema {schema}?
+	Rows:	Ligné yi:
+	Schema Library	Bibliothèque de schema
+	Schema URI:	URI schema:
+	Schemas:	Schéma yi:
+	Scrolling:	Defilé:
+	Select a custom XML store with editable datastore properties first.	Tannal njëkk benn dencukaay XML bu am màndarga dencukaay done yuñ mëna soppali.
+	Select an XML element to add, change, or remove one of its attributes.	Tannal benn élément XML ngir yokk, soppi wala dindi benn ci ay màndargam.
+	Selected element: {name}	Ëlëm biñ tànn: {name}
+	Set Attribute	Def màndarga
+	Show namespace URIs beside XML names	Waneel URI yu barabu tur yi ci wetu tur XML yi
+	Store: {store}	Màngasin: {store}
+	This XML store is preserved but cannot be edited here.	Màngasiinu XML bii dañu ko denc waaye mënu ñu ko soppali fii.
+	This document has no custom XML stores.	Këyit dafa amul ay dencukaay XML yuñ jagleel.
+	This store has no datastore properties part for schema references.	Màngasin bii amul benn pàccu màndarga màngasin done ngir royuwaayi schema.
+	This store has no elements available for editing.	Màngasin bii amul lenn luñu mëna soppali.
+	Value:	Valeur:
+	View and manage schema references associated with custom XML stores.	Xoolal te yor royuwaayi schema yi méngoo ak bitigu XML yiñ personaaliseer.
+	XML Element Attributes	Màndarga yi elemen XML
+	XML Options	Tànneefi XML
+	e.g. 25%,*	lu melni 25%,*
+	e.g. 30%,*	lu melni 30%,*
+	Web	Web
+	XML	XML

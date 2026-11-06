@@ -503,6 +503,12 @@ pub enum Dialog {
     Object(Box<crate::dialogs_object::ObjectDialog>),
     /// Developer › Legacy Tools: Form Field, Form Field Options and Help Text.
     Forms(Box<crate::dialogs_forms::FormDialog>),
+    /// Legacy HTML Frameset Properties with safe editing of the modeled frameset part.
+    Frameset(Box<crate::dialogs_frameset::FramesetDialog>),
+    /// Offline WordPerfect-style command help and its display options.
+    WordPerfectHelp(Box<crate::dialogs_wphelp::WordPerfectHelpDialog>),
+    /// Bounded custom XML schema, element-attribute and options editors.
+    CustomXml(Box<crate::dialogs_custom_xml::CustomXmlDialog>),
 }
 
 /// The Table Properties dialog's fields. Lengths are in the interface unit
@@ -945,6 +951,9 @@ impl Dialog {
             Dialog::Layout(d) => d.name(),
             Dialog::Object(d) => d.name(),
             Dialog::Forms(d) => d.name(),
+            Dialog::Frameset(d) => d.name(),
+            Dialog::WordPerfectHelp(d) => d.name(),
+            Dialog::CustomXml(d) => d.name(),
         }
     }
 
@@ -982,6 +991,15 @@ impl Dialog {
         }
         if let Some(d) = crate::dialogs_object::open(name, app) {
             return Some(Dialog::Object(Box::new(d)));
+        }
+        if let Some(d) = crate::dialogs_frameset::open(name, app) {
+            return Some(Dialog::Frameset(Box::new(d)));
+        }
+        if let Some(d) = crate::dialogs_wphelp::open(name, app) {
+            return Some(Dialog::WordPerfectHelp(Box::new(d)));
+        }
+        if let Some(d) = crate::dialogs_custom_xml::open(name, app) {
+            return Some(Dialog::CustomXml(Box::new(d)));
         }
         if matches!(
             name,
@@ -1457,6 +1475,9 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
         Dialog::Layout(d) => d.title(),
         Dialog::Object(d) => d.title(),
         Dialog::Forms(d) => d.title(),
+        Dialog::Frameset(d) => d.title(),
+        Dialog::WordPerfectHelp(d) => d.title(),
+        Dialog::CustomXml(d) => d.title(),
     };
     let id = egui::Id::new(("dialog", title));
     let shown = place_dialog(ctx, id, egui::Window::new(tl!(title)).id(id).collapsible(false).resizable(false)).open(&mut open).show(ctx, |ui| {
@@ -2974,6 +2995,9 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         Dialog::Layout(d) => crate::dialogs_layout::body(app, ui, d),
         Dialog::Object(d) => crate::dialogs_object::body(app, ui, d),
         Dialog::Forms(d) => crate::dialogs_forms::body(app, ui, d),
+        Dialog::Frameset(d) => crate::dialogs_frameset::body(app, ui, d),
+        Dialog::WordPerfectHelp(d) => crate::dialogs_wphelp::body(app, ui, d),
+        Dialog::CustomXml(d) => crate::dialogs_custom_xml::body(app, ui, d),
         Dialog::FindRecipient { text, message } => {
             ui.horizontal(|ui| {
                 ui.label(tl!("Find:"));
@@ -3599,6 +3623,29 @@ mod tests {
 
     fn props(app: &WordApp) -> doc4me_doc::props::ParaProps {
         app.session.doc.para_at(&app.session.sel.focus).map(|p| p.props.clone()).unwrap_or_default()
+    }
+
+    #[test]
+    fn legacy_html_wordperfect_and_custom_xml_requests_route_to_real_dialogs() {
+        let mut doc = doc4me_doc::Document::new();
+        doc.settings.html_frameset = Some(doc4me_doc::HtmlFrameset { rows: Some("*,*".into()), ..Default::default() });
+        let mut app = WordApp::new(Session::new(doc), crate::Services::default());
+
+        for (request, expected) in [
+            ("framesetProperties", "framesetProperties"),
+            ("wordPerfectHelp", "wordPerfectHelp"),
+            ("wordPerfectHelpOptions", "wordPerfectHelpOptions"),
+            ("xmlSchemaLibrary", "xmlSchemaLibrary"),
+            ("xmlElementAttributes", "xmlElementAttributes"),
+            ("xmlOptions", "xmlOptions"),
+        ] {
+            let dialog = Dialog::open(request, &mut app).unwrap_or_else(|| panic!("{request} did not open"));
+            assert_eq!(dialog.name(), expected);
+            assert!(serde_json::to_value(dialog).is_ok(), "{request} can be serialized with the active dialog state");
+        }
+
+        app.run("help.show", json!({})).unwrap();
+        assert_eq!(app.dialog.as_ref().map(Dialog::name), Some("wordPerfectHelp"));
     }
 
     /// Ordinary Turkish queries must find dotted-I labels, while canonical English labels and

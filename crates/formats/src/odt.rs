@@ -1410,7 +1410,7 @@ pub fn parse(bytes: &[u8]) -> Result<Flow, String> {
     if blocks.is_empty() {
         blocks.push(FBlock::Para(Para::default()));
     }
-    Ok(Flow { blocks, meta })
+    Ok(Flow { blocks, meta, frameset: None })
 }
 
 /// Parse an `.odt` package into a document.
