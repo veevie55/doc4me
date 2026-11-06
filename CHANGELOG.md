@@ -15,9 +15,13 @@
 
 - **เปิดเมนูตัวเลือก Table of Contents ด้วย Alt+Shift+F12** (`crates/ui-egui/src/toc_options.rs`, `keys.rs`, readiness `ks-329`): เปิดเมนู Update Table / Remove Table of Contents เมื่อ caret อยู่ใน TOC content control หรือย่อหน้า TOC ที่แอปสร้าง; นอกบริบทไม่ทำงาน. คำสั่งอัปเดตและลบใช้ engine command เดิม. ตรวจด้วย UI tests 4 กรณี รวมกด shortcut และคลิก Remove จริง.
 
+- **แยกปุ่มลบแป้นตัวเลขจากปุ่มลบแถวหลักใน keyboard event** (`vendor/egui-winit`, `crates/ui-egui/src/keys.rs`, readiness `ks-163`): คง logical `Minus` สำหรับ keymap เดิมและส่ง physical keypad subtract แยกผ่าน sentinel ที่ตรวจได้; Ctrl+Alt+Minus แถวหลักยังเป็น Optional Hyphen ส่วน Ctrl+Alt+NumpadSubtract เป็น Em Dash. Vendored `egui-winit` 0.36.2 ภายใต้ไลเซนส์เดิมของ dependency; ไม่เปลี่ยนเอกสาร .docx. ตรวจด้วย conversion test ของ vendor และ UI regression ที่ยืนยันทั้งสองผลลัพธ์.
+
 - **เพิ่ม catalog ภาษา isiXhosa, isiZulu, Kinyarwanda และ Sesotho sa Leboa** (`crates/ui-egui/src/i18n/{xh,zu,rw,nso}.tsv`, registry และ `docs/readiness/languages.tsv`): เพิ่ม 2,985 รายการต่อภาษา พร้อมตรวจ source keys, placeholders, ellipses และ glyph ใน Inter. Catalog แต่ละไฟล์ระบุชัดว่าแปลด้วย Google Translate และต้องตรวจคำศัพท์โดยเจ้าของภาษาก่อนเผยแพร่; ไม่มี English fallback ใน catalog. ไม่เปลี่ยน .docx เดิม, ภาษาไทย หรือการติดตั้ง. ตรวจด้วย i18n suite 61 tests ซึ่งผ่าน.
 
 - **จับคู่ Format Callout รุ่นเดิมกับ Format Shape** (`docs/readiness/dialogs.tsv`, `dlg-052`): Format Shape ปัจจุบันเปิดบน callout ที่เลือกและปรับ fill, outline และขนาดได้; leader geometry และ auto-attach แบบ Word รุ่นเก่าไม่รองรับ จึงบันทึกข้อจำกัดไว้ตรง readiness row. Windows run 42133507843 ยืนยัน dialogs 208/220 และ 100% เมื่อไม่นับ deferred.
+
+- **ทำ CSS Links รุ่นเดิมให้เป็น Web Options ที่มีผลจริงต่อเอกสาร** (`file.cssLinks`, readiness `dlg-010`): `LinkStyles` เปิดหรือปิด “Rely on CSS for font formatting”, undo ได้ และบันทึกใน `word/webSettings.xml` เป็น `w:doNotRelyOnCSS`; เรียกโดยไม่ส่งค่าจะเปิดหน้า Advanced ที่มี checkbox เดียวกัน. รายการ URL stylesheet ภายนอกของ dialog รุ่นเก่ายังไม่รองรับและระบุไว้ในแถว readiness. ตรวจด้วย engine regression ที่ครอบคลุม validation, DOCX round-trip และ undo พร้อม UI test ที่เปิดและเปลี่ยนค่าจริง.
 
 - **แทรกเนื้อหาเอกสารจาก file picker** (`insert.textFromFile`, readiness `dlg-108`): คำสั่ง Text from File ที่เดิมต้องป้อน path เองเปิด file picker ใน UI แล้วแทรกเนื้อหาของเอกสารที่เลือกตรงเคอร์เซอร์; ทดสอบ file picker แบบ async ด้วยไฟล์ TXT และ `cargo xtask ci` ผ่านครบทั้ง 6 ขั้น. เป็นการแทรกเนื้อหาแบบคงที่ ยังไม่รองรับการเชื่อมโยงซอร์สแบบ master document.
 

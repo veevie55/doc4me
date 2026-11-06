@@ -15,6 +15,9 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("file.webOptions", "Web Options", "File › Options › Advanced", web_options).params(
             r#"{"allowPng"?: bool, "relyOnCss"?: bool, "relyOnVml"?: bool, "organizeInFolder"?: bool, "longFileNames"?: bool, "optimizeForBrowser"?: bool, "pixelsPerInch"?: 19–480 | null, "targetScreen"?: "800x600|1024x768|…" | null, "encoding"?: string | null} — the document's Web Options (saved in the .docx); without any, opens File › Options › Advanced. Returns them."#,
         ),
+        CommandSpec::new("file.cssLinks", "Web Options", "File › Options › Advanced", css_links).params(
+            r#"{"linkStyles"?: bool} — whether web-page exports rely on CSS for font formatting; saved in word/webSettings.xml. Without a value, opens Web options. External stylesheet URLs are not supported."#,
+        ),
     ]
 }
 
@@ -113,6 +116,24 @@ fn web_options(s: &mut Session, v: &Value) -> CmdResult {
     }
     s.doc.settings.web = w;
     Ok(web_state(s))
+}
+
+/// The useful part of Word's retired CSS Links dialog: choose whether web-page formatting relies
+/// on CSS. The setting has a document effect (`w:doNotRelyOnCSS`) and shares Web Options' visible
+/// checkbox; Doc4Me does not invent or fetch the dialog's old external stylesheet URL list.
+fn css_links(s: &mut Session, v: &Value) -> CmdResult {
+    match v.get("linkStyles") {
+        None | Some(Value::Null) => {
+            s.only_read();
+            s.ui_requests.push(json!({"open": "options", "pane": "advanced"}));
+            Ok(json!({"linkStyles": s.doc.settings.web.rely_on_css, "opened": true}))
+        }
+        Some(Value::Bool(link)) => {
+            s.doc.settings.web.rely_on_css = *link;
+            Ok(json!({"linkStyles": link}))
+        }
+        Some(_) => Err(CmdError::Params("`linkStyles` must be true or false".into())),
+    }
 }
 
 /// The document's typography settings: `charSpacing`, `kinsoku` (standard, strict or custom)
@@ -246,5 +267,22 @@ mod web_tests {
         assert!(!s.doc.settings.web.rely_on_css && s.doc.settings.web.write_part());
         s.run("edit.undo", &json!({})).unwrap();
         assert!(s.doc.settings.web.is_default(), "undone like an edit");
+    }
+
+    #[test]
+    fn css_links_changes_the_document_round_trips_and_undoes() {
+        let mut s = Session::new(doc4me_doc::Document::from_text("Styled text"));
+        let opened = s.run("file.cssLinks", &json!({})).unwrap();
+        assert_eq!((opened["opened"].as_bool(), opened["linkStyles"].as_bool()), (Some(true), Some(true)));
+        assert!(s.run("file.cssLinks", &json!({"linkStyles": "yes"})).is_err());
+        assert!(s.doc.settings.web.rely_on_css, "a bad value changes nothing");
+
+        let changed = s.run("file.cssLinks", &json!({"linkStyles": false})).unwrap();
+        assert_eq!(changed["linkStyles"].as_bool(), Some(false));
+        let back = doc4me_docx::read(&doc4me_docx::write(&s.doc).unwrap()).unwrap();
+        assert!(!back.settings.web.rely_on_css, "w:doNotRelyOnCSS survives a DOCX save and reopen");
+
+        s.run("edit.undo", &json!({})).unwrap();
+        assert!(s.doc.settings.web.rely_on_css, "the document setting is one undoable edit");
     }
 }
