@@ -1,0 +1,2987 @@
+# Kinyarwanda (rw) interface catalog; machine-translated from en-gb.tsv using Google Translate, 2026-11-06. Review terminology before release.
+# Columns: context<TAB>English source<TAB>translation; placeholders are preserved.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	a cyangwa "an" mbere yijambo rikurikira; Igipolonye "w" / "twe", "z" / "ze".
+	% of all commits	% by'ibyo yiyemeje byose
+	(All)	(Byose)
+	(Custom)	(Custom)
+	(no style)	(nta buryo)
+	(no suggestions)	(nta gitekerezo)
+	(none)	(nta)
+	(normal text)	(inyandiko isanzwe)
+	(not matched)	(bidahuye)
+	(picture or object)	(ishusho cyangwa ikintu)
+	*Bold* and _italic_ with real formatting	* Inyuguti * na _italic_ hamwe nimiterere nyayo
+	0 or More Characters	0 cyangwa Inyuguti nyinshi
+	1. Formatting restrictions	1. Gushiraho imipaka
+	1. Main document	1. Inyandiko nyamukuru
+	1.5 Line Spacing	1.5 Umwanya
+	1/4 Em Space	1/4 Em Umwanya
+	1×2 Empty Matrix	1 × 2 Matrix Yubusa
+	1×3 Empty Matrix	1 × 3 Matrix Yubusa
+	2. Data source	2. Inkomoko yamakuru
+	2. Editing restrictions	2. Guhindura imipaka
+	2×1 Empty Matrix	2 × 1 Matrix Yubusa
+	2×2 Determinant	2 × 2 Kwiyemeza
+	2×2 Empty Matrix	2 × 2 Matrix Yubusa
+	2×2 Identity Matrix	2 × 2 Matrix
+	2×2 Identity Matrix (sparse)	2 × 2 Indangamuntu Matrix (gake)
+	2×2 Matrix in Brackets	2 × 2 Matrix mumutwe
+	2×2 Matrix in Double Bars	2 × 2 Matrix mu tubari tubiri
+	2×2 Matrix in Parentheses	2 × 2 Matrix muri Parentheses
+	2×3 Empty Matrix	2 × 3 Matrix Yubusa
+	3-D	3-D
+	3. Merge the data with the document	3. Huza amakuru hamwe ninyandiko
+	3. Start enforcement	3. Tangira kubahiriza
+	3D Models	Moderi ya 3D
+	3×1 Empty Matrix	3 × 1 Matrix Yubusa
+	3×2 Empty Matrix	3 × 2 Matrix Yubusa
+	3×3 Empty Matrix	3 × 3 Matrix Yubusa
+	3×3 Identity Matrix	3 × 3 Matrix
+	3×3 Identity Matrix (sparse)	3 × 3 Indangamuntu Matrix (gake)
+	5,000 characters a day; give an email address for 50,000.	Inyuguti 5.000 kumunsi; tanga imeri kuri 50.000.
+	<< Less	<< Gito
+	<< Remove	<< Kuraho
+	A file dialog is already open.	Idosiye Ikiganiro yamaze gufungura.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Ijambo ryubusa, rifungura-isoko yijambo ryatunganijwe ryanditswe kuva kera muri Rust. \\ NBishingiye kuri WordCraft nitsinda rya ArtCraft.
+	A header source holds the field names for a data source without a header row.	Umutwe Inkomoko Ifata Umwanya Amazina ya Data Inkomoko idafite Umutwe Umurongo.
+	A mail merge field	Umwanya wo guhuza ubutumwa
+	A new document lists the commands with their shortcuts.	Inyandiko nshya yerekana amategeko hamwe na shortcuts zabo.
+	A numbered sequence (figures, tables…)	Urutonde rukurikiranye (imibare, imbonerahamwe…)
+	A password is required to open this document.	Ijambobanga rirasabwa gufungura iyi nyandiko.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Umwanya mbere yo kuruhuka, ibimenyetso byikubye kabiri, koma yo muri Polonye mbere yo guhuza.
+	A table of contents	Imbonerahamwe y'ibirimo
+	A table's rows keep the same columns here.	Imirongo yumurongo ikomeza inkingi imwe hano.
+	A xor B	A xor B.
+	A, B, C, …	A, B, C,…
+	a, b, c, …	a, b, c,…
+	AaBbCcDd	AaBbCcDd
+	AaBbYyZz	AaBbYyZz
+	About	Ibyerekeye
+	About Doc4Me	Ibyerekeye Doc4Me
+	Above Chart	Hejuru yimbonerahamwe
+	Above the item	Hejuru yikintu
+	Absolute position	Umwanya wuzuye
+	Absolute value cases	Imanza zagaciro rwose
+	Accent	Acent
+	Accent Gradient	Ikirangantego
+	Accent with Reflection	Acent hamwe no Gutekereza
+	Accent {n}	Acent {n}
+	Accents	Amasezerano
+	Accept	Emera
+	Accept All	Emera Byose
+	Accept All Changes	Emera Impinduka zose
+	Accept or Reject Changes	Emera cyangwa Wange Impinduka
+	Accept This Change	Emera iri hinduka
+	Accessed on	Byemewe
+	Accessibility	Kuboneka
+	Accessibility Pane	Ikibaho
+	Acute	Ukaze
+	Add	Ongeraho
+	Add >>	Ongeraho >>
+	Add a comment	Ongeraho igitekerezo
+	Add a Table	Ongeraho Imbonerahamwe
+	Add at least one field.	Ongeraho byibuze umurima umwe.
+	Add caption when inserting:	Ongeraho ibisobanuro iyo winjizamo:
+	Add Chart Element	Ongeraho Imbonerahamwe
+	Add Field	Ongeraho Umwanya
+	Add Field Name	Ongeraho Izina ryumurima
+	Add Font…	Ongeraho Imyandikire…
+	Add line numbering	Ongeraho inomero
+	Add New Placeholder	Ongeraho Umwanya mushya
+	Add New Placeholder…	Ongeraho Umwanya mushya…
+	Add New Source…	Ongeraho Isoko Rishya…
+	Add Object to Selection	Ongeraho Ikintu Kuri Guhitamo
+	Add Pen	Ongeramo Ikaramu
+	Add Row	Ongeraho umurongo
+	Add Series	Ongeraho Urukurikirane
+	Add Shape	Ongeraho Ishusho
+	Add Space Before Paragraph	Ongeraho Umwanya Mbere ya paragarafu
+	Add space between Asian and Latin text	Ongeraho umwanya hagati yinyandiko ya Aziya n'Ikilatini
+	Add space between Asian text and numbers	Ongeraho umwanya hagati yinyandiko ya Aziya nimibare
+	Add tab stop at:	Ongeraho tab ihagarara kuri:
+	Add Text	Ongeraho Umwandiko
+	Add the chapter number	Ongeraho umubare wigice
+	Add to Dictionary	Ongera ku Inkoranyamagambo
+	Add to Document	Ongeraho Inyandiko
+	Add to Quick Access Toolbar	Ongera Kuri Byihuta Byibikoresho
+	Add to Style Gallery	Ongeraho muburyo bwububiko
+	Add-ins	Ongeraho
+	Add/Edit\nBibliography	Ongeraho / Hindura \\ nBibliografiya
+	Add/Edit\nCitation	Ongeraho / Hindura \\ nCitation
+	Add\nNote	Ongeraho \\ n Icyitonderwa
+	Add\nPen	Ongeraho \\ nPen
+	Add\nShape	Ongeraho \\ nIshusho
+	Added	Yongeyeho
+	Added Fonts	Wongeyeho Imyandikire
+	Address	Aderesi
+	Address Block	Guhagarika Aderesi
+	Address labels	Ibirango bya aderesi
+	Address:	Aderesi:
+	Address\nBlock	Aderesi \\ nGufunga
+	Adjust	Hindura
+	Advanced	Yateye imbere
+	Advanced Find	Shakisha Byambere
+	Advanced Find…	Shakisha Byiza…
+	After:	Nyuma:
+	Agents	Intumwa
+	Align	Huza
+	Align Bottom Center	Huza Hagati Hasi
+	Align Bottom Left	Huza Hasi Ibumoso
+	Align Bottom Right	Huza Hasi Iburyo
+	Align Center	Guhuza Ikigo
+	Align Center Left	Huza Ikigo Ibumoso
+	Align Center Right	Huza Ikigo Iburyo
+	Align Left	Huza Ibumoso
+	Align Right	Huza Iburyo
+	Align Text	Huza inyandiko
+	Align Top Center	Huza Hagati Hejuru
+	Align Top Left	Huza Hejuru Ibumoso
+	Align Top Right	Huza Hejuru Iburyo
+	Aligned at:	Guhuza kuri:
+	Alignment	Guhuza
+	Alignment:	Guhuza:
+	All	Byose
+	All - Linear	Byose - Umurongo
+	All - Professional	Byose - Ababigize umwuga
+	All Borders	Imipaka yose
+	All Caps	Ingofero zose
+	All caps	Ingofero zose
+	All Commands	Amategeko yose
+	All files	Amadosiye yose
+	All Levels	Inzego zose
+	All Markup	Ibimenyetso byose
+	All pages	Impapuro zose
+	All pages in the range	Impapuro zose murwego
+	All records	Inyandiko zose
+	All symbol sets	Ibimenyetso byose
+	Allow Doc4Me to use online services	Emerera Doc4Me gukoresha serivisi kumurongo
+	Allow hanging punctuation	Emera kuruhuka
+	Allow Latin text to wrap in the middle of a word	Emerera inyandiko y'Ikilatini kuzinga hagati y'ijambo
+	Allow line breaks	Emerera umurongo
+	Allow overlap	Emera guhuzagurika
+	Allow row to break across pages	Emerera umurongo gucamo impapuro
+	Alphabetical	Inyuguti
+	Alt Text	Inyandiko
+	Alt text	Inyandiko
+	Alt Text Pane	Umwanya wanditse
+	Alt:	Alt:
+	Alt\nText	Alt \\ nIbyanditswe
+	And	Kandi
+	Angle Brackets	Inguni zinguni
+	Angle Brackets with Separator	Inguni zinguni hamwe na Separator
+	Angle Brackets with Two Separators	Inguni zinguni hamwe nabatandukanya babiri
+	Animate the caret (it glides and fades)	Shushanya caret (iranyerera kandi irashira)
+	Animation	Animation
+	Animation effects:	Ingaruka za Animation:
+	Annotation Reference	Ibisobanuro
+	Annotation Subject	Ingingo yo Kwandika
+	Annotation Text	Inyandiko
+	Another file	Indi dosiye
+	Any Character	Imiterere iyo ari yo yose
+	Any Digit	Imibare iyo ari yo yose
+	Any Letter	Ibaruwa iyo ari yo yose
+	Anyone can open this document. Encrypt it with a password to keep it private.	Umuntu wese arashobora gufungura iyi nyandiko. Shishoza ukoresheje ijambo ryibanga kugirango ugumane wenyine.
+	Anyone who opens the document will need this password.	Umuntu wese ufunguye inyandiko azakenera ijambo ryibanga.
+	APA	APA
+	API key (if the server needs one)	Urufunguzo rwa API (niba seriveri ikeneye imwe)
+	Apply	Koresha
+	Apply as you type	Koresha nkuko wanditse
+	Apply Asian line-breaking rules (kinsoku)	Koresha amategeko yo muri Aziya yo guca umurongo (kinsoku)
+	Apply Character Style	Koresha Imiterere Imiterere
+	Apply formatting to:	Koresha imiterere kuri:
+	Apply special formats to	Koresha imiterere yihariye kuri
+	Apply Style	Koresha Imiterere
+	Apply Styles	Koresha Imiterere
+	Apply to:	Saba:
+	Arabic	Icyarabu
+	Arch Down	Arch Down
+	Arch Up	Ububiko
+	Area	Agace
+	Around	Hirya no hino
+	Arrange	Tegura
+	Arrange All	Tegura Byose
+	Arrange\nAll	Tegura \\ n Byose
+	Arrow	Umwambi
+	Arrows	Imyambi
+	Artistic Effects	Ingaruka z'ubuhanzi
+	As Recommended	Nkuko Byasabwe
+	As you type	Mugihe wanditse
+	ASAP	ASAP
+	Ascending	Kuzamuka
+	Asian text font:	Imyandikire yo muri Aziya:
+	Asian Typography	Imyandikire ya Aziya
+	Assign	Shinga
+	At least	Nibura
+	At least {n}	Nibura {n}
+	Atelier	Atelier
+	Atmosphere	Ikirere
+	Attach Template	Ongeraho Inyandikorugero
+	Attach…	Ongeraho…
+	Author	Umwanditsi
+	Auto	Imodoka
+	AutoCaption	AutoCaption
+	AutoCaption…	AutoCaption…
+	AutoComplete	AutoComplete
+	AutoCorrect	AutoCorrect
+	AutoCorrect Options	Amahitamo Yikora
+	AutoFit	AutoFit
+	AutoFit Contents	Ibirimo AutoFit
+	AutoFit Window	Idirishya
+	AutoFormat	AutoFormat
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	AutoFormat (Ctrl + Alt + K) ikora paragarafu zatoranijwe, cyangwa inyandiko yose.
+	AutoFormat and Review Changes…	AutoFormat no Gusubiramo Impinduka…
+	AutoFormat As You Type	AutoFormat Nkuko Wandika
+	AutoFormat changed {count} paragraphs	AutoFormat yahinduye paragarafu ya {count}
+	AutoFormat Now	AutoFormat Noneho
+	Automatic	Automatic
+	Automatic ({language})	Automatic ({language})
+	Automatic bulleted lists	Urutonde rwamasasu rwikora
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Automatic ikurikira imvugo ya sisitemu. Ibikubiyemo n'amabwiriza arahinduka; inyandiko zawe ntabwo.
+	Automatic numbered lists	Urutonde rwumubare rwikora
+	Automatic Table 1 (3 levels)	Imbonerahamwe yikora 1 (urwego 3)
+	Automatic Table 2 (2 levels)	Imbonerahamwe yikora 2 (urwego 2)
+	Automatically hyphenate document	Mu buryo bwikora hyphenate inyandiko
+	Automatically Update Document Styles	Mu buryo bwikora Kuvugurura inyandiko yuburyo
+	Automatically update document styles	Mu buryo bwikora kuvugurura inyandiko
+	AutoSave	AutoSave
+	AutoSave documents you have saved in Doc4Me	AutoSave inyandiko wabitse muri Doc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSave yananiwe: {error}. Bika inyandiko kugirango uhindure AutoSave inyuma.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSave ntabwo iboneka muri mushakisha: ntishobora kwandika kuri dosiye yawe. Bika ibikururwa.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	AutoSave ibika gusa .docx, .odt na .rtf dosiye; {name} ntishobora gukomeza imiterere yose. Bika nka .docx kugirango ufungure AutoSave.
+	AutoSave saves every change to the file (needs a saved document)	AutoSave ibika impinduka zose kuri dosiye (ikeneye inyandiko yabitswe)
+	AutoSave writes your changes to the file a moment after you stop typing.	AutoSave yanditse impinduka zawe muri dosiye akanya gato uhagaritse kwandika.
+	AutoText	AutoText
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10.12 "× 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7.17 "× 10.12"
+	Back	Inyuma
+	Backspace	Umwanya
+	Balloons	Imipira
+	Banded Columns	Inkingi
+	Banded Rows	Imirongo ihambiriye
+	Bar	Bar
+	Base text:	Inyandiko shingiro:
+	Based on: {style}	Bishingiye kuri: {style}
+	Baseline Dots	Utudomo twibanze
+	Basic Cycle	Inzira y'ibanze
+	Basic List	Urutonde rwibanze
+	Basic Math	Imibare Yibanze
+	Basic Matrix	Matrix Yibanze
+	Basic Process	Inzira y'ibanze
+	Basic Pyramid	Pyramid
+	Basic Radial	Ibanze
+	Basic Venn	Shingiro Venn
+	Bayes' rule	Amategeko ya Bayes
+	Before:	Mbere:
+	Beginning of Word	Intangiriro y'Ijambo
+	Behind Text	Inyuma yinyandiko
+	Below text	Munsi yinyandiko
+	Below the item	Munsi yikintu
+	Between	Hagati
+	Bibliography	Bibliografiya
+	Binary assets added	Umutungo wa Binary wongeyeho
+	Binary assets removed	Umutungo wa Binary wakuweho
+	Binomial Coefficient	Coefficient ya Binomial
+	Binomial Coefficient (angle)	Coefficient ya Binomial (inguni)
+	Binomial Coefficient with Angle Brackets	Coefficient ya Binomial hamwe ninguni zinguni
+	Binomial expansion of (x+a)ⁿ	Kwiyongera kwa binomial ya (x + a) ⁿ
+	Blank	Wibeshya
+	Blank (Three Columns)	Ubusa (Inkingi eshatu)
+	Blank document	Inyandiko idafite ishingiro
+	Blank Page	Urupapuro rutagaragara
+	Block\nAuthors	Hagarika \\ n Abanditsi
+	Blue:	Ubururu:
+	Body Text	Inyandiko yumubiri
+	Body text in a short paragraph to show spacing.	Umwandiko wumubiri mu gika kigufi kugirango werekane umwanya.
+	Bold	Ubutinyutsi
+	Book	Igitabo
+	Book Title	Umutwe w'igitabo
+	Book title	Umutwe w'igitabo
+	Bookmark	Ikimenyetso
+	Bookmark name:	Izina ryerekana:
+	Border lines	Imipaka
+	Border Painter	Irangi
+	Border\nPainter	Umupaka \\ nUmurangi
+	Borders	Imipaka
+	Borders and Shading	Imipaka no Igicucu
+	Borders and Shading…	Imipaka no Igicucu…
+	Border…	Umupaka…
+	Both Sides	Impande zombi
+	Both sides	Impande zombi
+	Bottom	Hasi
+	Bottom Border	Umupaka wo hasi
+	Bottom Margin	Hasi
+	Bottom of Page	Hasi y'urupapuro
+	Bottom of the Window	Hasi ya Idirishya
+	Bottom:	Hasi:
+	Box	Agasanduku
+	Boxed Formula	Agasanduku
+	Boxed Formula (example)	Agasanduku k'amasanduku (urugero)
+	Boxed Formulas	Agasanduku k'amasanduku
+	Braces	Utwugarizo
+	Braces with Separator	Ibirindiro hamwe na Bitandukanya
+	Bracket	Agace
+	Brackets	Utwugarizo
+	Brackets with Separators	Utwugarizo hamwe nabatandukanya
+	Break Link	Guhagarika
+	Breaks	Kumena
+	Breve	Breve
+	Brightness, contrast and transparency change the picture from how it looks now.	Umucyo, itandukaniro no gukorera mu mucyo bihindura ishusho uko isa ubu.
+	Brightness:	Umucyo:
+	Bring Forward	Zana Imbere
+	Browse in Doc4Me…	Reba muri Doc4Me…
+	Browse…	Gushakisha…
+	Build table of figures from:	Kubaka imbonerahamwe yimibare kuva:
+	Building Block Gallery Content Control	Kubaka Ibicuruzwa Byububiko Kugenzura Ibirimo
+	Built from the style or table entry fields chosen in Options.	Yubatswe kuva muburyo cyangwa kumeza yinjira mumwanya wahisemo mumahitamo.
+	Built-In	Yubatswe
+	Built-in Heading styles	Byubatswe-Imitwe yuburyo
+	Built-in style	Imiterere
+	Built-in styles can't be deleted.	Imiterere yubatswe ntishobora gusibwa.
+	Bullet	Amasasu
+	Bullet Library	Isomero ry'amasasu
+	Bullets	Amasasu
+	By author	Umwanditsi
+	By:	Na:
+	Calendar	Kalendari
+	Can't be deleted	Ntushobora gusibwa
+	Cancel	Kureka
+	Canvas Member	Umunyamuryango wa Canvas
+	Capitalization	Inyuguti nkuru
+	Capitalize Each Word	Andika buri jambo
+	Capitalize first letter of sentences	Andika inyuguti ya mbere yinteruro
+	Capitalize first letter of table cells	Andika inyuguti ya mbere yama selire
+	Capitalize names of days	Andika amazina yiminsi
+	Capitalize the first word of a sentence	Andika ijambo ryambere ryinteruro
+	Caption	Ibisobanuro
+	Caption label:	Ikirango cyanditseho:
+	Caption Numbering	Inomero y'inyandiko
+	Caption text	Inyandiko yanditseho
+	Caption:	Inyandiko:
+	Captions	Ibisobanuro
+	Caret Character	Imiterere ya Caret
+	Case changes	Impinduka
+	Cases	Imanza
+	Cases (Three Conditions)	Imanza (Ibintu bitatu)
+	Cases (Two Conditions)	Imanza (Ibintu bibiri)
+	Cases and Stacks	Imanza
+	Catalog	Cataloge
+	Categories	Ibyiciro
+	Categories:	Ibyiciro:
+	Category	Icyiciro
+	Category {n}	Icyiciro {n}
+	Category:	Icyiciro:
+	Category…	Icyiciro…
+	Ceiling	Ceiling
+	Cell	Akagari
+	Cell Margins	Ingirabuzimafatizo
+	Cell margins	Utugari
+	Cell Options	Amahitamo y'akagari
+	Cell Size	Ingano y'akagari
+	Cell\nMargins	Akagari \\ nMargins
+	Center	Ikigo
+	Centered	Hagati
+	Centered as Group	Hagati nk'itsinda
+	Centimeters	Santimetero
+	Change	Hindura
+	Change Case	Hindura Urubanza
+	Change Chart Type	Hindura Imbonerahamwe
+	Change Colors	Hindura amabara
+	Change in y over change in x	Guhindura muri y hejuru yo guhinduka muri x
+	Change Layout	Hindura Imiterere
+	Change List Level	Hindura Urwego Urwego
+	Change Password…	Hindura ijambo ryibanga…
+	Change Picture	Hindura Ishusho
+	Change Picture…	Hindura Ishusho…
+	Change Shape	Hindura Imiterere
+	Change Structure	Hindura Imiterere
+	Change to Display	Hindura Kuri Kugaragaza
+	Change to Inline	Hindura kumurongo
+	Change to Level 1	Hindura kurwego rwa 1
+	Change to Level 2	Hindura kurwego rwa 2
+	Change to Level 3	Hindura kurwego rwa 3
+	Change to Level 4	Hindura kurwego rwa 4
+	Change to Level 5	Hindura kurwego rwa 5
+	Change to Level 6	Hindura kurwego rwa 6
+	Change to Level 7	Hindura kurwego rwa 7
+	Change to Level 8	Hindura kurwego rwa 8
+	Change to Level 9	Hindura kurwego rwa 9
+	Change\nChart Type	Hindura \\ nUbushushanyo
+	Change\nColors	Hindura \\ n Amabara
+	Changed	Byahinduwe
+	Changed lines:	Imirongo yahinduwe:
+	Changes	Impinduka
+	Changes with highlighting	Impinduka hamwe no kumurika
+	Changes without highlighting	Impinduka uterekanye
+	Chapter in a book	Umutwe mu gitabo
+	Chapters begin at:	Ibice bitangirira kuri:
+	Character	Imiterere
+	Character Border	Imipaka
+	Character code:	Kode y'inyuguti:
+	Character in Range	Imiterere muri Range
+	Character level	Urwego rw'imiterere
+	Character Position	Umwanya w'inyuguti
+	Character Scale	Igipimo cy'inyuguti
+	Character Shading	Igicucu
+	Character Spacing	Umwanya w'inyuguti
+	Character spacing	Umwanya w'inyuguti
+	Character style	Imiterere
+	Characters	Inyuguti
+	Characters (no spaces)	Inyuguti (nta mwanya)
+	Characters (with spaces)	Inyuguti (hamwe n'umwanya)
+	Characters per line:	Inyuguti kumurongo:
+	Chart	Imbonerahamwe
+	Chart Design	Igishushanyo mbonera
+	Chart Layouts	Imbonerahamwe
+	Chart Title	Imbonerahamwe Umutwe
+	Check	Reba
+	Check Accessibility	Reba neza
+	Check Box Content Control	Reba Agasanduku Kugenzura Ibirimo
+	Check Compatibility	Reba Guhuza
+	Check Errors…	Reba Amakosa…
+	Check for Errors	Reba Amakosa
+	Check Spelling as You Type	Reba Imyandikire nkuko Wandika
+	Check spelling as you type	Reba imyandikire nkuko wandika
+	Check\nAccessibility	Reba \\ n Ibishoboka
+	Checked styles are allowed:	Imisusire yagenzuwe iremewe:
+	Checked symbol	Ikimenyetso cyagenzuwe
+	Chevron Down	Chevron Hasi
+	Chevron Up	Chevron Up
+	Chicago	Chicago
+	Chinese (Simplified)	Igishinwa (Byoroheje)
+	Chinese (Traditional)	Igishinwa (Gakondo)
+	Choose a command	Hitamo itegeko
+	Choose a shortcut	Hitamo inzira ihinnye
+	Choose List Item	Hitamo Urutonde Ikintu
+	Choose the sheet that holds the recipients.	Hitamo urupapuro rufata abahawe.
+	Circle	Uruziga
+	Circle area from its radius	Umuzenguruko uva kuri radiyo
+	Circled Dot	Akadomo kazengurutse
+	Circled Plus	Uruziga
+	Circled Times	Ibihe Byizengurutse
+	Citation marked.	Ikimenyetso cyashyizweho ikimenyetso.
+	Citation Style	Imisusire
+	Citations	Imirongo
+	Citations & Bibliography	Ibisobanuro & Bibliography
+	City	Umujyi
+	Clear	Biragaragara
+	Clear All	Kuraho Byose
+	Clear All Formatting	Kuraho Imiterere yose
+	Clear Character Formatting	Gusobanura Imiterere
+	Clear Character Style	Imiterere yimiterere
+	Clear Formatting Level	Urwego rusobanutse
+	Clear Paragraph Formatting	Gusobanura Igika
+	Click a border between two cells to merge them. Esc stops.	Kanda umupaka hagati ya selile ebyiri kugirango uhuze. Esc irahagarara.
+	Click an item to paste it.	Kanda ikintu kugirango ushireho.
+	Click level to modify:	Kanda urwego kugirango uhindure:
+	Click the empty text box the text should continue in (Esc cancels)	Kanda ahanditse ubusa agasanduku inyandiko igomba gukomeza muri (Esc cancels)
+	Click to switch back to inserting	Kanda kugirango uhindure usubiremo
+	Clipboard	Ububiko
+	Clipboard Contents	Ububiko
+	Clipboard Items	Ibikoresho byububiko
+	Clipboard Pane	Ikibaho
+	Close	Funga
+	Close Equation	Gereranya
+	Close Header and Footer	Funga Umutwe na Munsi
+	Close Outline View	Funga Urupapuro Reba
+	Close Outline\nView	Funga Urucacagu \\ n Reba
+	Close Reviewing Pane	Gufunga Gusubiramo
+	Clustered Bar	Akabari
+	Clustered Column	Inkingi
+	Col #:	Col #:
+	Collapse	Gusenyuka
+	Collapse Selection	Guhitamo
+	Collapse the Ribbon	Gusenyuka
+	Collate copies	Kusanya kopi
+	Collect entries from:	Kusanya ibyanditswe kuva:
+	Colon Equal	Inkingi zingana
+	Color	Ibara
+	Color model:	Icyitegererezo cy'amabara:
+	Color only	Ibara gusa
+	Color:	Ibara:
+	Color: {color}	Ibara: {color}
+	Colorful	Amabara
+	Colors	Amabara
+	Colors:	Amabara:
+	Column	Inkingi
+	Column Break	Ikiruhuko
+	Column Selection	Guhitamo Inkingi
+	Column selection: the arrow keys extend the block, Esc ends it	Guhitamo inkingi: urufunguzo rw'imyambi rwagura umurongo, Esc irarangiza
+	Column width	Ubugari bw'inkingi
+	Column:	Inkingi:
+	Columns	Inkingi
+	Columns:	Inkingi:
+	Combine	Huza
+	Combine Documents	Huza Inyandiko
+	Combo Box Content Control	Kugenzura Agasanduku Ibirimo
+	Commands	Amabwiriza
+	Commands:	Amategeko:
+	Comment	Igitekerezo
+	Comments	Ibitekerezo
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Ibitekerezo kuruhande rwa page yose hanyuma ukurikirane impinduka muri PDF, ibicapo n'amashusho; urutonde rwibitekerezo kurangiza urupapuro rwurubuga, Markdown ninyandiko.
+	Comments on version	Ibitekerezo kuri verisiyo
+	Comments Pane	Ibitekerezo
+	Commits	Imihigo
+	Common Accent Objects	Ibintu bisanzwe
+	Common Brackets	Utwugarizo dusanzwe
+	Common Fractions	Ibice bisanzwe
+	Common Functions	Imikorere isanzwe
+	Common Large Operators	Abakozi Bakuru Bakuru
+	Common Operator Structures	Imiterere rusange ya Operator
+	Common Operators	Abakoresha Rusange
+	Common Radicals	Ibisanzwe
+	Common Subscripts and Superscripts	Kwiyandikisha Rusange hamwe na Superscript
+	Communication	Itumanaho
+	Compact	Kwiyunga
+	Company	Isosiyete
+	Compare	Gereranya
+	Compare Documents	Gereranya Inyandiko
+	Compare to	Gereranya na
+	Compared: {changes} changes	Ugereranije: {changes} impinduka
+	Comparing with another file needs the desktop app.	Ugereranije nindi dosiye ikenera porogaramu ya desktop.
+	Comparison	Kugereranya
+	Comparison settings	Igereranya
+	Compatibility mode: {version}	Uburyo bwo guhuza: {version}
+	Compatibility Options	Guhitamo
+	Compatibility Options…	Amahitamo yo guhuza…
+	Compress Pictures	Kanda Amashusho
+	Compress punctuation at the start of a line	Gabanya utumenyetso two gutangira umurongo
+	Condensed	Byegeranye
+	Conference	Ihuriro
+	Conference paper	Urupapuro rw'inama
+	CONFIDENTIAL	ICYIZERE
+	Confirm password:	Emeza ijambo ryibanga:
+	Connect Shapes	Huza Imiterere
+	Constitutional Provisions	Ingingo z'Itegeko Nshinga
+	Container Title	Umutwe
+	Contains	Harimo
+	Content Control at Selection	Igenzura ry'ibirimo muguhitamo
+	Content Control Properties	Ibirimo Kugenzura Ibirimo
+	Contents can't be edited	Ibirimo ntibishobora guhindurwa
+	Context	Imirongo
+	Contextual	Imiterere
+	Continuous	Gukomeza
+	Continuous numbering	Gukomeza kubara
+	Contour Integral	Ibikubiyemo
+	Contour Integral with Limits	Kontora Yuzuye hamwe nimbibi
+	Contour Integral with Stacked Limits	Contour Yuzuye hamwe nimbibi zegeranye
+	Contour Integrals	Ibikubiyemo
+	Contrast:	Itandukaniro:
+	Contributors	Abaterankunga
+	Controls	Igenzura
+	Conversions	Guhindura
+	Convert	Hindura
+	Convert between built-up and linear form	Hindura hagati yuburyo bwubatswe
+	Convert Notes	Hindura Inyandiko
+	Convert Permanently	Hindura Iteka
+	Convert Text to Table	Hindura inyandiko kumeza
+	Convert Text to Table…	Hindura inyandiko kumeza…
+	Convert to Arabic Digits	Hindura imibare yicyarabu
+	Convert to Shapes	Hindura Imiterere
+	Convert to Text	Hindura Umwandiko
+	Convert to Thai Digits	Hindura imibare yo muri Tayilande
+	Copies	Amakopi
+	Coproduct	Kwandukura
+	Coproduct with Limits	Gukoporora hamwe Imipaka
+	Coproduct with Lower Limit	Gukoporora hamwe na Limit Limit
+	Coproduct with Subscript-Superscript Limits	Gukoporora hamwe na Subscript-Superscript Imipaka
+	Copy	Gukoporora
+	Copy Formatting	Gukoporora Imiterere
+	Copy of the text a bookmark marks	Gukoporora inyandiko yerekana ibimenyetso
+	Copy Styles	Gukoporora Imiterere
+	Copy Text	Gukoporora Umwandiko
+	Copy to where?	Wandukure aho?
+	Copyright	Uburenganzira
+	Copyright Sign	Ikimenyetso cy'uburenganzira
+	Corrections	Ubugororangingo
+	Cosecant Function	Imikorere ya Cosecant
+	Cosine 2x	Cosine 2x
+	Cosine Function	Imikorere ya Cosine
+	Cotangent Function	Imikorere ya Cotangent
+	Couldn't add {name}: {reason}	Ntushobora kongeramo {name}: {reason}
+	Couldn't download the picture: {reason}	Ntushobora gukuramo ifoto: {reason}
+	Couldn't download {name}: {error}	Ntushobora gukuramo {name}: {error}
+	Couldn't get the add-in list: {reason}	Ntushobora kubona urutonde rwinyongera: {reason}
+	Couldn't make Doc4Me the default: {error}	Ntushobora gukora Doc4Me isanzwe: {error}
+	Couldn't open {path}: {error}	Ntushobora gufungura {path}: {error}
+	Couldn't search: {reason}	Ntushobora gushakisha: {reason}
+	Couldn't translate: {reason}	Ntushobora guhindura: {reason}
+	Count by:	Kubara na:
+	Count words in text boxes and notes	Kubara amagambo mumasanduku yinyandiko
+	Country	Igihugu
+	Courtesy Title	Umutwe
+	Cover Page	Urupapuro
+	Craft	Ubukorikori
+	Create	Kurema
+	Create a Style	Kora Imiterere
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Kora urucacagu rwimikorere yinyandiko yawe. \\ N \\ nNuburyo bwiza cyane bwo gukurikirana aho uri cyangwa guhita wimura ibikubiyemo.
+	Create Data Source…	Kora Inkomoko Yamakuru…
+	Create Graphic	Kora Igishushanyo
+	Create Header Source	Kurema Umutwe Inkomoko
+	Create Link	Kora Ihuza
+	Create New Style	Kurema uburyo bushya
+	Create Source	Kurema Inkomoko
+	Create…	Kurema…
+	Crop	Igihingwa
+	Cross-reference	Kwambukiranya
+	Cross-reference:	Kwambukiranya:
+	Cube Root	Cube Imizi
+	Current	Ibiriho
+	Current - Linear	Ibiriho - Umurongo
+	Current - Professional	Ibiriho - Ababigize umwuga
+	Current keyboard settings	Igenamiterere rya Mwandikisho
+	Current page	Urupapuro rwubu
+	Current Position	Umwanya uriho
+	Current record	Inyandiko y'ubu
+	Current style: {style}	Imiterere y'ubu: {style}
+	Curved Arrow Connector	Umuyoboro uhetamye
+	Curved Connector	Umuyoboro uhetamye
+	Custom	Custom
+	Custom dictionary	Inkoranyamagambo
+	Custom Margins…	Umukiriya wihariye…
+	Custom mark:	Ikimenyetso cyihariye:
+	Custom range	Urutonde rwumukiriya
+	Custom Table of Contents	Imbonerahamwe y'ibirimo
+	Custom Table of Contents…	Imbonerahamwe y'ibirimo…
+	Custom Watermark	Ikimenyetso cyamazi
+	Custom Watermark…	Ikimenyetso cy'amazi…
+	Customize	Hindura
+	Customize Keyboard	Hindura Mwandikisho
+	Customize Quick Access Toolbar	Hindura ibikoresho byihuse
+	Customize Quick Access Toolbar…	Hindura Byihuse Ibikoresho Byinjira…
+	Customize Ribbon	Hindura Ikibaho
+	Customize the Ribbon…	Hindura Agasanduku…
+	Customize…	Hindura…
+	Cut	Kata
+	Cut, copy, and paste	Gukata, gukoporora, no gukata
+	Cycle	Ukuzenguruka
+	Czech	Ceki
+	Danish	Danemark
+	Dark	Umwijima
+	Dark Mode	Uburyo bwijimye
+	Dark page (white text on black)	Urupapuro rwijimye (inyandiko yera kumukara)
+	Dark with Shadow	Igicucu
+	Darkroom	Umwijima
+	Dashed	Dashe
+	Data	Amakuru
+	Data Labels	Ibirango byamakuru
+	Data source:	Inkomoko yamakuru:
+	Date	Itariki
+	Date & Time	Itariki & Igihe
+	Date and Time	Itariki nigihe
+	Date format	Imiterere y'itariki
+	Date formats:	Imiterere y'itariki:
+	Date Picker Content Control	Itariki Abatoranya Ibirimo Kugenzura
+	Day	Umunsi
+	Decimal	Icumi
+	Decorative objects only add visual interest: screen readers skip them.	Ibintu byo gushushanya byongera inyungu ziboneka gusa: abasoma ecran barabisimbuka.
+	Decrease Font Size	Kugabanya Ingano yimyandikire
+	Decrease Indent	Kugabanya Indent
+	Default	Mburabuzi
+	Default Paragraph Font	Mburabuzi Igika Imyandikire
+	Default tab stops:	Igice gisanzwe gihagarara:
+	Define New Bullet	Sobanura Isasu Rishya
+	Define New Multilevel List	Sobanura Urutonde rushya rwinshi
+	Define New Multilevel List…	Sobanura urutonde rushya rwa Multilevel…
+	Define New Number Format	Sobanura Imiterere Nshya
+	Deflate	Deflate
+	Delete	Siba
+	Delete Back in Equation	Siba Inyuma Muburinganire
+	Delete Cells	Siba Utugari
+	Delete Clipboard Item	Gusiba Ikibaho
+	Delete Columns	Siba Inkingi
+	Delete Comment	Siba Igitekerezo
+	Delete in Equation	Siba mu Kuringaniza
+	Delete Label	Siba Ikirango
+	Delete Next Word	Siba Ijambo rikurikira
+	Delete Previous Word	Siba Ijambo ryabanje
+	Delete Rows	Siba Imirongo
+	Delete Selected Ink	Siba Ink
+	Delete Style	Gusiba Imiterere
+	Delete Table	Gusiba Imbonerahamwe
+	Delete Table Style	Siba Imiterere yimbonerahamwe
+	Deleted	Gusiba
+	Deletions:	Gusiba:
+	Delivery address:	Aderesi yatanzwe:
+	Delta Equal To	Delta Bingana Kuri
+	Delta over arrow	Delta hejuru y'umwambi
+	Demote	Demote
+	Demote to Body Text	Demote kumyandiko yumubiri
+	Derivative as a limit	Inkomoko nkurugero
+	Descending	Kumanuka
+	Describe what this object shows, for people who can't see it.	Sobanura icyo iki kintu cyerekana, kubantu badashobora kukibona.
+	Describe what this table shows, for people who can't see it.	Sobanura icyo iyi mbonerahamwe yerekana, kubantu badashobora kuyibona.
+	Description:	Ibisobanuro:
+	Design	Igishushanyo
+	Design Mode	Uburyo bwo gushushanya
+	Detach Template	Kuramo Inyandikorugero
+	Detect language automatically	Menya ururimi mu buryo bwikora
+	Developer	Iterambere
+	development build	iterambere ryubaka
+	Diagonal	Diagonal
+	Diagonal Dots	Utudomo twa Diagonal
+	Diamond	Diamond
+	Dictate	Tegeka
+	Dictation isn't available here.	Dictation ntabwo iboneka hano.
+	Dictation stopped.	Inkoranyamagambo yarahagaze.
+	Dictation stopped: {reason}	Inkoranyamagambo yahagaritswe: {reason}
+	Different First Page	Urupapuro rwambere
+	Different Odd & Even Pages	Bitandukanye Odd & Ndetse Urupapuro
+	Differential	Itandukaniro
+	Differential theta	Itandukaniro
+	Differential x	Itandukaniro x
+	Differential y	Itandukaniro y
+	Differentials	Itandukaniro
+	Direct formatting	Imiterere itaziguye
+	Direction:	Icyerekezo:
+	Directory	Ubuyobozi
+	Display	Erekana
+	Display for Review	Erekana Gusubiramo
+	Display gridlines on screen	Erekana gridlines kuri ecran
+	Display name	Erekana izina
+	Display text	Erekana inyandiko
+	Distance from surrounding text	Intera ninyandiko ikikije
+	Distribute Columns	Gukwirakwiza Inkingi
+	Distribute letters	Tanga inzandiko
+	Distribute Rows	Gukwirakwiza Imirongo
+	Distribute spacing	Gukwirakwiza intera
+	Distributed	Yatanzwe
+	Do Not Check Spelling or Grammar	Ntugenzure Imyandikire cyangwa Ikibonezamvugo
+	Do not check spelling or grammar	Ntugenzure imyandikire cyangwa ikibonezamvugo
+	DO NOT COPY	NTIMUKORE
+	Do Not Show in TOC	Ntugaragaze muri TOC
+	Do you want to save changes to {name}?	Urashaka kubika impinduka kuri {name}?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Inyandiko ya Doc4Me ni udupaki twubusa twa macros kuva muri kataloge ya Doc4Me. Bashobora guhindura gusa inyandiko.
+	Doc4Me is now the default app for Word documents.	Doc4Me ubu ni porogaramu isanzwe yinyandiko.
+	Document	Inyandiko
+	Document End	Iherezo ry'inyandiko
+	Document Formatting	Imiterere y'inyandiko
+	Document Grid	Urusobekerane rw'inyandiko
+	Document Information	Amakuru yinyandiko
+	Document Property	Umutungo winyandiko
+	Document Start	Gutangira Inyandiko
+	Document template:	Inyandiko y'inyandiko:
+	Document Text	Inyandiko
+	Document Title	Umutwe w'inyandiko
+	Document1	Inyandiko1
+	Document\nPreferences	Inyandiko \\ nIbyifuzo
+	Documents	Inyandiko
+	Documents you open will show up here.	Inyandiko ufunguye zizerekanwa hano.
+	Does not contain	Ntabwo irimo
+	DOI	DOI
+	Don't add space between paragraphs of the same style	Ntukongere umwanya hagati yingingo zuburyo bumwe
+	Don't capitalize after:	Ntukoreshe inyuguti nyuma:
+	Don't hyphenate	Ntugahinyure
+	Don't print blank lines when data fields are empty	Ntugacapure imirongo yubusa mugihe amakuru yimibare arimo ubusa
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Ntugasome Zotero, Mendeley cyangwa EndNote yerekana na bibliografiya
+	Don't Save	Ntukize
+	Don't use HTML paragraph auto spacing	Ntukoreshe igika cya HTML umwanya wimodoka
+	Dot	Akadomo
+	Dot dash	Akadomo
+	Dot-dash	Akadomo
+	Dots	Utudomo
+	Dotted	Akadomo
+	Double	Kabiri
+	Double Bar	Kabiri
+	Double Closing Quote	Amajambo abiri yo gusoza
+	Double Dot	Akadomo kabiri
+	Double Integral	Kabiri
+	Double Integral with Limits	Kabiri Yuzuye hamwe Imipaka
+	Double Integral with Stacked Limits	Kabiri Yuzuye hamwe nimbibi zegeranye
+	Double Left Arrow with Text Above	Kabiri Ibumoso Umwambi hamwe ninyandiko Hejuru
+	Double Left Arrow with Text Below	Kabiri Ibumoso Umwambi hamwe ninyandiko hepfo
+	Double Left Right Arrow with Text Above	Kabiri Ibumoso Iburyo hamwe Umwandiko Hejuru
+	Double Left Right Arrow with Text Below	Kabiri Ibumoso Iburyo Umwambi hamwe ninyandiko hepfo
+	Double Opening Quote	Amagambo abiri yo gufungura
+	Double Right Arrow with Text Above	Kabiri iburyo bwiburyo hamwe ninyandiko hejuru
+	Double Right Arrow with Text Below	Kabiri iburyo bwiburyo hamwe ninyandiko hepfo
+	Double Spacing	Intera ebyiri
+	Double Square Brackets	Imirongo ibiri
+	Double Strikethrough	Inshuro ebyiri
+	Double strikethrough	Inshuro ebyiri
+	Double summation	Incamake ebyiri
+	Double Underline	Imirongo ibiri
+	Double Vertical Bars	Imirongo ibiri ihagaritse
+	Doughnut	Gutanga
+	Down	Hasi
+	Downloading the speech model ({mb} MB, once)…	Gukuramo imvugo yerekana ({mb} MB, rimwe)…
+	Downloading…	Gukuramo…
+	DRAFT	DRAFT
+	Draft	Inyandiko
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Kurura urukiramende gushushanya imbonerahamwe, cyangwa umurongo hejuru ya selile kugirango ubigabanye. Esc irahagarara.
+	Draw	Shushanya
+	Draw Ink	Shushanya Ink
+	Draw Table	Shushanya Imbonerahamwe
+	Draw\nTable	Shushanya \\ n Imbonerahamwe
+	Drawing Canvas	Gushushanya Canvas
+	Drawing Grid	Gushushanya
+	Drawing Tools	Gushushanya Ibikoresho
+	Drawing\nCanvas	Igishushanyo \\ nCanvas
+	Drop Cap	Igitonyanga
+	Drop cap	Igitonyanga
+	Drop-Down List Content Control	Kumanura Hasi Urutonde Ibirimo Kugenzura
+	Drops all formatting and pastes plain text.	Kureka imiterere yose hanyuma wandike inyandiko isanzwe.
+	Dutch	Ikidage
+	E-mail Messages	Ubutumwa bwa imeri
+	Edit Category	Hindura Icyiciro
+	Edit Comment	Hindura Igitekerezo
+	Edit Data	Hindura amakuru
+	Edit Document	Hindura inyandiko
+	Edit Equation	Hindura Ikigereranyo
+	Edit Field Code	Hindura kode yumurima
+	Edit Field…	Hindura Umwanya…
+	Edit Footer	Hindura Umutwe
+	Edit Header	Hindura Umutwe
+	Edit Individual Documents…	Hindura inyandiko kugiti cyawe…
+	Edit Items	Hindura Ibintu
+	Edit Recipient List	Hindura urutonde rwabakiriye
+	Edit Source	Hindura Inkomoko
+	Edit\nData	Hindura \\ nData
+	Edit\nRecipient List	Hindura \\ nUrutonde rwabakiriye
+	Edited	Byahinduwe
+	Editing	Guhindura
+	Editing header/footer	Guhindura umutwe / munsi
+	Editing in this document is restricted.	Guhindura muriyi nyandiko birabujijwe.
+	Editing — edit the document directly	Guhindura - hindura inyandiko mu buryo butaziguye
+	Edition	Inyandiko
+	Editor	Muhinduzi
+	Edit…	Hindura…
+	Effects	Ingaruka
+	Elbow Arrow Connector	Inkokora Umwambi Uhuza
+	Elbow Connector	Inkokora
+	Ellipsis	Ellipsis
+	Em Dash	Em Dash
+	Em Space	Umwanya
+	Email address (optional)	Aderesi imeri (bidashoboka)
+	Emboss	Emboss
+	Emphasis	Shimangira
+	Empty Matrices	Imibare Yubusa
+	En Dash	En Dash
+	En Space	Umwanya
+	Enclose Characters	Shyiramo inyuguti
+	Enclosure	Uruzitiro
+	Encrypt with Password	Shishoza ukoresheje ijambo ryibanga
+	Encrypt with Password…	Shishoza ukoresheje ijambo ryibanga…
+	End of document	Iherezo ryinyandiko
+	End of section	Impera yicyiciro
+	End of Word	Iherezo ry'ijambo
+	Endnote Reference	Ibisobanuro
+	Endnote Text	Ibisobanuro byanyuma
+	Endnotes	Ibisobanuro
+	Endnotes to footnotes	Ibisobanuro ahagana hasi ku ipaji
+	English	Icyongereza
+	English (United Kingdom)	Icyongereza (Ubwongereza)
+	English (United States)	Icyongereza (Amerika)
+	Engrave	Shushanya
+	Enlarge symbol	Ikimenyetso kinini
+	Enter formatting for number:	Injira imiterere ya numero:
+	Enter in Equation	Injira muburinganire
+	Enter page number:	Injiza nimero ya page:
+	Enter the web address or embed code of an online video:	Injira kurubuga cyangwa ushiremo kode ya videwo kumurongo:
+	Entry marked.	Ibyinjira byashyizweho ikimenyetso.
+	Entry:	Icyinjira:
+	Envelope #10   4.12" × 9.50"	Ibahasha # 10 4.12 "× 9.50"
+	Envelope Address	Aderesi ibahasha
+	Envelope DL   4.33" × 8.66"	Ibahasha DL 4.33 "× 8.66"
+	Envelope Return	Garuka ibahasha
+	Envelope size:	Ingano y'ibahasha:
+	Envelopes	Ibahasha
+	Equal by Definition	Bingana nubusobanuro
+	Equal column width	Ubugari bungana
+	Equal Equal	Bingana
+	Equal to	Bingana na
+	Equals:	Bingana:
+	Equation	Ikigereranyo
+	Equation Gallery	Ikigereranyo
+	Equation Info	Ikigereranyo cyamakuru
+	Equation Number	Umubare Ingano
+	Equation Options	Amahitamo yo kugereranya
+	Erase Ink	Kuraho Ink
+	Eraser	Eraser
+	Errors ({n})	Amakosa ({n})
+	Estonian	Esitoniya
+	Euler's identity	Indangamuntu ya Euler
+	Even Page	Ndetse Urupapuro
+	Even pages only	Ndetse impapuro gusa
+	Every change is recorded as a tracked change.	Impinduka zose zanditswe nkimpinduka ikurikiranwa.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Buri tegeko riraboneka kumyandikire hamwe nabakozi ba AI: koresha `doc4me-cli mcp` kuri seriveri ya MCP, cyangwa utangire porogaramu hamwe na - --control <port>` kumuyoboro wa JSON.
+	Every field needs a name.	Buri murima ukeneye izina.
+	Every font this document uses is installed.	Imyandikire yose iyi nyandiko ikoresha yashyizweho.
+	Everyone	Umuntu wese
+	Exactly	Nukuri
+	Exactly {n}	Nukuri {n}
+	Example: {sample}	Urugero: {sample}
+	Exceptions (optional)	Ibidasanzwe (bidashoboka)
+	Exceptions…	Ibidasanzwe…
+	Executive   7.25" × 10.50"	Nyobozi 7.25 "× 10.50"
+	Exit	Sohoka
+	Expand	Kwagura
+	Expand or Collapse Heading	Kwagura cyangwa gusenyuka Umutwe
+	Expanded	Yaguwe
+	Exponential	Ikigaragara
+	Exponential series	Urukurikirane rwerekana
+	Export	Kohereza hanze
+	Export a copy to share (PDF, Word document)	Kohereza kopi kugirango dusangire (PDF, Inyandiko y'Ijambo)
+	Export Page as JPEG	Urupapuro rwohereza hanze nka JPEG
+	Export Page as PNG	Urupapuro rwohereza hanze nka PNG
+	Export PDF	Kohereza PDF
+	Exported {path}	Kohereza hanze {path}
+	Expression	Imvugo
+	Extend Selection	Kwagura Guhitamo
+	Extend Selection by Units	Kwagura Guhitamo Kubice
+	Extra space	Umwanya winyongera
+	Extra spaces between words.	Umwanya wongeyeho hagati yamagambo.
+	Field	Umurima
+	Field Click	Kanda
+	Field code:	Kode yo mu murima:
+	Field Codes	Kode yo mu murima
+	Field codes:	Kode yo mu murima:
+	Field name	Izina ryumurima
+	Field name:	Izina ry'umurima:
+	Field names must be different.	Amazina yumurima agomba kuba atandukanye.
+	Field names:	Amazina yumurima:
+	Field properties	Imiterere yumurima
+	Field:	Umwanya:
+	Fields	Imirima
+	Fields to insert:	Imirima yo gushiramo:
+	Fields:	Imirima:
+	Field…	Umwanya…
+	Figure	Igishushanyo
+	File	Idosiye
+	File name:	Izina rya dosiye:
+	Fill	Uzuza
+	Fill & Line	Uzuza & Umurongo
+	Fill color:	Uzuza ibara:
+	Fill:	Uzuza:
+	Filling in forms	Kuzuza impapuro
+	Film	Filime
+	Filter and Sort	Muyunguruzi na Sort
+	Filter and Sort…	Akayunguruzo na Sort…
+	Filter Records	Muyunguruzi
+	Find	Shakisha
+	Find and Replace	Shakisha kandi usimbuze
+	Find Next	Shakisha Ibikurikira
+	Find Next Editable Region	Shakisha Ibikurikira Byahinduwe
+	Find Previous	Shakisha Mbere
+	Find Recipient	Shakisha Uwakiriye
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Shakisha hitamo igika gikurikira; Kwanga shyira uwatoranijwe inyuma nkuko byari bimeze.
+	Find What Expression	Shakisha Icyo Kugaragaza
+	Find What Text	Shakisha Inyandiko
+	Find what:	Shakisha icyo:
+	Find →	Shakisha →
+	Find:	Shakisha:
+	Finish	Kurangiza
+	Finish & Merge	Kurangiza & Guhuza
+	Finish &\nMerge	Kurangiza & \\ nMerge
+	Finished	Byarangiye
+	Finnish	Igifinilande
+	First	Ubwa mbere
+	First Cell in Column	Akagari ka mbere mu nkingi
+	First Cell in Row	Akagari ka mbere kumurongo
+	First Column	Inkingi ya mbere
+	First commit	Banza wiyemeze
+	First line	Umurongo wa mbere
+	First line:	Umurongo wa mbere:
+	First Name	Izina
+	First row of data contains column headers	Umurongo wambere wamakuru urimo inkingi imitwe
+	Fit	Bikwiranye
+	Fit text	Guhuza inyandiko
+	Fix Position on Page	Gukosora Umwanya kurupapuro
+	Fixed Column Width	Ubugari Bwuzuye
+	Flip Horizontal	Fata Horizontal
+	Flip Vertical	Flip Vertical
+	Floor	Igorofa
+	Focus	Wibande
+	Follow number with:	Kurikira umubare hamwe na:
+	Font	Imyandikire
+	Font Color	Ibara ry'imyandikire
+	Font color	Ibara ry'imyandikire
+	Font color:	Ibara ry'imyandikire:
+	Font Dialog	Imyandikire
+	Font not installed	Imyandikire ntabwo yashyizweho
+	Font Size	Ingano yimyandikire
+	Font Substitution	Gusimbuza Imyandikire
+	Font Substitution…	Gusimbuza Imyandikire…
+	Font:	Imyandikire:
+	Font: {font}	Imyandikire: {font}
+	Fonts	Imyandikire
+	Font…	Imyandikire…
+	Footer	Umutwe
+	Footnote and Endnote	Akajambo k'epfo
+	Footnote Reference	Ibisobanuro ahagana hasi ku ipaji
+	Footnote Text	Ibisobanuro ahagana hasi ku ipaji
+	Footnotes	Ibisobanuro
+	Footnotes and endnotes	Akajambo k'epfo
+	Footnotes to endnotes	Ibisobanuro ahagana hasi ku ipaji
+	Form Letters	Amabaruwa
+	Format	Imiterere
+	Format Page Numbers	Imiterere y'urupapuro
+	Format Page Numbers…	Imiterere y'urupapuro…
+	Format Painter	Irangi
+	Format Picture	Shushanya
+	Format Shape	Imiterere
+	Format:	Imiterere:
+	Formatted	Imiterere
+	Formatted Text	Umwandiko
+	Formatting	Imiterere
+	Formatting at Selection	Imiterere muguhitamo
+	Formatting completed. You can now:	Imiterere yarangiye. Urashobora noneho:
+	Formatting exceptions	Gushiraho ibintu bidasanzwe
+	Formatting marks	Gushiraho ibimenyetso
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Imiterere, impinduka zurubanza, umwanya wera nimbonerahamwe biragereranywa; ubundi igenamiterere ribikwa nyuma.
+	Formula	Inzira
+	Forward	Imbere
+	Fraction	Igice
+	Fractions (1/2) as fraction characters (½)	Ibice (1/2) nk'inyuguti zigabanya (½)
+	French	Igifaransa
+	French (France)	Igifaransa (Ubufaransa)
+	From	Kuva
+	From text:	Kuva mu nyandiko:
+	from Unicode (hex)	kuva muri Unicode (hex)
+	From:	Kuva:
+	Full page of the same label	Urupapuro rwuzuye rwa label imwe
+	Function	Imikorere
+	Functions	Imikorere
+	Gallery	Ikarita
+	GB/T 7714	GB / T 7714
+	General	Jenerali
+	Geometry	Geometrie
+	German	Ikidage
+	German (Germany)	Ikidage (Ubudage)
+	Get Add-ins	Kubona inyongera
+	Get Data	Kubona Amakuru
+	Get Data…	Shaka Data…
+	Getting ready…	Kwitegura…
+	Glow	Glow
+	Glow Colors	Garagaza amabara
+	Go Back	Subira inyuma
+	Go To	Jya kuri
+	Go to	Jya kuri
+	Go To…	Jya kuri…
+	Good afternoon	Mwaramutse
+	Good evening	Umugoroba mwiza
+	Good morning	Mwaramutse
+	GOST (name sort)	GOST (ubwoko bw'izina)
+	GOST (title sort)	GOST (ubwoko bwumutwe)
+	Grab bag	Fata igikapu
+	Grammar	Ikibonezamvugo
+	Grammar Settings	Igenamiterere ry'ikibonezamvugo
+	Graphic	Igishushanyo
+	Grave	Imva
+	Greater than	Biruta
+	Greater than or equal	Birarenze cyangwa bingana
+	Greek	Ikigereki
+	Greek Letters	Inzandiko z'ikigereki
+	Green:	Icyatsi:
+	Greeting Line	Umurongo wo gusuhuza
+	Greeting\nLine	Ndabaramukije \\ nUmurongo
+	Grid Settings	Igenamiterere
+	Grid Table 1 Light	Imbonerahamwe 1 Urumuri
+	Grid Table 4 – Blue	Imbonerahamwe ya 4 - Ubururu
+	Grid Table 4 – Green	Imbonerahamwe ya 4 - Icyatsi
+	Grid Table 4 – Orange	Imbonerahamwe ya 4 - Icunga
+	Grid Table 4 – Purple	Imbonerahamwe ya 4 - Umutuku
+	Gridlines	Imirongo
+	Group	Itsinda
+	Grouping Character Above	Gutondekanya Imiterere Hejuru
+	Grouping Character Below	Amatsinda Amatsinda Hasi
+	Grow Font 1 Point	Gukura Imyandikire 1 Ingingo
+	H:	H:
+	Hanging Indent	Kumanika Indent
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	Ingofero
+	Header	Umutwe
+	Header & Footer	Umutwe & Umutwe
+	Header Options	Amahitamo Umutwe
+	Header Options:	Amahitamo Umutwe:
+	Header Row	Umutwe Row
+	Header source: {file} (the next data source opened here takes its field names)	Inkomoko y'umutwe: {file} (isoko ikurikira yatanzwe hano ifata amazina yumurima)
+	Header/Footer Position	Umutwe / Umwanya Umwanya
+	Headers and footers	Umutwe na Mirongo
+	Heading 1	Umutwe 1
+	Heading 2	Umutwe 2
+	Heading 3	Umutwe 3
+	Heading styles (levels 1–{n})	Imiterere yumutwe (urwego 1 - {n})
+	Heading {n}	Umutwe {n}
+	Headings	Imitwe
+	Heart	Umutima
+	Hebrew	Igiheburayo
+	Height:	Uburebure:
+	Help	Ubufasha
+	Hex:	Hex:
+	Hidden	Hihishe
+	Hidden text	Inyandiko ihishe
+	Hide Codes	Hisha Kode
+	Hide from style lists	Hisha kurutonde rwimiterere
+	Hide Ink	Hisha Ink
+	Hide White Space	Hisha Umwanya Wera
+	Hide\nInk	Hisha \\ nInk
+	Hierarchy	Inzego
+	Highlight	Shyira ahagaragara
+	Highlight Changes	Shyira ahagaragara impinduka
+	Highlight changes in printed document	Shyira ahagaragara impinduka mu nyandiko
+	Highlight changes on screen	Shyira ahagaragara impinduka kuri ecran
+	Highlight Merge Fields	Shyira ahagaragara Imirima
+	Highlight\nMerge Fields	Shyira ahagaragara \\ n Guhuza Imirima
+	Highlighter	Kumurika
+	Hindi	Hindi
+	Historical and Discretional	Amateka n'Ubushishozi
+	Hollow	Ubusa
+	Home	Murugo
+	Home folder	Ububiko bw'urugo
+	Horizontal	Uhagaritse
+	Horizontal Line	Umurongo utambitse
+	Horizontal spacing:	Umwanya utambitse:
+	How many pages the whole document has	Nimpapuro zingahe inyandiko yose ifite
+	How many pages this section has	Ni impapuro zingahe iki gice gifite
+	How many words the document holds	Amagambo angahe inyandiko ifite
+	HTML Format	Imiterere ya HTML
+	Hue:	Hue:
+	Hungarian	Hongiriya
+	Hyperbolic Cosecant Function	Imikorere ya Hyperbolic Cosecant
+	Hyperbolic Cosine Function	Imikorere ya Hyperbolic Cosine
+	Hyperbolic Cotangent Function	Imikorere ya Hyperbolic Cotangent
+	Hyperbolic Functions	Imikorere ya Hyperbolic
+	Hyperbolic Secant Function	Imikorere ya Hyperbolic
+	Hyperbolic Sine Function	Imikorere ya Hyperbolic
+	Hyperbolic Tangent Function	Imikorere ya Hyperbolic
+	Hyperlink	Hyperlink
+	Hyphenate at:	Hyphenate kuri:
+	Hyphenate words in CAPS	Amagambo ahinnye muri CAPS
+	Hyphenation	Hyphenation
+	Hyphenation Options…	Amahitamo ya Hyphenation…
+	Hyphenation zone:	Agace ka Hyphenation:
+	Hyphens (--) as dashes (—)	Hyphens (-) nkibishushanyo (-)
+	Hypotenuse	Hypotenuse
+	I, II, III, …	I, II, III,…
+	i, ii, iii, …	i, ii, iii,…
+	Icon Color	Agashusho Ibara
+	Icons	Udushushondanga
+	Identity Matrices	Imibare y'irangamuntu
+	IEEE	IEEE
+	If…Then…Else	Niba… Hanyuma… Ubundi
+	If…Then…Else…	Niba… Hanyuma… Ubundi…
+	Ignore All	Irengagize Byose
+	Ignore punctuation characters	Irengagize inyuguti zerekana
+	Ignore web and file addresses	Kwirengagiza urubuga na aderesi ya dosiye
+	Ignore white-space characters	Kwirengagiza inyuguti-yera inyuguti
+	Ignore words in capitals	Ntiwirengagize amagambo mu nyuguti nkuru
+	Ignore words with numbers	Irengagize amagambo afite imibare
+	Illustrations	Ingero
+	Immersive	Immersive
+	Immersive Reader	Umusomyi wibiza
+	Immersive\nReader	Immersive \\ nUmusomyi
+	In Default apps, choose Doc4Me for the document types you want it to open.	Muri porogaramu zisanzwe, hitamo Doc4Me kubwoko bwinyandiko ushaka ko zifungura.
+	In equations, typing a name after a backslash replaces it with its symbol.	Muburinganire, kwandika izina nyuma yo gusubira inyuma bisimbuza ikimenyetso cyacyo.
+	In Front of Text	Imbere yinyandiko
+	In Line with Text	Ku murongo hamwe ninyandiko
+	Inches	Inch
+	Include label and number	Shyiramo ikirango numubare
+	Include level number from:	Shyiramo umubare urwego kuva:
+	Include page numbers	Shyiramo nimero ya page
+	Increase Font Size	Ongera Ingano yimyandikire
+	Increase Indent	Ongera Indent
+	Indent	Indent
+	Indent from left:	Kwerekana uhereye ibumoso:
+	Indentation	Kwerekana
+	Indented	Yatanzwe
+	Indents	Ibimenyetso
+	Indents and Spacing	Ibimenyetso hamwe n'umwanya
+	Index	Ironderero
+	Index and Tables	Ironderero n'imbonerahamwe
+	Index Heading	Umutwe
+	Index {n}	Ironderero {n}
+	Indonesian	Indoneziya
+	Inflate	Kwiyongera
+	Info	Amakuru
+	Initials:	Intangiriro:
+	Ink	Ink
+	Ink Equation	Ingano
+	Ink Replay	Gusubiramo Ink
+	Ink to Math	Ink to Math
+	Ink to Shape	Ink
+	Ink to\nMath	Ink kuri \\ nImibare
+	Ink to\nShape	Inkingi ya \\ n Ishusho
+	Ink\nReplay	Ink \\ nGusubiramo
+	Inline	Umurongo
+	Input Format	Iyinjiza
+	Insert	Shyiramo
+	Insert a 3D model from a file (.glb, .stl, .obj)	Shyiramo moderi ya 3D kuva muri dosiye (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	Shyiramo ikigereranyo gishya (Alt + =)
+	Insert Above	Shyira hejuru
+	Insert Below	Shyiramo hepfo
+	Insert Caption	Ongeramo ibisobanuro
+	Insert Cells	Shyiramo Utugari
+	Insert Chart	Shyiramo Imbonerahamwe
+	Insert Citation	Ongeramo Citation
+	Insert Columns to the Left	Shyiramo Inkingi Ibumoso
+	Insert Columns to the Right	Shyiramo Inkingi iburyo
+	Insert Data	Shyiramo amakuru
+	Insert Database	Shyiramo Ububikoshingiro
+	Insert Database…	Shyiramo Ububikoshingiro…
+	Insert Date Field	Shyiramo Itariki Umwanya
+	Insert Endnote	Ongeramo ibisobanuro
+	Insert entire column	Shyiramo inkingi yose
+	Insert entire row	Shyiramo umurongo wose
+	Insert Footnote	Ongeramo ibisobanuro
+	Insert Hyperlink	Shyiramo Hyperlink
+	Insert Index	Ongeramo urutonde
+	Insert Left	Shyiramo ibumoso
+	Insert LISTNUM Field	Shyiramo LISTNUM Umwanya
+	Insert Merge Field	Shyiramo umurima
+	Insert Merge\nField	Shyiramo Guhuza \\ nIngabo
+	Insert New Equation	Shyiramo Ikigereranyo gishya
+	Insert one text or another, depending on a field's value.	Shyiramo inyandiko imwe cyangwa indi, ukurikije agaciro k'umurima.
+	Insert Page Field	Shyiramo Urupapuro
+	Insert Right	Shyiramo iburyo
+	Insert Rows	Shyiramo imirongo
+	Insert Rows Above	Shyiramo imirongo hejuru
+	Insert Rows Below	Shyiramo imirongo hepfo
+	Insert Shapes	Shyiramo Imiterere
+	Insert SmartArt	Shyiramo SmartArt
+	Insert Structure	Shyiramo Imiterere
+	Insert Symbol	Shyiramo Ikimenyetso
+	Insert Table	Shyiramo Imbonerahamwe
+	Insert Table of Authorities	Shyiramo Imbonerahamwe yabayobozi
+	Insert Table of Figures	Shyiramo Imbonerahamwe
+	Insert Table…	Shyiramo Imbonerahamwe…
+	Insert Time Field	Shyiramo umwanya
+	Insert Video	Shyiramo Video
+	Insert\nAbove	Shyiramo \\ n Hejuru
+	Insert\nCaption	Ongeramo \\ nCaption
+	Insert\nCitation	Shyiramo
+	Insert\nFootnote	Shyiramo \\ nIbisobanuro
+	Inserted	Byinjijwe
+	Insertions and Deletions	Kwinjiza no Gusiba
+	Insertions:	Ibyinjijwe:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Kwinjiza: {ins}, gusiba: {del}, kwimuka: {moves}, imiterere: {fmt}, ibisobanuro: {comments}
+	Inside	Imbere
+	Inside Borders	Imbere Imipaka
+	Inside Margin	Imbere
+	Inside:	Imbere:
+	Inspect Document	Kugenzura Inyandiko
+	Inspect Styles at Selection	Kugenzura Imiterere Kuri Guhitamo
+	Institution	Ikigo
+	Integral	Intangarugero
+	Integral of e^(−x²)	Ibice bya e ^ (- x²)
+	Integral with Limits	Bidafite aho bigarukira
+	Integral with Stacked Limits	Intangarugero hamwe nimbibi zegeranye
+	Integrals	Kwishyira hamwe
+	Intense Emphasis	Gushimangira cyane
+	Intense Quote	Amagambo akomeye
+	Intense Reference	Byimbitse
+	Interface	Imigaragarire
+	Interface language	Ururimi rwimbere
+	Interface language:	Ururimi rwimbere:
+	Interface size:	Ingano yimbere:
+	Interface Theme	Insanganyamatsiko
+	Interface theme:	Insanganyamatsiko:
+	Interface\nTheme	Imigaragarire \\ n Insanganyamatsiko
+	Internet addresses as links	Aderesi ya interineti nkumuhuza
+	Intersection	Isangano
+	Intersection with Limits	Gutandukana n'imbibi
+	Intersection with Lower Limit	Isangano hamwe na Limit
+	Intersection with Subscript-Superscript Limits	Gutandukana hamwe na Subscript-Superscript Imipaka
+	Inverse Cosecant Function	Imikorere ya Cosecant Imikorere
+	Inverse Cosine Function	Imikorere ya Cosine
+	Inverse Cotangent Function	Imikorere ya Cotangent Imikorere
+	Inverse Functions	Imikorere itandukanye
+	Inverse Hyperbolic Cosecant Function	Imikorere ya Hyperbolic Cosecant Imikorere
+	Inverse Hyperbolic Cosine Function	Imikorere ya Hyperbolic Cosine Imikorere
+	Inverse Hyperbolic Cotangent Function	Imikorere ya Hyperbolic Cotangent Imikorere
+	Inverse Hyperbolic Functions	Imikorere ya Hyperbolic Imikorere
+	Inverse Hyperbolic Secant Function	Imikorere ya Hyperbolic Secant Imikorere
+	Inverse Hyperbolic Sine Function	Imikorere ya Hyperbolic Sine Imikorere
+	Inverse Hyperbolic Tangent Function	Imikorere ya Hyperbolic Tangent Imikorere
+	Inverse Secant Function	Imikorere idahwitse
+	Inverse Sine Function	Imikorere ya Sine
+	Inverse Tangent Function	Imikorere ihindagurika
+	Ionosphere	Ionosifera
+	Is blank	Ni ubusa
+	Is not blank	Ntabwo ari ubusa
+	ISO 690 (author-date)	ISO 690 (umwanditsi-itariki)
+	ISO 690 (numerical)	ISO 690 (mubare)
+	Issue	Ikibazo
+	it isn't a picture Doc4Me can read	ntabwo ari ishusho Doc4Me ishobora gusoma
+	Italian	Umutaliyani
+	Italic	Ubutaliyani
+	Japanese	Ikiyapani
+	Journal	Ikinyamakuru
+	Justification	Gutsindishirizwa
+	Justification of a display equation	Gutsindishirizwa kugereranya
+	Justified	Bifite ishingiro
+	Justify	Gutsindishiriza
+	Keep Lines Together	Komeza Imirongo hamwe
+	Keep lines together	Komeza imirongo hamwe
+	Keep Source Formatting	Komeza Imiterere
+	Keep Text Only	Komeza Inyandiko gusa
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Bika ijambo ryibanga ahantu hizewe: utarimo ntanumwe, Doc4Me irimo, irashobora gufungura inyandiko. Kureka ibisanduku byombi ubusa kugirango ukureho ijambo ryibanga.
+	Keep with Next	Komeza na Ibikurikira
+	Keep with next	Komeza hamwe nubutaha
+	Keeps the fonts and formatting of the copied text.	Komeza imyandikire hamwe nimiterere yinyandiko yimuwe.
+	Kerning for fonts:	Gukoresha Imyandikire:
+	Keyboard shortcuts:	Amahinanzira ya Mwandikisho:
+	Keys for this command:	Urufunguzo rw'iri tegeko:
+	Keywords	Ijambo ryibanze
+	Korean	Igikoreya
+	Label changes with:	Ikirango gihinduka hamwe na:
+	Label:	Akarango:
+	Labels	Ibirango
+	Landscape	Ahantu nyaburanga
+	Language	Ururimi
+	Language Preferences…	Ibyifuzo by'ururimi…
+	Language…	Ururimi…
+	Large\nOperator	Kinini \\ nUmuyobozi
+	Largest Only	Kinini gusa
+	Largest only	Kinini gusa
+	Lasso	Lasso
+	Lasso Select	Hitamo Lasso
+	Last	Icya nyuma
+	Last Cell in Column	Akagari ka nyuma mu nkingi
+	Last Cell in Row	Akagari ka nyuma kumurongo
+	Last Column	Inkingi yanyuma
+	Last commit	Icyemezo cya nyuma
+	Last Name	Izina ryanyuma
+	Last, First; Last, First	Icya nyuma, Icyambere; Icya nyuma, Icyambere
+	Latin text font:	Imyandikire y'Ikilatini:
+	Layout	Imiterere
+	Layout options for this document	Uburyo bwo guhitamo iyi nyandiko
+	Layout Summary	Incamake
+	Layouts	Imiterere
+	Leader	Umuyobozi
+	Leave a recipient out of the merge when a field has this value.	Kureka uwakiriye avuye hamwe mugihe umurima ufite agaciro.
+	Leave Equation	Kureka Ikigereranyo
+	Leave the equation (Esc)	Kureka ikigereranyo (Esc)
+	Leave the label out of the caption	Kureka ikirango hanze yamagambo
+	Left	Ibumoso
+	Left Arrow with Text Above	Ibumoso bwibumoso hamwe ninyandiko hejuru
+	Left Arrow with Text Below	Ibumoso Umwambi hamwe ninyandiko hepfo
+	Left Border	Ibumoso
+	Left border	Imipaka ibumoso
+	Left Bracket Twice	Ibumoso Ibumoso kabiri
+	Left indent	Ibumoso
+	Left Margin	Ibumoso
+	Left Only	Ibumoso
+	Left only	Ibumoso gusa
+	Left Right Arrow Above	Ibumoso Iburyo Umwambi Hejuru
+	Left Right Arrow with Text Above	Ibumoso Iburyo Umwambi hamwe ninyandiko hejuru
+	Left Right Arrow with Text Below	Ibumoso Iburyo Umwambi hamwe ninyandiko hepfo
+	Left Subscript-Superscript	Ibumoso Kwiyandikisha-Inyandiko
+	Left-to-right	Ibumoso-iburyo
+	Left-to-Right Text Direction	Ibumoso-Kuri-Iburyo Icyerekezo
+	Left:	Ibumoso:
+	Leftwards Arrow Above	Ibumoso Umwambi Hejuru
+	Leftwards Harpoon Above	Ibumoso Harpoon Hejuru
+	Legal   8.50" × 14.00"	Byemewe n'amategeko 8.50 "× 14.00"
+	Legal style numbering	Inomero yemewe
+	Legend	Umugani
+	Less than	Ntabwo ari munsi
+	Less than or equal	Ntibiri cyangwa bingana
+	Letter	Ibaruwa
+	Letter   8.50" × 11.00"	Ibaruwa 8.50 "× 11.00"
+	Letter headings	Imitwe
+	Letter-Like Symbols	Ibaruwa-Ibimenyetso
+	Letters	Inzandiko
+	Level 1	Urwego 1
+	Level 2	Urwego 2
+	Level 3	Urwego 3
+	Level 4	Urwego 4
+	Level 5	Urwego 5
+	Level 6	Urwego 6
+	Level 7	Urwego 7
+	Level 8	Urwego 8
+	Level 9	Urwego 9
+	Level {n}	Urwego {n}
+	Level:	Urwego:
+	Levels:	Inzego:
+	LibreTranslate server (open source)	Seriveri ya LibreTranslate (isoko ifunguye)
+	Ligatures:	Ligature:
+	Light	Umucyo
+	Light with Outline	Umucyo hamwe na Outline
+	Limit	Imipaka
+	Limit and\nLog	Imipaka na \\ nLog
+	Limit consecutive hyphens to:	Gabanya imipaka ikurikiranye kuri:
+	Limit Example	Kugabanya Urugero
+	Limit formatting to a selection of styles	Gabanya imiterere yo guhitamo imiterere
+	Line	Umurongo
+	Line and Page Breaks	Umurongo na Page Kumena
+	Line and Paragraph Spacing	Umurongo na paragarafu
+	Line between	Umurongo hagati
+	Line Break	Ikiruhuko
+	Line breaking	Kumurongo
+	Line delta	Umurongo delta
+	Line End	Impera y'umurongo
+	Line Number	Umubare Umubare
+	Line Numbering Options…	Imirongo yo Guhitamo Imirongo…
+	Line Numbers	Imibare
+	Line Spacing	Umwanya Umurongo
+	Line spacing	Umwanya
+	Line Spacing Options…	Amahitamo Umurongo…
+	Line spacing:	Umwanya utandukanijwe:
+	Line Start	Gutangira Umurongo
+	Line width:	Ubugari bw'umurongo:
+	Line:	Umurongo:
+	Linear	Umurongo
+	Linear Fraction	Igice cy'umurongo
+	Lines	Imirongo
+	Lines +/−	Imirongo +/−
+	Lines added	Imirongo yongeyeho
+	Lines and characters	Imirongo n'inyuguti
+	Lines deleted	Imirongo yasibwe
+	Lines only	Imirongo gusa
+	Lines per page:	Imirongo kurupapuro:
+	Link	Ihuza
+	Link entries to their headings	Ihuza ibyanditswe kumitwe yabo
+	Link level to style:	Urwego ruhuza imiterere:
+	Link to Previous	Ihuza Kubanza
+	Linked style (paragraph and character)	Imiterere ihujwe (paragarafu ninyuguti)
+	Links	Ihuza
+	Links and References	Ihuza hamwe
+	Link…	Ihuza…
+	List	Urutonde
+	List Commands	Andika Amabwiriza
+	List Definition	Urutonde Ibisobanuro
+	List entries	Andika ibyanditswe
+	List Paragraph	Andika paragarafu
+	List styles	Andika uburyo
+	List Table 3 – Blue	Andika Imbonerahamwe 3 - Ubururu
+	List Table 3 – Green	Urutonde Imbonerahamwe 3 - Icyatsi
+	List Table 3 – Orange	Andika Imbonerahamwe 3 - Icunga
+	List Table 3 – Purple	Andika Imbonerahamwe 3 - Umutuku
+	Listening… speak now	Gutegera… vuga nonaha
+	Location	Aho biherereye
+	Location: {path}	Aho uherereye: {path}
+	Lock aspect ratio	Gufunga igipimo
+	Lock Fields	Funga Imirima
+	Logarithm	Logarithm
+	Logarithm with Base	Logarithm hamwe na Base
+	Logical AND	Birumvikana kandi
+	Logical AND with Limits	Birumvikana kandi bifite aho bigarukira
+	Logical OR	Birumvikana CYANGWA
+	Logical OR with Limits	Birumvikana cyangwa bifite imipaka
+	Long citation:	Amagambo maremare:
+	lowercase	inyuguti nto
+	Lum:	Lum:
+	Macros	Makros
+	Made from the author and year when empty	Byakozwe kuva umwanditsi numwaka iyo ari ubusa
+	Magazine or newspaper article	Ikinyamakuru cyangwa ikinyamakuru
+	Mail Merge	Guhuza Ibaruwa
+	Mail Merge Helper	Kohereza Umufasha
+	Mail Merge Helper…	Ibaruwa Ihuza Umufasha…
+	Mailing Labels	Ibirango byoherejwe
+	Mailings	Kohereza
+	Main entry:	Icyinjira nyamukuru:
+	Make Doc4Me the default for Word documents…	Kora Doc4Me isanzwe yinyandiko zijambo…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	Kora lente, menus nibiganiro binini cyangwa bito, hejuru ya sisitemu yo kwerekana ibipimo. Gukuramo inyandiko biratandukanye.
+	Malay	Malayika
+	Manage Sources	Gucunga Inkomoko
+	Manage Styles	Gucunga Imiterere
+	Manage Styles…	Gucunga Imiterere…
+	Manual Hyphenation	Intoki
+	Manual hyphenation is complete.	Intoki zuzuye zuzuye.
+	Manual Line Break	Intoki Kumurongo
+	Manual Page Break	Urupapuro rw'intoki
+	Manual…	Igitabo…
+	Many pages	Impapuro nyinshi
+	Margin	Margin
+	Margins	Margins
+	Mark	Ikimenyetso
+	Mark All	Shyira Byose
+	Mark as decorative	Shyira ahagaragara
+	Mark Citation	Ikimenyetso
+	Mark Citation…	Ikimenyetso cerekana…
+	Mark Entry	Shyira ahanditse
+	Mark Entry…	Shyira akamenyetso…
+	Mark grammar errors as you type	Shyira ahagaragara ikibonezamvugo uko wandika
+	Mark Index Entry	Ikimenyetso cyerekana ibyinjira
+	Mark selected text as:	Shyira umwandiko watoranijwe nka:
+	Mark Table of Contents Entry	Shyira akamenyetso ku Ibirimo Kwinjira
+	Mark\nCitation	Ikimenyetso
+	Mark\nEntry	Ikimenyetso
+	Markdown (*.md)	Ikimenyetso (* .md)
+	Match case	Urubanza
+	Match Fields	Guhuza Imirima
+	Match prefix	Guhuza imbanzirizamushinga
+	Match suffix	Umugereka
+	Math AutoCorrect	Imibare AutoCorrect
+	Math Input Control	Kugenzura Imibare
+	Matrices with Brackets	Imibare hamwe na Brackets
+	Matrix	Matrix
+	Maximize	Mugure
+	Maximum	Ntarengwa
+	Maximum Example	Urugero ntarengwa
+	Measured By	Bipimwe na
+	Measurement units:	Ibipimo byo gupima:
+	Media	Itangazamakuru
+	Merge	Gukomatanya
+	Merge Cells	Guhuza Utugari
+	Merge Formatting	Guhuza Imiterere
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Gukomatanya Guhuza inyandiko yandika muburyo bwo kugwa, nkuko Komeza Umwandiko ubikora.
+	Merge Record #	Guhuza Inyandiko #
+	Merge records	Guhuza inyandiko
+	Merge to New Document	Guhuza Inyandiko Nshya
+	Merge to Printer	Gukomatanya Kuri Mucapyi
+	Merge to:	Guhuriza hamwe:
+	Merge type: {type}	Ubwoko bwo guhuza: {type}
+	Merged PRs	Byahujwe na PR
+	Merge…	Gukomatanya…
+	Mesosphere	Mesosikori
+	Middle	Hagati
+	Midline Dots	Utudomo two hagati
+	Millimeters	Millimetero
+	Minimum	Ntarengwa
+	Minus Equal	Minus Iringana
+	Mirror indents	Indorerwamo
+	Mirrored	Indorerwamo
+	Missing document font	Kubura imyandikire
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT CYANGWA Apache-2.0. Uburenganzira (c) 2026 Itsinda ryubuhanzi hamwe nabaterankunga ba WordCraft.
+	MLA	Umudepite
+	Model	Icyitegererezo
+	Models	Icyitegererezo
+	Moderate	Guciriritse
+	Modify Style	Hindura Imiterere
+	Modify Table Style	Hindura Imiterere yimbonerahamwe
+	Modify Table Style…	Hindura Imiterere yimbonerahamwe…
+	Modify…	Hindura…
+	Mon	Ukwezi
+	Month	Ukwezi
+	More >>	Ibindi >>
+	More Colors…	Amabara menshi…
+	More Columns…	Inkingi nyinshi…
+	More Commands…	Andi Mategeko…
+	More Symbols…	Ibindi bimenyetso…
+	More templates →	Inyandikorugero nyinshi →
+	Move Down	Himura Hasi
+	Move in Equation	Himura muburinganire
+	Move object with text	Himura ikintu hamwe ninyandiko
+	Move or Resize	Himura cyangwa uhindure
+	Move Paragraph Down	Himura Paragarafu Hasi
+	Move Paragraph Up	Himura paragarafu hejuru
+	Move Past Citation	Himura Ibyahise
+	Move Past\nCitation	Himura Kera \\ nCitation
+	Move Selected Ink	Himura Ink
+	Move Text	Himura Umwandiko
+	Move to where?	Kwimukira he?
+	Move Up	Zamuka
+	Move with Text	Himura hamwe ninyandiko
+	Move with text	Himura hamwe ninyandiko
+	Moved from	Yimuwe
+	Moved to	Yimuriwe kuri
+	Moves	Kwimuka
+	Multilevel List	Urutonde rwinshi
+	Multiple Pages	Impapuro nyinshi
+	My Add-ins	Ongeraho
+	MyMemory (free, no account)	MyMemory (kubuntu, nta konte)
+	Name	Izina
+	Name (A–Z)	Izina (A - Z)
+	Name of the file this document is saved as	Izina rya dosiye iyi nyandiko yabitswe nkuko
+	Name:	Izina:
+	Narrow  0.5" all	Gufunga 0.5 "byose
+	Natural Logarithm	Logarithm Kamere
+	Nature	Kamere
+	Navigation	Kugenda
+	Navigation Pane	Ikibaho
+	Negated Relations	Umubano mubi
+	New	Gishya
+	New Comment	Igitekerezo gishya
+	New comments and tracked changes are recorded under this name and these initials.	Ibitekerezo bishya hamwe nimpinduka zikurikiranwa byanditswe munsi yizina nintangiriro.
+	New Document	Inyandiko nshya
+	New document	Inyandiko nshya
+	New Drawing Canvas	Igishushanyo gishya
+	New Entry	Icyinjira gishya
+	New Folder	Ububiko bushya
+	New from Template	Gishya kuva Inyandikorugero
+	New Group	Itsinda Rishya
+	New Label	Ikirango gishya
+	New Label…	Ikirango gishya…
+	New Paragraph	Igika gishya
+	New shortcut:	Amagambo mashya:
+	New Style…	Uburyo bushya…
+	New Tab	Tab nshya
+	New Table Style	Imiterere mishya yuburyo
+	New Table Style…	Imiterere mishya yuburyo…
+	New Window	Idirishya Rishya
+	New word	Ijambo rishya
+	New\nComment	Gishya \\ nComment
+	New\nWindow	Gishya \\ nWindow
+	New…	Gishya…
+	Next	Ibikurikira
+	Next Change	Ibikurikira
+	Next Comment	Igitekerezo gikurikira
+	Next Field	Umwanya ukurikira
+	Next Footnote	Ibikurikira
+	Next Page	Urupapuro rukurikira
+	Next Record	Ibikurikira
+	Next Section	Igice gikurikira
+	Next Sentence	Interuro ikurikira
+	Next sentence	Interuro ikurikira
+	Next Window	Idirishya rikurikira
+	No	Oya
+	No accessibility issues found.	Nta kibazo cyo kuboneka cyabonetse.
+	No add-ins are listed yet.	Nta byongeweho byashyizwe ku rutonde.
+	No add-ins yet. Add one from the Store.	Nta byongeweho. Ongeraho imwe mububiko.
+	No Border	Nta mupaka
+	No changes (read only)	Nta gihinduka (soma gusa)
+	No Color	Nta Ibara
+	No contributor data was built into this copy.	Nta makuru yabaterankunga yubatswe muri iyi kopi.
+	No data source yet.	Nta nkomoko yamakuru.
+	No errors found: every merge field is in the recipient list.	Ntamakosa yabonetse: buri guhuza umurima biri murutonde rwabakiriye.
+	No Fill	Nta kuzuza
+	No Glow	Nta mucyo
+	No grid	Nta gride
+	No icons match your search.	Nta shusho ihuye nubushakashatsi bwawe.
+	No limit	Nta karimbi
+	No Line	Nta murongo
+	No Markup	Nta Markup
+	No model credits were built into this copy.	Nta ngero z'icyitegererezo zubatswe muri iyi kopi.
+	No Outline	Nta Urucacagu
+	No Paragraph Space	Nta mwanya wa paragarafu
+	No pictures found.	Nta mashusho yabonetse.
+	No Reflection	Nta Gutekereza
+	No revisions	Nta bisubirwamo
+	No Shadow	Nta gicucu
+	No Soft Edges	Nta mpande zoroshye
+	No sources yet.	Nta nkomoko.
+	No Spacing	Nta mwanya
+	no speech program on this system	nta gahunda yo kuvuga kuriyi sisitemu
+	No templates match your search.	Nta nyandikorugero zihuye nubushakashatsi bwawe.
+	No Transform	Nta Guhinduka
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Nta magambo. Ongera kuri Inkoranyamagambo ku ijambo ryanditse nabi ubishyire hano.
+	No-Width Non Break	Nta-Ubugari Kutaruhuka
+	No-Width Optional Break	Nta-Ubugari Bwihitirwa
+	Nonbreaking Hyphen	Hyphen Kumena
+	Nonbreaking Space	Umwanya utavunika
+	None	Nta na kimwe
+	Normal	Bisanzwe
+	Normal  1" all	Bisanzwe 1 "byose
+	Normal Indent	Ibisanzwe
+	Normal probability density	Ubucucike busanzwe
+	Normal speed	Umuvuduko usanzwe
+	Normal Style	Imiterere isanzwe
+	Normal Table	Imbonerahamwe isanzwe
+	Normal Text	Inyandiko isanzwe
+	Normal Word Document	Ijambo risanzwe
+	North	Amajyaruguru
+	Norwegian (Bokmål)	Noruveje (Bokmål)
+	Not	Oya
+	Not available right now	Ntaboneka nonaha
+	Not equal to	Ntabwo bingana na
+	Not linked: click a text box	Ntabwo bihujwe: kanda agasanduku kanditse
+	Not saved	Ntabwo yakijijwe
+	Not saved yet	Ntabwo yakijijwe
+	Not used by any command	Ntabwo ikoreshwa nubutegetsi ubwo aribwo bwose
+	Not {name}	Ntabwo {name}
+	Nothing	Ntacyo
+	Nothing collected yet. Items you copy or cut appear here.	Nta kintu na kimwe cyegeranijwe. Ibintu wandukuye cyangwa ukata bigaragara hano.
+	Now used by {command}	Noneho ikoreshwa na {command}
+	Nudge	Nudge
+	Num Occurrences	Umubare
+	Number	Umubare
+	Number alignment:	Guhuza umubare:
+	Number format	Imiterere y'umubare
+	Number of columns:	Umubare w'inkingi:
+	Number of rows:	Umubare w'imirongo:
+	Number of the page the field sits on	Umubare wurupapuro umurima wicayeho
+	Number of the section the field sits in	Umubare w'igice umurima wicayeho
+	Number style for this level:	Imiterere yimibare kururu rwego:
+	Number the equation; the number sits at the right margin (or type # then the number)	Kubara ikigereranyo; umubare wicaye kuruhande rwiburyo (cyangwa andika # hanyuma umubare)
+	Number type:	Ubwoko bw'umubare:
+	Number:	Umubare:
+	Numbering	Umubare
+	Numbering:	Umubare:
+	Numbering…	Umubare…
+	Numerals	Imibare
+	Numerals:	Umubare:
+	n×n Identity Matrix	n × n Indangamuntu Matrix
+	n×n Matrix	n × n Matrix
+	Object	Intego
+	Odd Page	Urupapuro rudasanzwe
+	Odd pages only	Impapuro zidasanzwe
+	Off	Hanze
+	Office	Ibiro
+	Office 2003 Default	Ibiro 2003 Bisanzwe
+	Offset (pt):	Offset (pt):
+	Offset: Bottom	Offset: Hasi
+	Offset: Bottom Left	Offset: Hasi ibumoso
+	Offset: Bottom Right	Offset: Hasi iburyo
+	Offset: Center	Offset: Hagati
+	Offset: Left	Offset: Ibumoso
+	Offset: Right	Offset: Nibyo
+	Offset: Top	Offset: Hejuru
+	Offset: Top Left	Offset: Hejuru ibumoso
+	Offset: Top Right	Offset: Hejuru iburyo
+	OK	Nibyo
+	Omit	Kureka
+	On	Kuri
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Kuri: caret iranyerera ahantu hashya iyo wanditse cyangwa ukoresha urufunguzo rwimyambi, kandi guhumbya kwayo kurashira. Hanze: irasimbuka igahumbya hejuru.
+	One	Imwe
+	One half	Kimwe cya kabiri
+	One label per recipient	Ikirango kimwe kubakira
+	One line per item. Enter adds an item.	Umurongo umwe kuri buri kintu. Injira wongeyeho ikintu.
+	One Page	Urupapuro rumwe
+	Online Pictures	Amashusho Kumurongo
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Amashusho kumurongo (Gufungura), Guhindura (MyMemory cyangwa seriveri yawe ya LibreTranslate), Kubona Add-ins no gukuramo imvugo yerekana imvugo ya Dictate ihuza na enterineti, kandi mugihe ubikoresha. Zimije, Doc4Me ntaho ihuriye nayo.
+	Online Pictures…	Amashusho Kumurongo…
+	Online services are turned off (File › Options › Trust Center).	Serivisi zo kumurongo zarafunzwe (File ›Amahitamo› Ikigo cyizere).
+	Online Video	Video Kumurongo
+	Only allow this kind of editing:	Gusa wemerere ubu bwoko bwo guhindura:
+	Only comments can be added, except in regions marked editable.	Gusa ibitekerezo birashobora kongerwaho, usibye mukarere kagaragajwe guhindurwa.
+	Only form fields can be filled in.	Imiterere yimiterere yonyine irashobora kuzuzwa.
+	only https addresses can be used	aderesi ya https gusa irashobora gukoreshwa
+	Only pictures I may use commercially	Gusa amashusho nshobora gukoresha mubucuruzi
+	Only the allowed styles can be applied.	Gusa imiterere yemewe irashobora gukoreshwa.
+	Only web (http, https) and email (mailto) links can be followed	Gusa urubuga (http, https) na imeri (mailto) amahuza arashobora gukurikizwa
+	Open	Fungura
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Fungura dosiye hamwe na mushakisha ya Doc4Me mugihe sisitemu ya dosiye ikiganiro itagaragara.
+	Open Data Source…	Fungura amakuru yatanzwe…
+	Open Hyperlink	Fungura Hyperlink
+	OpenDocument Text (*.odt)	Gufungura inyandiko (* .odt)
+	Opening print dialog…	Gufungura inyandiko y'ibiganiro…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Gufungura .docx, .doc, .rtf na .odt dosiye hamwe na Word templates hamwe na Doc4Me guhera ubu.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Fungura Igenamiterere ›Porogaramu zisanzwe, aho uhitamo Doc4Me ya .docx nubundi bwoko bwinyandiko.
+	Open…	Fungura…
+	Operator	Umukoresha
+	Operator Structures	Imiterere ya Operator
+	Operators	Abakoresha
+	Optional Hyphen	Hyphen
+	Options	Amahitamo
+	Options…	Amahitamo…
+	Or	Cyangwa
+	Or save a copy in another format:	Cyangwa ubike kopi mubundi buryo:
+	Ordinals (1st) as superscript	Ibisanzwe (icya 1) nkibisobanuro
+	Organizer	Ushinzwe gutegura
+	Organizer…	Ushinzwe gutegura…
+	Orientation	Icyerekezo
+	Original document	Inyandiko y'umwimerere
+	Other	Ibindi
+	Other Authorities	Abandi Bayobozi
+	Other Large Operators	Abandi Bakozi Bakuru
+	Other paragraph styles	Ubundi buryo bw'igika
+	Other styles and their TOC level:	Ubundi buryo hamwe nurwego rwabo rwa TOC:
+	Otherwise insert:	Bitabaye ibyo shyiramo:
+	Outline	Urucacagu
+	Outline Level	Urwego
+	Outline level	Urwego rw'urucacagu
+	Outline levels	Urwego
+	Outline State	Vuga Leta
+	Outline Tools	Urucacagu Ibikoresho
+	Outlining	Kugaragaza
+	Outside	Hanze
+	Outside border	Hanze y'umupaka
+	Outside Borders	Hanze y'imipaka
+	Outside Margin	Hanze ya Margin
+	Outside:	Hanze:
+	Outward Brackets	Inyuguti zo hanze
+	Oval	Oval
+	Overbar	Kurengana
+	Overbars and Underbars	Ibirenga na Underbars
+	Overbrace	Kurenza urugero
+	Overtype	Ubwoko burenze
+	Overtype (typing replaces the characters after the caret)	Ubwoko burenze (kwandika bisimbuza inyuguti nyuma ya caret)
+	Page	Urupapuro
+	Page Background	Urupapuro rwibanze
+	Page Border	Urupapuro Imipaka
+	Page Borders	Urupapuro Imipaka
+	Page Break	Urupapuro
+	Page Break Before	Urupapuro Urupapuro Mbere
+	Page break before	Urupapuro mbere
+	Page Breaks	Urupapuro
+	Page Color	Urupapuro Ibara
+	Page display	Urupapuro rwerekana
+	Page Down	Urupapuro Hasi
+	Page image (*.jpg, *.jpeg)	Ishusho y'urupapuro (* .jpg, * .jpeg)
+	Page image (*.png)	Urupapuro (* .png)
+	Page Movement	Urupapuro
+	Page Number	Urupapuro
+	Page number style	Urupapuro nimero
+	Page numbers at the right margin	Urupapuro nimero kuruhande rwiburyo
+	Page on which a bookmarked passage falls	Urupapuro ruriho akamenyetso
+	Page Setup	Urupapuro
+	Page title	Urupapuro
+	Page Up	Urupapuro Hejuru
+	Page Width	Ubugari bw'urupapuro
+	Page width	Ubugari bw'urupapuro
+	Page X of Y	Urupapuro X rwa Y.
+	Page {page}	Urupapuro {page}
+	Page {page} of {pages}	Urupapuro {page} ya {pages}
+	Page\nBorders	Urupapuro \\ n Imipaka
+	Page\nColor	Urupapuro \\ n Ibara
+	Page\nNumber	Urupapuro \\ nUmubare
+	Pages	Urupapuro
+	Pages like 1-3, 5	Urupapuro nka 1-3, 5
+	Pages of bookmark:	Urupapuro rwibimenyetso:
+	Paragraph	Igika
+	Paragraph Character	Igika
+	Paragraph Details	Igika Ibisobanuro
+	Paragraph Down	Igika Hasi
+	Paragraph Mark	Igika
+	Paragraph marks	Ibimenyetso
+	Paragraph Settings	Igenamiterere
+	Paragraph Spacing	Umwanya
+	Paragraph style	Imiterere ya paragarafu
+	Paragraph Up	Paragarafu Hejuru
+	Paragraphs	Ibika
+	Paragraph…	Igika…
+	Parentheses	Ababyeyi
+	Parentheses with Separator	Utubuto hamwe na Bitandukanya
+	Partial Differential	Ibice Bitandukanye
+	Password	Ijambobanga
+	Password:	Ijambobanga:
+	Paste	Shyira
+	Paste All	Andika Byose
+	Paste as:	Andika nka:
+	Paste Clipboard Item	Shyira Ikibaho
+	Paste Formatting	Kwandika
+	Paste Special	Shira umwihariko
+	Paste Special…	Shira umwihariko…
+	Paste Spike	Shira Spike
+	Paste: Keep Text Only	Kwanduza: Komeza inyandiko gusa
+	Paste: Merge Formatting	Kwanduza: Guhuza Imiterere
+	Pasting between documents:	Kwandika hagati yinyandiko:
+	Pasting from other programs:	Kwandika mu zindi gahunda:
+	Pasting within the same document:	Kwandika mu nyandiko imwe:
+	Pause	Kuruhuka
+	Paused	Kuruhuka
+	PDF document (*.pdf)	Inyandiko ya PDF (* .pdf)
+	Pen	Ikaramu
+	Pencil	Ikaramu
+	Pens	Ikaramu
+	People	Abantu
+	Periodical	Igihe cyagenwe
+	Personalize	Wenyine
+	Phonetic Guide	Imiyoboro ya Fonetike
+	Pi Over 2	Pi Kurenza 2
+	Picas	Picas
+	Pick a custom group (New Group makes one)	Toranya itsinda ryihariye (Itsinda rishya rikora imwe)
+	Pick a field from the list	Tora umurima kurutonde
+	Picture	Ishusho
+	Picture Border	Umupaka
+	Picture Content Control	Kugenzura Ibirimo
+	Picture Format	Imiterere y'amashusho
+	Picture Styles	Imisusire
+	Pictures	Amashusho
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Amashusho kuva Gufungura. Wubahe uruhushya rwa buri shusho: Doc4Me yongeyeho umurongo winguzanyo munsi yacyo.
+	Pie	Pie
+	Placeholder Name	Izina ryumwanya
+	Placeholder text	Umwandiko
+	Plain Table 1	Imbonerahamwe 1
+	Plain text (*.txt)	Inyandiko isanzwe (* .txt)
+	Plain Text Content Control	Igenzura ryibirimo
+	Play	Kina
+	Play Video	Kina Video
+	Play/Pause	Gukina / Kuruhuka
+	Plus Equal	Byongeye kandi Bingana
+	Points	Ingingo
+	points and above	ingingo no hejuru
+	Polish	Igipolonye
+	Portrait	Igishushanyo
+	Portuguese (Brazil)	Igiporutugali (Burezili)
+	Portuguese (Portugal)	Igiporutugali (Porutugali)
+	Position	Umwanya
+	Position:	Umwanya:
+	Positioning…	Umwanya…
+	Possible spelling mistake	Ikosa ryimyandikire
+	Postal Code	Kode y'iposita
+	Power series of (1+x)ⁿ	Urukurikirane rw'imbaraga za (1 + x) ⁿ
+	Preferred width:	Ubugari bwatoranijwe:
+	Preserve	Bika
+	Preserve formatting during updates	Bika imiterere mugihe cyo kuvugurura
+	Presets	Kugena
+	Press a key combination	Kanda urufunguzo
+	Preview	Imbere
+	Preview Results	Ibisubizo
+	Preview\nResults	Isuzuma \\ n Ibisubizo
+	Previous	Mbere
+	Previous 1 or More	Mbere 1 cyangwa byinshi
+	Previous Change	Impinduka zabanje
+	Previous Comment	Igitekerezo cyambere
+	Previous Field	Umwanya wabanjirije
+	Previous Footnote	Akajambo k'epfo
+	Previous Page	Urupapuro rwambere
+	Previous Record	Inyandiko zabanjirije iyi
+	Previous Section	Igice kibanziriza iki
+	Previous Sentence	Interuro ibanza
+	Previous sentence	Interuro ibanza
+	Previous Window	Idirishya
+	Print	Icapa
+	Print blank lines when data fields are empty	Shira kumurongo ubusa mugihe amakuru yimibare arimo ubusa
+	Print Documents	Shira Inyandiko
+	Print Documents…	Shira Inyandiko…
+	Print failed: {error}	Gucapa byananiranye: {error}
+	Print Layout	Shushanya Imiterere
+	Print Markup	Shira akamenyetso
+	Print the page color	Shira ibara ryurupapuro
+	Print to PDF	Shira kuri PDF
+	Print\nLayout	Icapa \\ nUmurongo
+	Printer	Mucapyi
+	Printing	Gucapa
+	Process	Inzira
+	Product	Ibicuruzwa
+	Product of A	Ibicuruzwa bya A.
+	Product with Limits	Ibicuruzwa bifite aho bigarukira
+	Product with Lower Limit	Ibicuruzwa bifite aho bigarukira
+	Product with Subscript-Superscript Limits	Ibicuruzwa hamwe na Subscript-Superscript Imipaka
+	Products and Coproducts	Ibicuruzwa n'ibicuruzwa
+	Professional	Ababigize umwuga
+	Promote	Teza imbere
+	Promote to Heading 1	Teza imbere Umutwe 1
+	Proofing	Ibihamya
+	Proofing Issues	Ibibazo
+	Proofing language	Imvugo yerekana
+	Properties	Ibyiza
+	Protect	Rinda
+	Protect Document	Kurinda Inyandiko
+	PRs	PR
+	pt	pt
+	Publisher	Umwanditsi
+	Punctuation	Utumenyetso
+	Put the caret in a content control first.	Shira caret mubigenzure mbere.
+	Put the default commands back on the Quick Access Toolbar?	Ongera usubize amategeko asubire kumurongo wihuse?
+	Pyramid	Pyramid
+	Quadratic Root	Imizi ya Quadratic
+	Query Options…	Amahitamo y'ibibazo…
+	Quick Access Toolbar	Umwanya wo Kwihuta
+	Quick Parts	Ibice byihuse
+	Quick Tables	Imbonerahamwe yihuse
+	Quote	Amagambo
+	Radical	Birakabije
+	Radical with Degree	Birakabije hamwe nimpamyabumenyi
+	Radicals	Radicals
+	Raised/lowered	Kuzamurwa / kumanurwa
+	Read Aloud	Soma n'ijwi rirenga
+	Read Aloud couldn't start the speech program: {reason}	Soma n'ijwi rirenga ntushobora gutangiza gahunda yo kuvuga: {reason}
+	Read Aloud couldn't start: {reason}	Soma n'ijwi rirenga ntishobora gutangira: {reason}
+	Read Aloud isn't available in the browser	Soma Aloud ntabwo iboneka muri mushakisha
+	Read Aloud Status	Soma Induru
+	Read Aloud stopped: {reason}	Soma n'ijwi rirenga: {reason}
+	Read Mode	Soma uburyo
+	Read\nAloud	Soma \\ nIjwi
+	Read\nMode	Soma \\ nMode
+	Reading	Gusoma
+	Reading Column Width	Gusoma Ubugari
+	Reading Highlight	Gusoma Ingingo
+	Reading Line Spacing	Umwanya wo gusoma
+	Reading Mode	Uburyo bwo Gusoma
+	Reading Speed	Umuvuduko wo gusoma
+	Reading Text Size	Gusoma Ingano yinyandiko
+	Reads the clipboard's rich text and keeps its formatting.	Isoma clip clip ikungahaye kandi ikomeza imiterere.
+	Reads the clipboard's web content and keeps its formatting.	Soma ibibaho byurubuga kandi bikomeza imiterere.
+	Real name	Izina nyaryo
+	Recent	Vuba
+	Recent Colors	Amabara ya vuba
+	Recent documents to show:	Inyandiko ziheruka kwerekana:
+	Recently used symbols:	Ibimenyetso byakoreshejwe vuba aha:
+	Recipient List	Urutonde rwabakiriya
+	Recipient lists	Urutonde rwabakiriye
+	Recipients: {count}	Abahawe: {count}
+	Recognized (you can correct it):	Kumenyekana (urashobora kubikosora):
+	Recognized Functions	Imikorere izwi
+	Recognized Functions…	Imikorere izwi…
+	Recolor a one-color picture, such as an icon	Ongera uhindure ibara rimwe, nkigishushanyo
+	Recolor Selected Ink	Gusubiramo Ink
+	Record Macro	Andika Macro
+	Recover Unsaved Documents	Kugarura Inyandiko Zidakijijwe
+	Rectangle	Urukiramende
+	Red:	Umutuku:
+	Redo	Ongera
+	Reduce Hanging Indent	Mugabanye Kumanika
+	References	Reba
+	Reflection	Gutekereza
+	Refresh	Ongera
+	Registered	Kwiyandikisha
+	Registered Sign	Ikimenyetso
+	Regular expressions	Imvugo isanzwe
+	Regulations	Amabwiriza
+	Reject	Wange
+	Reject All	Wange Byose
+	Reject All Changes	Wange Impinduka zose
+	Reject Change	Wange impinduka
+	Relationship	Isano
+	relative to	Kuri
+	Relative to:	Bifitanye isano na:
+	Relaxed	Humura
+	Remove	Kuraho
+	Remove Added Font	Kuraho Imyandikire Yongeyeho
+	Remove Background	Kuraho Amavu n'amavuko
+	Remove Content Control	Kuraho Igenzura
+	Remove every custom shortcut and restore the built-in keys?	Kuraho buri kintu cyihuta hanyuma ugarure urufunguzo rwubatswe?
+	Remove every custom tab and group and show all tabs again?	Kuraho buri tab na groupe yihariye hanyuma werekane tabs zose?
+	Remove field	Kuraho umurima
+	Remove Field Name	Kuraho Izina ryumurima
+	Remove Footer	Kuraho Umutwe
+	Remove from Quick Access Toolbar	Kuraho muri Toolbar Toolbar
+	Remove Header	Kuraho Umutwe
+	Remove Hyperlink	Kuraho Hyperlink
+	Remove Password	Kuraho ijambo ryibanga
+	Remove Pen	Kuraho Ikaramu
+	Remove Positioning	Kuraho Umwanya
+	Remove recipient	Kuraho uwakiriye
+	Remove row	Kuraho umurongo
+	Remove series	Kuraho urukurikirane
+	Remove Space After Paragraph	Kuraho Umwanya Nyuma yingingo
+	Remove Table of Contents	Kuraho Imbonerahamwe
+	Remove the control once edited	Kuraho igenzura rimaze guhindurwa
+	Remove the space before the punctuation	Kuraho umwanya mbere yo kuruhuka
+	Remove Watermark	Kuraho Amazi
+	Rename Style	Hindura izina
+	Rename…	Hindura izina…
+	Reopen	Fungura
+	Repeat	Subiramo
+	Repeat as header row on each page	Subiramo nkumutwe wumurongo kuri buri paji
+	Repeat Header Rows	Subiramo Umutwe Imirongo
+	Repeated words	Amagambo asubirwamo
+	Repeating Section Content Control	Gusubiramo Igice Igenzura Ibirimo
+	Replace	Simbuza
+	Replace All	Simbuza Byose
+	Replace as you type	Simbuza uko wanditse
+	Replace Document Text	Simbuza inyandiko
+	Replace text as you type	Simbuza inyandiko nkuko wandika
+	Replace with:	Simbuza na:
+	Replace:	Simbuza:
+	Replay	Subiza
+	Reply	Subiza
+	Report	Raporo
+	Research	Ubushakashatsi
+	Researcher	Umushakashatsi
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Umushakashatsi akeneye serivisi kumurongo; Doc4Me ibika inyandiko zawe kumurongo.
+	Reset	Gusubiramo
+	Reset All	Kugarura Byose
+	Reset All…	Kugarura Byose…
+	Reset Character Formatting	Ongera usubiremo imiterere
+	Reset Crop	Kugarura Igihingwa
+	Reset Graphic	Ongera ushushanye
+	Reset Paragraph Formatting	Ongera usubiremo ibika
+	Reset Picture	Ongera usubize ishusho
+	Reset to Normal	Ongera usubire mubisanzwe
+	Reset\nGraphic	Kugarura \\ n Igishushanyo
+	Reset…	Gusubiramo…
+	Resize Table by Dragging	Hindura Imbonerahamwe ukoresheje
+	Resolve	Kemura
+	Resolved	Byakemutse
+	Restart at 1	Ongera utangire kuri 1
+	Restart Each Page	Ongera utangire Urupapuro rwose
+	Restart Each Section	Ongera utangire buri gice
+	Restart list after:	Ongera utangire urutonde nyuma:
+	Restore	Kugarura
+	Restore Defaults	Kugarura Mburabuzi
+	Restore Down	Kugarura Hasi
+	Restore to Normal Word Document	Ongera usubire mu nyandiko isanzwe
+	Restrict Editing	Gabanya Guhindura
+	Restrict\nEditing	Gabanya \\ nGukosora
+	Result	Igisubizo
+	Results	Ibisubizo
+	Return address labels	Garuka ibirango bya aderesi
+	Return address:	Garuka aderesi:
+	Reverse the order	Hindura gahunda
+	Review	Isubiramo
+	Review AutoFormat Changes	Ongera uhindure AutoFormat
+	Review Changes…	Ongera uhindure…
+	Reviewing	Gusubiramo
+	Reviewing Pane	Gusubiramo Umwanya
+	Reviewing — edits become suggestions	Gusubiramo - guhindura bihinduka ibitekerezo
+	Revised document	Inyandiko yasubiwemo
+	Revisions	Gusubiramo
+	Rewind	Subiza
+	Ribbon	Agasanduku
+	Ribbon and Quick Access Toolbar:	Agasanduku nigikoresho cyihuta cyo kubona ibikoresho:
+	Ribbon tabs	Utubuto
+	Rich Text Content Control	Igenzura rikubiyemo Ibirimo
+	Rich Text Format (*.rtf)	Imiterere yinyandiko ikungahaye (* .rtf)
+	Rich Text Format (RTF)	Imiterere y'inyandiko ikungahaye (RTF)
+	Right	Iburyo
+	Right (vertical)	Iburyo (vertical)
+	Right align page numbers	Guhuza neza nimero ya page
+	Right Arrow with Text Above	Iburyo bwiburyo hamwe ninyandiko hejuru
+	Right Arrow with Text Below	Iburyo bwiburyo hamwe ninyandiko hepfo
+	Right Border	Imipaka iburyo
+	Right border	Imipaka iburyo
+	Right Bracket Twice	Iburyo bubiri kabiri
+	Right indent	Indent iburyo
+	Right Margin	Iburyo
+	Right Only	Nukuri
+	Right only	Nibyo gusa
+	Right-to-left	Iburyo-ibumoso
+	Right-to-Left Section	Igice cy'iburyo-ibumoso
+	Right-to-Left Table	Imbonerahamwe iburyo-ibumoso
+	Right-to-Left Text Direction	Iburyo-Ibumoso Icyerekezo Cyerekezo
+	Right:	Iburyo:
+	Rightwards Arrow Above	Iburyo Iburyo Hejuru
+	Rightwards Harpoon Above	Iburyo Harpoon Hejuru
+	Roots of ax²+bx+c	Imizi ya ax² + bx + c
+	Rotate	Kuzunguruka
+	Rotate all text 270°	Kuzenguruka inyandiko zose 270 °
+	Rotate all text 90°	Kuzenguruka inyandiko zose 90 °
+	Rotate Left 90°	Kuzenguruka Ibumoso 90 °
+	Rotate Right 90°	Kuzenguruka iburyo 90 °
+	Rotation	Kuzunguruka
+	Rotation:	Kuzunguruka:
+	Rounded Rectangle	Urukiramende
+	Row	Umurongo
+	Row:	Umurongo:
+	Rows & Columns	Imirongo & Inkingi
+	Ruby text:	Ruby text:
+	Ruler	Umutegetsi
+	Rules	Amategeko
+	Run	Iruka
+	Run-in	Kwiruka
+	Russian	Ikirusiya
+	Résumé	Résumé
+	Same as the whole table	Kimwe nkameza yose
+	SAMPLE	URUGERO
+	Sat:	Sat:
+	Save	Bika
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Bika kopi mubundi buryo. Gucapa binyura kuri PDF ushobora gucapa kubantu bose babireba.
+	Save As	Bika As
+	Save as Template	Bika nk'icyitegererezo
+	Save documents	Bika inyandiko
+	Save the document to turn on AutoSave	Bika inyandiko kugirango ufungure AutoSave
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Bika inyandiko kugirango ufungure AutoSave (dosiye wafunguye gusa ntabwo yongeye kwandikwa kugeza ubitse)
+	Save these pages as PDF…	Bika izi page nka PDF…
+	Save Version	Bika verisiyo
+	Saved	Yakijijwe
+	Scale	Igipimo
+	Scale Drawing	Igishushanyo Cyinshi
+	Scatter	Gutatanya
+	Screen Clipping	Gukata Mugaragaza
+	Screen clipping didn't work: {reason}	Gukuramo ecran ntibyakoraga: {reason}
+	Screen clipping ended without a picture.	Gukuramo ecran byarangiye nta shusho.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Gukuramo ecran ntibishoboka hano. Gukoporora ifoto ya ecran, hanyuma uyandike.
+	Screenshot	Ishusho
+	Script	Inyandiko
+	Scripts	Inyandiko
+	Scroll ribbon left	Kuzenguruka lente ibumoso
+	Scroll ribbon right	Kanda lente iburyo
+	Search	Shakisha
+	Search Commands	Shakisha Amabwiriza
+	Search commands and help	Shakisha amategeko nubufasha
+	Search document	Shakisha inyandiko
+	Search for templates	Shakisha inyandikorugero
+	Search icons	Shakisha amashusho
+	Search Openverse (Creative Commons pictures)	Shakisha Gufungura (Amashusho ya Creative Commons)
+	Search Options	Shakisha Amahitamo
+	Searching…	Gushakisha…
+	Secant Function	Imikorere Yumutekano
+	Section Break	Ikiruhuko
+	Section Breaks	Icyiciro
+	Section Character	Icyiciro
+	Section direction:	Icyerekezo cy'icyiciro:
+	Section Mark	Icyiciro Ikimenyetso
+	Section Properties	Icyiciro Ibyiza
+	Sections	Ibice
+	See	Reba
+	Select	Hitamo
+	Select a picture, shape, chart or table to describe it.	Hitamo ishusho, imiterere, imbonerahamwe cyangwa imbonerahamwe kugirango ubisobanure.
+	Select All	Hitamo Byose
+	Select Cell	Hitamo Akagari
+	Select Floating Shapes	Hitamo Imiterere ireremba
+	Select Heading and Content	Hitamo Umutwe n'ibirimo
+	Select Line	Hitamo Umurongo
+	Select Objects	Hitamo Ibintu
+	Select Paragraph	Hitamo paragarafu
+	Select Range	Hitamo Urwego
+	Select Recipients	Hitamo abakira
+	Select recipients first to choose from their fields.	Hitamo abakira banza uhitemo mumirima yabo.
+	Select recipients first to match their fields.	Hitamo abazahabwa mbere kugirango bahuze imirima yabo.
+	Select Row	Hitamo umurongo
+	Select Sentence	Hitamo interuro
+	Select Table	Hitamo Imbonerahamwe
+	Select Text	Hitamo Umwandiko
+	Select text in the document to translate it.	Hitamo inyandiko mu nyandiko kugirango uyihindure.
+	Select Text with Similar Formatting	Hitamo Umwandiko ufite Imiterere isa
+	Select text, then tick who can still edit it.	Hitamo inyandiko, hanyuma tike ushobora gukomeza kuyihindura.
+	Select the part of the screen to insert.	Hitamo igice cya ecran kugirango ushiremo.
+	Select Word	Hitamo Ijambo
+	Select\nRecipients	Hitamo \\ nAbakiriye
+	Selected Fields	Imirima yatoranijwe
+	Selected pages	Impapuro zatoranijwe
+	Selection	Guhitamo
+	Selection Pane	Umwanya wo guhitamo
+	Send Backward	Ohereza Inyuma
+	Send the document straight to the system print dialog, or save a copy in another format below.	Kohereza inyandiko igororotse kuri sisitemu icapa ibiganiro, cyangwa ubike kopi mubundi buryo bukurikira.
+	Sentence	Interuro
+	Sentence case.	Urubanza.
+	Separator:	Gutandukanya:
+	Sequence name:	Izina ryurukurikirane:
+	Serbian	Igiseribiya
+	Serbian (Cyrillic)	Igiseribiya (Cyrillic)
+	Serbian (Latin)	Igiseribiya (Ikilatini)
+	Series name	Izina ryuruhererekane
+	Series {n}	Urukurikirane {n}
+	Server address (https://…)	Aderesi ya seriveri (https: //…)
+	Set	Shiraho
+	Set As Default	Shiraho Nka Mburabuzi
+	Set as Default	Shiraho nkibisanzwe
+	Set Caret	Shiraho Caret
+	Set Character Formatting	Shiraho Imiterere
+	Set Date	Shiraho Itariki
+	Set Equation	Shiraho Ikigereranyo
+	Set Numbering Value	Shiraho Umubare
+	Set Paragraph Formatting	Shiraho paragarafu
+	Set Proofing Language…	Shiraho Ururimi Rwemeza…
+	Setting:	Gushiraho:
+	Settings…	Igenamiterere…
+	Shading	Igicucu
+	Shadow	Igicucu
+	Shadow, glow and soft edges	Igicucu, kimurika kandi cyoroshye
+	Shape Effects	Ingaruka
+	Shape Fill	Kuzuza ishusho
+	Shape Format	Imiterere
+	Shape Outline	Urucacagu
+	Shape Styles	Imiterere
+	Shapes	Imiterere
+	Share	Sangira
+	Sheet:	Urupapuro:
+	Shift cells down	Hindura selile hasi
+	Shift cells right	Hindura selile iburyo
+	Shift+Tab	Shift + Tab
+	Shipping labels	Ibirango byo kohereza
+	Short citation:	Amagambo magufi:
+	Shortcut key:	Urufunguzo ruto:
+	Show	Erekana
+	Show all formatting marks	Erekana ibimenyetso byose byerekana
+	Show All Levels	Erekana Inzego zose
+	Show all revisions inline	Erekana ubugororangingo bwose
+	Show changes at:	Erekana impinduka kuri:
+	Show changes in:	Erekana impinduka muri:
+	Show Comments	Erekana Ibitekerezo
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Erekana inyandiko n'amabara yabo ahindagurika, nka Reba ›Hindura uburyo. Kuzigama, gucapa na PDF ntabwo bihinduka.
+	Show every bibliography field	Erekana buri kibanza cya bibliografiya
+	Show First Line Only	Erekana umurongo wambere gusa
+	Show in the Styles gallery	Erekana muburyo bwububiko
+	Show KeyTips (Alt or F10)	Erekana Urufunguzo (Alt cyangwa F10)
+	Show Level	Erekana Urwego
+	Show Level 1	Erekana Urwego 1
+	Show Level 2	Erekana Urwego 2
+	Show Level 3	Erekana Urwego 3
+	Show Level 4	Erekana Urwego 4
+	Show Level 5	Erekana Urwego 5
+	Show Level 6	Erekana Urwego 6
+	Show Level 7	Erekana Urwego 7
+	Show Level 8	Erekana Urwego 8
+	Show Level 9	Erekana Urwego 9
+	Show Markup	Erekana Markup
+	Show Notes	Erekana Inyandiko
+	Show only comments and formatting in balloons	Erekana gusa ibitekerezo no gutunganya mumipira
+	Show or Hide Style	Erekana cyangwa Hisha Imiterere
+	Show page numbers	Erekana nimero ya page
+	Show revisions in balloons	Erekana ubugororangingo muri ballon
+	Show rulers	Erekana abategetsi
+	Show Text Formatting	Erekana Imiterere
+	Show the equation in the line of text	Erekana ikigereranyo mumurongo winyandiko
+	Show the equation on a line of its own	Erekana ikigereranyo kumurongo wacyo
+	Show the mini toolbar when text is selected	Erekana mini Toolbar iyo inyandiko yatoranijwe
+	Show/Hide ¶	Erekana / Hisha ¶
+	Show\nComments	Erekana \\ nIbicuruzwa
+	Showing the first {count} items.	Kwerekana ibintu bya mbere {count}.
+	Shows a tree: each item below the item it belongs to.	Erekana igiti: buri kintu munsi yikintu kirimo.
+	Shows items around a central idea: the first item is the centre.	Erekana ibintu bikikije igitekerezo rusange: ikintu cya mbere nicyo kigo.
+	Shows items of equal weight as blocks in rows.	Erekana ibintu bifite uburemere bungana nkibice kumurongo.
+	Shows overlapping ideas as overlapping circles.	Kwerekana ibitekerezo byuzuye nkuruziga.
+	Shows parts of a whole as quadrants.	Kwerekana ibice byose nka quadrants.
+	Shows parts that build on each other, largest at the bottom.	Erekana ibice byubaka, binini hepfo.
+	Shows steps in order, left to right, with arrows between them.	Erekana intambwe zikurikiranye, ibumoso ugana iburyo, hamwe n'imyambi hagati yabo.
+	Shows steps that repeat, around a circle.	Erekana intambwe zisubiramo, zizengurutse uruziga.
+	Shrink Font 1 Point	Gabanya Imyandikire 1 Ingingo
+	Shrink Selection	Gabanya Guhitamo
+	Shrink text	Gabanya inyandiko
+	Side to Side	Kuruhande
+	Side\nto Side	Uruhande \\ nto Kuruhande
+	Sides of a right triangle	Uruhande rwa mpandeshatu iburyo
+	Signature Line	Umurongo wumukono
+	Sine and cosine series of f(x)	Sine na cosine ikurikirana ya f (x)
+	Sine Function	Imikorere
+	Sine theta	Sine
+	Single	Ingaragu
+	Single Brackets	Utwugarizo tumwe
+	Single Closing Quote	Ijambo rimwe
+	Single label	Ikirango kimwe
+	Single Left Angle	Inguni imwe ibumoso
+	Single Left Bar	Akabari kamwe k'ibumoso
+	Single Left Brace	Ibumoso bumwe
+	Single Left Bracket	Agace kamwe k'ibumoso
+	Single Left Parenthesis	Ibumoso bumwe
+	Single Opening Quote	Ijambo ryo gufungura rimwe
+	Single Right Brace	Ikirangantego cyiburyo
+	Single Right Bracket	Agace kamwe k'iburyo
+	Single Right Parenthesis	Umubyeyi umwe iburyo
+	Single Spacing	Umwanya umwe
+	SIST02	SIST02
+	Site name	Izina ryurubuga
+	Size	Ingano
+	Size (pt):	Ingano (pt):
+	Size and Crop…	Ingano n'Ibihingwa…
+	Size:	Ingano:
+	Sketchbook	Igishushanyo
+	Skewed Fraction	Igice gito
+	Skip citations & bibliography	Hunga imirongo yatanzwe & bibliografiya
+	Skip Citations and Bibliography	Hunga Ibitabo na Bibliografiya
+	Skip Record If	Simbuka Inyandiko Niba
+	Skip Record If…	Simbuka Inyandiko Niba…
+	Slant Down	Shyira hasi
+	Slant Up	Shyira hejuru
+	Small Caps	Ingofero nto
+	Small caps	Ingofero nto
+	Small change	Impinduka nto
+	Smart quotes instead of straight quotes	Amagambo yubwenge aho kuvuga amagambo agororotse
+	SmartArt	SmartArt
+	SmartArt Design	Igishushanyo mbonera
+	SmartArt Styles	Imiterere ya SmartArt
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Kuzunguruka neza no guhinduranya, na menus na buto bigenda bishira. Off yerekana impinduka zose icyarimwe.
+	Soft Edges	Impande zoroshye
+	Soft Glow	Umucyo woroshye
+	Solid Accent	Urwego rukomeye
+	Sort	Sort
+	Sort by	Gutondekanya na
+	Sort order:	Itondekanya:
+	Sort Records	Gutondekanya inyandiko
+	Source code: github.com/chatraweechai/doc4me	Inkomoko yinkomoko: github.com/chatraweechai/doc4me
+	Source Manager	Umuyobozi w'inkomoko
+	Source type:	Ubwoko bw'inkomoko:
+	Sources in this document:	Inkomoko muri iyi nyandiko:
+	South	Amajyepfo
+	Space	Umwanya
+	Space after	Umwanya nyuma
+	Space after: {pt} pt	Umwanya nyuma: {pt} pt
+	Space before	Umwanya mbere
+	Space before/after:	Umwanya mbere / nyuma:
+	Space before: {pt} pt	Umwanya mbere: {pt} pt
+	Spaces	Umwanya
+	Spacing	Umwanya
+	Spacing (pt):	Umwanya (pt):
+	Spacing:	Umwanya:
+	Spanish	Icyesipanyoli
+	Spanish (Mexico)	Icyesipanyoli (Mexico)
+	Spanish (Spain)	Icyesipanyoli (Espanye)
+	Sparse Matrices	Imibare mike
+	Special	Bidasanzwe
+	Special Characters	Imiterere yihariye
+	Specify height:	Kugaragaza uburebure:
+	Speech	Imvugo
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	Imvugo izwi kuri iyi mudasobwa (whisper.cpp); nta kintu cyoherejwe kumurongo.
+	Speed	Umuvuduko
+	Spelling	Imyandikire
+	Spelling & Grammar	Imyandikire & Ikibonezamvugo
+	Spelling &\nGrammar	Imyandikire & \\ nIkibonezamvugo
+	Spelling and grammar are checked in English (United States).	Imyandikire n'ikibonezamvugo bisuzumwa mu Cyongereza (Amerika).
+	Spelling Suggestions	Ibyifuzo byimyandikire
+	Spike	Spike
+	Split	Gutandukanya
+	Split apart page break and paragraph mark	Gutandukanya kurupapuro no gutandukanya ikimenyetso
+	Split Cells	Gutandukanya Utugari
+	Split Table	Gutandukanya Imbonerahamwe
+	Spreadsheet Table	Imbonerahamwe y'urupapuro
+	Square	Umwanya
+	Square Root	Imizi ya kare
+	Square Root with Degree	Imizi ya kare ifite impamyabumenyi
+	Square Union	Ubumwe bwa Square
+	Stack Object	Igikoresho
+	Stack Object (Three)	Ikintu cya Stack (Bitatu)
+	Stacked	Bishyizwe hamwe
+	Stacked Bar	Akabari
+	Stacked Column	Inkingi
+	Stacked Fraction	Igice
+	Stacked, no bar	Bishyizwe hamwe, nta kabari
+	Standard	Bisanzwe
+	Standard and Contextual	Bisanzwe hamwe na Contextual
+	Standard Colors	Amabara asanzwe
+	Standard Only	Bisanzwe
+	Star	Inyenyeri
+	Start at:	Tangira kuri:
+	Start Enforcing Protection	Tangira Gushimangira Kurinda
+	Start Mail Merge	Tangira Mail Guhuza
+	Start Mail\nMerge	Tangira Ibaruwa \\ nMerge
+	State	Leta
+	Statement   5.50" × 8.50"	Itangazo 5.50 "× 8.50"
+	Statistics	Imibare
+	Status Bar	Imirongo
+	Statutes	Sitati
+	Stop	Hagarara
+	Stop Protection	Hagarika Kurinda
+	Stop Reading	Hagarika gusoma
+	Stopped	Yahagaritswe
+	Store	Ububiko
+	Straight Arrow Connector	Umuyoboro ugororotse
+	Straight Connector	Umuyoboro ugororotse
+	Strikethrough	Inzira
+	Stroke {n} of {total}	Gukubita {n} ya {total}
+	Strong	Mukomere
+	Structure Actions	Ibikorwa
+	Structures	Imiterere
+	Studio	Sitidiyo
+	Studio cover	Igifuniko cya sitidiyo
+	Studio handbook (sample)	Igitabo cya Studio (icyitegererezo)
+	Style	Imiterere
+	Style based on:	Imiterere ishingiye kuri:
+	Style Inspector	Umugenzuzi wuburyo
+	Style Set	Imiterere
+	Style:	Imiterere:
+	Style: APA	Imiterere: APA
+	Style: {style}	Imiterere: {style}
+	Styles	Imisusire
+	Styles Pane	Imisusire
+	Styles:	Imisusire:
+	Subentry:	Subentry:
+	Subject	Ingingo
+	Subscript	Kwiyandikisha
+	Subscript-Superscript	Kwiyandikisha
+	Subscripts and Superscripts	Kwiyandikisha hamwe na Superscript
+	Subset:	Subset:
+	Substituted font	Imyandikire yasimbuwe
+	Subtitle	Umutwe
+	Subtle Emphasis	Gushimangira mu buryo bworoshye
+	Subtle Reference	Byoroheje
+	Sum	Sum
+	Sum of cosines	Igiteranyo cya cosine
+	Sum or difference of sines	Sum cyangwa itandukaniro rya sines
+	Summation	Incamake
+	Summation from 0 to n	Incamake kuva 0 kugeza n
+	Summation over binomials	Incamake hejuru ya binomial
+	Summation with Limits	Incamake hamwe n'imbibi
+	Summation with Lower Limit	Incamake hamwe ntarengwa
+	Summation with Subscript Limit	Incamake hamwe na Subscript ntarengwa
+	Summation with Subscript-Superscript Limits	Incamake hamwe na Subscript-Superscript Imipaka
+	Summations	Incamake
+	Superscript	Inyandiko
+	Suppress line numbers	Kuraho nimero y'umurongo
+	Surface Integral	Ubuso bwuzuye
+	Surface Integral with Limits	Ubuso bwuzuye hamwe nimbibi
+	Surface Integral with Stacked Limits	Ubuso Bwuzuye hamwe nimbibi zegeranye
+	Swap footnotes and endnotes	Hindura ibisobanuro ahagana hasi ku ipaji
+	Swedish	Igisuwede
+	Switch Modes	Hindura uburyo
+	Switch Windows	Hindura Windows
+	Switch\nModes	Hindura \\ nUburyo
+	Symbol	Ikimenyetso
+	Symbol Font	Imyandikire y'Ikimenyetso
+	Symbols	Ibimenyetso
+	Synchronous Scrolling	Kuzunguruka
+	Synonyms	Synonyme
+	System	Sisitemu
+	Tab	Tab
+	Tab Character	Imiterere ya Tab
+	Tab character	Imiterere ya tab
+	Tab characters	Inyuguti
+	Tab leader:	Umuyobozi wa tab:
+	Tab stop position:	Ahantu ho guhagarara:
+	Tab stops to be cleared:	Tab ihagarara kugirango isukure:
+	Table	Imbonerahamwe
+	Table AutoFormat	Imbonerahamwe AutoFormat
+	Table AutoFormat…	Imbonerahamwe AutoFormat…
+	Table Column Width	Ubugari bw'Imbonerahamwe
+	Table Design	Igishushanyo mbonera
+	Table direction:	Icyerekezo cy'ameza:
+	Table entry fields	Imbonerahamwe yinjira
+	Table Grid	Urusobekerane
+	Table identifier:	Ikiranga imbonerahamwe:
+	Table Layout	Imbonerahamwe
+	Table of Authorities	Imbonerahamwe y'abayobozi
+	Table of Contents	Imbonerahamwe
+	Table of Contents Options	Imbonerahamwe Ibirimo Amahitamo
+	Table of Contents Styles	Imbonerahamwe Ibirimo Imiterere
+	Table of Figures	Imbonerahamwe
+	Table of Figures Options	Imbonerahamwe yimibare Ihitamo
+	Table of\nContents	Imbonerahamwe ya \\ n Ibirimo
+	Table Positioning	Umwanya Ameza
+	Table Properties	Imiterere yimbonerahamwe
+	Table Row Height	Uburebure bw'ameza
+	Table style	Imiterere yimeza
+	Table Style Options	Imiterere yimbonerahamwe
+	Table Styles	Imiterere yimbonerahamwe
+	Table styles:	Imiterere yimbonerahamwe:
+	Tables	Imbonerahamwe
+	Tabloid   11.00" × 17.00"	Tabloid 11.00 "× 17.00"
+	Tabs	Tab
+	Tabs…	Tabs…
+	Tabular List	Urutonde
+	Tag	Tag
+	Tangent formula	Inzira ya Tangent
+	Tangent Function	Imikorere idasanzwe
+	TC entry fields	TC yinjira
+	Technology	Ikoranabuhanga
+	Templates	Inyandikorugero
+	Templates and Add-ins	Inyandikorugero na Ongeramo
+	Text	Inyandiko
+	Text Box	Agasanduku k'inyandiko
+	Text boxes	Agasanduku k'inyandiko
+	Text Direction	Icyerekezo cy'inyandiko
+	Text Effects	Ingaruka z'inyandiko
+	Text Effects and Typography	Ingaruka zinyandiko hamwe nimyandikire
+	Text Fill	Uzuza inyandiko
+	Text from File	Inyandiko kuva muri dosiye
+	Text Highlight Color	Inyandiko Yerekana Ibara
+	Text indent at:	Inyandiko yanditse kuri:
+	Text isn't squeezed to fit its cell yet.	Inyandiko ntisunikwa kugirango ihuze selile yayo.
+	Text Outline	Urucacagu rw'inyandiko
+	Text over Colon Equal	Inyandiko hejuru ya Colon Iringana
+	Text over Equal	Inyandiko ireshya
+	Text Pane	Umwanya wanditse
+	Text size	Ingano yinyandiko
+	Text snaps to characters	Inyandiko ifata inyuguti
+	Text to display:	Umwandiko wo kwerekana:
+	Text Wrapping	Gupfunyika inyandiko
+	Text wrapping:	Gupfunyika inyandiko:
+	Text:	Inyandiko:
+	Text\nBox	Inyandiko \\ nBox
+	Text\nDirection	Inyandiko \\ nIcyerekezo
+	Thai	Tayilande
+	Thai Distributed	Ikwirakwizwa rya Tayilande
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Iyo format ntabwo ibika byose, inyandiko rero irakinguye. Bika nk'inyandiko y'Ijambo (.docx) kugirango ukomeze.
+	That isn't the web address or embed code of an online video.	Ntabwo ari adresse y'urubuga cyangwa kode ya videwo yo kumurongo.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Ijambobanga ntabwo arukuri. Ubigenzure (ijambo ryibanga-ryoroshye) hanyuma ugerageze.
+	The clipboard is empty.	Ububiko bwubusa.
+	The date it is today	Itariki ni uyu munsi
+	The document contains no tracked changes.	Inyandiko ikubiyemo impinduka zikurikiranwa.
+	The document has no bookmarks yet.	Inyandiko ntigira ibimenyetso.
+	The document is read only, except for regions marked editable.	Inyandiko isomwa gusa, usibye uturere twerekanwe guhindurwa.
+	The document will be saved with a password. Save it to protect it.	Inyandiko izabikwa hamwe nijambobanga. Uzigame kugirango urinde.
+	The first word of a sentence starts with a capital.	Ijambo ryambere ryinteruro ritangirana ninyuguti nkuru.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	amafaranga yubusa ya buri munsi arakoreshwa (gerageza nanone ejo, cyangwa utange imeri)
+	the LibreTranslate server	seriveri ya LibreTranslate
+	The Mail Merge Helper sets up a merge in three steps.	Umufasha woherejwe na Mail ashyiraho guhuza mubyiciro bitatu.
+	The new style takes the formatting of the current paragraph.	Uburyo bushya bufata imiterere yingingo iriho.
+	The password is optional; without it anyone can stop the protection.	Ijambobanga ntirishobora; bitabaye ibyo umuntu wese arashobora guhagarika uburinzi.
+	The password is removed. Save the document to keep the change.	Ijambobanga ryakuweho. Bika inyandiko kugirango ukomeze impinduka.
+	The passwords don't match.	Ijambobanga ntirihuye.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	Mucapyi, impande ebyiri zo gucapa nimpapuro kurupapuro byatoranijwe muricyo kiganiro.
+	The recipient-list field that fills each part of an address block and greeting line.	Umwanya-urutonde rwumwanya wuzuza buri gice cya adresse ya adresse numurongo wo kuramutsa.
+	The same word twice in a row.	Ijambo rimwe inshuro ebyiri zikurikiranye.
+	The spelling and grammar check is complete.	Kugenzura imyandikire nimbonezamvugo biruzuye.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Sisitemu dosiye y'ibiganiro ntabwo iboneka, Doc4Me rero yerekana iyayo. Kugirango ubone sisitemu ikiganiro, shyiramo dosiye ihitamo dosiye (nka xdg-desktop-portal-gtk) cyangwa zenit.
+	The text is sent to {service} to be translated.	Inyandiko yoherejwe kuri {service} kugirango ihindurwe.
+	The time right now	Igihe
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Video irerekana nk'ishusho mu nyandiko. Kanda inshuro ebyiri kugirango urebe muri mushakisha yawe.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	Inyandiko yose yahinduwe mu nyandiko nshya, isimbuza iyi. Bika akazi kawe mbere.
+	Theme Colors	Amabara
+	Theme Fonts	Imyandikire
+	Theme List	Urutonde
+	Themes	Insanganyamatsiko
+	Then by	Hanyuma
+	Then insert:	Noneho shyiramo:
+	There's no text to translate.	Nta nyandiko yo guhindura.
+	Thesaurus	Thesaurus
+	These marks show even when Show/Hide ¶ is off.	Ibi bimenyetso byerekana niyo Show / Hisha ¶ yazimye.
+	These merge fields aren't in the recipient list:	Imirima yo guhuza ntabwo iri murutonde rwabakiriye:
+	These settings will be used for new documents.	Igenamiterere rizakoreshwa ku nyandiko nshya.
+	Thick	Umubyimba
+	Thickness	Umubyimba
+	This Device…	Iki gikoresho…
+	This document	Iyi nyandiko
+	This field has no options.	Uyu murima nta mahitamo ufite.
+	This folder can't be read: {error}	Ubu bubiko ntibushobora gusomwa: {error}
+	This font has no characters to show.	Iyi myandikire nta nyuguti zigaragaza.
+	This page	Uru rupapuro
+	This password type isn't supported.	Ubwoko bwibanga ntabwo bushyigikiwe.
+	This point forward	Iyi ngingo imbere
+	This section	Iki gice
+	Three	Bitatu
+	Through	Binyuze
+	Tight	Gukomera
+	Tilde	Tilde
+	Tips ({n})	Inama ({n})
+	Title	Umutwe
+	Title from the document properties	Umutwe uva kumiterere yinyandiko
+	Title:	Umutwe:
+	To	Kuri
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Gufungura inyandiko zijambo hamwe na Doc4Me muburyo budasanzwe: hitamo imwe muri Finder, hitamo File ›Kubona amakuru, hitamo Doc4Me munsi Gufungura hamwe, hanyuma ukande Guhindura Byose.
+	To:	Kuri:
+	TOA Heading	Umutwe wa TOA
+	TOC Heading	Umutwe wa TOC
+	TOC {n}	TOC {n}
+	Today	Uyu munsi
+	tOGGLE cASE	URUBUGA
+	Toggle Check Box	Kuzuza agasanduku
+	Toggle Field Codes	Kuzuza kode yumurima
+	Toggle Unicode Character	Kuzuza Unicode Imiterere
+	Tools	Ibikoresho
+	Top	Hejuru
+	Top and Bottom	Hejuru na Hasi
+	Top Border	Umupaka wo hejuru
+	Top Margin	Hejuru
+	Top of Next Page	Hejuru yurupapuro rukurikira
+	Top of Page	Hejuru y'urupapuro
+	Top of Previous Page	Hejuru yurupapuro rwambere
+	Top of the Window	Hejuru ya Idirishya
+	Top:	Hejuru:
+	Total	Igiteranyo
+	Total Row	Umurongo wose
+	Track Changes	Kurikirana Impinduka
+	Track Changes Options	Kurikirana Guhindura Amahitamo
+	Track changes while editing	Kurikirana impinduka mugihe uhindura
+	Track Changes: On	Guhindura inzira: Kuri
+	Track formatting	Gukurikirana imiterere
+	Track\nChanges	Kurikirana \\ nIhinduka
+	Track\nChanges ✓	Kurikirana \\ nIhinduka ✓
+	Tracked changes	Gukurikirana impinduka
+	Tracking	Gukurikirana
+	Trademark	Ikirangantego
+	Trademark Sign	Ikimenyetso cy'ikirango
+	Transform	Hindura
+	Translate	Sobanura
+	Translate Document	Sobanura inyandiko
+	Translating {done} of {total}	Guhindura {done} ya {total}
+	Translation service	Serivisi y'ubuhinduzi
+	Translator	Umusemuzi
+	Transparency	Gukorera mu mucyo
+	Transparency:	Gukorera mu mucyo:
+	Transport	Ubwikorezi
+	Treatises	Ubuvuzi
+	Triangle	Inyabutatu
+	Triangle Down	Inyabutatu Hasi
+	Triangle Up	Inyabutatu Hejuru
+	Trigonometric Functions	Imikorere ya Trigonometric
+	Triple	Inshuro eshatu
+	Triple Dot	Akadomo ka gatatu
+	Triple Integral	Inshuro eshatu
+	Triple Integral with Limits	Inshuro eshatu zose hamwe ntarengwa
+	Triple Integral with Stacked Limits	Inshuro eshatu zuzuye hamwe nimbibi zegeranye
+	Trust Center	Ikigo Cyizere
+	Tue	Tue
+	Turabian	Turabian
+	Turkish	Turukiya
+	Two	Babiri
+	Type	Andika
+	Type a command, e.g. "insert table"	Andika itegeko, "shyiramo ameza"
+	Type a New List	Andika Urutonde rushya
+	Type a New List…	Andika urutonde rushya…
+	Type at least one recipient.	Andika byibuze uwakiriye.
+	Type equations in LaTeX	Andika ibingana muri LaTeX
+	Type equations in the linear format (UnicodeMath)	Andika ibigereranyo muburyo bw'umurongo (UnicodeMath)
+	Type in Equation	Andika muburinganire
+	Type normal (non-math) text in the equation	Andika inyandiko isanzwe (itari imibare) mukuringaniza
+	Type Text	Andika Umwandiko
+	Type the categories down the side and a column of values per series.	Andika ibyiciro hepfo kuruhande hamwe ninkingi yagaciro kumurongo.
+	Type the field's name and its switches, for example PAGE \\* roman.	Andika izina ryumurima hamwe nuwahinduye, urugero PAGE \\\\ * roman.
+	Type the password to stop the protection.	Andika ijambo ryibanga kugirango uhagarike uburinzi.
+	Type the recipients, or load them from a file.	Andika abayakiriye, cyangwa ubapakire muri dosiye.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Andika ikirango izina ryinkomoko. Urashobora kongeramo andi makuru kuriyi soko nyuma muguhindura isoko.
+	Type:	Ubwoko:
+	Typing	Kwandika
+	Typing replaces selected text	Kwandika bisimbuza inyandiko yatoranijwe
+	Ukrainian	Ukraine
+	Unchecked symbol	Ikimenyetso kitagenzuwe
+	Underbar	Munsi
+	Underbrace	Munsi
+	Underline	Shyira umurongo
+	Underline color	Shyira umurongo
+	Underline Words Only	Shyira umurongo ku magambo gusa
+	Undo	Kuraho
+	Undo Stroke	Kuraho inkoni
+	Undo {action}	Kuraho {action}
+	Unformatted Text	Inyandiko idahinduwe
+	Ungroup	Itsinda
+	Union	Ubumwe
+	Union of intersections	Ihuriro ry’amasangano
+	Union with Limits	Ubumwe hamwe n'imbibi
+	Union with Lower Limit	Ubumwe hamwe na Limit Limit
+	Union with Plus	Ubumwe hamwe na Plus
+	Union with Subscript-Superscript Limits	Ubumwe hamwe na Subscript-Superscript Imipaka
+	Unions and Intersections	Ihuriro n’amasangano
+	Unlink Fields	Kuramo imirima
+	Unlink\nCitations	Kuramo \\ nIbisobanuro
+	Unlock Fields	Fungura imirima
+	Up	Hejuru
+	Up Diagonal Dots	Hejuru Utudomo
+	Up one level	Hejuru urwego rumwe
+	Update Field	Kuvugurura Umwanya
+	Update fields before printing	Kuvugurura imirima mbere yo gucapa
+	Update Index	Kuvugurura urutonde
+	Update Style to Match Selection	Kuvugurura Imiterere kugirango ihuze Guhitamo
+	Update Styles from Template	Kuvugurura Imiterere kuva Inyandikorugero
+	Update Table	Kuvugurura Imbonerahamwe
+	Update Table of Figures	Kuvugurura Imbonerahamwe yimibare
+	Update to Match	Kuvugurura guhuza
+	Update to Match Selection	Kuvugurura guhuza Guhitamo
+	UPPERCASE	UPPERCASE
+	URGENT	BYIHUTIRWA
+	URL	URL
+	Use "a" before a consonant sound	Koresha "a" mbere yijwi ryumvikana
+	Use "an" before a vowel sound	Koresha "an" mbere yijwi ryijwi
+	Use an Existing List…	Koresha Urutonde Ruriho…
+	Use passim (five or more pages)	Koresha passim (impapuro eshanu cyangwa zirenga)
+	Use system setting	Koresha igenamiterere rya sisitemu
+	Use the Insert key to switch overtype on and off	Koresha urufunguzo rwo gushiramo kugirango uhindure ubwoko burenze kandi uzimye
+	Use wildcards	Koresha ikarita
+	User Name	Izina ryumukoresha
+	User name:	Izina ryumukoresha:
+	Username	Izina ryukoresha
+	Value	Agaciro
+	Vector A	Vector A.
+	Vector AB	Vector AB
+	Version	Inyandiko
+	Version History	Amateka ya verisiyo
+	Version {version} ({build})	Inyandiko {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	Imirongo ibikwa mugihe inyandiko ifunguye (dosiye ya .docx idafite verisiyo).
+	Vertical	Uhagaritse
+	Vertical Alignment	Guhuza Vertical
+	Vertical alignment:	Guhuza neza:
+	Vertical Bars	Utubari duhagaritse
+	Vertical Dots	Utudomo duhagaritse
+	Vertical spacing:	Umwanya uhagaze:
+	Vietnamese	Abanya Vietnam
+	View	Reba
+	View Alt Text…	Reba Inyandiko ya Alt…
+	View Gridlines	Reba Imirongo
+	View Side by Side	Reba Kuruhande
+	View State	Reba Leta
+	Views	Reba
+	Visual effects	Ingaruka zigaragara
+	Voice	Ijwi
+	Volume	Umubumbe
+	Volume Integral	Umubumbe wuzuye
+	Volume Integral with Limits	Umubumbe wuzuye hamwe nimbibi
+	Volume Integral with Stacked Limits	Umubumbe wuzuye hamwe ntarengwa
+	W:	W:
+	Waiting for Zotero…	Gutegereza Zotero…
+	Warm Gradient with Outline	Igipimo gishyushye hamwe na Outline
+	Warnings ({n})	Umuburo ({n})
+	Watermark	Ikimenyetso cy'amazi
+	Wave	Umuhengeri
+	Weather	Ikirere
+	web access isn't available here	kwinjira kurubuga ntabwo biboneka hano
+	Web Layout	Urubuga
+	Web page (*.html)	Urubuga (* .html)
+	Web\nLayout	Urubuga \\ nUmurongo
+	Website	Urubuga
+	Wed	Wed
+	Weight	Ibiro
+	West	Iburengerazuba
+	When merging records	Iyo uhuza inyandiko
+	When this document was first created	Iyo iyi nyandiko yashizweho bwa mbere
+	When this document was most recently printed	Iyo iyi nyandiko iherutse gucapwa
+	When this document was most recently saved	Iyo iyi nyandiko yabitswe vuba aha
+	White Space	Umwanya wera
+	White space	Umwanya wera
+	Who the document properties name as author	Ninde inyandiko yibiranga izina nkumwanditsi
+	Whole document	Inyandiko yose
+	Whole page	Urupapuro rwose
+	Whole Table	Imbonerahamwe yose
+	Whole words	Amagambo yose
+	Wide	Mugari
+	Widow/Orphan Control	Kugenzura Umupfakazi / Imfubyi
+	Widow/Orphan control	Igenzura ry'umupfakazi
+	Width and spacing	Ubugari n'umwanya
+	Width:	Ubugari:
+	Wildcards (regex)	Ikarita yo mu gasozi (regex)
+	Window	Idirishya
+	With:	Hamwe na:
+	Word 2007	Ijambo 2007
+	Word 2010	Ijambo 2010
+	Word 2013 and later	Ijambo 2013 na nyuma yaho
+	Word 97–2003	Ijambo 97–2003
+	Word Count	Kubara Ijambo
+	Word document	Inyandiko
+	Word document (*.docx)	Inyandiko y'ijambo (* .docx)
+	Word forms	Imiterere y'ijambo
+	Word Left	Ijambo Ibumoso
+	Word level	Urwego rw'ijambo
+	Word Right	Ijambo Iburyo
+	Word XML Document (*.xml)	Ijambo XML Inyandiko (* .xml)
+	WordArt	Ijambo
+	WordArt Styles	Imiterere ya WordArt
+	Words	Amagambo
+	Words only	Amagambo gusa
+	Wrap Text	Gupfunyika Umwandiko
+	Wrap text	Gupfunyika inyandiko
+	Wrap Text Sides	Gupfunyika Inyandiko
+	Wrap\nText	Gupfunyika \\ nIbyanditswe
+	Write & Insert Fields	Andika & Shyiramo Imirima
+	Write a reply	Andika igisubizo
+	Write math here with the mouse or a pen.	Andika imibare hano hamwe nimbeba cyangwa ikaramu.
+	Writing Style: Grammar	Uburyo bwo kwandika: Ikibonezamvugo
+	x bar	x bar
+	Year	Umwaka
+	Yes	Yego
+	Yields	Yitanga
+	Your changes will be lost if you don't save them.	Impinduka zawe zizabura niba utabitse.
+	Your system doesn't report an animation setting, so animation effects stay on.	Sisitemu yawe ntabwo itanga raporo ya animasiyo, bityo ingaruka za animasiyo zigumaho.
+	Your system has animation effects turned off.	Sisitemu yawe ifite ingaruka za animasiyo yazimye.
+	Your system has animation effects turned on.	Sisitemu yawe ifite ingaruka za animasiyo zifunguye.
+	Zoom	Kuzamura
+	Zoom In	Kuzamura
+	Zoom Out	Kuzamura
+	Zoom to Page	Kwegera kurupapuro
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: yahagaritswe
+	Zotero: done	Zotero: byakozwe
+	{cols}×{rows} Table	{cols} × {rows} Imbonerahamwe
+	{contributors} contributors · {commits} commits	Abaterankunga ba {contributors} · {commits} yiyemeje
+	{count} items highlighted	Ibintu bya {count} byerekanwe
+	{count} of {total} pages will print	{count} ya page ya {total} izacapura
+	{count} paragraphs were changed.	Ibika bya {count} byahinduwe.
+	{count} records; fields: {fields}	{count} inyandiko; imirima: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ntabwo yashyizwe kuri iyi mudasobwa, iyi nyandiko rero irerekanwa na {with}. Imirongo nurupapuro birashobora gucika ukundi kuruta imyandikire yumwimerere.
+	{group} settings	Igenamiterere rya {group}
+	{key}+Click to follow link	{key} + Kanda kugirango ukurikire
+	{language} is now the document's default language.	{language} ubu ni ururimi rusanzwe.
+	{name} (Press ENTER to Insert)	{name} (Kanda ENTER kugirango ushiremo)
+	{name} already exists. Choose Save again to replace it.	{name} irahari. Hitamo Kubika nanone kugirango ubisimbuze.
+	{name} can't be a folder's name.	{name} ntishobora kuba izina ryububiko.
+	{name} is protected with a password.	{name} irinzwe nijambobanga.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} yongeyeho. Makrosi zayo ziri munsi yinyongera-yanjye na Reba ›Macros.
+	{name} wasn't found.	{name} ntiyabonetse.
+	{n} entries marked.	{n} ibyanditswe byashyizweho ikimenyetso.
+	{n} lines	Imirongo ya {n}
+	{n} of {of} recipients	{n} yabahawe {of}
+	{n} pt	{n} pt
+	{n} records	{n} inyandiko
+	{n} revisions	{n} ivugurura
+	{selected} of {words} words	{selected} ya {words} amagambo
+	{size} pt	{size} pt
+	{words} words	Amagambo ya {words}
+	{w} × {h} in	{w} × {h} muri
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) ntabwo ari umubare.
+	← Find	Shakisha
+	✓ None	✓ Nta na kimwe
+	➕ New comment	Comment Igitekerezo gishya
+	📂  Browse…	Gushakisha…
+	Add Help Text…	Ongeraho Ubufasha…
+	AutoText entry:	Icyinjira cyanditse:
+	Calculate on exit	Kubara gusohoka
+	Calculation	Kubara
+	Check Box Form Field	Reba agasanduku k'imiterere
+	Check Box Form Field Options	Reba Agasanduku Ifishi Yumwanya Amahitamo
+	Check box	Reba agasanduku
+	Check box enabled	Reba agasanduku gashoboye
+	Check box size:	Reba ingano yisanduku:
+	Checked	Kugenzurwa
+	Current date	Itariki ya none
+	Current time	Igihe cyubu
+	Default value:	Agaciro gasanzwe:
+	Drop-Down Form Field	Umwanya wo kumanura
+	Drop-Down Form Field Options	Kumanura Hasi Ifishi Yumwanya Amahitamo
+	Drop-down	Hasi
+	Drop-down enabled	Kumanura hasi birashoboka
+	Drop-down item:	Ikintu cyamanutse:
+	Fill In Form Field	Uzuza Imiterere
+	Fill-in enabled	Uzuza
+	Form Field	Imiterere yumurima
+	Form Field Help Text	Ifishi Yumufasha Wanditse
+	Form Field Options	Ifishi yumwanya wo guhitamo
+	Form Field Shading	Ifaranga Igicucu
+	Form Field at Selection	Imiterere yumurima muguhitamo
+	Help Key (F1)	Gufasha Urufunguzo (F1)
+	Insert Form Field	Shyiramo Umwanya
+	Items in drop-down list:	Ibintu biri kumurongo wamanutse:
+	Legacy Tools	Ibikoresho byumurage
+	Maximum length:	Uburebure ntarengwa:
+	Next Form Field	Umwanya ukurikira
+	Not checked	Ntabwo yagenzuwe
+	Put the caret on a form field first.	Shira caret kumurongo wambere.
+	Regular text	Inyandiko isanzwe
+	Reset Form Fields	Ongera usubiremo imirima
+	Text Form Field	Umwanya wo Kwandika
+	Text Form Field Options	Ifishi yumwanya wo guhitamo
+	Type your own:	Andika ibyawe:
+	Unlimited	Ntarengwa
+	Protected sections:	Ibice bikingiwe:
+	Section Protection	Kurinda Icyiciro
+	Section {n}	Igice {n}
+	Select sections…	Hitamo ibice…
+	AutoSummarize	AutoSummarize
+	Create a new document and put the summary there	Kora inyandiko nshya hanyuma ushire incamake aho
+	Highlight key points	Shyira ahagaragara ingingo z'ingenzi
+	Insert an executive summary or abstract at the top of the document	Shyiramo incamake nyobozi cyangwa abstract hejuru yinyandiko
+	Length of summary	Uburebure bw'incamake
+	Percent of original:	Ijanisha ry'umwimerere:
+	Summary: {words} of {of} words	Incamake: {words} yamagambo ya {of}
+	Type of summary	Ubwoko bw'incamake
+	Update document statistics	Kuvugurura imibare yinyandiko
+	{n} sentences	Interuro {n}
+	{n} words or less	Amagambo ya {n} cyangwa munsi yayo
+	At:	Kuri:
+	Distance from text:	Intera iri hagati yinyandiko:
+	Format Frame	Imiterere Ikadiri
+	Format Frame…	Imiterere Ikadiri…
+	Frame	Ikadiri
+	Frame…	Ikadiri…
+	Insert Frame	Shyiramo Ikadiri
+	Lock anchor	Funga inanga
+	Remove Frame	Kuraho Ikadiri
+	Text wrapping	Gupfunyika inyandiko
+	Chinese Conversion	Guhindura Abashinwa
+	Chinese Conversion…	Guhindura Abashinwa…
+	Converted {n} characters	Guhindura inyuguti {n}
+	Simplified Chinese to Traditional Chinese	Igishinwa cyoroheje kubushinwa gakondo
+	Simplified to Traditional	Byoroheje Kuri Gakondo
+	Traditional Chinese to Simplified Chinese	Abashinwa gakondo kubushinwa bworoshye
+	Traditional to Simplified	Gakondo Kuri Byoroheje
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Koresha Tayiwani, Hong Kong SAR, na Macao SAR inyuguti zitandukanye
+	Asian Layout	Imiterere ya Aziya
+	Fit Text	Inyandiko ikwiranye
+	Fit Text…	Guhuza Umwandiko…
+	Two Lines in One	Imirongo ibiri muri imwe
+	Two Lines in One…	Imirongo ibiri muri imwe…
+	New text width (pt):	Ubugari bushya bw'inyandiko (pt):
+	Enclose in brackets	Shyira mumutwe
+	Bracket pair:	Ikirangantego:
+	Typography	Imyandikire
+	Character spacing control	Kugenzura imiterere yimiterere
+	Don't compress	Ntugahagarike
+	Compress punctuation only	Gabanya utumenyetso gusa
+	Compress punctuation and Japanese kana	Kanda utumenyetso hamwe nu kiyapani kana
+	First and last characters	Inyuguti zambere nizanyuma
+	Strict	Birakaze
+	Cannot start a line:	Ntushobora gutangira umurongo:
+	Cannot end a line:	Ntushobora kurangiza umurongo:
+	Japanese Find Options	Abayapani Shakisha Amahitamo
+	Sounds like (Japanese)	Byumvikane nka (Ikiyapani)
+	Match full/half width	Huza ubugari / igice cy'ubugari
+	Match hiragana/katakana	Huza hiragana / katakana
+	Match small kana	Huza kana nto
+	Match prolonged sound marks and dashes	Huza ibimenyetso birebire byamajwi nibice
+	Japanese Consistency Checker	Igenzura ry'Ubuyapani
+	Japanese Consistency Checker…	Igenzura ry'Ubuyapani…
+	No inconsistent spellings were found.	Nta myandikire idahuye yabonetse.
+	Pick the spelling to keep in each group.	Tora imyandikire kugirango ugumane muri buri tsinda.
+	Bidirectional text	Inyandiko zombi
+	Bidirectional Text	Inyandiko ebyiri
+	Default direction:	Icyerekezo gisanzwe:
+	Cursor movement:	Indorerezi:
+	Logical	Birumvikana
+	Visual	Biboneka
+	Manage Fields	Gucunga Imirima
+	File locations	Ahantu dosiye
+	File Locations	Ahantu Idosiye
+	Documents:	Inyandiko:
+	Pictures:	Amashusho:
+	The system's choice	Guhitamo sisitemu
+	Show Repairs	Erekana Gusana
+	No repairs were needed.	Nta gusana byari bikenewe.
+	These problems were found and repaired when the document was opened:	Ibi bibazo byabonetse kandi birasanwa igihe inyandiko yafungurwaga:
+	An unreadable entry in the file was skipped: {what}	Icyinjira kidasomeka muri dosiye cyasibwe: {what}
+	An unreadable part was left out: {what}	Igice kidasomeka cyasigaye hanze: {what}
+	Unreadable relationships were ignored: {what}	Umubano udasomwe wirengagijwe: {what}
+	A missing part of an embedded object was left out: {what}	Igice cyabuze cyikintu cyashyizwemo cyasigaye hanze: {what}
+	Copy File	Gukoporora Idosiye
+	Find Files	Shakisha Idosiye
+	Letter Wizard	Wizard
+	Recipient's name:	Izina ry'uwahawe:
+	Salutation:	Indamutso:
+	Subject:	Ingingo:
+	Complimentary closing:	Gufunga byuzuye:
+	Sender's name:	Izina ry'abohereje:
+	Job title:	Umutwe w'akazi:
+	Company:	Isosiyete:
+	Enclosures:	Imigereka:
+	Cc:	Cc:
+	Edit Links to Files	Hindura Ihuza Kuri Idosiye
+	Source file	Idosiye
+	Locked	Ifunze
+	Change Source	Hindura Inkomoko
+	This document has no links to files.	Iyi nyandiko ntaho ihuriye na dosiye.
+	Web options	Amahitamo y'urubuga
+	Web Options	Urubuga
+	Allow PNG as a graphics format	Emerera PNG nk'imiterere
+	Rely on CSS for font formatting	Wishingikirize kuri CSS kugirango uhindure imyandikire
+	Rely on VML for displaying graphics in browsers	Wishingikirize kuri VML kugirango werekane ibishushanyo muri mushakisha
+	Organize supporting files in a folder	Tegura dosiye zishyigikira mububiko
+	Use long file names whenever possible	Koresha amazina maremare ya dosiye igihe cyose bishoboka
+	Screen size:	Ingano ya ecran:
+	Pixels per inch:	Pixel kuri santimetero:
+	Hangul Hanja Conversion	Hangul Hanja Guhindura
+	Hangul Hanja Conversion…	Hangul Hanja Guhindura…
+	Hangul to Hanja	Hangul to Hanja
+	Hanja to Hangul	Hanja to Hangul
+	Put the caret in Korean text to choose its Hanja.	Shira caret mumyandiko ya koreya kugirango uhitemo Hanja yayo.
+	The selection, or the whole document when nothing is selected.	Guhitamo, cyangwa inyandiko yose mugihe ntakintu cyatoranijwe.

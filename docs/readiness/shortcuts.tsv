@@ -327,4 +327,4 @@ ks-325	Use function key shortcuts	Display the Save As dialog box.	F12	F12	file.s
 ks-326	Use function key shortcuts	Save the document.	Shift+F12	Shift+F12	file.save	registry		
 ks-327	Use function key shortcuts	Display the Open dialog box.	Ctrl+F12	Mod+F12	file.open	registry		
 ks-328	Use function key shortcuts	Display the Print tab.	Ctrl+Shift+F12	Mod+Shift+F12	file.print	registry		
-ks-329	Use function key shortcuts	Select the Table of Contents button.	Alt+Shift+F12	Alt+Shift+F12	-	manual	fail	
+ks-329	Use function key shortcuts	Select the Table of Contents button.	Alt+Shift+F12	Alt+Shift+F12	-	manual	pass	egui UI regression tests: Alt+Shift+F12 opens the TOC options menu from a TOC content control/entry; Update Table and Remove Table of Contents render, and Remove executes the existing command. Other contexts do nothing.

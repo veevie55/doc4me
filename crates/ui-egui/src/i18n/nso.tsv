@@ -1,0 +1,2987 @@
+# Sesotho sa Leboa (nso) interface catalog; machine-translated from en-gb.tsv using Google Translate, 2026-11-06. Review terminology before release.
+# Columns: context<TAB>English source<TAB>translation; placeholders are preserved.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	a goba "an" pele ga lentšu le le latelago; Sepoliši "w" / "re", "z" / "ze".
+	% of all commits	% ya go itlama ka moka
+	(All)	(Ka moka) .
+	(Custom)	(Tlwaelo) .
+	(no style)	(ga go na setaele) .
+	(no suggestions)	(ga go na ditšhišinyo)
+	(none)	(ga go le e tee) .
+	(normal text)	(sengwalwa se se tlwaelegilego) .
+	(not matched)	(ga se ya bapetšwa) .
+	(picture or object)	(seswantšho goba selo) .
+	*Bold* and _italic_ with real formatting	*Bold* le _italic_ ka fomete ya nnete
+	0 or More Characters	0 goba go feta Ditlhaka
+	1. Formatting restrictions	1. Dithibelo tša go fometa
+	1. Main document	1. Tokomane e kgolo
+	1.5 Line Spacing	1.5 Sebaka sa Mela
+	1/4 Em Space	1/4 Sebaka sa Em
+	1×2 Empty Matrix	1 × 2 Matrix e se nang letho
+	1×3 Empty Matrix	1 × 3 Matrix e se nang letho
+	2. Data source	2. Mohlodi wa data
+	2. Editing restrictions	2. Dithibelo tša go rulaganya
+	2×1 Empty Matrix	2 × 1 Matrix e se nang letho
+	2×2 Determinant	2 × 2 Se se laolago
+	2×2 Empty Matrix	2 × 2 Matrix e se nang letho
+	2×2 Identity Matrix	2 × 2 Matrix ya Boitsebišo
+	2×2 Identity Matrix (sparse)	2 × 2 Matrix ya Boitsebišo (se senyenyane) .
+	2×2 Matrix in Brackets	2 × 2 Matrix ka Maswaodikga
+	2×2 Matrix in Double Bars	2 × 2 Matrix ka Dibara tše pedi
+	2×2 Matrix in Parentheses	2 × 2 Matrix ka Maswaodikga
+	2×3 Empty Matrix	2 × 3 Matrix e se nang letho
+	3-D	3-D
+	3. Merge the data with the document	3. Kopanya ya data le tokomane
+	3. Start enforcement	3. Thoma go phethagatša phethagatšo
+	3D Models	Dikao tša 3D
+	3×1 Empty Matrix	3 × 1 Matrix e se nang letho
+	3×2 Empty Matrix	3 × 2 Matrix e se nang letho
+	3×3 Empty Matrix	3 × 3 Matrix e se nang letho
+	3×3 Identity Matrix	3 × 3 Matrix ya Boitsebišo
+	3×3 Identity Matrix (sparse)	3 × 3 Matrix ya Boitsebišo (se senyenyane) .
+	5,000 characters a day; give an email address for 50,000.	baanegwa ba 5,000 ka letšatši; fa aterese ya imeile bakeng sa 50,000.
+	<< Less	<< Ka tlase ga moo
+	<< Remove	<< Tloša
+	A file dialog is already open.	Poledišano ya faele e šetše e butšwe.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Sedirišwa sa go šoma ka mantšu sa mahala, sa mohlodi wo o bulegilego seo se ngwadilwego go tloga mathomong ka go Rust.\\\\nE theilwe godimo ga WordCraft ke sehlopha sa ArtCraft.
+	A header source holds the field names for a data source without a header row.	Mothopo wa hlogo o swara maina a tšhemo a mothopo wa datha ntle le mothaladi wa hlogo.
+	A mail merge field	Tšhemo ya go kopanya poso
+	A new document lists the commands with their shortcuts.	Tokomane ye mpsha e lokeletša ditaelo ka dikgaoletšo tša tšona.
+	A numbered sequence (figures, tables…)	Tatelano ya dinomoro (dipalo, ditafola…) .
+	A password is required to open this document.	Go nyakega phasewete go bula tokomane ye.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Sebaka pele ga maswaodikga, maswao a gabedi, dikhutlo tša Sepoliši pele ga makgokedi.
+	A table of contents	Tafola ya dikagare
+	A table's rows keep the same columns here.	Methaladi ya tafola e boloka dikholomo tše di swanago mo.
+	A xor B	A xor B. A xor B
+	A, B, C, …	A, B, C, … .…
+	a, b, c, …	a, b, c, … .…
+	AaBbCcDd	AaBbCCDd
+	AaBbYyZz	AaBbYyZz ya go swana le yona
+	About	Mabapi le
+	About Doc4Me	Mabapi le Doc4Me
+	Above Chart	Tšhate ya ka godimo
+	Above the item	Ka godimo ga ntho
+	Absolute position	Boemo bjo bo feletšego
+	Absolute value cases	Dikgetse tša boleng bjo bo feletšego
+	Accent	Mokgwa wa go hlaboša lentšu
+	Accent Gradient	Gradient ya Segalo
+	Accent with Reflection	Mokgwa wa go hlaboša lentšu ka go Naganišiša
+	Accent {n}	Mokgwa wa go hlaboša lentšu {n}
+	Accents	Ditlhaka tša go hlaboša
+	Accept	Amogela
+	Accept All	Amogela Bohle
+	Accept All Changes	Amogela Diphetogo ka Moka
+	Accept or Reject Changes	Amogela goba Gana Diphetogo
+	Accept This Change	Amogela Phetogo Ye
+	Accessed on	E fihleletšwe ka
+	Accessibility	Phihlelelo
+	Accessibility Pane	Pane ya Phihlelelo
+	Acute	Acute e hlobaetšago
+	Add	Add
+	Add >>	Add >>
+	Add a comment	Oketša tshwaelo
+	Add a Table	Oketša Tafola
+	Add at least one field.	Oketša bonyenyane tšhemo e tee.
+	Add caption when inserting:	Oketša tlhalošo ge o tsenya:
+	Add Chart Element	Oketša Elemente ya Tšhate
+	Add Field	Oketša Tšhemo
+	Add Field Name	Oketša Leina la Tšhemo
+	Add Font…	Oketša Fonte……
+	Add line numbering	Oketša dinomoro tša mela
+	Add New Placeholder	Oketša Seswari sa Lefelo se Sefsa
+	Add New Placeholder…	Oketša Seswari sa Lefelo se Sefsa……
+	Add New Source…	Oketša Mothopo o Mofsa……
+	Add Object to Selection	Oketša Selo go Kgetho
+	Add Pen	Add Pen
+	Add Row	Oketša Mothaladi
+	Add Series	Add Series
+	Add Shape	Oketša Sebopego
+	Add Space Before Paragraph	Oketša Sekgoba Pele ga Serapa
+	Add space between Asian and Latin text	Oketša sekgoba magareng ga sengwalwa sa Asia le Selatine
+	Add space between Asian text and numbers	Oketša sekgoba magareng ga sengwalwa sa Asia le dinomoro
+	Add tab stop at:	Add tab setopong ka:
+	Add Text	Oketša Sengwalwa
+	Add the chapter number	Oketša nomoro ya kgaolo
+	Add to Dictionary	Oketša go Pukuntšu
+	Add to Document	Oketša go Tokomane
+	Add to Quick Access Toolbar	Oketša go Baradidirišwa ya Phihlelelo ya Kapejana
+	Add to Style Gallery	Oketša go Setaele Gallery
+	Add-ins	Ditlaleletšo tša tlaleletšo
+	Add/Edit\nBibliography	Oketša/Edita\\\\nBibliography
+	Add/Edit\nCitation	Oketša/Edita\\\\nTsopolo
+	Add\nNote	Oketša\\\\nEla hloko
+	Add\nPen	Oketša\\\\nPene
+	Add\nShape	Oketša\\\\nSebopego
+	Added	E okeditšwe
+	Added Fonts	Difonte tše di okeditšwego
+	Address	Aterese ya
+	Address Block	Thibelo ya Aterese
+	Address labels	Dileibole tša aterese
+	Address:	Aterese: .
+	Address\nBlock	Aterese\\\\nBlock
+	Adjust	Beakanya
+	Advanced	E tšwetšego pele
+	Advanced Find	Hwetša ya Maemo a Godimo
+	Advanced Find…	Advanced Find……
+	After:	Ka morago ga gore:
+	Agents	Baemedi ba
+	Align	Go logaganya
+	Align Bottom Center	Logaganya Bottom Center
+	Align Bottom Left	Logaganya Bottom ka go le letshadi
+	Align Bottom Right	Logaganya Botlase ka go le letona
+	Align Center	Logaganya Setsi
+	Align Center Left	Lokiša Setsi sa Letsogo le letshadi
+	Align Center Right	Logaganya Setsi sa Tokelo ya
+	Align Left	Logaganya ka Letsogo le letshadi
+	Align Right	Logaganya ka go le letona
+	Align Text	Go logaganya Sengwalwa
+	Align Top Center	Logaganya Setsi sa Godimo
+	Align Top Left	Logaganya Godimo ka Letsogo le letshadi
+	Align Top Right	Logaganya Godimo ka go le letona
+	Aligned at:	E logagane ka:
+	Alignment	Go logaganya
+	Alignment:	Go logaganya: .
+	All	Ka moka
+	All - Linear	Tsohle - Linear
+	All - Professional	Ka moka - Seprofešenale
+	All Borders	Mellwane ka Moka
+	All Caps	Dikepisi ka moka
+	All caps	Dikepisi ka moka
+	All Commands	Ditaelo ka Moka
+	All files	Difaele tsohle
+	All Levels	Maemo ka Moka
+	All Markup	Ka moka Markup
+	All pages	Matlakala ka moka
+	All pages in the range	Matlakala ka moka a lego mo lefelong
+	All records	Direkoto ka moka
+	All symbol sets	Disete ka moka tša maswao
+	Allow Doc4Me to use online services	Dumelela Doc4Me go šomiša ditirelo tša inthanete
+	Allow hanging punctuation	Dumelela maswaodikga a go fegwa
+	Allow Latin text to wrap in the middle of a word	Dumelela sengwalwa sa Selatine go phuthela gare ga lentšu
+	Allow line breaks	Dumelela go kgaotša ga mela
+	Allow overlap	Dumelela go swana
+	Allow row to break across pages	Dumelela mothalo go kgaogana go putla matlakala
+	Alphabetical	Ka tatelano ya ditlhaka
+	Alt Text	Sengwalwa sa Alt
+	Alt text	Sengwalwa sa Alt
+	Alt Text Pane	Panele ya Sengwalwa sa Alt
+	Alt:	Alt: 1 .
+	Alt\nText	Alt\\\\nSengwalwa
+	And	Gomme
+	Angle Brackets	Diphaphathi tša Khutlo
+	Angle Brackets with Separator	Diphaphathi tša Khutlo ka Separator
+	Angle Brackets with Two Separators	Diphaphathi tša Khutlo tše di nago le Dikarolo tše Pedi
+	Animate the caret (it glides and fades)	Phediša caret (e thelela le go fifala) .
+	Animation	Ditshwantšho tša dipopaye
+	Animation effects:	Ditlamorago tša dipopaye:
+	Annotation Reference	Tšhupetšo ya Tlhaloso
+	Annotation Subject	Taba ya Tlhaloso
+	Annotation Text	Sengwalwa sa Tlhaloso
+	Another file	Faele e nngwe
+	Any Character	Moanegwa ofe goba ofe
+	Any Digit	Digit efe goba efe
+	Any Letter	Lengwalo lefe goba lefe
+	Anyone can open this document. Encrypt it with a password to keep it private.	Mang le mang a ka bula tokomane ye. E šitiše ka phasewete go e boloka e le ya poraebete.
+	Anyone who opens the document will need this password.	Mang le mang yo a bulago tokumente o tla hloka phasewete ye.
+	APA	APA
+	API key (if the server needs one)	Senotlolo sa API (haeba seva e hloka e mong) .
+	Apply	Dira kgopelo
+	Apply as you type	Dira kgopelo ge o dutše o thaepa
+	Apply Asian line-breaking rules (kinsoku)	Diriša melao ya go roba mela ya Asia (kinsoku) .
+	Apply Character Style	Diriša Setaele sa Semelo
+	Apply formatting to:	Diriša go fometa go:
+	Apply special formats to	Diriša difomete tše di kgethegilego go
+	Apply Style	Diriša Setaele
+	Apply Styles	Diriša Ditaele
+	Apply to:	Dira kgopelo go:
+	Arabic	Searabia
+	Arch Down	Arch Fase
+	Arch Up	Arch Godimo
+	Area	Sebaka
+	Around	Go dikologa
+	Arrange	Beakanya
+	Arrange All	Beakanya Ka Moka
+	Arrange\nAll	Beakanya\\\\nKa moka
+	Arrow	Motsu
+	Arrows	Metsu
+	Artistic Effects	Ditlamorago tša Bokgabo
+	As Recommended	Bjalo ka ge go Kgothaleditšwe
+	As you type	Ge o dutše o thaepa
+	ASAP	ASAP ka ASAP
+	Ascending	Go rotoga
+	Asian text font:	Fonte ya sengwalwa sa Asia:
+	Asian Typography	Mokgwa wa go Thaepa wa Asia
+	Assign	Abela
+	At least	Bonyane
+	At least {n}	Bonyane {n}
+	Atelier	Atelier ya
+	Atmosphere	Boemo bja leratadima
+	Attach Template	Kgomaretša Thempleite
+	Attach…	Kgomaretša……
+	Author	Mongwadi
+	Auto	Auto
+	AutoCaption	AutoCaption ya go itiriša
+	AutoCaption…	AutoCaption ya go itiriša……
+	AutoComplete	Feleletša ka Bowena
+	AutoCorrect	Go Lokiša ka Bowena
+	AutoCorrect Options	Dikgetho tša go Lokiša ka Bowena
+	AutoFit	AutoFit ya go ikgetha
+	AutoFit Contents	Diteng tša AutoFit
+	AutoFit Window	Lefasetere la AutoFit
+	AutoFormat	Fomete ya go itiriša
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	Fomete ya go itiriša (Ctrl+Alt+K) e fometa ditemana tše di kgethilwego, goba tokumente ka moka.
+	AutoFormat and Review Changes…	AutoFormat le Diphetogo tša Tlhahlobo……
+	AutoFormat As You Type	Fomete ka Boitirišo Ge o Thaepa
+	AutoFormat changed {count} paragraphs	AutoFormat e fetotše ditemana tša {count}
+	AutoFormat Now	Fomete ya go itiriša Bjale
+	Automatic	E itiriša
+	Automatic ({language})	Jarolla ka ho iketsa ({language}) .
+	Automatic bulleted lists	Mananeo a go itiriša a dikulo
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Automatic e latela polelo ya gago ya tshepedišo. Dimenu le ditaelo di a fetoga; ditokomane tša gago ga di dire bjalo.
+	Automatic numbered lists	Mananeo a dinomoro ka go itiriša
+	Automatic Table 1 (3 levels)	Tafole ya jarolla ka ho iketsa 1 (maemo a 3) .
+	Automatic Table 2 (2 levels)	Tafole ya jarolla ka ho iketsa 2 (maemo a 2) .
+	Automatically hyphenate document	Ka tsela e iketsang hyphenate tokomane
+	Automatically Update Document Styles	Mpshafatša ka go itiriša Ditaele tša Tokomane
+	Automatically update document styles	Ka go itiriša mpshafatša mekgwa ya ditokomane
+	AutoSave	Boloka ka Bowena
+	AutoSave documents you have saved in Doc4Me	AutoSave ditokomane tšeo o di bolokilego ka go Doc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSave e paletšwe: {error}. Boloka tokumente go bulela AutoSave morago.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	AutoSave ga e hwetšagale ka go sephephediši: e ka se kgone go ngwala go difaele tša gago. Boloka di-download khopi.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	AutoSave e boloka feela difaele tša .docx, .odt le .rtf; {name} e ka se kgone go boloka difomete ka moka. Boloka bjalo ka .docx go bulela AutoSave.
+	AutoSave saves every change to the file (needs a saved document)	AutoSave e boloka phetogo ye nngwe le ye nngwe go faele (e hloka tokumente ye e bolokilwego) .
+	AutoSave writes your changes to the file a moment after you stop typing.	AutoSave e ngwala diphetogo tša gago go faele motsotswana ka morago ga ge o emišitše go thaepa.
+	AutoText	Sengwalwa sa go Itiriša
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10,12 "× 14,33" .
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7,17 "× 10,12" .
+	Back	Morago kua
+	Backspace	Sebaka sa ka morago
+	Balloons	Dibalune tša go swana
+	Banded Columns	Dikholomo tša Banded
+	Banded Rows	Methaladi ya Banded
+	Bar	Bar
+	Base text:	Sengwalwa sa motheo: .
+	Based on: {style}	E theilwe godimo ga: {style}
+	Baseline Dots	Marontho a Motheo
+	Basic Cycle	Modikologo wa Motheo
+	Basic List	Lenaneo la Motheo
+	Basic Math	Dipalo tša Motheo
+	Basic Matrix	Matrix ya Motheo
+	Basic Process	Tshepetšo ya Motheo
+	Basic Pyramid	Piramiti ya Motheo
+	Basic Radial	Radial ya Motheo
+	Basic Venn	Venn ya motheo
+	Bayes' rule	Puso ya Bayes
+	Before:	Pele ga: .
+	Beginning of Word	Mathomo a Lentšu
+	Behind Text	Ka morago ga Sengwalwa
+	Below text	Ka tlase ga sengwalwa
+	Below the item	Ka tlase ga ntho
+	Between	Magareng ga
+	Bibliography	Lenaneo la dipuku
+	Binary assets added	Matlotlo a binary a ile a tlaleletša
+	Binary assets removed	Matlotlo a binary tlosoa
+	Binomial Coefficient	Segokanyipalo sa Binomial
+	Binomial Coefficient (angle)	Segokanyipalo sa Binomial (khutlo) .
+	Binomial Coefficient with Angle Brackets	Binomial Segokanyipalo le Angle Brackets
+	Binomial expansion of (x+a)ⁿ	Katološo ya binomial ya (x+a)8
+	Blank	Se se se nago selo
+	Blank (Three Columns)	Lefeela (Dikholomo tše Tharo) .
+	Blank document	Tokomane ye e se nago selo
+	Blank Page	Letlakala le le se nago selo
+	Block\nAuthors	Block\\\\nBangwadi
+	Blue:	Blue: .
+	Body Text	Sengwalwa sa Mmele
+	Body text in a short paragraph to show spacing.	Sengwalwa sa mmele ka temaneng ye kopana go bontšha sekgoba.
+	Bold	Sebete
+	Book	Puku ya
+	Book Title	Sehlogo sa Puku
+	Book title	Thaetlele ya puku
+	Bookmark	Bookmark
+	Bookmark name:	Leina la tšhupamabaka:
+	Border lines	Methaladi ya mollwane
+	Border Painter	Motaki wa Mellwane
+	Border\nPainter	Mollwane\\\\nMotaki
+	Borders	Mellwane
+	Borders and Shading	Mellwane le Moriti
+	Borders and Shading…	Mellwane le Shading……
+	Border…	Mollwane……
+	Both Sides	Mahlakore ka Bobedi
+	Both sides	Mahlakore ka bobedi
+	Bottom	Tlase
+	Bottom Border	Mollwane wa Tlase
+	Bottom Margin	Moedi wa Tlase
+	Bottom of Page	Botlase bja Letlakala
+	Bottom of the Window	Botlase bja Lefasetere
+	Bottom:	Tlase: .
+	Box	Lepokisi
+	Boxed Formula	Formula ya Mapokisi
+	Boxed Formula (example)	Formula ya Lepokisi (mohlala) .
+	Boxed Formulas	Difomula tša Mapokisi
+	Braces	Di-brace tša go swara
+	Braces with Separator	Braces le Separator
+	Bracket	Bracket ya go swara
+	Brackets	Diphaphathi
+	Brackets with Separators	Brackets le Dikarolo
+	Break Link	Kgaola Kgokagano
+	Breaks	O a kgaotša
+	Breve	Breve
+	Brightness, contrast and transparency change the picture from how it looks now.	Go phadima, phapano le go ba pepeneneng di fetoša seswantšho go tšwa go ka fao se lebelegago ka gona bjale.
+	Brightness:	Kganya: .
+	Bring Forward	Tliša Pele
+	Browse in Doc4Me…	Bala ka go Doc4Me……
+	Browse…	Browse……
+	Build table of figures from:	Aga tafola ya dipalo go tšwa go:
+	Building Block Gallery Content Control	Taolo ya Diteng tša Gallery ya Building Block
+	Built from the style or table entry fields chosen in Options.	E agilwe go tšwa go mafelo a go tsenya a setaele goba tafola ao a kgethilwego go Dikgetho.
+	Built-In	E Agile-Ka gare
+	Built-in Heading styles	Ditaele tša Dihlogo tše di agetšwego ka gare
+	Built-in style	Setaele se hahiloeng ka hare
+	Built-in styles can't be deleted.	Mekgwa ye e agetšwego ka gare e ka se phumolwe.
+	Bullet	Kulo ya
+	Bullet Library	Bokgobapuku bja Kulo
+	Bullets	Dikulo
+	By author	Ka mongwadi
+	By:	Ka:
+	Calendar	Tšhupamabaka
+	Can't be deleted	E ka se phumolwe
+	Cancel	Khansela
+	Canvas Member	Leloko la Seile
+	Capitalization	Go ngwala ka mongwalo o mogolo
+	Capitalize Each Word	Ngwala Lentšu le Le lengwe le le lengwe ka mongwalo o mogolo
+	Capitalize first letter of sentences	Ngwala tlhaka ya mathomo ya dipolelo tše kgolo
+	Capitalize first letter of table cells	Ngwala tlhaka ya mathomo ya disele tša tafola ka ditlhaka tše kgolo
+	Capitalize names of days	Ngwala maina a matšatši ka ditlhaka tše dikgolo
+	Capitalize the first word of a sentence	Ngwala lentšu la mathomo la polelo ye kgolo
+	Caption	Caption ya tlhalošo
+	Caption label:	Leina la tlhalošo:
+	Caption Numbering	Go Nomora Dinomoro tša Ditlhalošo
+	Caption text	Sengwalwa sa tlhalošo
+	Caption:	Caption:
+	Captions	Ditlhalošo tša ditlhalošo
+	Caret Character	Semelo sa Tlhokomelo
+	Case changes	Diphetogo tša molato
+	Cases	Dikgetse
+	Cases (Three Conditions)	Dikgetse (Maemo a Mararo) .
+	Cases (Two Conditions)	Dikgetse (Maemo a Mabedi) .
+	Cases and Stacks	Dikgetse le Dikgobo
+	Catalog	Lelokelelo la dipuku
+	Categories	Dihlopha
+	Categories:	Dihlopha: .
+	Category	Legoro la
+	Category {n}	Legoro la {n}
+	Category:	Legoro la: .
+	Category…	Legoro la……
+	Ceiling	Siling ya
+	Cell	Sele ya
+	Cell Margins	Dikarolo tša Disele
+	Cell margins	Mathoko a disele
+	Cell Options	Dikgetho tša Sele
+	Cell Size	Bogolo bja Sele
+	Cell\nMargins	Sele\\\\nDikarolo
+	Center	Setsi sa
+	Centered	E tsepame
+	Centered as Group	E tsepame bjalo ka Sehlopha
+	Centimeters	Disenthimithara
+	Change	Phetogo
+	Change Case	Fetola Taba
+	Change Chart Type	Fetoša Mohuta wa Tšhate
+	Change Colors	Fetola Mebala
+	Change in y over change in x	Phetogo ya y go feta phetogo ya x
+	Change Layout	Fetoša Peakanyo
+	Change List Level	Fetoša Maemo a Lenaneo
+	Change Password…	Fetola Phasewete……
+	Change Picture	Fetoša Seswantšho
+	Change Picture…	Fetola Seswantšho……
+	Change Shape	Fetoša Sebopego
+	Change Structure	Fetoša Sebopego
+	Change to Display	Fetola go Pontšo
+	Change to Inline	Fetola go ya go Inline
+	Change to Level 1	Fetogela go Maemo a 1
+	Change to Level 2	Fetogela go Maemo a 2
+	Change to Level 3	Fetogela go Maemo a 3
+	Change to Level 4	Fetogela go Maemo a 4
+	Change to Level 5	Fetogela go Maemo a 5
+	Change to Level 6	Fetogela go Maemo a 6
+	Change to Level 7	Fetogela go Maemo a 7
+	Change to Level 8	Fetogela go Maemo a 8
+	Change to Level 9	Fetogela go Maemo a 9
+	Change\nChart Type	Fetoša\\\\nMohuta wa Tšhate
+	Change\nColors	Fetoša\\\\nMebala
+	Changed	E fetotšwe
+	Changed lines:	Methaladi ye e fetotšwego:
+	Changes	Diphetogo
+	Changes with highlighting	Diphetogo ka go gatelela
+	Changes without highlighting	Diphetogo ntle le go gatelela
+	Chapter in a book	Kgaolo ka pukung
+	Chapters begin at:	Dikgaolo di thoma go:
+	Character	Semelo
+	Character Border	Moedi wa Semelo
+	Character code:	Khoutu ya semelo: .
+	Character in Range	Semelo ka Range
+	Character level	Boemo bja semelo
+	Character Position	Boemo bja Semelo
+	Character Scale	Sekala sa Semelo
+	Character Shading	Go dira Moriti wa Semelo
+	Character Spacing	Sebaka sa Semelo
+	Character spacing	Sebaka sa ditlhaka
+	Character style	Mokgwa wa semelo
+	Characters	Baanegwa
+	Characters (no spaces)	Ditlhaka (ga go na dikgoba) .
+	Characters (with spaces)	Ditlhaka (tše di nago le dikgoba) .
+	Characters per line:	Ditlhaka ka mola: .
+	Chart	Tšhate ya
+	Chart Design	Moralo wa Tšhate
+	Chart Layouts	Dipeakanyo tša Tšhate
+	Chart Title	Thaetlele ya Tšhate
+	Check	Hlahloba
+	Check Accessibility	Lekola Phihlelelo
+	Check Box Content Control	Taolo ya Diteng tša Lepokisi la go Hlahloba
+	Check Compatibility	Lekola go Sepelelana
+	Check Errors…	Lekola Diphošo……
+	Check for Errors	Lekola Diphošo
+	Check Spelling as You Type	Lekola Mopeleto ge O Thaepa
+	Check spelling as you type	Lekola mopeleto ge o dutše o thaepa
+	Check\nAccessibility	Lekola\\\\nPhihlelelo
+	Checked styles are allowed:	Mekgwa ye e hlahlobjago e a dumelelwa:
+	Checked symbol	Letshwao le hlahlobjago
+	Chevron Down	Chevron Fase ya go theoga
+	Chevron Up	Chevron Go ya godimo
+	Chicago	Chicago
+	Chinese (Simplified)	Setšhaena (Se Nolofaditšwego) .
+	Chinese (Traditional)	Setšhaena (Setšo) .
+	Choose a command	Kgetha taelo
+	Choose a shortcut	Kgetha tsela ye kopana
+	Choose List Item	Kgetha Ntlha ya Lenaneo
+	Choose the sheet that holds the recipients.	Kgetha letlakala leo le swarago baamogedi.
+	Circle	Sediko
+	Circle area from its radius	Sedikadikwe sebaka go tšwa go radius ya yona
+	Circled Dot	Letheba le le Sedikišitšwego
+	Circled Plus	Sedikadikwe Plus
+	Circled Times	Dinako tše di Dikologilego
+	Citation marked.	Citation e swailwe.
+	Citation Style	Setaele sa Tsopolo
+	Citations	Ditsopolo
+	Citations & Bibliography	Ditsopolo & Lenaneo la Dipuku
+	City	Motse
+	Clear	Hlakile
+	Clear All	Hlakola Tsohle
+	Clear All Formatting	Hlakola Fomete ka Moka
+	Clear Character Formatting	Fomete ya Semelo ye e Hlakilego
+	Clear Character Style	Setaele sa Semelo se Hlakileng
+	Clear Formatting Level	Maemo a go Fometa a Hlakola
+	Clear Paragraph Formatting	Fomete ya Serapa ye e Hlakilego
+	Click a border between two cells to merge them. Esc stops.	Klika mollwane magareng ga disele tše pedi go di kopanya. Esc e a ema.
+	Click an item to paste it.	Klika aetheme go e kgomaretša.
+	Click level to modify:	Tobetsa maemo go fetola:
+	Click the empty text box the text should continue in (Esc cancels)	Klika lepokisi la sengwalwa leo le se nago selo seo sengwalwa se swanetšego go tšwela pele go sona (Esc e a phumola) .
+	Click to switch back to inserting	Klika go fetogela morago go tsenya
+	Clipboard	Clipboard ya go kgaola
+	Clipboard Contents	Diteng tša Clipboard
+	Clipboard Items	Dilo tša Clipboard
+	Clipboard Pane	Lefasetešana la Clipboard
+	Close	Tswala
+	Close Equation	Tswala Tekanyo
+	Close Header and Footer	Tswala Hlogo le Letlakala la ka tlase
+	Close Outline View	Tswala Tebelelo ya Thulaganyo
+	Close Outline\nView	Tswala Thulaganyo\\\\nTebelelo
+	Close Reviewing Pane	Tswala Lefasetešana la go Hlahloba
+	Clustered Bar	Bar ya go Kgobokanywa
+	Clustered Column	Kholomo ya go Hlopha
+	Col #:	Mokolonele #: .
+	Collapse	Go phuhlama
+	Collapse Selection	Kgetho ya go phuhlama
+	Collapse the Ribbon	Phuhla Ripone
+	Collate copies	Kgoboketša dikopi
+	Collect entries from:	Kgoboketša dikeno go tšwa go:
+	Colon Equal	Kolone ya go Lekana
+	Color	Mmala wa
+	Color model:	Mmala mohlala: .
+	Color only	Mmala fela
+	Color:	Mmala: .
+	Color: {color}	Mmala: {color}
+	Colorful	Mebala-bala
+	Colors	Mebala ya
+	Colors:	Mebala: .
+	Column	Kholomo ya
+	Column Break	Kgaotšo ya Kholomo
+	Column Selection	Kgetho ya Kholomo
+	Column selection: the arrow keys extend the block, Esc ends it	Kgetho ya kholomo: dinotlelo tša motsu atološa boloko, Esc e e fediša
+	Column width	Bophara bja kholomo
+	Column:	Kholomo: .
+	Columns	Dikholomo
+	Columns:	Dikholomo: .
+	Combine	Kopanya
+	Combine Documents	Kopanya Ditokomane
+	Combo Box Content Control	Taolo ya Diteng tša Lepokisi la Motswako
+	Commands	Ditaelo
+	Commands:	Ditaelo: .
+	Comment	Tlhaloso ya maikutlo
+	Comments	Ditshwayotshwayo
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Ditshwayotshwayo ka thoko ga letlakala le lengwe le le lengwe le diphetogo tše di latišišitšwego ka go di-PDF, diprintwa le diswantšho; lenaneo la ditshwayotshwayo mafelelong a matlakala a wepe, Markdown le sengwalwa.
+	Comments on version	Ditshwaelo ka phetolelo
+	Comments Pane	Lefasetešana la Ditshwayotshwayo
+	Commits	E itlama
+	Common Accent Objects	Dilo tša Segalo tše di Tlwaelegilego
+	Common Brackets	Diphaphathi tše di Tlwaelegilego
+	Common Fractions	Dikarolwana tše di Tlwaelegilego
+	Common Functions	Mešomo ye e Tlwaelegilego
+	Common Large Operators	Badiriši ba Bagolo ba Tlwaelegilego
+	Common Operator Structures	Dibopego tša Modiriši tše di Tlwaelegilego
+	Common Operators	Badiriši ba Tlwaelegilego
+	Common Radicals	Di-Radical tše di Tlwaelegilego
+	Common Subscripts and Superscripts	Dingwalwa tša ka fasana tše di Tlwaelegilego le Dingwalwa tša ka Tlase
+	Communication	Poledišano
+	Compact	Compact
+	Company	Khamphani
+	Compare	Bapetša
+	Compare Documents	Bapetša Ditokomane
+	Compare to	Bapetša le
+	Compared: {changes} changes	Ge go bapetšwa: {changes} e a fetoga
+	Comparing with another file needs the desktop app.	Bapisa le faele e 'ngoe hloka tiriso ye ya komporong.
+	Comparison	Papiso
+	Comparison settings	Dipeakanyo tša go bapetša
+	Compatibility mode: {version}	Mokgwa wa go sepelelana: {version}
+	Compatibility Options	Dikgetho tša go sepelelana
+	Compatibility Options…	Dikgetho tša go sepelelana……
+	Compress Pictures	Gatelela Diswantšho
+	Compress punctuation at the start of a line	Gatelela maswaodikga mathomong a mola
+	Condensed	E khutsofaditšwe
+	Conference	Khonferentshe
+	Conference paper	Pampiri ya khonferentshe
+	CONFIDENTIAL	SEPHIRI
+	Confirm password:	Netefatša phasewete:
+	Connect Shapes	Kgokaganya Dibopego
+	Constitutional Provisions	Dipeelano tša Molaotheo
+	Container Title	Thaetlele ya Setshelo
+	Contains	E na le
+	Content Control at Selection	Taolo ya Diteng ka Kgetho
+	Content Control Properties	Dithoto tša Taolo ya Diteng
+	Contents can't be edited	Diteng di ka se rulaganywe
+	Context	Sebopego sa ditaba
+	Contextual	Sebopego sa diteng
+	Continuous	E tšwelago pele
+	Continuous numbering	Go nomoro mo go tšwelago pele
+	Contour Integral	Contour ya Bohlokwa
+	Contour Integral with Limits	Contour Integral le Mellwane
+	Contour Integral with Stacked Limits	Contour Integral le Mellwane e Stacked
+	Contour Integrals	Di-integral tša Contour
+	Contrast:	Phapano: .
+	Contributors	Baabi
+	Controls	Ditaolo
+	Conversions	Diphetolelo
+	Convert	Sokologa
+	Convert between built-up and linear form	Fetola magareng ga sebopego sa go agwa le sa linear
+	Convert Notes	Fetola Dintlha
+	Convert Permanently	Sokologela Sa ruri
+	Convert Text to Table	Fetolela Sengwalwa go Tafola
+	Convert Text to Table…	Fetolela Sengwalwa go Tafola……
+	Convert to Arabic Digits	Fetolela go Dinomoro tša Searabia
+	Convert to Shapes	Fetolela go Dibopego
+	Convert to Text	Fetolela go Sengwalwa
+	Convert to Thai Digits	Fetolela go Dinomoro tša Thai
+	Copies	Dikhopi
+	Coproduct	Setšweletšwa sa tirišano
+	Coproduct with Limits	Setšweletšwa sa Mohlakanelwa ka Mellwane
+	Coproduct with Lower Limit	Setšweletšwa sa Mohlakanelwa ka Moedi wa Tlase
+	Coproduct with Subscript-Superscript Limits	Setšweletšwa mmogo le Mellwane ya Mongwalo wa ka fase-Mongwalo wa ka Tlase
+	Copy	Khopiša
+	Copy Formatting	Go Fometa Khopi
+	Copy of the text a bookmark marks	Khopi ya sengwalwa seo pukutshwayo e se swayago
+	Copy Styles	Ditaele tša go Khopiša
+	Copy Text	Kopiša Sengwalwa
+	Copy to where?	Kopiša go ya kae?
+	Copyright	Tokelo ya ngwalollo e ileditšwe
+	Copyright Sign	Letshwao la Tokelo ya ngwalollo
+	Corrections	Diphošollo
+	Cosecant Function	Mošomo wa Cosecant
+	Cosine 2x	Cosine 2x ya go swana le
+	Cosine Function	Mošomo wa Cosine
+	Cotangent Function	Mošomo wa Cotangent
+	Couldn't add {name}: {reason}	Ga se ya kgona go oketša {name}: {reason}
+	Couldn't download the picture: {reason}	Ga se ya kgona go taonelouta seswantšho: {reason}
+	Couldn't download {name}: {error}	Ga se ya kgona go taonelouta {name}: {error}
+	Couldn't get the add-in list: {reason}	Ga se ya kgona go hwetša lenaneo la tlaleletšo: {reason}
+	Couldn't make Doc4Me the default: {error}	Ga se ya kgona go dira gore Doc4Me e be ya go se fetoge: {error}
+	Couldn't open {path}: {error}	Ga se ya kgona go bula {path}: {error}
+	Couldn't search: {reason}	Ga se ya kgona go nyaka: {reason}
+	Couldn't translate: {reason}	Ga se ya kgona go fetolela: {reason}
+	Count by:	Bala ka:
+	Count words in text boxes and notes	Bala mantšu ka gare ga mapokisi a sengwalwa le dinoutse
+	Country	Naga
+	Courtesy Title	Sehlogo sa Maitshwaro
+	Cover Page	Letlakala la Sekhurumetšo
+	Craft	Bokgabo bja diatla
+	Create	Bopa
+	Create a Style	Hlama Setaele
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Hlama thulaganyo ya tirišano ya tokumente ya gago.\\\\n\\\\nKe tsela ye botse ya go hlokomela moo o lego gona goba go sepetša diteng tša gago ka pela.\\\\n\\\\nGo thoma, eya go thepo ya Gae gomme o diriše ditaele tša Dihlogo go dihlogo ka go tokumente ya gago.
+	Create Data Source…	Hlama Mothopo wa Datha……
+	Create Graphic	Hlama Kerafo
+	Create Header Source	Hlama Mothopo wa Hlogo
+	Create Link	Thea Kgokagano
+	Create New Style	Hlama Setaele se Sefsa
+	Create Source	Hlama Mothopo
+	Create…	Bopa……
+	Crop	Sebjalo
+	Cross-reference	Tšhupetšo ya sefapano
+	Cross-reference:	Tšhupetšo ya sefapano: .
+	Cube Root	Modu wa Khube
+	Current	Ga bjale
+	Current - Linear	Bjale - Linear
+	Current - Professional	Bjale - Seprofešenale
+	Current keyboard settings	Dipeakanyo tša bjale tša khiiboto
+	Current page	Letlakala la bjale
+	Current Position	Boemo bja Bjale
+	Current record	Rekoto ya bjale
+	Current style: {style}	Mokgwa wa bjale: {style}
+	Curved Arrow Connector	Sehokedi sa Motsu o kobehileng
+	Curved Connector	Sehokedi se kobehileng
+	Custom	Tlwaelo
+	Custom dictionary	Pukuntšu ya tlwaelo
+	Custom Margins…	Dikarolo tša Tlwaelo……
+	Custom mark:	Letshwao la tlwaelo:
+	Custom range	Custom fapaneng ya
+	Custom Table of Contents	Lenaneo la Diteng la Tlwaelo
+	Custom Table of Contents…	Lenaneo la Diteng la Tlwaelo……
+	Custom Watermark	Letshwao la Meetse la Tlwaelo
+	Custom Watermark…	Letshwao la Meetse la Tlwaelo……
+	Customize	Tlwaetša
+	Customize Keyboard	Tlwaetša Keyboard
+	Customize Quick Access Toolbar	Tlwaetša Bar ya Didirišwa ya Phihlelelo ya Kapejana
+	Customize Quick Access Toolbar…	Tlwaetša Baradidirišwa ya Phihlelelo ya Kapejana……
+	Customize Ribbon	Tlwaetša Ribbon
+	Customize the Ribbon…	Tlwaetša Ribbon……
+	Customize…	Tlwaetša……
+	Cut	Sega
+	Cut, copy, and paste	Sega, kopiša, le go kgomaretša
+	Cycle	Modikologo
+	Czech	Se-Czech sa se-Czech
+	Danish	Sedanishe
+	Dark	Lefifi
+	Dark Mode	Mokgwa wa Lefifi
+	Dark page (white text on black)	Letlakala le lefsifsi (sengwalwa se sešweu godimo ga se se ntsho) .
+	Dark with Shadow	Lefifi le Moriti
+	Darkroom	Kamore ya leswiswi
+	Dashed	E kgaotšwe
+	Data	Datha ya data
+	Data Labels	Dileibole tša Datha
+	Data source:	Mohlodi wa data:
+	Date	Letšatšikgwedi
+	Date & Time	Letšatšikgwedi & Nako
+	Date and Time	Letšatšikgwedi le Nako
+	Date format	Sebopego sa letšatšikgwedi
+	Date formats:	Difomete tša letšatšikgwedi: .
+	Date Picker Content Control	Taolo ya Diteng ya Mokgethi wa Letšatšikgwedi
+	Day	Letšatši
+	Decimal	Tesimale ya
+	Decorative objects only add visual interest: screen readers skip them.	Dilo tša go kgabiša di oketša fela kgahlego ya pono: babadi ba skrine ba a di tlola.
+	Decrease Font Size	Fokotša Bogolo bja Fonte
+	Decrease Indent	Fokotša Indent
+	Default	Ka tlwaelo
+	Default Paragraph Font	Fonte ya Temana ya Tlwaelo
+	Default tab stops:	Default thepo e ema:
+	Define New Bullet	Hlaloša Kulo ye Mpsha
+	Define New Multilevel List	Hlaloša Lenaneo le Lefsa la Maemo a Mantši
+	Define New Multilevel List…	Hlaloša Lenaneo le Lefsa la Maemo a Mantši……
+	Define New Number Format	Hlaloša Sebopego se Sefsa sa Nomoro
+	Deflate	Deflate ya moya
+	Delete	Phimola
+	Delete Back in Equation	Phimola Morago ka go Tekanyo
+	Delete Cells	Phimola Disele
+	Delete Clipboard Item	Phimola Ntho ya Clipboard
+	Delete Columns	Phimola Dikholomo
+	Delete Comment	Phimola Tlhaloso
+	Delete in Equation	Phimola ka go Equation
+	Delete Label	Phimola Leibole
+	Delete Next Word	Phimola Lentšu le le Latelago
+	Delete Previous Word	Phimola Lentšu la Peleng
+	Delete Rows	Phimola Methaladi
+	Delete Selected Ink	Phimola Enke e Kgethilwego
+	Delete Style	Phimola Setaele
+	Delete Table	Phimola Tafole
+	Delete Table Style	Phimola Setaele sa Tafole
+	Deleted	E phumotšwe
+	Deletions:	Diphumolo:
+	Delivery address:	Aterese ya thomelo:
+	Delta Equal To	Delta E Lekanang Le
+	Delta over arrow	Delta godimo ga motsu
+	Demote	Theoša fase
+	Demote to Body Text	Theošetša go Sengwalwa sa Mmele
+	Derivative as a limit	Derivative e le moedi
+	Descending	Go theoga
+	Describe what this object shows, for people who can't see it.	Hlaloša seo selo se se se bontšhago, go batho bao ba sa kgonego go se bona.
+	Describe what this table shows, for people who can't see it.	Hlaloša seo tafola ye e se bontšhago, go batho bao ba sa kgonego go se bona.
+	Description:	Tlhaloso: .
+	Design	Moralo wa go hlama
+	Design Mode	Mokgwa wa Moralo
+	Detach Template	Kgaola Thempleite
+	Detect language automatically	Lemoga polelo ka go itiragalela
+	Developer	Motšweletši
+	development build	tlhabollo ya go aga
+	Diagonal	Diagonale ka diagonale
+	Diagonal Dots	Marontho a Diagonale
+	Diamond	Taemane
+	Dictate	Laela
+	Dictation isn't available here.	Dictation ga e hwetšagale mo.
+	Dictation stopped.	Dictation e ile ya ema.
+	Dictation stopped: {reason}	Dictation e ile ya ema: {reason}
+	Different First Page	Letlakala la Pele le le Fapanego
+	Different Odd & Even Pages	Matlakala a Fapaneng a Odd & Even
+	Differential	Phapano
+	Differential theta	Theta ya phapano
+	Differential x	Phapano x
+	Differential y	Phapano y
+	Differentials	Diphapano
+	Direct formatting	Go fometa ka go lebanya
+	Direction:	Tlhahlo: .
+	Directory	Tlhahlo ya dipuku
+	Display	Pontšo
+	Display for Review	Pontšo bakeng sa Tlhahlobo
+	Display gridlines on screen	Bontšha mela ya keriti godimo ga skrine
+	Display name	Leina la pontšho
+	Display text	Bontšha sengwalwa
+	Distance from surrounding text	Sekgala go tloga go sengwalwa se se dikologilego
+	Distribute Columns	Aba Dikholomo
+	Distribute letters	Aba mangwalo
+	Distribute Rows	Aba Methaladi
+	Distribute spacing	Aba sekgoba
+	Distributed	E phatlalatšwa
+	Do Not Check Spelling or Grammar	O se ke wa Lekola Mopeleto goba Thutapolelo
+	Do not check spelling or grammar	O se ke wa hlahloba mopeleto goba popopolelo
+	DO NOT COPY	O SE KE WA KOPIŠA
+	Do Not Show in TOC	O se ke wa Bontšha ka go TOC
+	Do you want to save changes to {name}?	Na o nyaka go boloka diphetogo go {name}?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Di-ad-in tša Doc4Me ke diphuthelwana tša mahala tša di-macro go tšwa go lelokelelo la tlaleletšo la Doc4Me. Ba ka rulaganya feela tokomane.
+	Doc4Me is now the default app for Word documents.	Doc4Me bjale ke tirišo ya go se fetoge ya ditokomane tša Word.
+	Document	Tokomane
+	Document End	Tokomane ya Mafelelo
+	Document Formatting	Go Fometa Ditokomane
+	Document Grid	Gridi ya Tokomane
+	Document Information	Tshedimošo ya Tokomane
+	Document Property	Thepa ya Tokomane
+	Document Start	Tokomane Thoma
+	Document template:	Thempleite ya tokomane:
+	Document Text	Sengwalwa sa Tokomane
+	Document Title	Thaetlele ya Tokomane
+	Document1	Tokomane1
+	Document\nPreferences	Tokomane\\\\nDikgetho
+	Documents	Ditokomane
+	Documents you open will show up here.	Ditokomane tšeo o di bulago di tla tšwelela mo.
+	Does not contain	Ga e na le
+	DOI	DOI ya go dira bjalo
+	Don't add space between paragraphs of the same style	O se ke wa oketša sekgoba magareng ga ditemana tša setaele se se swanago
+	Don't capitalize after:	O se ke wa ngwala ka mongwalo o mogolo ka morago ga:
+	Don't hyphenate	O se ke wa hyphenate
+	Don't print blank lines when data fields are empty	O se ke wa phrintha methalo ye e se nago selo ge mafelo a datha a se na selo
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	O se ke wa bala ditsopolo tša Zotero, Mendeley goba EndNote le dibibliographies
+	Don't Save	O se ke wa Boloka
+	Don't use HTML paragraph auto spacing	O se ke wa šomiša sekgoba sa go itiriša sa temana ya HTML
+	Dot	Letheba
+	Dot dash	Letheba la matheba
+	Dot-dash	Matheba-dash
+	Dots	Marontho
+	Dotted	E na le marontho
+	Double	Gabedi
+	Double Bar	Double Bar
+	Double Closing Quote	Setsopolwa sa go Tswalela Gabedi
+	Double Dot	Letheba le lebedi
+	Double Integral	Integral e habeli
+	Double Integral with Limits	Double Integral le Mellwane
+	Double Integral with Stacked Limits	Double Integral le Mellwane e Stacked
+	Double Left Arrow with Text Above	Motsu wa Nngele wa Gabedi ka Sengwalwa ka Godimo
+	Double Left Arrow with Text Below	Motsu wa Nngele wa Gabedi ka Sengwalwa ka fase
+	Double Left Right Arrow with Text Above	Motsu wa go ja gabedi wa Letsogo le letshadi ka Sengwalwa ka godimo
+	Double Left Right Arrow with Text Below	Motsu wa go ja gabedi wa Letsogo le letshadi ka Sengwalwa ka fase
+	Double Opening Quote	Setsopolwa sa go Bula Gabedi
+	Double Right Arrow with Text Above	Motsu wa go ja gabedi ka Sengwalwa ka godimo
+	Double Right Arrow with Text Below	Motsu wa go ja gabedi ka Sengwalwa ka fase
+	Double Spacing	Sebaka sa habeli
+	Double Square Brackets	Diphaphathi tša Sekwere tše pedi
+	Double Strikethrough	Go Hlasela gabedi
+	Double strikethrough	Go hlasela gabedi
+	Double summation	Kakaretšo ya gabedi
+	Double Underline	Thalela Gabedi
+	Double Vertical Bars	Dibara tše di emego gabedi
+	Doughnut	Donut ya go swana le
+	Down	Fase
+	Downloading the speech model ({mb} MB, once)…	Go taonelouta mohlala wa polelo ({mb} MB, gatee)……
+	Downloading…	Go taonelouta……
+	DRAFT	DRAFT
+	Draft	Sengwalwa sa go ngwalwa
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Goga khutlonne go thala tafola, goba mola go putla disele go di aroganya. Esc e a ema.
+	Draw	Thala
+	Draw Ink	Thala Enke
+	Draw Table	Thala Tafole
+	Draw\nTable	Thala\\\\nTafola
+	Drawing Canvas	Go Thala Seile
+	Drawing Grid	Gridi ya go Thala
+	Drawing Tools	Didirišwa tša go Thala
+	Drawing\nCanvas	Go thala\\\\nLešela
+	Drop Cap	Lerotholi Cap
+	Drop cap	Lerotholi kepisi
+	Drop-Down List Content Control	Taolo ya Diteng tša Lenaneo la go Theoga
+	Drops all formatting and pastes plain text.	Lahlela fomete ka moka le go kgomaretša sengwalwa se se sa hlakahlakanego.
+	Dutch	Sedache sa Madache
+	E-mail Messages	Melaetša ya E-mail
+	Edit Category	Edita Legoro
+	Edit Comment	Edita Tlhaloso
+	Edit Data	Edita Datha
+	Edit Document	Edita Tokomane
+	Edit Equation	Edita Tekanyo
+	Edit Field Code	Edita Khoutu ya Tšhemo
+	Edit Field…	Edita Tšhemo……
+	Edit Footer	Edita Letlakala la ka tlase
+	Edit Header	Hlogo ya Edita
+	Edit Individual Documents…	Edita Ditokomane tša Motho ka Noši……
+	Edit Items	Edita Dilo
+	Edit Recipient List	Edita Lenaneo la Baamogedi
+	Edit Source	Edita Mohlodi
+	Edit\nData	Edita \\\\ nData
+	Edit\nRecipient List	Edita\\\\nLenaneo la Baamogedi
+	Edited	E rulagantšwe
+	Editing	Go rulaganya
+	Editing header/footer	Go rulaganya hlogo/letlakala la ka tlase
+	Editing in this document is restricted.	Go rulaganya ka gare ga tokomane ye go thibetšwe.
+	Editing — edit the document directly	Editing - edita tokomane ka ho toba
+	Edition	Kgatišo
+	Editor	Morulaganyi
+	Edit…	Edita……
+	Effects	Ditlamorago
+	Elbow Arrow Connector	Sehokedi sa Motsu wa Elbow
+	Elbow Connector	Sehokedi sa Elbow
+	Ellipsis	Ellipsis ya go swana
+	Em Dash	Em Dash
+	Em Space	Em Sebaka
+	Email address (optional)	Aterese ya imeile (ya boikgethelo) .
+	Emboss	Emboss ya go swana le
+	Emphasis	Kgatelelo
+	Empty Matrices	Dimatriki tše di se nago selo
+	En Dash	En Dash
+	En Space	En Sebaka
+	Enclose Characters	Akaretša Ditlhaka
+	Enclosure	Go tswalelelwa
+	Encrypt with Password	Encrypt ka Phasewete
+	Encrypt with Password…	Encrypt ka Phasewete……
+	End of document	Bofelo bja tokomane
+	End of section	Mafelelo a karolo
+	End of Word	Bofelo bja Lentšu
+	Endnote Reference	Tšhupetšo ya Ntlha ya Mafelelo
+	Endnote Text	Sengwalwa sa Ntlha ya Mafelelo
+	Endnotes	Dintlha tša Mafelelo
+	Endnotes to footnotes	Dintlha tša mafelelo go mengwalo ya ka tlase
+	English	Sepedi
+	English (United Kingdom)	Sepedi (Morena wa United Kingdom) .
+	English (United States)	Sepedi (Amerika) .
+	Engrave	Go betla
+	Enlarge symbol	Godiša letshwao
+	Enter formatting for number:	Kenya go fometa bakeng sa nomoro:
+	Enter in Equation	Tsenya ka go Equation
+	Enter page number:	Tsenya nomoro ya letlakala:
+	Enter the web address or embed code of an online video:	Kenya aterese ya wepe goba khoutu ya go tsenya ya bidio ya inthaneteng:
+	Entry marked.	Go tsena go swailwe.
+	Entry:	Tseno: .
+	Envelope #10   4.12" × 9.50"	Enfelopo # 10 4,12 "× 9,50" .
+	Envelope Address	Aterese ya Enfelopo
+	Envelope DL   4.33" × 8.66"	Enfelopo DL 4,33 "× 8,66" .
+	Envelope Return	Enfelopo ya go Boela morago
+	Envelope size:	Bogolo bja enfelopo: .
+	Envelopes	Dienfelopo
+	Equal by Definition	Go Lekana ka Tlhaloso
+	Equal column width	Bophara bja kholomo bjo bo lekanago
+	Equal Equal	Go Lekana Go Lekana
+	Equal to	Go lekana le
+	Equals:	E lekana le:
+	Equation	Tekanyo ya go lekana
+	Equation Gallery	Gallery ya Ditekanyo
+	Equation Info	Info ya Tekanyo
+	Equation Number	Nomoro ya Tekanyo
+	Equation Options	Dikgetho tša Tekanyo
+	Erase Ink	Phimola Enke
+	Eraser	Sephumula
+	Errors ({n})	Diphošo ({n}) .
+	Estonian	Seestonia
+	Euler's identity	Boitsebišo bja Euler
+	Even Page	Le Letlakala
+	Even pages only	Le matlakala feela
+	Every change is recorded as a tracked change.	Phetogo ye nngwe le ye nngwe e rekotwa bjalo ka phetogo ye e latišišitšwego.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Taelo ye nngwe le ye nngwe e hwetšagala go dingwalwa le baemedi ba AI: matha `doc4me-cli mcp` bakeng sa seva ya MCP, goba thoma tirišo ka `--taolo <boemakepe>` bakeng sa mokero wa taolo wa JSON.
+	Every field needs a name.	Tšhemo ye nngwe le ye nngwe e nyaka leina.
+	Every font this document uses is installed.	Fonte ye nngwe le ye nngwe yeo tokumente ye e e šomišago e hlomilwe.
+	Everyone	Motho yo mongwe le yo mongwe
+	Exactly	Tlhoko
+	Exactly {n}	Tlhoko {n}
+	Example: {sample}	Mohlala: {sample}
+	Exceptions (optional)	Mekgekolo (ya boikgethelo) .
+	Exceptions…	Mekgekolo……
+	Executive   7.25" × 10.50"	Khuduthamaga 7.25 "× 10.50".
+	Exit	Tšwa
+	Expand	Katološa
+	Expand or Collapse Heading	Katološa goba Phuhla Hlogo
+	Expanded	E atološitšwe
+	Exponential	Exponential ya go bontšha
+	Exponential series	Letoto la ditšhupetšo
+	Export	Thomelontle
+	Export a copy to share (PDF, Word document)	Romelantle khopi go abelana (PDF, Tokomane ya Word) .
+	Export Page as JPEG	Romelantle Letlakala bjalo ka JPEG
+	Export Page as PNG	Romelantle Letlakala bjalo ka PNG
+	Export PDF	Romelantle PDF
+	Exported {path}	E rometšwe ntle {path}
+	Expression	Polelo
+	Extend Selection	Atološa Kgetho
+	Extend Selection by Units	Atološa Kgetho ka Diyuniti
+	Extra space	Sebaka se se oketšegilego
+	Extra spaces between words.	Dikgoba tše di oketšegilego magareng ga mantšu.
+	Field	Tšhemo
+	Field Click	Tšhemo Klika
+	Field code:	Khoutu ya tšhemo: .
+	Field Codes	Dikhoutu tša Tšhemo
+	Field codes:	Dikhoutu tša tšhemo:
+	Field name	Leina la tšhemo
+	Field name:	Leina la tšhemo: .
+	Field names must be different.	Maina a mašemo a swanetše go fapana.
+	Field names:	Maina a tšhemo: .
+	Field properties	Dithoto tša tšhemo
+	Field:	Tšhemo: .
+	Fields	Mašemo
+	Fields to insert:	Mabala ao a swanetšego go tsenywa:
+	Fields:	Mašemo: .
+	Field…	Tšhemo……
+	Figure	Seswantšho
+	File	Faele ya
+	File name:	Lebitso la faele:
+	Fill	Tlatša
+	Fill & Line	Tlatša & Mola
+	Fill color:	Tlatsa mmala:
+	Fill:	Tlatša: .
+	Filling in forms	Go tlatša diforomo
+	Film	Filimi
+	Filter and Sort	Sefa le go Hlopha
+	Filter and Sort…	Sefa le go Hlopha……
+	Filter Records	Sefa Direkoto
+	Find	Hwetša
+	Find and Replace	Hwetša le go Tšea Sebaka
+	Find Next	Hwetša Latelago
+	Find Next Editable Region	Hwetša Selete se se Latelago seo se Rulegago
+	Find Previous	Hwetša ya Pele
+	Find Recipient	Hwetša Moamogedi
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Hwetša e kgetha temana ye e latelago ye e fetotšwego; Gana e bušetša yeo e kgethilwego morago bjalo ka ge e be e le bjalo.
+	Find What Expression	Hwetša Polelo Efe
+	Find What Text	Hwetša Sengwalwa Sefe
+	Find what:	Hwetša gore ke eng:
+	Find →	Hwetša →
+	Find:	Hwetša:
+	Finish	Fetša
+	Finish & Merge	Fetša & Kopanya
+	Finish &\nMerge	Fetša &\\\\nKopanya
+	Finished	E feditšwe
+	Finnish	Sefinnishe
+	First	Sa pele
+	First Cell in Column	Sele ya Pele ka Kholomong
+	First Cell in Row	Sele ya Pele ka Mothaladi
+	First Column	Kholomo ya Pele
+	First commit	Pele itlama
+	First line	Mothaladi wa mathomo
+	First line:	Mothaladi wa mathomo:
+	First Name	Lebitso la Pele
+	First row of data contains column headers	Mothaladi wa mathomo wa datha o na le dihlogo tša kholomo
+	Fit	Fit
+	Fit text	Sengwalwa se se swanetšego
+	Fix Position on Page	Lokiša Boemo go Letlakala
+	Fixed Column Width	Bophara bja Kholomo bjo bo sa Fetogego
+	Flip Horizontal	Flip Rapameng
+	Flip Vertical	Flip E eme E eme
+	Floor	Lebato
+	Focus	Tsepamiša kgopolo
+	Follow number with:	Latela nomoro ka:
+	Font	Fonte ya
+	Font Color	Mmala wa Fonte
+	Font color	Mmala wa fonte
+	Font color:	Mmala wa fonte: .
+	Font Dialog	Poledišano ya Fonte
+	Font not installed	Font ga se ya hlongwa
+	Font Size	Bogolo bja Fonte
+	Font Substitution	Go Tšea Legato ga Fonte
+	Font Substitution…	Phetošo ya Fonte……
+	Font:	Fonte: .
+	Font: {font}	Fonte: {font} ya go swana le yona
+	Fonts	Difonte
+	Font…	Fonte ya……
+	Footer	Letlakala la ka tlase
+	Footnote and Endnote	Mongwalo wa ka tlase le Mongwalo wa Mafelelo
+	Footnote Reference	Tšhupetšo ya Mongwalo wa ka tlase
+	Footnote Text	Mongwalo wa Mongwalo wa ka tlase
+	Footnotes	Mengwalo ya ka tlase
+	Footnotes and endnotes	Mengwalo ya ka tlase le dintlha tša mafelelo
+	Footnotes to endnotes	Mengwalo ya ka tlase go ya go dintlha tša mafelelo
+	Form Letters	Foromo ya Mangwalo
+	Format	Sebopego
+	Format Page Numbers	Fometa Dinomoro tša Letlakala
+	Format Page Numbers…	Fomete Dinomoro tša Letlakala……
+	Format Painter	Motaki wa Sebopego
+	Format Picture	Fomete Seswantšho
+	Format Shape	Sebopego sa Fomete
+	Format:	Sebopego: .
+	Formatted	E rulagantšwe
+	Formatted Text	Sengwalwa se se rulagantšwego
+	Formatting	Go fometa
+	Formatting at Selection	Go fometa ka Kgetho
+	Formatting completed. You can now:	Go fometa go phethilwe. Bjale o ka:
+	Formatting exceptions	Go fometa mekgekolo
+	Formatting marks	Go fometa maswao
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Go fometa, diphetogo tša molato, sekgoba se sešweu le ditafola di a bapetšwa; dipeakanyo tše dingwe di bolokwa bakeng sa ka morago.
+	Formula	Fomula
+	Forward	Pele
+	Fraction	Karolwana
+	Fractions (1/2) as fraction characters (½)	Dikarolwana (1/2) bjalo ka ditlhaka tša karolwana (1⁄2) .
+	French	Sefora
+	French (France)	Sefora (Fora) .
+	From	Go tšwa go
+	From text:	Go tšwa sengwalong:
+	from Unicode (hex)	go tšwa go Unicode (hex) .
+	From:	Go tšwa go:
+	Full page of the same label	Letlakala le le tletšego la leina le le swanago
+	Function	Mošomo wa go šoma
+	Functions	Mešomo
+	Gallery	Gallery ya go bontšha
+	GB/T 7714	GB / T 7714.
+	General	Kakaretšo
+	Geometry	Thutafase ya thutafase
+	German	Sejeremane
+	German (Germany)	Sejeremane (Jeremane) .
+	Get Add-ins	Hwetša di-Add-ins
+	Get Data	Hwetša Data
+	Get Data…	Hwetša Data……
+	Getting ready…	Go itokišetša……
+	Glow	Kganya
+	Glow Colors	Mebala ya Glow
+	Go Back	Boela Morago Morago
+	Go To	Eya Go
+	Go to	Eya go
+	Go To…	Eya Go……
+	Good afternoon	Thapama ye botse
+	Good evening	Mantšiboa a mabotse
+	Good morning	Mesong e mebotse
+	GOST (name sort)	GOST (mofuta wa lebitso) .
+	GOST (title sort)	GOST (mofuta wa thaetlele) .
+	Grab bag	Tšea mokotla
+	Grammar	Thutapolelo
+	Grammar Settings	Dipeakanyo tša Popopolelo
+	Graphic	Kerafo
+	Grave	Lebitla
+	Greater than	E kgolo go feta
+	Greater than or equal	E kgolo go feta goba e lekanago
+	Greek	Segerika
+	Greek Letters	Ditlhaka tša Segerika
+	Green:	Botala: .
+	Greeting Line	Mola wa Tumedišo
+	Greeting\nLine	Dumedišo\\\\nMola
+	Grid Settings	Dipeakanyo tša Gridi
+	Grid Table 1 Light	Lenaneo la Gridi 1 Lesedi
+	Grid Table 4 – Blue	Lenaneo la Gridi 4 – Pududu
+	Grid Table 4 – Green	Lenaneo la keriti 4 – Botala
+	Grid Table 4 – Orange	Lenaneo la Gridi 4 – Mmala wa namune
+	Grid Table 4 – Purple	Lenaneo la keriti 4 – Perese
+	Gridlines	Methaladi ya keriti
+	Group	Sehlopha
+	Grouping Character Above	Semelo sa go Hlopha ka Godimo
+	Grouping Character Below	Semelo sa go hlopha ka fase
+	Grow Font 1 Point	Gola Fonte 1 Ntlha
+	H:	H: .
+	Hanging Indent	Indent e fegilwego
+	Harvard (Anglia)	Harvard (Senyesemane) .
+	Hat	Hut
+	Header	Hlogo ya ditaba
+	Header & Footer	Hlogo & Letlakala la ka tlase
+	Header Options	Dikgetho tša Hlogo
+	Header Options:	Dikgetho tša Hlogo:
+	Header Row	Mothaladi wa Hlogo
+	Header source: {file} (the next data source opened here takes its field names)	Mohlodi wa hlogo: {file} (mohlodi wa data wo o latelago wo o butšwego mo o tšea maina a yona a tšhemo)
+	Header/Footer Position	Boemo bja Hlogo/Letlakala la ka tlase
+	Headers and footers	Dihlogo le ditlhaka tša ka tlase
+	Heading 1	Hlogo ya 1
+	Heading 2	Hlogo ya 2
+	Heading 3	Hlogo ya 3
+	Heading styles (levels 1–{n})	Mekgwa ya dihlogo (maemo a 1–{n}) .
+	Heading {n}	Hlogo ya {n}
+	Headings	Dihlogo tša Dihlogo
+	Heart	Pelo
+	Hebrew	Seheberu
+	Height:	Bophahamo: .
+	Help	Thuša
+	Hex:	Hex: 1 .
+	Hidden	E utilwe
+	Hidden text	Sengwalwa se se utilwego
+	Hide Codes	Pata Dikhoutu
+	Hide from style lists	Pata go tšwa mananeong a setaele
+	Hide Ink	Pata Enke
+	Hide White Space	Pata Sebaka se Sesweu
+	Hide\nInk	Pata\\\\nEnke
+	Hierarchy	Tatelano ya maemo
+	Highlight	Gatelela
+	Highlight Changes	Hlaola Diphetogo
+	Highlight changes in printed document	Hlaola diphetogo ka go tokumente ye e gatišitšwego
+	Highlight changes on screen	Hlaola diphetogo skrineng
+	Highlight Merge Fields	Hlaola Mašemo a Kopanya
+	Highlight\nMerge Fields	Hlaola\\\\nKopanya Mabala
+	Highlighter	Sešupo sa go hlaboša
+	Hindi	Sehindi sa Sehindi
+	Historical and Discretional	Histori le Temogo
+	Hollow	Sekoti
+	Home	Gae
+	Home folder	Foltara ya gae
+	Horizontal	E rapameng
+	Horizontal Line	Mola o Rapaletšego
+	Horizontal spacing:	Sebaka se rapaletšego: .
+	How many pages the whole document has	Tokomane ka moka e na le matlakala a makae
+	How many pages this section has	Ke matlakala a makae karolo ye
+	How many words the document holds	Tokomane e swere mantšu a makae
+	HTML Format	Sebopego sa HTML
+	Hue:	Hue: .
+	Hungarian	Sehungary
+	Hyperbolic Cosecant Function	Mošomo wa Cosecant wa Hyperbolic
+	Hyperbolic Cosine Function	Mošomo wa Cosine wa Hyperbolic
+	Hyperbolic Cotangent Function	Mošomo wa Cotangent wa Hyperbolic
+	Hyperbolic Functions	Mešomo ya Hyperbolic
+	Hyperbolic Secant Function	Mošomo wa Secant wa Hyperbolic
+	Hyperbolic Sine Function	Mošomo wa Sine wa Hyperbolic
+	Hyperbolic Tangent Function	Mošomo wa Tangent ya Hyperbolic
+	Hyperlink	Kgokagano ya hyperlink
+	Hyphenate at:	Hyphenate ka:
+	Hyphenate words in CAPS	Mantšu a go swaya ka go CAPS
+	Hyphenation	Tlhaloso ya ditlhaka
+	Hyphenation Options…	Dikgetho tša Hyphenation……
+	Hyphenation zone:	Lefelo la maswaodikga: .
+	Hyphens (--) as dashes (—)	Ditlhakane (--) bjalo ka dithatšhe (—) .
+	Hypotenuse	Hypotenuse ya go fokotša mmele
+	I, II, III, …	I, II, III, ……
+	i, ii, iii, …	i, ii, iii, ……
+	Icon Color	Mmala wa Letshwao
+	Icons	Diaekhone
+	Identity Matrices	Dimatriki tša Boitsebišo
+	IEEE	IEEE
+	If…Then…Else	Ge e ba…Ke moka…Go sengwe
+	If…Then…Else…	Ge e ba…Ke moka…Go sego bjalo……
+	Ignore All	Hlokomologa Ka Moka
+	Ignore punctuation characters	Hlokomologa ditlhaka tša maswaodikga
+	Ignore web and file addresses	Hlokomologa diaterese tša wepe le tša faele
+	Ignore white-space characters	Hlokomologa ditlhaka tša sekgoba se sešweu
+	Ignore words in capitals	Hlokomologa mantšu ao a ngwadilwego ka ditlhaka tše dikgolo
+	Ignore words with numbers	Hlokomologa mantšu ao a nago le dinomoro
+	Illustrations	Diswantšho
+	Immersive	Go nwelela
+	Immersive Reader	Mmadi yo a nwelelago
+	Immersive\nReader	Go nwelela\\\\nMmadi
+	In Default apps, choose Doc4Me for the document types you want it to open.	Ka go ditirišo tša Tlwaelo, kgetha Doc4Me bakeng sa mehuta ya tokumente yeo o nyakago gore e e bule.
+	In equations, typing a name after a backslash replaces it with its symbol.	Ditekanyetšong, go thaepa leina ka morago ga sešupanako sa morago go le tšeela legato ka leswao la lona.
+	In Front of Text	Ka Pele ga Sengwalwa
+	In Line with Text	Ka Mothaladi le Sengwalwa
+	Inches	Disenthimithara
+	Include label and number	Akaretša leina le nomoro
+	Include level number from:	Akaretša nomoro ya maemo go tšwa go:
+	Include page numbers	Akaretša dinomoro tša matlakala
+	Increase Font Size	Oketša Bogolo bja Fonte
+	Increase Indent	Oketša Indent
+	Indent	Indent ya go tsenywa ka gare
+	Indent from left:	Indent go tloga ka go le letshadi:
+	Indentation	Go tsenywa ga dilo ka gare
+	Indented	E tsentšwe ka gare
+	Indents	Di-indent tša go tsenywa ka gare
+	Indents and Spacing	Di-Indent le Sekgoba
+	Index	Index
+	Index and Tables	Tšhupetšo le Ditafola
+	Index Heading	Hlogo ya Tšhupetšo
+	Index {n}	Tšhupetšo ya {n}
+	Indonesian	Se-Indonesia
+	Inflate	Go budulela moya
+	Info	Info
+	Initials:	Ditlhaka tša mathomo: .
+	Ink	Enke ya
+	Ink Equation	Tekanyo ya Enke
+	Ink Replay	Enke Replay gape
+	Ink to Math	Enke go ya go Dipalo
+	Ink to Shape	Enke go ya go Sebopego
+	Ink to\nMath	Enke go \\\\ nMath
+	Ink to\nShape	Enke go\\\\nSebopego
+	Ink\nReplay	Enke\\\\nBapala gape
+	Inline	Ka gare ga mothaladi
+	Input Format	Sebopego sa Tsenyo
+	Insert	Tsenya
+	Insert a 3D model from a file (.glb, .stl, .obj)	Tsenya mohlala wa 3D go tšwa faeleng (.glb, .stl, .obj) .
+	Insert a new equation (Alt+=)	Tsenya tekano ye mpsha (Alt+=) .
+	Insert Above	Tsenya ka Godimo
+	Insert Below	Tsenya ka tlase
+	Insert Caption	Tsenya Tlhaloso
+	Insert Cells	Tsenya Disele
+	Insert Chart	Tsenya Tšhate
+	Insert Citation	Tsenya Tsopolo
+	Insert Columns to the Left	Tsenya Dikholomo ka go Le letshadi
+	Insert Columns to the Right	Tsenya Dikholomo ka go le letona
+	Insert Data	Tsenya Datha
+	Insert Database	Tsenya Polokelo ya Tshedimošo
+	Insert Database…	Tsenya Polokelo ya Tshedimošo……
+	Insert Date Field	Tsenya Tšhemo ya Letšatšikgwedi
+	Insert Endnote	Tsenya Ntlha ya Mafelelo
+	Insert entire column	Tsenya kholomo ka moka
+	Insert entire row	Kenya mola ka moka
+	Insert Footnote	Tsenya Mongwalo wa ka tlase
+	Insert Hyperlink	Kenya Kgokagano ya Hyper
+	Insert Index	Tsenya Tšhupetšo
+	Insert Left	Tsenya Letsogo le letshadi
+	Insert LISTNUM Field	Tsenya Tšhemo ya LISTNUM
+	Insert Merge Field	Tsenya Tšhemo ya go Kopanya
+	Insert Merge\nField	Tsenya Kopanya \\\\ nTšhemo
+	Insert New Equation	Tsenya Tekanyo ye Mpsha
+	Insert one text or another, depending on a field's value.	Tsenya sengwalwa se tee goba se sengwe, go ya ka boleng bja tšhemo.
+	Insert Page Field	Tsenya Tšhemo ya Letlakala
+	Insert Right	Tsenya Tokelo ya
+	Insert Rows	Tsenya Methaladi
+	Insert Rows Above	Tsenya Methaladi ka Godimo
+	Insert Rows Below	Tsenya Methaladi ka fase
+	Insert Shapes	Tsenya Dibopego
+	Insert SmartArt	Kenya SmartArt
+	Insert Structure	Tsenya Sebopego
+	Insert Symbol	Tsenya Letshwao
+	Insert Table	Tsenya Tafola
+	Insert Table of Authorities	Tsenya Tafola ya Balaodi
+	Insert Table of Figures	Tsenya Tafole ya Dipalo
+	Insert Table…	Tsenya Tafole……
+	Insert Time Field	Tsenya Tšhemo ya Nako
+	Insert Video	Tsenya Bidio
+	Insert\nAbove	Tsenya\\\\nKa godimo
+	Insert\nCaption	Tsenya\\\\nCaption
+	Insert\nCitation	Tsenya\\\\nTsopolo
+	Insert\nFootnote	Tsenya\\\\nMongwalo wa ka tlase
+	Inserted	E tsentšwe
+	Insertions and Deletions	Ditseno le Diphumolo
+	Insertions:	Dilo tše di tsentšwego: .
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Ditseno: {ins}, diphumolo: {del}, go huduga: {moves}, go fometa: {fmt}, ditshwayotshwayo: {comments}
+	Inside	Ka gare
+	Inside Borders	Ka Gare ga Mellwane
+	Inside Margin	Ka gare ga Margin
+	Inside:	Ka gare: .
+	Inspect Document	Hlahloba Tokomane
+	Inspect Styles at Selection	Hlahloba Ditaele ka Kgetho
+	Institution	Setheo sa setheo
+	Integral	Bohlokwa
+	Integral of e^(−x²)	Integral ya e ^ (−x2) .
+	Integral with Limits	Bohlokwa le Mellwane
+	Integral with Stacked Limits	Integral le Mellwane e Stacked
+	Integrals	Dilo tše di kopanego
+	Intense Emphasis	Kgatelelo e Kgolo
+	Intense Quote	Tsopolo ye e tseneletšego
+	Intense Reference	Tšhupetšo ye e tseneletšego
+	Interface	Segokaganyi
+	Interface language	Polelo ya segokanyimmediamentsi sa sebolokigolo
+	Interface language:	Polelo ya segokanyimmediamentsi sa sebolokigolo:
+	Interface size:	Bogolo bja segokanyimmediamentsi sa sebolokigolo:
+	Interface Theme	Sehlogo sa Segokaganyi
+	Interface theme:	Sehlogo sa segokanyimmediamentsi sa sebolokigolo:
+	Interface\nTheme	Segokanyimmediamentsi sa sebolokigolo\\\\nSehlogo
+	Internet addresses as links	Diaterese tša inthanete bjalo ka dikgokagano
+	Intersection	Mapatlelo
+	Intersection with Limits	Mapatlelo le Mellwane
+	Intersection with Lower Limit	Mapatlelo le Moedi wa Tlase
+	Intersection with Subscript-Superscript Limits	Mapatlelo le Mellwane ya Mongwalo wa ka fase-Mongwalo wa ka fase
+	Inverse Cosecant Function	Mošomo wa Cosecant ya go Inverse
+	Inverse Cosine Function	Mošomo wa Cosine ya go Inverse
+	Inverse Cotangent Function	Mošomo wa Cotangent wa go Inverse
+	Inverse Functions	Mešomo ya go Inverse
+	Inverse Hyperbolic Cosecant Function	Mošomo wa Cosecant wa Hyperbolic wa go fetoga
+	Inverse Hyperbolic Cosine Function	Mošomo wa Cosine wa Hyperbolic wa go fetoga
+	Inverse Hyperbolic Cotangent Function	Mošomo wa Cotangent wa Hyperbolic wa go fetoga
+	Inverse Hyperbolic Functions	Mešomo ya Hyperbolic ya go Inverse
+	Inverse Hyperbolic Secant Function	Mošomo wa Secant ya Hyperbolic ya go fetoga
+	Inverse Hyperbolic Sine Function	Mošomo wa Sine ya Hyperbolic ya go Inverse
+	Inverse Hyperbolic Tangent Function	Mošomo wa Tangent ya Hyperbolic ya go Inverse
+	Inverse Secant Function	Mošomo wa Secant ya go Inverse
+	Inverse Sine Function	Mošomo wa Inverse Sine
+	Inverse Tangent Function	Mošomo wa Tangent ya go Inverse
+	Ionosphere	Ionosphere ya go swana le yona
+	Is blank	Ke lefeela
+	Is not blank	Ga se selo se se se nago selo
+	ISO 690 (author-date)	ISO 690 (mongwadi-letšatšikgwedi) .
+	ISO 690 (numerical)	ISO 690 (ya dipalo) .
+	Issue	Taba ya
+	it isn't a picture Doc4Me can read	ga se seswantšho seo Doc4Me e ka se balago
+	Italian	Setaliana
+	Italic	Mongwalo o sekamego
+	Japanese	Sejapane
+	Journal	Journal
+	Justification	Go lokafatšwa
+	Justification of a display equation	Tokafatšo ya tekano ya pontšho
+	Justified	E lokafaditšwe
+	Justify	Lokafatša
+	Keep Lines Together	Boloka Methaladi e le Mmogo
+	Keep lines together	Boloka mela e le gotee
+	Keep Source Formatting	Boloka o Fometa Mothopo
+	Keep Text Only	Boloka Sengwalwa Feela
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Boloka phasewete felotsoko e bolokegilego: ntle le yona ga go na motho, Doc4Me e akareditšwe, yo a ka bulago tokumente. Tlogela mapokisi ka bobedi a se na selo go tloša phasewete.
+	Keep with Next	Boloka le Latelago
+	Keep with next	Dula le se se latelago
+	Keeps the fonts and formatting of the copied text.	E boloka difonte le fomete ya sengwalwa se se kopišitšwego.
+	Kerning for fonts:	Kerning bakeng sa difonte:
+	Keyboard shortcuts:	Dikgaoletšo tša khiiboto: .
+	Keys for this command:	Dinotlelo tša taelo ye:
+	Keywords	Mantšu a bohlokwa
+	Korean	Sekorea
+	Label changes with:	Leibole e fetoga ka:
+	Label:	Leibole: .
+	Labels	Dileibole
+	Landscape	Sebopego sa naga
+	Language	Polelo
+	Language Preferences…	Dikgetho tša Polelo……
+	Language…	Polelo……
+	Large\nOperator	Kgolo\\\\nModiriši
+	Largest Only	Kgolo Feela
+	Largest only	Kgolo ka ho fetisisa feela
+	Lasso	Lasso ya ba
+	Lasso Select	Lasso Kgetha
+	Last	La mafelelo
+	Last Cell in Column	Sele ya Mafelelo ka go Kholomo
+	Last Cell in Row	Sele ya Mafelelo mothalong
+	Last Column	Kholomo ya Mafelelo
+	Last commit	Last itlama
+	Last Name	Lebitso la Mafelelo
+	Last, First; Last, First	La mafelelo, Pele; La mafelelo, Pele
+	Latin text font:	Fonte ya sengwalwa sa Selatine:
+	Layout	Peakanyo ya go beakanya
+	Layout options for this document	Dikgetho tša peakanyo ya tokomane ye
+	Layout Summary	Kakaretšo ya Peakanyo
+	Layouts	Dipeakanyo tša go dira dilo
+	Leader	Moetapele
+	Leave a recipient out of the merge when a field has this value.	Tlogela moamogedi ka ntle ga kopanyo ge tšhemo e na le boleng bjo.
+	Leave Equation	Tlogela Tekanyo
+	Leave the equation (Esc)	Tlogela tekano (Esc) .
+	Leave the label out of the caption	Tlogela leina ka ntle ga tlhalošo
+	Left	Ka go le letshadi
+	Left Arrow with Text Above	Motsu wa Nngele ka Sengwalwa ka Godimo
+	Left Arrow with Text Below	Motsu wa Nngele ka Sengwalwa ka fase
+	Left Border	Mollwane wa Nngele
+	Left border	Moedi wa nngele
+	Left Bracket Twice	Bracket ya Letsogo le letshadi Gabedi
+	Left indent	Indent ya le letshadi
+	Left Margin	Mošito wa Letsogo le letshadi
+	Left Only	Left Feela
+	Left only	E tlogetšwe fela
+	Left Right Arrow Above	Motsu wa Letsogo le letshadi wa go ja Godimo
+	Left Right Arrow with Text Above	Motsu wa Letsogo le letshadi wa go ja ka Sengwalwa ka godimo
+	Left Right Arrow with Text Below	Motsu wa Letsogo le letshadi wa go ja ka Sengwalwa ka fase
+	Left Subscript-Superscript	Left Subscript-Mongwalo wa ka tlase
+	Left-to-right	Go tloga go le letshadi go ya go le letona
+	Left-to-Right Text Direction	Tlhahlo ya Sengwalwa go tloga go Le letshadi go ya go le letona
+	Left:	Ka go le letshadi:
+	Leftwards Arrow Above	Motsu wa go ya ka go le letshadi Godimo
+	Leftwards Harpoon Above	Ka go le letshadi Harpoon Ka godimo
+	Legal   8.50" × 14.00"	Molao 8.50 "× 14,00" .
+	Legal style numbering	Go nomoro ga setaele sa molao
+	Legend	Tšhaba
+	Less than	Ka tlase ga
+	Less than or equal	Ka tlase ga goba go lekana
+	Letter	Lengwalo
+	Letter   8.50" × 11.00"	Lengolo la 8.50 "× 11.00".
+	Letter headings	Dihlogo tša ditlhaka
+	Letter-Like Symbols	Maswao a go Swana le Ditlhaka
+	Letters	Mangwalo
+	Level 1	Maemo a 1
+	Level 2	Maemo a 2
+	Level 3	Maemo a 3
+	Level 4	Maemo a 4
+	Level 5	Maemo a 5
+	Level 6	Maemo a 6
+	Level 7	Maemo a 7
+	Level 8	Maemo a 8
+	Level 9	Maemo a 9
+	Level {n}	Boemo bja {n}
+	Level:	Maemo a: .
+	Levels:	Maemo a: .
+	LibreTranslate server (open source)	Seva ya LibreTranslate (mohlodi o bulehileng) .
+	Ligatures:	Dikgokagano: .
+	Light	Lesedi
+	Light with Outline	Seetša ka Thulaganyo
+	Limit	Moedi
+	Limit and\nLog	Lekanyetša le\\\\nLog
+	Limit consecutive hyphens to:	Lekanyetša maswaodikga a go latelana go:
+	Limit Example	Mohlala wa Moedi
+	Limit formatting to a selection of styles	Lekanyetša go fometa go kgetho ya ditaele
+	Line	Mola
+	Line and Page Breaks	Dikgaotšo tša Mola le Letlakala
+	Line and Paragraph Spacing	Sebaka sa Mola le Serapa
+	Line between	Mola magareng ga
+	Line Break	Kgaotšo ya Mola
+	Line breaking	Go thubega ga mola
+	Line delta	Delta ya mola
+	Line End	Mafelelo a Mola
+	Line Number	Nomoro ya Mola
+	Line Numbering Options…	Dikgetho tša go Nomola Mola……
+	Line Numbers	Dinomoro tša Methaladi
+	Line Spacing	Sebaka sa Mola
+	Line spacing	Sebaka sa mela
+	Line Spacing Options…	Dikgetho tša Sebaka sa Mela……
+	Line spacing:	Sebaka sa mela: .
+	Line Start	Go Thoma Mola
+	Line width:	Bophara bja mola: .
+	Line:	Mola: .
+	Linear	Mothaladi wa mothalo
+	Linear Fraction	Karolwana ya Mothalo
+	Lines	Methaladi
+	Lines +/−	Methaladi +/−
+	Lines added	Methaladi e ile ya tlaleletša
+	Lines and characters	Methaladi le baanegwa
+	Lines deleted	Methaladi e phumotšwe
+	Lines only	Methaladi fela
+	Lines per page:	Methaladi ka letlakala:
+	Link	Link
+	Link entries to their headings	Kgokaganya dikeno go dihlogo tša tšona
+	Link level to style:	Boemo bja kgokagano go setaele:
+	Link to Previous	Kgokagano ya go ya go Previous
+	Linked style (paragraph and character)	Setaele se se kgokagantšwego (temana le moanegwa) .
+	Links	Dikgokagano
+	Links and References	Dikgokagano le Ditšhupetšo
+	Link…	Link……
+	List	Lenaneo
+	List Commands	Lenaneo la Ditaelo
+	List Definition	Tlhaloso ya Lenaneo
+	List entries	Lenaneo la dikeno
+	List Paragraph	Lenaneo la Serapa
+	List styles	Lenaneo la mekgwa
+	List Table 3 – Blue	Lenaneo Lenaneo la 3 – Pududu
+	List Table 3 – Green	Lenaneo Lenaneo 3 – Botala
+	List Table 3 – Orange	Lenaneo Lenaneo la 3 – Mmala wa namune
+	List Table 3 – Purple	Lenaneo Lenaneo 3 – Perese
+	Listening… speak now	Go theeletša… bolela bjale
+	Location	Lefelo
+	Location: {path}	Sebaka: {path}
+	Lock aspect ratio	Notlela lehlakore karo-karolelano
+	Lock Fields	Notlela Mašemo
+	Logarithm	Logaritmo ya go dira dilo
+	Logarithm with Base	Logarithm ka Motheo
+	Logical AND	E kwagalago LE
+	Logical AND with Limits	E kwagalago LE yeo e nago le Mellwane
+	Logical OR	E kwagalago GOBA
+	Logical OR with Limits	Go kwagala GOBA ka Mellwane
+	Long citation:	Tsopolo e telele:
+	lowercase	ditlhaka tše nnyane
+	Lum:	Lum: 1 .
+	Macros	Dimakro tše dikgolo
+	Made from the author and year when empty	E dirilwe go tšwa go mongwadi le ngwaga ge e se na selo
+	Magazine or newspaper article	Sehlogo sa makasine goba sa kuranta
+	Mail Merge	Kopanya ya Poso
+	Mail Merge Helper	Mothuši wa go Kopanya Poso
+	Mail Merge Helper…	Mothuši wa go Kopanya Poso……
+	Mailing Labels	Dileibole tša go Romela Poso
+	Mailings	Diposo tša go romela poso
+	Main entry:	Tsenelo ye kgolo: .
+	Make Doc4Me the default for Word documents…	Dira gore Doc4Me e be ya go se fetoge ya ditokomane tša Word……
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	E dira gore lenti, dimenu le dipoledišano e be tše kgolo goba tše nnyane, godimo ga go lekanya ga pontšho ya tshepedišo ya gago. Tokomane zoom e arohane.
+	Malay	Semalay
+	Manage Sources	Laola Methopo
+	Manage Styles	Laola Ditaele
+	Manage Styles…	Laola Ditaele……
+	Manual Hyphenation	Tlhaloso ya ka Seatla
+	Manual hyphenation is complete.	Maswaodikga ka seatla e feletše.
+	Manual Line Break	Kgaotšo ya Mola ka Seatla
+	Manual Page Break	Puku ya go Kgaotša Letlakala
+	Manual…	Manual……
+	Many pages	Matlakala a mantši
+	Margin	Mošito wa ka thoko
+	Margins	Dikarolo tša ka thoko
+	Mark	Mareka
+	Mark All	Mark All
+	Mark as decorative	Swaya bjalo ka mokgabišo
+	Mark Citation	Mark Citation
+	Mark Citation…	Mark Citation……
+	Mark Entry	Swaya Tsenyo
+	Mark Entry…	Mark Entry……
+	Mark grammar errors as you type	Swaya diphošo tša popopolelo ge o dutše o thaepa
+	Mark Index Entry	Tsenyo ya Tšhupetšo ya Maswao
+	Mark selected text as:	Swaya sengwalwa se se kgethilwego bjalo ka:
+	Mark Table of Contents Entry	Swaya Lenaneo la Diteng Tsenyo
+	Mark\nCitation	Swaya\\\\nTsopolo
+	Mark\nEntry	Swaya\\\\nTsenya
+	Markdown (*.md)	Markdown (*.md) .
+	Match case	Taba ya go swana
+	Match Fields	Mabala a go Bapetša
+	Match prefix	Sehlongwapele sa go nyalelanya
+	Match suffix	Moselana wa go nyalelanya
+	Math AutoCorrect	Dipalo AutoCorrect
+	Math Input Control	Taolo ya Tsenyo ya Dipalo
+	Matrices with Brackets	Dimatriki tše di nago le Maswaodikga
+	Matrix	Matrix ya
+	Maximize	Godiša
+	Maximum	Palo e kahodimodimo
+	Maximum Example	Palo e kahodimodimo Mohlala
+	Measured By	E Lekantšwe Ka
+	Measurement units:	Diyuniti tša go ela: .
+	Media	Boraditaba
+	Merge	Kopanya
+	Merge Cells	Kopanya Disele
+	Merge Formatting	Go Kopanya Fometa
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Kopanya Fometa e kgomaretša sengwalwa ka go fometa moo se kotamago, bjalo ka ge Boloka Sengwalwa Feela se dira.
+	Merge Record #	Kopanya Rekoto # .
+	Merge records	Kopanya direkhoto
+	Merge to New Document	Kopanya go Tokomane ye Mpsha
+	Merge to Printer	Kopanya go Mogatiši
+	Merge to:	Kopanya go:
+	Merge type: {type}	Mofuta wa kopanya: {type}
+	Merged PRs	Di-PR tše di kopantšwego
+	Merge…	Kopanya……
+	Mesosphere	Mesosphere ya Mesosphere
+	Middle	Bogare
+	Midline Dots	Marontho a Mothaladi wa Bogare
+	Millimeters	Dimilimetara
+	Minimum	Bonyane
+	Minus Equal	Go tloša go lekana
+	Mirror indents	Di-indent tša seipone
+	Mirrored	E bontšhitšwe ka seiponeng
+	Missing document font	Fonte ya tokumente ye e hlaelelago
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT GOBA Apache-2.0. Tokelo ya ngwalollo (c) 2026 Sehlopha sa ArtCraft le baabi ba WordCraft.
+	MLA	MLA
+	Model	Mohlala
+	Models	Mehlala ya
+	Moderate	E lekanetšego
+	Modify Style	Fetoša Setaele
+	Modify Table Style	Fetoša Setaele sa Tafola
+	Modify Table Style…	Fetoša Setaele sa Tafola……
+	Modify…	Fetoša……
+	Mon	Mon
+	Month	Kgwedi
+	More >>	Tse dingwe >>
+	More Colors…	Mebala e Meng……
+	More Columns…	Dikholomo tše dingwe……
+	More Commands…	Ditaelo tše dingwe……
+	More Symbols…	Matshwao a mangwe……
+	More templates →	Dithempleite tše dingwe →
+	Move Down	Suthela Fase
+	Move in Equation	Sutha ka go Equation
+	Move object with text	Suthiša selo ka sengwalwa
+	Move or Resize	Suthiša goba Fetoša Bogolo
+	Move Paragraph Down	Suthiša Serapa Fase
+	Move Paragraph Up	Suthiša Serapa Godimo
+	Move Past Citation	Sutha go Fetilego Tsopolo
+	Move Past\nCitation	Sutha Nakong e Fetilego\\\\nTsopolo
+	Move Selected Ink	Suthiša Enke ye e Kgethilwego
+	Move Text	Suthiša Sengwalwa
+	Move to where?	Hudugela kae?
+	Move Up	Go ya Godimo
+	Move with Text	Sutha ka Sengwalwa
+	Move with text	Sutha ka sengwalwa
+	Moved from	E hudugile go tšwa
+	Moved to	O ile a hudugela go
+	Moves	O a šutha
+	Multilevel List	Lenaneo la Maemo a Mantši
+	Multiple Pages	Matlakala a Mantši
+	My Add-ins	Ditlaleletšo tša ka
+	MyMemory (free, no account)	MyMemory (ya mahala, ga go na akhaonto) .
+	Name	Leina
+	Name (A–Z)	Lebitso (A–Z) .
+	Name of the file this document is saved as	Leina la faele tokumente ye e bolokwa bjalo ka
+	Name:	Leina: .
+	Narrow  0.5" all	Mosesane 0.5 "ka moka
+	Natural Logarithm	Logarithm ya Tlhago
+	Nature	Tlhago
+	Navigation	Go sepelasepela
+	Navigation Pane	Lefasetešana la go Sepelasepela
+	Negated Relations	Dikamano tše di Ganeditšwego
+	New	E mpsha
+	New Comment	Tlhaloso ye Mpsha
+	New comments and tracked changes are recorded under this name and these initials.	Ditshwayotshwayo tše mpsha le diphetogo tše di latišišitšwego di rekotwa ka fase ga leina le le ditlhaka tše tša mathomo.
+	New Document	Tokomane ye Mpsha
+	New document	Tokomane ye mpsha
+	New Drawing Canvas	Lešela le Lefsa la go Thala
+	New Entry	Tsenelo ye Mpsha
+	New Folder	Foltara ye Mpsha
+	New from Template	E mpsha go tšwa go Thempleite
+	New Group	Sehlopha se Secha
+	New Label	Leina le Lefsa
+	New Label…	Leina le Lefsa……
+	New Paragraph	Serapa se Sefsa
+	New shortcut:	Kgaoletšo ye mpsha:
+	New Style…	Setaele se Seswa……
+	New Tab	Thepo ye Mpsha
+	New Table Style	Setaele se Sefsa sa Tafola
+	New Table Style…	Setaele se Sefsa sa Tafola……
+	New Window	Lefasetere le Lefsa
+	New word	Lentšu le lefsa
+	New\nComment	New\\\\nTshwaelo
+	New\nWindow	New\\\\nLefasetere
+	New…	New……
+	Next	Se se latelago
+	Next Change	Phetogo ye e Latelago
+	Next Comment	Tlhaloso ye e Latelago
+	Next Field	Tšhemo ye e Latelago
+	Next Footnote	Mongwalo wa ka tlase o Latelago
+	Next Page	Letlakala le Le latelago
+	Next Record	Rekhoto ye e Latelago
+	Next Section	Karolo e Latelago
+	Next Sentence	Polelo ye e Latelago
+	Next sentence	Polelo ye e latelago
+	Next Window	Lefasetere le le Latelago
+	No	Aowa
+	No accessibility issues found.	Ga go na ditaba tša phihlelelo tšeo di hweditšwego.
+	No add-ins are listed yet.	Ga go na di-ad-ins tšeo di lokeleditšwego ga bjale.
+	No add-ins yet. Add one from the Store.	Ga go na ditlaleletšo go fihla ga bjale. Oketša e tee go tšwa Lebenkeleng.
+	No Border	Ga go na Mollwane
+	No changes (read only)	Ga go na diphetogo (balwa fela) .
+	No Color	Ga go na Mmala
+	No contributor data was built into this copy.	Ga go na datha ya moabi yeo e agilwego ka gare ga khopi ye.
+	No data source yet.	Ga go na mothopo wa data ga bjale.
+	No errors found: every merge field is in the recipient list.	Ga go na diphošo tše di hweditšwego: tšhemo ye nngwe le ye nngwe ya kopanyo e lenaneong la moamogedi.
+	No Fill	Ga go na go Tlatša
+	No Glow	Ga go na Glow
+	No grid	Ga go na keriti
+	No icons match your search.	Ga go na diaekhone tšeo di swanago le nyakišišo ya gago.
+	No limit	Ga go na moedi
+	No Line	Ga go na Mola
+	No Markup	Ga go na Markup
+	No model credits were built into this copy.	Ga go na dikrediti tša mohlala tšeo di agilwego ka gare ga khopi ye.
+	No Outline	Ga go na Thulaganyo
+	No Paragraph Space	Ga go na Sebaka sa Serapa
+	No pictures found.	Ga go na diswantšho tše di hweditšwego.
+	No Reflection	Ga go na Go Naganišiša
+	No revisions	Ga go na diphetošo
+	No Shadow	Ga go na Moriti
+	No Soft Edges	Ga go na Mapheko a Boleta
+	No sources yet.	Ga go na methopo go fihla ga bjale.
+	No Spacing	Ga go na Sekgoba
+	no speech program on this system	ga go na lenaneo la polelo tshepedišong ye
+	No templates match your search.	Ga go na dithempleite tšeo di swanago le nyakišišo ya gago.
+	No Transform	Ga go na Phetogo
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Ga go na mantšu go fihla ga bjale. Add to Dictionary ka lentšu leo ​​le sa ngwalwago gabotse e le bea mo.
+	No-Width Non Break	No-Bophara Non Kgaotšo
+	No-Width Optional Break	No-Bophara Kgaotšo ya Boikgethelo
+	Nonbreaking Hyphen	Lešala leo le sa thubego
+	Nonbreaking Space	Sebaka se sa Robago
+	None	Ga go le e tee
+	Normal	Tlwaelegilego
+	Normal  1" all	Tlwaelegilego 1 "ka moka
+	Normal Indent	Indent e Tlwaelegilego
+	Normal probability density	Tlwaelo kgonego segokanyipalo
+	Normal speed	Lebelo le le tlwaelegilego
+	Normal Style	Setaele se se Tlwaelegilego
+	Normal Table	Tafole e Tlwaelegilego
+	Normal Text	Sengwalwa se se Tlwaelegilego
+	Normal Word Document	Tokomane ya Lentšu ye e Tlwaelegilego
+	North	Leboa
+	Norwegian (Bokmål)	Se-Norway (Bokmål) .
+	Not	Aowa
+	Not available right now	Ga e hwetšagale gona bjale
+	Not equal to	Ga go lekane le
+	Not linked: click a text box	Ga se ya kgokaganywa: klika lepokisi la sengwalwa
+	Not saved	Ga se ya bolokwa
+	Not saved yet	Ga se ya bolokwa ga bjale
+	Not used by any command	Ga e šomišwe ke taelo efe goba efe
+	Not {name}	E sego {name}
+	Nothing	Ga go selo
+	Nothing collected yet. Items you copy or cut appear here.	Ga go selo seo se kgobokeditšwego go fihla ga bjale. Dilo tšeo o di kopišago goba o di segago di tšwelela mo.
+	Now used by {command}	Bjale e šomišwa ke {command}
+	Nudge	Nudge ya go šuthiša
+	Num Occurrences	Num Ditiragalo
+	Number	Nomoro ya
+	Number alignment:	Go logaganya dinomoro: .
+	Number format	Sebopego sa nomoro
+	Number of columns:	Palo ya dikholomo: .
+	Number of rows:	Palo ya mela: .
+	Number of the page the field sits on	Palo ya letlakala leo tšhemo e dutšego go lona
+	Number of the section the field sits in	Palo ya karolo yeo tšhemo e dutšego go yona
+	Number style for this level:	Setaele sa dinomoro sa maemo a:
+	Number the equation; the number sits at the right margin (or type # then the number)	Nomoro ya tekano; nomoro e dula mošito wa go ja (goba thaepa # ke moka nomoro) .
+	Number type:	Mohuta wa nomoro: .
+	Number:	Nomoro ya: .
+	Numbering	Go beakanya dinomoro
+	Numbering:	Go bea dinomoro: .
+	Numbering…	Go nomola dinomoro……
+	Numerals	Dipalo
+	Numerals:	Dipalo: .
+	n×n Identity Matrix	n×n Matrix ya Boitsebišo
+	n×n Matrix	n×n Matrix ya
+	Object	Selo
+	Odd Page	Letlakala la go makatša
+	Odd pages only	Matlakala a makatšago feela
+	Off	Tima
+	Office	Kantoro
+	Office 2003 Default	Office 2003 ya kamehla
+	Offset (pt):	Offset (pt): .
+	Offset: Bottom	Offset: Ka tlase
+	Offset: Bottom Left	Offset: Tlase ka go le letshadi
+	Offset: Bottom Right	Offset: Tlase ka go le letona
+	Offset: Center	Offset: Setsi sa
+	Offset: Left	Offset: Ka go le letshadi
+	Offset: Right	Offset: Go lokile
+	Offset: Top	Offset: Godimo
+	Offset: Top Left	Offset: Godimo ka go le letshadi
+	Offset: Top Right	Offset: Godimo ka go le letona
+	OK	OK
+	Omit	Tlogela
+	On	On
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	On: caret e thelela lefelong la yona le lefsa ge o thaepa goba o šomiša dinotlelo tša metsu, gomme go panya ga yona go a fela. Tima: e tlola le go panya godimo le go tima.
+	One	E tee
+	One half	Seripa se tee
+	One label per recipient	Leina le tee ka moamogedi
+	One line per item. Enter adds an item.	Mothaladi o tee ka selo. Kenya e tlaleletša ka aetheme.
+	One Page	Letlakala le tee
+	Online Pictures	Diswantšho tša Inthaneteng
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Diswantšho tša Inthaneteng (Openverse), Fetolela (MyMemory goba seva ya gago ya LibreTranslate), Hwetša Ditlaleletšo le go taonelouta mohlala wa polelo wa Dictate di kgokagana le inthanete, gomme fela ge o di šomiša. E timilwe, Doc4Me ga e dire kgokagano ya yona.
+	Online Pictures…	Diswantšho tša Inthaneteng……
+	Online services are turned off (File › Options › Trust Center).	Ditirelo tša inthanete di timilwe (File › Dikgetho › Trust Center).
+	Online Video	Video ya Inthaneteng
+	Only allow this kind of editing:	Dumelela fela mohuta wo wa go rulaganya:
+	Only comments can be added, except in regions marked editable.	Ke ditshwayotshwayo fela tšeo di ka okeletšwago, ntle le ka dileteng tšeo di swailwego ka go rulaganywa.
+	Only form fields can be filled in.	Ke fela mafelo a foromo ao a ka tlatšwago.
+	only https addresses can be used	ke diaterese tša https fela tšeo di ka šomišwago
+	Only pictures I may use commercially	Ke diswantšho feela tšeo nka di dirišago kgwebong
+	Only the allowed styles can be applied.	Ke fela mekgwa ye e dumeletšwego yeo e ka dirišwago.
+	Only web (http, https) and email (mailto) links can be followed	Ke dikgokagano tša wepe (http, https) le imeile (mailto) fela tšeo di ka latelwago
+	Open	Bula
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Bula faele ka sephephediši sa Doc4Me ka noši ge poledišano ya faele ya tshepedišo e sa tšwelele.
+	Open Data Source…	Mohlodi wa Datha ye e Bulegilego……
+	Open Hyperlink	Bula Kgokagano ya Hyper
+	OpenDocument Text (*.odt)	Sengwalwa sa Tokomane ye e Bulegilego (*.odt) .
+	Opening print dialog…	Go bula poledišano ya go phrintha……
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	E bula difaele tša .docx, .doc, .rtf le .odt le dithempleite tša Word ka Doc4Me go tloga bjale go ya pele.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	E bula Dipeakanyo › Ditirišo tša tlwaelo, moo o kgethago Doc4Me ya .docx le mehuta ye mengwe ya ditokomane.
+	Open…	Bula……
+	Operator	Modiriši
+	Operator Structures	Dibopego tša Modiriši
+	Operators	Badiriši ba didirišwa
+	Optional Hyphen	Tlhahlo ya Boikgethelo
+	Options	Dikgetho
+	Options…	Dikgetho……
+	Or	Goba
+	Or save a copy in another format:	Goba boloka khopi ka sebopego se sengwe:
+	Ordinals (1st) as superscript	Ditaelo (1st) bjalo ka mongwalo wa godimo
+	Organizer	Morulaganyi
+	Organizer…	Morulaganyi……
+	Orientation	Tsela ya go sekamela
+	Original document	Tokomane ya mathomo
+	Other	Tše dingwe
+	Other Authorities	Balaodi ba Bang
+	Other Large Operators	Badiriši ba Bang ba Bagolo
+	Other paragraph styles	Mekgwa ye mengwe ya ditemana
+	Other styles and their TOC level:	Mekgwa ye mengwe le maemo a yona a TOC:
+	Otherwise insert:	Go sego bjalo tsenya:
+	Outline	Thulaganyo ya ditaba
+	Outline Level	Maemo a Thulaganyo
+	Outline level	Maemo a go hlaloša
+	Outline levels	Hlaloša maemo
+	Outline State	Polelo ya Thulaganyo
+	Outline Tools	Didirišwa tša Thulaganyo
+	Outlining	Go hlaloša
+	Outside	Ka ntle
+	Outside border	Ka ntle ga mollwane
+	Outside Borders	Ka Ntle ga Mellwane
+	Outside Margin	Ka Ntle ga Margin
+	Outside:	Ka ntle: .
+	Outward Brackets	Diphaphathi tša ka Ntle
+	Oval	Oval ya oval
+	Overbar	Overbar ya godimo
+	Overbars and Underbars	Di-Overbar le Di-Underbar
+	Overbrace	Overbrace e feteletšego
+	Overtype	Mohuta wa go feta tekano
+	Overtype (typing replaces the characters after the caret)	Overtype (go thaepa go tšea legato la ditlhaka ka morago ga caret) .
+	Page	Page
+	Page Background	Lemorago la Letlakala
+	Page Border	Mollwane wa Letlakala
+	Page Borders	Mellwane ya Letlakala
+	Page Break	Kgaotšo ya Letlakala
+	Page Break Before	Kgaotša Letlakala Pele
+	Page break before	Page break pele
+	Page Breaks	Go Kgaoga ga Letlakala
+	Page Color	Mmala wa Letlakala
+	Page display	Pontšo ya letlakala
+	Page Down	Letlakala Fase
+	Page image (*.jpg, *.jpeg)	Seswantšho sa letlakala (*.jpg, *.jpeg) .
+	Page image (*.png)	Seswantšho sa letlakala (*.png) .
+	Page Movement	Motsamao wa Letlakala
+	Page Number	Nomoro ya Letlakala
+	Page number style	Setaele sa nomoro ya letlakala
+	Page numbers at the right margin	Dinomoro tša matlakala ka thoko ya go ja
+	Page on which a bookmarked passage falls	Letlakala leo temana yeo e swailwego ka dipuku e welago go lona
+	Page Setup	Setup ya Letlakala
+	Page title	Thaetlele ya letlakala
+	Page Up	Letlakala Godimo
+	Page Width	Bophara bja Letlakala
+	Page width	Bophara bja letlakala
+	Page X of Y	Letlakala la X la Y
+	Page {page}	Letlakala la {page}
+	Page {page} of {pages}	Letlakala la {page} la {pages}
+	Page\nBorders	Letlakala\\\\nMellwane
+	Page\nColor	Letlakala\\\\nMmala
+	Page\nNumber	Letlakala\\\\nNomoro
+	Pages	Matlakala
+	Pages like 1-3, 5	Matlakala a go swana le 1-3, 5
+	Pages of bookmark:	Matlakala a letshwao la puku:
+	Paragraph	Serapa
+	Paragraph Character	Moanegwa wa Serapa
+	Paragraph Details	Dintlha tša Serapa
+	Paragraph Down	Serapa sa Fase
+	Paragraph Mark	Serapa Mark
+	Paragraph marks	Maswao a ditemana
+	Paragraph Settings	Dipeakanyo tša Serapa
+	Paragraph Spacing	Sebaka sa Ditemana
+	Paragraph style	Mokgwa wa temana
+	Paragraph Up	Serapa sa Godimo
+	Paragraphs	Ditemana
+	Paragraph…	Temana ya……
+	Parentheses	Maswaodikga
+	Parentheses with Separator	Maswaodikga ka Separator
+	Partial Differential	Phapano ya Karolo
+	Password	Phasewete
+	Password:	Phasewete: .
+	Paste	Kgomaretša
+	Paste All	Kgomaretša Ka Moka
+	Paste as:	Kgomaretša bjalo ka:
+	Paste Clipboard Item	Kgomaretša Ntho ya Clipboard
+	Paste Formatting	Go Kgomaretša go Fometa
+	Paste Special	Kgomaretša Kgethegilego
+	Paste Special…	Kgomaretša Kgethegilego……
+	Paste Spike	Kgomaretša Spike
+	Paste: Keep Text Only	Kgomaretša: Boloka Sengwalwa Feela
+	Paste: Merge Formatting	Kgomaretša: Go Kopanya Fometa
+	Pasting between documents:	Go kgomaretša magareng ga ditokomane:
+	Pasting from other programs:	Go kgomaretša go tšwa mananeong a mangwe:
+	Pasting within the same document:	Go kgomaretša ka gare ga tokumente ye e swanago:
+	Pause	Kgaotša go se nene
+	Paused	O ile a ema go se nene
+	PDF document (*.pdf)	Tokomane ya PDF (*.pdf) .
+	Pen	Pen
+	Pencil	Pensele
+	Pens	Dipene
+	People	Batho
+	Periodical	Nako le nako
+	Personalize	Dira gore e be ya gago
+	Phonetic Guide	Tlhahlo ya Medumo
+	Pi Over 2	Pi Ka godimo ga 2
+	Picas	Picas
+	Pick a custom group (New Group makes one)	Kgetha sehlopha sa tlwaelo (Sehlopha se Secha se dira se tee) .
+	Pick a field from the list	Kgetha tšhemo go tšwa lenaneong
+	Picture	Seswantšho
+	Picture Border	Moedi wa Seswantšho
+	Picture Content Control	Taolo ya Diteng tša Seswantšho
+	Picture Format	Sebopego sa Seswantšho
+	Picture Styles	Ditaele tša Diswantšho
+	Pictures	Diswantšho
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Diswantšho go tšwa go Openverse. Hlompha laesense ya seswantšho se sengwe le se sengwe: Doc4Me e tlaleletša ka mogala wa mokitlana ka fase ga yona.
+	Pie	Pie
+	Placeholder Name	Leina la Seswari sa Lefelo
+	Placeholder text	Sengwalwa sa seswari sa lefelo
+	Plain Table 1	Lenaneo le le Tlwaelegilego 1
+	Plain text (*.txt)	Sengwalwa se se tlwaelegilego (*.txt) .
+	Plain Text Content Control	Taolo ya Diteng tša Sengwalwa se se Tlwaelegilego
+	Play	Bapala
+	Play Video	Bapala Bidio
+	Play/Pause	Bapala/Khutša
+	Plus Equal	Plus E Lekanang
+	Points	Dintlha
+	points and above	dintlha le ka godimo
+	Polish	Sepoliši sa Sepoliši
+	Portrait	Setshwantsho sa Setshwantsho
+	Portuguese (Brazil)	Sepotokisi (Brazil) .
+	Portuguese (Portugal)	Sepotokisi (Sepotokisi) .
+	Position	Maemo a
+	Position:	Boemo: .
+	Positioning…	Go beakanya maemo……
+	Possible spelling mistake	Phošo ya mopeleto yeo e ka bago gona
+	Postal Code	Khoutu ya Poso
+	Power series of (1+x)ⁿ	Matla letoto la (1+x)8
+	Preferred width:	Bophara bjo bo kgethilwego: .
+	Preserve	Boloka
+	Preserve formatting during updates	Boloka go fometa nakong ya diapdeite
+	Presets	Dipeakanyo tša pele
+	Press a key combination	Tobetsa motswako wa senotlelo
+	Preview	Tebelelopele ya pele
+	Preview Results	Dipoelo tša Tebelelopele
+	Preview\nResults	Tebelelopele\\\\nDipoelo
+	Previous	Se se fetilego
+	Previous 1 or More	Previous 1 goba go feta moo
+	Previous Change	Phetogo ya Peleng
+	Previous Comment	Tlhaloso ya Peleng
+	Previous Field	Tšhemo ya Peleng
+	Previous Footnote	Mongwalo wa ka tlase wa Peleng
+	Previous Page	Letlakala la Pele
+	Previous Record	Rekoto ya Peleng
+	Previous Section	Karolo ya Peleng
+	Previous Sentence	Polelo ya Peleng
+	Previous sentence	Polelo ya peleng
+	Previous Window	Lefasetere la Peleng
+	Print	Kgatišo
+	Print blank lines when data fields are empty	Phrintha mela ye e se nago selo ge mafelo a datha a se na selo
+	Print Documents	Phrintha Ditokomane
+	Print Documents…	Phrintha Ditokomane……
+	Print failed: {error}	Kgatišo e paletšwe: {error}
+	Print Layout	Peakanyo ya go Phrintha
+	Print Markup	Phrintha Swaya
+	Print the page color	Phrintha mmala wa letlakala
+	Print to PDF	Phrintha go PDF
+	Print\nLayout	Phrintha\\\\nPeakanyo
+	Printer	Mogatiši
+	Printing	Go gatiša
+	Process	Tshepetšo
+	Product	Setšweletšwa
+	Product of A	Setšweletšwa sa A
+	Product with Limits	Setšweletšwa se se nago le Mellwane
+	Product with Lower Limit	Setšweletšwa se se nago le Moedi wa Tlase
+	Product with Subscript-Superscript Limits	Setšweletšwa se se nago le Mellwane ya Mongwalo wa ka Fase-Mongwalo wa ka Tlase
+	Products and Coproducts	Ditšweletšwa le Ditšweletšwa tša Modirišani
+	Professional	Setsebi
+	Promote	Tšwetša pele
+	Promote to Heading 1	Tšwetša pele go ya go Hlogo ya 1
+	Proofing	Go hlatsela dihlatse
+	Proofing Issues	Ditaba tša Bohlatse
+	Proofing language	Polelo ya go hlatsela
+	Properties	Dithoto
+	Protect	Šireletša
+	Protect Document	Šireletša Tokomane
+	PRs	Di-PR
+	pt	pt
+	Publisher	Mogatiši
+	Punctuation	Maswaodikga a maswaodikga
+	Put the caret in a content control first.	Bea caret ka gare ga taolo ya diteng pele.
+	Put the default commands back on the Quick Access Toolbar?	Bea ditaelo tša maitirelo morago go Baradidirišwa ya Phihlelelo ya Kapejana?
+	Pyramid	Piramiti ya go swana le
+	Quadratic Root	Modu wa Quadratic
+	Query Options…	Dikgetho tša Potšišo……
+	Quick Access Toolbar	Baradidirišwa ya Phihlelelo ya Kapejana
+	Quick Parts	Dikarolo tša Kapejana
+	Quick Tables	Ditafole tša Kapejana
+	Quote	Tsopolo
+	Radical	Radical
+	Radical with Degree	Radical ka Degree
+	Radicals	Di-radical tša go dira dilo
+	Raised/lowered	E phagamišitšwe/e theošitšwe
+	Read Aloud	Bala ka go hlaboša lentšu
+	Read Aloud couldn't start the speech program: {reason}	Read Aloud o ile a palelwa ke go thoma lenaneo la polelo: {reason}
+	Read Aloud couldn't start: {reason}	Bala ka go hlaboša ga se a kgona go thoma: {reason}
+	Read Aloud isn't available in the browser	Bala ka go hlaboša ga e hwetšagale ka go sephephediši
+	Read Aloud Status	Bala ka go hlaboša lentšu Boemo
+	Read Aloud stopped: {reason}	Bala ka go hlaboša e ile ya ema: {reason}
+	Read Mode	Mokgwa wa go Bala
+	Read\nAloud	Bala\\\\nKa go hlaboša lentšu
+	Read\nMode	Bala \\\\ nMokgwa wa
+	Reading	Go bala
+	Reading Column Width	Bophara bja Kholomo ya go Bala
+	Reading Highlight	Kgahlamelo ya go Bala
+	Reading Line Spacing	Sebaka sa Mela ya go Bala
+	Reading Mode	Mokgwa wa go Bala
+	Reading Speed	Lebelo la go Bala
+	Reading Text Size	Bogolo bja Sengwalwa sa go Bala
+	Reads the clipboard's rich text and keeps its formatting.	Bala sengwalwa se se humilego sa clipboard gomme e boloka sebopego sa yona.
+	Reads the clipboard's web content and keeps its formatting.	Bala diteng tša wepe tša clipboard gomme e boloka sebopego sa yona.
+	Real name	Lebitso la sebele
+	Recent	Morago bjale
+	Recent Colors	Mebala ya Morago bjale
+	Recent documents to show:	Ditokomane tša morago bjale tšeo di swanetšego go bontšha:
+	Recently used symbols:	Maswao ao a sa tšwago go dirišwa:
+	Recipient List	Lenaneo la Baamogedi
+	Recipient lists	Mananeo a baamogedi
+	Recipients: {count}	Baamogedi: {count}
+	Recognized (you can correct it):	E lemogilwe (o ka e phošolla):
+	Recognized Functions	Mešomo ye e Lemogwago
+	Recognized Functions…	Mešomo ye e Lemogwago……
+	Recolor a one-color picture, such as an icon	Recolor seswantšho sa mmala o tee, bjalo ka leswao
+	Recolor Selected Ink	Recolor Enke e Kgethilwego
+	Record Macro	Rekhoto Macro
+	Recover Unsaved Documents	Hlaphoheloa Ditokomane tse sa bolokwang
+	Rectangle	Khutlonne ya khutlonne
+	Red:	Bohwibidu: .
+	Redo	Dira gape
+	Reduce Hanging Indent	Fokotša Indent ya go Fegwa
+	References	Ditšhupetšo
+	Reflection	Go naganišiša
+	Refresh	Lapološa
+	Registered	E ngwadišitšwe
+	Registered Sign	Letshwao le le Ngwadišitšwego
+	Regular expressions	Dipolelo tša ka mehla
+	Regulations	Melawana ya
+	Reject	Gana
+	Reject All	Gana Ka Moka
+	Reject All Changes	Gana Diphetogo ka Moka
+	Reject Change	Gana Phetogo
+	Relationship	Kamano ya kamano
+	relative to	ge go bapetšwa le
+	Relative to:	Mabapi le:
+	Relaxed	O iketlile
+	Remove	Tlosa
+	Remove Added Font	Tloša Fonte ye e Okeditšwego
+	Remove Background	Tlosa Lemorago
+	Remove Content Control	Tloša Taolo ya Diteng
+	Remove every custom shortcut and restore the built-in keys?	Tlosa tsela e nngwe le e nngwe ya tlwaelo gomme o bušetše dinotlelo tše di agetšwego ka gare?
+	Remove every custom tab and group and show all tabs again?	Tloša thepo ye nngwe le ye nngwe ya tlwaelo le sehlopha gomme o bontšhe dithepo ka moka gape?
+	Remove field	Tlosa tšimo
+	Remove Field Name	Tloša Leina la Tšhemo
+	Remove Footer	Tloša Letlakala la ka tlase
+	Remove from Quick Access Toolbar	Tloša go tšwa go Baradidirišwa ya Phihlelelo ya Kapejana
+	Remove Header	Tloša Hlogo ya Sehlogo
+	Remove Hyperlink	Tlosa Kgokagano ya Hyper
+	Remove Password	Tlosa Phasewete
+	Remove Pen	Tlosa Pene
+	Remove Positioning	Tloša go Bea Maemo
+	Remove recipient	Tlosa moamohedi
+	Remove row	Tlosa mola
+	Remove series	Tlosa letoto la lihlooho tse
+	Remove Space After Paragraph	Tloša Sebaka Ka Morago ga Serapa
+	Remove Table of Contents	Tloša Lenaneo la Diteng
+	Remove the control once edited	Tloša taolo ge e šetše e rulagantšwe
+	Remove the space before the punctuation	Tloša sekgoba pele ga maswaodikga
+	Remove Watermark	Tloša Letshwao la Meetse
+	Rename Style	Lebiša Setaele lefsa
+	Rename…	Rena leina lefsa……
+	Reopen	Bula gape
+	Repeat	Pheta
+	Repeat as header row on each page	Pheta bjalo ka mothaladi wa hlogo letlakaleng le lengwe le le lengwe
+	Repeat Header Rows	Boeletša Methaladi ya Hlogo
+	Repeated words	Mantšu ao a boeletšwago
+	Repeating Section Content Control	Go Boeletša Taolo ya Diteng tša Karolo
+	Replace	E tšeela sebaka
+	Replace All	Efa legato la Ka moka
+	Replace as you type	E tšeela sebaka ge o dutše o thaepa
+	Replace Document Text	Efa Sengwalwa sa Tokomane legato
+	Replace text as you type	Efa sengwalwa legatong ge o thaepa
+	Replace with:	E tšeela sebaka ka:
+	Replace:	E tšeela sebaka:
+	Replay	Bapala gape
+	Reply	Araba
+	Report	Pego ya
+	Research	Nyakišišo
+	Researcher	Monyakišiši
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Monyakišiši o hloka tirelo ya inthaneteng; Doc4Me e boloka ditokomane tša gago di se inthaneteng.
+	Reset	Seta gape
+	Reset All	Seta gape Tsohle
+	Reset All…	Seta gape Tsohle……
+	Reset Character Formatting	Seta gape Fomete ya Semelo
+	Reset Crop	Seta Sejalo gape
+	Reset Graphic	Seta Graphic gape
+	Reset Paragraph Formatting	Seta gape Fomete ya Serapa
+	Reset Picture	Seta Seswantšho gape
+	Reset to Normal	Seta gape go Tlwaelo
+	Reset\nGraphic	Seta gape \\\\ nKerafo
+	Reset…	Seta gape……
+	Resize Table by Dragging	Fetoša Bogolo bja Tafola ka go Goga
+	Resolve	Rarolla
+	Resolved	E rarolotšwe
+	Restart at 1	Thoma gape ka 1
+	Restart Each Page	Thoma Gape Letlakala le Lengwe le le Nngwe
+	Restart Each Section	Thoma gape Karolo ye Nngwe le E Nngwe
+	Restart list after:	Thoma lenaneo gape ka morago ga:
+	Restore	Tsošološa
+	Restore Defaults	Tsošološa Dilo tše di Tlwaelegilego
+	Restore Down	Tsošološa Fase
+	Restore to Normal Word Document	Bušetša go Tokomane ya Lentšu ye e Tlwaelegilego
+	Restrict Editing	Thibela go Rulaganya
+	Restrict\nEditing	Thibela\\\\nGo rulaganya
+	Result	Sephetho
+	Results	Dipoelo
+	Return address labels	Dileibole tša diaterese tša go boela morago
+	Return address:	Aterese ya go boela morago:
+	Reverse the order	Bušetša morago tatelano
+	Review	Boeletša
+	Review AutoFormat Changes	Boeletša Diphetogo tša Fomete ya go Itiriša
+	Review Changes…	Diphetogo tša Boeletša……
+	Reviewing	Go sekaseka
+	Reviewing Pane	Pane ya go Hlahloba
+	Reviewing — edits become suggestions	Reviewing - diphetolo fetoha ditshitshinyo
+	Revised document	Tokomane ye e boeleditšwego
+	Revisions	Diphetošo
+	Rewind	Boela morago
+	Ribbon	Ripone ya
+	Ribbon and Quick Access Toolbar:	Ripone le Baradidirišwa ya Phihlelelo ya Kapejana:
+	Ribbon tabs	Dithepo tša lenti
+	Rich Text Content Control	Taolo ya Diteng tša Sengwalwa se se Humilego
+	Rich Text Format (*.rtf)	Sebopego sa Sengwalwa se se Humilego (*.rtf) .
+	Rich Text Format (RTF)	Sebopego sa Sengwalwa se se Humilego (RTF) .
+	Right	Go lokile
+	Right (vertical)	Tokelo ya (e eme) .
+	Right align page numbers	Lokiša dinomoro tša letlakala ka go le letona
+	Right Arrow with Text Above	Motsu wa go ja ka Sengwalwa ka godimo
+	Right Arrow with Text Below	Motsu wa go ja ka Sengwalwa ka fase
+	Right Border	Mollwane wa Tokelo ya
+	Right border	Mollwane wa go ja
+	Right Bracket Twice	Bracket ya Tokelo ya Gabedi
+	Right indent	Indent ya go le letona
+	Right Margin	Mošito wa Tokelo
+	Right Only	Tokelo Feela
+	Right only	Tokelo feela
+	Right-to-left	Go tloga ka go le letona go ya go le letshadi
+	Right-to-Left Section	Karolo ya go tloga ka go le letona go ya go le letshadi
+	Right-to-Left Table	Tafola ya go tloga ka go le letona go ya go le letshadi
+	Right-to-Left Text Direction	Tlhahlo ya Sengwalwa sa go tloga ka go le letona go ya go le letshadi
+	Right:	Ka go le letona:
+	Rightwards Arrow Above	Motsu wa go ya ka go le letona Godimo
+	Rightwards Harpoon Above	Ka go le letona Harpoon Ka godimo
+	Roots of ax²+bx+c	Medu ya ax2+bx+c
+	Rotate	Dikološa
+	Rotate all text 270°	Dikološa sengwalwa ka moka 270°
+	Rotate all text 90°	Dikološa sengwalwa ka moka 90°
+	Rotate Left 90°	Dikološa ka go Le letshadi 90°
+	Rotate Right 90°	Dikološa ka go le letona 90°
+	Rotation	Go dikološa
+	Rotation:	Go dikološa: .
+	Rounded Rectangle	Khutlonne ye e Kgokologilego
+	Row	Mothaladi
+	Row:	Mothaladi: .
+	Rows & Columns	Methaladi & Dikholomo
+	Ruby text:	Sengwalwa sa Ruby: .
+	Ruler	Mmuši
+	Rules	Melawana
+	Run	Matha
+	Run-in	Go kitima ka gare
+	Russian	Se-Russia
+	Résumé	Résumé ya go thoma
+	Same as the whole table	Go swana le tafola ka moka
+	SAMPLE	MOHLALA
+	Sat:	Sat: 10 .
+	Save	Boloka
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Boloka khopi ka sebopego se sengwe. Go phrintha go feta ka PDF yeo o ka e phrinthago go tšwa go mmogedi ofe goba ofe.
+	Save As	Boloka Bjalo ka
+	Save as Template	Boloka bjalo ka Thempleite
+	Save documents	Boloka ditokomane
+	Save the document to turn on AutoSave	Boloka tokumente go bulela AutoSave
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Boloka tokumente go bulela AutoSave (faele yeo o e butšego fela ga e ngwalwe gape go fihlela o e boloka)
+	Save these pages as PDF…	Boloka matlakala a bjalo ka PDF……
+	Save Version	Boloka Phetolelo
+	Saved	E bolokilwe
+	Scale	Sekala
+	Scale Drawing	Go Thala Sekala
+	Scatter	Go phatlalatša
+	Screen Clipping	Go kgaola Skrine
+	Screen clipping didn't work: {reason}	Go kgaola skrine ga se gwa šoma: {reason}
+	Screen clipping ended without a picture.	Screen clipping e ile ya fela ntle le seswantšho.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Screen clipping ga e hwetšagale mo. Khopiša seswantšho sa skrine, ke moka o se kgomaretše.
+	Screenshot	Seswantšho sa skrine
+	Script	Sengwalwa
+	Scripts	Dingwalwa
+	Scroll ribbon left	Scroll lente le letšehali
+	Scroll ribbon right	Scroll lente ka go le letona
+	Search	Nyaka
+	Search Commands	Ditaelo tša go Nyaka
+	Search commands and help	Batla ditaelo le thušo
+	Search document	Tokomane ya go nyaka
+	Search for templates	Batla dithempleite
+	Search icons	Batla diaekhone
+	Search Openverse (Creative Commons pictures)	Batla Openverse (Ditshwantsho tsa Creative Commons) .
+	Search Options	Dikgetho tša go Nyaka
+	Searching…	Go nyaka……
+	Secant Function	Mošomo wa Secant
+	Section Break	Kgaotšo ya Karolo
+	Section Breaks	Karolo ya go Kgaotša
+	Section Character	Semelo sa Karolo
+	Section direction:	Tlhahlo ya karolo: .
+	Section Mark	Letshwao la Karolo
+	Section Properties	Dithoto tša Karolo
+	Sections	Dikarolo
+	See	Bona
+	Select	Kgetha
+	Select a picture, shape, chart or table to describe it.	Kgetha seswantšho, sebopego, tšhate goba tafola go e hlaloša.
+	Select All	Kgetha Ka moka
+	Select Cell	Kgetha Sele
+	Select Floating Shapes	Kgetha Dibopego tše di Phaphametšego
+	Select Heading and Content	Kgetha Hlogo le Diteng
+	Select Line	Kgetha Mola
+	Select Objects	Kgetha Dilo
+	Select Paragraph	Kgetha Serapa
+	Select Range	Kgetha Range
+	Select Recipients	Kgetha Baamogedi
+	Select recipients first to choose from their fields.	Kgetha baamogedi pele go kgetha go tšwa mašemong a bona.
+	Select recipients first to match their fields.	Kgetha baamogedi pele go swantšha mašemo a bona.
+	Select Row	Kgetha Mothaladi
+	Select Sentence	Kgetha Polelo
+	Select Table	Kgetha Tafole
+	Select Text	Kgetha Sengwalwa
+	Select text in the document to translate it.	Kgetha sengwalwa ka gare ga tokumente go e fetolela.
+	Select Text with Similar Formatting	Kgetha Sengwalwa se se nago le Fomete ye e Swanago
+	Select text, then tick who can still edit it.	Kgetha sengwalwa, ke moka o swaya gore ke mang yo a sa kgonago go se rulaganya.
+	Select the part of the screen to insert.	Kgetha karolo ya skrine seo o tlago go e tsenya.
+	Select Word	Kgetha Lentšu
+	Select\nRecipients	Kgetha\\\\nBaamogedi
+	Selected Fields	Mašemo a Kgethilwego
+	Selected pages	Matlakala ao a kgethilwego
+	Selection	Kgetho ya go kgetha
+	Selection Pane	Lefasetešana la Kgetho
+	Send Backward	Romela Morago Morago
+	Send the document straight to the system print dialog, or save a copy in another format below.	Romela tokumente thwii go poledišano ya go phrintha ya tshepedišo, goba boloka khopi ka sebopego se sengwe ka fase.
+	Sentence	Polelo
+	Sentence case.	Molato wa kahlolo.
+	Separator:	Karoganyo: .
+	Sequence name:	Leina la tatelano: .
+	Serbian	Seserbia
+	Serbian (Cyrillic)	Seserbia (Se-Cyrillic) .
+	Serbian (Latin)	Seserbia (Selatine) .
+	Series name	Lebitso la letoto
+	Series {n}	Letoto la lihlooho tse {n}
+	Server address (https://…)	Aterese ya seva (https://…)
+	Set	Beha
+	Set As Default	Beakanya Bjalo ka Default
+	Set as Default	Beha bjalo ka Default
+	Set Caret	Beha Tlhokomelo
+	Set Character Formatting	Seta Fomete ya Semelo
+	Set Date	Beakanya Letšatšikgwedi
+	Set Equation	Beakanya Tekanyo
+	Set Numbering Value	Beakanya Boleng bja go Nomoro
+	Set Paragraph Formatting	Beakanya Fomete ya Serapa
+	Set Proofing Language…	Set Polelo ya go Hlahloba……
+	Setting:	Setting: .
+	Settings…	Dipeakanyo tša……
+	Shading	Go dira moriti
+	Shadow	Moriti wa
+	Shadow, glow and soft edges	Moriti, khanya le metshetshe bonolo
+	Shape Effects	Ditlamorago tša Sebopego
+	Shape Fill	Sebopego Tlatša
+	Shape Format	Sebopego sa Sebopego
+	Shape Outline	Sebopego Thulaganyo
+	Shape Styles	Ditaele tša Sebopego
+	Shapes	Dibopego
+	Share	Abelana
+	Sheet:	Letlakala: .
+	Shift cells down	Shift disele fase
+	Shift cells right	Shift disele ka go le letona
+	Shift+Tab	Phetogo + Tab
+	Shipping labels	Dileibole tša thomelo
+	Short citation:	Tsopolo ye kopana:
+	Shortcut key:	Senotlelo sa tsela e kopana: .
+	Show	Bontšha
+	Show all formatting marks	Bontšha maswao ka moka a go fometa
+	Show All Levels	Bontšha Maemo ka Moka
+	Show all revisions inline	Bontšha diphetošo ka moka ka gare ga mothaladi
+	Show changes at:	Bontšha diphetogo go:
+	Show changes in:	Bontšha diphetogo go:
+	Show Comments	Bontšha Ditshwayotshwayo
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Bontšha ditokomane ka mebala ya tšona ye e fetotšwego, go swana le Tebelelego › Mekgwa ya go Fetoša. Go boloka, go gatiša le di-PDF ga di fetoge.
+	Show every bibliography field	Bontšha tšhemo ye nngwe le ye nngwe ya lenaneo la dipuku
+	Show First Line Only	Bontšha Mola wa Pele Feela
+	Show in the Styles gallery	Bontšha ka gare ga gallery ya Ditaele
+	Show KeyTips (Alt or F10)	Bontšha Dikeletšo tša Senotlelo (Alt goba F10) .
+	Show Level	Bontšha Maemo
+	Show Level 1	Bontšha Maemo a 1
+	Show Level 2	Bontšha Maemo a 2
+	Show Level 3	Bontšha Maemo a 3
+	Show Level 4	Bontšha Maemo a 4
+	Show Level 5	Bontšha Maemo a 5
+	Show Level 6	Bontšha Maemo a 6
+	Show Level 7	Bontšha Maemo a 7
+	Show Level 8	Bontšha Maemo a 8
+	Show Level 9	Bontšha Maemo a 9
+	Show Markup	Bontšha Markup
+	Show Notes	Bontšha Dintlha
+	Show only comments and formatting in balloons	Bontšha fela ditshwayotshwayo le go fometa ka dibalune
+	Show or Hide Style	Bontšha goba Pata Setaele
+	Show page numbers	Bontšha dinomoro tša matlakala
+	Show revisions in balloons	Bontšha diphetošo ka dibalune
+	Show rulers	Bontšha babuši
+	Show Text Formatting	Bontšha Fomete ya Sengwalwa
+	Show the equation in the line of text	Bontšha tekano mothalong wa sengwalwa
+	Show the equation on a line of its own	Bontšha tekano mothalong wa yona
+	Show the mini toolbar when text is selected	Bontšha bara ya didirišwa ye nnyane ge sengwalwa se kgethilwe
+	Show/Hide ¶	Bontšha/Pata ¶ .
+	Show\nComments	Bontšha\\\\nDitshwayotshwayo
+	Showing the first {count} items.	Go bontšha dilo tša mathomo tša {count}.
+	Shows a tree: each item below the item it belongs to.	E bontšha sehlare: selo se sengwe le se sengwe ka fase ga selo seo e lego sa sona.
+	Shows items around a central idea: the first item is the centre.	E bontšha dilo go dikologa kgopolo ya bogareng: selo sa mathomo ke bogare.
+	Shows items of equal weight as blocks in rows.	E bontšha dilo tša boima bjo bo lekanago bjalo ka diboloko ka methaladi.
+	Shows overlapping ideas as overlapping circles.	E bontšha dikgopolo tše di lekelelanago bjalo ka didiko tše di lekelelanago.
+	Shows parts of a whole as quadrants.	E bontšha dikarolo tša kakaretšo bjalo ka dikotara.
+	Shows parts that build on each other, largest at the bottom.	E bontšha dikarolo tšeo di agago godimo ga tše dingwe, tše kgolo kudu ka fase.
+	Shows steps in order, left to right, with arrows between them.	E bontšha dikgato ka tatelano, go tloga go le letshadi go ya go le letona, ka metsu magareng ga tšona.
+	Shows steps that repeat, around a circle.	E bontšha dikgato tšeo di boeletšago, go dikologa sediko.
+	Shrink Font 1 Point	Fokotša Fonte 1 Ntlha
+	Shrink Selection	Kgetho ya go Fokotša
+	Shrink text	Fokotša sengwalwa
+	Side to Side	Lehlakore go ya go Lehlakore
+	Side\nto Side	Lehlakore\\\\nto Lehlakore
+	Sides of a right triangle	Mahlakoreng a khutlotharo e nepahetseng
+	Signature Line	Mola wa Mosaeno
+	Sine and cosine series of f(x)	Sine le cosine letoto la f (x) .
+	Sine Function	Mošomo wa Sine
+	Sine theta	Sine theta ya go swana le
+	Single	Single
+	Single Brackets	Diphaphathi tše tee
+	Single Closing Quote	Setsopolwa se tee sa go Tswalela
+	Single label	Leina le le leng
+	Single Left Angle	Khutlo e tee ya Letsogo le letshadi
+	Single Left Bar	Single Letsogo le Letshadi Bar
+	Single Left Brace	Sešireletši se tee sa Letsogo le letshadi
+	Single Left Bracket	Bracket e tee ya Letsogo le letshadi
+	Single Left Parenthesis	Parentese e tee ya Letsogo le letshadi
+	Single Opening Quote	Setsopolwa sa go Bula se tee
+	Single Right Brace	Single Tokelo ya Brace
+	Single Right Bracket	Bracket e le nngwe e le letona
+	Single Right Parenthesis	Parentese e tee ya go le letona
+	Single Spacing	Sekgoba se tee
+	SIST02	SIST02
+	Site name	Lebitso la sebaka
+	Size	Bogolo
+	Size (pt):	Bogolo (pt): .
+	Size and Crop…	Bogolo le Dibjalo……
+	Size:	Bogolo: .
+	Sketchbook	Puku ya go thala diswantšho
+	Skewed Fraction	Karolwana ye e Sekamego
+	Skip citations & bibliography	Tlola ditsopolo & lenaneo la dipuku
+	Skip Citations and Bibliography	Tlola Ditsopolo le Lenaneo la Dipuku
+	Skip Record If	Tlola Rekhoto Ge e ba
+	Skip Record If…	Tlola Rekoto Ge e ba……
+	Slant Down	Sekame fatše
+	Slant Up	Slant Godimo
+	Small Caps	Dikepisi tše Nnyane
+	Small caps	Dikepisi tše nnyane
+	Small change	Phetogo ye nnyane
+	Smart quotes instead of straight quotes	Ditsopolwa tša bohlale go e na le ditsopolwa tše di otlologilego
+	SmartArt	SmartArt
+	SmartArt Design	Moralo wa SmartArt
+	SmartArt Styles	Ditaele tša SmartArt
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Go sepelasepela ka boreledi le go godiša, le dimenu le dikonope tšeo di fifalago ka gare.Tima e bontšha phetogo ye nngwe le ye nngwe ka nako e tee.
+	Soft Edges	Metshetshe e Boleta
+	Soft Glow	Bonolo Glow
+	Solid Accent	Segalo se se Tiilego
+	Sort	Hlopha
+	Sort by	Hlopha ka
+	Sort order:	Tatelano ya go hlopha:
+	Sort Records	Hlopha Direkoto
+	Source code: github.com/chatraweechai/doc4me	Khoutu ya mohlodi: github.com / chatraweechai / doc4me
+	Source Manager	Molaodi wa Mothopo
+	Source type:	Mohuta wa mothopo:
+	Sources in this document:	Methopo yeo e lego ka gare ga tokomane ye:
+	South	Borwa
+	Space	Sebaka
+	Space after	Sebaka ka morago ga
+	Space after: {pt} pt	Sebaka ka morago ga: {pt} pt
+	Space before	Sebaka pele
+	Space before/after:	Sebaka pele/ka morago ga:
+	Space before: {pt} pt	Sebaka pele: {pt} pt
+	Spaces	Dikgoba
+	Spacing	Go beakanya sekgoba
+	Spacing (pt):	Sebaka (pt): .
+	Spacing:	Sekgoba: .
+	Spanish	Sepaniši
+	Spanish (Mexico)	Sepaniši (Mexico) .
+	Spanish (Spain)	Sepaniši (Sepaniši) .
+	Sparse Matrices	Dimatriki tša go se be gona
+	Special	Kgethegilego
+	Special Characters	Baanegwa ba Kgethegilego
+	Specify height:	Laetša bophagamo: .
+	Speech	Polelo
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	Polelo e lemogwa khomphutheng ye (whisper.cpp); ga go na selo seo se romelwago inthaneteng.
+	Speed	Lebelo
+	Spelling	Mopeleto
+	Spelling & Grammar	Mopeleto & Thutapolelo
+	Spelling &\nGrammar	Mopeleto &\\\\nPopopolelo
+	Spelling and grammar are checked in English (United States).	Mopeleto le popopolelo di hlahlobja ka Seisemane (United States).
+	Spelling Suggestions	Ditšhišinyo tša Mopeleto
+	Spike	Spike ya
+	Split	Go arogana
+	Split apart page break and paragraph mark	Aroganya letlakala la go kgaotša le leswao la serapa
+	Split Cells	Disele tše di Arogilego
+	Split Table	Tafole ya go arogana
+	Spreadsheet Table	Tafole ya Spreadsheet
+	Square	Sekwere
+	Square Root	Modu wa Sekwere
+	Square Root with Degree	Modu wa Sekwere ka Degree
+	Square Union	Sekwere Union
+	Stack Object	Selo sa Mokgobo
+	Stack Object (Three)	Selo sa Mokgobo (Thara) .
+	Stacked	E kgobokeditšwe
+	Stacked Bar	Bar ye e kgobokeditšwego
+	Stacked Column	Kholomo ye e Kgobokeditšwego
+	Stacked Fraction	Karolwana ye e Kgobokeditšwego
+	Stacked, no bar	Stacked, ha ho bareng
+	Standard	Maemo a
+	Standard and Contextual	Maemo le Sebopego
+	Standard Colors	Mebala ya Maemo
+	Standard Only	Standard Feela
+	Star	Naledi
+	Start at:	Thoma ka:
+	Start Enforcing Protection	Thoma go Gapeletša Tšhireletšo
+	Start Mail Merge	Thoma Kopanyo ya Poso
+	Start Mail\nMerge	Thoma Poso\\\\nKopanya
+	State	Mmušo
+	Statement   5.50" × 8.50"	Polelo 5.50 "× 8.50".
+	Statistics	Dipalopalo
+	Status Bar	Bar ya Maemo
+	Statutes	Melawana ya Melawana
+	Stop	Ema
+	Stop Protection	Emiša Tšhireletšo
+	Stop Reading	Tlogela go Bala
+	Stopped	E ile ya ema
+	Store	Lebenkele
+	Straight Arrow Connector	Sehokedi sa Motsu o otlolohileng
+	Straight Connector	Sehokedi sa go otlologa
+	Strikethrough	Strikethrough ka go fetiša
+	Stroke {n} of {total}	Setorouku {n} ya {total}
+	Strong	E matla
+	Structure Actions	Ditiro tša Sebopego
+	Structures	Dibopego
+	Studio	Studio
+	Studio cover	Sekwahelo sa Studio
+	Studio handbook (sample)	Puku ya setudio (mohlala) .
+	Style	Setaele sa
+	Style based on:	Setaele se theilwego godimo ga:
+	Style Inspector	Mohlahlobi wa Setaele
+	Style Set	Sete ya Setaele
+	Style:	Setaele: .
+	Style: APA	Setaele: APA
+	Style: {style}	Setaele: {style}
+	Styles	Ditaele
+	Styles Pane	Lefasetere la Ditaele
+	Styles:	Ditaele: .
+	Subentry:	Tsenyo ya ka fasana: .
+	Subject	Taba ya ditaba
+	Subscript	Mongwalo wa ka tlase
+	Subscript-Superscript	Mongwalo wa ka tlase-Mongwalo wa ka tlase
+	Subscripts and Superscripts	Dingwalwa tša ka fasana le Dingwalwa tša ka godimo
+	Subset:	Sehlopha se senyenyane: .
+	Substituted font	Fonte ye e tšeetšwego legato
+	Subtitle	Thaetlele ya ka fasana
+	Subtle Emphasis	Kgatelelo ye e sa lemogegego
+	Subtle Reference	Tšhupetšo ye e sa lemogegego
+	Sum	Kakaretšo
+	Sum of cosines	Palomoka ya di-cosine
+	Sum or difference of sines	Kakaretšo goba phapano ya di-sines
+	Summation	Kakaretšo
+	Summation from 0 to n	Kakaretšo go tloga go 0 go ya go n
+	Summation over binomials	Kakaretšo godimo ga di-binomial
+	Summation with Limits	Kakaretšo yeo e nago le Mellwane
+	Summation with Lower Limit	Kakaretšo ka Moedi wa Tlase
+	Summation with Subscript Limit	Kakaretšo ka Moedi wa Mongwalo wa ka fase
+	Summation with Subscript-Superscript Limits	Kakaretšo ka Mellwane ya Mongwalo wa ka fase-Mongwalo wa ka Tlase
+	Summations	Dikakaretšo
+	Superscript	Mongwalo wa ka godimo
+	Suppress line numbers	Gatelela dinomoro tša mela
+	Surface Integral	Bokagodimo bja Integral
+	Surface Integral with Limits	Bokagodimo Integral le Mellwane
+	Surface Integral with Stacked Limits	Bokagodimo Integral le Stacked Mellwane
+	Swap footnotes and endnotes	Fapantšha mengwalo ya ka tlase le dintlha tša mafelelo
+	Swedish	Seswedishe
+	Switch Modes	Mekgwa ya Switch
+	Switch Windows	Switch Windows
+	Switch\nModes	Switch \\\\ nMekgwa ya go dira
+	Symbol	Letshwao
+	Symbol Font	Fonte ya Letshwao
+	Symbols	Matshwao
+	Synchronous Scrolling	Go Kgokologa ga Synchronous
+	Synonyms	Mahlalosetšagotee
+	System	Tshepedišo ya
+	Tab	Tab
+	Tab Character	Semelo sa Thepo
+	Tab character	Semelo sa thepo
+	Tab characters	Ditlhaka tša thepo
+	Tab leader:	Moetapele wa tab: .
+	Tab stop position:	Tab emisa boemo: .
+	Tab stops to be cleared:	Tab e ema go hlwekišwa:
+	Table	Tafole ya
+	Table AutoFormat	Tafole Fomete ya go Itiriša
+	Table AutoFormat…	Tafole Fomete ya go Itiriša……
+	Table Column Width	Bophara bja Kholomo ya Tafola
+	Table Design	Moralo wa Tafole
+	Table direction:	Tlhahlo ya tafole: .
+	Table entry fields	Mabala a go tsenya tafola
+	Table Grid	Gridi ya Tafola
+	Table identifier:	Sešupo sa tafola: .
+	Table Layout	Peakanyo ya Tafola
+	Table of Authorities	Tafole ya Balaodi
+	Table of Contents	Lenaneo la Diteng
+	Table of Contents Options	Lenaneo la Diteng Dikgetho
+	Table of Contents Styles	Lenaneo la Diteng Ditaele
+	Table of Figures	Tafole ya Dipalopalo
+	Table of Figures Options	Tafole ya Dipalo Dikgetho
+	Table of\nContents	Lenaneo la\\\\nDiteng
+	Table Positioning	Go Bea Tafola Maemo
+	Table Properties	Dithoto tša Tafola
+	Table Row Height	Bophagamo bja Mothaladi wa Tafola
+	Table style	Tafole setaele
+	Table Style Options	Dikgetho tša Setaele sa Tafola
+	Table Styles	Ditaele tša Tafola
+	Table styles:	Mekgwa ya tafole: .
+	Tables	Ditafole
+	Tabloid   11.00" × 17.00"	Tabloid 11,00 "× 17,00" .
+	Tabs	Dithepo
+	Tabs…	Dithepo tša……
+	Tabular List	Lenaneo la Tafola
+	Tag	Tag
+	Tangent formula	Fomula ya tangent
+	Tangent Function	Mošomo wa Tangent
+	TC entry fields	Mabala a go tsena ga TC
+	Technology	Theknolotši
+	Templates	Dithempleite
+	Templates and Add-ins	Dithempleite le Ditlaleletšo
+	Text	Sengwalwa
+	Text Box	Lepokisi la Sengwalwa
+	Text boxes	Mapokisi a sengwalwa
+	Text Direction	Tlhahlo ya Sengwalwa
+	Text Effects	Ditlamorago tša Sengwalwa
+	Text Effects and Typography	Ditlamorago tša Sengwalwa le Thaepo
+	Text Fill	Tlatša Sengwalwa
+	Text from File	Sengwalwa go tšwa go Faele
+	Text Highlight Color	Sengwalwa Hlaola Mmala
+	Text indent at:	Sengwalwa se se tsentšwego go:
+	Text isn't squeezed to fit its cell yet.	Sengwalwa ga se sa pitlaganywa gore se lekanele sele ya sona ga bjale.
+	Text Outline	Thulaganyo ya Sengwalwa
+	Text over Colon Equal	Sengwalwa godimo ga Kolone E lekana
+	Text over Equal	Sengwalwa godimo ga Equal
+	Text Pane	Lefasetešana la Sengwalwa
+	Text size	Bogolo bja sengwalwa
+	Text snaps to characters	Sengwalwa se snap go ditlhaka
+	Text to display:	Sengwalwa seo se swanetšego go bontšhwa:
+	Text Wrapping	Go Phuthelwa ga Sengwalwa
+	Text wrapping:	Go phuthela sengwalwa: .
+	Text:	Sengwalwa: .
+	Text\nBox	Sengwalwa\\\\nLepokisi
+	Text\nDirection	Sengwalwa\\\\nTsela
+	Thai	Sethai
+	Thai Distributed	Thai e Aba
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Sebopego seo ga se boloke se sengwe le se sengwe, ka fao tokumente e sa bulegile. E boloke bjalo ka tokumente ya Word (.docx) go tšwela pele.
+	That isn't the web address or embed code of an online video.	Yeo ga se aterese ya wepe goba khoutu ya go tsenya ya bidio ya inthaneteng.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Phasewete yeo ga se ya loka. E hlahlobje (diphasewete di na le tlhokomelo ya ditlhaka tše dikgolo) gomme o leke gape.
+	The clipboard is empty.	Letlapa la go kgaola ga le na selo.
+	The date it is today	Letšatšikgwedi leo e lego lona lehono
+	The document contains no tracked changes.	Tokomane ga e na diphetogo tše di latišišitšwego.
+	The document has no bookmarks yet.	Tokomane ga e na dipukutshwayo ga bjale.
+	The document is read only, except for regions marked editable.	Tokomane e balwa fela, ntle le dilete tšeo di swailwego gore di ka rulaganywa.
+	The document will be saved with a password. Save it to protect it.	Tokomane e tla bolokwa ka phasewete. E boloke go e šireletša.
+	The first word of a sentence starts with a capital.	Lentšu la mathomo la polelo le thoma ka mongwalo o mogolo.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	tefo ya mahala ya letšatši le letšatši e dirišitšwe (leka gape gosasa, goba o fe aterese ya imeile)
+	the LibreTranslate server	seva ya LibreTranslate
+	The Mail Merge Helper sets up a merge in three steps.	Mothuši wa Kopanyo ya Poso o hloma kopanyo ka magato a mararo.
+	The new style takes the formatting of the current paragraph.	Setaele se sefsa se tšea sebopego sa temana ya bjale.
+	The password is optional; without it anyone can stop the protection.	Phasewete ke ya boikgethelo; ntle le yona motho le ge e le ofe a ka thibela tšhireletšo.
+	The password is removed. Save the document to keep the change.	Phasewete e tlošitšwe. Boloka tokumente go boloka phetogo.
+	The passwords don't match.	Diphasewete ga di swane.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	Mogatiši, go gatiša ka mahlakore a mabedi le matlakala ka letlakala di kgethilwe poledišanong yeo.
+	The recipient-list field that fills each part of an address block and greeting line.	Tšhemo ya lenaneo la moamogedi yeo e tlatšago karolo ye nngwe le ye nngwe ya thibelo ya diaterese le mola wa tumedišo.
+	The same word twice in a row.	Lentšu le tee gabedi ka go latelana.
+	The spelling and grammar check is complete.	Tlhahlobo ya mopeleto le popopolelo e feletše.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Poledišano ya faele ya tshepedišo ga e hwetšagale, ka fao Doc4Me e bontšha ya yona. Go hwetša poledišano ya tshepedišo, tsenya kgoro ya mokgethi wa faele (go swana le xdg-desktop-portal-gtk) goba zenity.
+	The text is sent to {service} to be translated.	Sengwalwa se romelwa go {service} gore se fetolelwe.
+	The time right now	Nako gona bjale
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Bidio e bontšha bjalo ka seswantšho ka gare ga tokomane. E klike gabedi go e lebelela ka go sephephediši sa gago.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	Tokomane ka moka e fetolelwa go tokomane ye mpsha, yeo e tšeago legato la ye. Boloka mošomo wa gago pele.
+	Theme Colors	Mebala ya Sehlogo
+	Theme Fonts	Difonte tša Sehlogo
+	Theme List	Lenaneo la Sehlooho
+	Themes	Dihlogotaba
+	Then by	Ke moka ka
+	Then insert:	Ke moka o tsenye:
+	There's no text to translate.	Ga go na sengwalwa seo se swanetšego go fetolela.
+	Thesaurus	Thesaurus ya go swana le yona
+	These marks show even when Show/Hide ¶ is off.	Maswao a a bontšha le ge Bontšha/Pata ¶ e timilwe.
+	These merge fields aren't in the recipient list:	Mabala a a kopanya ga a lenaneong la baamogedi:
+	These settings will be used for new documents.	Dipeakanyo tše di tla šomišwa go ditokomane tše mpsha.
+	Thick	Botenya
+	Thickness	Botenya
+	This Device…	Sedirišwa se……
+	This document	Tokomane ye
+	This field has no options.	Tšhemo ye ga e na dikgetho.
+	This folder can't be read: {error}	Foltara ye e ka se balwe: {error}
+	This font has no characters to show.	Fonte ye ga e na ditlhaka tšeo e swanetšego go di bontšha.
+	This page	Letlakala le
+	This password type isn't supported.	Mohuta wo wa phasewete ga o thekgwe.
+	This point forward	Ntlha ye pele
+	This section	Karolo ye
+	Three	Ba bararo
+	Through	Ka
+	Tight	E thata
+	Tilde	Tilde
+	Tips ({n})	Dikeletšo ({n}) .
+	Title	Thaetlele
+	Title from the document properties	Thaetlele go tšwa go dithoto tša tokumente
+	Title:	Thaetlele: .
+	To	Go
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Go bula ditokomane ta Word ka Doc4Me ka go ikemela: kgetha e tee ka go Finder, kgetha Faele › Hwetša Tshedimošo, kgetha Doc4Me ka fase ga Bula ka, gomme o klike Fetoša Ka moka.
+	To:	Go:
+	TOA Heading	Hlogo ya TOA
+	TOC Heading	Hlogo ya TOC
+	TOC {n}	TOC {n} ya go swana le yona
+	Today	Lehono
+	tOGGLE cASE	go OGGLE KESE
+	Toggle Check Box	Toggle Lepokisi la go Hlahloba
+	Toggle Field Codes	Toggle Dikhoutu tša Tšhemo
+	Toggle Unicode Character	Toggle Semelo sa Unicode
+	Tools	Didirišwa
+	Top	Godimo
+	Top and Bottom	Godimo le Tlase
+	Top Border	Moedi wa Godimo
+	Top Margin	Moedi wa Godimo
+	Top of Next Page	Godimo ga Letlakala le Le Latelago
+	Top of Page	Godimo ga Letlakala
+	Top of Previous Page	Godimo ga Letlakala la Peleng
+	Top of the Window	Godimo ga Lefasetere
+	Top:	Godimo: .
+	Total	Palomoka ya
+	Total Row	Palomoka ya Mothaladi
+	Track Changes	Diphetogo tša Track
+	Track Changes Options	Dikgetho tša Diphetogo tša Track
+	Track changes while editing	Track diphetogo ge o rulaganya
+	Track Changes: On	Diphetogo tša Pina: On
+	Track formatting	Go fometa ga pina
+	Track\nChanges	Track\\\\nDiphetogo
+	Track\nChanges ✓	Track\\\\nDiphetogo ✓
+	Tracked changes	Diphetogo tše di latišišitšwego
+	Tracking	Go latela
+	Trademark	Letshwao la kgwebo
+	Trademark Sign	Letshwao la Letshwao la Kgwebo
+	Transform	Phetogo
+	Translate	Fetolela
+	Translate Document	Fetolela Tokomane
+	Translating {done} of {total}	Go fetolela {done} ya {total}
+	Translation service	Tirelo ya phetolelo
+	Translator	Mofetoledi
+	Transparency	Go ba pepeneneng
+	Transparency:	Go ba pepeneneng: .
+	Transport	Dinamelwa
+	Treatises	Dingwalwa tša go ngwala
+	Triangle	Khutlotharo
+	Triangle Down	Khutlotharo Fase
+	Triangle Up	Khutlotharo Godimo
+	Trigonometric Functions	Mešomo ya Trigonometric
+	Triple	Triple
+	Triple Dot	Letheba le le tharo
+	Triple Integral	Integral ya go ba gararo
+	Triple Integral with Limits	Triple Integral ka Mellwane
+	Triple Integral with Stacked Limits	Triple Integral le Mellwane e Stacked
+	Trust Center	Setsi sa Trust
+	Tue	Tue
+	Turabian	Turabian o ile a re
+	Turkish	Seturkey
+	Two	Tše pedi
+	Type	Mohuta wa
+	Type a command, e.g. "insert table"	Thaepa taelo, k.g.r. "kenya tafole".
+	Type a New List	Thaepa Lenaneo le Lefsa
+	Type a New List…	Thaepa Lenaneo le Lefsa……
+	Type at least one recipient.	Thaepa bonyane moamogedi o tee.
+	Type equations in LaTeX	Thaepa ditekanyetšo ka go LaTeX
+	Type equations in the linear format (UnicodeMath)	Thaepa ditekanyetšo ka sebopego sa mothalo (UnicodeMath) .
+	Type in Equation	Thaepa ka go Tekanyo
+	Type normal (non-math) text in the equation	Thaepa sengwalwa sa tlwaelo (e sego sa dipalo) ka gare ga tekano
+	Type Text	Thaepa Sengwalwa
+	Type the categories down the side and a column of values per series.	Thaepa magoro fase ka lehlakoreng le kholomo ya boleng ka lelokelelo.
+	Type the field's name and its switches, for example PAGE \\* roman.	Thaepa leina la tšhemo le di-switch tša yona, mohlala PAGE \\\\\\\\* roman.
+	Type the password to stop the protection.	Thaepa phasewete go emiša tšhireletšo.
+	Type the recipients, or load them from a file.	Thaepa baamogedi, goba o ba laetše go tšwa faeleng.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Thaepa leina la thepo la mothopo. O ka oketša tshedimošo ye ntši go mothopo wo ka morago ka go rulaganya mothopo.
+	Type:	Mohuta: .
+	Typing	Go thaepa
+	Typing replaces selected text	Go thaepa go tšea legato la sengwalwa se se kgethilwego
+	Ukrainian	Seukraine
+	Unchecked symbol	Letshwao le sa hlahlobjago
+	Underbar	Underbar ya ka tlase
+	Underbrace	Underbrace ya ka tlase
+	Underline	Thalela thalela
+	Underline color	Thalela mmala
+	Underline Words Only	Thalela Mantšu Feela
+	Undo	Bušetša morago
+	Undo Stroke	Undo Seterouku
+	Undo {action}	Go bušetša morago {action}
+	Unformatted Text	Sengwalwa se se sa fometelwago
+	Ungroup	Ungroup ka sehlopha
+	Union	Union
+	Union of intersections	Union ya magahlano a ditsela
+	Union with Limits	Kopano yeo e nago le Mellwane
+	Union with Lower Limit	Union ka Moedi wa Tlase
+	Union with Plus	Union le Plus
+	Union with Subscript-Superscript Limits	Kopano yeo e nago le Mellwane ya Mongwalo wa ka tlase-Mongwalo wa ka Tlase
+	Unions and Intersections	Mekgatlo le Mapatlelo
+	Unlink Fields	Kgaola Kgokagano ya Mašemo
+	Unlink\nCitations	Kgaola kgokagano\\\\nDitsopolo
+	Unlock Fields	Notlolla Mašemo
+	Up	Godimo
+	Up Diagonal Dots	Godimo Marontho a Diagonale
+	Up one level	Godimo ga maemo a tee
+	Update Field	Tšhemo ya Mpshafatšo
+	Update fields before printing	Mpshafatša mafelo pele o gatiša
+	Update Index	Ntšha Tšhupetšo
+	Update Style to Match Selection	Mpshafatša Setaele go Nyalantšha Kgetho
+	Update Styles from Template	Mpshafatša Ditaele go tšwa go Thempleite
+	Update Table	Tafole ya Mpshafatšo
+	Update Table of Figures	Update Tafole ya Dipalopalo
+	Update to Match	Mpshafatša go Nyalelanya
+	Update to Match Selection	Mpshafatša go Kgetho ya go Nyalantšha
+	UPPERCASE	DITLHAHLOBO TŠE KGOLO
+	URGENT	GO POTLHELELA
+	URL	URL ya
+	Use "a" before a consonant sound	Šomiša "a" pele ga modumo wa tumammogo
+	Use "an" before a vowel sound	Šomiša "an" pele ga modumo wa tumanoši
+	Use an Existing List…	Diriša Lenaneo leo le lego gona……
+	Use passim (five or more pages)	Diriša passim (matlakala a mahlano goba go feta moo) .
+	Use system setting	Diriša peakanyo ya tshepedišo
+	Use the Insert key to switch overtype on and off	Šomiša konope ya Tsenya go bulela le go tima go thaepa go feta tekano
+	Use wildcards	Diriša dikarata tša lešoka
+	User Name	Leina la Modiriši
+	User name:	Lebitso la mosebedisi:
+	Username	Leina la mosediriši
+	Value	Boleng
+	Vector A	Vector A
+	Vector AB	Vector ya AB
+	Version	Phetolelo
+	Version History	Histori ya Phetolelo
+	Version {version} ({build})	Phetolelo ya {version} ({build}) .
+	Versions are kept while the document is open (a .docx file has no versions).	Diphetolelo di bolokwa ge tokumente e bulegile (faele ya .docx ga e na diphetolelo).
+	Vertical	E eme thwii
+	Vertical Alignment	Go logaganya ka go Ema
+	Vertical alignment:	Go logaganya ka go ema thwii: .
+	Vertical Bars	Dibara tše di emego thwii
+	Vertical Dots	Marontho a go Ema
+	Vertical spacing:	Sebaka sa go ema thwii: .
+	Vietnamese	Sevietnam
+	View	Tebelelo
+	View Alt Text…	Lebelela Sengwalwa sa Alt……
+	View Gridlines	Lebelela Methaladi ya Gridi
+	View Side by Side	Pono ya Lehlakore ka Lehlakoreng
+	View State	Boemo bja Pono
+	Views	Dipono
+	Visual effects	Ditlamorago tša go bonwa
+	Voice	Lentšu
+	Volume	Bolumo
+	Volume Integral	Bolumo ya Integral
+	Volume Integral with Limits	Bolumo Integral le Mellwane
+	Volume Integral with Stacked Limits	Bophahamo ba modumo Integral le Stacked Mellwane
+	W:	W: .
+	Waiting for Zotero…	Re emetše Zotero……
+	Warm Gradient with Outline	Gradient e Mofuthu ka Thulaganyo
+	Warnings ({n})	Ditemošo ({n}) .
+	Watermark	Letshwao la meetse
+	Wave	Leqhubu
+	Weather	Boemo bja leratadima
+	web access isn't available here	phihlelelo ya wepe ga e hwetšagale mo
+	Web Layout	Peakanyo ya Wepe
+	Web page (*.html)	Letlakala la wepesaete (*.html) .
+	Web\nLayout	Web\\\\nPeakanyo
+	Website	Wepesaete
+	Wed	Laboraro
+	Weight	Boima bja mmele
+	West	Bodikela
+	When merging records	Ge o kopanya direkhoto
+	When this document was first created	Ge tokomane ye e be e hlolwa la mathomo
+	When this document was most recently printed	Ge tokomane ye e be e sa tšwa go gatišwa
+	When this document was most recently saved	Ge tokomane ye e be e sa tšwa go bolokwa
+	White Space	Sebaka se Sešweu
+	White space	Sebaka se sešweu
+	Who the document properties name as author	Mang thepa ya tokomane leina bjalo ka mongwadi
+	Whole document	Tokomane ka moka
+	Whole page	Letlakala ka moka
+	Whole Table	Tafole e Feletseng
+	Whole words	Mantšu a feletšego
+	Wide	Ka bophara
+	Widow/Orphan Control	Taolo ya Mohlologadi/Ditšhiwana
+	Widow/Orphan control	Taolo ya mohlologadi/Ditšhiwana
+	Width and spacing	Bophara le sekgoba
+	Width:	Bophara bja: .
+	Wildcards (regex)	Dikarata tša naga (regex) .
+	Window	Lefasetere
+	With:	Ka:
+	Word 2007	Lentšu la 2007
+	Word 2010	Lentšu la 2010
+	Word 2013 and later	Lentšu 2013 le ka morago
+	Word 97–2003	Lentšu la 97–2003
+	Word Count	Palo ya Mantšu
+	Word document	Tokomane ya lentšu
+	Word document (*.docx)	Tokomane ya Word (*.docx) .
+	Word forms	Dibopego tša mantšu
+	Word Left	Lentšu Le Letshadi
+	Word level	Boemo bja lentšu
+	Word Right	Lentšu Tokelo ya
+	Word XML Document (*.xml)	Tokomane ya XML ya Word (*.xml) .
+	WordArt	Bokgabo bja Lentšu
+	WordArt Styles	Ditaele tša Bokgabo bja WordArt
+	Words	Mantšu
+	Words only	Mantšu fela
+	Wrap Text	Phuthela Sengwalwa
+	Wrap text	Phuthela sengwalwa
+	Wrap Text Sides	Phuthela Mahlakore a Sengwalwa
+	Wrap\nText	Phuthela\\\\nSengwalwa
+	Write & Insert Fields	Ngwala & Tsenya Mabala
+	Write a reply	Ngwala karabo
+	Write math here with the mouse or a pen.	Ngwala dipalo mo ka toeba goba pene.
+	Writing Style: Grammar	Mokgwa wa go Ngwala: Thutapolelo
+	x bar	x bareng
+	Year	Ngwaga
+	Yes	Ee
+	Yields	Dipoelo
+	Your changes will be lost if you don't save them.	Diphetogo tša gago di tla lahlega ge o sa di boloke.
+	Your system doesn't report an animation setting, so animation effects stay on.	Tshepedišo ya gago ga e bege peakanyo ya dipopaye, ka fao ditlamorago tša dipopaye di dula di bulegile.
+	Your system has animation effects turned off.	Tshepedišo ya gago e na le ditlamorago tša dipopaye tše di timilwego.
+	Your system has animation effects turned on.	Tshepedišo ya gago e na le ditlamorago tša dipopaye tše di buletšwego.
+	Zoom	Zoom
+	Zoom In	Zoom In ka gare
+	Zoom Out	Fokotša Fokotša
+	Zoom to Page	Godiša go ya go Letlakala
+	Zotero	Zotero o ile a re
+	Zotero: cancelled	Zotero: e phumotšwe
+	Zotero: done	Zotero: e dirilwe
+	{cols}×{rows} Table	{cols} × {rows} Tafole
+	{contributors} contributors · {commits} commits	{contributors} baabi · {commits} e itlama
+	{count} items highlighted	{count} dintho tse hlalositsoeng
+	{count} of {total} pages will print	{count} ya matlakala a {total} e tla gatiša
+	{count} paragraphs were changed.	Ditemana tša {count} di ile tša fetošwa.
+	{count} records; fields: {fields}	Direkoto tša {count}; mabala: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ga se ya tsenywa khomphutheng ye, ka fao tokomane ye e bontšhwa ka {with}. Methaladi le matlakala di ka thubega ka tsela ye e fapanego go feta ka fonte ya mathomo.
+	{group} settings	Dipeakanyo tša {group}
+	{key}+Click to follow link	{key}+Tobetsa go latela kgokagano
+	{language} is now the document's default language.	{language} bjale ke polelo ya go se fetoge ya tokumente.
+	{name} (Press ENTER to Insert)	{name} (Tobetsa ENTER go Tsenya)
+	{name} already exists. Choose Save again to replace it.	{name} e šetše e le gona. Kgetha Boloka gape go e tšeela legato.
+	{name} can't be a folder's name.	{name} e ka se be leina la foltara.
+	{name} is protected with a password.	{name} e sireleditswe ka phasewete.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} e ile ya tlaleletšwa. Dimakro tša yona di ka fase ga Ditlaleletšo tša ka le Tebelelego › Dimaekro.
+	{name} wasn't found.	{name} ga se ya hwetšwa.
+	{n} entries marked.	Dikeno tša {n} di swailwe.
+	{n} lines	{n} mela
+	{n} of {of} recipients	{n} ya baamogedi ba {of}
+	{n} pt	{n} pt
+	{n} records	{n} direkoto
+	{n} revisions	{n} diphetolelo
+	{selected} of {words} words	{selected} ya mantšu a {words}
+	{size} pt	{size} pt
+	{words} words	{words} mantšu
+	{w} × {h} in	{w} × {h} ka
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) ga se palo.
+	← Find	← Hwetša
+	✓ None	✓ Ga go le e tee
+	➕ New comment	➕ Tlhaloso ye mpsha
+	📂  Browse…	📂 Lebelela……
+	Add Help Text…	Oketša Sengwalwa sa Thušo……
+	AutoText entry:	Tsenyo ya Sengwalwa sa go Itiriša:
+	Calculate on exit	Bala ka go tšwa
+	Calculation	Go bala
+	Check Box Form Field	Tšhemo ya Foromo ya Lepokisi la go Hlahloba
+	Check Box Form Field Options	Dikgetho tša Tšhemo ya Foromo ya Lepokisi la go Hlahloba
+	Check box	Lepokisi la go hlahloba
+	Check box enabled	Lepokisi la go hlahloba le kgontšhitšwe
+	Check box size:	Bogolo bja lepokisi la go hlahloba:
+	Checked	E hlahlobja
+	Current date	Letšatšikgwedi la bjale
+	Current time	Nako ya bjale
+	Default value:	Boleng bja tlwaelo: .
+	Drop-Down Form Field	Tšhemo ya Foromo ya go Theoga
+	Drop-Down Form Field Options	Dikgetho tša Tšhemo ya Foromo ya go Theoga
+	Drop-down	Go theoga-fase
+	Drop-down enabled	Drop-down e kgontšhitšwe
+	Drop-down item:	Ntlha ya go theoga:
+	Fill In Form Field	Tlatša Tšhemo ya Foromo
+	Fill-in enabled	Go tlatša go kgontšhitšwe
+	Form Field	Tšhemo ya Foromo
+	Form Field Help Text	Foromo Sengwalwa sa Thušo ya Tšhemo
+	Form Field Options	Dikgetho tša Tšhemo ya Foromo
+	Form Field Shading	Foromo Tšhemo Shading
+	Form Field at Selection	Tšhemo ya Foromo ka Kgetho
+	Help Key (F1)	Senotlelo sa Thušo (F1) .
+	Insert Form Field	Tsenya Tšhemo ya Foromo
+	Items in drop-down list:	Dilo tšeo di lego lenaneong la go theoga:
+	Legacy Tools	Didirišwa tša Lefa
+	Maximum length:	Palo e kahodimodimo bolelele: .
+	Next Form Field	Tšhemo ya Foromo ye e Latelago
+	Not checked	Ga se ya hlahlobja
+	Put the caret on a form field first.	Bea caret tšhemong ya foromo pele.
+	Regular text	Sengwalwa sa ka mehla
+	Reset Form Fields	Seta gape Mašemo a Foromo
+	Text Form Field	Tšhemo ya Foromo ya Sengwalwa
+	Text Form Field Options	Dikgetho tša Tšhemo ya Foromo ya Sengwalwa
+	Type your own:	Thaepa ya gago:
+	Unlimited	E sa lekanyetšwego
+	Protected sections:	Dikarolo tše di šireleditšwego: .
+	Section Protection	Tšhireletšo ya Karolo
+	Section {n}	Karolo ya {n}
+	Select sections…	Kgetha dikarolo……
+	AutoSummarize	Akaretša ka Bowena
+	Create a new document and put the summary there	Hlama tokumente ye mpsha gomme o bee kakaretšo fao
+	Highlight key points	Gatelela dintlha tše bohlokwa
+	Insert an executive summary or abstract at the top of the document	Tsenya kakaretšo ya khuduthamaga goba abstraction ka godimo ga tokumente
+	Length of summary	Bolelele ba kakaretso
+	Percent of original:	Peresente ya mathomo: .
+	Summary: {words} of {of} words	Kakaretšo: {words} ya mantšu a {of}
+	Type of summary	Mohuta wa kakaretšo
+	Update document statistics	Mpshafatša dipalopalo tša tokomane
+	{n} sentences	{n} dipolelo
+	{n} words or less	{n} mantšu goba ka fase ga moo
+	At:	Ka:
+	Distance from text:	Sekgala go tloga go sengwalwa: .
+	Format Frame	Foreime ya Fomete
+	Format Frame…	Foreime ya Fomete……
+	Frame	Foreime ya
+	Frame…	Foreime ya……
+	Insert Frame	Tsenya Foreime ya
+	Lock anchor	Notlela ankora
+	Remove Frame	Tlosa Foreime ya
+	Text wrapping	Go phuthela sengwalwa
+	Chinese Conversion	Phetolelo ya Setšhaena
+	Chinese Conversion…	Phetolelo ya Setšhaena……
+	Converted {n} characters	Ditlhaka tša {n} tše di fetotšwego
+	Simplified Chinese to Traditional Chinese	Setšhaena se se Nolofaditšwego go ya go Setšhaena sa Setšo
+	Simplified to Traditional	E nolofaditšwe go ya go Setšo
+	Traditional Chinese to Simplified Chinese	Setšhaena sa Setšo go ya go Setšhaena se Nolofaditšwego
+	Traditional to Simplified	Setšo go ya go se Nolofaditšwego
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Diriša mehuta ya ditlhaka tša Taiwan, Hong Kong SAR le Macao SAR
+	Asian Layout	Peakanyo ya Asia
+	Fit Text	Sengwalwa se se swanetšego
+	Fit Text…	Sengwalwa se se swanetšego……
+	Two Lines in One	Methaladi ye Mebedi ka go E tee
+	Two Lines in One…	Methaladi ye Mebedi ka go E tee……
+	New text width (pt):	Bophara bja sengwalwa se sefsa (pt): .
+	Enclose in brackets	Tswala ka gare ga maswaodikga
+	Bracket pair:	Para ya bracket: .
+	Typography	Mokgwa wa go thaepa
+	Character spacing control	Taolo ya sekgoba sa semelo
+	Don't compress	O se ke wa gatelela
+	Compress punctuation only	Gatelela maswaodikga fela
+	Compress punctuation and Japanese kana	Compress maswaodikga le Japanese kana
+	First and last characters	Baanegwa ba pele le ba mafelelo
+	Strict	E thata
+	Cannot start a line:	E ka se thome mola:
+	Cannot end a line:	E ka se fetše mola:
+	Japanese Find Options	Sejapane Hwetša Dikgetho
+	Sounds like (Japanese)	E kwagala bjalo ka (Sejapane) .
+	Match full/half width	Nyalantšha bophara bjo bo tletšego/seripa
+	Match hiragana/katakana	Bapetša hiragana/katakana
+	Match small kana	Match kana ye nnyane
+	Match prolonged sound marks and dashes	Nyalantšha maswao a modumo a nako ye telele le dithatšhe
+	Japanese Consistency Checker	Sehlahlobi sa go se fetoge sa Sejapane
+	Japanese Consistency Checker…	Sehlahlobi sa go se fetoge sa Japane……
+	No inconsistent spellings were found.	Ga go na mopeleto wo o sa dumelelanego wo o hweditšwego.
+	Pick the spelling to keep in each group.	Kgetha mopeleto wo o swanetšego go o boloka sehlopheng se sengwe le se sengwe.
+	Bidirectional text	Sengwalwa sa mahlakore a mabedi
+	Bidirectional Text	Sengwalwa sa Mahlakore a mabedi
+	Default direction:	Tlhahlo ya kamehla:
+	Cursor movement:	Motsamao wa khesara: .
+	Logical	E kwagalago
+	Visual	Ka pono
+	Manage Fields	Laola Mašemo
+	File locations	Mafelo a faele
+	File Locations	Mafelo a Faele
+	Documents:	Ditokomane: .
+	Pictures:	Diswantšho:
+	The system's choice	Kgetho ya tsamaiso
+	Show Repairs	Bontšha Ditokišo
+	No repairs were needed.	Go be go sa nyakege gore go lokišwe.
+	These problems were found and repaired when the document was opened:	Mathata a a ile a hwetšwa le go lokišwa ge lengwalo le be le bulwa:
+	An unreadable entry in the file was skipped: {what}	Tsenelo yeo e sa balegego ka faeleng e ile ya tlolwa: {what}
+	An unreadable part was left out: {what}	Karolo yeo e sa balegego e ile ya tlogelwa: {what}
+	Unreadable relationships were ignored: {what}	Dikamano tšeo di sa balegego di ile tša hlokomologwa: {what}
+	A missing part of an embedded object was left out: {what}	Karolo ye e hlaelelago ya selo se se tsentšwego e ile ya tlogelwa ka ntle: {what}
+	Copy File	Khopiša Faele
+	Find Files	Hwetša Difaele
+	Letter Wizard	Wizate ya Lengwalo
+	Recipient's name:	Leina la moamogedi:
+	Salutation:	Tumedišo: .
+	Subject:	Taba: .
+	Complimentary closing:	Go tswalela ga theto:
+	Sender's name:	Leina la moromiši:
+	Job title:	Thaetlele ya mošomo:
+	Company:	Khamphani: .
+	Enclosures:	Ditswalelo: .
+	Cc:	Cc: 1 .
+	Edit Links to Files	Edita Dikgokagano go Difaele
+	Source file	Faele ya mohlodi
+	Locked	E notletšwe
+	Change Source	Mothopo wa Phetogo
+	This document has no links to files.	Tokomane ye ga e na dikgokagano tša difaele.
+	Web options	Dikgetho tša wepe
+	Web Options	Dikgetho tša Wepe
+	Allow PNG as a graphics format	Dumelela PNG bjalo ka sebopego sa dikerafike
+	Rely on CSS for font formatting	Ithekge ka CSS bakeng sa go fometa fonte
+	Rely on VML for displaying graphics in browsers	Itšetlehile ka VML bakeng sa bontša dikerafike ka diphensele
+	Organize supporting files in a folder	Rulaganya difaele tše di thekgago ka gare ga foltara
+	Use long file names whenever possible	Šomiša maina a matelele a difaele neng le neng ge go kgonega
+	Screen size:	Boholo ba skrine:
+	Pixels per inch:	Dipiksele ka intshi:
+	Hangul Hanja Conversion	Hangul Hanja Phetolelo
+	Hangul Hanja Conversion…	Hangul Hanja Phetolelo ya……
+	Hangul to Hanja	Hangul go ya go Hanja
+	Hanja to Hangul	Hanja go ya go Hangul
+	Put the caret in Korean text to choose its Hanja.	Bea caret ka sengwalwa sa Sekorea go kgetha Hanja ya yona.
+	The selection, or the whole document when nothing is selected.	Kgetho, goba tokumente ka moka ge go se na selo seo se kgethilwego.

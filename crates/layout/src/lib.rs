@@ -2963,6 +2963,18 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         (float_rects, pl) = anchor_floats(ctx, pb, p, (y0, bx.top), excl_mark, &label);
         anchor_y = y0;
     }
+    // Word does not give an empty paragraph whose only content is a continuous section break
+    // its own line of height. In govuk-005, an empty 7pt paragraph carrying `sectPr` follows an
+    // ordinary empty 7pt paragraph after a table; Word leaves one blank line there while our
+    // second line shifted the following paragraph down by 8.4pt. Keep the marker in the layout
+    // for navigation, but don't let its invisible paragraph mark advance the text flow.
+    if p.text.is_empty() && p.objects.is_empty() && p.section.as_deref().is_some_and(|s| s.start == SectionStart::Continuous) && pl.lines.len() == 1 {
+        let pl = Arc::make_mut(&mut pl);
+        pl.height = 0.0;
+        if let Some(line) = pl.lines.first_mut() {
+            line.height = 0.0;
+        }
+    }
     let mut n = pl.lines.len();
     let mut l0 = 0;
     // The paragraph ends with a page break: what follows starts the next page, and its space
