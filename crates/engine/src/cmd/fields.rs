@@ -8,6 +8,8 @@
 //! code instead of the result applies to simple fields; range fields keep showing their result.
 
 use doc4me_doc::para::{InlineObject, OBJ};
+#[cfg(not(target_arch = "wasm32"))]
+use doc4me_doc::props::CharProps;
 use doc4me_doc::{Pos, StoryRef};
 use serde_json::{Value, json};
 
@@ -38,8 +40,11 @@ pub fn specs() -> Vec<CommandSpec> {
             .pure(),
         CommandSpec::new("fields.click", "Field Click", "Insert › Text › Quick Parts", click).key("Alt+Shift+F9"),
         CommandSpec::new("file.editLinks", "Edit Links to Files", "File › Info", edit_links).params(
-            r#"{"link"?: n (from 0, as listed), "action"?: "lock|unlock|changeSource|breakLink", "source"?: path (changeSource)} → {"links": [{"kind", "source", "locked", "pos"}]}: the document's fields that take content from other files (INCLUDETEXT, INCLUDEPICTURE, INCLUDE, LINK, IMPORT)"#,
+            r#"{"link"?: n (from 0, as listed), "action"?: "lock|unlock|changeSource|refresh|breakLink", "source"?: path (changeSource)} → {"links": [{"kind", "source", "locked", "pos"}]}: the document's fields that take content from other files (INCLUDETEXT, INCLUDEPICTURE, INCLUDE, LINK, IMPORT)"#,
         ),
+        CommandSpec::new("fields.updateLinked", "Update Field", "File › Info", update_linked)
+            .key("Mod+Shift+F7")
+            .params(r#"{}: update the selected linked field, or every unlocked linked field when the selection has none"#),
         CommandSpec::new("fields.selected", "Selected Fields", "Insert › Text › Quick Parts", |s, _| {
             Ok(Value::Array(selected(s).iter().map(|f| f.json()).collect()))
         })
@@ -267,9 +272,171 @@ fn edit_links(s: &mut Session, v: &Value) -> CmdResult {
             s.sel = Selection { anchor: at, focus: end };
             unlink(s, &json!({}))?;
         }
-        other => return Err(CmdError::Params(format!("unknown action `{other}`: lock, unlock, changeSource or breakLink"))),
+        "refresh" => {
+            let changed = refresh_link(s, link)?;
+            return Ok(json!({"updated": changed, "links": file_links(s).iter().map(|l| json!({
+                "kind": l.kind,
+                "source": l.source,
+                "locked": l.field.locked,
+                "pos": super::pos_json(&l.field.at),
+            })).collect::<Vec<_>>()}));
+        }
+        other => return Err(CmdError::Params(format!("unknown action `{other}`: lock, unlock, changeSource, refresh or breakLink"))),
     }
     Ok(list(&file_links(s)))
+}
+
+/// Ctrl+Shift+F7: update a linked field at the caret/selection, or all links when none is
+/// selected. Later fields are handled first so earlier insertions cannot invalidate their paths.
+fn update_linked(s: &mut Session, _: &Value) -> CmdResult {
+    let mut links = file_links(s);
+    if links.is_empty() {
+        return Err(CmdError::Failed("the document has no links to files".into()));
+    }
+    let selected_fields = selected(s);
+    let selected_links: Vec<Pos> = links.iter().filter(|l| selected_fields.iter().any(|f| f.at == l.field.at)).map(|l| l.field.at.clone()).collect();
+    if !selected_links.is_empty() {
+        links.retain(|l| selected_links.contains(&l.field.at));
+    }
+    links.sort_by(|a, b| b.field.at.cmp(&a.field.at));
+
+    let mut updated = 0usize;
+    let mut skipped = Vec::new();
+    for link in &links {
+        match refresh_link(s, link) {
+            Ok(true) => updated += 1,
+            Ok(false) => skipped.push(json!({"source": link.source, "reason": "locked"})),
+            Err(e) => skipped.push(json!({"source": link.source, "reason": e.to_string()})),
+        }
+    }
+    if updated == 0 {
+        let reason = skipped.first().and_then(|v| v["reason"].as_str()).unwrap_or("all links are locked");
+        return Err(CmdError::Failed(format!("no linked information was updated: {reason}")));
+    }
+    Ok(json!({"updated": updated, "skipped": skipped}))
+}
+
+/// Read a linked source through the same access policy as other application file commands.
+/// Relative paths in a saved document resolve beside that document.
+#[cfg(not(target_arch = "wasm32"))]
+fn linked_path(s: &Session, source: &str) -> std::path::PathBuf {
+    let path = std::path::PathBuf::from(source);
+    if path.is_absolute() {
+        path
+    } else if let Some(parent) = s.path.as_deref().and_then(std::path::Path::parent) {
+        parent.join(path)
+    } else {
+        path
+    }
+}
+
+/// Resolve the linked source and replace the field result. Text links accept supported document
+/// formats; INCLUDEPICTURE/IMPORT accept supported raster image formats. Word's OLE spreadsheet
+/// links and metafile importers have no equivalent data model here and are reported as skipped.
+#[cfg(target_arch = "wasm32")]
+fn refresh_link(_: &mut Session, _: &FileLink) -> Result<bool, CmdError> {
+    Err(CmdError::Failed("linked files are refreshed through the browser on the web".into()))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn refresh_link(s: &mut Session, link: &FileLink) -> Result<bool, CmdError> {
+    if link.field.locked {
+        return Ok(false);
+    }
+    let code = super::references::FieldCode::parse(&link.field.instr);
+    let path = linked_path(s, &link.source);
+    let path_text = path.to_string_lossy().into_owned();
+    match link.kind.as_str() {
+        "INCLUDETEXT" | "INCLUDE" | "LINK" => {
+            // LINK's application-specific payload is only understood when it names a document
+            // format Doc4Me can open; spreadsheet/automation OLE links remain untouched.
+            let bytes = crate::io::read_file_capped(&path_text, 200 << 20, "linked source").map_err(CmdError::Failed)?;
+            let source = crate::io::open_bytes(&path_text, &bytes).map_err(CmdError::Failed)?;
+            let fragment =
+                if let Some(bookmark) = linked_bookmark(&link.kind, &code) { bookmark_fragment(&source, bookmark)? } else { source.body_fragment() };
+            replace_link_result(s, link, &fragment)
+        }
+        "INCLUDEPICTURE" | "IMPORT" => {
+            if link.field.end.is_none() {
+                return Err(CmdError::Failed("this picture link has no editable result range".into()));
+            }
+            let bytes = crate::io::read_file_capped(&path_text, 200 << 20, "linked picture").map_err(CmdError::Failed)?;
+            let (pw, ph) =
+                doc4me_render::image_size(&bytes).ok_or_else(|| CmdError::Failed("the linked source is not a supported raster image".into()))?;
+            let ext = image_extension(&bytes).ok_or_else(|| CmdError::Failed("the linked source is not a supported raster image".into()))?;
+            let media = s.doc.add_media(bytes, ext);
+            let max_w = s.doc.sections().iter().map(|(_, p)| p.text_width()).fold(f32::INFINITY, f32::min).clamp(36.0, 4000.0);
+            let mut w = pw as f32 * 0.75;
+            let mut h = ph as f32 * 0.75;
+            if w > max_w {
+                h *= max_w / w;
+                w = max_w;
+            }
+            let image = InlineObject::Image { media, w, h, alt: String::new(), float: Default::default(), crop: [0.0; 4], ole: None, video: None };
+            replace_link_image(s, link, image)
+        }
+        _ => Err(CmdError::Failed(format!("{} links are not supported", link.kind))),
+    }
+}
+
+/// A second INCLUDETEXT argument, or the third LINK argument, names a bookmark in the source.
+#[cfg(not(target_arch = "wasm32"))]
+fn linked_bookmark<'a>(kind: &str, code: &'a super::references::FieldCode) -> Option<&'a str> {
+    let index = if kind == "LINK" { 2 } else { 1 };
+    code.args.get(index).map(String::as_str).filter(|s| !s.is_empty())
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn bookmark_fragment(source: &doc4me_doc::Document, name: &str) -> Result<doc4me_doc::edit::Fragment, CmdError> {
+    let (_, start) =
+        source.bookmarks().into_iter().find(|(n, _)| n == name).ok_or_else(|| CmdError::Failed(format!("source bookmark `{name}` was not found")))?;
+    let para = source.para_at(&start).ok_or_else(|| CmdError::Failed(format!("source bookmark `{name}` is invalid")))?;
+    let end = para
+        .object_offsets()
+        .into_iter()
+        .find(|off| *off > start.off && matches!(para.object_at(*off), Some(InlineObject::BookmarkEnd { name: n }) if n == name))
+        .ok_or_else(|| CmdError::Failed(format!("source bookmark `{name}` spans paragraphs, which this link cannot refresh")))?;
+    let from = Pos { off: start.off + OBJ.len_utf8(), ..start.clone() };
+    Ok(source.copy_range(&from, &Pos { off: end, ..start }))
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn replace_link_result(s: &mut Session, link: &FileLink, fragment: &doc4me_doc::edit::Fragment) -> Result<bool, CmdError> {
+    if let Some(end) = &link.field.end {
+        let from = Pos { off: link.field.at.off + OBJ.len_utf8(), ..link.field.at.clone() };
+        let at = s.doc.delete_range(&from, end)?;
+        s.doc.insert_fragment(&at, fragment)?;
+    } else {
+        let result = fragment.plain_text();
+        with_field(s, &link.field.at, |o| {
+            if let InlineObject::Field { result: current, .. } = o {
+                *current = result.clone();
+            }
+        })?;
+    }
+    Ok(true)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn replace_link_image(s: &mut Session, link: &FileLink, image: InlineObject) -> Result<bool, CmdError> {
+    let end = link.field.end.as_ref().ok_or_else(|| CmdError::Failed("this picture link has no editable result range".into()))?;
+    let from = Pos { off: link.field.at.off + OBJ.len_utf8(), ..link.field.at.clone() };
+    let at = s.doc.delete_range(&from, end)?;
+    let props: CharProps = s.doc.para_at(&at).map(|p| p.props_of_char(at.off).clone()).unwrap_or_default();
+    s.doc.insert_object(&at, image, &props)?;
+    Ok(true)
+}
+
+#[cfg(not(target_arch = "wasm32"))]
+fn image_extension(bytes: &[u8]) -> Option<&'static str> {
+    match bytes.get(..4) {
+        Some([0x89, b'P', b'N', b'G']) => Some("png"),
+        Some([0xFF, 0xD8, ..]) => Some("jpeg"),
+        Some([b'G', b'I', b'F', _]) => Some("gif"),
+        Some([b'R', b'I', b'F', b'F']) => Some("webp"),
+        Some([b'B', b'M', ..]) => Some("bmp"),
+        _ => None,
+    }
 }
 
 /// Alt+Shift+F9 (Word's Do Field Click) on the field at the caret: GOTOBUTTON goes to its
@@ -456,10 +623,64 @@ fn go(s: &mut Session, forward: bool) -> CmdResult {
 
 #[cfg(test)]
 mod tests {
-    use doc4me_doc::para::InlineObject;
+    use std::path::PathBuf;
+
+    use doc4me_doc::para::{InlineObject, OBJ};
+    use doc4me_doc::props::CharProps;
+    use doc4me_doc::{Pos, StoryRef};
     use serde_json::json;
 
     use crate::Session;
+
+    fn temp_folder(label: &str) -> PathBuf {
+        let stamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos();
+        let dir = std::env::temp_dir().join(format!("doc4me-{label}-{}-{stamp}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        dir
+    }
+
+    fn insert_range_field(s: &mut Session, instr: &str, result: &str) {
+        let props = CharProps::default();
+        s.doc.insert_object(&Pos::body(0, 0), InlineObject::FieldStart { instr: instr.into(), locked: false }, &props).unwrap();
+        let content = OBJ.len_utf8();
+        s.doc.insert_text(&Pos::body(0, content), result, &props).unwrap();
+        s.doc.insert_object(&Pos::body(0, content + result.len()), InlineObject::FieldEnd, &props).unwrap();
+    }
+
+    fn linked_result(s: &Session) -> String {
+        let range = s.doc.field_ranges(StoryRef::Body).into_iter().next().unwrap();
+        let from = Pos { off: range.start.off + OBJ.len_utf8(), ..range.start };
+        s.doc.copy_range(&from, &range.end).plain_text()
+    }
+
+    #[test]
+    fn update_linked_refreshes_a_relative_include_text_and_undoes() {
+        let dir = temp_folder("linked-text");
+        std::fs::write(dir.join("source.txt"), "Fresh source text").unwrap();
+        let mut s = Session::new(doc4me_doc::Document::new());
+        s.path = Some(dir.join("main.docx"));
+        insert_range_field(&mut s, r#"INCLUDETEXT "source.txt""#, "Stale text");
+
+        let result = s.run("fields.updateLinked", &json!({})).unwrap();
+        assert_eq!(result["updated"], 1);
+        assert_eq!(result["skipped"].as_array().unwrap().len(), 0);
+        assert_eq!(linked_result(&s), "Fresh source text");
+
+        s.run("edit.undo", &json!({})).unwrap();
+        assert_eq!(linked_result(&s), "Stale text", "the refresh is one undo step");
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn update_linked_skips_locked_sources_without_reading_them() {
+        let mut s = Session::new(doc4me_doc::Document::new());
+        insert_range_field(&mut s, r#"INCLUDETEXT "missing.txt""#, "Keep me");
+        s.run("file.editLinks", &json!({"link": 0, "action": "lock"})).unwrap();
+
+        let error = s.run("fields.updateLinked", &json!({})).unwrap_err();
+        assert!(error.to_string().contains("locked"));
+        assert_eq!(linked_result(&s), "Keep me");
+    }
 
     #[test]
     fn edit_links_lists_locks_repoints_and_breaks_file_links() {

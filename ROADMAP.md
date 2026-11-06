@@ -1,8 +1,8 @@
 # Doc4Me roadmap
 
-**Stage: alpha** · ready for real work **90.3%, measured on Windows** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, Windows run 42142329552 on 2026-11-06, measuring commit `7c8d9fb`; report commit `837b7c6`; 26 deferred rows and their reasons are listed in readiness.md); the target is 100% measured, 9.7 points away · **92.9% without 26 deferred owner-bound checks**, 7.1 points away · next: continue pagination, localization and genuine shortcut coverage; no release until the owner asks
+**Stage: alpha** · ready for real work **90.4%, measured on Windows** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, run 42163732889 on 2026-11-06; workflow head `d75859c`, generated report commit `91478bc` measures source `b043958`; 26 deferred rows and their reasons are listed in readiness.md); the target is 100% measured, 9.6 points away · **93.0% without 26 deferred owner-bound checks**, 7.0 points away · the user's active scope also requires implementing the 7 legacy dialogs still outside the denominator; continue pagination, localization and shortcuts; no release until the owner asks
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42142329552: 90.3% total / 92.9% without deferred; pagination 175/222 page counts and 97/222 page-boundary checks; localization 68/95; dialogs 208/220, 12 deferred and 8 obsolete rows excluded; see [`docs/readiness.md`](docs/readiness.md)) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42163732889: 90.4% total / 93.0% without deferred; pagination 175/222 pages and 97/222 boundaries; languages 68/95; dialogs 209/221 with 12 deferred and 7 legacy dialogs still excluded; shortcuts 271/280 with 7 deferred; see [`docs/readiness.md`](docs/readiness.md)) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -16,7 +16,7 @@ agent control. This page is the summary; the assessment is
 |---|---|---|
 | Ribbon/menu catalog coverage | **499 / 499 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md)) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
-| **Ready for real work** (full target) | **90.3%** | measured 2026-11-06 on Windows (run 42142329552: dialogs 208/220, pages 175/222, page breaks 97/222, languages 68/95, shortcuts 269/280): `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail checks and all 222 real-world documents with Word-made reference PDFs; 92.9% excluding 26 deferred rows |
+| **Ready for real work** (full target) | **90.4%** | measured 2026-11-06 on Windows (run 42163732889: dialogs 209/221, pages 175/222, page breaks 97/222, languages 68/95, shortcuts 271/280): `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail checks and all 222 real-world documents with Word-made reference PDFs; 93.0% excluding 26 deferred rows, while 7 legacy dialogs remain outside the measured denominator and are still in the user's scope |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
@@ -35,7 +35,7 @@ discounts and the user evidence (120 issues from outside users, 4 praise, 0 "swi
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **90.3%** (measured on Windows) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, remaining shortcuts, 27 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
+| Full target (ready for real work) | **90.4%** (measured on Windows) | **~650–1,100 h** (70–80% parallelizes; estimate unchanged) | Pagination and document fidelity, 7 excluded dialogs, remaining shortcuts, 27 unsupported interface languages, and owner-deferred hardware/platform/service checks; plus everything below |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
@@ -54,8 +54,8 @@ one, checks that real-world documents open and keep their text and make-up, not 
 
 | Dimension | Parity | Measured | Hours to full | Doc |
 |---|---|---|---|---|
-| Features (depth) | 68% | 97.3% (ribbon 499/499, dialogs 208/220; 12 deferred, 8 obsolete excluded) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
-| UI/UX fidelity | 65% | 96.1% (shortcuts 269/280; 7 deferred) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
+| Features (depth) | 68% | 97.3% (ribbon 499/499; dialogs 209/221, 12 deferred and 7 legacy dialogs excluded from the report but still in scope) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
+| UI/UX fidelity | 65% | 96.8% (shortcuts 271/280; 7 deferred) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
 | File formats | 60% | 100.0% (open 222/222, save and reopen 222/222) | 185–300 | [file-format-parity.md](docs/file-format-parity.md) |
 | Layout and pagination fidelity | 55% | 61.3% (page count 175/222, page breaks 97/222) | 90–145 | [layout-parity.md](docs/layout-parity.md) |
 | Hardware | 40% | 37.5% (3/8; 5 owner-deferred) | 20–40 | [hardware-parity.md](docs/hardware-parity.md) |
@@ -147,7 +147,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 | 2026-11-06 | Windows run 42142329552 measured `7c8d9fb`: 90.3% total / 92.9% without 26 deferred rows; pagination 175/222 pages and 97/222 boundaries, languages 68/95, shortcuts 269/280; dialogs 208/220 with all non-deferred rows passing. `ks-329` TOC options and four machine-translated catalogs (`xh`, `zu`, `rw`, `nso`) contributed; the pagination fix corrected `govuk-005` on Linux without corpus regressions. |
 | 2026-11-06 | Implemented physical keypad-minus dispatch for `ks-163`; main-row Ctrl+Alt+Minus remains Optional Hyphen and keypad Ctrl+Alt+Minus inserts Em Dash. Focused event/UI tests and all 6 `cargo xtask ci` steps pass; Windows measurement is pending. Corrected the `ks-165` evidence note. Re-audit found 8 dialog rows marked `excluded` despite the user's standing requirement to implement them; dialogs cannot be called complete until those behaviors and tests exist. |
 | 2026-11-06 | Added `file.cssLinks` for `dlg-010`, mapping its `LinkStyles` behavior to the real, undoable Web Options setting serialized as `w:doNotRelyOnCSS`; external stylesheet URL lists remain unsupported. Combined keypad + CSS Links passed all 6 `cargo xtask ci` steps. Windows measurement is pending; one localized command label was changed to existing “Web Options” so the 64 supported catalogs remain complete. |
-| 2026-11-06 | Added context-aware citation options for `ks-203` on built-in `CITATION`/`BIBLIOGRAPHY` fields; Alt+Shift+F12 then Space opens Update Field and supported citation styles, with tests for context, style action, key sequence and consuming Space. Focused tests pass 3/3 and the full 6-step `cargo xtask ci` passes. This change is after active Windows run 42162503290 checked out `abf6073`, so it needs a later Windows measurement. |
+| 2026-11-06 | Added context-aware citation options for `ks-203` on built-in `CITATION`/`BIBLIOGRAPHY` fields; Alt+Shift+F12 then Space opens Update Field and supported citation styles, with tests for context, style action, key sequence and consuming Space. Focused tests pass 3/3 and the full 6-step `cargo xtask ci` passes. Windows run 42162503290 measures abf6073 and does not include this change; run 42163732889 is queued for d75859c. |
 | 2026-11-05 | Windows run 42025088010 measured `bb15416`: 89.8% total / 92.5% without 26 deferred rows; `dlg-041` mapped to `file.print`, dialogs 205/220. Pagination 174/222 page counts and 97/222 boundaries; languages 64/95. |
 | 2026-11-05 | Windows run 42020535590 measured `041cfbc`: 89.8% total / 92.4% excluding 26 deferred rows; dialogs 204/220 after eight obsolete WordPerfect Help, Smart Tags, custom XML and legacy HTML authoring rows were excluded with reasons. Pagination 174/222 page counts and 97/222 boundaries; languages 64/95. |
 | 2026-11-05 | Windows run 42017927963 measured `25cfb28`: readiness 89.3% total / 91.8% excluding 26 deferred rows, languages 64/95 after recognizing Catalan (Valencia) and Serbian Cyrillic (Bosnia & Herzegovina) as locales of complete catalogs; pagination stayed at 174/222 page counts and 97/222 page boundaries. |
