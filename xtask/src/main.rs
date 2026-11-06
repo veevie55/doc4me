@@ -28,10 +28,11 @@ commands:
                   show where test corpora live; --download fetches PngSuite into corpus/pngsuite
   stats [--exact] count tests and lines per crate (--exact: ask the test harness via `-- --list`)
   parity          recompute the Word feature-parity summary in docs/parity-checklist.md
-  readiness [--download] [--corpus] [--jobs N] [--cli PATH] [--dry-run]
+  readiness [--download] [--corpus] [--jobs N] [--cli PATH] [--dry-run] [--diagnostics]
                   the measured readiness number over the check sets in docs/readiness/ (written to
                   docs/readiness.md); --download fetches the real-world corpus into
-                  corpus/readiness (SHA-256 checked), --corpus checks it (needs pdfinfo/pdftotext)
+                  corpus/readiness (SHA-256 checked), --corpus checks it (needs pdfinfo/pdftotext);
+                  --diagnostics prints every corpus failure to stdout without enlarging the report
   window <soak|fonts|save|typing|scroll|touch> [--app PATH] [--cli PATH] [--out DIR] [--hours H]
                   readiness hand checks in the app's real window, driven through its control
                   channel (on Linux without a display: xvfb-run -a cargo xtask window …)

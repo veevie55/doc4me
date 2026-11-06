@@ -19,6 +19,8 @@
 
 - **บันทึกการ resolve ฟอนต์ใน Windows readiness run** (`.github/workflows/readiness-windows.yml`): ตรวจเอกสาร 8 ไฟล์ที่อาจเกี่ยวกับ MS Gothic ด้วยคำสั่งอ่านอย่างเดียว `file.fontSubstitution` และ `file.info` เพื่อแสดงฟอนต์ทดแทนกับจำนวนหน้าใน log; ไม่แก้ DOCX หรือเปลี่ยนคะแนน readiness. ตรวจ YAML และทดสอบ command syntax กับ release CLI ใน session; ยังรอ Windows run.
 
+- **เพิ่ม full-corpus failure diagnostics สำหรับ readiness** (`cargo xtask readiness --diagnostics`): พิมพ์ ID และเหตุผลของเอกสารทุกไฟล์ที่ page count หรือ page boundary ไม่ผ่านลง stdout/Actions log โดยไม่ขยาย `docs/readiness.md` ที่สรุป 40 รายการแรก. ใช้ regression test ตรวจว่ารวมแถวท้ายรายการและไม่ดึง failure จากมิติอื่นเข้ามา; workflow Windows ถัดไปจะใช้ flag นี้.
+
 - **แทนตัวเลือก URL ของ Smart Tags รุ่นเก่าด้วยการตรวจจับลิงก์จริง** (`tools.smartTags`, readiness `dlg-215`): เปิดหน้าตั้งค่าเฉพาะสำหรับ Internet addresses as links ซึ่งใช้ค่าร่วมกับ AutoCorrect และมีผลเมื่อพิมพ์ URL; คำสั่งอ่าน/ตั้งค่าได้โดยตรงและค่าเก็บใน preference เดิม. Smart Tags เฉพาะเอนทิตีไม่ได้ทำขึ้นมาใหม่. ตรวจด้วย engine regression ที่ปิด/เปิดแล้วพิมพ์ URL และ UI regression ที่เปิด dialog เปลี่ยนค่าและบันทึก.
 
 - **เปิดเมนูตัวเลือก Table of Contents ด้วย Alt+Shift+F12** (`crates/ui-egui/src/toc_options.rs`, `keys.rs`, readiness `ks-329`): เปิดเมนู Update Table / Remove Table of Contents เมื่อ caret อยู่ใน TOC content control หรือย่อหน้า TOC ที่แอปสร้าง; นอกบริบทไม่ทำงาน. คำสั่งอัปเดตและลบใช้ engine command เดิม. ตรวจด้วย UI tests 4 กรณี รวมกด shortcut และคลิก Remove จริง.

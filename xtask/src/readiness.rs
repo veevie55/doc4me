@@ -96,16 +96,18 @@ struct Opts {
     cli: Option<PathBuf>,
     jobs: usize,
     write: bool,
+    diagnostics: bool,
 }
 
 pub fn run(root: &Path, args: &[&str]) -> Result<(), String> {
-    let mut opts = Opts { corpus: false, download: false, cli: None, jobs: 0, write: true };
+    let mut opts = Opts { corpus: false, download: false, cli: None, jobs: 0, write: true, diagnostics: false };
     let mut it = args.iter();
     while let Some(a) = it.next() {
         match *a {
             "--corpus" => opts.corpus = true,
             "--download" => opts.download = true,
             "--dry-run" => opts.write = false,
+            "--diagnostics" => opts.diagnostics = true,
             "--cli" => opts.cli = Some(PathBuf::from(it.next().ok_or("--cli needs a path")?)),
             "--jobs" => opts.jobs = it.next().and_then(|n| n.parse().ok()).ok_or("--jobs needs a number")?,
             other => return Err(format!("readiness: unknown option {other}")),
@@ -140,6 +142,12 @@ pub fn run(root: &Path, args: &[&str]) -> Result<(), String> {
     let corpus_files = present.1;
     sets.extend(present.0);
     let report = render(&sets, corpus_files, manifest.len(), &commit(root), &today());
+    if opts.diagnostics {
+        let failures = full_diagnostics(&sets);
+        if !failures.is_empty() {
+            println!("Full corpus failures (set<TAB>document<TAB>reason):\n{failures}");
+        }
+    }
     if opts.write {
         let out = root.join("docs/readiness.md");
         std::fs::write(&out, &report).map_err(|e| format!("{}: {e}", out.display()))?;
@@ -828,6 +836,16 @@ fn render(sets: &[SetResult], corpus_run: usize, corpus_listed: usize, commit: &
     md
 }
 
+/// All corpus failures for CI logs that need the complete document IDs, while keeping the
+/// checked-in summary compact. Rows are tab-separated so a run log can be parsed mechanically.
+fn full_diagnostics(sets: &[SetResult]) -> String {
+    sets.iter()
+        .filter(|s| s.name.starts_with("corpus-"))
+        .flat_map(|s| s.failing.iter().map(move |(id, why)| format!("{}\t{id}\t{why}", s.name)))
+        .collect::<Vec<_>>()
+        .join("\n")
+}
+
 fn commit(root: &Path) -> String {
     let out = Command::new("git").current_dir(root).args(["rev-parse", "--short", "HEAD"]).output();
     let hash = out.map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string()).unwrap_or_default();
@@ -883,6 +901,22 @@ mod tests {
         assert!(err.contains("2 files"), "{err}");
         assert!(download(&[], &dir).is_ok(), "nothing listed, nothing missing");
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn full_diagnostics_include_every_corpus_failure_without_other_sets() {
+        let mut pages = SetResult::new("corpus-pages");
+        for i in 0..42 {
+            pages.fail(&format!("doc-{i:03}"), "page count differs");
+        }
+        let mut dialogs = SetResult::new("dialogs");
+        dialogs.fail("dlg-1", "missing dialog");
+
+        let report = full_diagnostics(&[pages, dialogs]);
+        assert_eq!(report.lines().count(), 42);
+        assert!(report.contains("corpus-pages\tdoc-000\tpage count differs"));
+        assert!(report.contains("corpus-pages\tdoc-041\tpage count differs"));
+        assert!(!report.contains("dlg-1"));
     }
 
     fn registry() -> Registry {

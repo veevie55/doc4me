@@ -2,7 +2,9 @@
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md). The plan that
-uses the number is in [`../roadmap.md`](../roadmap.md#path-to-100-measured-readiness).
+uses the number is in [`../roadmap.md`](../roadmap.md#path-to-100-measured-readiness). Pass
+`--diagnostics` on a full corpus run to print every corpus failure ID and reason to stdout for
+investigation; the generated report remains capped at 40 failures per set.
 
 ## Rules
 
