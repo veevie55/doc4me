@@ -26,6 +26,7 @@ pub mod backstage;
 pub mod canvas;
 pub mod caret_glide;
 pub mod chrome;
+pub mod citation_options;
 pub mod colors;
 pub mod content_controls;
 pub mod control;
@@ -215,6 +216,12 @@ pub struct UiState {
     /// The Table of Contents content-control button opened by its keyboard shortcut; not saved.
     #[serde(skip)]
     pub toc_options_open: bool,
+    /// The citation options button's second key in the Alt+Shift+F12 sequence; not saved.
+    #[serde(skip)]
+    pub citation_options_pending: bool,
+    /// The context-aware citation options menu; not saved.
+    #[serde(skip)]
+    pub citation_options_open: bool,
     /// Show ribbon and Quick Access Toolbar KeyTips on Alt/F10 (#620).
     pub keytips_enabled: bool,
     /// Digits entered for a multi-key Quick Access Toolbar badge; never persisted.
@@ -305,6 +312,8 @@ impl Default for UiState {
             read_aloud_rate: 1.0,
             read_aloud_skip_citations: true,
             toc_options_open: false,
+            citation_options_pending: false,
+            citation_options_open: false,
             keytips_enabled: true,
             keytip_prefix: String::new(),
             keytips: crate::keytips::Phase::Off,
@@ -1098,6 +1107,14 @@ impl WordApp {
                 self.ui.toc_options_open = !self.ui.toc_options_open;
                 json!({"open": self.ui.toc_options_open})
             }
+            "ui.citationOptions" => {
+                if !crate::citation_options::caret_in_citation_content(self) {
+                    self.ui.citation_options_open = false;
+                    return Some(Err("place the caret in a citation or bibliography".into()));
+                }
+                self.ui.citation_options_open = !self.ui.citation_options_open;
+                json!({"open": self.ui.citation_options_open})
+            }
             "ui.keytips" => {
                 if let Some(v) = p.get("value") {
                     let Some(enabled) = v.as_bool() else { return Some(Err("`value` must be a boolean".into())) };
@@ -1615,6 +1632,7 @@ impl WordApp {
         font_notice::show(self, &ctx);
         crate::keytips::show(self, &ctx, ui);
         crate::toc_options::show(self, &ctx);
+        crate::citation_options::show(self, &ctx);
         keys::global_shortcuts(self, &ctx);
         windows::show_others(self, ui);
         if let Some(url) = self.canvas.open_url.take() {
