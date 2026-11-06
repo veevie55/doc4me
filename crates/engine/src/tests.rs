@@ -5281,6 +5281,20 @@ fn hyperlinks_back_and_forward() {
     }
 }
 
+#[test]
+fn web_refresh_rebuilds_web_layout_and_rejects_other_views() {
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "A document page"}));
+    run(&mut s, "view.webLayout", json!({}));
+    let before = s.layout();
+    assert_eq!(run(&mut s, "web.refresh", json!({}))["refreshed"], json!(true));
+    let after = s.layout();
+    assert!(!std::sync::Arc::ptr_eq(&before, &after), "refresh invalidates the cached web layout");
+
+    run(&mut s, "view.printLayout", json!({}));
+    assert!(s.run("web.refresh", &json!({})).is_err(), "refresh is only available in Web Layout");
+}
+
 /// Alt+Shift+F9: GOTOBUTTON goes to its bookmark, MACROBUTTON NoMacro selects its placeholder,
 /// HYPERLINK \l follows the link.
 #[test]

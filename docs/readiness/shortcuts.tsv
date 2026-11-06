@@ -175,7 +175,7 @@ ks-173	Insert special characters	Insert the ANSI character for the specified ANS
 ks-174	Work with web content	Insert a hyperlink.	Ctrl+K	Mod+K	insert.link	registry		
 ks-175	Work with web content	Go back one page.	Alt+Left arrow key	Alt+Left	web.back	registry		Back through followed hyperlinks (engine test hyperlinks_back_and_forward); Alt+Left stays Word Left on a Mac
 ks-176	Work with web content	Go forward one page.	Alt+Right arrow key	Alt+Right	web.forward	registry		Forward through followed hyperlinks (engine test hyperlinks_back_and_forward)
-ks-177	Work with web content	Refresh the page.	F9	F9	-	manual	fail	web page refresh
+ks-177	Work with web content	Refresh the page.	F9	F9	-	manual	pass	In Web Layout, F9 runs `web.refresh`, updates document fields and invalidates the cached layout so the page is rebuilt; engine test `web_refresh_rebuilds_web_layout_and_rejects_other_views` and UI event test `f9_refreshes_web_layout_and_leaves_print_layout_to_update_fields` cover the behavior. In Print/Draft, F9 retains `references.updateFields`. Doc4Me does not embed remote web pages, so this refreshes the document's Web Layout rather than fetching a URL.
 ks-178	Move around in a table	Move to the next cell in the row and select its content.	Tab key	Tab	-	manual	pass	engine tests.rs table_keys_move_and_select_like_word (Tab selects the next cell's content)
 ks-179	Move around in a table	Move to the previous cell in the row and select its content.	Shift+Tab	Shift+Tab	-	manual	pass	engine tests.rs table_keys_move_and_select_like_word (Shift+Tab selects the previous cell's content)
 ks-180	Move around in a table	Move to the first cell in the row.	Alt+Home	Alt+Home	table.firstCellInRow	registry		table.firstCellInRow
