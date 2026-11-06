@@ -334,6 +334,35 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
             let _ = app.run("text.emDash", json!({}));
             continue;
         }
+        // Ctrl+NumpadSubtract inserts an en dash. Keep the main-row Ctrl+Minus binding intact.
+        if let egui::Event::Key { key: Key::Minus, physical_key: Some(Key::Num0), pressed: true, modifiers, .. } = &e
+            && (modifiers.ctrl || modifiers.command)
+            && !modifiers.alt
+            && !modifiers.shift
+        {
+            let _ = app.run("text.enDash", json!({}));
+            continue;
+        }
+        // Word's unmodified NumpadDivide toggles Show Text Formatting in Outline view. The
+        // physical sentinel distinguishes it from the main-row slash, which remains text input.
+        if let egui::Event::Key { key: Key::Slash, physical_key: Some(Key::Num0), pressed: true, modifiers, .. } = &e
+            && modifiers.is_none()
+            && app.session.view.mode == doc4me_layout::ViewMode::Outline
+        {
+            let _ = app.run("outline.showFormatting", json!({}));
+            continue;
+        }
+        // With NumLock off, Windows reports physical Numpad5 as logical Clear. egui-winit maps
+        // that uncommon pair to (logical Num0, physical Num5); Alt+that pair selects the table.
+        if let egui::Event::Key { key: Key::Num0, physical_key: Some(Key::Num5), pressed: true, modifiers, .. } = &e
+            && modifiers.alt
+            && !modifiers.ctrl
+            && !modifiers.command
+            && !modifiers.shift
+        {
+            let _ = app.run("table.selectTable", json!({}));
+            continue;
+        }
         // Word's Alt+Shift+F12 selects the options button on a Table of Contents content
         // control. Other contexts keep their normal shortcut handling (including the citation
         // options sequence in the References tab).
@@ -734,6 +763,78 @@ mod tests {
         frame(&mut app, Some(Key::Num0));
         frame(&mut app, Some(Key::Minus));
         assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "text—\u{00ad}");
+    }
+
+    #[test]
+    fn keypad_ctrl_minus_inserts_en_dash_and_main_minus_still_zooms_out() {
+        let mut keypad = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::from_text("text")), crate::Services::default());
+        keypad.run("caret.docEnd", json!({})).unwrap();
+        let keypad_ctx = egui::Context::default();
+        let modifiers = Modifiers { ctrl: true, command: true, ..Default::default() };
+        let keypad_minus = egui::Event::Key { key: Key::Minus, physical_key: Some(Key::Num0), pressed: true, repeat: false, modifiers };
+        keypad_ctx
+            .run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(modifiers), keypad_minus], ..Default::default() }, |ui| {
+                canvas_events(&mut keypad, ui.ctx())
+            })
+            .drop_without_applying_deltas();
+        assert_eq!(keypad.session.doc.plain_text(doc4me_doc::StoryRef::Body), "text–");
+
+        let mut main = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::from_text("text")), crate::Services::default());
+        main.run("caret.docEnd", json!({})).unwrap();
+        let main_ctx = egui::Context::default();
+        let zoom_before = main.session.view.zoom;
+        let main_minus = egui::Event::Key { key: Key::Minus, physical_key: Some(Key::Minus), pressed: true, repeat: false, modifiers };
+        main_ctx
+            .run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(modifiers), main_minus], ..Default::default() }, |ui| {
+                canvas_events(&mut main, ui.ctx())
+            })
+            .drop_without_applying_deltas();
+        assert_eq!(main.session.doc.plain_text(doc4me_doc::StoryRef::Body), "text", "the main-row minus does not insert an en dash");
+        assert!(main.session.view.zoom < zoom_before, "the main-row Ctrl+Minus still zooms out");
+    }
+
+    #[test]
+    fn keypad_divide_toggles_outline_formatting_without_claiming_main_slash() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::from_text("Outline")), crate::Services::default());
+        app.run("view.outline", json!({})).unwrap();
+        let ctx = egui::Context::default();
+        let key = |app: &mut crate::WordApp, physical_key| {
+            let modifiers = Modifiers::NONE;
+            let event = egui::Event::Key { key: Key::Slash, physical_key, pressed: true, repeat: false, modifiers };
+            ctx.run_ui(egui::RawInput { events: vec![event], ..Default::default() }, |ui| canvas_events(app, ui.ctx()))
+                .drop_without_applying_deltas();
+        };
+
+        key(&mut app, Some(Key::Num0));
+        assert!(app.session.view.outline.hide_formatting, "keypad divide hides character formatting");
+        key(&mut app, Some(Key::Slash));
+        assert!(app.session.view.outline.hide_formatting, "main-row slash does not toggle formatting");
+        key(&mut app, Some(Key::Num0));
+        assert!(!app.session.view.outline.hide_formatting, "a second keypad divide restores formatting");
+    }
+
+    #[test]
+    fn alt_numlock_off_keypad_five_selects_the_entire_table() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        app.run("insert.table", json!({"rows": 2, "cols": 3})).unwrap();
+        let ctx = egui::Context::default();
+        let alt = Modifiers { alt: true, ..Default::default() };
+        let digit = egui::Event::Key { key: Key::Num5, physical_key: Some(Key::Num5), pressed: true, repeat: false, modifiers: alt };
+        ctx.run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(alt), digit], ..Default::default() }, |ui| {
+            canvas_events(&mut app, ui.ctx())
+        })
+        .drop_without_applying_deltas();
+        let cell = |p: &doc4me_doc::Pos| p.path.cell().map(|(_, r, c)| (r, c));
+        assert_eq!(cell(&app.session.sel.anchor), cell(&app.session.sel.focus), "NumLock-on keypad 5 does not select the table");
+
+        let clear = egui::Event::Key { key: Key::Num0, physical_key: Some(Key::Num5), pressed: true, repeat: false, modifiers: alt };
+        ctx.run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(alt), clear], ..Default::default() }, |ui| {
+            canvas_events(&mut app, ui.ctx())
+        })
+        .drop_without_applying_deltas();
+
+        assert_eq!(cell(&app.session.sel.anchor), Some((0, 0)));
+        assert_eq!(cell(&app.session.sel.focus), Some((1, 2)));
     }
 
     /// Shift+Alt+End selects to the end of the table row, Shift+Alt+Page Down to the bottom of the

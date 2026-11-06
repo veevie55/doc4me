@@ -13,6 +13,12 @@
 
 ### เพิ่ม
 
+- **เพิ่มคีย์ลัดแป้นตัวเลขสามรายการ** (`text.enDash`, `table.selectTable`, `outline.showFormatting`; readiness `ks-164`, `ks-193`, `ks-260`): Ctrl+NumpadSubtract แทรก en dash โดย Ctrl+Minus แถวหลักยังซูมออก, Alt+Numpad5 ขณะปิด Num Lock เลือกทั้งตาราง, และ NumpadDivide สลับ character formatting ใน Outline view. ปรับ event conversion ของ vendored `egui-winit` ให้แยกปุ่ม subtract/divide และ NumLock-off Clear+Numpad5 โดยไม่เปลี่ยน logical key ทั่วไป; เพิ่มผลลัพธ์ใน command finder 1 รายการเพื่อให้ Insert Table ยังปรากฏเมื่อค้นหา `INSERT`. ไม่มีการเปลี่ยนรูปแบบเอกสาร; ตรวจด้วย engine, synthetic UI และ physical-key conversion regressions; ไม่อ้างว่าทดสอบคีย์บอร์ดจริงหรือ Windows event delivery แล้ว.
+
+- **เพิ่ม manual workflow ตรวจแพ็กเกจ Windows ARM64** (`.github/workflows/platform-windows-arm64-readiness.yml`, readiness `plat-002`): สร้าง MSI และ portable ZIP บน Windows runner, ตรวจไฟล์ตามชื่อ ARM64 และบันทึก SHA-256. Workflow สั่งด้วยตนเองเท่านั้น ไม่มีการอัปโหลดแพ็กเกจ, ออก Release หรือเผยแพร่ environment; การทำงานบนอุปกรณ์ ARM64 จริงยังไม่รวม. ตรวจ syntax และเงื่อนไข workflow แล้ว; ยังรอ Windows run.
+
+- **บันทึกการ resolve ฟอนต์ใน Windows readiness run** (`.github/workflows/readiness-windows.yml`): ตรวจเอกสาร 8 ไฟล์ที่อาจเกี่ยวกับ MS Gothic ด้วยคำสั่งอ่านอย่างเดียว `file.fontSubstitution` และ `file.info` เพื่อแสดงฟอนต์ทดแทนกับจำนวนหน้าใน log; ไม่แก้ DOCX หรือเปลี่ยนคะแนน readiness. ตรวจ YAML และทดสอบ command syntax กับ release CLI ใน session; ยังรอ Windows run.
+
 - **แทนตัวเลือก URL ของ Smart Tags รุ่นเก่าด้วยการตรวจจับลิงก์จริง** (`tools.smartTags`, readiness `dlg-215`): เปิดหน้าตั้งค่าเฉพาะสำหรับ Internet addresses as links ซึ่งใช้ค่าร่วมกับ AutoCorrect และมีผลเมื่อพิมพ์ URL; คำสั่งอ่าน/ตั้งค่าได้โดยตรงและค่าเก็บใน preference เดิม. Smart Tags เฉพาะเอนทิตีไม่ได้ทำขึ้นมาใหม่. ตรวจด้วย engine regression ที่ปิด/เปิดแล้วพิมพ์ URL และ UI regression ที่เปิด dialog เปลี่ยนค่าและบันทึก.
 
 - **เปิดเมนูตัวเลือก Table of Contents ด้วย Alt+Shift+F12** (`crates/ui-egui/src/toc_options.rs`, `keys.rs`, readiness `ks-329`): เปิดเมนู Update Table / Remove Table of Contents เมื่อ caret อยู่ใน TOC content control หรือย่อหน้า TOC ที่แอปสร้าง; นอกบริบทไม่ทำงาน. คำสั่งอัปเดตและลบใช้ engine command เดิม. ตรวจด้วย UI tests 4 กรณี รวมกด shortcut และคลิก Remove จริง.

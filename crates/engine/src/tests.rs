@@ -207,6 +207,14 @@ fn typing_enter_undo() {
 }
 
 #[test]
+fn en_dash_command_inserts_an_en_dash() {
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "before"}));
+    run(&mut s, "text.enDash", json!({}));
+    assert_eq!(text(&s), "before–");
+}
+
+#[test]
 fn joined_commands_are_one_undo_step() {
     let mut s = s();
     run(&mut s, "text.insert", json!({"text": "Hello"}));
