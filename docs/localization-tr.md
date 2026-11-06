@@ -1,6 +1,6 @@
 # Turkish interface
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-11 · **Change:** minor (Turkish interface catalog completed, 2,325 entries, #774; previously minor: Turkish interface catalog and regression checks) · **Target:** Doc4Me 1.1 (written as "0.5.0", a version never released; the catalog has been in every release since 1.0.0)
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Turkish catalog now has 2,985 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
 
 Choose **File › Options › Interface language › Türkçe**, or follow a Turkish system display language
 (`tr-TR`, `tr-CY`, `tr_TR.UTF-8`). The catalog code is `tr`; `ui.language` with `{"value":"tr"}`
@@ -8,7 +8,7 @@ selects it explicitly, and `DOC4ME_LANGUAGE=tr-TR` does the same for a headless 
 launch while the preference is `auto`. The choice is saved with the other interface settings.
 Document text, command ids, CLI/MCP/control responses and file paths do not change.
 
-`crates/ui-egui/src/i18n/tr.tsv` has all 2,325 entries of the Russian catalog (the same
+`crates/ui-egui/src/i18n/tr.tsv` has all 2,985 unique parsed keys of the Russian catalog (the same
 keys). It covers all ribbon commands, dialogs, built-in style names, equation and math gallery
 structures, watermark presets, paper sizes, and rendered preview tiles. It is written from the
 meaning of the English labels; no proprietary translation resources were consulted. The catalog

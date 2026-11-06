@@ -649,6 +649,37 @@ mod tests {
     }
 
     #[test]
+    fn ime_preedit_is_not_inserted_until_the_input_method_commits_it() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        let ctx = egui::Context::default();
+        let frame = |app: &mut crate::WordApp, event| {
+            ctx.run_ui(egui::RawInput { events: vec![event], ..Default::default() }, |ui| canvas_events(app, ui.ctx()))
+                .drop_without_applying_deltas();
+        };
+
+        frame(&mut app, egui::Event::Ime(egui::ImeEvent::Preedit { text: "かな".into(), active_range_chars: Some(0..2) }));
+        assert_eq!(app.canvas.ime_preedit, "かな", "the composition remains visible as preedit");
+        assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "", "preedit is not committed document text");
+
+        frame(&mut app, egui::Event::Ime(egui::ImeEvent::Commit("仮名".into())));
+        assert!(app.canvas.ime_preedit.is_empty(), "commit clears the composition");
+        assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "仮名", "only the committed text enters the document");
+    }
+
+    #[test]
+    fn printable_system_text_is_inserted_even_while_alt_is_held() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        let ctx = egui::Context::default();
+        let alt = Modifiers { alt: true, ..Default::default() };
+        ctx.run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(alt), egui::Event::Text("€".into())], ..Default::default() }, |ui| {
+            canvas_events(&mut app, ui.ctx())
+        })
+        .drop_without_applying_deltas();
+
+        assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "€", "OS-provided text is inserted without synthesizing Alt-code input");
+    }
+
+    #[test]
     fn paste_modifiers_follow_word_for_windows() {
         if cfg!(target_os = "macos") {
             return;

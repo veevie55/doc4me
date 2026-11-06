@@ -42,6 +42,10 @@ const MAX_SOURCES: usize = 10_000;
 const MAX_BIBLIOGRAPHY_PARTS: usize = 64;
 /// Characters kept of a bibliography's citation style name.
 const MAX_STYLE_NAME: usize = 64;
+/// Font-table entries needed for alternate-name substitution.
+const MAX_FONT_ALIASES: usize = 4096;
+/// Font family names in OOXML font tables are short identifiers, not arbitrary descriptions.
+const MAX_FONT_NAME: usize = 256;
 
 /// Bibliography sources already read: tags, and (title, author) of untagged ones.
 #[derive(Default)]
@@ -171,6 +175,9 @@ pub(crate) fn read_opened(pkg: &Package) -> Result<Document, DocxError> {
             pkg.note_repair(crate::package::REPAIR_PART, part);
         }
     };
+    if let Some(p) = part(rt::FONT_TABLE) {
+        lenient("font table", &p, r.read_font_table(&p));
+    }
     // Styles come before settings, but their theme colours already follow its colour mapping.
     if let Some(p) = part(rt::SETTINGS) {
         r.read_color_mapping(&p);
@@ -548,6 +555,20 @@ impl Reader<'_> {
 
     fn xml(&self, path: &str) -> Result<Option<El>, DocxError> {
         self.pkg.xml(path)
+    }
+
+    fn read_font_table(&mut self, path: &str) -> Result<(), DocxError> {
+        let Some(root) = self.xml(path)? else { return Ok(()) };
+        for font in root.children("w:font").take(MAX_FONT_ALIASES) {
+            let (Some(name), Some(alternate)) = (font.attr("w:name"), font.child_val("w:altName")) else { continue };
+            let (name, alternate) = (name.trim(), alternate.trim());
+            if name.is_empty() || alternate.is_empty() || name.len() > MAX_FONT_NAME || alternate.len() > MAX_FONT_NAME {
+                continue;
+            }
+            let key = name.to_lowercase();
+            self.doc.font_aliases.entry(key).or_insert_with(|| doc4me_doc::FontAlias { font: name.into(), alternate: alternate.into() });
+        }
+        Ok(())
     }
 
     pub fn revision(&mut self, kind: RevisionKind, e: &El) -> u32 {

@@ -4922,6 +4922,24 @@ fn font_substitution_and_citation_placeholders() {
     assert_eq!(s.doc.sources.iter().filter(|x| x.tag == "Kiln1").count(), 1);
 }
 
+#[test]
+fn font_substitution_prefers_a_docx_font_table_alt_name() {
+    let mut s = s();
+    let requested = "Zyx Missing Sans";
+    run(&mut s, "text.insert", json!({"text": "Font alias"}));
+    run(&mut s, "select.all", json!({}));
+    run(&mut s, "format.set", json!({"props": {"font": requested}}));
+    s.doc.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+
+    let v = run(&mut s, "file.fontSubstitution", json!({}));
+    let row = v["fonts"].as_array().unwrap().iter().find(|f| f["font"] == requested).expect("listed");
+    assert_eq!(row["substitute"], "Source Sans 3");
+    let v = run(&mut s, "file.fontSubstitution", json!({"convert": [requested]}));
+    assert!(v["converted"].as_u64().unwrap() >= 1);
+    let p = s.doc.para(StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap();
+    assert_eq!(p.runs[0].props.font.as_deref(), Some("Source Sans 3"));
+}
+
 /// Cell Options (margins of the selected cells or the table's, Wrap text, which AutoFit to
 /// Contents honours) and Table Positioning (Around places the table, None puts it back), both
 /// kept in .docx.

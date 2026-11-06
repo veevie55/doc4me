@@ -747,6 +747,10 @@ pub struct Document {
     pub comments: BTreeMap<u32, Comment>,
     pub revisions: Vec<Revision>,
     pub settings: Settings,
+    /// DOCX font-table alternate names, keyed by the requested family name in lowercase. The
+    /// original run font stays in `CharProps`; layout uses an alternate only when it is missing.
+    #[serde(skip_serializing_if = "BTreeMap::is_empty")]
+    pub font_aliases: BTreeMap<String, FontAlias>,
     pub core: CoreProps,
     /// Bibliography sources (References › Manage Sources).
     pub sources: Vec<Source>,
@@ -774,6 +778,14 @@ pub struct Document {
     /// Not saved; empty for a document read without trouble or made here.
     #[serde(skip)]
     pub repairs: Vec<Repair>,
+}
+
+/// A `w:font` name and its `w:altName`, retained for font substitution during layout and save.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FontAlias {
+    pub font: String,
+    pub alternate: String,
 }
 
 /// One thing reading a damaged file repaired: `message` is a fixed English sentence with `{what}`
@@ -814,6 +826,7 @@ impl Document {
             comments: BTreeMap::new(),
             revisions: Vec::new(),
             settings: Settings::default(),
+            font_aliases: BTreeMap::new(),
             core: CoreProps::default(),
             sources: Vec::new(),
             custom_props: Vec::new(),

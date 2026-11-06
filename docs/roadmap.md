@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42178240013: readiness 90.4% / 93.1% without 26 deferred; dialogs 210/222, page counts 175/222, page-boundary checks 97/222, languages 68/95, shortcuts 273/280) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key checks, shortcuts 276/280 with 4 deferred. Current `manual.tsv` changes ARM64 from deferred to fail, so the generated report awaits refresh; language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -35,7 +35,7 @@ desktop in WordCraft and have not been re-run on Windows yet.
 
 | Core workflow | Works end to end? | Evidence | Hours to pass |
 |---|---|---|---|
-| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 625 commands (2026-10-25), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
+| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 720 engine commands (`doc4me-cli commands --json`, 2026-11-06), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
 | Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; typical text/table/picture documents work; on 222 real-world documents all open and preserve measured structure through save and reopen (formatting not compared yet); charts, SmartArt and OLE dropped silently, move tracking lost (gaps #1, #2, #5) | 0 (beta work: 50–80) |
 | Build a structured document: tables, pictures, headers/footers, page numbers, sections, columns | yes | Tables with row splitting and floating tables (#137), floating pictures (#136), first/odd/even headers; columns don't balance (gap #4) | 0 |
 | Review with others: comments, track changes, accept/reject, compare | yes | Margin balloons, tracked insert/delete incl. paragraph marks (#125, #244), formatting revisions (#41), compare | 0 |
@@ -64,17 +64,20 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | M12 | Formats breadth (PDF, ODT, RTF, HTML, MD, TXT, LaTeX, `.doc` import) | done (first versions); encrypted `.docx` opens and saves (agile encryption); `.doc` write, encrypted `.doc`, minor formats missing | 60–100 h |
 | M13 | Performance budgets | on track (1.4 ms relayout); large real-world documents unmeasured | 10–20 h |
 | M14 | 1.0 polish, packaging, signing | Doc4Me v1.0.0, v1.1.0, v1.1.1 and v1.1.2 (the latest) published on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases) on 2026-11-02, the earlier three rebuilt from their own commits (Windows x64 MSI and portable zip, unsigned; CI signs once the signing secrets are set); WordCraft, upstream, shipped v0.1.0–v0.4.0 on every platform | — |
-| M15 | Localization (12 key languages, RTL interface, proofing languages) | 68/95 catalogs meet the 95% string threshold; English, Polish and Thai proofing, a proofing language per run | 75–120 h |
+| M15 | Localization (12 key languages, RTL interface, proofing languages) | 68/95 culture rows pass catalog key-row coverage; the check does not validate translated values or quality. English, Polish and Thai proofing, a proofing language per run | 75–120 h |
 | M16 | Right-to-left and East Asian typography | RTL paragraphs done (#207) | 30–45 h |
 
 ## Path to 100% measured readiness
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **90.4%** measured on Windows on 2026-11-06 (run 42178240013, dialogs
-210/222, 175/222 page counts, 97/222 page-boundary checks, 68/95 languages; `readiness.md`,
-all 222 corpus documents; DOCX open and round-trip 222/222), 9.6 points short of 100% overall.
-The current score excluding 26 deferred owner-bound checks is 93.1%, 6.9 points short.
+2026-10-25 report, and **90.5%** in the latest official Windows report (run 42211564189, source
+`84db9fc`, report commit `beea45d`; dialogs 210/222, pages 175/222, boundaries 97/222, languages
+68/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222), 9.5 points short
+of 100% overall. That report says 93.1% without its 23 deferred rows, 6.9 points short. The local
+`manual.tsv` now records the ARM64 check as fail after a later package attempt, so the generated
+report must be refreshed before quoting a current no-deferred score. Language readiness measures
+catalog key-row coverage, not translated content or accuracy.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,
@@ -109,19 +112,20 @@ never removed, so the number can't drift by editing the list.
 replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
-reports 100.0% on the latest commit: every row of every check set passing. The 2026-11-05
-measurement passes stability (222/222 corpus; 5/5 hand checks) and performance (6/6); the largest
-remaining areas are pagination (175/222 page-count and 97/222 boundary checks), dialog checks
-(210/222 with 12 deferred), and localization (68/95). The latest Windows report records
-shortcuts 273/280 with seven deferred; the source branch now implements three of those keypad
-behaviors, pending a Windows remeasurement. Recent
+reports 100.0% on the latest commit: every row of every check set passing. The latest official
+Windows measurement (2026-11-06) passes stability (222/222 corpus; 5/5 hand checks) and
+performance (6/6); the largest remaining measured areas are pagination (175/222 page-count and
+97/222 boundary checks), dialogs (210/222 with 12 deferred), and language catalog-key coverage
+(68/95; translation quality is not tested). The report records shortcuts 276/280 with four
+deferred. The current source adds regression tests for OS text/IME delivery and keypad behavior,
+pending Windows remeasurement. Recent
 work fixed contextual trailing spacing between paragraphs in table cells; the Windows result moved
 from 172 to 174 page-count passes, while boundary passes remain 97.
 Some rows can only pass
-on the owner's hardware: the Windows field reports of stability (startup crash, freezes, saving
-without administrator rights), typing and scrolling on a Windows PC, and the printer, pen,
-microphone, scanner, touch and multi-monitor rows; the platform rows also need the Windows arm64,
-Linux and macOS builds, which wait on the owner's go-ahead (2026-10-26). 100% further needs every
+on the owner's hardware: the printer, pen, microphone, scanner and multi-monitor checks. Windows
+ARM64 packaging has been requested and attempted; run 42213688289 failed at final linking, and a
+static-CRT fix is awaiting Windows validation. Linux and macOS package checks already pass in
+`manual.tsv`; touch and other Windows session checks pass under the recorded owner rule. 100% further needs every
 corpus document to paginate exactly as Word does, an interface catalog for each of the 95 languages
 Microsoft 365 offers, and every Word dialog and shortcut in the lists, including the ones tied to
 Microsoft services (owner rule: out of scope), so those rows decide how close the number can get.
@@ -129,7 +133,7 @@ Those rows wait as `deferred` until the owner asks for them (owner, 2026-10-27),
 [`readiness.md`](readiness.md) reports a second number beside the measured one: readiness without
 the deferred rows, also aimed at 100% ([rules](readiness/README.md)). The work: real-world DOCX failures (gap #1), pagination
 (gap #4), crashes and hangs on Windows (gap #3), Word ink round trip (gap #2), native printing
-(gap #6), missing dialogs and options (gap #7) and shortcuts (gap #24), editing Word's charts and
+(gap #6), remaining dialog depth (gap #7), the four deferred OS-owned shortcut rows (gap #24), editing Word's charts and
 SmartArt (gap #13), and the alpha gate re-run on Windows.
 
 ## Next after beta
@@ -141,7 +145,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-06 | minor | Windows run 42178240013: readiness 90.4% / 93.1% without 26 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95, shortcuts 273/280. Three keypad shortcuts and ARM64 packaging validation are under test for the next run. |
+| 2026-11-06 | minor | Latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95 catalog-key checks, shortcuts 276/280. The current `manual.tsv` records a later ARM64 package failure; the generated report awaits a new Windows run. |
 | 2026-11-05 | minor | Windows run 42025088010: 89.8% total / 92.5% without 26 deferred; legacy printer setup dialog mapped to File › Print; dialogs 205/220, pagination 174/222 pages and 97/222 boundary checks, languages 64/95. |
 | 2026-11-05 | minor | Windows run 42020535590: 89.8% total / 92.4% without 26 deferred; eight legacy dialogs excluded with reasons; dialogs 204/220, pagination 174/222 pages and 97/222 boundary checks, languages 64/95. |
 | 2026-11-05 | minor | Windows run 42017927963: 89.3% total / 91.8% without deferred; languages 64/95 (Catalan Valencia and Serbian Cyrillic Bosnia alias existing complete catalogs); pagination 174/222 pages and 97/222 boundary checks. |

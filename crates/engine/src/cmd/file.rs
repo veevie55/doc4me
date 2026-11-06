@@ -393,8 +393,21 @@ fn document_fonts(doc: &Document) -> Vec<String> {
 
 /// `file.fontSubstitution`.
 fn font_substitution(s: &mut Session, v: &Value) -> CmdResult {
-    let fonts: Vec<(String, String)> =
-        document_fonts(&s.doc).into_iter().filter_map(|f| doc4me_fonts::word::substitute_for(&f).map(|sub| (f, sub))).collect();
+    let fonts: Vec<(String, String)> = document_fonts(&s.doc)
+        .into_iter()
+        .filter_map(|f| {
+            let fallback = doc4me_fonts::word::substitute_for(&f)?;
+            let key = f.trim().to_lowercase();
+            let sub = s
+                .doc
+                .font_aliases
+                .get(&key)
+                .filter(|alias| !alias.alternate.trim().is_empty())
+                .map(|alias| doc4me_fonts::word::substitute_for(&alias.alternate).unwrap_or_else(|| alias.alternate.clone()))
+                .unwrap_or(fallback);
+            Some((f, sub))
+        })
+        .collect();
     let key = |n: &str| n.chars().filter(|c| !c.is_whitespace()).flat_map(char::to_lowercase).collect::<String>();
     let wanted: Vec<String> = v.get("convert").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str).map(key).collect();
     let swap: Vec<(String, String)> = fonts.iter().filter(|(f, _)| wanted.contains(&key(f))).map(|(f, sub)| (key(f), sub.clone())).collect();

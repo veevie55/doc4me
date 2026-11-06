@@ -343,6 +343,27 @@ fn drawing_text_in_th_sarabun_is_sized_like_the_original() {
     assert!(draws.iter().all(|d| matches!(d, Draw::Glyphs { size, .. } if (*size - 20.0).abs() < 1e-3)));
 }
 
+#[test]
+fn drawing_text_uses_font_table_alt_name_without_rewriting_its_font() {
+    let requested = "Doc4Me Missing Graphic Font 7F31";
+    assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+    let mut doc = Document::new();
+    doc.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    let item = GraphicItem::Text {
+        rect: [0.0, 0.0, 200.0, 30.0],
+        text: "Aliased graphic text".into(),
+        size: 20.0,
+        color: doc4me_doc::props::Rgb::BLACK,
+        bold: false,
+        align: TextAlign::Left,
+        font: Some(requested.into()),
+    };
+
+    let draws = display::text_glyphs(&doc, Rect::new(0.0, 0.0, 200.0, 30.0), &item, 1.0, 1.0);
+    assert!(draws.iter().any(|draw| matches!(draw, Draw::Glyphs { face, .. } if face.family == "Source Sans 3")));
+    assert!(matches!(&item, GraphicItem::Text { font: Some(font), .. } if font == requested));
+}
+
 /// Word kerns letter pairs only with "Kerning for fonts" (`w:kern`) set, at that size and above;
 /// TH Sarabun New drawn with Sarabun takes TH Sarabun New's pairs.
 #[test]

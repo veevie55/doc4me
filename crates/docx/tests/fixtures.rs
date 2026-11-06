@@ -48,6 +48,26 @@ fn read_body(body: &str) -> Document {
 }
 
 #[test]
+fn font_table_alt_names_drive_substitution_and_survive_docx_round_trip() {
+    let fonts = format!(r#"<w:fonts {W_NS}><w:font w:name="Missing Family"><w:altName w:val="Source Sans 3"/></w:font></w:fonts>"#);
+    let bytes = docx(
+        r#"<w:p><w:r><w:rPr><w:rFonts w:ascii="Missing Family" w:hAnsi="Missing Family"/></w:rPr><w:t>kept</w:t></w:r></w:p>"#,
+        &[("rIdFontTable", "fontTable", "fontTable.xml")],
+        &[("word/fontTable.xml", &fonts)],
+    );
+    let first = doc4me_docx::read(&bytes).unwrap();
+    assert_eq!(first.font_aliases.get("missing family").map(|a| (a.font.as_str(), a.alternate.as_str())), Some(("Missing Family", "Source Sans 3")));
+    let first_run = first.body[0].as_para().unwrap().props_at(0);
+    assert_eq!(first_run.font.as_deref(), Some("Missing Family"));
+
+    let saved = doc4me_docx::write(&first).unwrap();
+    let second = doc4me_docx::read(&saved).unwrap();
+    assert_eq!(second.font_aliases, first.font_aliases);
+    let second_run = second.body[0].as_para().unwrap().props_at(0);
+    assert_eq!(second_run.font.as_deref(), Some("Missing Family"));
+}
+
+#[test]
 fn paragraph_default_presence_survives_repeated_saves() {
     // Omission leaves paragraph defaults application-defined (ISO 29500 pPrDefault).
     // An explicitly empty container must therefore remain distinct from omission.

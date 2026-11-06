@@ -25,6 +25,79 @@ fn empty_doc_has_one_page() {
 }
 
 #[test]
+fn document_font_alt_name_is_used_only_when_the_requested_family_is_missing() {
+    let mut d = Document::new();
+    d.font_aliases.insert(
+        "missing font for alt-name test".into(),
+        doc4me_doc::FontAlias { font: "Missing Font for Alt-Name Test".into(), alternate: "Source Sans 3".into() },
+    );
+    let chosen = crate::para::font_for_document(&d, "Missing Font for Alt-Name Test");
+    assert_eq!(chosen, "Source Sans 3");
+    assert_eq!(doc4me_fonts::word::resolve(&chosen, false, false).face.family, "Source Sans 3");
+
+    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into() });
+    assert_eq!(crate::para::font_for_document(&d, "Sarabun"), "Sarabun");
+}
+
+#[test]
+fn paragraph_layout_uses_document_alt_name_and_keeps_the_requested_font() {
+    let requested = "Doc4Me Missing Paragraph Font 36A2";
+    assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+    let text = "Paragraph rendered with the alternate family";
+    let mut d = Document::from_text(text);
+    d.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, text.len()), &|c| c.font = Some(requested.into())).unwrap();
+
+    let l = lay(&d);
+    let para =
+        l.pages.iter().flat_map(|p| p.items.iter()).find_map(|it| if let Placed::Lines { para, .. } = it { Some(para) } else { None }).unwrap();
+    let run = para.styles.iter().find(|style| style.rc.font == requested).expect("the requested run font is retained");
+    assert_eq!(run.face.family, "Source Sans 3");
+    assert!(run.substituted);
+    assert_eq!(run.rc.font, requested);
+}
+
+#[test]
+fn equation_layout_uses_document_alt_name_and_keeps_the_requested_font() {
+    use doc4me_doc::math::{MNode, MRun, Math};
+
+    let requested = "Doc4Me Missing Equation Font A17F";
+    assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+    let mut d = Document::new();
+    d.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    let math = Math {
+        nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(requested.into()), ..Default::default() })],
+        ..Default::default()
+    };
+    d.insert_object(
+        &Pos::body(0, 0),
+        InlineObject::Equation { linear: "Equation label".into(), display: false, math: math.clone() },
+        &Default::default(),
+    )
+    .unwrap();
+
+    let layout = lay(&d);
+    let equation = layout
+        .pages
+        .iter()
+        .flat_map(|page| page.items.iter())
+        .find_map(|item| match item {
+            Placed::Lines { para, .. } => para.maths.first().map(|(_, math)| math),
+            _ => None,
+        })
+        .expect("equation is laid out");
+    let face = equation
+        .items
+        .iter()
+        .find_map(|item| if let crate::math::MItem::Glyphs { face, .. } = item { Some(face) } else { None })
+        .expect("normal math text has glyphs");
+    assert_eq!(face.family, "Source Sans 3");
+    let source = &d.para(StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().objects[0];
+    let InlineObject::Equation { math: saved, .. } = source else { panic!("the equation object is retained") };
+    assert_eq!(saved, &math, "the source font name remains unchanged");
+}
+
+#[test]
 fn long_paragraph_wraps_and_paginates() {
     let text = "The quick brown fox jumps over the lazy dog. ".repeat(400);
     let d = Document::from_text(&text);
