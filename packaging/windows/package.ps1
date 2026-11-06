@@ -88,6 +88,9 @@ if (-not $SkipBuild) {
     $env:CMAKE_ASM_COMPILER_TARGET = $Target
     $env:CMAKE_TRY_COMPILE_TARGET_TYPE = 'STATIC_LIBRARY'
     $env:GGML_NATIVE = 'OFF'
+    # clang-cl disables C++ exceptions by default; ggml's GGUF reader uses try/catch.
+    $previousCxxFlags = $env:CXXFLAGS
+    $env:CXXFLAGS = if ([string]::IsNullOrWhiteSpace($previousCxxFlags)) { '/EHsc' } else { "$previousCxxFlags /EHsc" }
   }
   Invoke-Native "cargo build ($Target)" { cargo build --release --locked -p doc4me -p doc4me-cli --target $Target }
 }
