@@ -4469,6 +4469,43 @@ fn an_empty_section_break_paragraph_at_the_foot_of_a_page_leaves_no_blank_page()
     }
 }
 
+/// In Word's GOV.UK ASF1 reference, two empty 7pt paragraphs follow a table; the second carries
+/// a continuous section break. Word leaves only one blank line before the next paragraph. The
+/// section marker stays navigable, but its empty paragraph mark does not add another line.
+#[test]
+fn an_empty_continuous_section_break_does_not_add_a_blank_line() {
+    let mut d = Document::new();
+    let before = doc4me_doc::Paragraph::with_text("Before", Default::default());
+    let mut marker = doc4me_doc::Paragraph::new();
+    let section = SectionProps { start: SectionStart::Continuous, ..Default::default() };
+    marker.section = Some(Box::new(section));
+    let after = doc4me_doc::Paragraph::with_text("After", Default::default());
+    d.body = vec![doc4me_doc::para_block(before), doc4me_doc::para_block(marker), doc4me_doc::para_block(after)];
+    d.last_section.start = SectionStart::Continuous;
+
+    let l = lay(&d);
+    let line = |path: &[u32]| {
+        l.pages
+            .iter()
+            .flat_map(|p| &p.items)
+            .find_map(|it| match it {
+                Placed::Lines { story: StoryRef::Body, path: p, para, l0, x: _, y, .. } if p.0 == path => {
+                    para.lines.get(*l0).map(|line| (*y + line.top, line.height))
+                }
+                _ => None,
+            })
+            .expect("paragraph line is placed")
+    };
+    let marker_line = line(&[1]);
+    let (after_top, _) = line(&[2]);
+    assert_eq!(marker_line.1, 0.0, "an empty continuous section marker contributes no line height");
+    assert!(
+        (0.0..15.0).contains(&(after_top - marker_line.0)),
+        "the next section begins at the marker's first line inset, without a second blank line: {:?} then {after_top}",
+        marker_line
+    );
+}
+
 /// A page break ending the paragraph before an empty paragraph that only ends its section leaves
 /// no blank page when the next section starts on a new page: that paragraph stays on the break's
 /// page and the next section starts the page after it (zenodo-160, as in Word). Before a

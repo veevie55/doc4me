@@ -917,7 +917,7 @@ fn british_english_and_canadian_french_follow_their_regions() {
 
 /// Catalogs written whole, one entry per interface string: the code, the language's own name and
 /// locale tags that resolve to it.
-const WHOLE_CATALOGS: [(&str, &str, &[&str]); 40] = [
+const WHOLE_CATALOGS: [(&str, &str, &[&str]); 44] = [
     ("nl", "Nederlands", &["nl", "nl-NL", "nl_BE.UTF-8"]),
     ("sv", "Svenska", &["sv", "sv-SE", "sv_FI.UTF-8"]),
     ("da", "Dansk", &["da", "da-DK", "da_DK.UTF-8"]),
@@ -958,6 +958,10 @@ const WHOLE_CATALOGS: [(&str, &str, &[&str]); 40] = [
     ("lt", "Lietuvių", &["lt", "lt-LT", "lt_LT.UTF-8"]),
     ("sl", "Slovenščina", &["sl", "sl-SI", "sl_SI.UTF-8"]),
     ("vi", "Tiếng Việt", &["vi", "vi-VN", "vi_VN.UTF-8"]),
+    ("xh", "isiXhosa", &["xh", "xh-ZA", "xh_ZA.UTF-8"]),
+    ("zu", "isiZulu", &["zu", "zu-ZA", "zu_ZA.UTF-8"]),
+    ("rw", "Ikinyarwanda", &["rw", "rw-RW", "rw_RW.UTF-8"]),
+    ("nso", "Sesotho sa Leboa", &["nso", "nso-ZA", "nso_ZA.UTF-8"]),
 ];
 
 /// Each whole catalog resolves from its locales, translates every interface string, and is drawn

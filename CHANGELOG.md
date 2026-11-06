@@ -13,6 +13,10 @@
 
 ### เพิ่ม
 
+- **เปิดเมนูตัวเลือก Table of Contents ด้วย Alt+Shift+F12** (`crates/ui-egui/src/toc_options.rs`, `keys.rs`, readiness `ks-329`): เปิดเมนู Update Table / Remove Table of Contents เมื่อ caret อยู่ใน TOC content control หรือย่อหน้า TOC ที่แอปสร้าง; นอกบริบทไม่ทำงาน. คำสั่งอัปเดตและลบใช้ engine command เดิม. ตรวจด้วย UI tests 4 กรณี รวมกด shortcut และคลิก Remove จริง.
+
+- **เพิ่ม catalog ภาษา isiXhosa, isiZulu, Kinyarwanda และ Sesotho sa Leboa** (`crates/ui-egui/src/i18n/{xh,zu,rw,nso}.tsv`, registry และ `docs/readiness/languages.tsv`): เพิ่ม 2,985 รายการต่อภาษา พร้อมตรวจ source keys, placeholders, ellipses และ glyph ใน Inter. Catalog แต่ละไฟล์ระบุชัดว่าแปลด้วย Google Translate และต้องตรวจคำศัพท์โดยเจ้าของภาษาก่อนเผยแพร่; ไม่มี English fallback ใน catalog. ไม่เปลี่ยน .docx เดิม, ภาษาไทย หรือการติดตั้ง. ตรวจด้วย i18n suite 61 tests ซึ่งผ่าน.
+
 - **จับคู่ Format Callout รุ่นเดิมกับ Format Shape** (`docs/readiness/dialogs.tsv`, `dlg-052`): Format Shape ปัจจุบันเปิดบน callout ที่เลือกและปรับ fill, outline และขนาดได้; leader geometry และ auto-attach แบบ Word รุ่นเก่าไม่รองรับ จึงบันทึกข้อจำกัดไว้ตรง readiness row. Windows run 42133507843 ยืนยัน dialogs 208/220 และ 100% เมื่อไม่นับ deferred.
 
 - **แทรกเนื้อหาเอกสารจาก file picker** (`insert.textFromFile`, readiness `dlg-108`): คำสั่ง Text from File ที่เดิมต้องป้อน path เองเปิด file picker ใน UI แล้วแทรกเนื้อหาของเอกสารที่เลือกตรงเคอร์เซอร์; ทดสอบ file picker แบบ async ด้วยไฟล์ TXT และ `cargo xtask ci` ผ่านครบทั้ง 6 ขั้น. เป็นการแทรกเนื้อหาแบบคงที่ ยังไม่รองรับการเชื่อมโยงซอร์สแบบ master document.
@@ -132,6 +136,8 @@
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
 ### แก้ไข
+
+- **ไม่เพิ่มบรรทัดเกิน Word ให้ย่อหน้าว่างที่มี continuous section break** (`crates/layout/src/lib.rs`): section marker ยังอยู่สำหรับ navigation แต่ paragraph mark ที่มองไม่เห็นไม่เลื่อน text flow ซ้ำ. `govuk-005` เปลี่ยนจาก 37 เป็น 36 หน้าใน Linux diagnostic; เทียบครบ 222 เอกสาร ดีขึ้น 1, แย่ลง 0, ไม่เปลี่ยน 221. ตรวจด้วย layout regression และ full Linux corpus; ต้องยืนยัน Windows และ page-boundary words ยังคลาด.
 
 - **ระยะหลังย่อหน้าใน cell ตารางที่ใช้ contextual spacing ถูกลบได้ถูกต้อง** (`crates/layout/src/lib.rs`, regression ใน `crates/layout/src/tests.rs`)
   - เหตุผล: layout ของ cell บันทึกระยะท้ายย่อหน้าเป็นศูนย์เมื่อย่อหน้าปัจจุบันต่อเนื่องกับย่อหน้าก่อนหน้า ทั้งที่ยังบวกระยะนั้นเข้า flow; ย่อหน้าถัดไปจึงลบระยะที่บันทึกไว้ไม่ครบ ทำให้ระยะรายการใน govuk-006 สะสมเกิน Word

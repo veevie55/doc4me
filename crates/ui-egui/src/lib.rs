@@ -82,6 +82,7 @@ pub mod style_format;
 pub mod table_pen;
 pub mod table_resize;
 pub mod theme;
+pub mod toc_options;
 pub mod translator;
 pub mod widgets;
 pub mod window_geometry;
@@ -211,6 +212,9 @@ pub struct UiState {
     /// Read Aloud speed (1 = normal) and whether it skips citations and bibliographies.
     pub read_aloud_rate: f32,
     pub read_aloud_skip_citations: bool,
+    /// The Table of Contents content-control button opened by its keyboard shortcut; not saved.
+    #[serde(skip)]
+    pub toc_options_open: bool,
     /// Show ribbon and Quick Access Toolbar KeyTips on Alt/F10 (#620).
     pub keytips_enabled: bool,
     /// Digits entered for a multi-key Quick Access Toolbar badge; never persisted.
@@ -300,6 +304,7 @@ impl Default for UiState {
             editing: doc4me_engine::Prefs::default(),
             read_aloud_rate: 1.0,
             read_aloud_skip_citations: true,
+            toc_options_open: false,
             keytips_enabled: true,
             keytip_prefix: String::new(),
             keytips: crate::keytips::Phase::Off,
@@ -1085,6 +1090,14 @@ impl WordApp {
                 self.ui.ribbon_collapsed = !self.ui.ribbon_collapsed;
                 json!({"collapsed": self.ui.ribbon_collapsed})
             }
+            "ui.tocOptions" => {
+                if !crate::toc_options::caret_in_toc_control(self) {
+                    self.ui.toc_options_open = false;
+                    return Some(Err("place the caret inside a Table of Contents content control".into()));
+                }
+                self.ui.toc_options_open = !self.ui.toc_options_open;
+                json!({"open": self.ui.toc_options_open})
+            }
             "ui.keytips" => {
                 if let Some(v) = p.get("value") {
                     let Some(enabled) = v.as_bool() else { return Some(Err("`value` must be a boolean".into())) };
@@ -1601,6 +1614,7 @@ impl WordApp {
         dictate::show(self, &ctx);
         font_notice::show(self, &ctx);
         crate::keytips::show(self, &ctx, ui);
+        crate::toc_options::show(self, &ctx);
         keys::global_shortcuts(self, &ctx);
         windows::show_others(self, ui);
         if let Some(url) = self.canvas.open_url.take() {

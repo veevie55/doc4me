@@ -1,0 +1,2987 @@
+# isiXhosa (xh) interface catalog; machine-translated from en-gb.tsv using Google Translate, 2026-11-06. Review terminology before release.
+# Columns: context<TAB>English source<TAB>translation; placeholders are preserved.
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	a okanye "i" phambi kwegama elilandelayo; IsiPolish "w"/"we", "z"/"ze".
+	% of all commits	I-% yazo zonke izibophelelo
+	(All)	(Konke)
+	(Custom)	(Siko)
+	(no style)	(akukho simbo)
+	(no suggestions)	(akukho ngcebiso)
+	(none)	(akukho)
+	(normal text)	(umbhalo oqhelekileyo)
+	(not matched)	(ayingqamananga)
+	(picture or object)	(umfanekiso okanye into)
+	*Bold* and _italic_ with real formatting	*Bold* kunye _ithalikhi_ enofomato lokwenyani
+	0 or More Characters	0 okanye ngaphezulu abalinganiswa
+	1. Formatting restrictions	1. Izithintelo zokufomatha
+	1. Main document	1. Uxwebhu oluphambili
+	1.5 Line Spacing	1.5 iSikhewu seMigca
+	1/4 Em Space	1/4 Em Isithuba
+	1×2 Empty Matrix	I-1 × 2 iMatrix engenanto
+	1×3 Empty Matrix	I-1 × 3 iMatrix engenanto
+	2. Data source	2. Umthombo wedatha
+	2. Editing restrictions	2. Izithintelo zokuhlela
+	2×1 Empty Matrix	I-2 × 1 iMatrix engenanto
+	2×2 Determinant	2 × 2 Isigqibo
+	2×2 Empty Matrix	I-2 × 2 iMatrix engenanto
+	2×2 Identity Matrix	2 × 2 Identity Matrix
+	2×2 Identity Matrix (sparse)	2×2 Identity Matrix (incinci)
+	2×2 Matrix in Brackets	I-2 × 2 iMatrix kwiiBrackets
+	2×2 Matrix in Double Bars	I-2 × 2 iMatrix kwiiBars ezimbini
+	2×2 Matrix in Parentheses	I-2 × 2 iMatrix kwiiParentheses
+	2×3 Empty Matrix	I-2 × 3 iMatrix engenanto
+	3-D	3-D
+	3. Merge the data with the document	3. Dibanisa idatha kunye noxwebhu
+	3. Start enforcement	3. Qala ukunyanzeliswa
+	3D Models	Iimodeli ze3D
+	3×1 Empty Matrix	3 × 1 iMatrix engenanto
+	3×2 Empty Matrix	I-3 × 2 iMatrix engenanto
+	3×3 Empty Matrix	3 × 3 iMatrix engenanto
+	3×3 Identity Matrix	3 × 3 Identity Matrix
+	3×3 Identity Matrix (sparse)	3×3 Identity Matrix (incinci)
+	5,000 characters a day; give an email address for 50,000.	oonobumba abangama-5,000 ngosuku; nika idilesi ye-imeyile ye-50,000.
+	<< Less	<< Ngaphantsi
+	<< Remove	<< Susa
+	A file dialog is already open.	Incoko yababini yefayile sele ivuliwe.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Iprosesa yamagama esimahla, evulelekileyo ebhalwe ukusuka ekuqaleni kwiRust.\\\\nIsekwe kwiWordCraft liqela leArtCraft.
+	A header source holds the field names for a data source without a header row.	Umthombo weheader ubambe amagama ommandla womthombo wedatha ngaphandle komqolo weheader.
+	A mail merge field	Indawo yokudibanisa imeyile
+	A new document lists the commands with their shortcuts.	Uxwebhu olutsha ludwelisa imiyalelo kunye neendlela zabo ezimfutshane.
+	A numbered sequence (figures, tables…)	Ulandelelwano oluneenombolo (amanani, iitheyibhile…)
+	A password is required to open this document.	Igama lokugqitha liyafuneka ukuze uvule olu xwebhu.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	Isithuba esiphambi kweziphumlisi, amanqaku aphindwe kabini, iikoma zesiPolish phambi kwezihlanganisi.
+	A table of contents	Itheyibhile yeziqulatho
+	A table's rows keep the same columns here.	Umqolo wetafile ugcina imiqolo efanayo apha.
+	A xor B	Okanye B
+	A, B, C, …	A, B, C,……
+	a, b, c, …	a, b, c,……
+	AaBbCcDd	AaBbCcDd
+	AaBbYyZz	AaBbYyZz
+	About	Malunga
+	About Doc4Me	Malunga neDoc4Me
+	Above Chart	Itshathi engentla
+	Above the item	Ngaphezulu kwento
+	Absolute position	Isikhundla esipheleleyo
+	Absolute value cases	Iimeko zexabiso elipheleleyo
+	Accent	Isigxininiso
+	Accent Gradient	I-Accent Gradient
+	Accent with Reflection	Isigxivizo esinokucamngca
+	Accent {n}	Unyuso {n}
+	Accents	Ii-accents
+	Accept	Yamkela
+	Accept All	Yamkela Konke
+	Accept All Changes	Yamkela Zonke Iinguqu
+	Accept or Reject Changes	Yamkela okanye Yale Utshintsho
+	Accept This Change	Yamkela Olu tshintsho
+	Accessed on	Ifikeleleke kwi
+	Accessibility	Ukufikeleleka
+	Accessibility Pane	Iphayini yofikelelo
+	Acute	Ibukhali
+	Add	Yongeza
+	Add >>	Yongeza >>
+	Add a comment	Yongeza uluvo
+	Add a Table	Yongeza iTheyibhile
+	Add at least one field.	Yongeza nokuba mnye umhlaba.
+	Add caption when inserting:	Yongeza i-caption xa ufaka:
+	Add Chart Element	Yongeza iNqaku yeTshati
+	Add Field	Yongeza Indawo
+	Add Field Name	Yongeza Igama Lommandla
+	Add Font…	Yongeza Ifonti……
+	Add line numbering	Yongeza amanani omgca
+	Add New Placeholder	Yongeza isibambi-ndawo esitsha
+	Add New Placeholder…	Yongeza Isibambi-ndawo Esitsha……
+	Add New Source…	Yongeza uMthombo Omtsha……
+	Add Object to Selection	Yongeza into kuKhetho
+	Add Pen	Yongeza iPeni
+	Add Row	Yongeza umqolo
+	Add Series	Yongeza uthotho
+	Add Shape	Yongeza iMilo
+	Add Space Before Paragraph	Yongeza isithuba phambi komhlathi
+	Add space between Asian and Latin text	Yongeza isithuba phakathi kombhalo wesi-Asiya nesiLatini
+	Add space between Asian text and numbers	Yongeza isithuba phakathi kombhalo weAsia kunye namanani
+	Add tab stop at:	Yongeza indawo yokumisa kwisithuba:
+	Add Text	Yongeza Okubhaliweyo
+	Add the chapter number	Yongeza inombolo yesahluko
+	Add to Dictionary	Yongeza kwiDictionary
+	Add to Document	Yongeza kuXwebhu
+	Add to Quick Access Toolbar	Yongeza kwiThulbha yoFikelelo oluKhawulezayo
+	Add to Style Gallery	Yongeza kwigalari yesimbo
+	Add-ins	Izongezo
+	Add/Edit\nBibliography	Yongeza/Hlela\\\\nUluhlu lweencwadi
+	Add/Edit\nCitation	Yongeza/Hlela\\\\nCiko
+	Add\nNote	Yongeza\\\\nQaphela
+	Add\nPen	Yongeza\\\\nIpeni
+	Add\nShape	Yongeza\\\\nMilo
+	Added	Yongeziwe
+	Added Fonts	Iifonti ezongeziweyo
+	Address	Idilesi
+	Address Block	NONE
+	Address labels	Iileyibhile zedilesi
+	Address:	Idilesi:
+	Address\nBlock	Idilesi\\\\nValela
+	Adjust	Lungisa
+	Advanced	Ikwinqanaba eliphezulu
+	Advanced Find	Advanced Find
+	Advanced Find…	UFundo olukwinqanaba eliPhambili……
+	After:	Emva:
+	Agents	Iiarhente
+	Align	Lungelelanisa
+	Align Bottom Center	Lungelelanisa Emazantsi Umbindi
+	Align Bottom Left	Lungelelanisa Ezantsi Ekhohlo
+	Align Bottom Right	Lungelelanisa Ezantsi Ekunene
+	Align Center	Lungelelanisa embindini
+	Align Center Left	Lungelelanisa embindini ekhohlo
+	Align Center Right	Lungelelanisa embindini eKunene
+	Align Left	Lungelelanisa eKhohlo
+	Align Right	Lungelelanisa eKunene
+	Align Text	Lungelelanisa isiqendu
+	Align Top Center	Lungelelanisa Umbindi Ophezulu
+	Align Top Left	Lungelelanisa Phezulu eKhohlo
+	Align Top Right	Lungelelanisa Phezulu eKunene
+	Aligned at:	Ihambelana ne:
+	Alignment	Ulungelelwaniso
+	Alignment:	Ulungelelwaniso:
+	All	Konke
+	All - Linear	Zonke - Linear
+	All - Professional	Zonke - Professional
+	All Borders	Yonke imida
+	All Caps	Zonke iiCaps
+	All caps	Zonke iikepusi
+	All Commands	Yonke Imiyalelo
+	All files	Zonke iifayile
+	All Levels	Onke amanqanaba
+	All Markup	Lonke uphawu
+	All pages	Onke amaphepha
+	All pages in the range	Onke amaphepha kuluhlu
+	All records	Zonke iirekhodi
+	All symbol sets	Zonke iiseti zesimboli
+	Allow Doc4Me to use online services	Vumela iDoc4Me ukuba isebenzise iinkonzo ze-intanethi
+	Allow hanging punctuation	Vumela iziphumlisi ezijingayo
+	Allow Latin text to wrap in the middle of a word	Vumela umbhalo wesiLatini ukuba usonge embindini wegama
+	Allow line breaks	Vumela ikhefu lomgca
+	Allow overlap	Vumela ukugqithelana
+	Allow row to break across pages	Vumela umqolo ukwaphule amaphepha
+	Alphabetical	Ngokwealfabhethi
+	Alt Text	Isiqendu seAlt
+	Alt text	Umbhalo omnye
+	Alt Text Pane	Ifestile ye-Alt Text
+	Alt:	Alt:
+	Alt\nText	Enye\\\\nUmbhalo
+	And	Kwaye
+	Angle Brackets	Izibiyeli ze-engile
+	Angle Brackets with Separator	Izibiyeli ze-engile ezineSahluli
+	Angle Brackets with Two Separators	Izibiyeli ze-engile ezinezahluli ezimbini
+	Animate the caret (it glides and fades)	Philisa ukhathalelo (iyatyibilika kwaye icime)
+	Animation	Oopopayi
+	Animation effects:	Iziphumo zoopopayi:
+	Annotation Reference	Isalathiso seSihlomelo
+	Annotation Subject	Umxholo wesihlomelo
+	Annotation Text	Isicatshulwa sochazo
+	Another file	Enye ifayile
+	Any Character	Nawuphi na umlinganiswa
+	Any Digit	Nayiphi na idijithi
+	Any Letter	Nayiphi na Ileta
+	Anyone can open this document. Encrypt it with a password to keep it private.	Nabani na angaluvula olu xwebhu. Yiguqulele ngokuntsonkothileyo ngegama lokugqitha ukuze uyigcine bucala.
+	Anyone who opens the document will need this password.	Nabani na ovula uxwebhu uya kufuna eli gama lokugqithisa.
+	APA	APA
+	API key (if the server needs one)	API isitshixo (ukuba umncedisi ufuna enye)
+	Apply	Faka isicelo
+	Apply as you type	Faka isicelo njengoko uchwetheza
+	Apply Asian line-breaking rules (kinsoku)	Sebenzisa imithetho yaseAsia yokwaphulwa komgca (kinsoku)
+	Apply Character Style	Sebenzisa isimbo soMlinganiswa
+	Apply formatting to:	Faka ukufomatha ku:
+	Apply special formats to	Faka iifomati ezikhethekileyo kwi
+	Apply Style	Sebenzisa isimbo
+	Apply Styles	Sebenzisa Izimbo
+	Apply to:	Faka isicelo kwi:
+	Arabic	IsiArabhu
+	Arch Down	Arch Ezantsi
+	Arch Up	Arch Up
+	Area	Indawo
+	Around	Around
+	Arrange	Lungiselela
+	Arrange All	Lungiselela Konke
+	Arrange\nAll	Lungiselela\\\\nKonke
+	Arrow	Utolo
+	Arrows	Iintolo
+	Artistic Effects	Iziphumo Zobugcisa
+	As Recommended	Njengoko Kucetyiswa
+	As you type	Njengoko uchwetheza
+	ASAP	ASAP
+	Ascending	Ukunyuka
+	Asian text font:	Ifonti yombhalo waseAsia:
+	Asian Typography	Ukuchwetheza kweAsia
+	Assign	Yabela
+	At least	Ubuncinane
+	At least {n}	Ubuncinane {n}
+	Atelier	Atelier
+	Atmosphere	Umoya
+	Attach Template	Qhoboshela iSakhelo
+	Attach…	Qhoboshela……
+	Author	Umbhali
+	Auto	Ngokuzenzekelayo
+	AutoCaption	AutoCaption
+	AutoCaption…	I-AutoCap……
+	AutoComplete	Gqibezela ngokuzenzekela
+	AutoCorrect	I-AutoCorrect
+	AutoCorrect Options	Iinketho eziziLungisa ngokuzenzekela
+	AutoFit	AutoFit
+	AutoFit Contents	Imixholo ye-AutoFit
+	AutoFit Window	Ifestile ye-AutoFit
+	AutoFormat	I-AutoFormat
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	I-AutoFormat (Ctrl+Alt+K) ifomatha imihlathi ekhethiweyo, okanye uxwebhu lonke.
+	AutoFormat and Review Changes…	UkuFometha ngokuzenzekela kunye noPhononongo loTshintsho……
+	AutoFormat As You Type	Ukufometha okuzenzekelayo njengoko uchwetheza
+	AutoFormat changed {count} paragraphs	I-AutoFormat itshintshe imihlathi ye-{count}
+	AutoFormat Now	I-AutoFormat Ngoku
+	Automatic	Iyazenzekela
+	Automatic ({language})	Kuyazenzekela ({language})
+	Automatic bulleted lists	Uluhlu oluneebhulethi oluzenzekelayo
+	Automatic follows your system's language. Menus and commands change; your documents don't.	Okuzenzekelayo kulandela ulwimi lwesixokelelwano sakho. Iimenyu kunye nemiyalelo ziyatshintsha; amaxwebhu akho musa.
+	Automatic numbered lists	Uluhlu oluneenombolo oluzenzekelayo
+	Automatic Table 1 (3 levels)	oluzenzekelayo iTheyibhile 1 (3 amanqanaba)
+	Automatic Table 2 (2 levels)	oluzenzekelayo lweTheyibhile 2 (2 amanqanaba)
+	Automatically hyphenate document	Ngokuzenzekela qhagamshela uxwebhu
+	Automatically Update Document Styles	Hlaziya ngokuzenzekela kwizimbo zoxwebhu
+	Automatically update document styles	Hlaziya izimbo zamaxwebhu ngokuzenzekelayo
+	AutoSave	Gcina ngokuzenzekela
+	AutoSave documents you have saved in Doc4Me	Gcina ngokuzenzekela amaxwebhu owagcine kwiDoc4Me
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	Ugcino oluzenzekelayo aluphumelelanga: {error}. Gcina uxwebhu ukuze uvule uGcina ngokuzenzekela kwakhona.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	Ugcino oluzenzekelayo alufumaneki kwisikhangeli: alukwazi ukubhala kwiifayile zakho. Gcina ikopi ekhutshelweyo.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	Ugcino oluzenzekelayo lugcina kuphela i.docx, .odt kunye neefayile ze.rtf; {name} ayikwazi ukugcina lonke ufomato. Gcina njenge-.docx ukuze uvule uGcina ngokuzenzekelayo.
+	AutoSave saves every change to the file (needs a saved document)	Ugcino oluzenzekelayo lugcina lonke utshintsho kwifayile (ifuna uxwebhu olugciniweyo)
+	AutoSave writes your changes to the file a moment after you stop typing.	Ugcino oluzenzekelayo lubhala utshintsho lwakho kwifayile umzuzwana emva kokuba uyekile ukuchwetheza.
+	AutoText	Umbhalo ozenzekelayo
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS) 10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS) 7.17" × 10.12"
+	Back	Emva
+	Backspace	Indawo yangasemva
+	Balloons	Iibhaloni
+	Banded Columns	IiKholam ezinezibhande
+	Banded Rows	Imiqolo enemiqolo
+	Bar	Ibha
+	Base text:	Umbhalo osisiseko:
+	Based on: {style}	Isekwe kwi: {style}
+	Baseline Dots	Amanqaku asisiseko
+	Basic Cycle	Umjikelo osisiseko
+	Basic List	Uluhlu olusisiseko
+	Basic Math	Izibalo ezisisiseko
+	Basic Matrix	Matrix esisiseko
+	Basic Process	Inkqubo esisiseko
+	Basic Pyramid	Iphiramidi esisiseko
+	Basic Radial	I-Radial esisiseko
+	Basic Venn	Venn esisiseko
+	Bayes' rule	Umthetho kaBayes
+	Before:	Ngaphambili:
+	Beginning of Word	Ukuqala kweLizwi
+	Behind Text	Ngasemva Kwesicatshulwa
+	Below text	Ngezantsi umbhalo
+	Below the item	Ngezantsi kwento
+	Between	Phakathi
+	Bibliography	Uluhlu lweencwadi
+	Binary assets added	Ii-asethi zikabini zongeziwe
+	Binary assets removed	Ii-asethi zikabini zisusiwe
+	Binomial Coefficient	I-Binomial Coefficient
+	Binomial Coefficient (angle)	I-Binomial Coefficient (iengile)
+	Binomial Coefficient with Angle Brackets	I-Binomial Coefficient ene-Angle Brackets
+	Binomial expansion of (x+a)ⁿ	Ukwandiswa kweBinomial ye (x+a)ⁿ
+	Blank	Akunanto
+	Blank (Three Columns)	Akunanto (Iintsika eziNtathu)
+	Blank document	Uxwebhu olungenanto
+	Blank Page	Iphepha Elingenanto
+	Block\nAuthors	Vimba\\\\nAbabhali
+	Blue:	Bulu:
+	Body Text	Isicatshulwa somzimba
+	Body text in a short paragraph to show spacing.	Umzimba wesicatshulwa kumhlathi omfutshane ukubonisa izithuba.
+	Bold	Engqindilili
+	Book	Incwadi
+	Book Title	Isihloko seNcwadi
+	Book title	Isihloko sencwadi
+	Bookmark	Bookmark
+	Bookmark name:	Igama lencwadi ephawulayo:
+	Border lines	Imigca yemida
+	Border Painter	Umzobi weBorder
+	Border\nPainter	Umda\\\\nMpeyinti
+	Borders	Imida
+	Borders and Shading	Imida kunye neShading
+	Borders and Shading…	Imida kunye neShading……
+	Border…	Umda……
+	Both Sides	Macala omabini
+	Both sides	Amacala omabini
+	Bottom	Ezantsi
+	Bottom Border	Umda ongezantsi
+	Bottom Margin	Umda ongezantsi
+	Bottom of Page	Emazantsi ePhepha
+	Bottom of the Window	Emazantsi efestile
+	Bottom:	Ezantsi:
+	Box	Ibhokisi
+	Boxed Formula	Ifomula enebhokisi
+	Boxed Formula (example)	Ifomula enebhokisi (umzekelo)
+	Boxed Formulas	Iifomula ezinebhokisi
+	Braces	Iibrayisi
+	Braces with Separator	Iibrayisi ezineSahluli
+	Bracket	Isibiyeli
+	Brackets	Izibiyeli
+	Brackets with Separators	Izibiyeli ezinezahluli
+	Break Link	Yaphula ikhonkco
+	Breaks	Iikhefu
+	Breve	Breve
+	Brightness, contrast and transparency change the picture from how it looks now.	Ukukhanya, ukuchasana kunye nokungafihli kuyawutshintsha umfanekiso kwindlela okhangeleka ngayo ngoku.
+	Brightness:	Ukukhanya:
+	Bring Forward	Zisa Phambili
+	Browse in Doc4Me…	Bhrawuza kwiDoc4Me……
+	Browse…	Khangela……
+	Build table of figures from:	Yakha itafile yamanani ukusuka:
+	Building Block Gallery Content Control	Ulawulo lwesiqulatho seGalari yeBloko yeSakhiwo
+	Built from the style or table entry fields chosen in Options.	Yakhelwe kwisimbo okanye imihlaba yokungena kwetafile ekhethwe kwiiKhetho.
+	Built-In	Yakhelwe-ngaphakathi
+	Built-in Heading styles	Izimbo ezakhelwe-ngaphakathi zesihloko
+	Built-in style	Isimbo esakhelwe ngaphakathi
+	Built-in styles can't be deleted.	Izitayile ezakhelwe ngaphakathi azinakucinywa.
+	Bullet	Imbumbulu
+	Bullet Library	Ithala leencwadi
+	Bullets	Iimbumbulu
+	By author	Ngombhali
+	By:	Ngu:
+	Calendar	Ikhalenda
+	Can't be deleted	Ayinakucinywa
+	Cancel	Rhoxisa
+	Canvas Member	Ilungu leCanvas
+	Capitalization	Ukwenziwa koonobumba abakhulu
+	Capitalize Each Word	Bhala ngoonobumba abakhulu igama ngalinye
+	Capitalize first letter of sentences	Bhala unobumba omkhulu wezivakalisi
+	Capitalize first letter of table cells	Bhala unobumba omkhulu wokuqala weeseli zetafile
+	Capitalize names of days	Bhala ngoonobumba abakhulu amagama eentsuku
+	Capitalize the first word of a sentence	Bhala ngoonobumba abakhulu igama lokuqala lesivakalisi
+	Caption	Inkcazo
+	Caption label:	Ileyibhile yamagama-ncazo:
+	Caption Numbering	Amagama-ncazo amanani
+	Caption text	Isicatshulwa sombhalo
+	Caption:	Inkcazo:
+	Captions	Iinkcazelo
+	Caret Character	Caret Character
+	Case changes	Utshintsho lwetyala
+	Cases	Amatyala
+	Cases (Three Conditions)	Amatyala (Imiqathango emithathu)
+	Cases (Two Conditions)	Amatyala (imiqathango emibini)
+	Cases and Stacks	Amatyala kunye ne-Stacks
+	Catalog	Ikhathalogu
+	Categories	Iindidi
+	Categories:	Iindidi:
+	Category	Udidi
+	Category {n}	Udidi {n}
+	Category:	Udidi:
+	Category…	Udidi……
+	Ceiling	Isilingi
+	Cell	Iseli
+	Cell Margins	Imida yeeseli
+	Cell margins	Imida yeeseli
+	Cell Options	Iinketho Zeseli
+	Cell Size	Ubungakanani beSeli
+	Cell\nMargins	Iseli\\\\nImida
+	Center	Iziko
+	Centered	Isembindini
+	Centered as Group	Imiswe njengeQela
+	Centimeters	Iisentimitha
+	Change	Guqula
+	Change Case	Tshintsha Ityala
+	Change Chart Type	Guqula uhlobo lweTshati
+	Change Colors	Guqula Imibala
+	Change in y over change in x	Utshintsho ku-y phezu kotshintsho ku-x
+	Change Layout	Guqula uYilo
+	Change List Level	Guqula iNqanaba loLuhlu
+	Change Password…	Guqula igama lokugqithisa……
+	Change Picture	Guqula Umfanekiso
+	Change Picture…	Tshintsha uMfanekiso……
+	Change Shape	Guqula iMilo
+	Change Structure	Guqula iSakhiwo
+	Change to Display	Guqula kumboniso
+	Change to Inline	Tshintshela ku-Inline
+	Change to Level 1	Tshintshela kwiNqanaba loku-1
+	Change to Level 2	Tshintshela kwiNqanaba lesi-2
+	Change to Level 3	Tshintshela kwiNqanaba lesi-3
+	Change to Level 4	Tshintshela kwiNqanaba lesi-4
+	Change to Level 5	Tshintshela kwiNqanaba lesi-5
+	Change to Level 6	Tshintshela kwiNqanaba lesi-6
+	Change to Level 7	Tshintshela kwiNqanaba lesi-7
+	Change to Level 8	Tshintshela kwiNqanaba lesi-8
+	Change to Level 9	Tshintshela kwiNqanaba lesi-9
+	Change\nChart Type	Tshintsha\\\\nUhlobo lweTshati
+	Change\nColors	Guqula\\\\nImibala
+	Changed	Itshintshiwe
+	Changed lines:	Imigca etshintshiweyo:
+	Changes	Iinguqu
+	Changes with highlighting	Utshintsho ngokuqaqambisa
+	Changes without highlighting	Utshintsho ngaphandle kokuqaqambisa
+	Chapter in a book	Isahluko encwadini
+	Chapters begin at:	Izahluko ziqala ngo:
+	Character	Umlinganiswa
+	Character Border	Umda womlinganiswa
+	Character code:	Ikhowudi yoonobumba:
+	Character in Range	Umlinganiswa kuluhlu
+	Character level	Inqanaba lomlinganiswa
+	Character Position	Isikhundla somlinganiswa
+	Character Scale	Isikali soMlinganiswa
+	Character Shading	Ukufihlwa konobumba
+	Character Spacing	Izithuba zoonobumba
+	Character spacing	Izithuba zoonobumba
+	Character style	Isimbo somlinganiswa
+	Characters	Abalinganiswa
+	Characters (no spaces)	Abalinganiswa (akukho zithuba)
+	Characters (with spaces)	Abalinganiswa (kunye nezithuba)
+	Characters per line:	Abalinganiswa ngomgca ngamnye:
+	Chart	Itshathi
+	Chart Design	Uyilo lweTshati
+	Chart Layouts	Uyilo lweTshati
+	Chart Title	Isihloko seTshati
+	Check	Khangela
+	Check Accessibility	Khangela Ukufikeleleka
+	Check Box Content Control	Khangela Ulawulo Lwebhokisi Lomxholo
+	Check Compatibility	Khangela Ukuhambelana
+	Check Errors…	Jonga iimposiso……
+	Check for Errors	Jonga iimposiso
+	Check Spelling as You Type	Jonga upelo njengoko uchwetheza
+	Check spelling as you type	Jonga upelo njengoko uchwetheza
+	Check\nAccessibility	Jonga\\\\nUfikelelo
+	Checked styles are allowed:	Izimbo ezikhangelweyo zivumelekile:
+	Checked symbol	Isimboli etshekiweyo
+	Chevron Down	Chevron Phantsi
+	Chevron Up	Chevron Up
+	Chicago	eChicago
+	Chinese (Simplified)	IsiTshayina (Esenziwe lula)
+	Chinese (Traditional)	IsiTshayina (Sesiko)
+	Choose a command	Khetha umyalelo
+	Choose a shortcut	Khetha indlela emfutshane
+	Choose List Item	Khetha Uluhlu Lwento
+	Choose the sheet that holds the recipients.	Khetha iphepha eligcina abamkeli.
+	Circle	Isangqa
+	Circle area from its radius	Indawo yesangqa ukusuka kwiradiyasi yayo
+	Circled Dot	Ichaphaza eliSangqa
+	Circled Plus	Ukudibanisa okuCwangcisiweyo
+	Circled Times	Amaxesha aSangqa
+	Citation marked.	Ucaphulo luphawulwe.
+	Citation Style	Isimbo sokucaphula
+	Citations	Ucaphulo
+	Citations & Bibliography	Iingcaphulo kunye noBhalo-ncwadi
+	City	Isixeko
+	Clear	Cacileyo
+	Clear All	Sula Konke
+	Clear All Formatting	Cima Konke ukuFomatha
+	Clear Character Formatting	Sula ukuFomatha oonobumba
+	Clear Character Style	Isimbo esicacileyo soMlinganiswa
+	Clear Formatting Level	Cacisa iNqanaba lokuFomatha
+	Clear Paragraph Formatting	Cacisa ukuFomatha kwemihlathi
+	Click a border between two cells to merge them. Esc stops.	Cofa umda phakathi kweeseli ezimbini ukuzidibanisa. I-Esc iyamisa.
+	Click an item to paste it.	Cofa into ukuze uyincamathelise.
+	Click level to modify:	Cofa inqanaba ukulungisa:
+	Click the empty text box the text should continue in (Esc cancels)	Cofa ibhokisi yokubhaliweyo engenanto okubhaliweyo okumele kuqhubeke kuyo (Esc iyarhoxisa)
+	Click to switch back to inserting	Cofa ukutshintshela emva ekufakeni
+	Clipboard	Ibhodi eqhotyoshwayo
+	Clipboard Contents	Imixholo yebhodi eqhotyoshwayo
+	Clipboard Items	Izinto zebhodi eqhotyoshwayo
+	Clipboard Pane	Ipheyini yebhodi eqhotyoshwayo
+	Close	Vala
+	Close Equation	Vala Equation
+	Close Header and Footer	Vala umbhalo ongasentla kwekhasi kunye noMazantsi
+	Close Outline View	Vala imbonakalo yolwandlalo
+	Close Outline\nView	Vala ulwandlalo\\\\nJonga
+	Close Reviewing Pane	Vala iPhaneli yoPhononongo
+	Clustered Bar	Ibha edityanisiweyo
+	Clustered Column	IKholam edibeneyo
+	Col #:	Kol #:
+	Collapse	Ukuwa
+	Collapse Selection	Vala uKhetho
+	Collapse the Ribbon	Songa iRibhoni
+	Collate copies	Qokelela iikopi
+	Collect entries from:	Qokelela amangenelo ukusuka:
+	Colon Equal	Ikholoni Elinganayo
+	Color	Umbala
+	Color model:	Imodeli yombala:
+	Color only	Umbala kuphela
+	Color:	Umbala:
+	Color: {color}	Umbala: {color}
+	Colorful	Inemibala
+	Colors	Imibala
+	Colors:	Imibala:
+	Column	Umqolo
+	Column Break	Ikhefu leKholam
+	Column Selection	uKhetho lweKholam
+	Column selection: the arrow keys extend the block, Esc ends it	Ukukhetha ikholamu: izitshixo zotolo zandisa ibhloko, i-Esc iyayigqiba
+	Column width	Ububanzi bekholamu
+	Column:	Uluhlu:
+	Columns	Imihlathi
+	Columns:	Imihlathi:
+	Combine	Dibanisa
+	Combine Documents	Dibanisa Amaxwebhu
+	Combo Box Content Control	Ulawulo lwesiqulatho seBhokisi yeNdibaniselwano
+	Commands	Imiyalelo
+	Commands:	Imiyalelo:
+	Comment	Comment
+	Comments	Amagqabantshintshi
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Amagqabantshintshi ecaleni kwephepha ngalinye kwaye alandelele utshintsho kwiiPDF, kushicilelo nakwimifanekiso; uluhlu lwezimvo ekupheleni kwamaphepha ewebhu, Markdown kunye nokubhaliweyo.
+	Comments on version	Izimvo kuguqulelo
+	Comments Pane	Iphaneli yezimvo
+	Commits	Ukuzibophelela
+	Common Accent Objects	Izinto ze-Accent eziqhelekileyo
+	Common Brackets	Izibiyeli eziqhelekileyo
+	Common Fractions	Amaqhezu aqhelekileyo
+	Common Functions	Imisebenzi eqhelekileyo
+	Common Large Operators	abaSebenzi abakhulu abaqhelekileyo
+	Common Operator Structures	IZakhiwo zoMsebenzisi oqhelekileyo
+	Common Operators	AbaSebenzi abaqhelekileyo
+	Common Radicals	IiRadicals eziqhelekileyo
+	Common Subscripts and Superscripts	Imirhumo eqhelekileyo kunye nemibhalo ephambili
+	Communication	Unxibelelwano
+	Compact	Icwecwe
+	Company	Inkampani
+	Compare	Thelekisa
+	Compare Documents	Thelekisa Amaxwebhu
+	Compare to	Thelekisa
+	Compared: {changes} changes	Xa kuthelekiswa: {changes} utshintsho
+	Comparing with another file needs the desktop app.	Ukuthelekisa nenye ifayile kufuna i-desktop app.
+	Comparison	Ukuthelekisa
+	Comparison settings	Iisetingi zokuthelekisa
+	Compatibility mode: {version}	Imo yokuhambelana: {version}
+	Compatibility Options	Iinketho zokuhambelana
+	Compatibility Options…	Ukhetho Lokuhambelana……
+	Compress Pictures	Compress Imifanekiso
+	Compress punctuation at the start of a line	Cofa iziphumlisi ekuqaleni komgca
+	Condensed	Icutshiwe
+	Conference	Inkomfa
+	Conference paper	Iphepha lenkomfa
+	CONFIDENTIAL	YIMFIHLO
+	Confirm password:	Qinisekisa igama lokugqithisa:
+	Connect Shapes	Qhagamshela iiMilo
+	Constitutional Provisions	Izibonelelo zoMgaqo-siseko
+	Container Title	Isihloko sesikhongozeli
+	Contains	Iqulathe
+	Content Control at Selection	Ulawulo Lomxholo ekuKhethweni
+	Content Control Properties	IiPropati zoLawulo loMxholo
+	Contents can't be edited	Imixholo ayinakuhlelwa
+	Context	Umxholo
+	Contextual	Ngokomxholo
+	Continuous	Ngokuqhubekayo
+	Continuous numbering	Ukunika amanani rhoqo
+	Contour Integral	IContour Integral
+	Contour Integral with Limits	IContour Integral eneMida
+	Contour Integral with Stacked Limits	I-Contour Integral eneMida eSikiweyo
+	Contour Integrals	Contour Integrals
+	Contrast:	Thelekisa:
+	Contributors	Abaxhasi
+	Controls	Ulawulo
+	Conversions	Uguqulo
+	Convert	Guqula
+	Convert between built-up and linear form	Guqula phakathi kwefom eyakhelweyo kunye neyomgca
+	Convert Notes	Guqula amanqaku
+	Convert Permanently	Guqula ngokusisigxina
+	Convert Text to Table	Guqula isiqendu sibe yiTheyibhile
+	Convert Text to Table…	Guqula isiqendu sibe kwiTheyibhile……
+	Convert to Arabic Digits	Guqula kwiidijithi zesiArabhu
+	Convert to Shapes	Guqula kwiiMilo
+	Convert to Text	Guqula kwisiqendu
+	Convert to Thai Digits	Guqula kwiThai Digits
+	Copies	Iikopi
+	Coproduct	Imveliso
+	Coproduct with Limits	Imveliso eneMida
+	Coproduct with Lower Limit	Imveliso eneMida esezantsi
+	Coproduct with Subscript-Superscript Limits	Imveliso kunye ne-Subscript-Superscript Limit
+	Copy	Khuphela
+	Copy Formatting	Khuphela ukuFomatha
+	Copy of the text a bookmark marks	Ikopi yesicatshulwa amanqaku ebhukumaka
+	Copy Styles	Khuphela Izimbo
+	Copy Text	Khuphela Okubhaliweyo
+	Copy to where?	Khuphela phi?
+	Copyright	Ilungelo lokushicilela
+	Copyright Sign	Uphawu lokushicilela
+	Corrections	Izilungiso
+	Cosecant Function	Umsebenzi weCosecant
+	Cosine 2x	Cosine 2x
+	Cosine Function	Umsebenzi weCosine
+	Cotangent Function	Cotangent Function
+	Couldn't add {name}: {reason}	Ayinakongeza {name}: {reason}
+	Couldn't download the picture: {reason}	Ayikwazanga kukhuphela umfanekiso: {reason}
+	Couldn't download {name}: {error}	Ayinakuyikhuphela i-{name}: {error}
+	Couldn't get the add-in list: {reason}	Ayikwazanga kulufumana uluhlu olongezelweyo: {reason}
+	Couldn't make Doc4Me the default: {error}	Ayikwazanga ukwenza i-Doc4Me ibe yinto emiselweyo: {error}
+	Couldn't open {path}: {error}	Ayikwazanga ukuvula i-{path}: {error}
+	Couldn't search: {reason}	Ayikwazanga ukukhangela: {reason}
+	Couldn't translate: {reason}	Ayikwazanga ukuguqulela: {reason}
+	Count by:	Bala nge:
+	Count words in text boxes and notes	Bala amagama kwiibhokisi zetekisi kunye namanqaku
+	Country	Ilizwe
+	Courtesy Title	Isihloko sembeko
+	Cover Page	Iphepha Leqweqwe
+	Craft	Ubugcisa
+	Create	Yenza
+	Create a Style	Yenza isimbo
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	Yenza ulwandlalo olusebenzisanayo lwexwebhu lakho.\\\\n\\\\nYindlela entle yokugcina umkhondo wendawo okuyo okanye ushukumise umxholo wakho ngokukhawuleza.\\\\n\\\\nUkuze uqalise, yiya eKhaya isithuba kwaye usebenzise izimbo zesihloko kwizihloko ezikuxwebhu lwakho.
+	Create Data Source…	Yila uMthombo weDatha……
+	Create Graphic	Yenza uMzobo
+	Create Header Source	Yenza uMthombo wesihloko
+	Create Link	Yenza ikhonkco
+	Create New Style	Yenza isimbo esitsha
+	Create Source	Yenza uMthombo
+	Create…	Yenza……
+	Crop	Isityalo
+	Cross-reference	Iireferensi ezinqamlezileyo
+	Cross-reference:	Iireferensi ezinqamlezileyo:
+	Cube Root	Ingcambu yeCube
+	Current	Okwangoku
+	Current - Linear	Okwangoku - Linear
+	Current - Professional	Okwangoku - Ubungcali
+	Current keyboard settings	Izicwangciso zangoku zebhodibhodi
+	Current page	Iphepha langoku
+	Current Position	Isikhundla sangoku
+	Current record	Ingxelo yangoku
+	Current style: {style}	Uhlobo lwangoku: {style}
+	Curved Arrow Connector	Isidibanisi sotolo olugobileyo
+	Curved Connector	Isiqhagamshelanisi esigobileyo
+	Custom	Isiko
+	Custom dictionary	Isichazi-magama esilungiselelweyo
+	Custom Margins…	Imida eSiko……
+	Custom mark:	Uphawu olulungiselelweyo:
+	Custom range	Uluhlu oluqhelekileyo
+	Custom Table of Contents	Itheyibhile yesiko lemixholo
+	Custom Table of Contents…	Isiqulatho sesiKhokelo……
+	Custom Watermark	I-Watermark yesiko
+	Custom Watermark…	Isiko leWatermark……
+	Customize	Lungiselela
+	Customize Keyboard	Lungiselela ikhibhodi
+	Customize Quick Access Toolbar	Lungiselela iThulbha yoFikelelo oluKhawulezayo
+	Customize Quick Access Toolbar…	Lungiselela iSixhobo seSixhobo sokuFikelela ngokukhawuleza……
+	Customize Ribbon	Lungiselela iRibhoni
+	Customize the Ribbon…	Lungiselela iRibhoni……
+	Customize…	Lungiselela……
+	Cut	Sika
+	Cut, copy, and paste	Sika, khuphela, kwaye uncamathisele
+	Cycle	Umjikelo
+	Czech	IsiCzech
+	Danish	IsiDanish
+	Dark	Mnyama
+	Dark Mode	Imo Emnyama
+	Dark page (white text on black)	Iphepha elimnyama (umbhalo omhlophe kumnyama)
+	Dark with Shadow	Mnyama ngeShadow
+	Darkroom	Indawo emnyama
+	Dashed	Dashed
+	Data	Idatha
+	Data Labels	Iileyibhile zeDatha
+	Data source:	Umthombo wedatha:
+	Date	Umhla
+	Date & Time	Umhla & Ixesha
+	Date and Time	Umhla kunye nexesha
+	Date format	Ifomathi yomhla
+	Date formats:	Iifomati zomhla:
+	Date Picker Content Control	Ulawulo lwesiqulatho soMkhethi womhla
+	Day	Usuku
+	Decimal	Idesimali
+	Decorative objects only add visual interest: screen readers skip them.	Izinto zokuhombisa zongeza kuphela umdla obonakalayo: abafundi besikrini bayatsiba.
+	Decrease Font Size	Nciphisa ubungakanani befonti
+	Decrease Indent	Nciphisa i-Indesi
+	Default	Ukuhlala kukho
+	Default Paragraph Font	Ifonti yomhlathi oMiselweyo
+	Default tab stops:	Ukumisa isithuba sesithuba:
+	Define New Bullet	Chaza iBullet Entsha
+	Define New Multilevel List	Chaza uLuhlu olutsha lwamanqanaba amaninzi
+	Define New Multilevel List…	Chaza uLuhlu olutsha lweMiphakamo emininzi……
+	Define New Number Format	Chaza iFomathi yeNombolo eNtsha
+	Deflate	Deflate
+	Delete	Cima
+	Delete Back in Equation	Cima Emva kwi-Equation
+	Delete Cells	Cima Iiseli
+	Delete Clipboard Item	Cima Inqaku lebhodi eqhotyoshwayo
+	Delete Columns	Cima Imihlathi
+	Delete Comment	Cima Izimvo
+	Delete in Equation	Cima kwi-Equation
+	Delete Label	Cima ileyibhile
+	Delete Next Word	Cima Igama Elilandelayo
+	Delete Previous Word	Cima Igama Elidlulileyo
+	Delete Rows	Cima Imiqolo
+	Delete Selected Ink	Cima I-Ink Ekhethiweyo
+	Delete Style	Cima Isimbo
+	Delete Table	Cima iTheyibhile
+	Delete Table Style	Cima iSimbo seTheyibhile
+	Deleted	Icinyiwe
+	Deletions:	Ucimo:
+	Delivery address:	Idilesi yokuthunyelwa:
+	Delta Equal To	Delta Equal To
+	Delta over arrow	Delta phezu kotolo
+	Demote	Yehlisa
+	Demote to Body Text	Yehlisela kwisiqendu soMzimba
+	Derivative as a limit	Iphuma kumda
+	Descending	Ukuhla
+	Describe what this object shows, for people who can't see it.	Chaza ukuba le nto ibonisa ntoni, kubantu abangayiboniyo.
+	Describe what this table shows, for people who can't see it.	Chaza ukuba le theyibhile ibonisa ntoni, kubantu abangayiboniyo.
+	Description:	Inkcazo:
+	Design	Yila
+	Design Mode	Imo yoYilo
+	Detach Template	Cima Isakhelo
+	Detect language automatically	Khangela ulwimi ngokuzenzekelayo
+	Developer	Umphuhlisi
+	development build	ukwakhiwa kophuhliso
+	Diagonal	Idiagonal
+	Diagonal Dots	Amachaphaza eDiyagonal
+	Diamond	Idayimani
+	Dictate	Yalela
+	Dictation isn't available here.	Umyalelo awufumaneki apha.
+	Dictation stopped.	Ukubizela kuyekile.
+	Dictation stopped: {reason}	Umyalelo umisiwe: {reason}
+	Different First Page	Iphepha lokuqala elahlukileyo
+	Different Odd & Even Pages	Amaphepha awohlukeneyo oOdd & alinganayo
+	Differential	Umahluko
+	Differential theta	Itheta eyahlukileyo
+	Differential x	Umahluko x
+	Differential y	Umahluko y
+	Differentials	Umahluko
+	Direct formatting	Ukufomatha ngqo
+	Direction:	Umkhomba-ndlela:
+	Directory	Uluhlu
+	Display	Bonisa
+	Display for Review	Umboniso wokuphononongwa
+	Display gridlines on screen	Bonisa imigca yegridi kwisikrini
+	Display name	Bonisa igama
+	Display text	Bonisa okubhaliweyo
+	Distance from surrounding text	Umgama ukusuka kwisicatshulwa esijikelezileyo
+	Distribute Columns	Ukusasaza amaKholam
+	Distribute letters	Uhambisa iileta
+	Distribute Rows	Ukusasaza Imiqolo
+	Distribute spacing	Ukusabalalisa izithuba
+	Distributed	Kusasazwe
+	Do Not Check Spelling or Grammar	Musa ukujonga Upelo okanye igrama
+	Do not check spelling or grammar	Musa ukujonga upelo okanye igrama
+	DO NOT COPY	UNGAKOPI
+	Do Not Show in TOC	Ungabonisi kwi-TOC
+	Do you want to save changes to {name}?	Ngaba uyafuna ukugcina utshintsho kwi-{name}?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Izongezo zeDoc4Me ziipakethi zasimahla zeemakhro ezivela kwikhathalogu eyongeziweyo kaDoc4Me. Bangahlela kuphela uxwebhu.
+	Doc4Me is now the default app for Word documents.	I-Doc4Me ngoku ilusetyenziso olungagqibekanga lwamaxwebhu eLizwi.
+	Document	Uxwebhu
+	Document End	Ukuphela koxwebhu
+	Document Formatting	UkuFomatha uxwebhu
+	Document Grid	Igridi yoXwebhu
+	Document Information	Ulwazi loxwebhu
+	Document Property	Ipropati yoxwebhu
+	Document Start	Ukuqala koxwebhu
+	Document template:	Itemplate yoxwebhu:
+	Document Text	Isicatshulwa soxwebhu
+	Document Title	Isihloko soxwebhu
+	Document1	Uxwebhu1
+	Document\nPreferences	Uxwebhu\\\\nEzikhethwayo
+	Documents	Amaxwebhu
+	Documents you open will show up here.	Amaxwebhu owavulayo aza kuvela apha.
+	Does not contain	Ayiqulathanga
+	DOI	DOI
+	Don't add space between paragraphs of the same style	Musa ukongeza isithuba phakathi kwemihlathi yesimbo esifanayo
+	Don't capitalize after:	Musa ukwenza imali enkulu emva:
+	Don't hyphenate	Musa ukwenza ihyphenate
+	Don't print blank lines when data fields are empty	Musa ukushicilela imigca engenanto xa iindawo zedatha zingenanto
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Sukuzifunda iZotero, iMendeley okanye i-EndNote ecatshulweyo kunye neebhiliyografi
+	Don't Save	Musa Gcina
+	Don't use HTML paragraph auto spacing	Musa ukusebenzisa isithuba se-HTML esizenzekelayo somhlathi
+	Dot	Ichaphaza
+	Dot dash	Dot dash
+	Dot-dash	Dot-dash
+	Dots	Amachaphaza
+	Dotted	Ichaphaziwe
+	Double	Kabini
+	Double Bar	Ibha ephindwe kabini
+	Double Closing Quote	Ukuvala kabini iQuote
+	Double Dot	Ichaphaza eliphindwe kabini
+	Double Integral	Ukudityaniswa kabini
+	Double Integral with Limits	Ukudityaniswa kabini kunye neMida
+	Double Integral with Stacked Limits	Ukudityaniswa kabini kunye neMida eSikiweyo
+	Double Left Arrow with Text Above	Utolo oluphindiweyo lwaKhohlo olunombhalo oPhezulu
+	Double Left Arrow with Text Below	Utolo oluphindiweyo lwasekhohlo olunombhalo ongezantsi
+	Double Left Right Arrow with Text Above	Utolo oluphindiweyo lwaKhohlo olunombhalo oPhezulu
+	Double Left Right Arrow with Text Below	Utolo lwaKhohlo eKhohlo olunombhalo ongezantsi
+	Double Opening Quote	I-Quote yokuvula kabini
+	Double Right Arrow with Text Above	Utolo lwasekunene olunombhalo oPhezulu
+	Double Right Arrow with Text Below	Utolo lwasekunene olunombhalo ongezantsi
+	Double Spacing	Izithuba ezimbini
+	Double Square Brackets	Izibiyeli eziphindwe kabini zesikwere
+	Double Strikethrough	Ukubetha kabini
+	Double strikethrough	Ukubetha kabini
+	Double summation	Ukushwankathela kabini
+	Double Underline	Krwela umgca kabini
+	Double Vertical Bars	IiBar ezithe nkqo kabini
+	Doughnut	Donut
+	Down	Phantsi
+	Downloading the speech model ({mb} MB, once)…	Ikhuphela imodeli yentetho ({mb} MB, kanye)……
+	Downloading…	Iyakhuphela……
+	DRAFT	UYILO
+	Draft	Uyilo
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	Tsala uxande ukuzoba itafile, okanye umgca ngapha kweeseli ukuzahlula. I-Esc iyamisa.
+	Draw	Zoba
+	Draw Ink	Zoba i-Inki
+	Draw Table	Zoba iTheyibhile
+	Draw\nTable	Zoba\\\\nItheyibhile
+	Drawing Canvas	Umzobo weCanvas
+	Drawing Grid	Igridi yokuzoba
+	Drawing Tools	Izixhobo zokuzoba
+	Drawing\nCanvas	Umzobo\\\\nIkhanvasi
+	Drop Cap	Yehlisa iCap
+	Drop cap	Yehlisa ikepusi
+	Drop-Down List Content Control	Uluhlu loLawulo lokuLahla-Phantsi
+	Drops all formatting and pastes plain text.	Ulahla konke ukufomatha kwaye uncamathisele umbhalo ongenanto.
+	Dutch	IsiDatshi
+	E-mail Messages	Imiyalezo ye-imeyile
+	Edit Category	Hlela udidi
+	Edit Comment	Hlela amagqabantshintshi
+	Edit Data	Hlela iDatha
+	Edit Document	Hlela uxwebhu
+	Edit Equation	Hlela iEquation
+	Edit Field Code	Hlela iKhowudi yendawo
+	Edit Field…	Hlela indawo……
+	Edit Footer	Hlela Umbhalo Osemazantsi
+	Edit Header	Hlela Okungasentla
+	Edit Individual Documents…	Hlela Amaxwebhu Ngawonye……
+	Edit Items	Hlela izinto
+	Edit Recipient List	Hlela uLuhlu lwabamkeli
+	Edit Source	Hlela umthombo
+	Edit\nData	Hlela\\\\nIdatha
+	Edit\nRecipient List	Hlela\\\\nUludwe Lwabamkeli
+	Edited	Ihlelwe
+	Editing	Ukuhlela
+	Editing header/footer	Hlela umbhalo ongasentla kwekhasi/umbhalo osemazantsi
+	Editing in this document is restricted.	Ukuhlela kolu xwebhu kuthintelwe.
+	Editing — edit the document directly	Ukuhlela — hlela uxwebhu ngokuthe ngqo
+	Edition	Uhlelo
+	Editor	Umhleli
+	Edit…	Hlela……
+	Effects	Iziphumo
+	Elbow Arrow Connector	Isidibanisi sotolo lwengqiniba
+	Elbow Connector	I-Elbow Connector
+	Ellipsis	I-ellipsis
+	Em Dash	Em Dash
+	Em Space	Em Isithuba
+	Email address (optional)	Idilesi ye-imeyile (uyazikhethela)
+	Emboss	Emboss
+	Emphasis	Ugxininiso
+	Empty Matrices	Iimatriki ezingenanto
+	En Dash	En Dash
+	En Space	En Isithuba
+	Enclose Characters	Vala Abalinganiswa
+	Enclosure	Indawo ebiyelweyo
+	Encrypt with Password	Fihla ngePassword
+	Encrypt with Password…	Fihla Ngegama Lokugqithisa……
+	End of document	Ukuphela koxwebhu
+	End of section	Ukuphela kwecandelo
+	End of Word	Ukuphela kweLizwi
+	Endnote Reference	Isalathiso soMbhalo
+	Endnote Text	Isiqendu Sokuphetha
+	Endnotes	Imibhalo yokugqibela
+	Endnotes to footnotes	Imibhalo esemazantsi kwimibhalo esemazantsi
+	English	IsiNgesi
+	English (United Kingdom)	IsiNgesi (eUnited Kingdom)
+	English (United States)	IsiNgesi (eUnited States)
+	Engrave	Zikrole
+	Enlarge symbol	Isimboli enkulu
+	Enter formatting for number:	Ngenisa ukufomatha inombolo:
+	Enter in Equation	Ngena kwiEquation
+	Enter page number:	Faka inombolo yephepha:
+	Enter the web address or embed code of an online video:	Faka idilesi yewebhu okanye ubethelele ikhowudi yevidiyo ekwi-intanethi:
+	Entry marked.	Ungeniso luphawuliwe.
+	Entry:	Ungeniso:
+	Envelope #10   4.12" × 9.50"	Imvulophu #10 4.12" × 9.50"
+	Envelope Address	Idilesi yemvulophu
+	Envelope DL   4.33" × 8.66"	Imvulophu DL 4.33" × 8.66"
+	Envelope Return	UkuBuyiswa kwemvulophu
+	Envelope size:	Ubungakanani bemvulophu:
+	Envelopes	Iimvulophu
+	Equal by Definition	Ilingana ngeNgcaciso
+	Equal column width	Ububanzi bekholamu obulinganayo
+	Equal Equal	Equal Equal
+	Equal to	Ilingana ne
+	Equals:	Iyalingana:
+	Equation	Inxaki
+	Equation Gallery	Igalari yokulinganisa
+	Equation Info	Equation Ulwazi
+	Equation Number	Inombolo yoMlinganiso
+	Equation Options	IiNdlela zoNxulumaniso
+	Erase Ink	Cima i-Ink
+	Eraser	Irabha
+	Errors ({n})	Iimpazamo ({n})
+	Estonian	isiEstonian
+	Euler's identity	Isazisi sikaEuler
+	Even Page	Nditsho Iphepha
+	Even pages only	Namaphepha kuphela
+	Every change is recorded as a tracked change.	Lonke utshintsho lurekhodwa njengotshintsho olulandelelweyo.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	Wonke umyalelo uyafumaneka kwizikripti kunye neearhente ze-AI: sebenzisa `doc4me-cli mcp` kwiseva ye-MCP, okanye uqalise usetyenziso nge `--control <port>` yeJSON isitishi solawulo.
+	Every field needs a name.	Yonke indawo idinga igama.
+	Every font this document uses is installed.	Yonke ifonti esetyenziswa lolu xwebhu ifakiwe.
+	Everyone	Wonke umntu
+	Exactly	Ngokuchanekileyo
+	Exactly {n}	Kanye kanye {n}
+	Example: {sample}	Umzekelo: {sample}
+	Exceptions (optional)	Ngaphandle (ukhetho)
+	Exceptions…	NONE…
+	Executive   7.25" × 10.50"	Ulawulo 7.25" × 10.50"
+	Exit	Phuma
+	Expand	Yandisa
+	Expand or Collapse Heading	Yandisa okanye Gobe Isihloko
+	Expanded	Yandisiwe
+	Exponential	Exponential
+	Exponential series	Uthotho lwe Exponential
+	Export	Thumela ngaphandle
+	Export a copy to share (PDF, Word document)	Thumela ngaphandle ikopi ukwabelana (PDF, uxwebhu lweLizwi)
+	Export Page as JPEG	Thumela Iphepha njengeJPEG
+	Export Page as PNG	Thumela Iphepha njengePNG
+	Export PDF	Thumela iPDF
+	Exported {path}	Ithengiswa ngaphandle kwe-{path}
+	Expression	Ukuvakalisa
+	Extend Selection	Yandisa Ukhetho
+	Extend Selection by Units	Yandisa uKhetho ngeeYunithi
+	Extra space	Indawo eyongezelelweyo
+	Extra spaces between words.	Izithuba ezongezelelweyo phakathi kwamagama.
+	Field	Intsimi
+	Field Click	Nqakraza kwindawo
+	Field code:	Ikhowudi yendawo:
+	Field Codes	Iikhowudi zeNdawo
+	Field codes:	Iikhowudi zendawo:
+	Field name	Igama lommandla
+	Field name:	Igama lommandla:
+	Field names must be different.	Amagama ommandla kufuneka ahluke.
+	Field names:	Amagama ommandla:
+	Field properties	Iipropati zentsimi
+	Field:	Ummandla:
+	Fields	Imimandla
+	Fields to insert:	Imimandla yokufaka:
+	Fields:	Imimandla:
+	Field…	Umhlaba……
+	Figure	Umzobo
+	File	Ifayile
+	File name:	Igama lefayile:
+	Fill	Gcwalisa
+	Fill & Line	Gcwalisa & Line
+	Fill color:	Gcwalisa umbala:
+	Fill:	Gcwalisa:
+	Filling in forms	Ukuzalisa iifom
+	Film	Ifilimu
+	Filter and Sort	Hlunga kwaye Hlela
+	Filter and Sort…	Hluza kwaye Uhlele……
+	Filter Records	Iirekhodi zesihluzi
+	Find	Fumana
+	Find and Replace	Fumana kwaye ubeke endaweni yakho
+	Find Next	Fumana Okulandelayo
+	Find Next Editable Region	Fumana iNgingqi ehlelekayo elandelayo
+	Find Previous	Fumana Ngaphambili
+	Find Recipient	Fumana umamkeli
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	Fumana ukhetha umhlathi olandelayo otshintshiweyo; Ukwala kubeka lowo ukhethiweyo umva njengoko ebenjalo.
+	Find What Expression	Fumana Yintoni Ukuchazwa
+	Find What Text	Fumana Sithini Isiqendu
+	Find what:	Fumana ntoni:
+	Find →	Fumana →
+	Find:	Fumana:
+	Finish	Gqiba
+	Finish & Merge	Gqiba kwaye udibanise
+	Finish &\nMerge	Gqiba &\\\\nDibanisa
+	Finished	Kugqityiwe
+	Finnish	IsiFinnish
+	First	Okokuqala
+	First Cell in Column	Iseli yokuQala kwiKholam
+	First Cell in Row	Iseli yokuqala kumqolo
+	First Column	IKholamu yokuQala
+	First commit	Zibophelele kuqala
+	First line	Umgca wokuqala
+	First line:	Umgca wokuqala:
+	First Name	Igama lokuqala
+	First row of data contains column headers	Uluhlu lokuqala lwedatha luqulathe iiheader zekholamu
+	Fit	Fit
+	Fit text	Faka umbhalo
+	Fix Position on Page	Lungisa iNdawo kwiPhepha
+	Fixed Column Width	Ububanzi beKholam eZinzisiweyo
+	Flip Horizontal	Flip Horizontal
+	Flip Vertical	Jika ngokuthe nkqo
+	Floor	Umgangatho
+	Focus	Gxininisa
+	Follow number with:	Landela inombolo nge:
+	Font	Ifonti
+	Font Color	Umbala Wefonti
+	Font color	Umbala wefonti
+	Font color:	Umbala wefonti:
+	Font Dialog	Incoko yababini yefonti
+	Font not installed	Ifonti ayifakelwanga
+	Font Size	Ubungakanani befonti
+	Font Substitution	Ukutshintshwa kwefonti
+	Font Substitution…	Ukutshintshwa Kwefonti……
+	Font:	Ifonti:
+	Font: {font}	Ifonti: {font}
+	Fonts	Iifonti
+	Font…	Ifonti……
+	Footer	Umbhalo osemazantsi
+	Footnote and Endnote	Umbhalo osemazantsi kunye noMbhalo
+	Footnote Reference	Isalathiso sombhalo osemazantsi
+	Footnote Text	Umbhalo osemazantsi
+	Footnotes	Imibhalo esemazantsi
+	Footnotes and endnotes	Imibhalo esemazantsi nesiphelo
+	Footnotes to endnotes	Imibhalo esemazantsi ukuya kumanqakwana
+	Form Letters	Yenza iileta
+	Format	Ifomathi
+	Format Page Numbers	Amanani ePhepha lokuFometha
+	Format Page Numbers…	UkuFomatha Iinombolo zePhepha……
+	Format Painter	Ipeyinti yokuFomatha
+	Format Picture	Fomata Umfanekiso
+	Format Shape	Ubume beFomathi
+	Format:	Ubume:
+	Formatted	Ifomathiweyo
+	Formatted Text	Isiqendu esifomathiweyo
+	Formatting	Ukufomatha
+	Formatting at Selection	Ukufomatha kuKhetho
+	Formatting completed. You can now:	Ukufomatha kugqityiwe. Ngoku unga:
+	Formatting exceptions	Izinto ezingaqhelekanga zokufomatha
+	Formatting marks	Amanqaku okufomatha
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	Ukufomatha, utshintsho lweemeko, indawo emhlophe kunye neetafile ziyathelekiswa; ezinye iisetingi zigcinelwe kamva.
+	Formula	Ifomula
+	Forward	Phambili
+	Fraction	Iqhezu
+	Fractions (1/2) as fraction characters (½)	Amaqhezu (1/2) njengamagama amaqhezu (½)
+	French	IsiFrentshi
+	French (France)	IsiFrentshi (eFransi)
+	From	Ukusuka
+	From text:	Ukusuka kwisicatshulwa:
+	from Unicode (hex)	ukusuka kwi-Unicode (hex)
+	From:	Isuka:
+	Full page of the same label	Iphepha elipheleleyo leleyibhile efanayo
+	Function	Umsebenzi
+	Functions	Imisebenzi
+	Gallery	Igalari
+	GB/T 7714	GB/T 7714
+	General	Ngokubanzi
+	Geometry	Ijometri
+	German	IsiJamani
+	German (Germany)	Isijamani (eJamani)
+	Get Add-ins	Fumana ezongezo
+	Get Data	Fumana iDatha
+	Get Data…	Fumana iDatha……
+	Getting ready…	Iyalungiselela……
+	Glow	Khanya
+	Glow Colors	Imibala eqaqambileyo
+	Go Back	Buyela Emva
+	Go To	Yiya ku
+	Go to	Yiya ku
+	Go To…	Yiya ku……
+	Good afternoon	Mholo emva kwemini
+	Good evening	Molo ngokuhlwa
+	Good morning	Molo kusasa
+	GOST (name sort)	I-GOST (uhlobo lwegama)
+	GOST (title sort)	I-GOST (uhlobo lwesihloko)
+	Grab bag	Thatha ibhegi
+	Grammar	Igrama
+	Grammar Settings	Izicwangciso zegrama
+	Graphic	Umzobo
+	Grave	Ingcwaba
+	Greater than	Enkulu kune
+	Greater than or equal	Enkulu kuno okanye iyalingana
+	Greek	isiGrike
+	Greek Letters	Iileta zesiGrike
+	Green:	Luhlaza:
+	Greeting Line	Umgca wokubulisa
+	Greeting\nLine	Umbuliso\\\\nUmgca
+	Grid Settings	Izicwangciso zegridi
+	Grid Table 1 Light	Itheyibhile yegridi 1 Ukukhanya
+	Grid Table 4 – Blue	Itheyibhile yegridi yesi-4 – eluhlaza okwesibhakabhaka
+	Grid Table 4 – Green	Itheyibhile yegridi yesi-4 – eluhlaza
+	Grid Table 4 – Orange	Itheyibhile yegridi yesi-4 - i-Orenji
+	Grid Table 4 – Purple	Itheyibhile yegridi 4 – Purple
+	Gridlines	Imigca yegridi
+	Group	Iqela
+	Grouping Character Above	Ukwahlulahlula uMlinganiswa Ngentla
+	Grouping Character Below	Ukwahlulahlula uMlinganiswa Ngezantsi
+	Grow Font 1 Point	Khulisa ifonti yoku-1
+	H:	H:
+	Hanging Indent	I-Ident ejingayo
+	Harvard (Anglia)	IHarvard (eAnglia)
+	Hat	Umnqwazi
+	Header	Okubhalwe ngasentla kwekhasi
+	Header & Footer	Okubhalwe ngasentla kunye noKusemazantsi
+	Header Options	IiKhetho zeHeada
+	Header Options:	Okunokukhethwa Ngasentla:
+	Header Row	Umqolo ongasentla
+	Header source: {file} (the next data source opened here takes its field names)	Umthombo weheader: {file} (umthombo wedatha olandelayo ovulwe apha uthatha amagama awo kwindawo)
+	Header/Footer Position	Indawo engasentla/ngasezantsi
+	Headers and footers	Okubhalwe ngasentla kwekhasi kunye nemibhalo engezantsi
+	Heading 1	Isihloko 1
+	Heading 2	Isihloko 2
+	Heading 3	Isihloko 3
+	Heading styles (levels 1–{n})	Izimbo zesihloko (amanqanaba 1–{n})
+	Heading {n}	Umfanekiso we-{n}
+	Headings	Izihloko
+	Heart	Intliziyo
+	Hebrew	IsiHebhere
+	Height:	Ubude:
+	Help	Nceda
+	Hex:	Hex:
+	Hidden	Ifihliwe
+	Hidden text	Isicatshulwa esifihliweyo
+	Hide Codes	Fihla Iikhowudi
+	Hide from style lists	Fihla kuluhlu lwesimbo
+	Hide Ink	Fihla i-Ink
+	Hide White Space	Fihla isithuba esiMhlophe
+	Hide\nInk	Fihla\\\\nInki
+	Hierarchy	Uluhlu lwemigangatho
+	Highlight	Balaselisa
+	Highlight Changes	Balaselisa iinguqulelo
+	Highlight changes in printed document	Gxininisa utshintsho kuxwebhu olushicilelweyo
+	Highlight changes on screen	Layisha utshintsho kwiscreen
+	Highlight Merge Fields	Gxininisa imimandla yokudibanisa
+	Highlight\nMerge Fields	Gqamisa\\\\nDibanisa imimandla
+	Highlighter	Isikhanyisi
+	Hindi	IsiHindi
+	Historical and Discretional	Imbali kunye nengqiqo
+	Hollow	Umgongxo
+	Home	Ekhaya
+	Home folder	Ifolda yasekhaya
+	Horizontal	Ukuthe tye
+	Horizontal Line	Umgca othe tye
+	Horizontal spacing:	Izithuba ezithe tyaba:
+	How many pages the whole document has	Mangaphi amaphepha analo lonke uxwebhu
+	How many pages this section has	Mangaphi amaphepha analo eli candelo
+	How many words the document holds	Mangaphi amagama agcinwe luxwebhu
+	HTML Format	Ubume be-HTML
+	Hue:	Hue:
+	Hungarian	IsiHungary
+	Hyperbolic Cosecant Function	Umsebenzi we-hyperbolic Cosecant
+	Hyperbolic Cosine Function	Umsebenzi we-hyperbolic Cosine
+	Hyperbolic Cotangent Function	Hyperbolic Cotangent Function
+	Hyperbolic Functions	Imisebenzi ye-hyperbolic
+	Hyperbolic Secant Function	Hyperbolic Secant Function
+	Hyperbolic Sine Function	Hyperbolic Sine Function
+	Hyperbolic Tangent Function	Umsebenzi we-hyperbolic Tangent
+	Hyperlink	I-Hyperlink
+	Hyphenate at:	Iqhagamshela apha:
+	Hyphenate words in CAPS	Amagama adibanisayo kwiCAPS
+	Hyphenation	Iqhagamshela
+	Hyphenation Options…	Ukhetho Lweqhagamshela……
+	Hyphenation zone:	Indawo yokudibanisa:
+	Hyphens (--) as dashes (—)	Iqhagamshela (--) njengedash (—)
+	Hypotenuse	Hypotenuse
+	I, II, III, …	I, II, III,……
+	i, ii, iii, …	mna, ii, ii……
+	Icon Color	Umbala woMfanekiso
+	Icons	Iimpawu zomqondiso
+	Identity Matrices	Iimatriki zesazisi
+	IEEE	IEEE
+	If…Then…Else	Ukuba…Ngoko…Okunye
+	If…Then…Else…	Ukuba…Kwaye…Okunye…
+	Ignore All	Ungabahoyi Konke
+	Ignore punctuation characters	Ungazihoyi iimpawu zobhalo
+	Ignore web and file addresses	Ungahoyi iwebhu kunye needilesi zeefayile
+	Ignore white-space characters	Ungahoyi amagama amhlophe
+	Ignore words in capitals	Ungawahoyi amagama ngoonobumba abakhulu
+	Ignore words with numbers	Ungawahoyi amagama anamanani
+	Illustrations	Imizekeliso
+	Immersive	Ukuntywilisela
+	Immersive Reader	Umfundi ontywilayo
+	Immersive\nReader	Ngokuntywiliselayo\\\\nUmfundi
+	In Default apps, choose Doc4Me for the document types you want it to open.	Kwii-apps eziMiselweyo, khetha i-Doc4Me kwiintlobo zamaxwebhu ofuna ukuba ivuleke.
+	In equations, typing a name after a backslash replaces it with its symbol.	Kwii-equations, ukuchwetheza igama emva kwe-backslash endaweni yalo kunye nesimboli salo.
+	In Front of Text	Phambi Kwesiqendu
+	In Line with Text	Ngokuhambelana nesicatshulwa
+	Inches	I-intshi
+	Include label and number	Bandakanya ileyibhile kunye nenombolo
+	Include level number from:	Bandakanya inombolo yenqanaba ukusuka:
+	Include page numbers	Bandakanya amanani ephepha
+	Increase Font Size	Yandisa Ubungakanani Befonti
+	Increase Indent	Yandisa i-Indent
+	Indent	I-Indent
+	Indent from left:	Ujikeze ukusuka ekhohlo:
+	Indentation	Ukujikela ngaphakathi
+	Indented	Ifakwe ngaphakathi
+	Indents	Iindenti
+	Indents and Spacing	Iindenti kunye neSithuba
+	Index	Isalathiso
+	Index and Tables	Isalathiso kunye neeThebhile
+	Index Heading	Isihloko sesalathiso
+	Index {n}	Isalathiso {n}
+	Indonesian	Isi-Indonesian
+	Inflate	Gxumeka
+	Info	Ulwazi
+	Initials:	Abaqalayo:
+	Ink	I-inki
+	Ink Equation	I-Ink Equation
+	Ink Replay	I-Ink Replay
+	Ink to Math	I-Ink ukuya kwiMathematika
+	Ink to Shape	I-Ink kwiMilo
+	Ink to\nMath	I-Inki ukuya\\\\nMathematika
+	Ink to\nShape	I-Inki yoku\\\\nMilo
+	Ink\nReplay	I-Inki\\\\nPhinda udlale
+	Inline	Emgceni
+	Input Format	Uyilo Lwefomathi
+	Insert	Faka
+	Insert a 3D model from a file (.glb, .stl, .obj)	Faka imodeli ye-3D kwifayile (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	Faka inxaki entsha (Alt+=)
+	Insert Above	Faka Phezulu
+	Insert Below	Faka Ngezantsi
+	Insert Caption	Faka i-Caption
+	Insert Cells	Faka Iiseli
+	Insert Chart	Faka iTshati
+	Insert Citation	Faka Isicaphulo
+	Insert Columns to the Left	Faka Imihlathi eKhohlo
+	Insert Columns to the Right	Faka iiKholam ekunene
+	Insert Data	Faka Idatha
+	Insert Database	Faka iDatabase
+	Insert Database…	Faka Uvimba Weenkcukacha……
+	Insert Date Field	Faka Indawo Yomhla
+	Insert Endnote	Faka Inqaku Elisekupheleni
+	Insert entire column	Faka ikholam epheleleyo
+	Insert entire row	Faka umqolo wonke
+	Insert Footnote	Faka Umbhalo osemazantsi
+	Insert Hyperlink	Faka iHyperlink
+	Insert Index	Faka Isalathiso
+	Insert Left	Faka eKhohlo
+	Insert LISTNUM Field	Faka LISTNUM Indawo
+	Insert Merge Field	Faka Indawo Yokudibanisa
+	Insert Merge\nField	Faka Ukudibanisa\\\\nUmmandla
+	Insert New Equation	Faka inxaki entsha
+	Insert one text or another, depending on a field's value.	Faka isicatshulwa esinye okanye esinye, kuxhomekeke kwixabiso lendawo.
+	Insert Page Field	Faka Indawo Yephepha
+	Insert Right	Faka Ekunene
+	Insert Rows	Faka Imiqolo
+	Insert Rows Above	Faka Imiqolo Engasentla
+	Insert Rows Below	Faka Imiqolo Ngezantsi
+	Insert Shapes	Faka iiMilo
+	Insert SmartArt	Faka i-SmartArt
+	Insert Structure	Faka Isakhiwo
+	Insert Symbol	Faka uphawu
+	Insert Table	Faka iTheyibhile
+	Insert Table of Authorities	Faka iTheyibhile yabasemagunyeni
+	Insert Table of Figures	Faka iTheyibhile yeMifanekiso
+	Insert Table…	Faka Itheyibhile……
+	Insert Time Field	Faka Indawo Yexesha
+	Insert Video	Faka Ividiyo
+	Insert\nAbove	Faka\\\\nNgentla
+	Insert\nCaption	Faka\\\\nUmfanekiso
+	Insert\nCitation	Faka\\\\nCiko
+	Insert\nFootnote	Faka\\\\nUmbhalo osemazantsi
+	Inserted	Ifakiwe
+	Insertions and Deletions	Ukufakwa kunye nokucinywa
+	Insertions:	Ukufakwa:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	Ukufakwa: {ins}, kucinywe: {del}, ihamba: {moves}, ukufomatha: {fmt}, izimvo: {comments}
+	Inside	Ngaphakathi
+	Inside Borders	Ngaphakathi kwemida
+	Inside Margin	Ngaphakathi kuMda
+	Inside:	Ngaphakathi:
+	Inspect Document	Hlola uxwebhu
+	Inspect Styles at Selection	Jonga izimbo xa ukhetha
+	Institution	Iziko
+	Integral	Okudityanisiweyo
+	Integral of e^(−x²)	Umdibaniso we-e^(−x²)
+	Integral with Limits	Idibaniso kunye neMida
+	Integral with Stacked Limits	Idityanisiwe kunye neMida eSikiweyo
+	Integrals	Iindibaniselwano
+	Intense Emphasis	Ugxininiso Olunzulu
+	Intense Quote	I-Quote enzulu
+	Intense Reference	Isalathiso esinzulu
+	Interface	Ujongano
+	Interface language	Ulwimi lwesinxibelelanisi
+	Interface language:	Ulwimi lwesiNxulumanisi:
+	Interface size:	Ubungakanani bojongano:
+	Interface Theme	Umxholo wonxibelelwano
+	Interface theme:	Umxholo wojongano:
+	Interface\nTheme	Ujongano\\\\nUmxholo
+	Internet addresses as links	Iidilesi ze-Intanethi njengamakhonkco
+	Intersection	Ukunqumla kweendlela
+	Intersection with Limits	Ukudibana kunye neMida
+	Intersection with Lower Limit	Ukudibana kunye noMda oMphantsi
+	Intersection with Subscript-Superscript Limits	Ukudibana kunye neMida yeSibhalo-Superscript
+	Inverse Cosecant Function	UmSebenzi weCosecant eNguqulekileyo
+	Inverse Cosine Function	I-Inverse Cosine Function
+	Inverse Cotangent Function	Umsebenzi weCotangent eHambayo
+	Inverse Functions	Imisebenzi eguqukileyo
+	Inverse Hyperbolic Cosecant Function	Umsebenzi we-hyperbolic Cosecant eHambayo
+	Inverse Hyperbolic Cosine Function	Umsebenzi we-Hyperbolic Cosine oPhambileyo
+	Inverse Hyperbolic Cotangent Function	Umsebenzi oHambayo we-hyperbolic Cotangent
+	Inverse Hyperbolic Functions	Imisebenzi ye-hyperbolic eHambayo
+	Inverse Hyperbolic Secant Function	Umsebenzi we-hyperbolic Secant eHambayo
+	Inverse Hyperbolic Sine Function	Umsebenzi weSine oHambayo
+	Inverse Hyperbolic Tangent Function	Umsebenzi we-Hayperbolic Tangent eHambayo
+	Inverse Secant Function	I-Inverse Secant Function
+	Inverse Sine Function	Umsebenzi weSine oHambayo
+	Inverse Tangent Function	Umsebenzi weTangenti eNguqulekileyo
+	Ionosphere	Ionosphere
+	Is blank	Ayinanto
+	Is not blank	Ayinanto
+	ISO 690 (author-date)	ISO 690 (umbhali-umhla)
+	ISO 690 (numerical)	ISO 690 (yamanani)
+	Issue	Umba
+	it isn't a picture Doc4Me can read	ayingomfanekiso iDoc4Me enokufundwa
+	Italian	IsiTaliyane
+	Italic	akekeleyo
+	Japanese	IsiJapan
+	Journal	Ijenali
+	Justification	Uthethelelo
+	Justification of a display equation	Ulungelelaniso lwenxaki yokubonisa
+	Justified	Igwetyelwe
+	Justify	thethelela
+	Keep Lines Together	Gcina Imigca Ndawonye
+	Keep lines together	Gcina imigca kunye
+	Keep Source Formatting	Gcina ukuFomatha uMthombo
+	Keep Text Only	Gcina Isiqendu Kuphela
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	Gcina igama eliyimfihlo kwindawo ethile ekhuselekileyo: ngaphandle kwayo akukho mntu, iDoc4Me ibandakanyiwe, unokuvula uxwebhu. Shiya zombini iibhokisi zingenanto ukususa igama lokugqithisa.
+	Keep with Next	Gcina ngokulandelayo
+	Keep with next	Gcina ngokulandelayo
+	Keeps the fonts and formatting of the copied text.	Igcina iifonti kunye nokufomatha kokubhaliweyo okukhutshelweyo.
+	Kerning for fonts:	Kerning kwiifonti:
+	Keyboard shortcuts:	Iindlela ezimfutshane ze-keyboard:
+	Keys for this command:	Izitshixo zalo myalelo:
+	Keywords	Amagama angundoqo
+	Korean	IsiKorea
+	Label changes with:	Ileyibhile iyatshintsha nge:
+	Label:	Ileyibhile:
+	Labels	Iileyibhile
+	Landscape	Imbonakalo-mhlaba
+	Language	Ulwimi
+	Language Preferences…	Ulwimi Olukhethwayo……
+	Language…	Ulwimi……
+	Large\nOperator	Enkulu\\\\nUmqhubi
+	Largest Only	Enkulu Kuphela
+	Largest only	Enkulu kuphela
+	Lasso	Lasso
+	Lasso Select	Lasso Khetha
+	Last	Okokugqibela
+	Last Cell in Column	Iseli yokugqibela kwiKholam
+	Last Cell in Row	Iseli yokugqibela kumqolo
+	Last Column	Umqolo wokugqibela
+	Last commit	Isibophelelo sokugqibela
+	Last Name	Ifani
+	Last, First; Last, First	Okokugqibela, Okokuqala; Okokugqibela, Okokuqala
+	Latin text font:	Ifonti yombhalo wesiLatini:
+	Layout	Uyilo
+	Layout options for this document	Iinketho zoyilo zolu xwebhu
+	Layout Summary	Ubeko Isishwankathelo
+	Layouts	Uyilo
+	Leader	Inkokeli
+	Leave a recipient out of the merge when a field has this value.	Shiya umamkeli ngaphandle kodibaniso xa umhlaba unalo eli xabiso.
+	Leave Equation	Shiya Equation
+	Leave the equation (Esc)	Shiya inxaki (Esc)
+	Leave the label out of the caption	Shiya ileyibhile ngaphandle kwesihloko
+	Left	Ekhohlo
+	Left Arrow with Text Above	Utolo lwasekhohlo Olunombhalo oPhezulu
+	Left Arrow with Text Below	Utolo lwasekhohlo olunombhalo ongezantsi
+	Left Border	Umda wasekhohlo
+	Left border	Umda wasekhohlo
+	Left Bracket Twice	Isibiyeli sasekhohlo kabini
+	Left indent	Ushiya indawo ekhohlo
+	Left Margin	Umda wasekhohlo
+	Left Only	Ekhohlo Kuphela
+	Left only	Ekhohlo kuphela
+	Left Right Arrow Above	Utolo lwaKhohlo eKunene Phezulu
+	Left Right Arrow with Text Above	Utolo lwaKhohlo olunombhalo oPhezulu
+	Left Right Arrow with Text Below	Utolo lwasekhohlo olunombhalo ongezantsi
+	Left Subscript-Superscript	Ushicilelo olusezantsi lwasekhohlo
+	Left-to-right	Ekhohlo ukuya ekunene
+	Left-to-Right Text Direction	Umkhomba-ndlela wokubhaliweyo ukuya eKhohlo ukuya ekunene
+	Left:	Ekhohlo:
+	Leftwards Arrow Above	Utolo lwasekhohlo Phezulu
+	Leftwards Harpoon Above	Ekhohlo iHarpoon Phezulu
+	Legal   8.50" × 14.00"	Esemthethweni 8.50" × 14.00"
+	Legal style numbering	Iinombolo zesimbo esisemthethweni
+	Legend	Intsomi
+	Less than	Ngaphantsi kwe
+	Less than or equal	Ngaphantsi okanye ngokulinganayo
+	Letter	Ileta
+	Letter   8.50" × 11.00"	Unobumba 8.50" × 11.00"
+	Letter headings	Izihloko zoonobumba
+	Letter-Like Symbols	IiMpawu ezinje ngonobumba
+	Letters	Iileta
+	Level 1	Inqanaba loku-1
+	Level 2	Inqanaba lesi-2
+	Level 3	Inqanaba lesi-3
+	Level 4	Inqanaba lesi-4
+	Level 5	Inqanaba lesi-5
+	Level 6	Inqanaba lesi-6
+	Level 7	Inqanaba lesi-7
+	Level 8	Inqanaba lesi-8
+	Level 9	Inqanaba lesi-9
+	Level {n}	Inqanaba le-{n}
+	Level:	Inqanaba:
+	Levels:	Amanqanaba:
+	LibreTranslate server (open source)	LibreTranslate iseva (umthombo ovulekileyo)
+	Ligatures:	ILigatures:
+	Light	Ukukhanya
+	Light with Outline	Ukukhanya ngolwandlalo
+	Limit	Umda
+	Limit and\nLog	Mda kunye\\\\nNgena
+	Limit consecutive hyphens to:	Nciphisa amakhonkco alandelelanayo ukuba:
+	Limit Example	Umda Umzekelo
+	Limit formatting to a selection of styles	Nciphisa ukufomatha kukhetho lwezimbo
+	Line	Umgca
+	Line and Page Breaks	Ukuqhawulwa komgca kunye nePhepha
+	Line and Paragraph Spacing	Isithuba somgca kunye nomhlathi
+	Line between	Umgca phakathi
+	Line Break	Ikhefu lomgca
+	Line breaking	Ukuqhawuka komgca
+	Line delta	Umgca wedelta
+	Line End	Ukuphela komgca
+	Line Number	Inombolo yomgca
+	Line Numbering Options…	IiNdlela zokuKhetha iinombolo zomgca……
+	Line Numbers	Amanani omgca
+	Line Spacing	iSithuba somgca
+	Line spacing	Izithuba zemigca
+	Line Spacing Options…	Ukhetho Lwezithuba Zomgca……
+	Line spacing:	Izithuba zomgca:
+	Line Start	Ukuqala Komgca
+	Line width:	Ububanzi bomgca:
+	Line:	Umgca:
+	Linear	Umgca
+	Linear Fraction	Iqhezwana elinomgca
+	Lines	Imigca
+	Lines +/−	Imigca +/−
+	Lines added	Imigca yongeziwe
+	Lines and characters	Imigca kunye nabalinganiswa
+	Lines deleted	Imigca icinyiwe
+	Lines only	Imigca kuphela
+	Lines per page:	Imigca ngephepha ngalinye:
+	Link	Ikhonkco
+	Link entries to their headings	Xhumanisa amangenelo kwizihloko zawo
+	Link level to style:	Nxulumanisa inqanaba kwisimbo:
+	Link to Previous	Unxulumaniso Oludlulileyo
+	Linked style (paragraph and character)	Isimbo esidityanisiweyo (umhlathi kunye nomlinganiswa)
+	Links	Unxulumano
+	Links and References	Amakhonkco kunye neeReferensi
+	Link…	Ikhonkco……
+	List	Uluhlu
+	List Commands	Uluhlu lwemiyalelo
+	List Definition	Uluhlu Inkcazo
+	List entries	Dwelisa amangeniso
+	List Paragraph	Dwelisa umhlathi
+	List styles	Uluhlu lwezimbo
+	List Table 3 – Blue	Uluhlu lweTheyibhile 3 – Blowu
+	List Table 3 – Green	Uluhlu lweTheyibhile 3 – Luhlaza
+	List Table 3 – Orange	Uluhlu lwe-3-Orenji
+	List Table 3 – Purple	Uluhlu lweTheyibhile 3 – Purple
+	Listening… speak now	Ukumamela… thetha ngoku
+	Location	Indawo
+	Location: {path}	Indawo: {path}
+	Lock aspect ratio	Umlinganiselo wokutshixa
+	Lock Fields	Tshixa amabala
+	Logarithm	Logarithm
+	Logarithm with Base	Ilogarithm enesiseko
+	Logical AND	Ingqiqo KUNYE
+	Logical AND with Limits	Isengqiqweni KUNYE neMida
+	Logical OR	Ingqiqo OKANYE
+	Logical OR with Limits	Ingqiqo OKANYE eneMida
+	Long citation:	Ucaphulo olude:
+	lowercase	unobumba omncinci
+	Lum:	Lum:
+	Macros	Iimakhro
+	Made from the author and year when empty	Yenziwe kumbhali kunye nonyaka xa ingenanto
+	Magazine or newspaper article	Inqaku lemagazini okanye lephephandaba
+	Mail Merge	Ukudityaniswa kwemeyile
+	Mail Merge Helper	Imeyile Dibanisa uMncedi
+	Mail Merge Helper…	NONE…
+	Mailing Labels	Iileyibhile zokuposa
+	Mailings	Iiposi
+	Main entry:	Ungeniso oluphambili:
+	Make Doc4Me the default for Word documents…	Yenza iDoc4Me ibe yeyokwendalo kumaxwebhu eWord……
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	Yenza iribhoni, iimenyu kunye neengxoxo zibe nkulu okanye zibe ncinci, ngaphezulu kwendlela yakho yokubonisa isikali. Usondezo loxwebhu lwahlukile.
+	Malay	IsiMalay
+	Manage Sources	Lawula imithombo
+	Manage Styles	Lawula Izimbo
+	Manage Styles…	Lawula Izimbo……
+	Manual Hyphenation	Uqhagamshelo lweManuwali
+	Manual hyphenation is complete.	Uqhagamshelo lwezandla lugqityiwe.
+	Manual Line Break	Ikhefu lomgca weManuwali
+	Manual Page Break	Ikhefu lephepha leManuwali
+	Manual…	Imanyuwali……
+	Many pages	Amaphepha amaninzi
+	Margin	Umda
+	Margins	Imida
+	Mark	Phawula
+	Mark All	Phawula Konke
+	Mark as decorative	Phawula njengento yokuhombisa
+	Mark Citation	Phawula Citation
+	Mark Citation…	Phawula Isicaphulo……
+	Mark Entry	Phawula uNgeno
+	Mark Entry…	Phawula uNgeno……
+	Mark grammar errors as you type	Phawula iimpazamo zegrama njengoko uchwetheza
+	Mark Index Entry	Phawula ngeSalathiso sokuNgena
+	Mark selected text as:	Phawula okubhaliweyo okukhethiweyo njengo:
+	Mark Table of Contents Entry	Phawula kwiTheyibhile yokuNgena kweziqulatho
+	Mark\nCitation	Phawula\\\\nCitation
+	Mark\nEntry	Phawula\\\\nUngeno
+	Markdown (*.md)	Ukubekwa phantsi (*.md)
+	Match case	Ityala lomdlalo
+	Match Fields	Iinkalo zomdlalo
+	Match prefix	Tshatisa isimaphambili
+	Match suffix	Tshatisa isimamva
+	Math AutoCorrect	IMathematika iLungisa ngokuzenzekela
+	Math Input Control	Ulawulo lwegalelo leMathematika
+	Matrices with Brackets	Iimatriki ezinezibiyeli
+	Matrix	Imatrix
+	Maximize	Yandisa
+	Maximum	Ubuninzi
+	Maximum Example	Ubuninzi bomzekelo
+	Measured By	Ilinganiswe Ngu
+	Measurement units:	Iiyunithi zomlinganiselo:
+	Media	Media
+	Merge	Hlanganisa
+	Merge Cells	Dibanisa iiseli
+	Merge Formatting	Dibanisa ukuFomatha
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	Ukudibanisa ukuFomatha kuncamathisela okubhaliweyo kwindlela ehlala kuyo, njengoko igcina okubhaliweyo Kuphela.
+	Merge Record #	Hlanganisa iRekhodi #
+	Merge records	Hlanganisa iirekhodi
+	Merge to New Document	Dibanisa kuXwebhu olutsha
+	Merge to Printer	Dibanisa kwisishicileli
+	Merge to:	Dibanisa kwi:
+	Merge type: {type}	Uhlobo lokudibanisa: {type}
+	Merged PRs	I-PRs ezidityanisiweyo
+	Merge…	Dibanisa……
+	Mesosphere	I-Mesosphere
+	Middle	Phakathi
+	Midline Dots	Amachaphaza oMphakathi
+	Millimeters	Iimilimitha
+	Minimum	Ubuncinane
+	Minus Equal	Susa ukulingana
+	Mirror indents	Ukujongwa kwesipili
+	Mirrored	Ibonakalisiwe
+	Missing document font	Ifonti yoxwebhu olungekhoyo
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OKANYE Apache-2.0. Ilungelo lokushicilela (c) IQela le-ArtCraft lika-2026 kunye nabaxhasi be-WordCraft.
+	MLA	MLA
+	Model	Umzekelo
+	Models	Iimodeli
+	Moderate	Phakathi
+	Modify Style	Guqula isimbo
+	Modify Table Style	Guqula isimbo seTheyibhile
+	Modify Table Style…	Guqula isimbo seTheyibhile……
+	Modify…	Lungisa……
+	Mon	Mon
+	Month	Inyanga
+	More >>	Ngakumbi >>
+	More Colors…	Eminye Imibala……
+	More Columns…	Imihlathi engakumbi……
+	More Commands…	Eminye imiyalelo……
+	More Symbols…	Iimpawu ezingakumbi……
+	More templates →	Iitemplate ezininzi →
+	Move Down	Shenxisa ezantsi
+	Move in Equation	Hambisa kwiEquation
+	Move object with text	Hambisa into enombhalo
+	Move or Resize	Shenxisa okanye Resize
+	Move Paragraph Down	Shenxisa Isiqendu Ezantsi
+	Move Paragraph Up	Shenxisa isiqendu phezulu
+	Move Past Citation	Shenxisa uCazululo oludlulileyo
+	Move Past\nCitation	NONE
+	Move Selected Ink	Hambisa i-Ink ekhethiweyo
+	Move Text	Hambisa Okubhaliweyo
+	Move to where?	Yiya phi?
+	Move Up	Shenxela Phezulu
+	Move with Text	Hambisa ngesicatshulwa
+	Move with text	Hambisa ngesicatshulwa
+	Moved from	Isusiwe
+	Moved to	Ihanjisiwe ukuya
+	Moves	Iyashukuma
+	Multilevel List	Uluhlu lwamanqanaba amaninzi
+	Multiple Pages	Amaphepha amaninzi
+	My Add-ins	Izongezo zam
+	MyMemory (free, no account)	MyMemory (simahla, akukho akhawunti)
+	Name	Igama
+	Name (A–Z)	Igama (A–Z)
+	Name of the file this document is saved as	Igama lefayile olu xwebhu lugcinwe njenge
+	Name:	Igama:
+	Narrow  0.5" all	Imxinwa yi-0.5" yonke
+	Natural Logarithm	I-Logarithm yendalo
+	Nature	Indalo
+	Navigation	Ukukhangela
+	Navigation Pane	Indawo yokukhangela
+	Negated Relations	Ubudlelwane obungathandekiyo
+	New	Entsha
+	New Comment	Amagqabantshintshi amatsha
+	New comments and tracked changes are recorded under this name and these initials.	Amagqabantshintshi amatsha kunye neenguqu ezilandelelweyo zirekhodwa phantsi kweli gama kunye nala mainishiyali.
+	New Document	Uxwebhu olutsha
+	New document	Uxwebhu olutsha
+	New Drawing Canvas	Umzobo omtsha weCanvas
+	New Entry	Ungeniso Olutsha
+	New Folder	Isiqulathi seefayili esitsha
+	New from Template	Entsha kwi Template
+	New Group	Iqela elitsha
+	New Label	Ileyibhile entsha
+	New Label…	Ileyibhile Entsha……
+	New Paragraph	Umhlathi Omtsha
+	New shortcut:	Indlela emfutshane entsha:
+	New Style…	Isimbo Esitsha……
+	New Tab	Ithebhu entsha
+	New Table Style	Isimbo esitsha seTheyibhile
+	New Table Style…	Isimbo Esitsha seTheyibhile……
+	New Window	Ifestile entsha
+	New word	Igama elitsha
+	New\nComment	Entsha\\\\nAmagqabantshintshi
+	New\nWindow	Entsha\\\\nIfestile
+	New…	Entsha……
+	Next	Okulandelayo
+	Next Change	Utshintsho Olulandelayo
+	Next Comment	Amagqabantshintshi alandelayo
+	Next Field	Indawo elandelayo
+	Next Footnote	Umbhalo osemazantsi olandelayo
+	Next Page	Iphepha Elilandelayo
+	Next Record	Ingxelo elandelayo
+	Next Section	Icandelo Elilandelayo
+	Next Sentence	Isivakalisi Esilandelayo
+	Next sentence	Isivakalisi esilandelayo
+	Next Window	Ifestile elandelayo
+	No	Hayi
+	No accessibility issues found.	Akukho miba yofikelelo efunyenweyo.
+	No add-ins are listed yet.	Akukho zongezo zidwelisiweyo okwangoku.
+	No add-ins yet. Add one from the Store.	Akukho zongezo okwangoku. Yongeza enye ukusuka kwiVenkile.
+	No Border	Akukho Mda
+	No changes (read only)	Akukho lutshintsho (funda kuphela)
+	No Color	Akukho Mbala
+	No contributor data was built into this copy.	Akukho datha yomxhasi yakhelwe kule kopi.
+	No data source yet.	Akukho mthombo wedatha okwangoku.
+	No errors found: every merge field is in the recipient list.	Akukho ziphoso zifunyenweyo: indawo yonke yodibaniso ikuluhlu lwabamkeli.
+	No Fill	Akukho Gcwalisa
+	No Glow	Akukho Kukhanya
+	No grid	Akukho grid
+	No icons match your search.	Akukho zimpawu zihambelana nophendlo lwakho.
+	No limit	Akukho mda
+	No Line	Akukho Line
+	No Markup	Akukho phawu
+	No model credits were built into this copy.	Akukho khredithi yemodeli eyakhelweyo kule kopi.
+	No Outline	Akukho lwandlalo
+	No Paragraph Space	Akukho sithuba somhlathi
+	No pictures found.	Akukho mifanekiso ifunyenweyo.
+	No Reflection	Akukho kuReflection
+	No revisions	Akukho zihlaziyo
+	No Shadow	Akukho Shadow
+	No Soft Edges	Akukho Soft Edges
+	No sources yet.	Akukho mithombo okwangoku.
+	No Spacing	Akukho Sithuba
+	no speech program on this system	akukho nkqubo yentetho kule nkqubo
+	No templates match your search.	Akukho zifanekiso zihambelana nophendlo lwakho.
+	No Transform	Akukho Nguqu
+	No words yet. Add to Dictionary on a misspelled word puts it here.	Akukho mazwi okwangoku. Yongeza kwiDikshinari kwigama elingapelwanga kakuhle ibeka apha.
+	No-Width Non Break	Akukho-Ububanzi Non Break
+	No-Width Optional Break	Akukho-Ububanzi Optional Break
+	Nonbreaking Hyphen	Nonbreaking Iqhagamshela
+	Nonbreaking Space	Isithuba esingaqhawukiyo
+	None	Akukho nanye
+	Normal	Okuqhelekileyo
+	Normal  1" all	Eqhelekileyo 1" zonke
+	Normal Indent	I-Indent eqhelekileyo
+	Normal probability density	Ukuxinana okuqhelekileyo okunokwenzeka
+	Normal speed	Isantya esiqhelekileyo
+	Normal Style	Isimbo esiQhelekileyo
+	Normal Table	Itheyibhile eqhelekileyo
+	Normal Text	Isicatshulwa esiQhelekileyo
+	Normal Word Document	Uxwebhu lwegama eliQhelekileyo
+	North	Emantla
+	Norwegian (Bokmål)	IsiNorwegian (Bokmål)
+	Not	Hayi
+	Not available right now	Ayifumaneki ngoku
+	Not equal to	Ayilingani ne
+	Not linked: click a text box	Ayidityaniswanga: cofa ibhokisi yokubhaliweyo
+	Not saved	Ayigcinwanga
+	Not saved yet	Ayikagcinwa
+	Not used by any command	Ayisetyenziswa nguwuphi na umyalelo
+	Not {name}	Hayi {name}
+	Nothing	Akukho nto
+	Nothing collected yet. Items you copy or cut appear here.	Akukho nto iqokelelweyo okwangoku. Izinto ozikopayo okanye ozisikileyo zivela apha.
+	Now used by {command}	Ngoku isetyenziswa yi {command}
+	Nudge	Gqibezela
+	Num Occurrences	Num Izehlo
+	Number	Inani
+	Number alignment:	Ulungelelwaniso lwamanani:
+	Number format	Ubume bamanani
+	Number of columns:	Inani lemiqolo:
+	Number of rows:	Inani lemiqolo:
+	Number of the page the field sits on	Inani lephepha elihlala ibala
+	Number of the section the field sits in	Inani lecandelo ekuhlala kulo ibala
+	Number style for this level:	Isimbo senani salo mgangatho:
+	Number the equation; the number sits at the right margin (or type # then the number)	Faka iinombolo kwinxaki; inani lihleli kumda wasekunene (okanye chwetheza # ke inani)
+	Number type:	Uhlobo lwamanani:
+	Number:	Inani:
+	Numbering	Ukubala amanani
+	Numbering:	Amanani:
+	Numbering…	Ukunika amanani……
+	Numerals	Amanani
+	Numerals:	Amanani:
+	n×n Identity Matrix	n× n Identity Matrix
+	n×n Matrix	n× n Matrix
+	Object	Into
+	Odd Page	Iphepha Elingaqhelekanga
+	Odd pages only	Amaphepha angaqhelekanga kuphela
+	Off	Cimile
+	Office	Iofisi
+	Office 2003 Default	IOfisi ka-2003 eMiselweyo
+	Offset (pt):	Ukulinganisa (pt):
+	Offset: Bottom	Offset: Ezantsi
+	Offset: Bottom Left	Offset: Ezantsi Ekhohlo
+	Offset: Bottom Right	Offset: Ezantsi Ekunene
+	Offset: Center	I-Offset: Umbindi
+	Offset: Left	Offset: Ekhohlo
+	Offset: Right	Offset: Ekunene
+	Offset: Top	Offset: Phezulu
+	Offset: Top Left	Offset: Phezulu eKhohlo
+	Offset: Top Right	Offset: Phezulu Ekunene
+	OK	KULUNGILE
+	Omit	Shiya
+	On	Vula
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	Vula: inkathalo ityibilika kwindawo yayo entsha xa uchwetheza okanye usebenzisa izitshixo zotolo, kwaye ukuqhwanyaza kwayo kuyacima. Valiwe: iyaxhuma iyaqhwanyaza iphinde icime.
+	One	Enye
+	One half	Isiqingatha esinye
+	One label per recipient	Ileyibhile enye kumamkeli ngamnye
+	One line per item. Enter adds an item.	Umgca omnye kwinto nganye. Ngena wongeza into.
+	One Page	Iphepha elinye
+	Online Pictures	Iifoto ezikwi-Intanethi
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	Imifanekiso ekwi-Intanethi (Openverse), Guqulela (MyMemory okanye iseva yakho yeLibreTranslate), Fumana ezongezo kunye nokukhuphela imodeli yentetho yeDictate qhagamshela kwi-intanethi, kwaye kuphela xa uzisebenzisa. Icinyiwe, iDoc4Me ayenzi nxibelelwano iyodwa.
+	Online Pictures…	Imifanekiso ekwi-Intanethi……
+	Online services are turned off (File › Options › Trust Center).	Iinkonzo ze-intanethi ziyacinywa (Ifayile › Khetha > Iziko lokuThemba).
+	Online Video	Ividiyo ekwi-Intanethi
+	Only allow this kind of editing:	Vumela olu hlobo lokuhlela kuphela:
+	Only comments can be added, except in regions marked editable.	Kuphela amagqabantshintshi anokongezwa, ngaphandle kweengingqi eziphawulwe ukuba ziyahleleka.
+	Only form fields can be filled in.	Kuphela iindawo zeefom ezinokuzaliswa.
+	only https addresses can be used	kuphela iidilesi zika-https ezinokusetyenziswa
+	Only pictures I may use commercially	Yimifanekiso kuphela endinokuyisebenzisa kurhwebo
+	Only the allowed styles can be applied.	Zizimbo ezivumelekileyo kuphela ezinokusetyenziswa.
+	Only web (http, https) and email (mailto) links can be followed	Kuphela iwebhu (http, https) kunye ne-imeyile (mailto) amakhonkco anokulandelwa
+	Open	Vula
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Vula ifayile ngeDoc4Me's browser xa ifayile yenkqubo yencoko yababini ingabonakali.
+	Open Data Source…	Vula uMthombo weDatha……
+	Open Hyperlink	Vula iHyperlink
+	OpenDocument Text (*.odt)	Isiqendu soxwebhu oluvulekileyo (*.odt)
+	Opening print dialog…	Ivula ingxoxo yoshicilelo……
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Ivula .docx, .doc, .rtf kunye .odt iifayile kunye neetemplates zeWord ngeDoc4Me ukususela ngoku ukuya phambili.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Ivula imimiselo > Ii-apps ezihlala zikhona, apho ukhetha i-Doc4Me ye-.docx kunye nolunye uhlobo loxwebhu.
+	Open…	Vula……
+	Operator	Umsebenzisi
+	Operator Structures	Izakhiwo zoMsebenzisi
+	Operators	Abaqhubi
+	Optional Hyphen	Ngokuzikhethela Iqhagamshela
+	Options	Iinketho
+	Options…	Ukhetho……
+	Or	Okanye
+	Or save a copy in another format:	Okanye gcina ikopi kwenye ifomathi:
+	Ordinals (1st) as superscript	I-Ordinals (yokuqala) njengombhalo ongasentla
+	Organizer	Umququzeleli
+	Organizer…	Umququzeleli……
+	Orientation	Ukuqhelaniswa
+	Original document	Uxwebhu loqobo
+	Other	Okunye
+	Other Authorities	Amanye Abasemagunyeni
+	Other Large Operators	Abanye abaSebenzi abakhulu
+	Other paragraph styles	Ezinye izimbo zemihlathi
+	Other styles and their TOC level:	Ezinye izitayile kunye nenqanaba labo le-TOC:
+	Otherwise insert:	Kungenjalo faka:
+	Outline	Ulwandlalo
+	Outline Level	Inqanaba lolwandlalo
+	Outline level	Inqanaba lolwandlalo
+	Outline levels	Amanqanaba enkcazo
+	Outline State	Inkcazo yenkcazo
+	Outline Tools	Izixhobo zokuchaza
+	Outlining	Ukwandlala
+	Outside	Ngaphandle
+	Outside border	Ngaphandle komda
+	Outside Borders	Ngaphandle kwemida
+	Outside Margin	Ngaphandle kweMargin
+	Outside:	Ngaphandle:
+	Outward Brackets	Izibiyeli zangaphandle
+	Oval	Umbhoxo
+	Overbar	Ibar engaphezulu
+	Overbars and Underbars	Ii-Ova kunye nee-Underbar
+	Overbrace	Ukugqithisa
+	Overtype	Ukuchwetheza ngokugqithisileyo
+	Overtype (typing replaces the characters after the caret)	Uchwethezo olugqithisileyo (ukuchwetheza kungena endaweni yeempawu emva kokhathalelo)
+	Page	Iphepha
+	Page Background	Imvelaphi Yephepha
+	Page Border	Umda wephepha
+	Page Borders	Imida yephepha
+	Page Break	Ikhefu lePhepha
+	Page Break Before	Ikhefu lephepha Ngaphambili
+	Page break before	Ikhefu lephepha ngaphambili
+	Page Breaks	Ukuqhekeka Kwephepha
+	Page Color	Umbala Wephepha
+	Page display	Umboniso wephepha
+	Page Down	Iphepha Phantsi
+	Page image (*.jpg, *.jpeg)	Umfanekiso wephepha (*.jpg, *.jpeg)
+	Page image (*.png)	Umfanekiso wephepha (*.png)
+	Page Movement	Intshukumo yephepha
+	Page Number	Inombolo Yephepha
+	Page number style	Isimbo senani lephepha
+	Page numbers at the right margin	Amanani ephepha kumda wasekunene
+	Page on which a bookmarked passage falls	Iphepha apho isicatshulwa esiphawulweyo siwela khona
+	Page Setup	Ukuseta iphepha
+	Page title	Isihloko sephepha
+	Page Up	Iphepha phezulu
+	Page Width	Ububanzi bephepha
+	Page width	Ububanzi bephepha
+	Page X of Y	Iphepha X lika-Y
+	Page {page}	Iphepha {page}
+	Page {page} of {pages}	Iphepha {page} le {pages}
+	Page\nBorders	Iphepha\\\\nImida
+	Page\nColor	Iphepha\\\\nUmbala
+	Page\nNumber	Iphepha\\\\nInombolo
+	Pages	Amaphepha
+	Pages like 1-3, 5	Amaphepha afana ne-1-3, 5
+	Pages of bookmark:	Amaphepha ebhukhimakhi:
+	Paragraph	Umhlathi
+	Paragraph Character	Umlinganiswa okwisiqendu
+	Paragraph Details	Iinkcukacha zomhlathi
+	Paragraph Down	Umhlathi Phantsi
+	Paragraph Mark	Umhlathi Mark
+	Paragraph marks	Amanqaku omhlathi
+	Paragraph Settings	Izicwangciso Zesiqendu
+	Paragraph Spacing	Izithuba zemihlathi
+	Paragraph style	Isimbo somhlathi
+	Paragraph Up	Umhlathi Up
+	Paragraphs	Imihlathi
+	Paragraph…	Umhlathi……
+	Parentheses	Iiparenthesi
+	Parentheses with Separator	Izibiyeli ezineSahluli
+	Partial Differential	Umahluko ongaphelelanga
+	Password	Igama lokugqithisa
+	Password:	Igama lokugqithisa:
+	Paste	Ncamathelisa
+	Paste All	Ncamathelisa Konke
+	Paste as:	Ncamathelisa ngolu hlobo:
+	Paste Clipboard Item	Ncamathelisa into yebhodi eqhotyoshwayo
+	Paste Formatting	Cola ukuFomatha
+	Paste Special	Ncamathelisa Okukhethekileyo
+	Paste Special…	Ncamathelisa Ekhethekileyo……
+	Paste Spike	Cola iSpike
+	Paste: Keep Text Only	Ncamathelisa: Gcina Isiqendu Kuphela
+	Paste: Merge Formatting	Ncamathelisa: Dibanisa ukuFomatha
+	Pasting between documents:	Ukuncamathisela phakathi kwamaxwebhu:
+	Pasting from other programs:	Ukuncamathisela kwezinye iinkqubo:
+	Pasting within the same document:	Ukuncamathisela kuxwebhu olufanayo:
+	Pause	Misa
+	Paused	Inqunyanyisiwe
+	PDF document (*.pdf)	Uxwebhu lwePDF (*.pdf)
+	Pen	Usiba
+	Pencil	Ipensile
+	Pens	Iipeni
+	People	Abantu
+	Periodical	Ngamaxesha athile
+	Personalize	Lungiselela wena
+	Phonetic Guide	IsiKhokelo sefonetiki
+	Pi Over 2	Pi Ngaphezulu kwe2
+	Picas	Picas
+	Pick a custom group (New Group makes one)	Khetha iqela elilungiselelweyo (Iqela elitsha lenza elinye)
+	Pick a field from the list	Khetha indawo kuluhlu
+	Picture	Umfanekiso
+	Picture Border	Umfanekiso womda
+	Picture Content Control	Ulawulo loMfanekiso woMfanekiso
+	Picture Format	Ifomathi yoMfanekiso
+	Picture Styles	Izimbo zeMifanekiso
+	Pictures	Imifanekiso
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Imifanekiso evela kwi-Openverse. Hlonipha iphepha-mvume lomfanekiso ngamnye: I-Doc4Me yongeza umgca wetyala phantsi kwayo.
+	Pie	Iphayi
+	Placeholder Name	Igama lesibambi-ndawo
+	Placeholder text	Isiqendu sesibambi-ndawo
+	Plain Table 1	Itheyibhile engenanto 1
+	Plain text (*.txt)	Umbhalo ongenanto (*.txt)
+	Plain Text Content Control	Ulawulo lwesiqulatho seSibhalo esingenanto
+	Play	Dlala
+	Play Video	Dlala iVidiyo
+	Play/Pause	Dlala/Misa
+	Plus Equal	Plus Equal
+	Points	Amanqaku
+	points and above	amanqaku nangaphezulu
+	Polish	IsiPolish
+	Portrait	Umfanekiso
+	Portuguese (Brazil)	IsiPhuthukezi (eBrazil)
+	Portuguese (Portugal)	IsiPhuthukezi (ePortugal)
+	Position	Isikhundla
+	Position:	Isikhundla:
+	Positioning…	Ukubekwa……
+	Possible spelling mistake	Impazamo yopelo enokwenzeka
+	Postal Code	Ikhowudi Yeposi
+	Power series of (1+x)ⁿ	Uthotho lwamandla ka (1+x)ⁿ
+	Preferred width:	Ububanzi obukhethwayo:
+	Preserve	Gcina
+	Preserve formatting during updates	Gcina ukufomatha ngexesha lohlaziyo
+	Presets	Ukusetha kwangaphambili
+	Press a key combination	Cinezela indibaniselwano yesitshixo
+	Preview	Jonga kwangaphambili
+	Preview Results	Iziphumo zokujonga kwangaphambili
+	Preview\nResults	Imboniso\\\\nIziphumo
+	Previous	Ngaphambili
+	Previous 1 or More	Ngaphambili 1 okanye Ngaphezulu
+	Previous Change	Utshintsho oludlulileyo
+	Previous Comment	Izimvo ezidlulileyo
+	Previous Field	Umhlaba odlulileyo
+	Previous Footnote	Umbhalo osemazantsi wangaphambili
+	Previous Page	Iphepha Elingaphambili
+	Previous Record	Ingxelo yangaphambili
+	Previous Section	Icandelo Elidlulileyo
+	Previous Sentence	Isivakalisi sangaphambili
+	Previous sentence	Isivakalisi sangaphambili
+	Previous Window	Ifestile yangaphambili
+	Print	Shicilela
+	Print blank lines when data fields are empty	Shicilela imigca engenanto xa iindawo zedatha zingenanto
+	Print Documents	Shicilela Amaxwebhu
+	Print Documents…	Shicilela Amaxwebhu……
+	Print failed: {error}	Ushicilelo aluphumelelanga: {error}
+	Print Layout	Uyilo loShicilelo
+	Print Markup	Uphawu lokuprinta
+	Print the page color	Shicilela umbala wephepha
+	Print to PDF	Shicilela kwiPDF
+	Print\nLayout	Shicilela\\\\nUyilo
+	Printer	Umshicileli
+	Printing	Ukushicilelwa
+	Process	Inkqubo
+	Product	Imveliso
+	Product of A	Imveliso ka-A
+	Product with Limits	Imveliso eneMida
+	Product with Lower Limit	Imveliso enoMda ophantsi
+	Product with Subscript-Superscript Limits	Imveliso ene-Subscript-Superscript Limit
+	Products and Coproducts	IiMveliso kunye neeMveliso
+	Professional	Ubungcali
+	Promote	Yazisa
+	Promote to Heading 1	Nyusa kwisihloko soku-1
+	Proofing	Ubungqina
+	Proofing Issues	Ubungqina bemiba
+	Proofing language	Ubungqina bolwimi
+	Properties	Iipropati
+	Protect	Khusela
+	Protect Document	Khusela uxwebhu
+	PRs	PRs
+	pt	pt
+	Publisher	Umpapashi
+	Punctuation	Iziphumlisi
+	Put the caret in a content control first.	Beka i-caret kulawulo lomxholo kuqala.
+	Put the default commands back on the Quick Access Toolbar?	Beka imiyalelo emiyo emva kwiThulbha yoFikelelo oluKhawulezayo?
+	Pyramid	Iphiramidi
+	Quadratic Root	Ingcambu yeQuadratic
+	Query Options…	NONE…
+	Quick Access Toolbar	Ufikelelo oluKhawulezayo lweThulbha
+	Quick Parts	Amacandelo aKhawulezayo
+	Quick Tables	Iitafile eziKhawulezayo
+	Quote	Caphula
+	Radical	Radical
+	Radical with Degree	Radical kunye neDegree
+	Radicals	IiRadicals
+	Raised/lowered	Unyusiwe/uthotyiwe
+	Read Aloud	Funda Ngokuvakalayo
+	Read Aloud couldn't start the speech program: {reason}	Ukufunda Ngokuvakalayo akukwazanga ukuqalisa inkqubo yentetho: {reason}
+	Read Aloud couldn't start: {reason}	Ukufunda Ngokuvakalayo akukwazanga ukuqalisa: {reason}
+	Read Aloud isn't available in the browser	Funda Ngokuvakalayo ayifumaneki kwibhrawuza
+	Read Aloud Status	Imo yokufunda ngokuvakalayo
+	Read Aloud stopped: {reason}	Ukufundwa ngokuvakalayo kuyekile: {reason}
+	Read Mode	Imo yokuFunda
+	Read\nAloud	Funda\\\\nNgokuvakalayo
+	Read\nMode	Funda\\\\nImo
+	Reading	Ukufunda
+	Reading Column Width	Ububanzi beKholam yokuFunda
+	Reading Highlight	Balaselisa Ukufunda
+	Reading Line Spacing	ISithuba soMgca wokuFunda
+	Reading Mode	Imo yokuFunda
+	Reading Speed	Isantya sokufunda
+	Reading Text Size	Ubungakanani bombhalo wokufunda
+	Reads the clipboard's rich text and keeps its formatting.	Ufunda umbhalo otyebileyo webhodi eqhotyoshwayo kwaye agcine ukufomatha kwawo.
+	Reads the clipboard's web content and keeps its formatting.	Ufunda umxholo wewebhu webhodi eqhotyoshwayo kwaye ugcina ukufomatha kwayo.
+	Real name	Igama lokwenyani
+	Recent	Kutshanje
+	Recent Colors	Imibala yakutsha nje
+	Recent documents to show:	Amaxwebhu akutsha nje azakubonisa:
+	Recently used symbols:	Iisimboli ezisandula kusetyenziswa:
+	Recipient List	Uluhlu lwabamkeli
+	Recipient lists	Uluhlu lwabamkeli
+	Recipients: {count}	abamkeli: {count}
+	Recognized (you can correct it):	Iyaziwa (ungayilungisa):
+	Recognized Functions	Imisebenzi eyaziwayo
+	Recognized Functions…	Imisebenzi Eyaziwayo……
+	Recolor a one-color picture, such as an icon	Faka umbala kwakhona kumfanekiso onombala omnye, onjenge icon
+	Recolor Selected Ink	Phinda Ufake umbala kwi-Ink ekhethiweyo
+	Record Macro	Record Macro
+	Recover Unsaved Documents	Fumana Amaxwebhu Angagcinwanga
+	Rectangle	Uxande
+	Red:	Bomvu:
+	Redo	Phinda wenze
+	Reduce Hanging Indent	Nciphisa i-Ident ejingayo
+	References	Iimbekiselo
+	Reflection	Ukucamngca
+	Refresh	Hlaziya
+	Registered	Ibhalisiwe
+	Registered Sign	Uphawu olubhalisiweyo
+	Regular expressions	Amabinzana aqhelekileyo
+	Regulations	Imigaqo
+	Reject	Yala
+	Reject All	Yala Konke
+	Reject All Changes	Yala Zonke Iinguqu
+	Reject Change	Yala Utshintsho
+	Relationship	Ubudlelwane
+	relative to	malunga ne
+	Relative to:	Ngokunxulumene ne:
+	Relaxed	Ukhululekile
+	Remove	Susa
+	Remove Added Font	Susa ifonti eyoNgeziweyo
+	Remove Background	Susa Imvelaphi
+	Remove Content Control	Susa Ulawulo Lomxholo
+	Remove every custom shortcut and restore the built-in keys?	Susa zonke iindlela ezimfutshane kwaye ubuyisele izitshixo ezakhelwe ngaphakathi?
+	Remove every custom tab and group and show all tabs again?	Susa zonke ithebhu kunye neqela kwaye ubonise zonke iithebhu kwakhona?
+	Remove field	Susa indawo
+	Remove Field Name	Susa Igama Lommandla
+	Remove Footer	Susa iFoter
+	Remove from Quick Access Toolbar	Susa kwiThulbha yoFikelelo oluKhawulezayo
+	Remove Header	Susa okubhalwe ngasentla
+	Remove Hyperlink	Susa iHyperlink
+	Remove Password	Susa igama lokugqithisa
+	Remove Pen	Susa usiba
+	Remove Positioning	Susa iPositioning
+	Remove recipient	Susa umamkeli
+	Remove row	Susa umqolo
+	Remove series	Susa uthotho
+	Remove Space After Paragraph	Susa isithuba emva komhlathi
+	Remove Table of Contents	Susa isiqulatho
+	Remove the control once edited	Susa ulawulo xa luhleliwe
+	Remove the space before the punctuation	Susa isithuba phambi kweziphumlisi
+	Remove Watermark	Susa iWatermark
+	Rename Style	Phinda unike igama kwisimbo
+	Rename…	Phinda unike igama……
+	Reopen	Phinda uvule
+	Repeat	Phinda
+	Repeat as header row on each page	Phinda njengomqolo weheader kwiphepha ngalinye
+	Repeat Header Rows	Phinda Imiqolo Engasentla
+	Repeated words	Amagama aphindiweyo
+	Repeating Section Content Control	Ukuphinda uLawulo loMxholo weCandelo
+	Replace	Faka enye indawo
+	Replace All	Buyisela Konke
+	Replace as you type	Faka enye indawo njengoko uchwetheza
+	Replace Document Text	Buyisela Isiqendu Soxwebhu
+	Replace text as you type	Buyisela umbhalo njengoko uchwetheza
+	Replace with:	Faka endaweni yakho:
+	Replace:	Faka endaweni:
+	Replay	Phinda udlale
+	Reply	Phendula
+	Report	Ingxelo
+	Research	Uphando
+	Researcher	Umphandi
+	Researcher needs an online service; Doc4Me keeps your documents offline.	Umphandi ufuna inkonzo ye-intanethi; I-Doc4Me igcina amaxwebhu akho ngaphandle kweintanethi.
+	Reset	Lungisa kwakhona
+	Reset All	Lungisa Konke
+	Reset All…	Lungisa Konke……
+	Reset Character Formatting	Lungisa ukuFometha koonobumba
+	Reset Crop	Seta kwakhona iNqampuwa
+	Reset Graphic	Phinda umisele uMzobo
+	Reset Paragraph Formatting	Lungisa ukuFomatha uMhlathi
+	Reset Picture	Seta kwakhona uMfanekiso
+	Reset to Normal	Phinda umisele iNgqondo
+	Reset\nGraphic	Phinda umisele\\\\nMzobo
+	Reset…	Phinda umisele……
+	Resize Table by Dragging	Phinda ubungakanani beTheyibhile ngokutsala
+	Resolve	Sombulula
+	Resolved	Isonjululwe
+	Restart at 1	Qala kwakhona ngo-1
+	Restart Each Page	Qala kwakhona Iphepha ngalinye
+	Restart Each Section	Qala kwakhona iCandelo ngalinye
+	Restart list after:	Luqale kwakhona uluhlu emva:
+	Restore	Buyisela
+	Restore Defaults	Buyisela Ukungagqibeki
+	Restore Down	Buyisela Phantsi
+	Restore to Normal Word Document	Buyisela kuXwebhu lwamagama oluQhelekileyo
+	Restrict Editing	Nciphisa ukuhlela
+	Restrict\nEditing	Nqanda\\\\nUkuhlela
+	Result	Isiphumo
+	Results	Iziphumo
+	Return address labels	Buyisela iilebhile zedilesi
+	Return address:	Buyisela idilesi:
+	Reverse the order	Ukubuyisela umva ulandelelwano
+	Review	Uphononongo
+	Review AutoFormat Changes	Hlaziya uTshintsho lweFomathi ezenzekelayo
+	Review Changes…	Hlaziya uTshintsho……
+	Reviewing	Ukuphonononga
+	Reviewing Pane	IPhaneli yoPhononongo
+	Reviewing — edits become suggestions	Ukuphonononga - ukuhlelwa kuba ziingcebiso
+	Revised document	Uxwebhu oluhlaziyiweyo
+	Revisions	Uhlaziyo
+	Rewind	Buyela umva
+	Ribbon	Iribhoni
+	Ribbon and Quick Access Toolbar:	IRibhoni kunye neThulbha yoFikelelo oluKhawulezayo:
+	Ribbon tabs	Iithebhu zeRibhoni
+	Rich Text Content Control	Ulawulo lwesiqulatho seSibhalo esityebileyo
+	Rich Text Format (*.rtf)	Ifomathi Yesiqendu Esityebileyo (*.rtf)
+	Rich Text Format (RTF)	i-Rich Text Format (RTF)
+	Right	Kunene
+	Right (vertical)	Ekunene (the nkqo)
+	Right align page numbers	Lungelelanisa ekunene amanani ephepha
+	Right Arrow with Text Above	Utolo lwasekunene olunombhalo ongentla
+	Right Arrow with Text Below	Utolo lwasekunene olunombhalo ongezantsi
+	Right Border	Umda wasekunene
+	Right border	Umda wasekunene
+	Right Bracket Twice	Isibiyeli sasekunene kabini
+	Right indent	Ujongeka ngasekunene
+	Right Margin	Umjikelo wasekunene
+	Right Only	Ekunene Kuphela
+	Right only	Ekunene kuphela
+	Right-to-left	Ekunene ukuya ekhohlo
+	Right-to-Left Section	Ekunene ukuya eKhohlo iCandelo
+	Right-to-Left Table	Itheyibhile eKunene ukuya eKhohlo
+	Right-to-Left Text Direction	Umkhomba-ndlela wokubhaliweyo ukuya ekunene ukuya ekhohlo
+	Right:	Ekunene:
+	Rightwards Arrow Above	Utolo lwasekunene Phezulu
+	Rightwards Harpoon Above	Ekunene iHarpoon Phezulu
+	Roots of ax²+bx+c	Iingcambu ze-ax²+bx+c
+	Rotate	Jikelezisa
+	Rotate all text 270°	Jikelezisa wonke umbhalo ngama-270°
+	Rotate all text 90°	Jikelezisa wonke umbhalo ngama-90°
+	Rotate Left 90°	Jikelezisa eKhohlo 90°
+	Rotate Right 90°	Jikelezisa eKunene 90°
+	Rotation	Ukujikeleza
+	Rotation:	Ujikelezo:
+	Rounded Rectangle	Uxande olungqukuva
+	Row	Umqolo
+	Row:	Umqolo:
+	Rows & Columns	Imiqolo kunye neMihlathi
+	Ruby text:	Umbhalo weRuby:
+	Ruler	Umlawuli
+	Rules	Imigaqo
+	Run	Baleka
+	Run-in	Ukubaleka ngaphakathi
+	Russian	IsiRashiya
+	Résumé	Qhubeka
+	Same as the whole table	Ngokufanayo netafile yonke
+	SAMPLE	ISAMPULI
+	Sat:	NgoMgqibelo:
+	Save	Gcina
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	Gcina ikopi kwenye ifomathi. Ushicilelo luhamba ngePDF onokuyiprinta nakuwuphi na umbukeli.
+	Save As	Gcina Njenge
+	Save as Template	Gcina njengeSakhelo
+	Save documents	Gcina amaxwebhu
+	Save the document to turn on AutoSave	Gcina uxwebhu ukuze uvule uGcina ngokuzenzekela
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	Gcina uxwebhu ukuze uvule uGcina ngokuzenzekela (ifayile oyivulileyo kuphela ayibhalwa kwakhona de uyigcine)
+	Save these pages as PDF…	Gcina la maphepha njengePDF……
+	Save Version	Gcina Inguqulelo
+	Saved	Igciniwe
+	Scale	Isikali
+	Scale Drawing	Isikali uMzobo
+	Scatter	Gcwalisa
+	Screen Clipping	Ukucofa iSkrini
+	Screen clipping didn't work: {reason}	Ukuchetywa kwesikrini akuzange kusebenze: {reason}
+	Screen clipping ended without a picture.	Ukunqunyulwa kwesikrini kuphelile ngaphandle komfanekiso.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	Ukunqunyulwa kwesikrini akufumaneki apha. Khuphela umfanekiso weskrini, uze uwuncamathisele.
+	Screenshot	Umfanekiso wekhusi
+	Script	Ushicilelo
+	Scripts	Izikripthi
+	Scroll ribbon left	Skrola iribhoni ngasekhohlo
+	Scroll ribbon right	Skrola iribhoni ngasekunene
+	Search	Khangela
+	Search Commands	Phendla imiyalelo
+	Search commands and help	Phendla imiyalelo kunye noncedo
+	Search document	Phendla uxwebhu
+	Search for templates	Khangela itemplates
+	Search icons	Khangela ii-iyikhoni
+	Search Openverse (Creative Commons pictures)	Phendla iOpenverse (imifanekiso yeCreative Commons)
+	Search Options	Khangela Iinketho
+	Searching…	Iyakhangela……
+	Secant Function	Secant Function
+	Section Break	Ikhefu leCandelo
+	Section Breaks	Iikhefu zeCandelo
+	Section Character	Umlinganiswa weCandelo
+	Section direction:	Isalathiso secandelo:
+	Section Mark	Uphawu lweCandelo
+	Section Properties	Iipropati zeCandelo
+	Sections	Amacandelo
+	See	'Yabona
+	Select	Khetha
+	Select a picture, shape, chart or table to describe it.	Khetha umfanekiso, imilo, itshati okanye itheyibhile ukuyichaza.
+	Select All	Khetha Konke
+	Select Cell	Khetha Iseli
+	Select Floating Shapes	Khetha iiMilo ezidadayo
+	Select Heading and Content	Khetha isihloko kunye nesiqulatho
+	Select Line	Khetha Umgca
+	Select Objects	Khetha Izinto
+	Select Paragraph	Khetha umhlathi
+	Select Range	Khetha uluhlu
+	Select Recipients	Khetha Abamkeli
+	Select recipients first to choose from their fields.	Khetha abamkeli kuqala ukukhetha kwiindawo zabo.
+	Select recipients first to match their fields.	Khetha abamkeli kuqala ukuze batshatise iindawo zabo.
+	Select Row	Khetha Umqolo
+	Select Sentence	Khetha Isivakalisi
+	Select Table	Khetha Itheyibhile
+	Select Text	Khetha Okubhaliweyo
+	Select text in the document to translate it.	Khetha okubhaliweyo kuxwebhu ukuze uyiguqulele.
+	Select Text with Similar Formatting	Khetha Okubhaliweyo Ngokufomatha Okufanayo
+	Select text, then tick who can still edit it.	Khetha umbhalo, uze uphawule ukuba ngubani osakwazi ukuwuhlela.
+	Select the part of the screen to insert.	Khetha indawo yesikrini ukuze uyifake.
+	Select Word	Khetha Igama
+	Select\nRecipients	Khetha\\\\nAbamkeli
+	Selected Fields	Imimandla ekhethiweyo
+	Selected pages	Amaphepha akhethiweyo
+	Selection	Ukukhetha
+	Selection Pane	Iphayini yoKhetho
+	Send Backward	Thumela ngasemva
+	Send the document straight to the system print dialog, or save a copy in another format below.	Thumela uxwebhu ngqo kwincoko yababini yoshicilelo lwesixokelelwano, okanye gcina ikopi kwenye ifomathi engezantsi.
+	Sentence	Isivakalisi
+	Sentence case.	Ityala lesigwebo.
+	Separator:	Umahluli:
+	Sequence name:	Igama lolandelelwano:
+	Serbian	isiSerbia
+	Serbian (Cyrillic)	IsiSerbian (Cyrillic)
+	Serbian (Latin)	IsiSerbia (Latin)
+	Series name	Igama lothotho
+	Series {n}	Umfanekiso we {n}
+	Server address (https://…)	Idilesi yeseva (https://…)
+	Set	Seta
+	Set As Default	Misela Njengokuhlala kukho
+	Set as Default	Seta njengokuhlala kukho
+	Set Caret	Seta iCaret
+	Set Character Formatting	Cwangcisa ukuFomatha koonobumba
+	Set Date	Seta Umhla
+	Set Equation	Seta inxaki
+	Set Numbering Value	Seta ixabiso leenombolo
+	Set Paragraph Formatting	Cwangcisa ukuFomatha uMhlathi
+	Set Proofing Language…	Misela Ulwimi Lokungqina……
+	Setting:	Ulungiselelo:
+	Settings…	Iisetingi……
+	Shading	Ukwenza umbala
+	Shadow	Isithunzi
+	Shadow, glow and soft edges	Isithunzi, ukukhanya kunye neencam ezithambileyo
+	Shape Effects	Iimpembelelo zeMilo
+	Shape Fill	Ukugcwaliswa kobume
+	Shape Format	Ubume boBume
+	Shape Outline	Ulwandlalo lwemilo
+	Shape Styles	Izimbo zokuBumba
+	Shapes	Iimilo
+	Share	Yabelana
+	Sheet:	Iphepha:
+	Shift cells down	Shift iiseli ezantsi
+	Shift cells right	Shift iiseli ekunene
+	Shift+Tab	Shift+Tab
+	Shipping labels	Iileyibhile zokuthumela ngenqanawa
+	Short citation:	Ucaphulo olufutshane:
+	Shortcut key:	Iqhosha elinqumlayo:
+	Show	Bonisa
+	Show all formatting marks	Bonisa onke amanqaku okufomatha
+	Show All Levels	Bonisa Onke Amanqanaba
+	Show all revisions inline	Bonisa lonke uhlaziyo emgceni
+	Show changes at:	Bonisa utshintsho apha:
+	Show changes in:	Bonisa utshintsho kwi:
+	Show Comments	Bonisa amagqabaza
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	Bonisa amaxwebhu anemibala yawo eguqulweyo, njenge Jonga › Tshintsha Iindlela. Ukugcina, ukuprinta kunye neePDF azitshintshanga.
+	Show every bibliography field	Bonisa lonke icandelo loluhlu lweencwadi
+	Show First Line Only	Bonisa Umgca WokuQala Kuphela
+	Show in the Styles gallery	Bonisa kwigalari yeZimbo
+	Show KeyTips (Alt or F10)	Bonisa iingcebiso ezingundoqo (Alt okanye F10)
+	Show Level	Bonisa iNqanaba
+	Show Level 1	Bonisa iNqanaba loku-1
+	Show Level 2	Bonisa iNqanaba lesi-2
+	Show Level 3	Bonisa iNqanaba lesi-3
+	Show Level 4	Bonisa iNqanaba lesi-4
+	Show Level 5	Bonisa iNqanaba lesi-5
+	Show Level 6	Bonisa iNqanaba lesi-6
+	Show Level 7	Bonisa iNqanaba lesi-7
+	Show Level 8	Bonisa iNqanaba lesi-8
+	Show Level 9	Bonisa iNqanaba lesi-9
+	Show Markup	Bonisa uphawu
+	Show Notes	Bonisa Amanqaku
+	Show only comments and formatting in balloons	Bonisa kuphela izimvo kunye nokufomatha kwiibhaluni
+	Show or Hide Style	Bonisa okanye Fihla Isimbo
+	Show page numbers	Bonisa amanani ephepha
+	Show revisions in balloons	Bonisa uhlaziyo kwiibhaluni
+	Show rulers	Bonisa abalawuli
+	Show Text Formatting	Bonisa ukuFomatha okubhaliweyo
+	Show the equation in the line of text	Bonisa inxaki kumgca wokubhaliweyo
+	Show the equation on a line of its own	Bonisa inxaki kumgca wayo
+	Show the mini toolbar when text is selected	Bonisa ibar yesixhobo encinci xa okubhaliweyo kukhethiwe
+	Show/Hide ¶	Bonisa/Fihla ¶
+	Show\nComments	Bonisa\\\\nAmagqabantshintshi
+	Showing the first {count} items.	Ibonisa izinto zokuqala ze-{count}.
+	Shows a tree: each item below the item it belongs to.	Ubonisa umthi: into nganye engezantsi kwento ekuyo.
+	Shows items around a central idea: the first item is the centre.	Ubonisa izinto ezingqonge ingcamango esembindini: into yokuqala liziko.
+	Shows items of equal weight as blocks in rows.	Ubonisa izinto ezinobunzima obulinganayo njengeebhloko kwimiqolo.
+	Shows overlapping ideas as overlapping circles.	Ibonisa izimvo ezithungelanayo njengezangqa ezithungelanayo.
+	Shows parts of a whole as quadrants.	Ibonisa iindawo ezipheleleyo njengama-quadrants.
+	Shows parts that build on each other, largest at the bottom.	Ubonisa iindawo ezakhayo enye kwenye, ezinkulu ezantsi.
+	Shows steps in order, left to right, with arrows between them.	Ibonisa izinyuko ngolandelelwano, ukusuka ekhohlo ukuya ekunene, neentolo phakathi kwazo.
+	Shows steps that repeat, around a circle.	Ubonisa amanyathelo aphinda-phindayo, ajikeleze isangqa.
+	Shrink Font 1 Point	Nciphisa ifonti yenqaku eli-1
+	Shrink Selection	Nciphisa Ukhetho
+	Shrink text	Nciphisa umbhalo
+	Side to Side	Ecaleni ukuya eCaleni
+	Side\nto Side	Ecaleni\\\\kwicala
+	Sides of a right triangle	Amacala kanxantathu wasekunene
+	Signature Line	Umgca wokutyikitya
+	Sine and cosine series of f(x)	Uthotho lwe-Sine kunye ne-cosine ye-f(x)
+	Sine Function	Sine Function
+	Sine theta	Sine theta
+	Single	Ungatshatanga
+	Single Brackets	Izibiyeli eziNye
+	Single Closing Quote	Isicaphulo esiNye sokuvala
+	Single label	Ileyibhile enye
+	Single Left Angle	Iengile enye yaKhohlo
+	Single Left Bar	Ibha Ekhohlo enye
+	Single Left Brace	Isikalisi esiNye saKhohlo
+	Single Left Bracket	Isibiyeli esiNye saKhohlo
+	Single Left Parenthesis	Isibiyeli esiNye saKhohlo
+	Single Opening Quote	Isicaphulo sokuvula esiNye
+	Single Right Brace	I-Single Right Brace
+	Single Right Bracket	Isibiyeli esiNye ekunene
+	Single Right Parenthesis	Isibiyeli sasekunene esinye
+	Single Spacing	Isithuba esiNye
+	SIST02	SIST02
+	Site name	Igama lesiza
+	Size	Ubungakanani
+	Size (pt):	Ubungakanani (pt):
+	Size and Crop…	Ubungakanani kunye neNqanaba……
+	Size:	Ubungakanani:
+	Sketchbook	Incwadi yesiketshi
+	Skewed Fraction	Iqhezu eligotyiweyo
+	Skip citations & bibliography	Tsiba izicatshulwa kunye nobhalografi
+	Skip Citations and Bibliography	Tsiba izicatshulwa kunye neBibliography
+	Skip Record If	Tsiba Record Ukuba
+	Skip Record If…	Tsiba Ingxelo Ukuba……
+	Slant Down	Gqibezela Phantsi
+	Slant Up	Nqakraza phezulu
+	Small Caps	IiCaps ezincinci
+	Small caps	Iikepusi ezincinci
+	Small change	Utshintsho oluncinci
+	Smart quotes instead of straight quotes	Iingcaphuno ezihlakaniphile endaweni yeengcaphuno ezithe ngqo
+	SmartArt	I-SmartArt
+	SmartArt Design	Uyilo lweSmartArt
+	SmartArt Styles	Izimbo ze-SmartArt
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	Ukuskrola okungenamagingxigingxi kunye nokwandisa, kunye neemenyu kunye namaqhosha acimayo. Ukucima kubonisa lonke utshintsho ngexesha elinye.
+	Soft Edges	Imiphetho ethambileyo
+	Soft Glow	UkuKhanya okuthambileyo
+	Solid Accent	I-Scent Accent
+	Sort	Hlela
+	Sort by	Hlela ngokwe
+	Sort order:	Hlela ulandelelwano:
+	Sort Records	Hlela iiRekhodi
+	Source code: github.com/chatraweechai/doc4me	Ikhowudi yomthombo: github.com/chatraweechai/doc4me
+	Source Manager	UMphathi woMthombo
+	Source type:	Uhlobo lomthombo:
+	Sources in this document:	Imithombo kolu xwebhu:
+	South	Emazantsi
+	Space	Isithuba
+	Space after	Isithuba emva
+	Space after: {pt} pt	Isithuba emva: {pt} pt
+	Space before	Indawo ngaphambili
+	Space before/after:	Isithuba phambi/emva:
+	Space before: {pt} pt	Indawo ngaphambili: {pt} pt
+	Spaces	Izithuba
+	Spacing	Izithuba
+	Spacing (pt):	Isithuba (pt):
+	Spacing:	Isithuba:
+	Spanish	IsiSpanish
+	Spanish (Mexico)	IsiSpanish (eMexico)
+	Spanish (Spain)	IsiSpanish (eSpain)
+	Sparse Matrices	Iimatriki ezincinci
+	Special	Ekhethekileyo
+	Special Characters	Abalinganiswa Abakhethekileyo
+	Specify height:	Chaza ubude:
+	Speech	Intetho
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	Intetho iyaziwa kule khompyutha (whisper.cpp); akukho nto ithunyelwa kwi-intanethi.
+	Speed	Isantya
+	Spelling	Upelo
+	Spelling & Grammar	Upelo & negrama
+	Spelling &\nGrammar	Upelo &\\\\nIgrama
+	Spelling and grammar are checked in English (United States).	Upelo negrama zikhangelwa kwisiNgesi (eUnited States).
+	Spelling Suggestions	Iingcebiso ngopelo
+	Spike	Spike
+	Split	Ukwahlula
+	Split apart page break and paragraph mark	Yahlula-hlula ikhefu lephepha kunye nenqaku lomhlathi
+	Split Cells	Yahlula iiseli
+	Split Table	Itheyibhile yokwahlula
+	Spreadsheet Table	Itheyibhile yespreadsheet
+	Square	Isikwere
+	Square Root	Ingcambu yesikwere
+	Square Root with Degree	Ingcambu yesikwere kunye neDegree
+	Square Union	Umanyano lwesikwere
+	Stack Object	Into Yemfumba
+	Stack Object (Three)	Into yemfumba (ezintathu)
+	Stacked	Ipakishwe
+	Stacked Bar	Ibha eMiselweyo
+	Stacked Column	Umqolo obekiweyo weKholam
+	Stacked Fraction	Iqhezwana eliFukelweyo
+	Stacked, no bar	Ipakishwe, akukho bar
+	Standard	Umgangatho
+	Standard and Contextual	Umgangatho kunye noMxholo
+	Standard Colors	Imibala esemgangathweni
+	Standard Only	Esemgangathweni Kuphela
+	Star	inkwenkwezi
+	Start at:	Qala ku:
+	Start Enforcing Protection	Qala ukunyanzelisa uKhuseleko
+	Start Mail Merge	Qala ukudityaniswa kwemeyile
+	Start Mail\nMerge	Qala Imeyile\\\\nDibanisa
+	State	Umbuso
+	Statement   5.50" × 8.50"	Ingxelo 5.50" × 8.50"
+	Statistics	Amanani
+	Status Bar	Indawo yeNdawo
+	Statutes	Imimiselo
+	Stop	Misa
+	Stop Protection	Misa uKhuseleko
+	Stop Reading	Yeka Ukufunda
+	Stopped	Kumisiwe
+	Store	Gcina
+	Straight Arrow Connector	Isidibanisi sotolo oluthe ngqo
+	Straight Connector	Isidibanisi esithe ngqo
+	Strikethrough	Ukubetha
+	Stroke {n} of {total}	I-Stroke {n} ye-{total}
+	Strong	Yomelele
+	Structure Actions	Izenzo zesakhiwo
+	Structures	Ulwakhiwo
+	Studio	Isitudiyo
+	Studio cover	Ikhava yesitudiyo
+	Studio handbook (sample)	Incwadi yestudio (isampulu)
+	Style	Isimbo
+	Style based on:	Isimbo esisekwe kwi:
+	Style Inspector	Umhloli weSimbo
+	Style Set	Iseti yesimbo
+	Style:	Isimbo:
+	Style: APA	Isimbo: APA
+	Style: {style}	Uhlobo: {style}
+	Styles	Izimbo
+	Styles Pane	Ifestile yeZimbo
+	Styles:	Izimbo:
+	Subentry:	I-Subentry:
+	Subject	Umxholo
+	Subscript	Umrhumo
+	Subscript-Superscript	Umbhalo-ngqangi-umbhalo ophezulu
+	Subscripts and Superscripts	Imirhumo kunye nemibhalo ephambili
+	Subset:	Iseti engaphantsi:
+	Substituted font	Ifonti endaweni yayo
+	Subtitle	Umbhalo ongezantsi
+	Subtle Emphasis	Ugxininiso Olufihlakeleyo
+	Subtle Reference	Isalathiso esifihlakeleyo
+	Sum	Isishwankathelo
+	Sum of cosines	Isimbuku seecosines
+	Sum or difference of sines	Isishwankathelo okanye umahluko wesines
+	Summation	Ushwankathelo
+	Summation from 0 to n	Ushwankathelo ukusuka ku-0 ukuya ku-n
+	Summation over binomials	Ushwankathelo phezu kweebinomials
+	Summation with Limits	Ushwankathelo oluneMida
+	Summation with Lower Limit	Isishwankathelo esinoMda osezantsi
+	Summation with Subscript Limit	Isishwankathelo esinoMda wokuBhalwa
+	Summation with Subscript-Superscript Limits	Isishwankathelo kunye neMida yoMbhalo-Superscript
+	Summations	Ushwankathelo
+	Superscript	Umbhalo ophezulu
+	Suppress line numbers	Shicilela amanani emigca
+	Surface Integral	Umphezulu odibeneyo
+	Surface Integral with Limits	Umphezulu odityanisiweyo oneMida
+	Surface Integral with Stacked Limits	Umphezulu odityanisiweyo oneMida eSikiweyo
+	Swap footnotes and endnotes	Tshintsha imibhalo esemazantsi kunye namanqaku okugqibela
+	Swedish	IsiSwedish
+	Switch Modes	Tshintsha Iindlela
+	Switch Windows	Tshintsha iiWindows
+	Switch\nModes	Tshintsha\\\\nIindlela
+	Symbol	Uphawu
+	Symbol Font	Ifonti yophawu
+	Symbols	Iimpawu
+	Synchronous Scrolling	UkuSkrola okuNgqamanisiyo
+	Synonyms	Izithethantonye
+	System	Inkqubo
+	Tab	Ithebhu
+	Tab Character	Umlinganiswa weTabhu
+	Tab character	Umlinganiswa wethebhu
+	Tab characters	Abalinganiswa bethebhu
+	Tab leader:	Inkokheli yethebhu:
+	Tab stop position:	Indawo yokumisa ithebhu:
+	Tab stops to be cleared:	Indawo yokumisa isithuba kufuneka icocwe:
+	Table	Itheyibhile
+	Table AutoFormat	Itheyibhile i-AutoFormat
+	Table AutoFormat…	UkuFometha Okuzenzekela kweTheyibhile……
+	Table Column Width	Ububanzi beKholam yeTheyibhile
+	Table Design	Uyilo lweTheyibhile
+	Table direction:	Isalathiso setafile:
+	Table entry fields	Iindawo zokungena kwitheyibhile
+	Table Grid	Igridi yetafile
+	Table identifier:	Isichongi seTheyibhile:
+	Table Layout	UYilo lweTheyibhile
+	Table of Authorities	Uluhlu lwabasemaGunyeni
+	Table of Contents	Isiqulatho
+	Table of Contents Options	Ukhetho Lweziqulatho
+	Table of Contents Styles	Uluhlu Lweziqulatho Izimbo
+	Table of Figures	Itheyibhile yamanani
+	Table of Figures Options	Itheyibhile yoKhetho lweMifanekiso
+	Table of\nContents	Itheyibhile ye\\\\nImixholo
+	Table Positioning	Ukuma kweTheyibhile
+	Table Properties	Iipropati zeTheyibhile
+	Table Row Height	Itheyibhile yoMde womqolo
+	Table style	Isimbo setafile
+	Table Style Options	Iinketho zeSimbo seTheyibhile
+	Table Styles	Izimbo zetafile
+	Table styles:	Izimbo zetafile:
+	Tables	Iitafile
+	Tabloid   11.00" × 17.00"	Tabloid 11.00" × 17.00"
+	Tabs	Iithebhu
+	Tabs…	Iithebhu……
+	Tabular List	Uluhlu lweTheyibhile
+	Tag	Ithegi
+	Tangent formula	Ifomula yeTanji
+	Tangent Function	Tangent Function
+	TC entry fields	Iindawo zokungena zeTC
+	Technology	Iteknoloji
+	Templates	Izempleyithi
+	Templates and Add-ins	Iitemplates kunye nezongezo
+	Text	Isicatshulwa
+	Text Box	Ibhokisi yokubhaliweyo
+	Text boxes	Iibhokisi zemibhalo
+	Text Direction	Ulwalathiso lwesicatshulwa
+	Text Effects	Iziphumo zombhalo
+	Text Effects and Typography	Iziphumo zombhalo kunye nokuchwetheza
+	Text Fill	Gcwalisa isiqendu
+	Text from File	Okubhaliweyo kwiFayile
+	Text Highlight Color	Umbala wokuGqamisa okubhaliweyo
+	Text indent at:	Ukuhanjiswa kombhalo apha:
+	Text isn't squeezed to fit its cell yet.	Umbhalo awukacinezelwa ukuze ulingane neseli.
+	Text Outline	Ulwandlalo lweSibhalo
+	Text over Colon Equal	Umbhalo phezu kweKholoni Elinganayo
+	Text over Equal	Umbhalo ngaphezulu kwe-Equal
+	Text Pane	Iphayini yokubhaliweyo
+	Text size	Ubungakanani bombhalo
+	Text snaps to characters	Umbhalo utsibela kubalinganiswa
+	Text to display:	Umbhalo oza kuboniswa:
+	Text Wrapping	Ukusongwa kombhalo
+	Text wrapping:	Ukusonga umbhalo:
+	Text:	Isiqendu:
+	Text\nBox	Umbhalo\\\\nIbhokisi
+	Text\nDirection	Umbhalo\\\\nUmkhombandlela
+	Thai	IsiThai
+	Thai Distributed	IsiThai Sabiwa
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	Loo fomati ayigcini yonke into, ngoko ke uxwebhu lusavuliwe. Yigcine njengoxwebhu lweLizwi (.docx) ukuze uqhubeke.
+	That isn't the web address or embed code of an online video.	Ayiyiyo idilesi yewebhu leyo okanye ikhowudi yokulungisa ividiyo ekwi-intanethi.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	Elo gama lokugqithisa alilunganga. Yijonge (amagama okugqithisa anovakalelo lwemeko) kwaye uzame kwakhona.
+	The clipboard is empty.	Ibhodi eqhotyoshwayo ayinanto.
+	The date it is today	Umhla ikuyo namhlanje
+	The document contains no tracked changes.	Uxwebhu alunalutshintsho lulandelelweyo.
+	The document has no bookmarks yet.	Uxwebhu alunazo iibhukhimaksi okwangoku.
+	The document is read only, except for regions marked editable.	Uxwebhu lufundwa kuphela, ngaphandle kwemimandla ephawulwe ukuba iyahleleka.
+	The document will be saved with a password. Save it to protect it.	Uxwebhu luya kugcinwa kunye negama lokugqitha. Yigcine ukuyikhusela.
+	The first word of a sentence starts with a capital.	Igama lokuqala lesivakalisi liqala ngonobumba omkhulu.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	Isibonelelo semihla ngemihla sasimahla sisetyenzisiwe (zama kwakhona ngomso, okanye unike idilesi ye-imeyile)
+	the LibreTranslate server	iseva ye-LibreTranslate
+	The Mail Merge Helper sets up a merge in three steps.	UMncedi wokuDityaniswa kwemeyile useka udibaniso ngamanyathelo amathathu.
+	The new style takes the formatting of the current paragraph.	Isimbo esitsha sithatha ukufomathwa komhlathi wangoku.
+	The password is optional; without it anyone can stop the protection.	Igama lokugqitha liyinketho; ngaphandle kwayo nabani na unokumisa ukhuseleko.
+	The password is removed. Save the document to keep the change.	Igama lokugqithisa lisusiwe. Gcina uxwebhu ukugcina utshintsho.
+	The passwords don't match.	Amagama okugqithisa awahambelani.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	Umshicileli, ushicilelo olumacala mabini kunye namaphepha ngeshiti ngalinye akhethiwe kuloo ncoko yababini.
+	The recipient-list field that fills each part of an address block and greeting line.	Indawo yoluhlu lwabamkeli egcwalisa indawo nganye yebhloko yedilesi kunye nomgca wokubulisa.
+	The same word twice in a row.	Igama elifanayo kabini ngokulandelelana.
+	The spelling and grammar check is complete.	Ukukhangelwa kopelo negrama kugqityiwe.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	Ingxoxo yefayile yesixokelelwano ayifumaneki, ngoko ke iDoc4Me ibonisa eyakhe. Ukufumana inkqubo yencoko yababini, hlohla isikhethi sefayile portal (efana ne xdg-desktop-portal-gtk) okanye zenity.
+	The text is sent to {service} to be translated.	Umbhalo uthunyelwe ku-{service} ukuze uguqulelwe.
+	The time right now	Ixesha ngoku
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	Ividiyo ibonisa njengomfanekiso kuxwebhu. Cofa kabini ukuyibukela kwibhrawuza yakho.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	Lonke uxwebhu luguqulelwa kuxwebhu olutsha, oluthatha indawo yolu. Gcina umsebenzi wakho kuqala.
+	Theme Colors	Imibala yomxholo
+	Theme Fonts	Iifonti zomxholo
+	Theme List	Uluhlu Lwemixholo
+	Themes	Imixholo
+	Then by	Emva koko nge
+	Then insert:	Emva koko faka:
+	There's no text to translate.	Akukho mbhalo unokuguqulelwa.
+	Thesaurus	IThesaurus
+	These marks show even when Show/Hide ¶ is off.	La manqaku abonisa naxa uBonisa/Fihla ¶ ecimile.
+	These merge fields aren't in the recipient list:	Le mihlaba yokudibanisa ayikho kuludwe lwabamkeli:
+	These settings will be used for new documents.	Olu seto luya kusetyenziselwa amaxwebhu amatsha.
+	Thick	Zingqindilili
+	Thickness	Ukutyeba
+	This Device…	Esi sixhobo……
+	This document	Olu xwebhu
+	This field has no options.	Lo mmandla awunazo iinketho.
+	This folder can't be read: {error}	Le folda ayinakufundeka: {error}
+	This font has no characters to show.	Le fonti ayinamagama anokuboniswa.
+	This page	Eli phepha
+	This password type isn't supported.	Olu hlobo lokugqithisa aluxhaswanga.
+	This point forward	Le ngongoma phambili
+	This section	Eli candelo
+	Three	Zintathu
+	Through	Ngokusebenzisa
+	Tight	Qinisa
+	Tilde	Tilde
+	Tips ({n})	Iingcebiso ({n})
+	Title	Isihloko
+	Title from the document properties	Isihloko esivela kwiipropati zoxwebhu
+	Title:	Isihloko:
+	To	Ukuya
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Ukuvula amaxwebhu e-Word nge-Doc4Me ngokungagqibekanga: khetha ibe nye kwi-Finder, khetha iFayile › Fumana Ulwazi, khetha i-Doc4Me phantsi Vula ngayo, emva koko ucofe Guqula Konke.
+	To:	Ukuya:
+	TOA Heading	TOA Isihloko
+	TOC Heading	Isihloko se-TOC
+	TOC {n}	I-TOC {n}
+	Today	Namhlanje
+	tOGGLE cASE	QHUBEKA ICALA
+	Toggle Check Box	NONE
+	Toggle Field Codes	Guqula iiKhowudi zeNdawo
+	Toggle Unicode Character	Guqula i-Unicode Character
+	Tools	Izixhobo
+	Top	Phezulu
+	Top and Bottom	Phezulu naPhantsi
+	Top Border	Umda oPhezulu
+	Top Margin	Umjikelo oPhezulu
+	Top of Next Page	Phezulu kwePhepha Elilandelayo
+	Top of Page	Phezulu kwePhepha
+	Top of Previous Page	Phezulu kwePhepha elidlulileyo
+	Top of the Window	Phezulu kwefestile
+	Top:	Phezulu:
+	Total	Iyonke
+	Total Row	Uluhlu olupheleleyo
+	Track Changes	Landela Utshintsho
+	Track Changes Options	Khangela Iinketho zoTshintsho
+	Track changes while editing	Landela utshintsho ngelixa uhlela
+	Track Changes: On	Track Utshintsho: Vula
+	Track formatting	Ukufomatha kwendlela
+	Track\nChanges	Landa\\\\nUtshintsho
+	Track\nChanges ✓	Umkhondo\\\\nUtshintsho ✓
+	Tracked changes	Ulandelelwe utshintsho
+	Tracking	Ukulandela umkhondo
+	Trademark	Uphawu lokuthengisa
+	Trademark Sign	Uphawu lokuthengisa
+	Transform	Guqula
+	Translate	Guqulela
+	Translate Document	Guqulela uxwebhu
+	Translating {done} of {total}	Ukuguqulelwa kwe-{done} ye-{total}
+	Translation service	Inkonzo yoguqulo
+	Translator	Umguquleli
+	Transparency	Ukungafihli
+	Transparency:	Ukungafihli:
+	Transport	Ezothutho
+	Treatises	IiNyango
+	Triangle	Unxantathu
+	Triangle Down	Unxantathu Phantsi
+	Triangle Up	Unxantathu phezulu
+	Trigonometric Functions	Imisebenzi ye-Trigonometric
+	Triple	Kathathu
+	Triple Dot	Ichaphaza kathathu
+	Triple Integral	Ukudityaniswa kathathu
+	Triple Integral with Limits	Udibaniso oluphindwe kathathu oluneMida
+	Triple Integral with Stacked Limits	Udibaniso oluphindwe kathathu oluneMida eSikiweyo
+	Trust Center	Iziko leTrasti
+	Tue	NgoLwesibini
+	Turabian	iTurabian
+	Turkish	IsiTurkey
+	Two	Zimbini
+	Type	Uhlobo
+	Type a command, e.g. "insert table"	Chwetheza umyalelo, umz. "faka itafile"
+	Type a New List	Chwetheza uLudwe Olutsha
+	Type a New List…	Chwetheza Uluhlu Olutsha……
+	Type at least one recipient.	Chwetheza nokuba mnye umamkeli.
+	Type equations in LaTeX	Chwetheza iiequations kwiLaTeX
+	Type equations in the linear format (UnicodeMath)	Chwetheza iiequation kwifomathi yomgca (UnicodeMath)
+	Type in Equation	Chwetheza kwiEquation
+	Type normal (non-math) text in the equation	Chwetheza okuqhelekileyo (okungeyozibalo) okubhaliweyo kwinxaki
+	Type Text	Chwetheza Isiqendu
+	Type the categories down the side and a column of values per series.	Chwetheza iindidi phantsi kwecala kunye noluhlu lwamaxabiso ngothotho ngalunye.
+	Type the field's name and its switches, for example PAGE \\* roman.	Chwetheza igama lommandla kunye nokutshintsha kwawo, umzekelo PAGE \\\\\\\\* roman.
+	Type the password to stop the protection.	Chwetheza igama lokugqitha ukumisa ukhuseleko.
+	Type the recipients, or load them from a file.	Chwetheza abamkeli, okanye balayishe kwifayile.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	Chwetheza igama lethegi yomthombo. Unokongeza ulwazi oluninzi kulo mthombo kamva ngokuhlela umthombo.
+	Type:	Uhlobo:
+	Typing	Ukuchwetheza
+	Typing replaces selected text	Ukuchwetheza kungena endaweni yesicatshulwa esikhethiweyo
+	Ukrainian	Isi-Ukraine
+	Unchecked symbol	Isimboli engakhange iqwalaselwe
+	Underbar	Ibha engaphantsi
+	Underbrace	I-Underbrace
+	Underline	Krwela umgca ngaphantsi
+	Underline color	Krwela umgca ngaphantsi kombala
+	Underline Words Only	Krwela umgca phantsi kwamagama kuphela
+	Undo	qhaqha
+	Undo Stroke	qhaqha iStroke
+	Undo {action}	Hlehlisa i-{action}
+	Unformatted Text	Isiqendu esingalungiswanga
+	Ungroup	Susa iqela
+	Union	Umanyano
+	Union of intersections	Umanyano lweendlela zokuhlangana
+	Union with Limits	Umanyano oluneMida
+	Union with Lower Limit	Umanyano olunoMda ophantsi
+	Union with Plus	Umanyano kunye Plus
+	Union with Subscript-Superscript Limits	IManyano kunye neMida yokuBhalwa koMbhalo oPhezulu
+	Unions and Intersections	Iimanyano kunye neeNdibanisela
+	Unlink Fields	NONE
+	Unlink\nCitations	Susa unxulumaniso\\\\nIzicatshulwa
+	Unlock Fields	Vula Imimandla
+	Up	Phezulu
+	Up Diagonal Dots	Amachaphaza eDiyagonal phezulu
+	Up one level	Phezulu kwinqanaba elinye
+	Update Field	Indawo yoHlaziyo
+	Update fields before printing	Hlaziya iindawo phambi kokushicilela
+	Update Index	Isalathiso soHlaziyo
+	Update Style to Match Selection	Hlaziya isimbo ukuze ufanise uKhetho
+	Update Styles from Template	Hlaziya izimbo kwiSakhelo
+	Update Table	Itheyibhile yoHlaziyo
+	Update Table of Figures	Uhlaziyo lweTheyibhile yaManani
+	Update to Match	Uhlaziyo kuMatshisi
+	Update to Match Selection	Uhlaziyo kuKhetho lomdlalo
+	UPPERCASE	AMAKHULU
+	URGENT	NGOKUXAMISEKILEYO
+	URL	URL
+	Use "a" before a consonant sound	Sebenzisa u-"a" phambi kwesandi sekhonsonanti
+	Use "an" before a vowel sound	Sebenzisa "i" phambi kwesandi sesikhamiso
+	Use an Existing List…	Sebenzisa Uludwe Olukhoyo……
+	Use passim (five or more pages)	Sebenzisa ipassim (amaphepha amahlanu nangaphezulu)
+	Use system setting	Sebenzisa useto lwesixokelelwano
+	Use the Insert key to switch overtype on and off	Sebenzisa iqhosha elithi Faka ukuze utshintshe uchwethezo olugqithisileyo ekuvuleni nasekuvaleni
+	Use wildcards	Sebenzisa amakhadi asendle
+	User Name	Igama lomsebenzisi
+	User name:	Igama lomsebenzisi:
+	Username	Igama lomsebenzisi
+	Value	Ixabiso
+	Vector A	IVector A
+	Vector AB	IVector AB
+	Version	Inguqulelo
+	Version History	Imbali yenguqulelo
+	Version {version} ({build})	Inguqulelo {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	Iinguqulelo zigcinwa ngelixa uxwebhu luvuliwe (ifayile ye.docx ayinazinguqulelo).
+	Vertical	Ngokuthe nkqo
+	Vertical Alignment	Ulungelelwaniso oluthe nkqo
+	Vertical alignment:	Ulungelelwaniso oluthe nkqo:
+	Vertical Bars	IiBar ezithe nkqo
+	Vertical Dots	Amachaphaza athe nkqo
+	Vertical spacing:	Izithuba ezithe nkqo:
+	Vietnamese	IsiVietnamese
+	View	Jonga
+	View Alt Text…	Jonga isiqendu seAlt……
+	View Gridlines	Jonga imigca yegridi
+	View Side by Side	Jonga icala ngecala
+	View State	Jonga iLizwe
+	Views	Iimbono
+	Visual effects	Iziphumo ezibonakalayo
+	Voice	Ilizwi
+	Volume	Umthamo
+	Volume Integral	Umthamo odibeneyo
+	Volume Integral with Limits	Umthamo odityanisiweyo onemida
+	Volume Integral with Stacked Limits	Umthamo odityanisiweyo oneMida eSikiweyo
+	W:	W:
+	Waiting for Zotero…	Ilinde iZotero……
+	Warm Gradient with Outline	Ithareyidi efudumeleyo enolwandlalo
+	Warnings ({n})	Izilumkiso ({n})
+	Watermark	I-Watermark
+	Wave	Wave
+	Weather	Imozulu
+	web access isn't available here	ufikelelo lwewebhu alufumaneki apha
+	Web Layout	UYilo lweWebhu
+	Web page (*.html)	Iphepha lewebhu (*.html)
+	Web\nLayout	IWebhu\\\\nUyilo
+	Website	Iwebhusayithi
+	Wed	NgoLwesithathu
+	Weight	Ubunzima
+	West	eNtshona
+	When merging records	Xa udibanisa iirekhodi
+	When this document was first created	Xa olu xwebhu lwenziwa okokuqala
+	When this document was most recently printed	Xa olu xwebhu belusanda kushicilelwa
+	When this document was most recently saved	Xa olu xwebhu lwalusanda kugcinwa
+	White Space	Isithuba esimhlophe
+	White space	Indawo emhlophe
+	Who the document properties name as author	Ngubani igama leepropati zoxwebhu njengombhali
+	Whole document	Uxwebhu lonke
+	Whole page	Iphepha elipheleleyo
+	Whole Table	Itheyibhile yonke
+	Whole words	Amazwi onke
+	Wide	Banzi
+	Widow/Orphan Control	Ulawulo Lomhlolokazi/Inkedama
+	Widow/Orphan control	Umhlolokazi/ulawulo lwenkedama
+	Width and spacing	Ububanzi kunye nezithuba
+	Width:	Ububanzi:
+	Wildcards (regex)	Amakhadi asendle (regex)
+	Window	Ifestile
+	With:	Nge:
+	Word 2007	Igama lika-2007
+	Word 2010	Igama lika-2010
+	Word 2013 and later	Igama lika-2013 nasemva koko
+	Word 97–2003	ILizwi 97–2003
+	Word Count	Ukubalwa kwamagama
+	Word document	Uxwebhu lwegama
+	Word document (*.docx)	Uxwebhu lwegama (*.docx)
+	Word forms	Iimo zamagama
+	Word Left	Igama Ekhohlo
+	Word level	Inqanaba legama
+	Word Right	Ilizwi eliLungileyo
+	Word XML Document (*.xml)	Uxwebhu lwegama leXML (*.xml)
+	WordArt	WordArt
+	WordArt Styles	Izimbo zeWordArt
+	Words	Amagama
+	Words only	Amagama kuphela
+	Wrap Text	Qhuba isiqendu
+	Wrap text	Gquba isicatshulwa
+	Wrap Text Sides	Songa Amacala Okubhaliweyo
+	Wrap\nText	Gqibezela\\\\nIsiqendu
+	Write & Insert Fields	Bhala kwaye ufake imimandla
+	Write a reply	Bhala impendulo
+	Write math here with the mouse or a pen.	Bhala izibalo apha ngempuku okanye ngosiba.
+	Writing Style: Grammar	Isimbo sokuBhala: Igrama
+	x bar	x ibha
+	Year	Unyaka
+	Yes	Ewe
+	Yields	Izivuno
+	Your changes will be lost if you don't save them.	Utshintsho lwakho luya kulahleka ukuba awulugcini.
+	Your system doesn't report an animation setting, so animation effects stay on.	Isixokelelwano sakho asixeli isicwangciso soopopayi, ngoko iziphumo zoopopayi zihlala zivuliwe.
+	Your system has animation effects turned off.	Inkqubo yakho ineziphumo zoopopayi ezicinyiweyo.
+	Your system has animation effects turned on.	Inkqubo yakho ineziphumo zoopopayi ezivuliweyo.
+	Zoom	Sondeza
+	Zoom In	Sondeza
+	Zoom Out	Zoom Out
+	Zoom to Page	Sondeza kwiPhepha
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: icinyiwe
+	Zotero: done	Zotero: ugqibile
+	{cols}×{rows} Table	Itheyibhile ye-{cols}×{rows}
+	{contributors} contributors · {commits} commits	{contributors} abaxhasi · {commits} izibophelela
+	{count} items highlighted	{count} ziyaphawulwa
+	{count} of {total} pages will print	{count} ye-{total} amaphepha aya kuprinta
+	{count} paragraphs were changed.	{count} imihlathi yatshintshwa.
+	{count} records; fields: {fields}	iirekhodi ze{count}; iindawo: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	I-{fonts} ayifakelwanga kule khompyutha, ngoko ke olu xwebhu luboniswa kunye ne-{with}. Imigca kunye namaphepha anokwaphuka ngokwahlukileyo kunefonti yokuqala.
+	{group} settings	Iimpawu eziphambili ze{group}
+	{key}+Click to follow link	{key}+Cofa ukulandela ikhonkco
+	{language} is now the document's default language.	I-{language} ngoku lulwimi olungagqibekanga loxwebhu.
+	{name} (Press ENTER to Insert)	{name} (Cofa ENTER ukuze Faka)
+	{name} already exists. Choose Save again to replace it.	{name} sele ikhona. Khetha Gcina kwakhona ukuze uyibuyisele.
+	{name} can't be a folder's name.	{name} ayinakuba ligama lefolda.
+	{name} is protected with a password.	I-{name} ikhuselwe ngegama eliyimfihlo.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} yongezwa. Iimakhro zayo ziphantsi kweZongezo zam kunye nokuJonga › Iimakhro.
+	{name} wasn't found.	{name} ayifunyenwanga.
+	{n} entries marked.	{n} amangeno aphawuliwe.
+	{n} lines	Imigca ye-{n}
+	{n} of {of} recipients	{n} ye-{of} yabamkeli
+	{n} pt	Ingxenye ye-{n}
+	{n} records	Iimpawu ze{n}
+	{n} revisions	{n} uhlaziyo
+	{selected} of {words} words	{selected} ye {words} amagama
+	{size} pt	Ingxenye ye-{size}
+	{words} words	{words} amagama
+	{w} × {h} in	{w} × {h} ngaphakathi
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) asiyonombolo.
+	← Find	← Fumana
+	✓ None	✓ Akukho
+	➕ New comment	➕ amagqabantshintshi amatsha
+	📂  Browse…	📂 Khangela…
+	Add Help Text…	Yongeza isiqendu soNcedo……
+	AutoText entry:	Ungeniso lokubhaliweyo oluzenzekelayo:
+	Calculate on exit	Bala xa uphuma
+	Calculation	Ukubala
+	Check Box Form Field	Khangela indawo yeFom yeBhokisi
+	Check Box Form Field Options	Khangela Iinketho Zommandla weFom yeBhokisi
+	Check box	Khangela ibhokisi
+	Check box enabled	Ibhokisi yokukhangela yenziwe yasebenza
+	Check box size:	Jonga ubungakanani bebhokisi:
+	Checked	Ijongiwe
+	Current date	Umhla wangoku
+	Current time	Ixesha langoku
+	Default value:	Ixabiso elimiselweyo:
+	Drop-Down Form Field	Indawo yeFom yokuLahla-Phantsi
+	Drop-Down Form Field Options	Iinketho Zommandla Wokulahla Ifomu
+	Drop-down	Ukwehla-phantsi
+	Drop-down enabled	Ukwehla kunikwe amandla
+	Drop-down item:	Into yokwehla:
+	Fill In Form Field	Gcwalisa Ummandla weFom
+	Fill-in enabled	Ukuzalisa kuvuliwe
+	Form Field	Indawo yeFomu
+	Form Field Help Text	Isiqendu soNcedo seFom
+	Form Field Options	Iinketho zeNdawo zeFom
+	Form Field Shading	Ifom yokwenza Umthunzi wendawo
+	Form Field at Selection	Indawo yeFomu ekuKhethweni
+	Help Key (F1)	Iqhosha loNcedo (F1)
+	Insert Form Field	Faka Ummandla Wefomu
+	Items in drop-down list:	Izinto ezikuluhlu lokuhla:
+	Legacy Tools	Izixhobo zeLifa
+	Maximum length:	Obona bude bubuninzi:
+	Next Form Field	Indawo yeFomu elandelayo
+	Not checked	Ayikhangelwa
+	Put the caret on a form field first.	Beka inkathalo kwibala lefom kuqala.
+	Regular text	Isicatshulwa esiqhelekileyo
+	Reset Form Fields	Phinda umisele imimandla yeFomu
+	Text Form Field	Indawo yeFomu yokubhaliweyo
+	Text Form Field Options	Iinketho zommandla weFomu yeSibhalo
+	Type your own:	Chwetheza eyakho:
+	Unlimited	Unlimited
+	Protected sections:	Amacandelo akhuselweyo:
+	Section Protection	Ukhuseleko lweCandelo
+	Section {n}	Icandelo le-{n}
+	Select sections…	Khetha amacandelo……
+	AutoSummarize	Ukushwankathela okuzenzekelayo
+	Create a new document and put the summary there	Yenza uxwebhu olutsha kwaye ubeke isishwankathelo apho
+	Highlight key points	Balaselisa iingongoma eziphambili
+	Insert an executive summary or abstract at the top of the document	Faka isishwankathelo solawulo okanye i-abstract phezulu kuxwebhu
+	Length of summary	Ubude besishwankathelo
+	Percent of original:	Ipesenti yoqobo:
+	Summary: {words} of {of} words	Ushwankathelo: {words} ye {of} amagama
+	Type of summary	Uhlobo lwesishwankathelo
+	Update document statistics	Hlaziya amanani amaxwebhu
+	{n} sentences	izivakalisi {n}
+	{n} words or less	{n} amagama okanye ngaphantsi
+	At:	E:
+	Distance from text:	Umgama ukusuka kwisicatshulwa:
+	Format Frame	Isakhelo sokuFomatha
+	Format Frame…	Ifomathi Yesakhelo……
+	Frame	Isakhelo
+	Frame…	Isakhelo……
+	Insert Frame	Faka isakhelo
+	Lock anchor	Tshixa iankile
+	Remove Frame	Susa isakhelo
+	Text wrapping	Ukusonga umbhalo
+	Chinese Conversion	Uguqulo lwesiTshayina
+	Chinese Conversion…	Uguqulo lwamaTshayina……
+	Converted {n} characters	Iimpawu eziguqulweyo {n}
+	Simplified Chinese to Traditional Chinese	IsiTshayina Esenziwe Lula ukuya kwisiTshayina Somthonyama
+	Simplified to Traditional	Lula ukuya kwisiNtu
+	Traditional Chinese to Simplified Chinese	IsiTshayina Somthonyama ukuya kwisiTshayina Esenziwe Lula
+	Traditional to Simplified	Ngokwemveli ukuba kwenziwe lula
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	Sebenzisa iTaiwan, iHong Kong SAR, kunye neMacao SAR ezahlukeneyo zabalinganiswa
+	Asian Layout	Uyilo lwaseAsia
+	Fit Text	Isiqendu Esifanelekileyo
+	Fit Text…	Faka isiqendu……
+	Two Lines in One	Imigca emibini komnye
+	Two Lines in One…	Imigca emibini kwenye……
+	New text width (pt):	Ububanzi bombhalo omtsha (pt):
+	Enclose in brackets	Vala kwizibiyeli
+	Bracket pair:	Izibini zesibiyeli:
+	Typography	Ukuchwetheza
+	Character spacing control	Ulawulo lwezithuba zoonobumba
+	Don't compress	Musa ukucinezela
+	Compress punctuation only	Cofa iziphumlisi kuphela
+	Compress punctuation and Japanese kana	Compress iziphumlisi kunye Japanese kana
+	First and last characters	Abalinganiswa bokuqala nabokugqibela
+	Strict	Ngokungqongqo
+	Cannot start a line:	Akunakuqala umgca:
+	Cannot end a line:	Akunakuphela umgca:
+	Japanese Find Options	Japanese Fumana iinketho
+	Sounds like (Japanese)	Ivakala ngathi (yaseJapan)
+	Match full/half width	Tshatisa ngokupheleleyo/isiqingatha ububanzi
+	Match hiragana/katakana	Tshatisa i-hiragana/katakana
+	Match small kana	Tshatisa incinci kana
+	Match prolonged sound marks and dashes	Tshatisa iimpawu zezandi ezinde kunye nodwi
+	Japanese Consistency Checker	Japanese Consistency Checker
+	Japanese Consistency Checker…	Isikhangeli soKungqinelana saseJapan……
+	No inconsistent spellings were found.	Akukho kupelo olungangqinelani lufunyenweyo.
+	Pick the spelling to keep in each group.	Khetha upelo oza kulugcina kwiqela ngalinye.
+	Bidirectional text	Umbhalo omacala omabini
+	Bidirectional Text	Isiqendu seNdlela ezimbini
+	Default direction:	Isalathiso esihlala sihleli:
+	Cursor movement:	Intshukumo yekhesa:
+	Logical	Isengqiqweni
+	Visual	Okubonakalayo
+	Manage Fields	Lawula Imimandla
+	File locations	Iindawo zefayile
+	File Locations	IiNdawo zeeFayile
+	Documents:	Amaxwebhu:
+	Pictures:	Imifanekiso:
+	The system's choice	Ukhetho lwenkqubo
+	Show Repairs	Bonisa ukulungisa
+	No repairs were needed.	Akuzange kufuneke kulungiswa.
+	These problems were found and repaired when the document was opened:	Ezi ngxaki zifunyenwe kwaye zalungiswa xa uxwebhu luvulwa:
+	An unreadable entry in the file was skipped: {what}	Ungeno olungafundekiyo kwifayile lutsityiwe: {what}
+	An unreadable part was left out: {what}	Inxalenye engafundekiyo ishiywe ngaphandle: {what}
+	Unreadable relationships were ignored: {what}	Ubudlelwane obungafundekiyo khange buhoywe: {what}
+	A missing part of an embedded object was left out: {what}	Inxalenye elahlekileyo yento ehlonyelweyo ishiywe ngaphandle: {what}
+	Copy File	Khuphela iFayile
+	Find Files	Fumana Iifayile
+	Letter Wizard	Wizard ileta
+	Recipient's name:	Igama lomamkeli:
+	Salutation:	Isibuliso:
+	Subject:	Umxholo:
+	Complimentary closing:	Ukuvalwa kokuthotyelwa:
+	Sender's name:	Igama lomthumeli:
+	Job title:	Isihloko somsebenzi:
+	Company:	Inkampani:
+	Enclosures:	Iindawo ezibiyelweyo:
+	Cc:	Cc:
+	Edit Links to Files	Hlela amakhonkco kwiiFayile
+	Source file	Ifayile yemvelaphi
+	Locked	Itshixiwe
+	Change Source	Guqula uMthombo
+	This document has no links to files.	Olu xwebhu alunakhonkco kwiifayile.
+	Web options	Iinketho zewebhu
+	Web Options	Iinketho zeWebhu
+	Allow PNG as a graphics format	Vumela i-PNG njengefomathi yemizobo
+	Rely on CSS for font formatting	Thembela kwi-CSS yokufomatha ifonti
+	Rely on VML for displaying graphics in browsers	Thembela kwi-VML ngokubonisa imizobo kwizikhangeli
+	Organize supporting files in a folder	Lungiselela iifayile ezixhasayo kwifolda
+	Use long file names whenever possible	Sebenzisa amagama eefayile ezinde xa kunokwenzeka
+	Screen size:	Ubungakanani beskrini:
+	Pixels per inch:	Iipikseli nge-intshi nganye:
+	Hangul Hanja Conversion	Uguqulo lweHangul Hanja
+	Hangul Hanja Conversion…	Uguqulo lweHangul Hanja……
+	Hangul to Hanja	Hangul ukuya eHanja
+	Hanja to Hangul	Hanja ukuya Hangul
+	Put the caret in Korean text to choose its Hanja.	Beka inkathalo kwisicatshulwa saseKorea ukukhetha iHanja yayo.
+	The selection, or the whole document when nothing is selected.	Ukhetho, okanye uxwebhu lonke xa kungekho nto ikhethiweyo.

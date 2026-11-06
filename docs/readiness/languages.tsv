@@ -37,13 +37,13 @@ lang-035	Icelandic	is-IS	is
 lang-036	Igbo	ig-NG	-
 lang-037	Indonesian	id-ID	id
 lang-038	Irish	ga-IE	ga
-lang-039	isiXhosa	xh-ZA	-
-lang-040	isiZulu	zu-ZA	-
+lang-039	isiXhosa	xh-ZA	xh
+lang-040	isiZulu	zu-ZA	zu
 lang-041	Italian	it-IT	it
 lang-042	Japanese	ja-JP	ja
 lang-043	Kannada	kn-IN	-
 lang-044	Kazakh	kk-KZ	kk
-lang-045	Kinyarwanda	rw-RW	-
+lang-045	Kinyarwanda	rw-RW	rw
 lang-046	KiSwahili	sw-KE	sw
 lang-047	Konkani	kok-IN	-
 lang-048	Korean	ko-KR	-
@@ -74,7 +74,7 @@ lang-072	Scottish Gaelic	gd-GB	gd
 lang-073	Serbian (Cyrillic, Serbia)	sr-cyrl-RS	sr
 lang-074	Serbian (Latin, Serbia)	sr-latn-RS	sr-latn
 lang-075	Serbian (Cyrillic, Bosnia & Herzegovina)	sr-cyrl-BA	sr
-lang-076	Sesotho sa Leboa	nso-ZA	-
+lang-076	Sesotho sa Leboa	nso-ZA	nso
 lang-077	Setswana	tn-ZA	-
 lang-078	Sinhala	si-LK	-
 lang-079	Slovak	sk-SK	sk

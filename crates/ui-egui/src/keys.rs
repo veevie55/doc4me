@@ -318,6 +318,19 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
         return;
     }
     for e in events {
+        // Word's Alt+Shift+F12 selects the options button on a Table of Contents content
+        // control. Other contexts keep their normal shortcut handling (including the citation
+        // options sequence in the References tab).
+        if let egui::Event::Key { key: Key::F12, pressed: true, modifiers, .. } = &e
+            && modifiers.alt
+            && modifiers.shift
+            && !modifiers.command
+            && !modifiers.ctrl
+            && crate::toc_options::caret_in_toc_control(app)
+        {
+            let _ = app.execute("ui.tocOptions", json!({}));
+            continue;
+        }
         // An Alt shortcut (Alt+Shift+D, Alt+F7…) may also send its key's text; it isn't typed.
         match &e {
             egui::Event::Key { pressed: true, .. } => app.canvas.swallow_text = false,
