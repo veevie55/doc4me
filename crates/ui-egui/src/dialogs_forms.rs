@@ -719,7 +719,7 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut FormDialog) -> bool {
             if links.is_empty() {
                 ui.label(tl!("This document has no links to files."));
             } else {
-                egui::Grid::new("edit_links").num_columns(5).spacing(egui::vec2(8.0, 6.0)).show(ui, |ui| {
+                egui::Grid::new("edit_links").num_columns(6).spacing(egui::vec2(8.0, 6.0)).show(ui, |ui| {
                     ui.label(egui::RichText::new(tl!("Type")).strong());
                     ui.label(egui::RichText::new(tl!("Source file")).strong());
                     ui.label(egui::RichText::new(tl!("Locked")).strong());
@@ -736,6 +736,9 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut FormDialog) -> bool {
                             .clicked()
                         {
                             action = Some(json!({"link": i, "action": "changeSource", "source": text.trim()}));
+                        }
+                        if ui.add_enabled(!locked, egui::Button::new(tl!("Update Field"))).clicked() {
+                            action = Some(json!({"link": i, "action": "refresh"}));
                         }
                         if ui.button(tl!("Break Link")).clicked() {
                             action = Some(json!({"link": i, "action": "breakLink"}));

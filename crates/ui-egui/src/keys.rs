@@ -568,6 +568,36 @@ mod tests {
     use super::*;
 
     #[test]
+    fn ctrl_shift_f7_refreshes_a_linked_field_from_the_document_canvas() {
+        let stamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_nanos();
+        let dir = std::env::temp_dir().join(format!("doc4me-ks219-{}-{stamp}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("source.txt"), "Updated by the shortcut").unwrap();
+
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        app.session.path = Some(dir.join("main.docx"));
+        app.run("insert.field", json!({"instr": r#"INCLUDETEXT "source.txt""#, "result": "Old linked text"})).unwrap();
+        app.session.sel = doc4me_engine::Selection::caret(doc4me_doc::Pos::body(0, 0));
+
+        let ctx = egui::Context::default();
+        let modifiers = Modifiers { ctrl: true, command: true, shift: true, ..Default::default() };
+        let event = egui::Event::Key { key: Key::F7, physical_key: None, pressed: true, repeat: false, modifiers };
+        ctx.run_ui(egui::RawInput { events: vec![egui::Event::ModifiersChanged(modifiers), event], ..Default::default() }, |ui| {
+            canvas_events(&mut app, ui.ctx())
+        })
+        .drop_without_applying_deltas();
+
+        let field_result = app.session.doc.para_at(&doc4me_doc::Pos::body(0, 0)).and_then(|p| {
+            p.objects.iter().find_map(|o| match o {
+                doc4me_doc::para::InlineObject::Field { instr, result, .. } if instr.starts_with("INCLUDETEXT") => Some(result.clone()),
+                _ => None,
+            })
+        });
+        assert_eq!(field_result.as_deref(), Some("Updated by the shortcut"));
+        std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
     fn paste_modifiers_follow_word_for_windows() {
         if cfg!(target_os = "macos") {
             return;

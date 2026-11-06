@@ -217,7 +217,7 @@ ks-215	Work with fields	Insert a LISTNUM field.	Ctrl+Alt+L	Mod+Alt+L	insert.list
 ks-216	Work with fields	Insert a PAGE field.	Alt+Shift+P	Alt+Shift+P	insert.pageField	registry		
 ks-217	Work with fields	Insert a TIME field.	Alt+Shift+T	Alt+Shift+T	insert.timeField	registry		
 ks-218	Work with fields	Insert an empty field.	Ctrl+F9	Mod+F9	insert.field	registry		
-ks-219	Work with fields	Update the linked information in a Word source document.	Ctrl+Shift+F7	Mod+Shift+F7	-	manual	fail	
+ks-219	Work with fields	Update the linked information in a Word source document.	Ctrl+Shift+F7	Mod+Shift+F7	-	manual	pass	UI key-event test `keys::tests::ctrl_shift_f7_refreshes_a_linked_field_from_the_document_canvas` verifies Ctrl+Shift+F7 reloads a relative INCLUDETEXT source; engine tests verify one-step undo and that locked links are skipped. Edit Links to Files also updates one unlocked link. INCLUDETEXT/INCLUDE and supported raster INCLUDEPICTURE/IMPORT are handled; OLE spreadsheet links and metafiles remain unsupported.
 ks-220	Work with fields	Update the selected fields.	F9	F9	references.updateFields	registry		
 ks-221	Work with fields	Unlink a field.	Ctrl+Shift+F9	Mod+Shift+F9	fields.unlink	registry		
 ks-222	Work with fields	Switch between a selected field code and its result.	Shift+F9	Shift+F9	fields.toggleCode	registry		
