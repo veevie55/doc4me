@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key checks, shortcuts 276/280 with 4 deferred. Current source maps 72/95 language rows and 216/228 dialog rows (12 deferred; 7 excluded), pending report refresh; `manual.tsv` changes ARM64 from deferred to fail. Language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key checks, shortcuts 276/280 with 4 deferred. Current source has 22 deferred rows, maps 72/95 language rows and 216/228 dialog rows (12 deferred; 7 excluded), and records ARM64 `plat-002` as pass from run 42262956358. A fresh report is pending after run 42262955486 was canceled before measuring the updated row. Language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -35,7 +35,7 @@ desktop in WordCraft and have not been re-run on Windows yet.
 
 | Core workflow | Works end to end? | Evidence | Hours to pass |
 |---|---|---|---|
-| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 727 registered engine command specs (current source count; CLI confirmation pending), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
+| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 727 registered engine command specs (confirmed by `doc4me-cli commands --json`), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
 | Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; typical text/table/picture documents work; on 222 real-world documents all open and preserve measured structure through save and reopen (formatting not compared yet); charts, SmartArt and OLE dropped silently, move tracking lost (gaps #1, #2, #5) | 0 (beta work: 50–80) |
 | Build a structured document: tables, pictures, headers/footers, page numbers, sections, columns | yes | Tables with row splitting and floating tables (#137), floating pictures (#136), first/odd/even headers; columns don't balance (gap #4) | 0 |
 | Review with others: comments, track changes, accept/reject, compare | yes | Margin balloons, tracked insert/delete incl. paragraph marks (#125, #244), formatting revisions (#41), compare | 0 |
@@ -74,9 +74,11 @@ estimated dimension parities. Since stage B it is measured: **66.1%** at first, 
 2026-10-25 report, and **90.5%** in the latest official Windows report (run 42211564189, source
 `84db9fc`, report commit `beea45d`; dialogs 210/222, pages 175/222, boundaries 97/222, languages
 68/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222), 9.5 points short
-of 100% overall. That report says 93.1% without its 23 deferred rows, 6.9 points short. The local
-`manual.tsv` now records the ARM64 check as fail after a later package attempt, so the generated
-report must be refreshed before quoting a current no-deferred score. Since that report, the source
+of 100% overall. That report says 93.1% without its 23 deferred rows, 6.9 points short. Current
+`manual.tsv` has 22 deferred rows and records the ARM64 check as pass after run 42262956358 built
+and verified the MSI and portable ZIP. Readiness run 42262955486 was canceled because it would
+measure the pre-pass row; the generated report must be refreshed before quoting a current
+no-deferred score. Since that report, the source
 TSVs now map 72/95 language rows and the dialog TSV/source predicts 216/228 rows (12 deferred; 7
 excluded); these results await the next report. Language readiness measures catalog key-row
 coverage, not translated content or accuracy.
@@ -125,8 +127,9 @@ work fixed contextual trailing spacing between paragraphs in table cells; the Wi
 from 172 to 174 page-count passes, while boundary passes remain 97.
 Some rows can only pass
 on the owner's hardware: the printer, pen, microphone, scanner and multi-monitor checks. Windows
-ARM64 packaging has been requested and attempted; run 42213688289 failed at final linking, and a
-static-CRT fix is awaiting Windows validation. Linux and macOS package checks already pass in
+ARM64 packaging passed after the earlier run 42213688289 link failure: run 42262956358
+built and verified the MSI and portable ZIP. The artifacts are unsigned and were not uploaded or
+published. Linux and macOS package checks already pass in
 `manual.tsv`; touch and other Windows session checks pass under the recorded owner rule. 100% further needs every
 corpus document to paginate exactly as Word does, an interface catalog for each of the 95 languages
 Microsoft 365 offers, and every Word dialog and shortcut in the lists, including the ones tied to
@@ -148,6 +151,7 @@ languages, screen-reader access.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-06 | minor | Latest official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95 catalog-key checks, shortcuts 276/280. The current `manual.tsv` records a later ARM64 package failure; the generated report awaits a new Windows run. |
+| 2026-11-06 | minor | Current `manual.tsv` records ARM64 `plat-002` as pass after run 42262956358 verified the MSI and portable ZIP; current deferred count is 22. Run 42262955486 was canceled before measuring the pass, and a new readiness run is pending; the latest official values remain 90.5% / 93.1% from run 42211564189. |
 | 2026-11-05 | minor | Windows run 42025088010: 89.8% total / 92.5% without 26 deferred; legacy printer setup dialog mapped to File › Print; dialogs 205/220, pagination 174/222 pages and 97/222 boundary checks, languages 64/95. |
 | 2026-11-05 | minor | Windows run 42020535590: 89.8% total / 92.4% without 26 deferred; eight legacy dialogs excluded with reasons; dialogs 204/220, pagination 174/222 pages and 97/222 boundary checks, languages 64/95. |
 | 2026-11-05 | minor | Windows run 42017927963: 89.3% total / 91.8% without deferred; languages 64/95 (Catalan Valencia and Serbian Cyrillic Bosnia alias existing complete catalogs); pagination 174/222 pages and 97/222 boundary checks. |

@@ -1,6 +1,6 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (current registry has 69 interface choices including English; the latest Windows readiness report is 68/95 culture rows, while the current source maps 72/95 pending report refresh; key-row coverage does not measure translation accuracy; only Hindi, Arabic and Korean among the twelve key languages currently lack catalogs) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (current registry has 69 interface choices including English; the latest Windows readiness report is 68/95 culture rows, while the current source maps 72/95 pending report refresh; key-row coverage does not measure translation accuracy; Hindi, Arabic and Korean remain unregistered among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Interface languages, script support and proofing per language. How translation works (catalog
 format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
@@ -10,7 +10,9 @@ other languages Word ships and native-speaker review (human). This estimate is s
 readiness check: the latest official Windows report (run 42211564189) records 68/95 culture rows
 passing the catalog key-row coverage rule; the current source maps 72/95 rows, and the next report
 has not yet verified that updated result. The check does not distinguish translated values from
-English-identical values and does not assess meaning or native-speaker quality.
+English-identical values and does not assess meaning or native-speaker quality. Bundled OFL Noto
+fallbacks now cover the missing scripts (including a Hangul subset); epaint's lack of bidi and RTL
+layout still prevents claiming Arabic or Hebrew interface readiness.
 
 ## What Word ships (measured by listing the bundle)
 

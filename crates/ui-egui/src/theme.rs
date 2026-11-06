@@ -393,6 +393,94 @@ pub fn faces_for_preedit(
 /// How far Sarabun's interface glyphs are lifted, as a fraction of the font size (negative = up).
 const SARABUN_Y_OFFSET: f32 = -0.06;
 
+/// Script faces used only after the established interface and CJK fonts lack a glyph.
+/// Keep Regular and Bold together so the regular, medium and semibold interface families can
+/// make the same fallback choice without changing the Latin or Thai faces.
+struct UiScriptFont {
+    family: &'static str,
+    regular: &'static [u8],
+    bold: &'static [u8],
+}
+
+const UI_SCRIPT_FONTS: &[UiScriptFont] = &[
+    UiScriptFont {
+        family: "Noto Arabic",
+        regular: include_bytes!("../../../assets/fonts/NotoSansArabic-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansArabic-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Armenian",
+        regular: include_bytes!("../../../assets/fonts/NotoSansArmenian-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansArmenian-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Bengali",
+        regular: include_bytes!("../../../assets/fonts/NotoSansBengali-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansBengali-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Devanagari",
+        regular: include_bytes!("../../../assets/fonts/NotoSansDevanagari-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansDevanagari-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Georgian",
+        regular: include_bytes!("../../../assets/fonts/NotoSansGeorgian-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansGeorgian-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Gujarati",
+        regular: include_bytes!("../../../assets/fonts/NotoSansGujarati-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansGujarati-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Gurmukhi",
+        regular: include_bytes!("../../../assets/fonts/NotoSansGurmukhi-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansGurmukhi-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Hebrew",
+        regular: include_bytes!("../../../assets/fonts/NotoSansHebrew-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansHebrew-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Kannada",
+        regular: include_bytes!("../../../assets/fonts/NotoSansKannada-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansKannada-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Malayalam",
+        regular: include_bytes!("../../../assets/fonts/NotoSansMalayalam-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansMalayalam-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Oriya",
+        regular: include_bytes!("../../../assets/fonts/NotoSansOriya-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansOriya-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Sinhala",
+        regular: include_bytes!("../../../assets/fonts/NotoSansSinhala-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansSinhala-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Tamil",
+        regular: include_bytes!("../../../assets/fonts/NotoSansTamil-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansTamil-Bold.ttf"),
+    },
+    UiScriptFont {
+        family: "Noto Telugu",
+        regular: include_bytes!("../../../assets/fonts/NotoSansTelugu-Regular.ttf"),
+        bold: include_bytes!("../../../assets/fonts/NotoSansTelugu-Bold.ttf"),
+    },
+    // Subset from Noto Sans CJK KR: Hangul, Jamo, common punctuation and UI ASCII only.
+    UiScriptFont {
+        family: "Doc4Me Hangul UI",
+        regular: include_bytes!("../../../assets/fonts/Doc4MeHangul-Regular.otf"),
+        bold: include_bytes!("../../../assets/fonts/Doc4MeHangul-Bold.otf"),
+    },
+];
+
 /// The interface fonts; see [`install_fonts_with`].
 pub fn font_definitions(prefer_hans: bool, system_cjk: bool) -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
@@ -438,6 +526,30 @@ pub fn font_definitions(prefer_hans: bool, system_cjk: bool) -> FontDefinitions 
     for f in &cjk {
         // The same static bytes the document fonts use: one copy in the binary.
         add_cjk(&mut fonts, format!("{} {}", f.family, f.style), FontData::from_static(f.bytes));
+    }
+    // Noto faces are appended after the established UI and optional CJK fallbacks. This keeps
+    // Inter/Sarabun and the language-specific CJK faces first while covering the additional UI
+    // scripts on every platform, including wasm. Arabic/Hebrew glyph coverage does not imply RTL
+    // UI support: epaint still lacks paragraph bidi and RTL layout.
+    for f in UI_SCRIPT_FONTS {
+        let regular = format!("{} Regular", f.family);
+        let bold = format!("{} Bold", f.family);
+        fonts.font_data.insert(regular.clone(), Arc::new(FontData::from_static(f.regular)));
+        fonts.font_data.insert(bold.clone(), Arc::new(FontData::from_static(f.bold)));
+        if let Some(prop) = fonts.families.get_mut(&FontFamily::Proportional) {
+            prop.push(regular.clone());
+        }
+        if let Some(monospace) = fonts.families.get_mut(&FontFamily::Monospace) {
+            monospace.push(regular.clone());
+        }
+        if let Some(fallbacks) = fonts.families.get_mut(&FontFamily::Name("medium".into())) {
+            fallbacks.push(regular.clone());
+            fallbacks.push(bold.clone());
+        }
+        if let Some(fallbacks) = fonts.families.get_mut(&FontFamily::Name("semibold".into())) {
+            fallbacks.push(bold);
+            fallbacks.push(regular);
+        }
     }
     // The embedded faces leave interface characters without a glyph (a build without craft-fonts,
     // without its Chinese face, #241, or with faces lacking catalog characters, #486): an
@@ -703,6 +815,73 @@ mod tests {
         super::add_fallback_faces(&mut defs, &got);
         assert_eq!(defs.font_data.len(), before + 1);
         assert!(defs.families[&egui::FontFamily::Proportional].last().is_some_and(|n| n.starts_with("fallback ")));
+    }
+
+    /// Non-Latin UI scripts use bundled fallback faces in every interface weight. Arabic and
+    /// Hebrew are glyph-covered here, while mixed-direction UI remains blocked on epaint bidi.
+    #[test]
+    fn bundled_ui_script_fonts_cover_catalog_letters_in_all_weights() {
+        let ctx = egui::Context::default();
+        ctx.set_fonts(super::font_definitions(false, false));
+        ctx.run_ui(egui::RawInput::default(), |_| {}).drop_without_applying_deltas();
+
+        let samples = [
+            ("Armenian", "Noto Armenian", "Հայերեն"),
+            ("Assamese/Bengali", "Noto Bengali", "অসমীয়া ৰৱ বাংলা"),
+            ("Georgian", "Noto Georgian", "ქართული"),
+            ("Gujarati", "Noto Gujarati", "ગુજરાતી"),
+            ("Devanagari", "Noto Devanagari", "हिन्दी मराठी नेपाली कोंकणी"),
+            ("Kannada", "Noto Kannada", "ಕನ್ನಡ"),
+            ("Malayalam", "Noto Malayalam", "മലയാളം"),
+            ("Odia", "Noto Oriya", "ଓଡ଼ିଆ"),
+            ("Gurmukhi", "Noto Gurmukhi", "ਪੰਜਾਬੀ"),
+            ("Sinhala", "Noto Sinhala", "සිංහල"),
+            ("Tamil", "Noto Tamil", "தமிழ்"),
+            ("Telugu", "Noto Telugu", "తెలుగు"),
+            ("Arabic", "Noto Arabic", "فارسی اردو پښتو"),
+            ("Hebrew", "Noto Hebrew", "עברית"),
+            ("Korean", "Doc4Me Hangul UI", "한국어"),
+        ];
+
+        // Check each regular and bold asset directly as well as through the production fallback
+        // chain, so a missing face cannot be hidden by the other weight of the same script.
+        for (script, family, text) in samples {
+            let Some(face) = super::UI_SCRIPT_FONTS.iter().find(|font| font.family == family) else {
+                panic!("no bundled font family for {script}");
+            };
+            for (weight, bytes) in [("Regular", face.regular), ("Bold", face.bold)] {
+                let alias = format!("probe {family} {weight}");
+                let mut face_defs = egui::FontDefinitions::default();
+                face_defs.font_data.insert(alias.clone(), std::sync::Arc::new(egui::FontData::from_static(bytes)));
+                // Put exactly this face in the proportional family. This checks its own
+                // charmap and avoids another fallback face hiding a missing code point.
+                face_defs.families.insert(egui::FontFamily::Proportional, vec![alias.clone()]);
+                let face_ctx = egui::Context::default();
+                face_ctx.set_fonts(face_defs);
+                face_ctx.run_ui(egui::RawInput::default(), |_| {}).textures_delta.clear();
+                let missing = face_ctx.fonts_mut(|fonts| {
+                    let mut face_font = fonts.fonts.font(&egui::FontFamily::Proportional);
+                    let charmap = face_font.characters();
+                    text.chars().filter(|c| !c.is_whitespace() && !charmap.get(c).is_some_and(|names| names.contains(&alias))).collect::<Vec<_>>()
+                });
+                assert!(missing.is_empty(), "{script} face {family} {weight} lacks {missing:?}");
+            }
+        }
+
+        let weights = [super::regular(13.0), super::medium(13.0), super::semibold(13.0), egui::FontId::monospace(13.0)];
+        for (script, _family, text) in samples {
+            for font in &weights {
+                let expected = format!("{_family} ");
+                let missing: Vec<char> = ctx.fonts_mut(|fonts| {
+                    let mut family_font = fonts.fonts.font(&font.family);
+                    let charmap = family_font.characters();
+                    text.chars()
+                        .filter(|c| !c.is_whitespace() && !charmap.get(c).is_some_and(|names| names.iter().any(|name| name.starts_with(&expected))))
+                        .collect()
+                });
+                assert!(missing.is_empty(), "{script}, {font:?} lacks {missing:?}");
+            }
+        }
     }
 
     /// #656: dialog primary buttons, the table eraser and the Navigation search highlight take
