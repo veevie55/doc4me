@@ -62,7 +62,7 @@ jobs:
 
       - name: Measure readiness
         shell: pwsh
-        run: cargo xtask readiness --corpus --jobs 4
+        run: cargo xtask readiness --corpus --jobs 4 --diagnostics
 
       # Keep this diagnostic read-only: the MS Gothic family is a candidate pagination cause,
       # but the report alone cannot say whether Windows has it or which fallback Doc4Me resolves.
