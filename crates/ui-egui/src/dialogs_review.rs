@@ -20,6 +20,8 @@ use crate::theme::semibold;
 pub enum ReviewDialog {
     Compare(CompareForm),
     AutoCorrect(Box<AutoCorrectForm>),
+    /// The retired Smart Tags option whose current equivalent is AutoCorrect's URL recognition.
+    SmartTags(SmartTagsForm),
     AcceptReject(AcceptRejectForm),
     /// Track changes while editing, show them on screen, print them.
     HighlightChanges([bool; 3]),
@@ -31,6 +33,7 @@ impl ReviewDialog {
             ReviewDialog::Compare(f) if f.combine => "combine",
             ReviewDialog::Compare(_) => "compare",
             ReviewDialog::AutoCorrect(_) => "autoCorrect",
+            ReviewDialog::SmartTags(_) => "smartTags",
             ReviewDialog::AcceptReject(_) => "acceptRejectChanges",
             ReviewDialog::HighlightChanges(_) => "highlightChanges",
         }
@@ -42,19 +45,21 @@ impl ReviewDialog {
             ReviewDialog::Compare(f) if f.combine => "Combine Documents",
             ReviewDialog::Compare(_) => "Compare Documents",
             ReviewDialog::AutoCorrect(_) => "AutoCorrect",
+            ReviewDialog::SmartTags(_) => "AutoCorrect",
             ReviewDialog::AcceptReject(_) => "Accept or Reject Changes",
             ReviewDialog::HighlightChanges(_) => "Highlight Changes",
         }
     }
 }
 
-/// The dialog `ui.dialog` opens by `name`: `compare`, `combine`, `autoCorrect`,
+/// The dialog `ui.dialog` opens by `name`: `compare`, `combine`, `autoCorrect`, `smartTags`,
 /// `acceptRejectChanges` or `highlightChanges`.
 /// `restrictEditing` opens the Restrict Editing pane instead (no dialog).
 pub fn open(name: &str, app: &mut WordApp) -> Option<ReviewDialog> {
     Some(match name {
         "compare" | "combine" => ReviewDialog::Compare(CompareForm::new(app, name == "combine")),
         "autoCorrect" => ReviewDialog::AutoCorrect(Box::new(AutoCorrectForm::new(app))),
+        "smartTags" => ReviewDialog::SmartTags(SmartTagsForm { links: app.session.prefs.autocorrect.links, message: String::new() }),
         "acceptRejectChanges" => {
             let mut f = AcceptRejectForm::default();
             f.read(app);
@@ -78,6 +83,7 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut ReviewDialog) -> bool {
     match d {
         ReviewDialog::Compare(f) => compare_ui(app, ui, f),
         ReviewDialog::AutoCorrect(f) => autocorrect_ui(app, ui, f),
+        ReviewDialog::SmartTags(f) => smart_tags_ui(app, ui, f),
         ReviewDialog::AcceptReject(f) => accept_reject_ui(app, ui, f),
         ReviewDialog::HighlightChanges(on) => highlight_ui(app, ui, on),
     }
@@ -452,6 +458,28 @@ fn compare_ui(app: &mut WordApp, ui: &mut Ui, f: &mut CompareForm) -> bool {
 
 // ---------------------------------------------------------------------------------------------
 // AutoCorrect Options
+
+/// Current equivalent of the retired Smart Tags options: URL detection while typing.
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SmartTagsForm {
+    pub links: bool,
+    pub message: String,
+}
+
+fn smart_tags_ui(app: &mut WordApp, ui: &mut Ui, f: &mut SmartTagsForm) -> bool {
+    heading(ui, "Replace as you type");
+    ui.checkbox(&mut f.links, tl!("Internet addresses as links"));
+    error(ui, &f.message);
+    let (ok, cancel) = buttons(ui, true);
+    if ok {
+        match app.run("tools.smartTags", json!({"links": f.links})) {
+            Ok(_) => return true,
+            Err(e) => f.message = e,
+        }
+    }
+    cancel
+}
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]

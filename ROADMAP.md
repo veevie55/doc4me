@@ -1,8 +1,8 @@
 # Doc4Me roadmap
 
-**Stage: alpha** · ready for real work **90.4%, measured on Windows** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, run 42172033914 on 2026-11-06; report commit `17b8881` measures source `0ac6f2b`; 26 deferred rows and their reasons are listed in readiness.md); the target is 100% measured, 9.6 points away · **93.0% without 26 deferred owner-bound checks**, 7.0 points away · the user's active scope also requires implementing the 7 legacy dialogs still outside the denominator; continue pagination, localization and shortcuts; no release until the owner asks
+**Stage: alpha** · ready for real work **90.4%, measured on Windows** ([`docs/readiness.md`](docs/readiness.md), full 222-document corpus, run 42175470485 on 2026-11-06; report commit `e5c82d5` measures source `2df6be0`; 26 deferred rows and their reasons are listed in readiness.md); the target is 100% measured, 9.6 points away · **93.1% without 26 deferred owner-bound checks**, 6.9 points away · shortcuts are 100% excluding their 7 deferred rows; the user's active scope also requires implementing the 7 legacy dialogs still outside the denominator; continue pagination and localization; no release until the owner asks
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42172033914: 90.4% total / 93.0% without deferred; pagination 175/222 pages and 97/222 boundaries; languages 68/95; dialogs 209/221 with 12 deferred and 7 legacy dialogs still excluded; shortcuts 272/280 with 7 deferred; see [`docs/readiness.md`](docs/readiness.md)) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Windows run 42175470485: 90.4% total / 93.1% without deferred; pagination 175/222 pages and 97/222 boundaries; languages 68/95; dialogs 209/221 with 12 deferred and 7 legacy dialogs still excluded; shortcuts 273/280 with 7 deferred, 100% excluding deferred; see [`docs/readiness.md`](docs/readiness.md)) · **Target:** Microsoft Word (Microsoft 365) for Windows (readiness measured on Windows with Word-made PDF references; direct UI parity has not yet been remeasured in Word for Windows)
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -16,7 +16,7 @@ agent control. This page is the summary; the assessment is
 |---|---|---|
 | Ribbon/menu catalog coverage | **499 / 499 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md)) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
-| **Ready for real work** (full target) | **90.4%** | measured 2026-11-06 on Windows (run 42172033914: dialogs 209/221, pages 175/222, page breaks 97/222, languages 68/95, shortcuts 272/280): `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail checks and all 222 real-world documents with Word-made reference PDFs; 93.0% excluding 26 deferred rows, while 7 legacy dialogs remain outside the measured denominator and are still in the user's scope |
+| **Ready for real work** (full target) | **90.4%** | measured 2026-11-06 on Windows (run 42175470485: dialogs 209/221, pages 175/222, page breaks 97/222, languages 68/95, shortcuts 273/280): `cargo xtask readiness --corpus` → [`docs/readiness.md`](docs/readiness.md), fixed pass/fail checks and all 222 real-world documents with Word-made reference PDFs; 93.1% excluding 26 deferred rows, while 7 legacy dialogs remain outside the measured denominator and are still in the user's scope |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
@@ -55,7 +55,7 @@ one, checks that real-world documents open and keep their text and make-up, not 
 | Dimension | Parity | Measured | Hours to full | Doc |
 |---|---|---|---|---|
 | Features (depth) | 68% | 97.3% (ribbon 499/499; dialogs 209/221, 12 deferred and 7 legacy dialogs excluded from the report but still in scope) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
-| UI/UX fidelity | 65% | 97.1% (shortcuts 272/280; 7 deferred) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
+| UI/UX fidelity | 65% | 97.5% (shortcuts 273/280; 7 deferred, 100% excluding them) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
 | File formats | 60% | 100.0% (open 222/222, save and reopen 222/222) | 185–300 | [file-format-parity.md](docs/file-format-parity.md) |
 | Layout and pagination fidelity | 55% | 61.3% (page count 175/222, page breaks 97/222) | 90–145 | [layout-parity.md](docs/layout-parity.md) |
 | Hardware | 40% | 37.5% (3/8; 5 owner-deferred) | 20–40 | [hardware-parity.md](docs/hardware-parity.md) |

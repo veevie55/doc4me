@@ -13,6 +13,8 @@
 
 ### เพิ่ม
 
+- **แทนตัวเลือก URL ของ Smart Tags รุ่นเก่าด้วยการตรวจจับลิงก์จริง** (`tools.smartTags`, readiness `dlg-215`): เปิดหน้าตั้งค่าเฉพาะสำหรับ Internet addresses as links ซึ่งใช้ค่าร่วมกับ AutoCorrect และมีผลเมื่อพิมพ์ URL; คำสั่งอ่าน/ตั้งค่าได้โดยตรงและค่าเก็บใน preference เดิม. Smart Tags เฉพาะเอนทิตีไม่ได้ทำขึ้นมาใหม่. ตรวจด้วย engine regression ที่ปิด/เปิดแล้วพิมพ์ URL และ UI regression ที่เปิด dialog เปลี่ยนค่าและบันทึก.
+
 - **เปิดเมนูตัวเลือก Table of Contents ด้วย Alt+Shift+F12** (`crates/ui-egui/src/toc_options.rs`, `keys.rs`, readiness `ks-329`): เปิดเมนู Update Table / Remove Table of Contents เมื่อ caret อยู่ใน TOC content control หรือย่อหน้า TOC ที่แอปสร้าง; นอกบริบทไม่ทำงาน. คำสั่งอัปเดตและลบใช้ engine command เดิม. ตรวจด้วย UI tests 4 กรณี รวมกด shortcut และคลิก Remove จริง.
 
 - **แยกปุ่มลบแป้นตัวเลขจากปุ่มลบแถวหลักใน keyboard event** (`vendor/egui-winit`, `crates/ui-egui/src/keys.rs`, readiness `ks-163`): คง logical `Minus` สำหรับ keymap เดิมและส่ง physical keypad subtract แยกผ่าน sentinel ที่ตรวจได้; Ctrl+Alt+Minus แถวหลักยังเป็น Optional Hyphen ส่วน Ctrl+Alt+NumpadSubtract เป็น Em Dash. Vendored `egui-winit` 0.36.2 ภายใต้ไลเซนส์เดิมของ dependency; ไม่เปลี่ยนเอกสาร .docx. ตรวจด้วย conversion test ของ vendor และ UI regression ที่ยืนยันทั้งสองผลลัพธ์.

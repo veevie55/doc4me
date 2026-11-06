@@ -1141,6 +1141,22 @@ mod tests {
         assert!(text(&h).contains("\u{201C}fine\u{201D}"), "the other changes stay");
     }
 
+    /// dlg-215: the retired Smart Tags URL option opens a focused dialog and updates the same
+    /// real Internet-address recognition used when text is typed.
+    #[test]
+    fn smart_tags_dialog_changes_url_recognition() {
+        let mut h = harness(app(""));
+        h.state_mut().run("tools.smartTags", json!({})).unwrap();
+        h.run_steps(3);
+        assert!(h.state().session.prefs.autocorrect.links);
+        h.get_by_label("Internet addresses as links").click();
+        h.run_steps(2);
+        h.get_by_label("OK").click();
+        h.run_steps(2);
+        assert!(!h.state().session.prefs.autocorrect.links);
+        assert!(h.state().dialog.is_none());
+    }
+
     /// dlg-117: Edit Individual Documents shows Merge to New Document (records, blank lines);
     /// dlg-124: the Mail Merge Helper; dlg-120 and dlg-135: Header Options › Create writes a
     /// header source and the next data source opened there takes its names.
