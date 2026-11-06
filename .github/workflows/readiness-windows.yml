@@ -70,7 +70,7 @@ jobs:
         shell: pwsh
         run: |
           $cli = Join-Path $env:GITHUB_WORKSPACE 'target/release/doc4me-cli.exe'
-          $ids = @('govuk-003', 'govuk-005', 'govuk-016', 'govuk-038', 'govuk-046', 'govuk-067', 'zenodo-053', 'zenodo-091')
+          $ids = @('govuk-003', 'govuk-005', 'govuk-016', 'govuk-038', 'govuk-046', 'govuk-067', 'zenodo-053', 'zenodo-091', 'zenodo-149')
           foreach ($id in $ids) {
             $document = Join-Path $env:GITHUB_WORKSPACE "corpus/readiness/$id.docx"
             if (-not (Test-Path $document)) { throw "Readiness corpus document is missing: $document" }

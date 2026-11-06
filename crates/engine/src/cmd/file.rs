@@ -109,9 +109,9 @@ pub fn specs() -> Vec<CommandSpec> {
         // installed, each with the font shown instead; `convert` puts that font in their place.
         CommandSpec::new("file.fontSubstitution", "Font Substitution", "File › Options › Advanced", font_substitution)
             .params(r#"{"convert"?: [font name] (replace these missing fonts with their substitutes, Convert Permanently)} → {"fonts": [{"font", "substitute"}], "converted"}"#),
-        // F1: Help (Word's Help pane; Doc4Me's Help window).
+        // F1: open Doc4Me's offline command help.
         CommandSpec::new("help.show", "Help", "Help", |s, _| {
-            s.ui_requests.push(json!({"open": "about"}));
+            s.ui_requests.push(json!({"open": "wordPerfectHelp"}));
             sel_result(s)
         })
         .key("F1")
@@ -355,35 +355,122 @@ pub fn unmatched_fonts(doc: &Document) -> Vec<String> {
     found
 }
 
-/// Every font name the document's styles, runs and paragraph marks use, in all stories, with the
-/// theme's heading and body fonts: the first spelling of each (case and spaces aside).
+/// Normalized document font identifier (case and spaces aside).
+fn font_key(n: &str) -> String {
+    n.chars().filter(|c| !c.is_whitespace()).flat_map(char::to_lowercase).collect()
+}
+
+fn note_document_font(found: &mut Vec<String>, name: Option<&str>) {
+    let Some(name) = name.map(str::trim).filter(|n| !n.is_empty() && !n.starts_with('+')) else { return };
+    let key = font_key(name);
+    if !found.iter().any(|f| font_key(f) == key) {
+        found.push(name.to_string());
+    }
+}
+
+fn graphic_fonts(graphic: &doc4me_doc::graphic::Graphic, found: &mut Vec<String>) {
+    for item in &graphic.items {
+        if let doc4me_doc::graphic::GraphicItem::Text { font, .. } = item {
+            note_document_font(found, font.as_deref());
+        }
+    }
+}
+
+fn math_fonts(nodes: &[doc4me_doc::math::MNode], found: &mut Vec<String>) {
+    use doc4me_doc::math::MNode as N;
+    for node in nodes {
+        match node {
+            N::Run(run) => {
+                note_document_font(found, run.font.as_deref());
+            }
+            N::Frac { num, den, .. } => {
+                math_fonts(num, found);
+                math_fonts(den, found);
+            }
+            N::Script { base, sub, sup, .. } => {
+                math_fonts(base, found);
+                math_fonts(sub, found);
+                math_fonts(sup, found);
+            }
+            N::Rad { deg, e, .. } => {
+                math_fonts(deg, found);
+                math_fonts(e, found);
+            }
+            N::Nary { sub, sup, e, .. } => {
+                math_fonts(sub, found);
+                math_fonts(sup, found);
+                math_fonts(e, found);
+            }
+            N::Delim { elems, .. } => {
+                for elem in elems {
+                    math_fonts(elem, found);
+                }
+            }
+            N::Func { name, e } => {
+                math_fonts(name, found);
+                math_fonts(e, found);
+            }
+            N::Lim { e, lim, .. } => {
+                math_fonts(e, found);
+                math_fonts(lim, found);
+            }
+            N::Acc { e, .. } | N::Bar { e, .. } | N::BorderBox { e, .. } | N::Boxed { e } | N::GroupChr { e, .. } | N::Phant { e, .. } => {
+                math_fonts(e, found)
+            }
+            N::EqArr { rows } => {
+                for row in rows {
+                    math_fonts(row, found);
+                }
+            }
+            N::Matrix { rows, .. } => {
+                for row in rows {
+                    for cell in row {
+                        math_fonts(cell, found);
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn object_fonts(object: &doc4me_doc::InlineObject, found: &mut Vec<String>) {
+    match object {
+        doc4me_doc::InlineObject::Graphic { graphic, .. } => graphic_fonts(graphic, found),
+        doc4me_doc::InlineObject::Equation { math, .. } => math_fonts(&math.nodes, found),
+        doc4me_doc::InlineObject::Group { children, .. } => {
+            for child in children {
+                object_fonts(&child.obj, found);
+            }
+        }
+        _ => {}
+    }
+}
+
+/// Every font name used by the theme, styles, text runs, graphic labels and math runs in all
+/// stories, including paragraph marks: the first spelling of each (case and spaces aside).
 fn document_fonts(doc: &Document) -> Vec<String> {
-    let key = |n: &str| n.chars().filter(|c| !c.is_whitespace()).flat_map(char::to_lowercase).collect::<String>();
     let mut found: Vec<String> = Vec::new();
-    let mut note = |name: Option<&str>| {
-        let Some(name) = name.map(str::trim).filter(|n| !n.is_empty() && !n.starts_with('+')) else { return };
-        if !found.iter().any(|f| key(f) == key(name)) {
-            found.push(name.to_string());
-        }
-    };
-    note(Some(&doc.settings.major_font));
-    note(Some(&doc.settings.minor_font));
-    let mut chr = |c: &doc4me_doc::props::CharProps| {
+    note_document_font(&mut found, Some(&doc.settings.major_font));
+    note_document_font(&mut found, Some(&doc.settings.minor_font));
+    let chr = |c: &doc4me_doc::props::CharProps, found: &mut Vec<String>| {
         for f in [&c.font, &c.font_cs, &c.font_ea] {
-            note(f.as_deref());
+            note_document_font(found, f.as_deref());
         }
     };
-    chr(&doc.styles.default_chr);
+    chr(&doc.styles.default_chr, &mut found);
     for st in &doc.styles.styles {
-        chr(&st.chr);
+        chr(&st.chr, &mut found);
     }
     let stories = std::iter::once(StoryRef::Body).chain(doc.parts.keys().map(|id| StoryRef::Part(*id)));
     for story in stories {
         for path in doc.para_paths(story) {
             if let Some(para) = doc.para(story, &path) {
-                chr(&para.mark);
+                chr(&para.mark, &mut found);
                 for run in &para.runs {
-                    chr(&run.props);
+                    chr(&run.props, &mut found);
+                }
+                for object in &para.objects {
+                    object_fonts(object, &mut found);
                 }
             }
         }
@@ -391,63 +478,151 @@ fn document_fonts(doc: &Document) -> Vec<String> {
     found
 }
 
-/// `file.fontSubstitution`.
-fn font_substitution(s: &mut Session, v: &Value) -> CmdResult {
-    let fonts: Vec<(String, String)> = document_fonts(&s.doc)
+fn fix_font(name: &mut Option<String>, swap: &[(String, String)], converted: &mut usize) {
+    if let Some(sub) = name.as_deref().and_then(|x| swap.iter().find(|(k, _)| *k == font_key(x))).map(|(_, sub)| sub.clone()) {
+        *name = Some(sub);
+        *converted += 1;
+    }
+}
+
+fn fix_char_props(c: &mut doc4me_doc::props::CharProps, fix: &mut dyn FnMut(&mut Option<String>, &mut usize), converted: &mut usize) {
+    fix(&mut c.font, converted);
+    fix(&mut c.font_cs, converted);
+    fix(&mut c.font_ea, converted);
+}
+
+fn convert_math_fonts(nodes: &mut [doc4me_doc::math::MNode], fix: &mut dyn FnMut(&mut Option<String>, &mut usize), converted: &mut usize) {
+    use doc4me_doc::math::MNode as N;
+    for node in nodes {
+        match node {
+            N::Run(run) => fix(&mut run.font, converted),
+            N::Frac { num, den, .. } => {
+                convert_math_fonts(num, fix, converted);
+                convert_math_fonts(den, fix, converted);
+            }
+            N::Script { base, sub, sup, .. } => {
+                convert_math_fonts(base, fix, converted);
+                convert_math_fonts(sub, fix, converted);
+                convert_math_fonts(sup, fix, converted);
+            }
+            N::Rad { deg, e, .. } => {
+                convert_math_fonts(deg, fix, converted);
+                convert_math_fonts(e, fix, converted);
+            }
+            N::Nary { sub, sup, e, .. } => {
+                convert_math_fonts(sub, fix, converted);
+                convert_math_fonts(sup, fix, converted);
+                convert_math_fonts(e, fix, converted);
+            }
+            N::Delim { elems, .. } => {
+                for elem in elems {
+                    convert_math_fonts(elem, fix, converted);
+                }
+            }
+            N::Func { name, e } => {
+                convert_math_fonts(name, fix, converted);
+                convert_math_fonts(e, fix, converted);
+            }
+            N::Lim { e, lim, .. } => {
+                convert_math_fonts(e, fix, converted);
+                convert_math_fonts(lim, fix, converted);
+            }
+            N::Acc { e, .. } | N::Bar { e, .. } | N::BorderBox { e, .. } | N::Boxed { e } | N::GroupChr { e, .. } | N::Phant { e, .. } => {
+                convert_math_fonts(e, fix, converted)
+            }
+            N::EqArr { rows } => {
+                for row in rows {
+                    convert_math_fonts(row, fix, converted);
+                }
+            }
+            N::Matrix { rows, .. } => {
+                for row in rows {
+                    for cell in row {
+                        convert_math_fonts(cell, fix, converted);
+                    }
+                }
+            }
+        }
+    }
+}
+
+fn convert_object_fonts(object: &mut doc4me_doc::InlineObject, fix: &mut dyn FnMut(&mut Option<String>, &mut usize), converted: &mut usize) {
+    match object {
+        doc4me_doc::InlineObject::Graphic { .. } => {
+            // Chart/SmartArt package markup is preserved opaquely and the DOCX writer doesn't
+            // serialize edits to GraphicItem text. Keep these fonts visible as unresolved rather
+            // than claiming a permanent conversion that saving would discard.
+        }
+        doc4me_doc::InlineObject::Equation { math, .. } => {
+            let before = *converted;
+            convert_math_fonts(&mut math.nodes, fix, converted);
+            if *converted != before {
+                // Other equation edits invalidate retained OMML for the same reason: the writer
+                // must serialize the edited model instead of copying stale source XML.
+                math.omml.clear();
+            }
+        }
+        doc4me_doc::InlineObject::Group { children, .. } => {
+            for child in children {
+                convert_object_fonts(&mut child.obj, fix, converted);
+            }
+        }
+        _ => {}
+    }
+}
+
+fn font_substitution_rows(doc: &Document) -> Vec<(String, String)> {
+    document_fonts(doc)
         .into_iter()
-        .filter_map(|f| {
-            let fallback = doc4me_fonts::word::substitute_for(&f)?;
-            let key = f.trim().to_lowercase();
-            let sub = s
-                .doc
+        .filter_map(|font| {
+            let fallback = doc4me_fonts::word::substitute_for(&font)?;
+            let key = font.trim().to_lowercase();
+            let substitute = doc
                 .font_aliases
                 .get(&key)
                 .filter(|alias| !alias.alternate.trim().is_empty())
                 .map(|alias| doc4me_fonts::word::substitute_for(&alias.alternate).unwrap_or_else(|| alias.alternate.clone()))
                 .unwrap_or(fallback);
-            Some((f, sub))
+            Some((font, substitute))
         })
-        .collect();
-    let key = |n: &str| n.chars().filter(|c| !c.is_whitespace()).flat_map(char::to_lowercase).collect::<String>();
-    let wanted: Vec<String> = v.get("convert").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str).map(key).collect();
-    let swap: Vec<(String, String)> = fonts.iter().filter(|(f, _)| wanted.contains(&key(f))).map(|(f, sub)| (key(f), sub.clone())).collect();
+        .collect()
+}
+
+/// `file.fontSubstitution`.
+fn font_substitution(s: &mut Session, v: &Value) -> CmdResult {
+    let fonts = font_substitution_rows(&s.doc);
+    let wanted: Vec<String> = v.get("convert").and_then(Value::as_array).into_iter().flatten().filter_map(Value::as_str).map(font_key).collect();
+    let swap: Vec<(String, String)> =
+        fonts.iter().filter(|(f, _)| wanted.contains(&font_key(f))).map(|(f, sub)| (font_key(f), sub.clone())).collect();
     let mut converted = 0;
     if !swap.is_empty() {
-        let fix = |name: &mut Option<String>, n: &mut usize| {
-            if let Some(sub) = name.as_deref().and_then(|x| swap.iter().find(|(k, _)| *k == key(x))).map(|(_, sub)| sub.clone()) {
-                *name = Some(sub);
-                *n += 1;
-            }
-        };
-        let fix_chr = |c: &mut doc4me_doc::props::CharProps, n: &mut usize| {
-            fix(&mut c.font, n);
-            fix(&mut c.font_cs, n);
-            fix(&mut c.font_ea, n);
-        };
+        let mut fix = |name: &mut Option<String>, n: &mut usize| fix_font(name, &swap, n);
         for f in [&mut s.doc.settings.major_font, &mut s.doc.settings.minor_font] {
             let mut o = Some(f.clone());
             fix(&mut o, &mut converted);
             *f = o.unwrap_or_default();
         }
-        fix_chr(&mut s.doc.styles.default_chr, &mut converted);
+        fix_char_props(&mut s.doc.styles.default_chr, &mut fix, &mut converted);
         for st in &mut s.doc.styles.styles {
-            fix_chr(&mut st.chr, &mut converted);
+            fix_char_props(&mut st.chr, &mut fix, &mut converted);
         }
         let stories: Vec<StoryRef> = std::iter::once(StoryRef::Body).chain(s.doc.parts.keys().map(|id| StoryRef::Part(*id))).collect();
         for story in stories {
             for path in s.doc.para_paths(story) {
                 let para = s.doc.para_mut(story, &path)?;
-                fix_chr(&mut para.mark, &mut converted);
+                fix_char_props(&mut para.mark, &mut fix, &mut converted);
                 for run in &mut para.runs {
-                    fix_chr(&mut run.props, &mut converted);
+                    fix_char_props(&mut run.props, &mut fix, &mut converted);
+                }
+                for object in &mut para.objects {
+                    convert_object_fonts(object, &mut fix, &mut converted);
                 }
                 para.touch();
             }
         }
         s.relayout();
     }
-    let left: Vec<Value> =
-        fonts.iter().filter(|(f, _)| !swap.iter().any(|(k, _)| *k == key(f))).map(|(f, sub)| json!({"font": f, "substitute": sub})).collect();
+    let left: Vec<Value> = font_substitution_rows(&s.doc).into_iter().map(|(f, sub)| json!({"font": f, "substitute": sub})).collect();
     Ok(json!({"fonts": left, "converted": converted}))
 }
 
@@ -693,4 +868,81 @@ fn layout_summary(s: &mut Session, _: &Value) -> CmdResult {
         .collect();
     let caret = l.caret_on(&s.sel.focus, s.page_hint).map(|c| json!({"page": c.page, "x": c.x, "y": c.top, "h": c.height}));
     Ok(json!({"pages": pages, "caret": caret, "ms": l.ms}))
+}
+
+#[cfg(test)]
+mod font_substitution_tests {
+    use super::font_substitution;
+    use crate::Session;
+    use doc4me_doc::graphic::{Graphic, GraphicItem, TextAlign};
+    use doc4me_doc::math::{MNode, MRun, Math};
+    use doc4me_doc::para::{Float, InlineObject};
+    use doc4me_doc::{Document, Pos, StoryRef};
+    use serde_json::json;
+    use std::sync::Arc;
+
+    #[test]
+    fn font_substitution_lists_and_converts_graphic_and_equation_fonts() {
+        let graphic_font = "Doc4Me Missing Graphic Font 76AF";
+        let equation_font = "Doc4Me Missing Equation Font C351";
+        let mut session = Session::new(Document::from_text("Graphic\nEquation"));
+        for name in [graphic_font, equation_font] {
+            session.doc.font_aliases.insert(name.to_lowercase(), doc4me_doc::FontAlias { font: name.into(), alternate: "Source Sans 3".into() });
+        }
+        let graphic = InlineObject::Graphic {
+            w: 80.0,
+            h: 32.0,
+            alt: String::new(),
+            float: Float::default(),
+            graphic: Arc::new(Graphic {
+                items: vec![GraphicItem::Text {
+                    rect: [0.0, 0.0, 80.0, 32.0],
+                    text: "Graphic label".into(),
+                    size: 12.0,
+                    color: Default::default(),
+                    bold: false,
+                    align: TextAlign::Left,
+                    font: Some(graphic_font.into()),
+                }],
+                ..Default::default()
+            }),
+        };
+        let equation = InlineObject::Equation {
+            linear: "Equation label".into(),
+            display: false,
+            math: Math {
+                nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(equation_font.into()), ..Default::default() })],
+                omml: "<m:oMath><m:r><m:t>Equation label</m:t></m:r></m:oMath>".into(),
+                ..Default::default()
+            },
+        };
+        session.doc.insert_object(&Pos::body(0, 0), graphic, &Default::default()).unwrap();
+        session.doc.insert_object(&Pos::body(1, 0), equation, &Default::default()).unwrap();
+
+        let listed = font_substitution(&mut session, &json!({})).unwrap();
+        let fonts = listed["fonts"].as_array().unwrap();
+        assert!(fonts.iter().any(|row| row["font"] == graphic_font), "{fonts:?}");
+        assert!(fonts.iter().any(|row| row["font"] == equation_font), "{fonts:?}");
+
+        let converted = font_substitution(&mut session, &json!({"convert": [graphic_font, equation_font]})).unwrap();
+        assert_eq!(converted["converted"], 1, "equation font converts; opaque graphic markup remains unconverted");
+        let remaining = converted["fonts"].as_array().unwrap();
+        assert!(remaining.iter().any(|row| row["font"] == graphic_font), "{remaining:?}");
+        assert!(!remaining.iter().any(|row| row["font"] == equation_font), "{remaining:?}");
+
+        let graphic_para = session.doc.para(StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap();
+        let InlineObject::Graphic { graphic, .. } = &graphic_para.objects[0] else { panic!("graphic is retained") };
+        let GraphicItem::Text { font, .. } = &graphic.items[0] else { panic!("graphic text is retained") };
+        assert_eq!(font.as_deref(), Some(graphic_font), "the command must not claim an unsaved graphic conversion");
+        let equation_para = session.doc.para(StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap();
+        let InlineObject::Equation { math, .. } = &equation_para.objects[0] else { panic!("equation is retained") };
+        let MNode::Run(run) = &math.nodes[0] else { panic!("equation run is retained") };
+        assert_eq!(run.font.as_deref(), Some("Source Sans 3"));
+        assert!(math.omml.is_empty(), "the stale source OMML must be invalidated after conversion");
+        let reopened = doc4me_docx::read(&doc4me_docx::write(&session.doc).unwrap()).unwrap();
+        let equation_para = reopened.para(StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap();
+        let InlineObject::Equation { math, .. } = &equation_para.objects[0] else { panic!("saved equation is retained") };
+        let MNode::Run(run) = &math.nodes[0] else { panic!("saved equation run is retained") };
+        assert_eq!(run.font.as_deref(), Some("Source Sans 3"), "the converted font survives DOCX round-trip");
+    }
 }

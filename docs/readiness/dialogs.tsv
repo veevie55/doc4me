@@ -77,10 +77,10 @@ dlg-075	wdDialogFormatTheme	855	(none)	design.themes	registry
 dlg-076	wdDialogFormattingRestrictions	1427	(none)	review.restrict	registry		
 dlg-077	wdDialogFormFieldHelp	361	(none)	developer.formFieldHelp	registry		Form Field Help Text: status bar and F1 help (typed or an AutoText entry), on its own or from Options › Add Help Text…
 dlg-078	wdDialogFormFieldOptions	353	Entry, Exit, Name, Enable, TextType, TextWidth, TextDefault, TextFormat, CheckSize, CheckWidth, CheckDefault, Type, OwnHelp, HelpText, OwnStat, StatText, Calculate	developer.formFieldOptions	registry		Text, Check Box and Drop-Down Form Field Options (type, default, maximum length, format, size, entries, bookmark, fill-in enabled, calculate on exit)
-dlg-079	wdDialogFrameSetProperties	1074	(none)		excluded		Legacy HTML frameset authoring; no equivalent UI in Word 365 for Windows.
-dlg-080	wdDialogHelpAbout	9	APPNAME, APPCOPYRIGHT, APPUSERNAME, APPORGANIZATION, APPSERIALNUMBER	help.show	registry		F1 and File › About open the About dialog
-dlg-081	wdDialogHelpWordPerfectHelp	10	WPCommand, HelpText, DemoGuidance		excluded		WordPerfect Help integration; Word 365 for Windows does not include WordPerfect Help.
-dlg-082	wdDialogHelpWordPerfectHelpOptions	511	CommandKeyHelp, DocNavKeys, MouseSimulation, DemoGuidance, DemoSpeed, HelpType		excluded		WordPerfect Help integration; Word 365 for Windows does not include WordPerfect Help.
+dlg-079	wdDialogFrameSetProperties	1074	(none)	web.frameset	registry		Legacy HTML frameset properties apply to imported HTML frameset documents and round-trip through HTML; not a feature of ordinary DOCX documents.
+dlg-080	wdDialogHelpAbout	9	APPNAME, APPCOPYRIGHT, APPUSERNAME, APPORGANIZATION, APPSERIALNUMBER	help.about	registry		File › About opens the About dialog; F1 opens the offline command help
+dlg-081	wdDialogHelpWordPerfectHelp	10	WPCommand, HelpText, DemoGuidance	help.wordPerfect	registry		Offline command and shortcut index for users moving from WordPerfect; does not ship proprietary WordPerfect help or demos.
+dlg-082	wdDialogHelpWordPerfectHelpOptions	511	CommandKeyHelp, DocNavKeys, MouseSimulation, DemoGuidance, DemoSpeed, HelpType	help.wordPerfectOptions	registry		Display options for the offline command and shortcut index; proprietary WordPerfect demos are not included.
 dlg-083	wdDialogHorizontalInVertical	1160	(none)	format.horizontalInVertical	registry		Horizontal in Vertical is available in the Asian Layout dialog
 dlg-084	wdDialogIMESetDefault	1094	(none)	-	registry	deferred	deferred 2026-10-27 (owner: skip until asked): the Windows IME
 dlg-085	wdDialogInsertAddCaption	402	Name	references.caption	registry		Caption › New Label
@@ -149,7 +149,7 @@ dlg-147	wdDialogOrganizer	222	(none)	styles.organizer	registry
 dlg-148	wdDialogPermission	1469	(none)		excluded		Information Rights Management (Microsoft service)
 dlg-149	wdDialogPhoneticGuide	986	(none)	format.phonetic	registry		
 dlg-150	wdDialogReviewAfmtRevisions	570	(none)	format.autoFormatReview	registry		"Formatting completed" after AutoFormat and Review Changes: Accept All, Reject All, Review Changes (Find ←/→ selects each changed paragraph, Reject puts it back); UI test dialogs_data::tests::autoformat_tab_and_review_dialog
-dlg-151	wdDialogSchemaLibrary	1417	(none)		excluded		Custom XML schema-library authoring was removed from Word starting with Office 2010; no equivalent current UI.
+dlg-151	wdDialogSchemaLibrary	1417	(none)	file.schemaLibrary	registry		Lists, adds and removes schema references on retained custom XML datastore properties without fetching schema URIs.
 dlg-152	wdDialogSearch	1363	(none)	file.findFiles	registry		legacy file search
 dlg-153	wdDialogShowRepairs	1381	(none)	file.showRepairs	registry		what opening a damaged .docx repaired or left out
 dlg-154	wdDialogSourceManager	1920	(none)	references.sources	registry		
@@ -232,5 +232,5 @@ dlg-230	wdDialogUpdateTOC	331	(none)	references.updateToc	registry
 dlg-231	wdDialogViewZoom	577	(none)	view.zoom	registry		
 dlg-232	wdDialogWebOptions	898	(none)	file.webOptions	registry		Options › Advanced › Web options (word/webSettings.xml read and saved)
 dlg-233	wdDialogWindowActivate	220	(none)	view.switchWindows	registry		
-dlg-234	wdDialogXMLElementAttributes	1460	(none)		excluded		Custom XML markup UI was removed from Word starting with Office 2010; no equivalent current UI.
-dlg-235	wdDialogXMLOptions	1425	(none)		excluded		Custom XML markup UI was removed from Word starting with Office 2010; no equivalent current UI.
+dlg-234	wdDialogXMLElementAttributes	1460	(none)	file.xmlElementAttributes	registry		Inspects bounded retained custom XML stores and edits one element attribute with undo.
+dlg-235	wdDialogXMLOptions	1425	(none)	file.xmlOptions	registry		Sets namespace display and schema-removal confirmation preferences for the custom XML editors.

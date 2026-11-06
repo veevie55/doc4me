@@ -506,6 +506,129 @@ pub struct Settings {
     /// as a web page in Word, kept so a .docx saves them back.
     #[serde(skip_serializing_if = "WebOptions::is_default")]
     pub web: WebOptions,
+    /// Legacy HTML frameset properties, retained for HTML import/export. These do not affect the
+    /// layout of a normal word-processing document.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub html_frameset: Option<HtmlFrameset>,
+}
+
+/// How an HTML frame scrolls (`<frame scrolling=...>`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum HtmlFrameScrolling {
+    Auto,
+    Yes,
+    No,
+}
+
+impl HtmlFrameScrolling {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Auto => "auto",
+            Self::Yes => "yes",
+            Self::No => "no",
+        }
+    }
+
+    pub fn parse(s: &str) -> Option<Self> {
+        match s.trim().to_ascii_lowercase().as_str() {
+            "auto" => Some(Self::Auto),
+            "yes" => Some(Self::Yes),
+            "no" => Some(Self::No),
+            _ => None,
+        }
+    }
+}
+
+/// A frame in an imported/exported legacy HTML frameset.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct HtmlFrame {
+    /// Safe relative, HTTP(S), or mail destination; script and local-file URLs are refused.
+    pub src: String,
+    pub name: Option<String>,
+    pub scrolling: Option<HtmlFrameScrolling>,
+    pub margin_width: Option<u16>,
+    pub margin_height: Option<u16>,
+    pub no_resize: bool,
+}
+
+/// Page-level properties and frame list for a legacy HTML frameset.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
+#[serde(default, rename_all = "camelCase")]
+pub struct HtmlFrameset {
+    /// Comma-separated HTML frame tracks (pixels, percentages, or relative `*` sizes).
+    pub rows: Option<String>,
+    pub cols: Option<String>,
+    /// Border width in pixels (`border`); clamped to 100.
+    pub border: Option<u16>,
+    /// Whether each frame has a visible border (`frameborder`).
+    pub frame_border: Option<bool>,
+    /// Spacing between frames in pixels (`framespacing`); clamped to 100.
+    pub spacing: Option<u16>,
+    pub border_color: Option<Rgb>,
+    /// Up to [`MAX_HTML_FRAMES`] child frames.
+    pub frames: Vec<HtmlFrame>,
+}
+
+pub const MAX_HTML_FRAMES: usize = 64;
+pub const MAX_HTML_FRAME_TRACKS: usize = 16;
+
+impl HtmlFrameset {
+    /// Validate and canonicalize track lists from HTML/automation input.
+    pub fn clean_tracks(s: &str) -> Option<String> {
+        let s = s.trim();
+        if s.is_empty() || s.len() > 256 || !s.is_ascii() {
+            return None;
+        }
+        let tracks: Vec<String> = s
+            .split(',')
+            .map(|part| {
+                let p = part.trim();
+                let (digits, suffix) = if let Some(n) = p.strip_suffix('%') {
+                    (n, "%")
+                } else if let Some(n) = p.strip_suffix('*') {
+                    (n, "*")
+                } else {
+                    (p, "")
+                };
+                let n = if digits.is_empty() && suffix == "*" { 1 } else { digits.parse::<u32>().ok()? };
+                if n > 100_000 || (suffix == "*" && n == 0) {
+                    return None;
+                }
+                Some(format!("{n}{suffix}"))
+            })
+            .take(MAX_HTML_FRAME_TRACKS + 1)
+            .collect::<Option<Vec<_>>>()?;
+        if tracks.is_empty() || tracks.len() > MAX_HTML_FRAME_TRACKS {
+            return None;
+        }
+        Some(tracks.join(","))
+    }
+
+    /// Sanitize untrusted HTML/command values before storing or exporting them.
+    pub fn sanitize(&mut self) {
+        self.rows = self.rows.as_deref().and_then(Self::clean_tracks);
+        self.cols = self.cols.as_deref().and_then(Self::clean_tracks);
+        self.border = self.border.map(|n| n.min(100));
+        self.spacing = self.spacing.map(|n| n.min(100));
+        self.frames.truncate(MAX_HTML_FRAMES);
+        self.frames.retain_mut(|frame| {
+            let src = frame.src.trim();
+            if src.len() > 2048 || !crate::link::is_safe_href(src) {
+                return false;
+            }
+            frame.src = src.to_string();
+            frame.name = frame.name.take().and_then(|name| {
+                let name = name.trim();
+                (!name.is_empty() && name.len() <= 128 && name.chars().all(|c| c.is_ascii_alphanumeric() || matches!(c, '_' | '-' | '.' | ':')))
+                    .then(|| name.to_string())
+            });
+            frame.margin_width = frame.margin_width.filter(|n| *n <= 1000);
+            frame.margin_height = frame.margin_height.filter(|n| *n <= 1000);
+            true
+        });
+    }
 }
 
 /// Web Options (File › Options › Advanced › Web Options; `w:webSettings`). `present` keeps the part
@@ -730,6 +853,7 @@ impl Default for Settings {
             char_spacing: CharSpacing::DoNotCompress,
             kinsoku: Kinsoku::default(),
             web: WebOptions::default(),
+            html_frameset: None,
         }
     }
 }

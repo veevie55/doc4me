@@ -34,7 +34,7 @@ pub fn parse(text: &str) -> model::Flow {
     if blocks.is_empty() {
         blocks.push(FBlock::Para(Para::default()));
     }
-    model::Flow { blocks, meta: Default::default() }
+    model::Flow { blocks, meta: Default::default(), frameset: None }
 }
 
 /// Leading tabs → spaces (tab stops of 4); the rest of the line is kept.

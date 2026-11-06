@@ -35,8 +35,10 @@ pub mod desktop_theme;
 pub mod dialogs;
 pub mod dialogs_chart;
 pub mod dialogs_controls;
+pub mod dialogs_custom_xml;
 pub mod dialogs_data;
 pub mod dialogs_forms;
+pub mod dialogs_frameset;
 pub mod dialogs_insert;
 pub mod dialogs_keyboard;
 pub mod dialogs_layout;
@@ -50,6 +52,7 @@ pub mod dialogs_review;
 pub mod dialogs_ribbon;
 pub mod dialogs_smart_art;
 pub mod dialogs_templates;
+pub mod dialogs_wphelp;
 pub mod dictate;
 pub mod equation_tab;
 /// The built-in file browser, for desktops without a system file dialog (#576).
@@ -246,6 +249,8 @@ pub struct UiState {
     pub caret_animation: bool,
     /// Custom keyboard shortcuts (Customize Keyboard, #368); the session owns them while running.
     pub keyboard: doc4me_engine::KeyMap,
+    /// WordPerfect-style offline command help display preferences.
+    pub wp_help: dialogs_wphelp::HelpOptions,
     /// Custom ribbon tabs and groups, hidden tabs and the Quick Access Toolbar (Customize Ribbon,
     /// #379); the session owns them while running.
     pub ribbon: doc4me_engine::RibbonLayout,
@@ -322,6 +327,7 @@ impl Default for UiState {
             dark_page: false,
             caret_animation: true,
             keyboard: doc4me_engine::KeyMap::default(),
+            wp_help: dialogs_wphelp::HelpOptions::default(),
             ribbon: doc4me_engine::RibbonLayout::default(),
             caption_labels: Vec::new(),
             ink_pens: Vec::new(),

@@ -2755,7 +2755,7 @@ pub fn parse(src: &str) -> Flow {
     p.top = u8::from(uses(["part", "part*"])) + u8::from(uses(["chapter", "chapter*"]));
     p.run(Some("document"));
     let (blocks, meta) = p.finish();
-    Flow { blocks, meta }
+    Flow { blocks, meta, frameset: None }
 }
 
 fn squash(s: &str) -> String {

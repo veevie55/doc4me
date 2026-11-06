@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key checks, shortcuts 276/280 with 4 deferred. Current `manual.tsv` changes ARM64 from deferred to fail, so the generated report awaits refresh; language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 catalog-key checks, shortcuts 276/280 with 4 deferred. Current source maps 72/95 language rows and 216/228 dialog rows (12 deferred; 7 excluded), pending report refresh; `manual.tsv` changes ARM64 from deferred to fail. Language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -35,7 +35,7 @@ desktop in WordCraft and have not been re-run on Windows yet.
 
 | Core workflow | Works end to end? | Evidence | Hours to pass |
 |---|---|---|---|
-| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 720 engine commands (`doc4me-cli commands --json`, 2026-11-06), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
+| Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 727 registered engine command specs (current source count; CLI confirmation pending), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
 | Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; typical text/table/picture documents work; on 222 real-world documents all open and preserve measured structure through save and reopen (formatting not compared yet); charts, SmartArt and OLE dropped silently, move tracking lost (gaps #1, #2, #5) | 0 (beta work: 50–80) |
 | Build a structured document: tables, pictures, headers/footers, page numbers, sections, columns | yes | Tables with row splitting and floating tables (#137), floating pictures (#136), first/odd/even headers; columns don't balance (gap #4) | 0 |
 | Review with others: comments, track changes, accept/reject, compare | yes | Margin balloons, tracked insert/delete incl. paragraph marks (#125, #244), formatting revisions (#41), compare | 0 |
@@ -64,7 +64,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | M12 | Formats breadth (PDF, ODT, RTF, HTML, MD, TXT, LaTeX, `.doc` import) | done (first versions); encrypted `.docx` opens and saves (agile encryption); `.doc` write, encrypted `.doc`, minor formats missing | 60–100 h |
 | M13 | Performance budgets | on track (1.4 ms relayout); large real-world documents unmeasured | 10–20 h |
 | M14 | 1.0 polish, packaging, signing | Doc4Me v1.0.0, v1.1.0, v1.1.1 and v1.1.2 (the latest) published on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases) on 2026-11-02, the earlier three rebuilt from their own commits (Windows x64 MSI and portable zip, unsigned; CI signs once the signing secrets are set); WordCraft, upstream, shipped v0.1.0–v0.4.0 on every platform | — |
-| M15 | Localization (12 key languages, RTL interface, proofing languages) | 68/95 culture rows pass catalog key-row coverage; the check does not validate translated values or quality. English, Polish and Thai proofing, a proofing language per run | 75–120 h |
+| M15 | Localization (12 key languages, RTL interface, proofing languages) | Latest official report: 68/95 culture rows pass; current source maps 72/95, pending report refresh. The check does not validate translated values or quality. English, Polish and Thai proofing, a proofing language per run | 75–120 h |
 | M16 | Right-to-left and East Asian typography | RTL paragraphs done (#207) | 30–45 h |
 
 ## Path to 100% measured readiness
@@ -76,8 +76,10 @@ estimated dimension parities. Since stage B it is measured: **66.1%** at first, 
 68/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222), 9.5 points short
 of 100% overall. That report says 93.1% without its 23 deferred rows, 6.9 points short. The local
 `manual.tsv` now records the ARM64 check as fail after a later package attempt, so the generated
-report must be refreshed before quoting a current no-deferred score. Language readiness measures
-catalog key-row coverage, not translated content or accuracy.
+report must be refreshed before quoting a current no-deferred score. Since that report, the source
+TSVs now map 72/95 language rows and the dialog TSV/source predicts 216/228 rows (12 deferred; 7
+excluded); these results await the next report. Language readiness measures catalog key-row
+coverage, not translated content or accuracy.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,

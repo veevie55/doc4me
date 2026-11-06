@@ -262,6 +262,8 @@ pub struct Meta {
 pub struct Flow {
     pub blocks: Vec<FBlock>,
     pub meta: Meta,
+    /// HTML frameset page settings, used only by the HTML reader/writer.
+    pub frameset: Option<doc4me_doc::HtmlFrameset>,
 }
 
 /// `inlines` with equations as their linear text (default formatting), for formats that have no
@@ -567,6 +569,10 @@ pub fn to_doc(flow: &Flow) -> Document {
     }
     let body = Builder { doc: &mut doc }.blocks(&flow.blocks, 0);
     doc.body = body;
+    doc.settings.html_frameset = flow.frameset.clone().map(|mut fs| {
+        fs.sanitize();
+        fs
+    });
     let m = &flow.meta;
     doc.core.title = m.title.clone();
     doc.core.creator = m.author.clone();
@@ -837,6 +843,7 @@ pub fn from_doc(doc: &Document) -> Flow {
             description: c.description.clone(),
             created: c.created.clone(),
         },
+        frameset: doc.settings.html_frameset.clone(),
     }
 }
 

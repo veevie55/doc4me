@@ -34,7 +34,7 @@ lang-032	Hebrew	he-IL	-
 lang-033	Hindi	hi-IN	-
 lang-034	Hungarian	hu-HU	hu
 lang-035	Icelandic	is-IS	is
-lang-036	Igbo	ig-NG	-
+lang-036	Igbo	ig-NG	ig
 lang-037	Indonesian	id-ID	id
 lang-038	Irish	ga-IE	ga
 lang-039	isiXhosa	xh-ZA	xh
@@ -75,7 +75,7 @@ lang-073	Serbian (Cyrillic, Serbia)	sr-cyrl-RS	sr
 lang-074	Serbian (Latin, Serbia)	sr-latn-RS	sr-latn
 lang-075	Serbian (Cyrillic, Bosnia & Herzegovina)	sr-cyrl-BA	sr
 lang-076	Sesotho sa Leboa	nso-ZA	nso
-lang-077	Setswana	tn-ZA	-
+lang-077	Setswana	tn-ZA	tn
 lang-078	Sinhala	si-LK	-
 lang-079	Slovak	sk-SK	sk
 lang-080	Slovenian	sl-SI	sl
@@ -92,5 +92,5 @@ lang-090	Urdu	ur-PK	-
 lang-091	Uzbek (Latin)	uz-Latn-UZ	uz
 lang-092	Vietnamese	vi-VN	vi
 lang-093	Welsh	cy-GB	cy
-lang-094	Wolof	wo-SN	-
-lang-095	Yoruba	yo-NG	-
+lang-094	Wolof	wo-SN	wo
+lang-095	Yoruba	yo-NG	yo

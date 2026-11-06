@@ -1376,7 +1376,7 @@ pub fn parse(bytes: &[u8]) -> Result<Flow, String> {
     if blocks.is_empty() {
         blocks.push(FBlock::Para(Para::default()));
     }
-    Ok(Flow { blocks, meta: r.meta })
+    Ok(Flow { blocks, meta: r.meta, frameset: None })
 }
 
 /// Parse RTF bytes into a document.
