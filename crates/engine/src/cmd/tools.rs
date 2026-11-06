@@ -309,6 +309,16 @@ fn autocorrect_options(s: &mut Session, v: &Value) -> CmdResult {
     }))
 }
 
+/// `tools.smartTags`: the retired Smart Tags dialog's useful URL recognition switch. Modern
+/// Word folded URL recognition into AutoCorrect's "Internet addresses as links" preference, so
+/// this focused compatibility command controls that same behavior.
+fn smart_tags_options(s: &mut Session, v: &Value) -> CmdResult {
+    if let Some(links) = p::bool(v, "links") {
+        s.prefs.autocorrect.links = links;
+    }
+    Ok(json!({"links": s.prefs.autocorrect.links}))
+}
+
 pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("edit.repeat", "Repeat", "Quick Access Toolbar", |s, _| {
@@ -356,6 +366,9 @@ pub fn specs() -> Vec<CommandSpec> {
             .params(
                 r#"{"enabled"?: bool (all of AutoCorrect), "replaceText"|"capSentences"|"capCells"|"capDays"|"smartQuotes"|"fractions"|"ordinals"|"dashes"|"links"|"bullets"|"numbering"|"borderLines"?: bool, "autoFormat"?: {"headings"|"lists"|"bullets"|"otherStyles"|"quotes"|"ordinals"|"fractions"|"dashes"|"emphasis"|"links"|"preserveStyles"?: bool} (the AutoFormat tab), "add"?: {"from": string, "to": string} (adds or replaces an entry), "delete"?: string (an entry's "from", built in or added), "addException"?: string, "deleteException"?: string} → options, entries and exceptions"#,
             )
+            .pure(),
+        CommandSpec::new("tools.smartTags", "AutoCorrect Options", "File › Options › Proofing", smart_tags_options)
+            .params(r#"{"links"?: bool} → whether typed Internet addresses become hyperlinks (the modern AutoCorrect equivalent of the retired Smart Tags URL option); no params opens the focused options dialog"#)
             .pure(),
         CommandSpec::new("tools.customizeKeyboard", "Customize Keyboard", "File › Options", customize_keyboard)
             .params(
@@ -1594,6 +1607,21 @@ mod tests {
         }
         // The first word of a sentence is capitalised too.
         assert_eq!(s.doc.plain_text(StoryRef::Body), "The The © ");
+    }
+
+    #[test]
+    fn smart_tags_option_controls_typed_url_links() {
+        let mut disabled = Session::new(Document::new());
+        assert_eq!(disabled.run("tools.smartTags", &json!({"links": false})).unwrap()["links"], false);
+        disabled.run("text.insert", &json!({"text": "https://example.org"})).unwrap();
+        disabled.run("text.insert", &json!({"text": " "})).unwrap();
+        assert!(disabled.doc.para_at(&Pos::body(0, 0)).unwrap().props_of_char(0).link.is_none());
+
+        let mut enabled = Session::new(Document::new());
+        assert_eq!(enabled.run("tools.smartTags", &json!({"links": true})).unwrap()["links"], true);
+        enabled.run("text.insert", &json!({"text": "https://example.org"})).unwrap();
+        enabled.run("text.insert", &json!({"text": " "})).unwrap();
+        assert_eq!(enabled.doc.para_at(&Pos::body(0, 0)).unwrap().props_of_char(0).link.as_deref(), Some("https://example.org"));
     }
 
     #[test]

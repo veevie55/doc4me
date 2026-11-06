@@ -1000,7 +1000,7 @@ impl Dialog {
         ) {
             return crate::dialogs_forms::open(name, app).map(|d| Dialog::Forms(Box::new(d)));
         }
-        if matches!(name, "compare" | "combine" | "autoCorrect" | "restrictEditing" | "acceptRejectChanges" | "highlightChanges") {
+        if matches!(name, "compare" | "combine" | "autoCorrect" | "smartTags" | "restrictEditing" | "acceptRejectChanges" | "highlightChanges") {
             return crate::dialogs_review::open(name, app).map(|d| Dialog::Review(Box::new(d)));
         }
         let st = app.session.run("format.state", &json!({})).unwrap_or_default();

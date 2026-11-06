@@ -1856,11 +1856,12 @@ fn input_dialog(id: &str, params: &Value) -> Option<&'static str> {
         // Define New Multilevel List and Track Changes Options without settings show their dialogs.
         "list.define" if params.get("levels").is_none() => Some("defineList"),
         "review.trackingOptions" if params.as_object().is_none_or(|m| m.is_empty()) => Some("trackChangesOptions"),
-        // Compare / Combine without a revised document, AutoCorrect Options without settings and
-        // Restrict Editing without settings show their dialogs or pane (#412).
+        // Compare / Combine without a revised document, AutoCorrect / Smart Tags options without
+        // settings and Restrict Editing without settings show their dialogs or pane (#412).
         "review.compare" if !has("path") && !has("text") => Some("compare"),
         "review.combine" if !has("path") && !has("text") => Some("combine"),
         "tools.autocorrect" if params.as_object().is_none_or(|m| m.is_empty()) => Some("autoCorrect"),
+        "tools.smartTags" if params.as_object().is_none_or(|m| m.is_empty()) => Some("smartTags"),
         "review.restrict" | "file.protect" if params.as_object().is_none_or(|m| m.is_empty()) => Some("restrictEditing"),
         "insert.bookmark" if !has("name") => Some("bookmark"),
         // Word Count from the keyboard or command search shows its dialog, as the ribbon does.
