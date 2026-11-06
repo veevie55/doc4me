@@ -106,6 +106,12 @@ pub fn combo(m: Modifiers, key: &str, with_shift: bool) -> String {
 
 /// Find and run the command bound to this key. Returns true if handled.
 fn dispatch(app: &mut WordApp, key: Key, m: Modifiers) -> bool {
+    // Word refreshes its current web page on F9; its Web Layout is the document-backed view in
+    // Doc4Me. Other views keep F9's Update Field command.
+    if key == Key::F9 && !m.ctrl && !m.command && !m.alt && !m.shift && app.session.view.mode == doc4me_layout::ViewMode::Web {
+        let _ = app.run("web.refresh", json!({}));
+        return true;
+    }
     let Some(name) = key_name(key) else { return false };
     let reg = app.session.registry.clone();
     if let Some(spec) = app.session.keymap.resolve(&reg, &combo(m, name, true)) {
@@ -595,6 +601,22 @@ mod tests {
         });
         assert_eq!(field_result.as_deref(), Some("Updated by the shortcut"));
         std::fs::remove_dir_all(dir).unwrap();
+    }
+
+    #[test]
+    fn f9_refreshes_web_layout_and_leaves_print_layout_to_update_fields() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        app.run("view.webLayout", json!({})).unwrap();
+        let before = app.session.layout();
+
+        let ctx = egui::Context::default();
+        let event = egui::Event::Key { key: Key::F9, physical_key: None, pressed: true, repeat: false, modifiers: Modifiers::default() };
+        ctx.run_ui(egui::RawInput { events: vec![event], ..Default::default() }, |ui| canvas_events(&mut app, ui.ctx()))
+            .drop_without_applying_deltas();
+
+        let after = app.session.layout();
+        assert!(!std::sync::Arc::ptr_eq(&before, &after), "F9 rebuilds the Web Layout page");
+        assert_eq!(app.session.view.mode, doc4me_layout::ViewMode::Web);
     }
 
     #[test]

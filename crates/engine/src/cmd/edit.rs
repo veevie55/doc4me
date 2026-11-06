@@ -121,6 +121,9 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("web.follow", "Open Hyperlink", "Navigation", follow_link)
             .params(r#"{"link"?: string (a URL, or # and a bookmark name; default: the link at the caret)} → {"followed": bookmark} | {"url": string (for the interface to open)}"#)
             .pure(),
+        CommandSpec::new("web.refresh", "Refresh", "Navigation", refresh_web)
+            .params(r#"{}: refresh the current Web Layout view by updating fields and rebuilding its layout"#)
+            .pure(),
         CommandSpec::new("web.back", "Back", "Navigation", |s, _| {
             s.link_step(true).ok_or_else(|| CmdError::Failed("no followed hyperlink to go back from".into()))?;
             sel_result(s)
@@ -1005,4 +1008,16 @@ fn follow_link(s: &mut Session, v: &Value) -> CmdResult {
         .ok_or_else(|| CmdError::Failed(format!("there is no bookmark named `{name}`")))?;
     s.follow_to(at);
     Ok(json!({"followed": name}))
+}
+
+/// F9 while Word's Web Layout is active: update the document fields and rebuild the flowing
+/// layout. Outside that view the same key keeps its normal Update Field behavior. Doc4Me does not
+/// embed remote web pages, so this refreshes the document view rather than fetching a URL.
+fn refresh_web(s: &mut Session, _: &Value) -> CmdResult {
+    if s.view.mode != doc4me_layout::ViewMode::Web {
+        return Err(CmdError::Failed("switch to Web Layout before refreshing the page".into()));
+    }
+    s.run("references.updateFields", &json!({}))?;
+    s.relayout();
+    Ok(json!({"refreshed": true, "view": "web"}))
 }
