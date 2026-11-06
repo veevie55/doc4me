@@ -8,7 +8,7 @@ dlg-006	wdDialogConvertObject	392	IconNumber, ActivateAs, IconFileName, Caption,
 dlg-007	wdDialogCopyFile	300	FileName, Directory	file.copyFile	registry		legacy
 dlg-008	wdDialogCreateAutoText	872	(none)	insert.autoText	registry		save selection as AutoText
 dlg-009	wdDialogCreateSource	1922	(none)	references.citation	registry		Create Source
-dlg-010	wdDialogCSSLinks	1261	LinkStyles		excluded		Legacy HTML authoring: Word 365 for Windows has no CSS-links dialog or equivalent UI.
+dlg-010	wdDialogCSSLinks	1261	LinkStyles	file.cssLinks	registry		Maps the retired dialog's useful LinkStyles setting to Web Options › Rely on CSS for font formatting; it changes the document, is undoable and saves as w:doNotRelyOnCSS. External stylesheet URL lists are not supported.
 dlg-011	wdDialogDocumentInspector	1482	(none)	file.inspect	registry		Inspect Document
 dlg-012	wdDialogDocumentStatistics	78	FileName, Directory, Template, Title, Created, LastSaved, LastSavedBy, Revision, Time, Printed, Pages, Words, Characters, Paragraphs, Lines, FileSize	review.wordCount	registry		Word Count / statistics
 dlg-013	wdDialogDrawAlign	634	Horizontal, Vertical, RelativeTo	arrange.align	registry		

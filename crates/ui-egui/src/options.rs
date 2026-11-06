@@ -828,7 +828,7 @@ mod tests {
     #[test]
     fn web_options_in_advanced_change_the_document() {
         let mut a = app();
-        a.run("file.webOptions", json!({})).unwrap();
+        a.run("file.cssLinks", json!({})).unwrap();
         let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 2400.0)).build_ui_state(
             |ui, app: &mut WordApp| {
                 let ctx = ui.ctx().clone();

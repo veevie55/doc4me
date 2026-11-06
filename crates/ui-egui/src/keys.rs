@@ -318,6 +318,16 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
         return;
     }
     for e in events {
+        // egui-winit uses physical Num0 as a sentinel for the physical keypad-subtract key while
+        // preserving `key: Minus`. Word assigns Ctrl+Alt+keypad-minus to Em Dash; the main-row
+        // Ctrl+Alt+Minus remains the Optional Hyphen command in the regular keymap.
+        if let egui::Event::Key { key: Key::Minus, physical_key: Some(Key::Num0), pressed: true, modifiers, .. } = &e
+            && (modifiers.ctrl || modifiers.command)
+            && modifiers.alt
+        {
+            let _ = app.run("text.emDash", json!({}));
+            continue;
+        }
         // Word's Alt+Shift+F12 selects the options button on a Table of Contents content
         // control. Other contexts keep their normal shortcut handling (including the citation
         // options sequence in the References tab).
@@ -625,6 +635,30 @@ mod tests {
         assert_eq!(shift_variant_params("caret.left"), Some(json!({"extend": true})));
         assert_eq!(shift_variant_params("table.lastCellInRow"), Some(json!({"extend": true})));
         assert_eq!(shift_variant_params("text.delete"), None);
+    }
+
+    #[test]
+    fn keypad_and_main_minus_keep_their_distinct_word_actions() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::from_text("text")), crate::Services::default());
+        app.run("caret.docEnd", json!({})).unwrap();
+        let ctx = egui::Context::default();
+        let modifiers = Modifiers { ctrl: true, command: true, alt: true, ..Default::default() };
+        let frame = |app: &mut crate::WordApp, physical_key| {
+            ctx.run_ui(
+                egui::RawInput {
+                    events: vec![
+                        egui::Event::ModifiersChanged(modifiers),
+                        egui::Event::Key { key: Key::Minus, physical_key, pressed: true, repeat: false, modifiers },
+                    ],
+                    ..Default::default()
+                },
+                |ui| canvas_events(app, ui.ctx()),
+            )
+            .drop_without_applying_deltas();
+        };
+        frame(&mut app, Some(Key::Num0));
+        frame(&mut app, Some(Key::Minus));
+        assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "text—\u{00ad}");
     }
 
     /// Shift+Alt+End selects to the end of the table row, Shift+Alt+Page Down to the bottom of the
