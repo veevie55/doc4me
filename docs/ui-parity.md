@@ -2,6 +2,8 @@
 
 > **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42274814600 on `ed4284d` confirms shortcuts 276/280 with 4 OS-owned deferred rows; all non-deferred shortcut rows pass, and physical keyboard delivery is not claimed) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
+IME composition commit now enters a selected text box before inserting text, preserving the body anchor. Synthetic preedit/commit regression covers Japanese text; actual Windows IME switching remains unverified. Official shortcuts remain 276/280.
+
 How Doc4Me looks and feels next to Word: ribbon, dialogs, panes, keyboard, mouse and touch.
 Typing behaviour has its own checklist ([`typing-parity.md`](typing-parity.md)). All assets are our
 own (`AGENTS.md`: no Microsoft iconography, ever).
@@ -44,6 +46,8 @@ own (`AGENTS.md`: no Microsoft iconography, ever).
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | IME commit enters selected text boxes while preserving their anchors; synthetic regression passes; actual Windows IME switching remains unverified. |
+| 2026-11-07 | minor | IME composition commit now enters a selected text box before inserting text, preserving the body anchor. Synthetic preedit/commit regression covers Japanese text; actual Windows IME switching remains unverified. Official shortcuts remain 276/280. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 confirms shortcuts 276/280; all 276 non-deferred rows pass and 4 OS-owned Alt-numpad/IME rows remain deferred. Physical keyboard delivery remains unclaimed. |
 | 2026-11-06 | minor | Add Ctrl+NumpadSubtract en dash, Alt+NumLock-off Numpad5 whole-table selection, and NumpadDivide Outline formatting toggle; synthetic UI and Winit physical-key conversion regressions pass; no physical keyboard or Windows event-delivery test is claimed. |
 | 2026-11-01 | minor | Alt+Shift+F10 dismisses active KeyTips and opens the actions/context menu at the document caret; regression test covers opening and Escape dismissal; shortcut check ks-319 passes |

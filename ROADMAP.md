@@ -21,7 +21,7 @@ agent control. This page is the summary; the assessment is
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 727 registered command specs (doc4me-cli commands --json) · 2,069 standalone test attributes · 216,566 lines of Rust (2026-11-07 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 727 registered command specs (doc4me-cli commands --json) · 2,071 standalone test attributes · 216,629 lines of Rust (2026-11-07 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
 | Releases | Doc4Me v1.1.2 (2026-11-02, the latest GitHub Release), with v1.1.1, v1.1.0 and v1.0.0 released again from their own commits the same day, all on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases) (Actions of `chatraweechai/doc4me` stopped: its account is locked over billing, and its earlier releases and tags were gone): Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader

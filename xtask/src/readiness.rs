@@ -794,7 +794,7 @@ fn render(sets: &[SetResult], corpus_run: usize, corpus_listed: usize, commit: &
     ));
     md.push_str(&format!("**Measured readiness: {:.1}%**\n\n", total * 100.0));
     md.push_str(&format!(
-        "**Without the deferred rows: {:.1}%** — {deferred} rows wait until the owner asks for them (checks only the owner's own hardware or Windows PC can make, builds the owner hasn't asked for, Microsoft services); they count as not passing in the number above.\n\n",
+        "**Without the deferred rows: {:.1}%** — {deferred} rows await their recorded prerequisites and verification (hardware, platform access or external services); they count as not passing in the number above. Authorization to resume work alone does not make a check pass.\n\n",
         ahead * 100.0
     ));
     if corpus_run < CORPUS_TARGET {
@@ -831,7 +831,7 @@ fn render(sets: &[SetResult], corpus_run: usize, corpus_listed: usize, commit: &
         .collect();
     if !deferred_rows.is_empty() {
         md.push_str(&format!(
-            "\n## Deferred rows ({})\n\nNot counted as passing until the owner asks for them. Each reason is the one recorded with the row (`docs/readiness/*.tsv`).\n\n",
+            "\n## Deferred rows ({})\n\nNot counted as passing until their recorded prerequisites are available and verification succeeds. Each reason is the one recorded with the row (`docs/readiness/*.tsv`); older reasons may describe the original deferral.\n\n",
             deferred_rows.len()
         ));
         for (set, id, why) in &deferred_rows {

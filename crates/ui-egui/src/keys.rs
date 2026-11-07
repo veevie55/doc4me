@@ -478,6 +478,9 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
             egui::Event::Ime(egui::ImeEvent::Commit(text)) => {
                 app.canvas.ime_preedit.clear();
                 if !text.is_empty() {
+                    // A committed composition targets a selected text box just like typed text;
+                    // inserting at the body selection would replace the box's anchor instead.
+                    crate::objects::enter_text_box(app);
                     let _ = app.run("text.insert", json!({"text": text}));
                 }
             }
@@ -664,6 +667,30 @@ mod tests {
         frame(&mut app, egui::Event::Ime(egui::ImeEvent::Commit("仮名".into())));
         assert!(app.canvas.ime_preedit.is_empty(), "commit clears the composition");
         assert_eq!(app.session.doc.plain_text(doc4me_doc::StoryRef::Body), "仮名", "only the committed text enters the document");
+    }
+
+    #[test]
+    fn ime_commit_enters_a_selected_text_box_without_replacing_it() {
+        use doc4me_doc::{Pos, StoryRef};
+
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        let id = app.run("insert.textBox", json!({"text": "Note: "})).unwrap()["story"].as_u64().unwrap() as u32;
+        app.run("select.range", json!({"anchor": Pos::body(0, 0), "focus": Pos::body(0, '\u{fffc}'.len_utf8())})).unwrap();
+        let body_before = app.session.doc.plain_text(StoryRef::Body);
+        let ctx = egui::Context::default();
+        let frame = |app: &mut crate::WordApp, event| {
+            ctx.run_ui(egui::RawInput { events: vec![event], ..Default::default() }, |ui| canvas_events(app, ui.ctx()))
+                .drop_without_applying_deltas();
+        };
+
+        frame(&mut app, egui::Event::Ime(egui::ImeEvent::Preedit { text: "かな".into(), active_range_chars: Some(0..2) }));
+        assert_eq!(app.session.doc.plain_text(StoryRef::Part(id)), "Note: ", "preedit leaves the box's text unchanged");
+        frame(&mut app, egui::Event::Ime(egui::ImeEvent::Commit("仮名".into())));
+        assert!(app.canvas.ime_preedit.is_empty());
+        assert_eq!(app.session.sel.focus.story, StoryRef::Part(id));
+        assert_eq!(app.session.doc.plain_text(StoryRef::Part(id)), "Note: 仮名");
+        assert_eq!(app.session.doc.plain_text(StoryRef::Body), body_before, "the text box's body anchor is preserved");
+        assert!(app.session.doc.text_box_anchor(id).is_some());
     }
 
     #[test]

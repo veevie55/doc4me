@@ -124,9 +124,10 @@ performance (6/6); the largest remaining measured areas are pagination (174/222 
 tested). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
-Recent
-work fixed contextual trailing spacing between paragraphs in table cells; the Windows result moved
-from 172 to 174 page-count passes, while boundary passes remain 97.
+Earlier work fixed contextual trailing spacing between paragraphs in table cells. The latest official
+Windows report is 174/222 page-count passes and 96/222 boundary passes; the trial section-marker
+change was reverted after a corpus boundary regression. Deferred work is now active under the owner's 2026-11-07 request;
+[the completion plan](readiness/deferred-plan.md) lists the remaining implementation and verification prerequisites.
 Some rows can only pass
 on the owner's hardware: the printer, pen, microphone, scanner and multi-monitor checks. Windows
 ARM64 packaging passed after the earlier run 42213688289 link failure: run 42262956358

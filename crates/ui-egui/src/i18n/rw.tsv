@@ -1498,7 +1498,7 @@
 	Mark Table of Contents Entry	Shyira akamenyetso ku Ibirimo Kwinjira
 	Mark\nCitation	Ikimenyetso
 	Mark\nEntry	Ikimenyetso
-	Markdown (*.md)	Ikimenyetso (* .md)
+	Markdown (*.md)	Ikimenyetso (*.md)
 	Match case	Urubanza
 	Match Fields	Guhuza Imirima
 	Match prefix	Guhuza imbanzirizamushinga
@@ -1735,7 +1735,7 @@
 	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	Fungura dosiye hamwe na mushakisha ya Doc4Me mugihe sisitemu ya dosiye ikiganiro itagaragara.
 	Open Data Source…	Fungura amakuru yatanzwe…
 	Open Hyperlink	Fungura Hyperlink
-	OpenDocument Text (*.odt)	Gufungura inyandiko (* .odt)
+	OpenDocument Text (*.odt)	Gufungura inyandiko (*.odt)
 	Opening print dialog…	Gufungura inyandiko y'ibiganiro…
 	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	Gufungura .docx, .doc, .rtf na .odt dosiye hamwe na Word templates hamwe na Doc4Me guhera ubu.
 	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	Fungura Igenamiterere ›Porogaramu zisanzwe, aho uhitamo Doc4Me ya .docx nubundi bwoko bwinyandiko.
@@ -1789,8 +1789,8 @@
 	Page Color	Urupapuro Ibara
 	Page display	Urupapuro rwerekana
 	Page Down	Urupapuro Hasi
-	Page image (*.jpg, *.jpeg)	Ishusho y'urupapuro (* .jpg, * .jpeg)
-	Page image (*.png)	Urupapuro (* .png)
+	Page image (*.jpg, *.jpeg)	Ishusho y'urupapuro (*.jpg, *.jpeg)
+	Page image (*.png)	Urupapuro (*.png)
 	Page Movement	Urupapuro
 	Page Number	Urupapuro
 	Page number style	Urupapuro nimero
@@ -1842,7 +1842,7 @@
 	Pasting within the same document:	Kwandika mu nyandiko imwe:
 	Pause	Kuruhuka
 	Paused	Kuruhuka
-	PDF document (*.pdf)	Inyandiko ya PDF (* .pdf)
+	PDF document (*.pdf)	Inyandiko ya PDF (*.pdf)
 	Pen	Ikaramu
 	Pencil	Ikaramu
 	Pens	Ikaramu
@@ -1865,7 +1865,7 @@
 	Placeholder Name	Izina ryumwanya
 	Placeholder text	Umwandiko
 	Plain Table 1	Imbonerahamwe 1
-	Plain text (*.txt)	Inyandiko isanzwe (* .txt)
+	Plain text (*.txt)	Inyandiko isanzwe (*.txt)
 	Plain Text Content Control	Igenzura ryibirimo
 	Play	Kina
 	Play Video	Kina Video
@@ -2086,7 +2086,7 @@
 	Ribbon and Quick Access Toolbar:	Agasanduku nigikoresho cyihuta cyo kubona ibikoresho:
 	Ribbon tabs	Utubuto
 	Rich Text Content Control	Igenzura rikubiyemo Ibirimo
-	Rich Text Format (*.rtf)	Imiterere yinyandiko ikungahaye (* .rtf)
+	Rich Text Format (*.rtf)	Imiterere yinyandiko ikungahaye (*.rtf)
 	Rich Text Format (RTF)	Imiterere y'inyandiko ikungahaye (RTF)
 	Right	Iburyo
 	Right (vertical)	Iburyo (vertical)
@@ -2739,7 +2739,7 @@
 	Weather	Ikirere
 	web access isn't available here	kwinjira kurubuga ntabwo biboneka hano
 	Web Layout	Urubuga
-	Web page (*.html)	Urubuga (* .html)
+	Web page (*.html)	Urubuga (*.html)
 	Web\nLayout	Urubuga \\ nUmurongo
 	Website	Urubuga
 	Wed	Wed
@@ -2770,12 +2770,12 @@
 	Word 97–2003	Ijambo 97–2003
 	Word Count	Kubara Ijambo
 	Word document	Inyandiko
-	Word document (*.docx)	Inyandiko y'ijambo (* .docx)
+	Word document (*.docx)	Inyandiko y'ijambo (*.docx)
 	Word forms	Imiterere y'ijambo
 	Word Left	Ijambo Ibumoso
 	Word level	Urwego rw'ijambo
 	Word Right	Ijambo Iburyo
-	Word XML Document (*.xml)	Ijambo XML Inyandiko (* .xml)
+	Word XML Document (*.xml)	Ijambo XML Inyandiko (*.xml)
 	WordArt	Ijambo
 	WordArt Styles	Imiterere ya WordArt
 	Words	Amagambo

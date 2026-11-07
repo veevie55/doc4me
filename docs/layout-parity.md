@@ -2,6 +2,8 @@
 
 > **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (latest official Windows run 42274814600 measured 174/222 page counts and 96/222 page boundaries, one below the preceding report in each set; font substitution diagnostics collected examples but did not establish a cause or a safe broad fix) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
+A section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 174/222 and 96/222.
+
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
 pagination and object placement in `crates/layout`. Typing behaviour is in
@@ -93,6 +95,7 @@ still needed.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | A section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 174/222 and 96/222. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 on `ed4284d` matches 174/222 page counts and 96/222 page boundaries; each is one below the preceding report. Font diagnostics sampled substitutions but did not identify a cause or safe broad fix. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189 matched 175/222 page counts and 97/222 page boundaries. DOCX `w:altName` font substitution passed all six CI steps before the next corpus run. |
 | 2026-11-01 | minor | Avoid a blank page for a leading page break in a table row; corpus rises to 162/222 page counts while page-boundary checks remain 87/222; govuk-003 page count matches but page boundaries still differ |

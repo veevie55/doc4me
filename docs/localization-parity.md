@@ -2,6 +2,8 @@
 
 > **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42274814600 reports 72/95 culture rows with catalog key coverage; this does not measure translation accuracy; candidate drafts outside the registered catalogs remain unreviewed; Hindi, Arabic and Korean lack reviewed registered catalogs among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
+Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered.
+
 Interface languages, script support and proofing per language. How translation works (catalog
 format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
@@ -146,6 +148,8 @@ allows); all other text is written from the meaning of the English. No Italian p
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | Corrected 13 file-filter translations and validated literal glob patterns; language coverage remains72/95. |
+| 2026-11-07 | minor | Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered. |
 | 2026-10-25 | trivial | TH SarabunIT๙ no longer reuses TH Sarabun New's metrics: Sarabun draws it at its own size and opening the document says so |
 | 2026-10-19 | minor | Thai interface catalog (2,433 entries, complete); Thai misspelling list grown to 105 pairs; review fixes (Thai/Latin words split for spelling, user dictionary clears typing-order marks) |
 | 2026-10-16 | minor | Thai proofing (typing-order mistakes and common misspellings, Royal Society spellings suggested), Thai counting list numbers and Thai list kinds in the Numbering menu, TH Sarabun New/PSK/IT๙ drawn with Sarabun at their own size, widths and line spacing, Word for Windows single line spacing |
