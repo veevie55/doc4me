@@ -19,13 +19,15 @@
 
 - **เพิ่ม Noto UI font fallback สำหรับสคริปต์ที่ขาด** (`crates/ui-egui/src/theme.rs`): ฝังฟอนต์ OFL regular/bold สำหรับ Arabic, Armenian, Bengali/Assamese, Devanagari, Georgian, Gujarati, Gurmukhi, Hebrew, Kannada, Malayalam, Oriya/Odia, Sinhala, Tamil และ Telugu พร้อม Hangul subset ที่เปลี่ยนชื่อ family; ต่อท้าย fallback เดิมของ proportional, medium, semibold และ monospace โดยคงฟอนต์หลักไว้ก่อน. Font coverage test ตรวจ charmap owner ในทุกน้ำหนัก. Arabic/Hebrew ได้ glyph coverage แต่ยังไม่รองรับ bidi/RTL UI.
 
-- **บันทึกการ resolve ฟอนต์ใน Windows readiness run** (`.github/workflows/readiness-windows.yml`): ตรวจเอกสาร 8 ไฟล์ที่อาจเกี่ยวกับ MS Gothic ด้วยคำสั่งอ่านอย่างเดียว `file.fontSubstitution` และ `file.info` เพื่อแสดงฟอนต์ทดแทนกับจำนวนหน้าใน log; ไม่แก้ DOCX หรือเปลี่ยนคะแนน readiness. ตรวจ YAML และทดสอบ command syntax กับ release CLI ใน session; ยังรอ Windows run.
+- **บันทึกผล readiness ล่าสุดและ font diagnostics บน Windows**: run [42274814600](https://github.com/veevie55/doc4me/actions/runs/42274814600) วัด source `ed4284d` ครบ 222 เอกสาร; report commit `29e6672` ได้ 91.3% readiness และ 93.2% เมื่อไม่นับ 22 deferred. ผ่าน page counts 174/222, page boundaries 96/222, languages 72/95, dialogs 216/228 และ shortcuts 276/280; platforms 5/5. ขั้น diagnostic ตรวจเอกสาร 9 ไฟล์แบบอ่านอย่างเดียวและเก็บ candidate font substitutions แต่ไม่ได้พิสูจน์สาเหตุของ pagination; ไม่พบ MS Gothic ในผลตัวอย่างที่ตรวจ. ไม่มีการเปลี่ยนคะแนนด้วย diagnostics.
 
-- **เพิ่ม full-corpus failure diagnostics สำหรับ readiness** (`cargo xtask readiness --diagnostics`): พิมพ์ ID และเหตุผลของเอกสารทุกไฟล์ที่ page count หรือ page boundary ไม่ผ่านลง stdout/Actions log โดยไม่ขยาย `docs/readiness.md` ที่สรุป 40 รายการแรก. ใช้ regression test ตรวจว่ารวมแถวท้ายรายการและไม่ดึง failure จากมิติอื่นเข้ามา; workflow Windows ถัดไปจะใช้ flag นี้.
+- **เพิ่ม full-corpus failure diagnostics สำหรับ readiness** (cargo xtask readiness --diagnostics): พิมพ์ ID และเหตุผลของเอกสารทุกไฟล์ที่ page count หรือ page boundary ไม่ผ่านลง stdout/Actions log โดยไม่ขยาย docs/readiness.md ที่สรุป 40 รายการแรก. ใช้ regression test ตรวจว่ารวมแถวท้ายรายการและไม่ดึง failure จากมิติอื่นเข้ามา; Windows run 42274814600 ใช้ flag นี้และบันทึกทั้งรายการ page-count กับ page-boundary failures.
 
-- **ตรวจฟอนต์และจำนวนหน้าของ `zenodo-149` บน Windows** (`.github/workflows/readiness-windows.yml`): เพิ่มเอกสารนี้ใน diagnostics แบบอ่านอย่างเดียว เพราะผล Linux แสดง 40 หน้ากับ PDF อ้างอิง 28 หน้าและอาจเกี่ยวกับ Arial Nova Cond Light แต่ผล Windows ปัจจุบันยังไม่ยืนยัน จึงต้องเก็บ `file.fontSubstitution` และ `file.info` จาก Windows ก่อนพิจารณาแก้ตัวแทนฟอนต์. ไม่มีการเปลี่ยนคะแนนจากการตรวจนี้.
+- **แสดงคำต้นและท้ายของหน้าที่ pagination ไม่ตรงกัน** (xtask/src/readiness.rs): เมื่อ --diagnostics เจอ page-boundary mismatch จะแสดง first/last word ที่ Doc4Me และ PDF อ้างอิงอ่านได้ เพื่อให้หาจุดคลาดเคลื่อนได้โดยไม่เดาสาเหตุจากจำนวนหน้า. เพิ่ม regression test สำหรับข้อความวินิจฉัย. ผล readiness ปัจจุบันยังเป็น run 42274814600 จนกว่าจะวัดบน Windows อีกครั้ง.
 
-- **ใช้ `w:altName` จาก DOCX font table เมื่อฟอนต์หลักไม่มี**: อ่าน mapping แบบ document-scoped แล้วใช้ฟอนต์ alternate ในย่อหน้า ข้อความกราฟ และข้อความปกติในสมการเฉพาะตอน family ที่เอกสารขอไม่ได้ติดตั้ง โดยคงชื่อฟอนต์เดิมของ run/object ไว้; `file.fontSubstitution` แสดงและแปลงเป็น alternate ที่ใช้จริง. เขียนรายการ `w:altName` ที่รองรับกลับใน `word/fontTable.xml`; รายการ font-table ชนิดอื่นยังไม่ถูกจำลอง. Tests ครอบ read/write/read, การจัดข้อความย่อหน้า กราฟ และสมการจริง, คำสั่ง Font Substitution, ชื่อฟอนต์ที่ไม่เปลี่ยน และไม่ override ฟอนต์หลักที่ติดตั้ง. รอวัดผล pagination บน Windows.
+- **ตรวจฟอนต์และจำนวนหน้าของ `zenodo-149` บน Windows** (`.github/workflows/readiness-windows.yml`): ผล Windows run 42274814600 ก็แสดง 40 หน้าเทียบกับ Word 28 หน้า; `file.fontSubstitution` พบ Arial Nova Cond Light → Arial, Aptos → Intos และ Arial Narrow → Arial. เป็นข้อมูลวินิจฉัยเท่านั้น ยังไม่พิสูจน์ว่าสิ่งใดทำให้เอกสารยาวกว่าอ้างอิงหรือรองรับการเปลี่ยนตัวแทนฟอนต์อย่างปลอดภัย. ไม่มีการเปลี่ยนคะแนนจากการตรวจนี้.
+
+- **ใช้ `w:altName` จาก DOCX font table เมื่อฟอนต์หลักไม่มี**: อ่าน mapping แบบ document-scoped แล้วใช้ฟอนต์ alternate ในย่อหน้า ข้อความกราฟ และข้อความปกติในสมการเฉพาะตอน family ที่เอกสารขอไม่ได้ติดตั้ง โดยคงชื่อฟอนต์เดิมของ run/object ไว้; `file.fontSubstitution` แสดงและแปลงเป็น alternate ที่ใช้จริง. เขียนรายการ `w:altName` ที่รองรับกลับใน `word/fontTable.xml`; รายการ font-table ชนิดอื่นยังไม่ถูกจำลอง. Tests ครอบ read/write/read, การจัดข้อความย่อหน้า กราฟ และสมการจริง, คำสั่ง Font Substitution, ชื่อฟอนต์ที่ไม่เปลี่ยน และไม่ override ฟอนต์หลักที่ติดตั้ง. Windows run 42274814600 เสร็จแล้ว: ผลรวม pagination 174/222 pages และ 96/222 boundaries เทียบกับ 175/222 และ 97/222 ในรายงานก่อนหน้า; ตัวเลขรวมไม่ได้ระบุว่า change นี้เป็นสาเหตุ.
 
 - **กู้ตำแหน่งหน้าต่างข้ามการเปลี่ยน DPI และ interface zoom** (`window_geometry`): บันทึก effective `pixels_per_point` ที่ egui ใช้แปลงขนาดจอและเทียบกับขนาดจอจริง เพื่อไม่ย้ายหน้าต่างเมื่อจอเดิมเปลี่ยน scale หรือ UI zoom. มี tests สำหรับการเปลี่ยน scale, zoom และ physical monitor size; `cargo check -p doc4me` ยืนยัน app call site. การตรวจหลายจอจริงบน Windows ยัง deferred จนกว่าจะทดสอบบนเครื่องเจ้าของ.
 
@@ -170,7 +172,7 @@
   - เหตุผล: ผู้ใช้สั่ง (2026-11-03) ให้วัด readiness บน Windows ทุกครั้งและบันทึกใน handoff กับ roadmap; session นี้เป็น Linux และคลังทดสอบไม่อยู่ใน git จึงวัดบน Windows เองไม่ได้
   - ทำงาน: ติดตั้ง poppler ผ่าน choco, ดาวน์โหลดคลัง (ลองซ้ำสูงสุด 3 ครั้ง), รัน `cargo xtask readiness --corpus --jobs 4` บน windows-latest, สรุปคะแนนลง step summary แล้ว commit `docs/readiness.md` กลับเข้า `main` ด้วย `[skip ci]`
   - ผู้ใช้: ไม่กระทบตัวโปรแกรมหรือไฟล์ .docx; ไม่รันเองตอน push (ใช้นาทีของ runner เฉพาะเมื่อกดรัน)
-  - ตรวจสอบ: ตรวจ YAML ด้วย parser แล้ว; ผลวัดจริงจะบันทึกหลังรัน workflow ครั้งแรก (ดู handoff/ROADMAP)
+  - ตรวจสอบ: run 42274814600 สำเร็จบน Windows ครบ 222 เอกสาร; ได้ 91.3% รวม/93.2% โดยไม่รวม 22 deferred และ workflow สร้าง `docs/readiness.md` ที่ report commit `29e6672` (ดู `handoff.md`, `ROADMAP.md` และ maintained parity docs)
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
 ### แก้ไข
@@ -180,7 +182,7 @@
 - **ระยะหลังย่อหน้าใน cell ตารางที่ใช้ contextual spacing ถูกลบได้ถูกต้อง** (`crates/layout/src/lib.rs`, regression ใน `crates/layout/src/tests.rs`)
   - เหตุผล: layout ของ cell บันทึกระยะท้ายย่อหน้าเป็นศูนย์เมื่อย่อหน้าปัจจุบันต่อเนื่องกับย่อหน้าก่อนหน้า ทั้งที่ยังบวกระยะนั้นเข้า flow; ย่อหน้าถัดไปจึงลบระยะที่บันทึกไว้ไม่ครบ ทำให้ระยะรายการใน govuk-006 สะสมเกิน Word
   - เปลี่ยน: เก็บระยะท้ายจริงไว้ แล้วให้ย่อหน้าถัดไปตัดออกเมื่อ contextual spacing ใช้ได้; ไฟล์ DOCX เดิมยังเปิด/บันทึกได้และการติดตั้งไม่เปลี่ยน
-  - ผลที่วัดได้: govuk-006 กลับจาก 5 หน้าเป็น 4 หน้าเท่า PDF อ้างอิง; corpus บน Linux ผ่านจำนวนหน้า 163/222 (เดิม 161/222), ขอบเขตหน้า 82/222; ผล Windows จะบันทึกหลัง workflow readiness รอบนี้
+  - ผลที่วัดได้: govuk-006 กลับจาก 5 หน้าเป็น 4 หน้าเท่า PDF อ้างอิง; corpus บน Linux ผ่านจำนวนหน้า 163/222 (เดิม 161/222), ขอบเขตหน้า 82/222; Windows run 42274814600 ผ่าน 174/222 page counts และ 96/222 boundaries. ผล Windows รวมลดลงหนึ่งรายการต่อชุดจากรายงานก่อนหน้า จึงยังสรุปผลของ change นี้จาก aggregate ไม่ได้.
   - ตรวจสอบ: regression `cargo test -p doc4me-layout contextual_spacing_suppresses_trailing_space_between_cell_paragraphs` ผ่าน; `cargo xtask ci` ผ่านครบ fmt, clippy, workspace tests, assets, layers และ wasm
 
 - **`Cargo.lock` ตรงกับเลขเวอร์ชัน 1.1.3 ใน `Cargo.toml`** (`Cargo.lock`)

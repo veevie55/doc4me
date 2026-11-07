@@ -1,18 +1,24 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (current registry has 69 interface choices including English; the latest Windows readiness report is 68/95 culture rows, while the current source maps 72/95 pending report refresh; key-row coverage does not measure translation accuracy; Hindi, Arabic and Korean remain unregistered among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42274814600 reports 72/95 culture rows with catalog key coverage; this does not measure translation accuracy; candidate drafts outside the registered catalogs remain unreviewed; Hindi, Arabic and Korean lack reviewed registered catalogs among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Interface languages, script support and proofing per language. How translation works (catalog
 format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
 **Dimension: ~27% (estimated), 75–120 h to full for the twelve key languages**, plus work for the
 other languages Word ships and native-speaker review (human). This estimate is separate from the
-readiness check: the latest official Windows report (run 42211564189) records 68/95 culture rows
-passing the catalog key-row coverage rule; the current source maps 72/95 rows, and the next report
-has not yet verified that updated result. The check does not distinguish translated values from
-English-identical values and does not assess meaning or native-speaker quality. Bundled OFL Noto
-fallbacks now cover the missing scripts (including a Hangul subset); epaint's lack of bidi and RTL
-layout still prevents claiming Arabic or Hebrew interface readiness.
+readiness check: Windows run 42274814600 on source `ed4284d` (report commit `29e6672`) records
+72/95 culture rows passing the catalog key-row coverage rule. The check does not distinguish
+translated values from English-identical values and does not assess meaning or native-speaker
+quality. Bundled OFL Noto fallbacks now cover the missing scripts (including a Hangul subset);
+candidate drafts in `docs/l10n-candidates/` are not registered and do not contribute to this result.
+Validation found that the six untracked candidates (ar, bn, fa, he, ps, ur) each have 3,031
+keys and no blank values, but they are unsafe to register: bn mistranslates examples such as “Save”
+and “Bold”; RTL drafts damage shortcut/file-extension tokens or insert Tab into translations of
+“Table”. Arabic and Hebrew also lack the RTL UI support needed for an interface-readiness claim. These
+drafts remain outside the source registry and do not affect the 72/95 score.
+epaint's lack of bidi and RTL layout
+still prevents claiming Arabic or Hebrew interface readiness.
 
 ## What Word ships (measured by listing the bundle)
 
@@ -29,8 +35,8 @@ layout still prevents claiming Arabic or Hebrew interface readiness.
   language catalogs, including Spanish, French, Indonesian, Vietnamese, European Portuguese,
   Norwegian Bokmål and Nynorsk. Four registered drafts (Igbo, Setswana, Wolof and Yoruba) are
   AI-generated and require native-speaker review; key presence counts them without measuring their
-  quality. The 95-row readiness catalog maps cultures to these files: the latest official result is
-  68/95, while the current source maps 72/95 pending report refresh. `LANGUAGES` is authoritative for
+  quality. The 95-row readiness catalog maps cultures to these files: Windows run 42274814600
+  reports 72/95 passing rows. Drafts outside the registry do not affect the score. `LANGUAGES` is authoritative for
   choices and locale matching; `languages.tsv` is the separate readiness denominator.
 - `cargo xtask readiness` parses unique catalog keys and compares key sets, not non-English
   values. These key counts cannot be described as the share of strings

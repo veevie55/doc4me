@@ -723,12 +723,24 @@ fn compare_pages(ours: &Path, reference: &Path) -> (Result<(), String>, Result<(
     }
     for page in 1..=a {
         let (x, y) = (page_words(ours, page), page_words(reference, page));
-        let ends = |w: &[String]| (w.first().cloned(), w.last().cloned());
-        if ends(&x) != ends(&y) {
-            return (Ok(()), Err(format!("page {page} starts or ends differently")));
+        if let Some(reason) = page_boundary_failure(page, &x, &y) {
+            return (Ok(()), Err(reason));
         }
     }
     (Ok(()), Ok(()))
+}
+
+/// Explain a page-boundary mismatch with the exact first and last words from both PDFs.
+fn page_boundary_failure(page: usize, ours: &[String], reference: &[String]) -> Option<String> {
+    let (ours_first, ours_last) = (ours.first(), ours.last());
+    let (reference_first, reference_last) = (reference.first(), reference.last());
+    if (ours_first, ours_last) == (reference_first, reference_last) {
+        None
+    } else {
+        Some(format!(
+            "page {page} starts or ends differently: Doc4Me first={ours_first:?}, last={ours_last:?}; Word first={reference_first:?}, last={reference_last:?}"
+        ))
+    }
 }
 
 fn pdf_pages(pdf: &Path) -> Option<usize> {
@@ -917,6 +929,20 @@ mod tests {
         assert!(report.contains("corpus-pages\tdoc-000\tpage count differs"));
         assert!(report.contains("corpus-pages\tdoc-041\tpage count differs"));
         assert!(!report.contains("dlg-1"));
+    }
+
+    #[test]
+    fn page_boundary_diagnostic_includes_both_word_pairs() {
+        let ours = words("OurOpening OurClosing");
+        let reference = words("WordOpening WordClosing");
+
+        assert_eq!(
+            page_boundary_failure(12, &ours, &reference).as_deref(),
+            Some(
+                "page 12 starts or ends differently: Doc4Me first=Some(\"ouropening\"), last=Some(\"ourclosing\"); Word first=Some(\"wordopening\"), last=Some(\"wordclosing\")"
+            )
+        );
+        assert_eq!(page_boundary_failure(1, &ours, &ours), None);
     }
 
     fn registry() -> Registry {
