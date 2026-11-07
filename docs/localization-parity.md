@@ -1,6 +1,6 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42274814600 reports 72/95 culture rows with catalog key coverage; this does not measure translation accuracy; candidate drafts outside the registered catalogs remain unreviewed; Hindi, Arabic and Korean lack reviewed registered catalogs among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42334133340 reports 72/95 culture rows with catalog key coverage; this does not measure translation accuracy; candidate drafts outside the registered catalogs remain unreviewed; Hindi, Arabic and Korean lack reviewed registered catalogs among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered.
 
@@ -9,7 +9,7 @@ format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
 **Dimension: ~27% (estimated), 75–120 h to full for the twelve key languages**, plus work for the
 other languages Word ships and native-speaker review (human). This estimate is separate from the
-readiness check: Windows run 42274814600 on source `ed4284d` (report commit `29e6672`) records
+readiness check: Windows run 42334133340 on source `1868cb4` (report commit `ed787f9`) records
 72/95 culture rows passing the catalog key-row coverage rule. The check does not distinguish
 translated values from English-identical values and does not assess meaning or native-speaker
 quality. Bundled OFL Noto fallbacks now cover the missing scripts (including a Hangul subset);
@@ -37,7 +37,7 @@ still prevents claiming Arabic or Hebrew interface readiness.
   language catalogs, including Spanish, French, Indonesian, Vietnamese, European Portuguese,
   Norwegian Bokmål and Nynorsk. Four registered drafts (Igbo, Setswana, Wolof and Yoruba) are
   AI-generated and require native-speaker review; key presence counts them without measuring their
-  quality. The 95-row readiness catalog maps cultures to these files: Windows run 42274814600
+  quality. The 95-row readiness catalog maps cultures to these files: Windows run 42334133340
   reports 72/95 passing rows. Drafts outside the registry do not affect the score. `LANGUAGES` is authoritative for
   choices and locale matching; `languages.tsv` is the separate readiness denominator.
 - `cargo xtask readiness` parses unique catalog keys and compares key sets, not non-English
@@ -148,6 +148,7 @@ allows); all other text is written from the meaning of the English. No Italian p
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Corrected 13 file-filter translations and validated literal glob patterns; language coverage remains72/95. |
 | 2026-11-07 | minor | Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered. |
 | 2026-10-25 | trivial | TH SarabunIT๙ no longer reuses TH Sarabun New's metrics: Sarabun draws it at its own size and opening the document says so |

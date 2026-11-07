@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (latest Windows run 42274814600 on `ed4284d`, report commit `29e6672`: 91.3% / 93.2% without 22 deferred; dialogs 216/228, pages 174/222, boundaries 96/222, languages 72/95, shortcuts 276/280 with 4 deferred, platforms 5/5. Language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (latest Windows run 42334133340 on `1868cb4`, report commit `ed787f9`: 91.3% / 93.2% without 22 deferred; dialogs 216/228, pages 174/222, boundaries 96/222, languages 72/95, shortcuts 276/280 with 4 deferred, platforms 5/5. Language key coverage does not measure translation accuracy.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -73,14 +73,14 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **91.3%** in the latest official Windows report (run 42274814600, source
-`ed4284d`, report commit `29e6672`; dialogs 216/228, pages 174/222, boundaries 96/222, languages
+2026-10-25 report, and **91.3%** in the latest official Windows report (run 42334133340, source
+`1868cb4`, report commit `ed787f9`; dialogs 216/228, pages 174/222, boundaries 96/222, languages
 72/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222), 8.7 points short
 of 100% overall. That report says 93.2% without its 22 deferred rows, 6.8 points short. Current
 `manual.tsv` has 22 deferred rows and records the ARM64 check as pass after run 42262956358 built
 and verified the MSI and portable ZIP. Readiness run 42262955486 was canceled because it would
-measure the pre-pass row; replacement run 42274814600 completed successfully on `ed4284d`, and its
-generated report is commit `29e6672`. The source TSVs map 72/95 language rows and the dialog
+measure the pre-pass row; latest run 42334133340 completed successfully on `1868cb4`, and its
+generated report is commit `ed787f9`. The source TSVs map 72/95 language rows and the dialog
 TSV/source maps 216/228 rows (12 deferred; 7 excluded), matching the report. Language readiness measures catalog key-row
 coverage, not translated content or accuracy.
 The target is **100% ready for real work, measured**
@@ -118,7 +118,7 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 42274814600 passes stability (222/222 corpus; 5/5 hand checks) and
+Windows measurement 42334133340 passes stability (222/222 corpus; 5/5 hand checks) and
 performance (6/6); the largest remaining measured areas are pagination (174/222 page-count and
 96/222 boundary checks) and language catalog-key coverage (72/95; translation quality is not
 tested). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
@@ -153,6 +153,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 measured `ed4284d`; generated report commit `29e6672` records 91.3% / 93.2% without 22 deferred rows, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 and shortcuts 276/280; platforms pass 5/5. Pagination is one page-count and one boundary pass below the previous report. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95 and shortcuts 276/280. A later report supersedes these values. |
 | 2026-11-06 | minor | At the time, ARM64 `plat-002` had passed after run 42262956358 verified the MSI and portable ZIP; run 42262955486 was canceled before measuring the pass. Replacement run 42274814600 later completed and refreshed the report. |

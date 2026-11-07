@@ -177,6 +177,8 @@
 
 ### แก้ไข
 
+- **ยืนยัน readiness บน Windows หลังแก้ IME/file-filter**: run [42334133340](https://github.com/veevie55/doc4me/actions/runs/42334133340) วัด source `1868cb4` ครบ 222 เอกสาร และ bot บันทึกรายงานใน `ed787f9`: 91.3% รวม / 93.2% ไม่นับ 22 deferred, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 และ shortcuts 276/280 เท่าเดิม. Diagnostic แสดงคำต้น/ท้ายของหน้าที่ไม่ตรงแล้ว; ไม่อ้างว่า software regression tests พิสูจน์ physical Windows IME/hardware.
+
 - **IME commit รักษา text box ที่เลือก** (`crates/ui-egui/src/keys.rs`): เข้าสู่ story ของกล่องก่อน `text.insert` เช่นเดียวกับการพิมพ์ปกติ ป้องกัน committed composition แทนที่ body anchor. Regression ตรวจ Japanese preedit/commit, ข้อความในกล่อง, caret และ anchor; ไม่เปลี่ยนรูปแบบไฟล์หรือยืนยัน Windows IME switching จาก synthetic test.
 - **รักษา file-filter glob ในคำแปล** (`crates/ui-egui/src/i18n/{catalog.rs,tests.rs,ig.tsv,rw.tsv,wo.tsv}`): คืน literal patterns 13 รายการ และ reject คำแปลที่เปลี่ยน extension/แทรกช่องว่าง โดย fallback English; รองรับ reorder alternatives และตรวจ Unicode suffix/multi-part extension. เปลี่ยนเฉพาะ label/validation ไม่เปลี่ยน file matching, registry ภาษา หรือ DOCX; เพิ่ม regression และตรวจครบ 68 catalogs.
 - **อธิบาย deferred readiness ตาม prerequisite จริง** (`xtask/src/readiness.rs`, `docs/readiness/deferred-plan.md`): ผู้ใช้สั่งเริ่ม deferred แล้ว แต่คะแนนผ่านยังต้องมี implementation และผลตรวจ ไม่ได้ผ่านอัตโนมัติจากคำสั่ง. เพิ่มแผนรายแถวครบ 22 รายการและแก้ข้อความ generated report สำหรับการวัดรอบถัดไป; คงสูตรคะแนนและไม่แก้รายงาน Windows เดิมด้วยมือ. ตรวจรวม `cargo xtask ci` ผ่านทั้ง 6 ขั้น (fmt, clippy, workspace tests, assets, layers, wasm), UI tests 441/441, xtask 32/32, assets 112/112.
