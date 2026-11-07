@@ -1,6 +1,8 @@
 # Hardware parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (the current branch adds a scale-aware multi-monitor window-geometry comparison and regression tests; physical Windows multi-monitor verification remains deferred) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (the current branch adds a scale-aware multi-monitor window-geometry comparison and regression tests; physical Windows multi-monitor verification remains deferred) · **Target:** Microsoft Word (Microsoft 365) for Windows
+
+Deferred work was explicitly resumed. Native printing, pressure-sensitive ink and scanner/camera acquisition still have implementation gaps in addition to unavailable physical devices; multi-monitor and microphone checks require physical Windows verification. See [the 22-row completion plan](readiness/deferred-plan.md).
 
 Word is not a hardware-heavy app, but a few devices matter to its users: printers above all, then
 pens, microphones (Dictate) and speakers (Read Aloud), and displays.
@@ -23,6 +25,7 @@ pens, microphones (Dictate) and speakers (Read Aloud), and displays.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-07 | minor | Deferred work was explicitly resumed. Native printing, pressure-sensitive ink and scanner/camera acquisition still have implementation gaps in addition to unavailable physical devices; multi-monitor and microphone checks require physical Windows verification. See [the 22-row completion plan](readiness/deferred-plan.md). |
 | 2026-11-06 | minor | Treat monitor dimensions as scale-dependent when comparing restored window geometry; synthetic regression tests cover DPI-only changes. Readiness `hw-003` remains deferred until tested on the owner's multiple-monitor Windows setup. |
 | 2026-10-25 | trivial | Pen / stylus row: Draw tab and Ink to Math; Dictate row: whisper.cpp on the desktop |
 | 2026-10-10 | trivial | Windows falls back to OpenGL when DirectX 12 offers only the software adapter (#316) |

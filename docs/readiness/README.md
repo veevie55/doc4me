@@ -40,7 +40,9 @@ investigation; the generated report remains capped at 40 failures per set.
 - Lists are fixed: rows may be added, and a status may change with evidence, but rows are never
   removed to move the number. A row out of scope stays with `check` = `excluded` and the reason.
 - A row whose check can't be made or met in a development session waits with `status` =
-  `deferred` until the owner asks for it (owner's rule of 2026-10-27): checks only the owner's own
+  `deferred` while its prerequisites or verification are unavailable. The owner originally asked
+  to skip these rows on 2026-10-27 and explicitly resumed them on 2026-11-07. Authorization to
+  work on a row does not itself make that row pass. These include checks only the owner's own
   hardware can make (a printer, pen, microphone, scanner or several monitors), OS input behaviors
   that the application does not own, and Word dialogs for Microsoft services, Windows components or
   another platform (Outlook, Exchange, OLE servers, ActiveX, Mac OS publish and subscribe). A build
@@ -54,6 +56,9 @@ investigation; the generated report remains capped at 40 failures per set.
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the
   owner. Both targets are 100%.
 - The number counts as final once the corpus checks have run on at least 200 documents.
+
+See the active [22-row deferred completion plan](deferred-plan.md) for implementation gaps,
+required platforms/devices/services and passing evidence.
 
 ## Files
 

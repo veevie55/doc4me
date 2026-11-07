@@ -112,6 +112,19 @@ fn malformed_catalog_lines_are_skipped_not_fatal() {
     assert_eq!(c.plain("Open…"), None);
 }
 
+#[test]
+fn catalog_file_filter_patterns_remain_literal() {
+    let (catalog, errors) = Catalog::parse(
+        "\tPage image (*.jpg, *.jpeg)\tImage (*.jpeg, *.jpg)\n\tPlain text (*.txt)\tTexte (*.tekst)\n\tWord document (*.docx)\tDocument (*.doc)\n\tWord XML Document (*.xml)\tDocument XML (* .xml)\n\tText file (*.txt)\tTexte (*.txtа)\n\tArchive (*.tar.gz)\tArchive (*.tar.xz)\n",
+    );
+    assert_eq!(errors.len(), 5, "{errors:?}");
+    assert!(errors.iter().all(|error| error.contains("file-filter patterns differ")));
+    assert_eq!(catalog.plain("Page image (*.jpg, *.jpeg)"), Some("Image (*.jpeg, *.jpg)"));
+    for source in ["Plain text (*.txt)", "Word document (*.docx)", "Word XML Document (*.xml)", "Text file (*.txt)", "Archive (*.tar.gz)"] {
+        assert_eq!(catalog.plain(source), None, "invalid syntax falls back to the English source");
+    }
+}
+
 /// Every bundled catalog parses without errors, and its entries keep the English placeholders.
 #[test]
 fn bundled_catalogs_are_well_formed() {

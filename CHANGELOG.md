@@ -177,6 +177,10 @@
 
 ### แก้ไข
 
+- **IME commit รักษา text box ที่เลือก** (`crates/ui-egui/src/keys.rs`): เข้าสู่ story ของกล่องก่อน `text.insert` เช่นเดียวกับการพิมพ์ปกติ ป้องกัน committed composition แทนที่ body anchor. Regression ตรวจ Japanese preedit/commit, ข้อความในกล่อง, caret และ anchor; ไม่เปลี่ยนรูปแบบไฟล์หรือยืนยัน Windows IME switching จาก synthetic test.
+- **รักษา file-filter glob ในคำแปล** (`crates/ui-egui/src/i18n/{catalog.rs,tests.rs,ig.tsv,rw.tsv,wo.tsv}`): คืน literal patterns 13 รายการ และ reject คำแปลที่เปลี่ยน extension/แทรกช่องว่าง โดย fallback English; รองรับ reorder alternatives และตรวจ Unicode suffix/multi-part extension. เปลี่ยนเฉพาะ label/validation ไม่เปลี่ยน file matching, registry ภาษา หรือ DOCX; เพิ่ม regression และตรวจครบ 68 catalogs.
+- **อธิบาย deferred readiness ตาม prerequisite จริง** (`xtask/src/readiness.rs`, `docs/readiness/deferred-plan.md`): ผู้ใช้สั่งเริ่ม deferred แล้ว แต่คะแนนผ่านยังต้องมี implementation และผลตรวจ ไม่ได้ผ่านอัตโนมัติจากคำสั่ง. เพิ่มแผนรายแถวครบ 22 รายการและแก้ข้อความ generated report สำหรับการวัดรอบถัดไป; คงสูตรคะแนนและไม่แก้รายงาน Windows เดิมด้วยมือ. ตรวจรวม `cargo xtask ci` ผ่านทั้ง 6 ขั้น (fmt, clippy, workspace tests, assets, layers, wasm), UI tests 441/441, xtask 32/32, assets 112/112.
+
 - **ไม่เพิ่มบรรทัดเกิน Word ให้ย่อหน้าว่างที่มี continuous section break** (`crates/layout/src/lib.rs`): section marker ยังอยู่สำหรับ navigation แต่ paragraph mark ที่มองไม่เห็นไม่เลื่อน text flow ซ้ำ. `govuk-005` เปลี่ยนจาก 37 เป็น 36 หน้าใน Linux diagnostic; เทียบครบ 222 เอกสาร ดีขึ้น 1, แย่ลง 0, ไม่เปลี่ยน 221. ตรวจด้วย layout regression และ full Linux corpus; ต้องยืนยัน Windows และ page-boundary words ยังคลาด.
 
 - **ระยะหลังย่อหน้าใน cell ตารางที่ใช้ contextual spacing ถูกลบได้ถูกต้อง** (`crates/layout/src/lib.rs`, regression ใน `crates/layout/src/tests.rs`)

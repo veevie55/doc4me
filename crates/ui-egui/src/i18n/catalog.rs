@@ -2,8 +2,8 @@
 //! The format is PdfCraft's. Most entries are plain (empty context); a few use one of
 //! [`CONTEXTS`] where the same English needs different wording in one place.
 //!
-//! Validation is strict (unknown escapes, unknown `@` contexts, placeholder, ellipsis and plural
-//! form mismatches, duplicates), but a bad line is only skipped and reported: the rest of the
+//! Validation is strict (unknown escapes, unknown `@` contexts, placeholder, ellipsis, file-filter
+//! pattern mismatches, duplicates), but a bad line is only skipped and reported: the rest of the
 //! catalog still loads and the skipped string shows in English. The tests insist the bundled
 //! catalogs have no errors at all.
 
@@ -75,7 +75,30 @@ fn validate(entry: &Entry) -> Result<(), String> {
     if source.ends_with('…') != translation.ends_with('…') {
         return Err("trailing ellipsis differs from the English source".into());
     }
+    if file_globs(source) != file_globs(translation) {
+        return Err("file-filter patterns differ from the English source".into());
+    }
     Ok(())
+}
+
+/// File extensions in filter labels are syntax, even when the surrounding description is translated.
+/// Sorting permits a translator to reorder a filter's alternatives without changing its meaning.
+fn file_globs(text: &str) -> Vec<&str> {
+    let mut patterns: Vec<_> = text
+        .match_indices("*.")
+        .filter_map(|(start, _)| {
+            let tail = text.get(start..)?;
+            let extension = tail.strip_prefix("*.")?;
+            let extension_bytes = extension
+                .chars()
+                .take_while(|c| c.is_alphanumeric() || matches!(c, '.' | '_' | '-' | '?' | '*'))
+                .fold(0usize, |bytes, c| bytes.saturating_add(c.len_utf8()));
+            let end = 2usize.saturating_add(extension_bytes);
+            if end > 2 { tail.get(..end) } else { None }
+        })
+        .collect();
+    patterns.sort_unstable();
+    patterns
 }
 
 fn parse_line(line: &str) -> Result<Entry, String> {

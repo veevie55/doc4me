@@ -9,7 +9,7 @@ committed, current summary. Rules for working in the code are in [`AGENTS.md`](.
 
 ## Layers
 
-216,566 Rust source lines across
+216,629 Rust source lines across
 20 workspace packages (including apps and `xtask`) against the dependency rules:
 a crate may only depend on crates in lower layers, and nothing below L6 depends on egui, eframe,
 winit or rfd.
@@ -54,7 +54,7 @@ winit or rfd.
 
 ## Testing and gates
 
-- 2,069
+- 2,071
   input, `.doc`, formats, typing parity (`engine/src/tests_typing.rs`), bidi, i18n catalogs, UI
   interaction (egui_kittest), MCP acceptance; `hostile_params_never_panic` runs every command with
   junk params.
