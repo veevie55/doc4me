@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (latest official Windows run 42211564189: 175/222 page counts and 97/222 page boundaries; current DOCX alternate-font fallback passes all six CI steps and awaits Windows corpus remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (latest official Windows run 42274814600 measured 174/222 page counts and 96/222 page boundaries, one below the preceding report in each set; font substitution diagnostics collected examples but did not establish a cause or a safe broad fix) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -9,10 +9,16 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 42211564189)
-matches Word's page count for 175/222 documents and every page's first and last word for 97/222.
-The current code can use DOCX `w:altName` fonts when the primary family is unavailable, with
-paragraph, graphic-text and DOCX round-trip regressions; Windows corpus impact is not measured yet.
+most of Word's layout rules; the latest official Windows corpus measurement (run 42274814600,
+source `ed4284d`, report commit `29e6672`) matches Word's page count for 174/222 documents and every
+page's first and last word for 96/222. The current code can use DOCX `w:altName` fonts when the
+primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions. The
+The new aggregate is one pass lower in each pagination check than the preceding report; Windows
+font diagnostics captured substitution examples but did not identify the cause or establish a safe
+broad fix. In run 42274814600, govuk-005 matched the reference 36-page count but failed its page-12
+boundary check with no font substitution reported; the log did not show the differing words. A local
+xtask diagnostic change now prints both PDFs exact first/last-word pairs on a failed page, but has
+not yet been measured on Windows. MS Gothic did not appear in the sampled font-resolution results.
 The `w:gridBefore` and
 `w:gridAfter` row properties preserve omitted table columns; govuk-009 now passes both pagination
 checks. A page break at the start of a table row no longer creates a blank page; govuk-003 now
@@ -87,7 +93,8 @@ still needed.
 
 | Date | Change | Summary |
 |---|---|---|
-| 2026-11-06 | minor | Latest official Windows run 42211564189 matches 175/222 page counts and 97/222 page boundaries. DOCX `w:altName` font substitution passes all six CI steps but awaits a full Windows corpus rerun. |
+| 2026-11-07 | minor | Latest official Windows run 42274814600 on `ed4284d` matches 174/222 page counts and 96/222 page boundaries; each is one below the preceding report. Font diagnostics sampled substitutions but did not identify a cause or safe broad fix. |
+| 2026-11-06 | minor | Previous official Windows run 42211564189 matched 175/222 page counts and 97/222 page boundaries. DOCX `w:altName` font substitution passed all six CI steps before the next corpus run. |
 | 2026-11-01 | minor | Avoid a blank page for a leading page break in a table row; corpus rises to 162/222 page counts while page-boundary checks remain 87/222; govuk-003 page count matches but page boundaries still differ |
 | 2026-11-01 | minor | Preserve omitted row grid columns through DOCX read/write and layout; govuk-009 passes; corpus pagination rises to 161/222 page counts and 87/222 page-break checks |
 | 2026-11-01 | minor | Treat Word's zero-size `w:framePr` marker as page flow, not a floating frame; regression test covers pagination; zenodo-030 improves from 16 to 34 pages (Word: 32), with aggregate checks unchanged at 160/222 and 86/222 |
