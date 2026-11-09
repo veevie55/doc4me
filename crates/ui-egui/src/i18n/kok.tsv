@@ -1,0 +1,3046 @@
+# Konkani (kok) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	फुडल्या उतरा आदीं "a" वा "an"; पोलिश "w"/"we", "z"/"ze".
+	% of all commits	सगळ्या कमिटांचो %
+	(All)	(सगळें)
+	(Custom)	(स्वतःचें)
+	(no style)	(शैली ना)
+	(no suggestions)	(सुचोवण्यो नात)
+	(none)	(कांयच ना)
+	(normal text)	(सादो मजकूर)
+	(not matched)	(जुळ्ळें ना)
+	(picture or object)	(चित्र वा वस्त)
+	*Bold* and _italic_ with real formatting	*दाट* आनी _तिरपें_ खऱ्या रचणुकेसयत
+	0 or More Characters	0 वा चड अक्षरां
+	1. Formatting restrictions	1. रचणूक निर्बंध
+	1. Main document	1. मुखेल दस्तावेज
+	1.5 Line Spacing	1.5 वळ अंतर
+	1/4 Em Space	1/4 Em सुवात
+	1×2 Empty Matrix	1×2 रितें मॅट्रिक्स
+	1×3 Empty Matrix	1×3 रितें मॅट्रिक्स
+	2. Data source	2. डेटा स्रोत
+	2. Editing restrictions	2. संपादन निर्बंध
+	2×1 Empty Matrix	2×1 रितें मॅट्रिक्स
+	2×2 Determinant	2×2 निर्धारक
+	2×2 Empty Matrix	2×2 रितें मॅट्रिक्स
+	2×2 Identity Matrix	2×2 एकक मॅट्रिक्स
+	2×2 Identity Matrix (sparse)	2×2 एकक मॅट्रिक्स (विरळ)
+	2×2 Matrix in Brackets	चौकोनी कंसांतलें 2×2 मॅट्रिक्स
+	2×2 Matrix in Double Bars	दुबाव पट्ट्यांतलें 2×2 मॅट्रिक्स
+	2×2 Matrix in Parentheses	कंसांतलें 2×2 मॅट्रिक्स
+	2×3 Empty Matrix	2×3 रितें मॅट्रिक्स
+	3-D	3-D
+	3. Merge the data with the document	3. डेटा दस्तावेजाकडेन एकठांय करात
+	3. Start enforcement	3. अंमलबजावणी सुरू करात
+	3D Models	3D मॉडेलां
+	3×1 Empty Matrix	3×1 रितें मॅट्रिक्स
+	3×2 Empty Matrix	3×2 रितें मॅट्रिक्स
+	3×3 Empty Matrix	3×3 रितें मॅट्रिक्स
+	3×3 Identity Matrix	3×3 एकक मॅट्रिक्स
+	3×3 Identity Matrix (sparse)	3×3 एकक मॅट्रिक्स (विरळ)
+	5,000 characters a day; give an email address for 50,000.	दिसाक 5,000 अक्षरां; 50,000 खातीर ईमेल पत्तो दियात.
+	<< Less	<< उणें
+	<< Remove	<< काडात
+	A file dialog is already open.	फायल संवाद पयलींच उगतो आसा.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Rust भाशेंत सुरवातीसावन बरयल्लो फुकट, मुक्त-स्रोत वर्ड प्रोसेसर.\nArtCraft पंगडाच्या WordCraft चेर आदारिल्लो.
+	A header source holds the field names for a data source without a header row.	हेडर स्रोतांत हेडर ओळ नाशिल्ल्या डेटा स्रोताचीं फील्ड नांवां आसतात.
+	A mail merge field	मेल मर्ज फील्ड
+	A new document lists the commands with their shortcuts.	नवो दस्तावेज आदेश आनी तांचे शॉर्टकट दाखयता.
+	A numbered sequence (figures, tables…)	क्रमांकित क्रम (आकृती, कोष्टक…)
+	A password is required to open this document.	हो दस्तावेज उगडपाक पासवर्ड जाय.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	विरामचिन्नां आदीं सुवात, दुबाव चिन्नां, संयोजकां आदीं पोलिश स्वल्पविराम.
+	A table of contents	विशयसुची
+	A table's rows keep the same columns here.	हांगा कोष्टकाच्यो ओळी तेच स्तंभ दवरतात.
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	अआइई AaBb
+	AaBbYyZz	अआहळ AaZz
+	About	विशीं
+	About Doc4Me	Doc4Me विशीं
+	Above Chart	चार्टा वयर
+	Above the item	वस्तू वयर
+	Absolute position	निरपेक्ष सुवात
+	Absolute value cases	निरपेक्ष मोल स्थिती
+	Accent	उठाव
+	Accent Gradient	उठाव ग्रेडियंट
+	Accent with Reflection	प्रतिबिंबासयत उठाव
+	Accent {n}	उठाव {n}
+	Accents	उठाव
+	Accept	मान्य करात
+	Accept All	सगळें मान्य करात
+	Accept All Changes	सगळे बदल मान्य करात
+	Accept or Reject Changes	बदल मान्य वा न्हयकारात
+	Accept This Change	हो बदल मान्य करात
+	Accessed on	प्रवेश तारीख
+	Accessibility	सुलभताय
+	Accessibility Pane	सुलभताय फलक
+	Acute	तीव्र स्वराघात
+	Add	जोडात
+	Add >>	जोडात >>
+	Add a comment	टिप्पणी जोडात
+	Add a Table	कोष्टक जोडात
+	Add at least one field.	उण्यांत उणें एक फील्ड जोडात.
+	Add caption when inserting:	घालतना मथळो जोडात:
+	Add Chart Element	चार्ट घटक जोडात
+	Add Field	फील्ड जोडात
+	Add Field Name	फील्ड नांव जोडात
+	Add Font…	फॉन्ट जोडात…
+	Add line numbering	वळ क्रमांकन जोडात
+	Add New Placeholder	नवो प्लेसहोल्डर जोडात
+	Add New Placeholder…	नवो प्लेसहोल्डर जोडात…
+	Add New Source…	नवो स्रोत जोडात…
+	Add Object to Selection	वस्त वेंचणुकेंत जोडात
+	Add Pen	पेन जोडात
+	Add Row	ओळ जोडात
+	Add Series	मालिका जोडात
+	Add Shape	आकार जोडात
+	Add Space Before Paragraph	परिच्छेदा आदीं सुवात जोडात
+	Add space between Asian and Latin text	आशियाई आनी लॅटिन मजकुरामदीं सुवात जोडात
+	Add space between Asian text and numbers	आशियाई मजकूर आनी आंकड्यांमदीं सुवात जोडात
+	Add tab stop at:	टॅब स्टॉप जोडात:
+	Add Text	मजकूर जोडात
+	Add the chapter number	प्रकरण क्रमांक जोडात
+	Add to Dictionary	उतरावळींत जोडात
+	Add to Document	दस्तावेजांत जोडात
+	Add to Quick Access Toolbar	बेगीन प्रवेश टूलबारांत जोडात
+	Add to Style Gallery	शैली गॅलरींत जोडात
+	Add-ins	ॲड-इन
+	Add/Edit\nBibliography	संदर्भसुची\nजोडात/संपादित करात
+	Add/Edit\nCitation	उल्लेख\nजोडात/संपादित करात
+	Add\nNote	टीप\nजोडात
+	Add\nPen	पेन\nजोडात
+	Add\nShape	आकार\nजोडात
+	Added	जोडलें
+	Added Fonts	जोडिल्ले फॉन्ट
+	Address	पत्तो
+	Address Block	पत्तो ब्लॉक
+	Address labels	पत्त्याचीं लेबलां
+	Address:	पत्तो:
+	Address\nBlock	पत्तो\nब्लॉक
+	Adjust	समायोजीत करात
+	Advanced	फुडारिल्लें
+	Advanced Find	फुडारिल्लो सोद
+	Advanced Find…	फुडारिल्लो सोद…
+	After:	उपरांत:
+	Agents	एजंट
+	Align	संरेखीत करात
+	Align Bottom Center	सकयल मदीं संरेखीत करात
+	Align Bottom Left	सकयल दाव्यान संरेखीत करात
+	Align Bottom Right	सकयल उजव्यान संरेखीत करात
+	Align Center	मदीं संरेखीत करात
+	Align Center Left	मदीं दाव्यान संरेखीत करात
+	Align Center Right	मदीं उजव्यान संरेखीत करात
+	Align Left	दाव्यान संरेखीत करात
+	Align Right	उजव्यान संरेखीत करात
+	Align Text	मजकूर संरेखीत करात
+	Align Top Center	वयर मदीं संरेखीत करात
+	Align Top Left	वयर दाव्यान संरेखीत करात
+	Align Top Right	वयर उजव्यान संरेखीत करात
+	Aligned at:	हांगा संरेखीत:
+	Alignment	संरेखन
+	Alignment:	संरेखन:
+	All	सगळें
+	All - Linear	सगळें - रेखीय
+	All - Professional	सगळें - वेवसायीक
+	All Borders	सगळ्यो कडो
+	All Caps	सगळीं व्हड अक्षरां
+	All caps	सगळीं व्हड अक्षरां
+	All Commands	सगळे आदेश
+	All files	सगळ्यो फायली
+	All Levels	सगळे स्तर
+	All Markup	सगळें मार्कअप
+	All pages	सगळीं पानां
+	All pages in the range	व्याप्तींतलीं सगळीं पानां
+	All records	सगळे रेकॉर्ड
+	All symbol sets	सगळे चिन्न संच
+	Allow Doc4Me to use online services	Doc4Me क ऑनलायन सेवा वापरूंक दियात
+	Allow hanging punctuation	लोंबतीं विरामचिन्नां मान्य करात
+	Allow Latin text to wrap in the middle of a word	लॅटिन मजकूर उतराच्या मदीं गुंडाळूंक दियात
+	Allow line breaks	वळ खंड मान्य करात
+	Allow overlap	एकामेकांवयर येवंक दियात
+	Allow row to break across pages	ओळ पानांमदीं फुटूंक दियात
+	Alphabetical	वर्णक्रमान
+	Alt Text	पर्यायी मजकूर
+	Alt text	पर्यायी मजकूर
+	Alt Text Pane	पर्यायी मजकूर फलक
+	Alt:	पर्यायी:
+	Alt\nText	पर्यायी\nमजकूर
+	And	आनी
+	Angle Brackets	कोन कंस
+	Angle Brackets with Separator	विभाजकासयत कोन कंस
+	Angle Brackets with Two Separators	दोन विभाजकांसयत कोन कंस
+	Animate the caret (it glides and fades)	कॅरेट हालचालींत दवरात (तो घसरता आनी फिको जाता)
+	Animation	हालचाल
+	Animation effects:	हालचाल परिणाम:
+	Annotation Reference	भाश्य संदर्भ
+	Annotation Subject	भाश्य विशय
+	Annotation Text	भाश्य मजकूर
+	Another file	दुसरी फायल
+	Any Character	खंयचेंय अक्षर
+	Any Digit	खंयचोय आंकडो
+	Any Letter	खंयचेंय अक्षर
+	Anyone can open this document. Encrypt it with a password to keep it private.	कोणूय हो दस्तावेज उगडूंक शकता. तो खाजगी दवरपाक पासवर्डान एन्क्रिप्ट करात.
+	Anyone who opens the document will need this password.	दस्तावेज उगडपी दरेकल्याक हो पासवर्ड जाय पडटलो.
+	APA	APA
+	API key (if the server needs one)	API कळ (सर्वराक जाय जाल्यार)
+	Apply	लागू करात
+	Apply as you type	टायप करतना लागू करात
+	Apply Asian line-breaking rules (kinsoku)	आशियाई वळ-खंड नेम लागू करात (kinsoku)
+	Apply Character Style	अक्षर शैली लागू करात
+	Apply formatting to:	रचणूक हाका लागू करात:
+	Apply special formats to	विशेश रचणुको हाका लागू करात
+	Apply Style	शैली लागू करात
+	Apply Styles	शैली लागू करात
+	Apply to:	हाका लागू करात:
+	Arabic	अरबी
+	Arch Down	सकयल कमान
+	Arch Up	वयर कमान
+	Area	क्षेत्र
+	Around	भोंवतणी
+	Arrange	मांडणी करात
+	Arrange All	सगळें मांडात
+	Arrange\nAll	सगळें\nमांडात
+	Arrow	बाण
+	Arrows	बाण
+	Artistic Effects	कलात्मक परिणाम
+	As Recommended	शिफारशी प्रमाण
+	As you type	टायप करतना
+	ASAP	बेगीनच
+	Ascending	चडत्या क्रमान
+	Asian text font:	आशियाई मजकूर फॉन्ट:
+	Asian Typography	आशियाई टायपोग्राफी
+	Assign	नेमात
+	At least	उण्यांत उणें
+	At least {n}	उण्यांत उणें {n}
+	Atelier	कार्यशाळा
+	Atmosphere	वातावरण
+	Attach Template	टेम्पलेट जोडात
+	Attach…	जोडात…
+	Author	बरोवपी
+	Auto	आपसूक
+	AutoCaption	आपसूक मथळो
+	AutoCaption…	आपसूक मथळो…
+	AutoComplete	आपसूक पूर्ण
+	AutoCorrect	आपसूक सुदारणा
+	AutoCorrect Options	आपसूक सुदारणा पर्याय
+	AutoFit	आपसूक बसय
+	AutoFit Contents	आशया प्रमाण आपसूक बसय
+	AutoFit Window	जनेला प्रमाण आपसूक बसय
+	AutoFormat	आपसूक रचणूक
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	आपसूक रचणूक (Ctrl+Alt+K) वेंचिल्ले परिच्छेद वा पुराय दस्तावेज रचता.
+	AutoFormat and Review Changes…	आपसूक रचणूक करात आनी बदल परतून पळयात…
+	AutoFormat As You Type	टायप करतना आपसूक रचणूक
+	AutoFormat changed {count} paragraphs	आपसूक रचणुकेन {count} परिच्छेद बदलले
+	AutoFormat Now	आतांच आपसूक रचणूक
+	Automatic	आपोआप
+	Automatic ({language})	आपोआप ({language})
+	Automatic bulleted lists	आपोआप बुलेट वळेरी
+	Automatic follows your system's language. Menus and commands change; your documents don't.	आपोआप तुमच्या सिस्टमाच्या भाशेक अनुसरता. मेनू आनी आदेश बदलतात; तुमचे दस्तावेज न्हय.
+	Automatic numbered lists	आपोआप क्रमांकित वळेरी
+	Automatic Table 1 (3 levels)	आपोआप कोष्टक 1 (3 स्तर)
+	Automatic Table 2 (2 levels)	आपोआप कोष्टक 2 (2 स्तर)
+	Automatically hyphenate document	दस्तावेज आपोआप हायफनेट करात
+	Automatically Update Document Styles	दस्तावेज शैली आपोआप अद्यतन करात
+	Automatically update document styles	दस्तावेज शैली आपोआप अद्यतन करात
+	AutoSave	आपोआप सांबाळप
+	AutoSave documents you have saved in Doc4Me	Doc4Me त सांबाळिल्ले दस्तावेज आपोआप सांबाळात
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	आपोआप सांबाळप फसलें: {error}. आपोआप सांबाळप परत सुरू करपाक दस्तावेज सांबाळात.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	आपोआप सांबाळप ब्राउझरांत मेळना: तें तुमच्या फायलींनी बरोवंक शकना. सांबाळ केल्यार प्रत डाउनलोड जाता.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	आपोआप सांबाळप फकत .docx, .odt आनी .rtf फायली दवरता; {name} सगळी रचणूक दवरूंक शकना. आपोआप सांबाळप सुरू करपाक .docx म्हूण सांबाळात.
+	AutoSave saves every change to the file (needs a saved document)	आपोआप सांबाळप दरेक बदल फायलींत सांबाळटा (सांबाळिल्लो दस्तावेज जाय)
+	AutoSave writes your changes to the file a moment after you stop typing.	टायप करप थांबयल्या उपरांत थोड्या वेळान आपोआप सांबाळप तुमचे बदल फायलींत बरयता.
+	AutoText	आपसूक मजकूर
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	फाटीं
+	Backspace	Backspace
+	Balloons	फुगे
+	Banded Columns	पट्टेदार स्तंभ
+	Banded Rows	पट्टेदार ओळी
+	Bar	बार
+	Base text:	मूळ मजकूर:
+	Based on: {style}	आदारीत: {style}
+	Baseline Dots	मूळरेखा ठिपके
+	Basic Cycle	मूळ चक्र
+	Basic List	मूळ वळेरी
+	Basic Math	मूळ गणीत
+	Basic Matrix	मूळ मॅट्रिक्स
+	Basic Process	मूळ प्रक्रिया
+	Basic Pyramid	मूळ पिरॅमिड
+	Basic Radial	मूळ त्रिज्य
+	Basic Venn	मूळ वेन
+	Bayes' rule	बेयसाचो नेम
+	Before:	आदीं:
+	Beginning of Word	उतराची सुरवात
+	Behind Text	मजकुरा फाटीं
+	Below text	मजकुरा सकयल
+	Below the item	वस्तू सकयल
+	Between	मदीं
+	Bibliography	संदर्भसुची
+	Binary assets added	बायनरी मालमत्ता जोडल्या
+	Binary assets removed	बायनरी मालमत्ता काडल्या
+	Binomial Coefficient	द्विपद गुणांक
+	Binomial Coefficient (angle)	द्विपद गुणांक (कोन)
+	Binomial Coefficient with Angle Brackets	कोन कंसांसयत द्विपद गुणांक
+	Binomial expansion of (x+a)ⁿ	(x+a)ⁿ चो द्विपद विस्तार
+	Blank	रितें
+	Blank (Three Columns)	रितें (तीन स्तंभ)
+	Blank document	रितो दस्तावेज
+	Blank Page	रितें पान
+	Block\nAuthors	बरोवप्यांक\nआडायात
+	Blue:	निळो:
+	Body Text	मुखेल मजकूर
+	Body text in a short paragraph to show spacing.	अंतर दाखोवपाक ल्हान परिच्छेदांतलो मुखेल मजकूर.
+	Bold	दाट
+	Book	पुस्तक
+	Book Title	पुस्तकाचें शीर्षक
+	Book title	पुस्तकाचें शीर्षक
+	Bookmark	बुकमार्क
+	Bookmark name:	बुकमार्क नांव:
+	Border lines	कडेच्यो रेशा
+	Border Painter	कडो पेंटर
+	Border\nPainter	कडो\nपेंटर
+	Borders	कडो
+	Borders and Shading	कडो आनी सावळी
+	Borders and Shading…	कडो आनी सावळी…
+	Border…	कड…
+	Both Sides	दोनूय वटांनी
+	Both sides	दोनूय वटांनी
+	Bottom	सकयल
+	Bottom Border	सकयली कड
+	Bottom Margin	सकयलो समास
+	Bottom of Page	पानाच्या सकयल
+	Bottom of the Window	जनेलाच्या सकयल
+	Bottom:	सकयल:
+	Box	पेटी
+	Boxed Formula	पेटयेंतलें सूत्र
+	Boxed Formula (example)	पेटयेंतलें सूत्र (उदाहरण)
+	Boxed Formulas	पेटयेंतलीं सुत्रां
+	Braces	महिरपी कंस
+	Braces with Separator	विभाजकासयत महिरपी कंस
+	Bracket	कंस
+	Brackets	कंस
+	Brackets with Separators	विभाजकांसयत कंस
+	Break Link	दुवो मोडात
+	Breaks	खंड
+	Breve	ह्रस्व चिन्न
+	Brightness, contrast and transparency change the picture from how it looks now.	चकचकाट, कॉन्ट्रास्ट आनी पारदर्शकताय चित्र आतांच्या रुपासावन बदलतात.
+	Brightness:	चकचकाट:
+	Bring Forward	मुखार हाडात
+	Browse in Doc4Me…	Doc4Me त ब्राउझ करात…
+	Browse…	ब्राउझ करात…
+	Build table of figures from:	आकृती वळेरी हातूंतल्यान तयार करात:
+	Building Block Gallery Content Control	बिल्डिंग ब्लॉक गॅलरी आशय नियंत्रण
+	Built from the style or table entry fields chosen in Options.	पर्यायांनी वेंचिल्ल्या शैली वा कोष्टक नोंदणी फील्डांतल्यान तयार केल्लें.
+	Built-In	भितरलें
+	Built-in Heading styles	भितरल्यो शीर्षक शैली
+	Built-in style	भितरली शैली
+	Built-in styles can't be deleted.	भितरल्यो शैली काडूंक जायनात.
+	Bullet	बुलेट
+	Bullet Library	बुलेट ग्रंथालय
+	Bullets	बुलेट
+	By author	बरोवप्या प्रमाण
+	By:	वरवीं:
+	Calendar	दिनदर्शिका
+	Can't be deleted	काडूंक जायना
+	Cancel	रद्द करात
+	Canvas Member	कॅनव्हास वांगडी
+	Capitalization	व्हड अक्षरां
+	Capitalize Each Word	दरेक उतराचें पयलें अक्षर व्हड
+	Capitalize first letter of sentences	वाक्यांचें पयलें अक्षर व्हड करात
+	Capitalize first letter of table cells	कोष्टक कक्षांचें पयलें अक्षर व्हड करात
+	Capitalize names of days	दिसांचीं नांवां व्हड अक्षरान
+	Capitalize the first word of a sentence	वाक्याचें पयलें उतर व्हड अक्षरान
+	Caption	मथळो
+	Caption label:	मथळो लेबल:
+	Caption Numbering	मथळो क्रमांकन
+	Caption text	मथळो मजकूर
+	Caption:	मथळो:
+	Captions	मथळे
+	Caret Character	कॅरेट अक्षर
+	Case changes	अक्षर बदल
+	Cases	स्थिती
+	Cases (Three Conditions)	स्थिती (तीन अटी)
+	Cases (Two Conditions)	स्थिती (दोन अटी)
+	Cases and Stacks	स्थिती आनी रास
+	Catalog	कॅटलॉग
+	Categories	वर्ग
+	Categories:	वर्ग:
+	Category	वर्ग
+	Category {n}	वर्ग {n}
+	Category:	वर्ग:
+	Category…	वर्ग…
+	Ceiling	वयलो पूर्णांक
+	Cell	कक्ष
+	Cell Margins	कक्ष समास
+	Cell margins	कक्ष समास
+	Cell Options	कक्ष पर्याय
+	Cell Size	कक्ष आकार
+	Cell\nMargins	कक्ष\nसमास
+	Center	मदीं
+	Centered	मदीं
+	Centered as Group	गट म्हूण मदीं
+	Centimeters	सेंटिमीटर
+	Change	बदलात
+	Change Case	अक्षर बदलात
+	Change Chart Type	चार्ट प्रकार बदलात
+	Change Colors	रंग बदलात
+	Change in y over change in x	x मदल्या बदलाचेर y मदलो बदल
+	Change Layout	मांडणी बदलात
+	Change List Level	वळेरी स्तर बदलात
+	Change Password…	पासवर्ड बदलात…
+	Change Picture	चित्र बदलात
+	Change Picture…	चित्र बदलात…
+	Change Shape	आकार बदलात
+	Change Structure	रचना बदलात
+	Change to Display	प्रदर्शनांत बदलात
+	Change to Inline	ओळींत बदलात
+	Change to Level 1	स्तर 1 त बदलात
+	Change to Level 2	स्तर 2 त बदलात
+	Change to Level 3	स्तर 3 त बदलात
+	Change to Level 4	स्तर 4 त बदलात
+	Change to Level 5	स्तर 5 त बदलात
+	Change to Level 6	स्तर 6 त बदलात
+	Change to Level 7	स्तर 7 त बदलात
+	Change to Level 8	स्तर 8 त बदलात
+	Change to Level 9	स्तर 9 त बदलात
+	Change\nChart Type	चार्ट प्रकार\nबदलात
+	Change\nColors	रंग\nबदलात
+	Changed	बदल्लें
+	Changed lines:	बदल्ल्यो वळी:
+	Changes	बदल
+	Changes with highlighting	हायलायटासयत बदल
+	Changes without highlighting	हायलायट नासतना बदल
+	Chapter in a book	पुस्तकांतलें प्रकरण
+	Chapters begin at:	प्रकरणां हांगासावन सुरू जातात:
+	Character	अक्षर
+	Character Border	अक्षर कड
+	Character code:	अक्षर कोड:
+	Character in Range	व्याप्तींतलें अक्षर
+	Character level	अक्षर स्तर
+	Character Position	अक्षराची सुवात
+	Character Scale	अक्षर प्रमाण
+	Character Shading	अक्षर सावळी
+	Character Spacing	अक्षर अंतर
+	Character spacing	अक्षर अंतर
+	Character style	अक्षर शैली
+	Characters	अक्षरां
+	Characters (no spaces)	अक्षरां (सुवात सोडून)
+	Characters (with spaces)	अक्षरां (सुवातीसयत)
+	Characters per line:	दर वळींत अक्षरां:
+	Chart	चार्ट
+	Chart Design	चार्ट डिझायन
+	Chart Layouts	चार्ट मांडणी
+	Chart Title	चार्ट शीर्षक
+	Check	तपासात
+	Check Accessibility	सुलभताय तपासात
+	Check Box Content Control	चेक बॉक्स आशय नियंत्रण
+	Check Compatibility	सुसंगतताय तपासात
+	Check Errors…	चुको तपासात…
+	Check for Errors	चुकांखातीर तपासात
+	Check Spelling as You Type	टायप करतना शुद्धलेखन तपासात
+	Check spelling as you type	टायप करतना शुद्धलेखन तपासात
+	Check\nAccessibility	सुलभताय\nतपासात
+	Checked styles are allowed:	खूण केल्ल्या शैलींक परवानगी आसा:
+	Checked symbol	खूण केल्लें चिन्न
+	Chevron Down	शेव्हरॉन सकयल
+	Chevron Up	शेव्हरॉन वयर
+	Chicago	Chicago
+	Chinese (Simplified)	चिनी (सोंपी)
+	Chinese (Traditional)	चिनी (पारंपारीक)
+	Choose a command	आदेश वेंचात
+	Choose a shortcut	शॉर्टकट वेंचात
+	Choose List Item	वळेरी वस्त वेंचात
+	Choose the sheet that holds the recipients.	मेळोवप्यांची शीट वेंचात.
+	Circle	वर्तूळ
+	Circle area from its radius	त्रिज्येवयल्यान वर्तुळाचें क्षेत्रफळ
+	Circled Dot	वर्तुळांतलो ठिपको
+	Circled Plus	वर्तुळांतलें अदीक
+	Circled Times	वर्तुळांतलो गुणाकार
+	Citation marked.	उल्लेख खूण केलो.
+	Citation Style	उल्लेख शैली
+	Citations	उल्लेख
+	Citations & Bibliography	उल्लेख आनी संदर्भसुची
+	City	शार
+	Clear	साफ करात
+	Clear All	सगळें साफ करात
+	Clear All Formatting	सगळी रचणूक साफ करात
+	Clear Character Formatting	अक्षर रचणूक साफ करात
+	Clear Character Style	अक्षर शैली साफ करात
+	Clear Formatting Level	रचणूक स्तर साफ करात
+	Clear Paragraph Formatting	परिच्छेद रचणूक साफ करात
+	Click a border between two cells to merge them. Esc stops.	दोन कक्षांमदल्या कडेचेर क्लिक करून ते एकठांय करात. Esc थांबयता.
+	Click an item to paste it.	चिकटावंक वस्तूचेर क्लिक करात.
+	Click level to modify:	बदलपाक स्तराचेर क्लिक करात:
+	Click the empty text box the text should continue in (Esc cancels)	मजकूर फुडें वचपाक जाय त्या रित्या मजकूर पेटयेचेर क्लिक करात (Esc रद्द करता)
+	Click to switch back to inserting	घालपाक परत वचपाक क्लिक करात
+	Clipboard	क्लिपबोर्ड
+	Clipboard Contents	क्लिपबोर्ड आशय
+	Clipboard Items	क्लिपबोर्ड वस्ती
+	Clipboard Pane	क्लिपबोर्ड फलक
+	Close	बंद करात
+	Close Equation	समीकरण बंद करात
+	Close Header and Footer	शीर्शलेख आनी तळटीप बंद करात
+	Close Outline View	रूपरेखा दृश्य बंद करात
+	Close Outline\nView	रूपरेखा दृश्य\nबंद करात
+	Close Reviewing Pane	परिक्षण फलक बंद करात
+	Clustered Bar	गटवारी बार
+	Clustered Column	गटवारी स्तंभ
+	Col #:	स्तंभ #:
+	Collapse	मिटयात
+	Collapse Selection	वेंचणूक मिटयात
+	Collapse the Ribbon	रिबन मिटयात
+	Collate copies	प्रती क्रमान
+	Collect entries from:	नोंदी हातूंतल्यान एकठांय करात:
+	Colon Equal	अपूर्णविराम बरोबर
+	Color	रंग
+	Color model:	रंग मॉडेल:
+	Color only	फकत रंग
+	Color:	रंग:
+	Color: {color}	रंग: {color}
+	Colorful	रंगीत
+	Colors	रंग
+	Colors:	रंग:
+	Column	स्तंभ
+	Column Break	स्तंभ खंड
+	Column Selection	स्तंभ वेंचणूक
+	Column selection: the arrow keys extend the block, Esc ends it	स्तंभ वेंचणूक: बाण कळो ब्लॉक वाडयतात, Esc सोंपयता
+	Column width	स्तंभ रुंदाय
+	Column:	स्तंभ:
+	Columns	स्तंभ
+	Columns:	स्तंभ:
+	Combine	एकठांय करात
+	Combine Documents	दस्तावेज एकठांय करात
+	Combo Box Content Control	कॉम्बो बॉक्स आशय नियंत्रण
+	Commands	आदेश
+	Commands:	आदेश:
+	Comment	टिप्पणी
+	Comments	टिप्पण्यो
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	PDF, छापणी आनी प्रतिमांनी दरेक पाना कुशीक टिप्पण्यो आनी मागोवा घेतिल्ले बदल; वेब पानां, Markdown आनी मजकुराच्या शेवटाक टिप्पणी वळेरी.
+	Comments on version	आवृत्तीचेर टिप्पण्यो
+	Comments Pane	टिप्पणी फलक
+	Commits	कमिट
+	Common Accent Objects	सामान्य उठाव वस्ती
+	Common Brackets	सामान्य कंस
+	Common Fractions	सामान्य अपूर्णांक
+	Common Functions	सामान्य फलनां
+	Common Large Operators	सामान्य व्हड ऑपरेटर
+	Common Operator Structures	सामान्य ऑपरेटर रचना
+	Common Operators	सामान्य ऑपरेटर
+	Common Radicals	सामान्य मूळ
+	Common Subscripts and Superscripts	सामान्य अधोलेख आनी उर्ध्वलेख
+	Communication	संवाद
+	Compact	ल्हान
+	Company	कंपनी
+	Compare	तुळा करात
+	Compare Documents	दस्तावेजांची तुळा करात
+	Compare to	हाचे कडेन तुळा करात
+	Compared: {changes} changes	तुळा केली: {changes} बदल
+	Comparing with another file needs the desktop app.	दुसऱ्या फायलीकडेन तुळा करपाक डेस्कटॉप ॲप जाय.
+	Comparison	तुळा
+	Comparison settings	तुळा सेटिंग्ज
+	Compatibility mode: {version}	सुसंगतताय मोड: {version}
+	Compatibility Options	सुसंगतताय पर्याय
+	Compatibility Options…	सुसंगतताय पर्याय…
+	Compress Pictures	चित्रां आकुंचीत करात
+	Compress punctuation at the start of a line	वळीच्या सुरवेक विरामचिन्नां आकुंचीत करात
+	Condensed	आकुंचीत
+	Conference	परिशद
+	Conference paper	परिशद लेख
+	CONFIDENTIAL	गुपीत
+	Confirm password:	पासवर्डाची पुष्टी करात:
+	Connect Shapes	आकार जोडात
+	Constitutional Provisions	घटनात्मक तरतुदी
+	Container Title	कंटेनर शीर्षक
+	Contains	आसा
+	Content Control at Selection	वेंचणुकेचेर आशय नियंत्रण
+	Content Control Properties	आशय नियंत्रण गुणधर्म
+	Contents can't be edited	आशय संपादित करूंक जायना
+	Context	संदर्भ
+	Contextual	संदर्भीत
+	Continuous	सतत
+	Continuous numbering	सतत क्रमांकन
+	Contour Integral	समोच्च संकलन
+	Contour Integral with Limits	मर्यादांसयत समोच्च संकलन
+	Contour Integral with Stacked Limits	रासलेल्या मर्यादांसयत समोच्च संकलन
+	Contour Integrals	समोच्च संकलनां
+	Contrast:	कॉन्ट्रास्ट:
+	Contributors	योगदानकर्ते
+	Controls	नियंत्रणां
+	Conversions	रुपांतरणां
+	Convert	रुपांतर करात
+	Convert between built-up and linear form	रचिल्ल्या आनी रेखीय रुपांमदीं रुपांतर करात
+	Convert Notes	टिपो रुपांतर करात
+	Convert Permanently	कायमचें रुपांतर करात
+	Convert Text to Table	मजकूर कोष्टकांत रुपांतर करात
+	Convert Text to Table…	मजकूर कोष्टकांत रुपांतर करात…
+	Convert to Arabic Digits	अरबी आंकड्यांत रुपांतर करात
+	Convert to Shapes	आकारांत रुपांतर करात
+	Convert to Text	मजकुरांत रुपांतर करात
+	Convert to Thai Digits	थाय आंकड्यांत रुपांतर करात
+	Copies	प्रती
+	Coproduct	सहगुणाकार
+	Coproduct with Limits	मर्यादांसयत सहगुणाकार
+	Coproduct with Lower Limit	सकयल्या मर्यादेसयत सहगुणाकार
+	Coproduct with Subscript-Superscript Limits	अधोलेख-उर्ध्वलेख मर्यादांसयत सहगुणाकार
+	Copy	प्रत करात
+	Copy Formatting	रचणूक प्रत करात
+	Copy of the text a bookmark marks	बुकमार्कान खूण केल्ल्या मजकुराची प्रत
+	Copy Styles	शैली प्रत करात
+	Copy Text	मजकूर प्रत करात
+	Copy to where?	खंय प्रत करची?
+	Copyright	कॉपीराइट
+	Copyright Sign	कॉपीराइट चिन्न
+	Corrections	सुदारणा
+	Cosecant Function	कोसेकंट फलन
+	Cosine 2x	कोसायन 2x
+	Cosine Function	कोसायन फलन
+	Cotangent Function	कोटॅन्जंट फलन
+	Couldn't add {name}: {reason}	{name} जोडूंक जालें ना: {reason}
+	Couldn't download the picture: {reason}	चित्र डाउनलोड जालें ना: {reason}
+	Couldn't download {name}: {error}	{name} डाउनलोड जालें ना: {error}
+	Couldn't get the add-in list: {reason}	ॲड-इन वळेरी मेळूंक ना: {reason}
+	Couldn't make Doc4Me the default: {error}	Doc4Me डिफॉल्ट करूंक जालें ना: {error}
+	Couldn't open {path}: {error}	{path} उगडूंक जालें ना: {error}
+	Couldn't search: {reason}	सोद जालो ना: {reason}
+	Couldn't translate: {reason}	अणकार जालो ना: {reason}
+	Count by:	हाचे प्रमाण मेजात:
+	Count words in text boxes and notes	मजकूर पेटयो आनी टिपांतलीं उतरां मेजात
+	Country	देश
+	Courtesy Title	आदराची उपाधी
+	Cover Page	मुखपान
+	Craft	हस्तकला
+	Create	तयार करात
+	Create a Style	शैली तयार करात
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	तुमच्या दस्तावेजाची संवादी रूपरेखा तयार करात.\n\nतुमी खंय आसात तें खबर आसपाक वा आशय बेगीन हालोवपाक हो बरो मार्ग.\n\nसुरवात करपाक घर टॅबाचेर वचात आनी दस्तावेजांतल्या शीर्षकांक शीर्षक शैली लागू करात.
+	Create Data Source…	डेटा स्रोत तयार करात…
+	Create Graphic	ग्राफिक तयार करात
+	Create Header Source	हेडर स्रोत तयार करात
+	Create Link	दुवो तयार करात
+	Create New Style	नवी शैली तयार करात
+	Create Source	स्रोत तयार करात
+	Create…	तयार करात…
+	Crop	कातरात
+	Cross-reference	उलटो संदर्भ
+	Cross-reference:	उलटो संदर्भ:
+	Cube Root	घनमूळ
+	Current	सद्याचें
+	Current - Linear	सद्याचें - रेखीय
+	Current - Professional	सद्याचें - वेवसायीक
+	Current keyboard settings	सद्याची कीबोर्ड सेटिंग्ज
+	Current page	सद्याचें पान
+	Current Position	सद्याची सुवात
+	Current record	सद्याचो रेकॉर्ड
+	Current style: {style}	सद्याची शैली: {style}
+	Curved Arrow Connector	वळणदार बाण जोडणी
+	Curved Connector	वळणदार जोडणी
+	Custom	स्वतःचें
+	Custom dictionary	स्वतःची उतरावळ
+	Custom Margins…	स्वतःचे समास…
+	Custom mark:	स्वतःचें चिन्न:
+	Custom range	स्वतःची व्याप्ती
+	Custom Table of Contents	स्वतःची विशयसुची
+	Custom Table of Contents…	स्वतःची विशयसुची…
+	Custom Watermark	स्वतःचें वॉटरमार्क
+	Custom Watermark…	स्वतःचें वॉटरमार्क…
+	Customize	सानुकूल करात
+	Customize Keyboard	कीबोर्ड सानुकूल करात
+	Customize Quick Access Toolbar	बेगीन प्रवेश टूलबार सानुकूल करात
+	Customize Quick Access Toolbar…	बेगीन प्रवेश टूलबार सानुकूल करात…
+	Customize Ribbon	रिबन सानुकूल करात
+	Customize the Ribbon…	रिबन सानुकूल करात…
+	Customize…	सानुकूल करात…
+	Cut	कातरात
+	Cut, copy, and paste	कातरप, प्रत आनी चिकटावप
+	Cycle	चक्र
+	Czech	चेक
+	Danish	डॅनिश
+	Dark	काळखी
+	Dark Mode	काळखी मोड
+	Dark page (white text on black)	काळखें पान (काळ्याचेर धवो मजकूर)
+	Dark with Shadow	सावळेसयत काळखी
+	Darkroom	काळखी कूड
+	Dashed	डॅश केल्लें
+	Data	डेटा
+	Data Labels	डेटा लेबलां
+	Data source:	डेटा स्रोत:
+	Date	तारीख
+	Date & Time	तारीख आनी वेळ
+	Date and Time	तारीख आनी वेळ
+	Date format	तारीख रचणूक
+	Date formats:	तारीख रचणुको:
+	Date Picker Content Control	तारीख वेंचणी आशय नियंत्रण
+	Day	दीस
+	Decimal	दशांश
+	Decorative objects only add visual interest: screen readers skip them.	सजावटी वस्ती फकत दिसपाची बरेपण वाडयतात: स्क्रीन रीडर तांकां सोडटात.
+	Decrease Font Size	फॉन्ट आकार उणो करात
+	Decrease Indent	इंडेंट उणो करात
+	Default	डिफॉल्ट
+	Default Paragraph Font	डिफॉल्ट परिच्छेद फॉन्ट
+	Default tab stops:	डिफॉल्ट टॅब स्टॉप:
+	Define New Bullet	नवो बुलेट थारायात
+	Define New Multilevel List	नवी बहुस्तरीय वळेरी थारायात
+	Define New Multilevel List…	नवी बहुस्तरीय वळेरी थारायात…
+	Define New Number Format	नवी आंकडो रचणूक थारायात
+	Deflate	आकुंचीत करात
+	Delete	काडात
+	Delete Back in Equation	समीकरणांत फाटीं काडात
+	Delete Cells	कक्ष काडात
+	Delete Clipboard Item	क्लिपबोर्ड वस्त काडात
+	Delete Columns	स्तंभ काडात
+	Delete Comment	टिप्पणी काडात
+	Delete in Equation	समीकरणांत काडात
+	Delete Label	लेबल काडात
+	Delete Next Word	फुडलें उतर काडात
+	Delete Previous Word	फाटलें उतर काडात
+	Delete Rows	ओळी काडात
+	Delete Selected Ink	वेंचिल्ली शाय काडात
+	Delete Style	शैली काडात
+	Delete Table	कोष्टक काडात
+	Delete Table Style	कोष्टक शैली काडात
+	Deleted	काडलें
+	Deletions:	काडणी:
+	Delivery address:	पावोवपाचो पत्तो:
+	Delta Equal To	डेल्टा बरोबर
+	Delta over arrow	बाणा वयर डेल्टा
+	Demote	स्तर सकयल करात
+	Demote to Body Text	मुखेल मजकुरा मेरेन सकयल करात
+	Derivative as a limit	मर्यादा म्हूण व्युत्पन्न
+	Descending	देंवत्या क्रमान
+	Describe what this object shows, for people who can't see it.	जे पळोवंक शकनात तांचेखातीर ही वस्त कितें दाखयता तें सांगात.
+	Describe what this table shows, for people who can't see it.	जे पळोवंक शकनात तांचेखातीर हें कोष्टक कितें दाखयता तें सांगात.
+	Description:	वर्णन:
+	Design	डिझायन
+	Design Mode	डिझायन मोड
+	Detach Template	टेम्पलेट वेगळें करात
+	Detect language automatically	भास आपोआप वळखात
+	Developer	विकसक
+	development build	विकास बिल्ड
+	Diagonal	कर्ण
+	Diagonal Dots	कर्ण ठिपके
+	Diamond	हिरो
+	Dictate	सांगून बरोवप
+	Dictation isn't available here.	सांगून बरोवप हांगा मेळना.
+	Dictation stopped.	सांगून बरोवप थांबलें.
+	Dictation stopped: {reason}	सांगून बरोवप थांबलें: {reason}
+	Different First Page	वेगळें पयलें पान
+	Different Odd & Even Pages	वेगळीं विशम आनी सम पानां
+	Differential	अवकलन
+	Differential theta	अवकलन थीटा
+	Differential x	अवकलन x
+	Differential y	अवकलन y
+	Differentials	अवकलनां
+	Direct formatting	थेट रचणूक
+	Direction:	दिशा:
+	Directory	सुची
+	Display	दाखोवप
+	Display for Review	परिक्षणाखातीर दाखयात
+	Display gridlines on screen	स्क्रीनाचेर ग्रिडलायन दाखयात
+	Display name	दाखोवपाचें नांव
+	Display text	दाखोवपाचो मजकूर
+	Distance from surrounding text	भोंवतणच्या मजकुरासावन अंतर
+	Distribute Columns	स्तंभ समान वांटात
+	Distribute letters	अक्षरां वांटात
+	Distribute Rows	ओळी समान वांटात
+	Distribute spacing	अंतर वांटात
+	Distributed	वांटिल्लें
+	Do Not Check Spelling or Grammar	शुद्धलेखन वा व्याकरण तपासूं नाकात
+	Do not check spelling or grammar	शुद्धलेखन वा व्याकरण तपासूं नाकात
+	DO NOT COPY	प्रत करूं नाकात
+	Do Not Show in TOC	विशयसुचींत दाखोवंक नाकात
+	Do you want to save changes to {name}?	{name} मदले बदल सांबाळपाक जाय?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me ॲड-इन हे Doc4Me च्या ॲड-इन कॅटलॉगांतले मॅक्रोचे फुकट पॅक. ते फकत दस्तावेज संपादित करूंक शकतात.
+	Doc4Me is now the default app for Word documents.	Doc4Me आतां Word दस्तावेजांखातीर डिफॉल्ट ॲप.
+	Document	दस्तावेज
+	Document End	दस्तावेजाचो शेवट
+	Document Formatting	दस्तावेज रचणूक
+	Document Grid	दस्तावेज ग्रिड
+	Document Information	दस्तावेज माहिती
+	Document Property	दस्तावेज गुणधर्म
+	Document Start	दस्तावेजाची सुरवात
+	Document template:	दस्तावेज टेम्पलेट:
+	Document Text	दस्तावेज मजकूर
+	Document Title	दस्तावेज शीर्षक
+	Document1	दस्तावेज1
+	Document\nPreferences	दस्तावेज\nप्राधान्यां
+	Documents	दस्तावेज
+	Documents you open will show up here.	तुमी उगडिल्ले दस्तावेज हांगा दिसतले.
+	Does not contain	ना
+	DOI	DOI
+	Don't add space between paragraphs of the same style	एकाच शैलीच्या परिच्छेदांमदीं सुवात जोडूं नाकात
+	Don't capitalize after:	हाचे उपरांत व्हड अक्षर करूं नाकात:
+	Don't hyphenate	हायफनेट करूं नाकात
+	Don't print blank lines when data fields are empty	डेटा फील्ड रितीं आसतना रित्यो वळी छापूं नाकात
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Zotero, Mendeley वा EndNote उल्लेख आनी संदर्भसुची वाचूं नाकात
+	Don't Save	सांबाळूं नाकात
+	Don't use HTML paragraph auto spacing	HTML परिच्छेद आपोआप अंतर वापरूं नाकात
+	Dot	ठिपको
+	Dot dash	ठिपको डॅश
+	Dot-dash	ठिपको-डॅश
+	Dots	ठिपके
+	Dotted	ठिपक्यांचें
+	Double	दुबाव
+	Double Bar	दुबाव पट्टी
+	Double Closing Quote	दुबाव बंद उद्धरण चिन्न
+	Double Dot	दुबाव ठिपको
+	Double Integral	दुबाव संकलन
+	Double Integral with Limits	मर्यादांसयत दुबाव संकलन
+	Double Integral with Stacked Limits	रासलेल्या मर्यादांसयत दुबाव संकलन
+	Double Left Arrow with Text Above	वयर मजकुरासयत दुबाव दावो बाण
+	Double Left Arrow with Text Below	सकयल मजकुरासयत दुबाव दावो बाण
+	Double Left Right Arrow with Text Above	वयर मजकुरासयत दुबाव दावो-उजवो बाण
+	Double Left Right Arrow with Text Below	सकयल मजकुरासयत दुबाव दावो-उजवो बाण
+	Double Opening Quote	दुबाव उगडें उद्धरण चिन्न
+	Double Right Arrow with Text Above	वयर मजकुरासयत दुबाव उजवो बाण
+	Double Right Arrow with Text Below	सकयल मजकुरासयत दुबाव उजवो बाण
+	Double Spacing	दुबाव अंतर
+	Double Square Brackets	दुबाव चौकोनी कंस
+	Double Strikethrough	दुबाव काटरेखा
+	Double strikethrough	दुबाव काटरेखा
+	Double summation	दुबाव बेरीज
+	Double Underline	दुबाव अधोरेखा
+	Double Vertical Bars	दुबाव उब्यो पट्ट्यो
+	Doughnut	डोनट
+	Down	सकयल
+	Downloading the speech model ({mb} MB, once)…	उलोवपाचें मॉडेल डाउनलोड जाता ({mb} MB, एकदांच)…
+	Downloading…	डाउनलोड जाता…
+	DRAFT	मसुदो
+	Draft	मसुदो
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	कोष्टक काडपाक आयत ओडात, वा कक्ष विभागपाक तांचेर रेशा ओडात. Esc थांबयता.
+	Draw	काडात
+	Draw Ink	शायेन काडात
+	Draw Table	कोष्टक काडात
+	Draw\nTable	कोष्टक\nकाडात
+	Drawing Canvas	चित्र कॅनव्हास
+	Drawing Grid	चित्र ग्रिड
+	Drawing Tools	चित्र साधनां
+	Drawing\nCanvas	चित्र\nकॅनव्हास
+	Drop Cap	ड्रॉप कॅप
+	Drop cap	ड्रॉप कॅप
+	Drop-Down List Content Control	ड्रॉप-डाउन वळेरी आशय नियंत्रण
+	Drops all formatting and pastes plain text.	सगळी रचणूक काडून सादो मजकूर चिकटायता.
+	Dutch	डच
+	E-mail Messages	ई-मेल संदेश
+	Edit Category	वर्ग संपादित करात
+	Edit Comment	टिप्पणी संपादित करात
+	Edit Data	डेटा संपादित करात
+	Edit Document	दस्तावेज संपादित करात
+	Edit Equation	समीकरण संपादित करात
+	Edit Field Code	फील्ड कोड संपादित करात
+	Edit Field…	फील्ड संपादित करात…
+	Edit Footer	तळटीप संपादित करात
+	Edit Header	शीर्शलेख संपादित करात
+	Edit Individual Documents…	वेगवेगळे दस्तावेज संपादित करात…
+	Edit Items	वस्ती संपादित करात
+	Edit Recipient List	मेळोवप्यांची वळेरी संपादित करात
+	Edit Source	स्रोत संपादित करात
+	Edit\nData	डेटा\nसंपादित करात
+	Edit\nRecipient List	मेळोवप्यांची वळेरी\nसंपादित करात
+	Edited	संपादित
+	Editing	संपादन
+	Editing header/footer	शीर्शलेख/तळटीप संपादन
+	Editing in this document is restricted.	ह्या दस्तावेजांत संपादनाचेर निर्बंध आसात.
+	Editing — edit the document directly	संपादन — दस्तावेज थेट संपादित करात
+	Edition	आवृत्ती
+	Editor	संपादक
+	Edit…	संपादित करात…
+	Effects	परिणाम
+	Elbow Arrow Connector	कोंपर बाण जोडणी
+	Elbow Connector	कोंपर जोडणी
+	Ellipsis	लोपचिन्न
+	Em Dash	Em डॅश
+	Em Space	Em सुवात
+	Email address (optional)	ईमेल पत्तो (पर्यायी)
+	Emboss	उठाव
+	Emphasis	भर
+	Empty Matrices	रितीं मॅट्रिक्सां
+	En Dash	En डॅश
+	En Space	En सुवात
+	Enclose Characters	अक्षरां घेरात
+	Enclosure	घेर
+	Encrypt with Password	पासवर्डान एन्क्रिप्ट करात
+	Encrypt with Password…	पासवर्डान एन्क्रिप्ट करात…
+	End of document	दस्तावेजाचो शेवट
+	End of section	विभागाचो शेवट
+	End of Word	उतराचो शेवट
+	Endnote Reference	अंत्यटीप संदर्भ
+	Endnote Text	अंत्यटीप मजकूर
+	Endnotes	अंत्यटिपो
+	Endnotes to footnotes	अंत्यटिपो तळटिपांत
+	English	इंग्लीश
+	English (United Kingdom)	इंग्लीश (युनायटेड किंगडम)
+	English (United States)	इंग्लीश (अमेरिका)
+	Engrave	खोदीव
+	Enlarge symbol	चिन्न व्हड करात
+	Enter formatting for number:	आंकड्याखातीर रचणूक घालात:
+	Enter in Equation	समीकरणांत Enter
+	Enter page number:	पान क्रमांक घालात:
+	Enter the web address or embed code of an online video:	ऑनलायन व्हिडिओचो वेब पत्तो वा एम्बेड कोड घालात:
+	Entry marked.	नोंद खूण केली.
+	Entry:	नोंद:
+	Envelope #10   4.12" × 9.50"	लिफाफो #10   4.12" × 9.50"
+	Envelope Address	लिफाफो पत्तो
+	Envelope DL   4.33" × 8.66"	लिफाफो DL   4.33" × 8.66"
+	Envelope Return	लिफाफो परतीचो पत्तो
+	Envelope size:	लिफाफो आकार:
+	Envelopes	लिफाफे
+	Equal by Definition	व्याख्येन बरोबर
+	Equal column width	समान स्तंभ रुंदाय
+	Equal Equal	बरोबर बरोबर
+	Equal to	बरोबर
+	Equals:	बरोबर:
+	Equation	समीकरण
+	Equation Gallery	समीकरण गॅलरी
+	Equation Info	समीकरण माहिती
+	Equation Number	समीकरण क्रमांक
+	Equation Options	समीकरण पर्याय
+	Erase Ink	शाय पुसात
+	Eraser	पुसणी
+	Errors ({n})	चुको ({n})
+	Estonian	एस्टोनियन
+	Euler's identity	ऑयलराची समानता
+	Even Page	सम पान
+	Even pages only	फकत सम पानां
+	Every change is recorded as a tracked change.	दरेक बदल मागोवा घेतिल्लो बदल म्हूण नोंद जाता.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	दरेक आदेश स्क्रिप्ट आनी AI एजंटांक मेळटा: MCP सर्वराखातीर `doc4me-cli mcp` चलयात, वा JSON नियंत्रण चॅनलाखातीर ॲप `--control <port>` वांगडा सुरू करात.
+	Every field needs a name.	दरेक फील्डाक नांव जाय.
+	Every font this document uses is installed.	हो दस्तावेज वापरता ते सगळे फॉन्ट बसयल्ले आसात.
+	Everyone	सगळे
+	Exactly	नेमकें
+	Exactly {n}	नेमकें {n}
+	Example: {sample}	उदाहरण: {sample}
+	Exceptions (optional)	अपवाद (पर्यायी)
+	Exceptions…	अपवाद…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	भायर सरात
+	Expand	विस्तारीत करात
+	Expand or Collapse Heading	शीर्षक विस्तारीत वा मिटयात
+	Expanded	विस्तारीत
+	Exponential	घातांकी
+	Exponential series	घातांकी श्रेणी
+	Export	निर्यात करात
+	Export a copy to share (PDF, Word document)	वांटपाक प्रत निर्यात करात (PDF, Word दस्तावेज)
+	Export Page as JPEG	पान JPEG म्हूण निर्यात करात
+	Export Page as PNG	पान PNG म्हूण निर्यात करात
+	Export PDF	PDF निर्यात करात
+	Exported {path}	निर्यात केलें {path}
+	Expression	पदावळ
+	Extend Selection	वेंचणूक वाडयात
+	Extend Selection by Units	एककां प्रमाण वेंचणूक वाडयात
+	Extra space	चड सुवात
+	Extra spaces between words.	उतरांमदीं चड सुवात.
+	Field	फील्ड
+	Field Click	फील्ड क्लिक
+	Field code:	फील्ड कोड:
+	Field Codes	फील्ड कोड
+	Field codes:	फील्ड कोड:
+	Field name	फील्ड नांव
+	Field name:	फील्ड नांव:
+	Field names must be different.	फील्ड नांवां वेगवेगळीं आसूंक जाय.
+	Field names:	फील्ड नांवां:
+	Field properties	फील्ड गुणधर्म
+	Field:	फील्ड:
+	Fields	फील्डां
+	Fields to insert:	घालपाचीं फील्डां:
+	Fields:	फील्डां:
+	Field…	फील्ड…
+	Figure	आकृती
+	File	फायल
+	File name:	फायल नांव:
+	Fill	भरप
+	Fill & Line	भरप आनी रेशा
+	Fill color:	भरपाचो रंग:
+	Fill:	भरप:
+	Filling in forms	फॉर्म भरप
+	Film	फिल्म
+	Filter and Sort	गाळणी आनी क्रम
+	Filter and Sort…	गाळणी आनी क्रम…
+	Filter Records	रेकॉर्ड गाळात
+	Find	सोदात
+	Find and Replace	सोदात आनी बदलात
+	Find Next	फुडलें सोदात
+	Find Next Editable Region	फुडलें संपादनायोग्य क्षेत्र सोदात
+	Find Previous	फाटलें सोदात
+	Find Recipient	मेळोवपी सोदात
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	सोद फुडलो बदल्लो परिच्छेद वेंचता; न्हयकार वेंचिल्ल्याक आदलें स्थितींत हाडटा.
+	Find What Expression	सोदपाची पदावळ
+	Find What Text	सोदपाचो मजकूर
+	Find what:	कितें सोदचें:
+	Find →	सोदात →
+	Find:	सोदात:
+	Finish	सोंपयात
+	Finish & Merge	सोंपयात आनी एकठांय करात
+	Finish &\nMerge	सोंपयात आनी\nएकठांय करात
+	Finished	सोंपलें
+	Finnish	फिनिश
+	First	पयलें
+	First Cell in Column	स्तंभांतलो पयलो कक्ष
+	First Cell in Row	ओळींतलो पयलो कक्ष
+	First Column	पयलो स्तंभ
+	First commit	पयलें कमिट
+	First line	पयली वळ
+	First line:	पयली वळ:
+	First Name	पयलें नांव
+	First row of data contains column headers	डेटाच्या पयल्या ओळींत स्तंभ शीर्षकां आसात
+	Fit	बसयात
+	Fit text	मजकूर बसयात
+	Fix Position on Page	पानाचेर सुवात थीर करात
+	Fixed Column Width	थीर स्तंभ रुंदाय
+	Flip Horizontal	आडवें उलटें करात
+	Flip Vertical	उबें उलटें करात
+	Floor	सकयलो पूर्णांक
+	Focus	लक्ष
+	Follow number with:	आंकड्या उपरांत:
+	Font	फॉन्ट
+	Font Color	फॉन्ट रंग
+	Font color	फॉन्ट रंग
+	Font color:	फॉन्ट रंग:
+	Font Dialog	फॉन्ट संवाद
+	Font not installed	फॉन्ट बसयल्लो ना
+	Font Size	फॉन्ट आकार
+	Font Substitution	फॉन्ट बदली
+	Font Substitution…	फॉन्ट बदली…
+	Font:	फॉन्ट:
+	Font: {font}	फॉन्ट: {font}
+	Fonts	फॉन्ट
+	Font…	फॉन्ट…
+	Footer	तळटीप
+	Footnote and Endnote	पानाटीप आनी अंत्यटीप
+	Footnote Reference	पानाटीप संदर्भ
+	Footnote Text	पानाटीप मजकूर
+	Footnotes	पानाटिपो
+	Footnotes and endnotes	पानाटिपो आनी अंत्यटिपो
+	Footnotes to endnotes	पानाटिपो अंत्यटिपांत
+	Form Letters	फॉर्म पत्रां
+	Format	रचणूक
+	Format Page Numbers	पान क्रमांक रचात
+	Format Page Numbers…	पान क्रमांक रचात…
+	Format Painter	रचणूक पेंटर
+	Format Picture	चित्र रचात
+	Format Shape	आकार रचात
+	Format:	रचणूक:
+	Formatted	रचिल्लें
+	Formatted Text	रचिल्लो मजकूर
+	Formatting	रचणूक
+	Formatting at Selection	वेंचणुकेचेर रचणूक
+	Formatting completed. You can now:	रचणूक पुराय जाली. आतां तुमी करूंक शकतात:
+	Formatting exceptions	रचणूक अपवाद
+	Formatting marks	रचणूक चिन्नां
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	रचणूक, अक्षर बदल, सुवात आनी कोष्टकांची तुळा जाता; हेर सेटिंग्ज मागीर खातीर दवरतात.
+	Formula	सूत्र
+	Forward	मुखार
+	Fraction	अपूर्णांक
+	Fractions (1/2) as fraction characters (½)	अपूर्णांक (1/2) अपूर्णांक अक्षरां (½) म्हूण
+	French	फ्रेंच
+	French (France)	फ्रेंच (फ्रान्स)
+	From	धाडपी
+	From text:	मजकुरांतल्यान:
+	from Unicode (hex)	Unicode मदल्यान (hex)
+	From:	धाडपी:
+	Full page of the same label	एकाच लेबलाचें पुराय पान
+	Function	फलन
+	Functions	फलनां
+	Gallery	गॅलरी
+	GB/T 7714	GB/T 7714
+	General	सामान्य
+	Geometry	भूमिती
+	German	जर्मन
+	German (Germany)	जर्मन (जर्मनी)
+	Get Add-ins	ॲड-इन मेळयात
+	Get Data	डेटा मेळयात
+	Get Data…	डेटा मेळयात…
+	Getting ready…	तयारी चालू आसा…
+	Glow	उजवाड
+	Glow Colors	उजवाड रंग
+	Go Back	फाटीं वचात
+	Go To	हांगा वचात
+	Go to	हांगा वचात
+	Go To…	हांगा वचात…
+	Good afternoon	बरो दनपार
+	Good evening	बरी सांज
+	Good morning	बरें सकाळ
+	GOST (name sort)	GOST (नांव क्रम)
+	GOST (title sort)	GOST (शीर्षक क्रम)
+	Grab bag	मिश्र
+	Grammar	व्याकरण
+	Grammar Settings	व्याकरण सेटिंग्ज
+	Graphic	ग्राफिक
+	Grave	मंद स्वराघात
+	Greater than	चड
+	Greater than or equal	चड वा बरोबर
+	Greek	ग्रीक
+	Greek Letters	ग्रीक अक्षरां
+	Green:	पाचवो:
+	Greeting Line	अभिवादन वळ
+	Greeting\nLine	अभिवादन\nवळ
+	Grid Settings	ग्रिड सेटिंग्ज
+	Grid Table 1 Light	ग्रिड कोष्टक 1 फिकें
+	Grid Table 4 – Blue	ग्रिड कोष्टक 4 – निळें
+	Grid Table 4 – Green	ग्रिड कोष्टक 4 – पाचवें
+	Grid Table 4 – Orange	ग्रिड कोष्टक 4 – नारिंगी
+	Grid Table 4 – Purple	ग्रिड कोष्टक 4 – जांबळें
+	Gridlines	ग्रिडलायन
+	Group	गट करात
+	Grouping Character Above	वयर गट अक्षर
+	Grouping Character Below	सकयल गट अक्षर
+	Grow Font 1 Point	फॉन्ट 1 पॉइंट वाडयात
+	H:	उं:
+	Hanging Indent	लोंबतो इंडेंट
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	टोपी
+	Header	शीर्शलेख
+	Header & Footer	शीर्शलेख आनी तळटीप
+	Header Options	शीर्शलेख पर्याय
+	Header Options:	शीर्शलेख पर्याय:
+	Header Row	शीर्शलेख ओळ
+	Header source: {file} (the next data source opened here takes its field names)	हेडर स्रोत: {file} (हांगा उगडटलो फुडलो डेटा स्रोत ताचीं फील्ड नांवां घेता)
+	Header/Footer Position	शीर्शलेख/तळटीप सुवात
+	Headers and footers	शीर्शलेख आनी तळटिपो
+	Heading 1	शीर्षक 1
+	Heading 2	शीर्षक 2
+	Heading 3	शीर्षक 3
+	Heading styles (levels 1–{n})	शीर्षक शैली (स्तर 1–{n})
+	Heading {n}	शीर्षक {n}
+	Headings	शीर्षकां
+	Heart	काळीज
+	Hebrew	हिब्रू
+	Height:	उंचाय:
+	Help	आदार
+	Hex:	Hex:
+	Hidden	लिपिल्लें
+	Hidden text	लिपिल्लो मजकूर
+	Hide Codes	कोड लिपयात
+	Hide from style lists	शैली वळेरींतल्यान लिपयात
+	Hide Ink	शाय लिपयात
+	Hide White Space	रिती सुवात लिपयात
+	Hide\nInk	शाय\nलिपयात
+	Hierarchy	श्रेणीरचना
+	Highlight	हायलायट
+	Highlight Changes	बदल हायलायट करात
+	Highlight changes in printed document	छापिल्ल्या दस्तावेजांत बदल हायलायट करात
+	Highlight changes on screen	स्क्रीनाचेर बदल हायलायट करात
+	Highlight Merge Fields	मर्ज फील्डां हायलायट करात
+	Highlight\nMerge Fields	मर्ज फील्डां\nहायलायट करात
+	Highlighter	हायलायटर
+	Hindi	हिंदी
+	Historical and Discretional	ऐतिहासीक आनी ऐच्छीक
+	Hollow	पोकळ
+	Home	घर
+	Home folder	घर फोल्डर
+	Horizontal	आडवें
+	Horizontal Line	आडवी रेशा
+	Horizontal spacing:	आडवें अंतर:
+	How many pages the whole document has	पुराय दस्तावेजांत कितलीं पानां आसात
+	How many pages this section has	ह्या विभागांत कितलीं पानां आसात
+	How many words the document holds	दस्तावेजांत कितलीं उतरां आसात
+	HTML Format	HTML रचणूक
+	Hue:	रंगछटा:
+	Hungarian	हंगेरियन
+	Hyperbolic Cosecant Function	अतिवलयी कोसेकंट फलन
+	Hyperbolic Cosine Function	अतिवलयी कोसायन फलन
+	Hyperbolic Cotangent Function	अतिवलयी कोटॅन्जंट फलन
+	Hyperbolic Functions	अतिवलयी फलनां
+	Hyperbolic Secant Function	अतिवलयी सेकंट फलन
+	Hyperbolic Sine Function	अतिवलयी सायन फलन
+	Hyperbolic Tangent Function	अतिवलयी टॅन्जंट फलन
+	Hyperlink	हायपरलिंक
+	Hyphenate at:	हांगा हायफनेट करात:
+	Hyphenate words in CAPS	व्हड अक्षरांतलीं उतरां हायफनेट करात
+	Hyphenation	हायफनेशन
+	Hyphenation Options…	हायफनेशन पर्याय…
+	Hyphenation zone:	हायफनेशन क्षेत्र:
+	Hyphens (--) as dashes (—)	हायफन (--) डॅश (—) म्हूण
+	Hypotenuse	कर्ण
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	i, ii, iii, …
+	Icon Color	चिन्न रंग
+	Icons	चिन्नां
+	Identity Matrices	एकक मॅट्रिक्सां
+	IEEE	IEEE
+	If…Then…Else	जर…जाल्यार…ना जाल्यार
+	If…Then…Else…	जर…जाल्यार…ना जाल्यार…
+	Ignore All	सगळें दुर्लक्ष करात
+	Ignore punctuation characters	विरामचिन्न अक्षरांकडे दुर्लक्ष करात
+	Ignore web and file addresses	वेब आनी फायल पत्त्यांकडे दुर्लक्ष करात
+	Ignore white-space characters	रिती सुवात अक्षरांकडे दुर्लक्ष करात
+	Ignore words in capitals	व्हड अक्षरांतल्या उतरांकडे दुर्लक्ष करात
+	Ignore words with numbers	आंकडे आशिल्ल्या उतरांकडे दुर्लक्ष करात
+	Illustrations	चित्रां
+	Immersive	तल्लीन
+	Immersive Reader	तल्लीन वाचक
+	Immersive\nReader	तल्लीन\nवाचक
+	In Default apps, choose Doc4Me for the document types you want it to open.	डिफॉल्ट ॲपांनी, जे दस्तावेज प्रकार Doc4Me न उगडचे ते खातीर Doc4Me वेंचात.
+	In equations, typing a name after a backslash replaces it with its symbol.	समीकरणांनी, बॅकस्लॅश उपरांत नांव टायप केल्यार तें ताच्या चिन्नान बदलता.
+	In Front of Text	मजकुरा मुखार
+	In Line with Text	मजकुराच्या वळींत
+	Inches	इंच
+	Include label and number	लेबल आनी क्रमांक घालात
+	Include level number from:	स्तर क्रमांक हातूंतल्यान घालात:
+	Include page numbers	पान क्रमांक घालात
+	Increase Font Size	फॉन्ट आकार वाडयात
+	Increase Indent	इंडेंट वाडयात
+	Indent	इंडेंट
+	Indent from left:	दाव्यान इंडेंट:
+	Indentation	इंडेंटेशन
+	Indented	इंडेंट केल्लें
+	Indents	इंडेंट
+	Indents and Spacing	इंडेंट आनी अंतर
+	Index	सुची
+	Index and Tables	सुची आनी कोष्टकां
+	Index Heading	सुची शीर्षक
+	Index {n}	सुची {n}
+	Indonesian	इंडोनेशियन
+	Inflate	फुगयात
+	Info	माहिती
+	Initials:	आद्याक्षरां:
+	Ink	शाय
+	Ink Equation	शाय समीकरण
+	Ink Replay	शाय परत खेळ
+	Ink to Math	शायेंतल्यान गणीत
+	Ink to Shape	शायेंतल्यान आकार
+	Ink to\nMath	शायेंतल्यान\nगणीत
+	Ink to\nShape	शायेंतल्यान\nआकार
+	Ink\nReplay	शाय\nपरत खेळ
+	Inline	ओळींत
+	Input Format	इनपुट रचणूक
+	Insert	घालात
+	Insert a 3D model from a file (.glb, .stl, .obj)	फायलींतल्यान 3D मॉडेल घालात (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	नवें समीकरण घालात (Alt+=)
+	Insert Above	वयर घालात
+	Insert Below	सकयल घालात
+	Insert Caption	मथळो घालात
+	Insert Cells	कक्ष घालात
+	Insert Chart	चार्ट घालात
+	Insert Citation	उल्लेख घालात
+	Insert Columns to the Left	दाव्यान स्तंभ घालात
+	Insert Columns to the Right	उजव्यान स्तंभ घालात
+	Insert Data	डेटा घालात
+	Insert Database	डेटाबेस घालात
+	Insert Database…	डेटाबेस घालात…
+	Insert Date Field	तारीख फील्ड घालात
+	Insert Endnote	अंत्यटीप घालात
+	Insert entire column	पुराय स्तंभ घालात
+	Insert entire row	पुराय ओळ घालात
+	Insert Footnote	पानाटीप घालात
+	Insert Hyperlink	हायपरलिंक घालात
+	Insert Index	सुची घालात
+	Insert Left	दाव्यान घालात
+	Insert LISTNUM Field	LISTNUM फील्ड घालात
+	Insert Merge Field	मर्ज फील्ड घालात
+	Insert Merge\nField	मर्ज फील्ड\nघालात
+	Insert New Equation	नवें समीकरण घालात
+	Insert one text or another, depending on a field's value.	फील्डाच्या मोलाप्रमाण एक वा दुसरो मजकूर घालात.
+	Insert Page Field	पान फील्ड घालात
+	Insert Right	उजव्यान घालात
+	Insert Rows	ओळी घालात
+	Insert Rows Above	वयर ओळी घालात
+	Insert Rows Below	सकयल ओळी घालात
+	Insert Shapes	आकार घालात
+	Insert SmartArt	SmartArt घालात
+	Insert Structure	रचना घालात
+	Insert Symbol	चिन्न घालात
+	Insert Table	कोष्टक घालात
+	Insert Table of Authorities	अधिकार वळेरी घालात
+	Insert Table of Figures	आकृती वळेरी घालात
+	Insert Table…	कोष्टक घालात…
+	Insert Time Field	वेळ फील्ड घालात
+	Insert Video	व्हिडिओ घालात
+	Insert\nAbove	वयर\nघालात
+	Insert\nCaption	मथळो\nघालात
+	Insert\nCitation	उल्लेख\nघालात
+	Insert\nFootnote	पानाटीप\nघालात
+	Inserted	घालिल्लें
+	Insertions and Deletions	घालणी आनी काडणी
+	Insertions:	घालणी:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	घालणी: {ins}, काडणी: {del}, हालोवणी: {moves}, रचणूक: {fmt}, टिप्पण्यो: {comments}
+	Inside	भितर
+	Inside Borders	भितरल्यो कडो
+	Inside Margin	भितरलो समास
+	Inside:	भितर:
+	Inspect Document	दस्तावेज तपासात
+	Inspect Styles at Selection	वेंचणुकेचेर शैली तपासात
+	Institution	संस्था
+	Integral	संकलन
+	Integral of e^(−x²)	e^(−x²) चें संकलन
+	Integral with Limits	मर्यादांसयत संकलन
+	Integral with Stacked Limits	रासलेल्या मर्यादांसयत संकलन
+	Integrals	संकलनां
+	Intense Emphasis	तीव्र भर
+	Intense Quote	तीव्र उद्धरण
+	Intense Reference	तीव्र संदर्भ
+	Interface	इंटरफेस
+	Interface language	इंटरफेस भास
+	Interface language:	इंटरफेस भास:
+	Interface size:	इंटरफेस आकार:
+	Interface Theme	इंटरफेस थीम
+	Interface theme:	इंटरफेस थीम:
+	Interface\nTheme	इंटरफेस\nथीम
+	Internet addresses as links	इंटरनेट पत्ते दुवे म्हूण
+	Intersection	छेदन
+	Intersection with Limits	मर्यादांसयत छेदन
+	Intersection with Lower Limit	सकयल्या मर्यादेसयत छेदन
+	Intersection with Subscript-Superscript Limits	अधोलेख-उर्ध्वलेख मर्यादांसयत छेदन
+	Inverse Cosecant Function	व्यस्त कोसेकंट फलन
+	Inverse Cosine Function	व्यस्त कोसायन फलन
+	Inverse Cotangent Function	व्यस्त कोटॅन्जंट फलन
+	Inverse Functions	व्यस्त फलनां
+	Inverse Hyperbolic Cosecant Function	व्यस्त अतिवलयी कोसेकंट फलन
+	Inverse Hyperbolic Cosine Function	व्यस्त अतिवलयी कोसायन फलन
+	Inverse Hyperbolic Cotangent Function	व्यस्त अतिवलयी कोटॅन्जंट फलन
+	Inverse Hyperbolic Functions	व्यस्त अतिवलयी फलनां
+	Inverse Hyperbolic Secant Function	व्यस्त अतिवलयी सेकंट फलन
+	Inverse Hyperbolic Sine Function	व्यस्त अतिवलयी सायन फलन
+	Inverse Hyperbolic Tangent Function	व्यस्त अतिवलयी टॅन्जंट फलन
+	Inverse Secant Function	व्यस्त सेकंट फलन
+	Inverse Sine Function	व्यस्त सायन फलन
+	Inverse Tangent Function	व्यस्त टॅन्जंट फलन
+	Ionosphere	आयनांबर
+	Is blank	रितें आसा
+	Is not blank	रितें ना
+	ISO 690 (author-date)	ISO 690 (बरोवपी-तारीख)
+	ISO 690 (numerical)	ISO 690 (संख्यात्मक)
+	Issue	अंक
+	it isn't a picture Doc4Me can read	Doc4Me वाचूंक शकता अशें तें चित्र न्हय
+	Italian	इटालियन
+	Italic	तिरपें
+	Japanese	जपानी
+	Journal	नियतकालीक
+	Justification	समरेखन
+	Justification of a display equation	प्रदर्शन समीकरणाचें समरेखन
+	Justified	दोनूय वटांनी संरेखीत
+	Justify	दोनूय वटांनी संरेखीत करात
+	Keep Lines Together	वळी एकठांय दवरात
+	Keep lines together	वळी एकठांय दवरात
+	Keep Source Formatting	स्रोत रचणूक दवरात
+	Keep Text Only	फकत मजकूर दवरात
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	पासवर्ड सुरक्षीत सुवातेर दवरात: ताचे बगर कोणूय, Doc4Me धरून, दस्तावेज उगडूंक शकना. पासवर्ड काडपाक दोनूय पेटयो रित्यो दवरात.
+	Keep with Next	फुडल्याकडेन दवरात
+	Keep with next	फुडल्याकडेन दवरात
+	Keeps the fonts and formatting of the copied text.	प्रत केल्ल्या मजकुराचे फॉन्ट आनी रचणूक दवरता.
+	Kerning for fonts:	फॉन्टांखातीर कर्निंग:
+	Keyboard shortcuts:	कीबोर्ड शॉर्टकट:
+	Keys for this command:	ह्या आदेशाखातीर कळो:
+	Keywords	मुखेल उतरां
+	Korean	कोरियन
+	Label changes with:	लेबल हाचे वांगडा बदलता:
+	Label:	लेबल:
+	Labels	लेबलां
+	Landscape	आडवें
+	Language	भास
+	Language Preferences…	भास प्राधान्यां…
+	Language…	भास…
+	Large\nOperator	व्हड\nऑपरेटर
+	Largest Only	फकत सगळ्यांत व्हड
+	Largest only	फकत सगळ्यांत व्हड
+	Lasso	फांस
+	Lasso Select	फांस वेंचणूक
+	Last	निमाणें
+	Last Cell in Column	स्तंभांतलो निमाणो कक्ष
+	Last Cell in Row	ओळींतलो निमाणो कक्ष
+	Last Column	निमाणो स्तंभ
+	Last commit	निमाणें कमिट
+	Last Name	आडनांव
+	Last, First; Last, First	आडनांव, नांव; आडनांव, नांव
+	Latin text font:	लॅटिन मजकूर फॉन्ट:
+	Layout	मांडणी
+	Layout options for this document	ह्या दस्तावेजाखातीर मांडणी पर्याय
+	Layout Summary	मांडणी सारांश
+	Layouts	मांडण्यो
+	Leader	लीडर
+	Leave a recipient out of the merge when a field has this value.	फील्डाचें हें मोल आसतना मेळोवप्याक एकठांयणींतल्यान वगळात.
+	Leave Equation	समीकरण सोडात
+	Leave the equation (Esc)	समीकरण सोडात (Esc)
+	Leave the label out of the caption	मथळ्यांतल्यान लेबल वगळात
+	Left	दावें
+	Left Arrow with Text Above	वयर मजकुरासयत दावो बाण
+	Left Arrow with Text Below	सकयल मजकुरासयत दावो बाण
+	Left Border	दावी कड
+	Left border	दावी कड
+	Left Bracket Twice	दोन फावटीं दावो कंस
+	Left indent	दावो इंडेंट
+	Left Margin	दावो समास
+	Left Only	फकत दावें
+	Left only	फकत दावें
+	Left Right Arrow Above	वयर दावो-उजवो बाण
+	Left Right Arrow with Text Above	वयर मजकुरासयत दावो-उजवो बाण
+	Left Right Arrow with Text Below	सकयल मजकुरासयत दावो-उजवो बाण
+	Left Subscript-Superscript	दावो अधोलेख-उर्ध्वलेख
+	Left-to-right	दाव्यासावन उजवेकडेन
+	Left-to-Right Text Direction	दाव्यासावन उजवेकडेन मजकूर दिशा
+	Left:	दावें:
+	Leftwards Arrow Above	वयर दावेकडेन बाण
+	Leftwards Harpoon Above	वयर दावेकडेन हार्पून
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	कायदेशीर शैली क्रमांकन
+	Legend	लेजंड
+	Less than	उणें
+	Less than or equal	उणें वा बरोबर
+	Letter	पत्र
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	अक्षर शीर्षकां
+	Letter-Like Symbols	अक्षरासारकीं चिन्नां
+	Letters	पत्रां
+	Level 1	स्तर 1
+	Level 2	स्तर 2
+	Level 3	स्तर 3
+	Level 4	स्तर 4
+	Level 5	स्तर 5
+	Level 6	स्तर 6
+	Level 7	स्तर 7
+	Level 8	स्तर 8
+	Level 9	स्तर 9
+	Level {n}	स्तर {n}
+	Level:	स्तर:
+	Levels:	स्तर:
+	LibreTranslate server (open source)	LibreTranslate सर्वर (मुक्त स्रोत)
+	Ligatures:	जोडाक्षरां:
+	Light	फिकें
+	Light with Outline	रूपरेखेसयत फिकें
+	Limit	मर्यादा
+	Limit and\nLog	मर्यादा आनी\nलॉग
+	Limit consecutive hyphens to:	सलग हायफनांची मर्यादा:
+	Limit Example	मर्यादा उदाहरण
+	Limit formatting to a selection of styles	रचणूक वेंचिल्ल्या शैलीं मेरेन मर्यादीत करात
+	Line	रेशा
+	Line and Page Breaks	वळ आनी पान खंड
+	Line and Paragraph Spacing	वळ आनी परिच्छेद अंतर
+	Line between	मदीं रेशा
+	Line Break	वळ खंड
+	Line breaking	वळ फोड
+	Line delta	वळ फरक
+	Line End	वळीचो शेवट
+	Line Number	वळ क्रमांक
+	Line Numbering Options…	वळ क्रमांकन पर्याय…
+	Line Numbers	वळ क्रमांक
+	Line Spacing	वळ अंतर
+	Line spacing	वळ अंतर
+	Line Spacing Options…	वळ अंतर पर्याय…
+	Line spacing:	वळ अंतर:
+	Line Start	वळीची सुरवात
+	Line width:	रेशेची जाडाय:
+	Line:	रेशा:
+	Linear	रेखीय
+	Linear Fraction	रेखीय अपूर्णांक
+	Lines	वळी
+	Lines +/−	वळी +/−
+	Lines added	जोडिल्ल्यो वळी
+	Lines and characters	वळी आनी अक्षरां
+	Lines deleted	काडिल्ल्यो वळी
+	Lines only	फकत रेशा
+	Lines per page:	दर पानार वळी:
+	Link	दुवो
+	Link entries to their headings	नोंदी तांच्या शीर्षकांकडेन जोडात
+	Link level to style:	स्तर शैलीकडेन जोडात:
+	Link to Previous	फाटल्याकडेन जोडात
+	Linked style (paragraph and character)	जोडिल्ली शैली (परिच्छेद आनी अक्षर)
+	Links	दुवे
+	Links and References	दुवे आनी संदर्भ
+	Link…	दुवो…
+	List	वळेरी
+	List Commands	आदेशांची वळेरी
+	List Definition	वळेरी व्याख्या
+	List entries	वळेरी नोंदी
+	List Paragraph	वळेरी परिच्छेद
+	List styles	वळेरी शैली
+	List Table 3 – Blue	वळेरी कोष्टक 3 – निळें
+	List Table 3 – Green	वळेरी कोष्टक 3 – पाचवें
+	List Table 3 – Orange	वळेरी कोष्टक 3 – नारिंगी
+	List Table 3 – Purple	वळेरी कोष्टक 3 – जांबळें
+	Listening… speak now	आयकता… आतां उलयात
+	Location	सुवात
+	Location: {path}	सुवात: {path}
+	Lock aspect ratio	गुणोत्तर कुलूप करात
+	Lock Fields	फील्डां कुलूप करात
+	Logarithm	लघुगणक
+	Logarithm with Base	आदारासयत लघुगणक
+	Logical AND	तार्कीक AND
+	Logical AND with Limits	मर्यादांसयत तार्कीक AND
+	Logical OR	तार्कीक OR
+	Logical OR with Limits	मर्यादांसयत तार्कीक OR
+	Long citation:	लांब उल्लेख:
+	lowercase	ल्हान अक्षरां
+	Lum:	उजवाड:
+	Macros	मॅक्रो
+	Made from the author and year when empty	रितें आसल्यार बरोवपी आनी वर्सांतल्यान तयार जाता
+	Magazine or newspaper article	मासिक वा पत्राचो लेख
+	Mail Merge	मेल मर्ज
+	Mail Merge Helper	मेल मर्ज आदारी
+	Mail Merge Helper…	मेल मर्ज आदारी…
+	Mailing Labels	मेलिंग लेबलां
+	Mailings	मेलिंग
+	Main entry:	मुखेल नोंद:
+	Make Doc4Me the default for Word documents…	Doc4Me Word दस्तावेजांखातीर डिफॉल्ट करात…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	तुमच्या सिस्टमाच्या डिस्प्ले स्केलिंगावयर रिबन, मेनू आनी संवाद व्हड वा ल्हान करता. दस्तावेज झूम वेगळो.
+	Malay	मलय
+	Manage Sources	स्रोत वेवस्थापीत करात
+	Manage Styles	शैली वेवस्थापीत करात
+	Manage Styles…	शैली वेवस्थापीत करात…
+	Manual Hyphenation	हातान हायफनेशन
+	Manual hyphenation is complete.	हातान हायफनेशन पुराय जालें.
+	Manual Line Break	हातान वळ खंड
+	Manual Page Break	हातान पान खंड
+	Manual…	हातान…
+	Many pages	जायतीं पानां
+	Margin	समास
+	Margins	समास
+	Mark	खूण करात
+	Mark All	सगळें खूण करात
+	Mark as decorative	सजावटी म्हूण खूण करात
+	Mark Citation	उल्लेख खूण करात
+	Mark Citation…	उल्लेख खूण करात…
+	Mark Entry	नोंद खूण करात
+	Mark Entry…	नोंद खूण करात…
+	Mark grammar errors as you type	टायप करतना व्याकरण चुको खूण करात
+	Mark Index Entry	सुची नोंद खूण करात
+	Mark selected text as:	वेंचिल्लो मजकूर अशें खूण करात:
+	Mark Table of Contents Entry	विशयसुची नोंद खूण करात
+	Mark\nCitation	उल्लेख\nखूण करात
+	Mark\nEntry	नोंद\nखूण करात
+	Markdown (*.md)	Markdown (*.md)
+	Match case	अक्षर जुळयात
+	Match Fields	फील्डां जुळयात
+	Match prefix	उपसर्ग जुळयात
+	Match suffix	प्रत्यय जुळयात
+	Math AutoCorrect	गणीत आपसूक सुदारणा
+	Math Input Control	गणीत इनपुट नियंत्रण
+	Matrices with Brackets	कंसांसयत मॅट्रिक्सां
+	Matrix	मॅट्रिक्स
+	Maximize	व्हड करात
+	Maximum	कमाल
+	Maximum Example	कमाल उदाहरण
+	Measured By	हाणें मेजिल्लें
+	Measurement units:	माप एककां:
+	Media	माध्यम
+	Merge	एकठांय करात
+	Merge Cells	कक्ष एकठांय करात
+	Merge Formatting	रचणूक एकठांय करात
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	रचणूक एकठांय करात मजकूर तो खंय पडटा थंयच्या रचणुकेंत चिकटायता, फकत मजकूर दवरात भशेन.
+	Merge Record #	मर्ज रेकॉर्ड #
+	Merge records	रेकॉर्ड एकठांय करात
+	Merge to New Document	नव्या दस्तावेजांत एकठांय करात
+	Merge to Printer	प्रिंटराचेर एकठांय करात
+	Merge to:	हातूंत एकठांय करात:
+	Merge type: {type}	मर्ज प्रकार: {type}
+	Merged PRs	एकठांय केल्ले PR
+	Merge…	एकठांय करात…
+	Mesosphere	मध्यांबर
+	Middle	मदीं
+	Midline Dots	मध्यरेशा ठिपके
+	Millimeters	मिलीमीटर
+	Minimum	किमान
+	Minus Equal	वजा बरोबर
+	Mirror indents	आरसो इंडेंट
+	Mirrored	आरसो
+	Missing document font	नाशिल्लो दस्तावेज फॉन्ट
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	मॉडेल
+	Models	मॉडेलां
+	Moderate	मध्यम
+	Modify Style	शैली बदलात
+	Modify Table Style	कोष्टक शैली बदलात
+	Modify Table Style…	कोष्टक शैली बदलात…
+	Modify…	बदलात…
+	Mon	सोम
+	Month	म्हयनो
+	More >>	चड >>
+	More Colors…	चड रंग…
+	More Columns…	चड स्तंभ…
+	More Commands…	चड आदेश…
+	More Symbols…	चड चिन्नां…
+	More templates →	चड टेम्पलेट →
+	Move Down	सकयल हालयात
+	Move in Equation	समीकरणांत हालयात
+	Move object with text	वस्त मजकुरा वांगडा हालयात
+	Move or Resize	हालयात वा आकार बदलात
+	Move Paragraph Down	परिच्छेद सकयल हालयात
+	Move Paragraph Up	परिच्छेद वयर हालयात
+	Move Past Citation	उल्लेखा फुडें वचात
+	Move Past\nCitation	उल्लेखा फुडें\nवचात
+	Move Selected Ink	वेंचिल्ली शाय हालयात
+	Move Text	मजकूर हालयात
+	Move to where?	खंय हालोवचें?
+	Move Up	वयर हालयात
+	Move with Text	मजकुरा वांगडा हालयात
+	Move with text	मजकुरा वांगडा हालयात
+	Moved from	हांगासावन हालयलें
+	Moved to	हांगा हालयलें
+	Moves	हालोवण्यो
+	Multilevel List	बहुस्तरीय वळेरी
+	Multiple Pages	जायतीं पानां
+	My Add-ins	म्हजे ॲड-इन
+	MyMemory (free, no account)	MyMemory (फुकट, खात्या बगर)
+	Name	नांव
+	Name (A–Z)	नांव (A–Z)
+	Name of the file this document is saved as	हो दस्तावेज ज्या नांवान सांबाळला त्या फायलीचें नांव
+	Name:	नांव:
+	Narrow  0.5" all	अरुंद  सगळे 0.5"
+	Natural Logarithm	नैसर्गीक लघुगणक
+	Nature	सोबीत
+	Navigation	मार्गदर्शन
+	Navigation Pane	मार्गदर्शन फलक
+	Negated Relations	न्हयकारी संबंद
+	New	नवें
+	New Comment	नवी टिप्पणी
+	New comments and tracked changes are recorded under this name and these initials.	नव्यो टिप्पण्यो आनी मागोवा घेतिल्ले बदल ह्या नांवान आनी आद्याक्षरांनी नोंद जातात.
+	New Document	नवो दस्तावेज
+	New document	नवो दस्तावेज
+	New Drawing Canvas	नवें चित्र कॅनव्हास
+	New Entry	नवी नोंद
+	New Folder	नवो फोल्डर
+	New from Template	टेम्पलेटांतल्यान नवें
+	New Group	नवो गट
+	New Label	नवें लेबल
+	New Label…	नवें लेबल…
+	New Paragraph	नवो परिच्छेद
+	New shortcut:	नवो शॉर्टकट:
+	New Style…	नवी शैली…
+	New Tab	नवो टॅब
+	New Table Style	नवी कोष्टक शैली
+	New Table Style…	नवी कोष्टक शैली…
+	New Window	नवें जनेल
+	New word	नवें उतर
+	New\nComment	नवी\nटिप्पणी
+	New\nWindow	नवें\nजनेल
+	New…	नवें…
+	Next	फुडलें
+	Next Change	फुडलो बदल
+	Next Comment	फुडली टिप्पणी
+	Next Field	फुडलें फील्ड
+	Next Footnote	फुडली पानाटीप
+	Next Page	फुडलें पान
+	Next Record	फुडलो रेकॉर्ड
+	Next Section	फुडलो विभाग
+	Next Sentence	फुडलें वाक्य
+	Next sentence	फुडलें वाक्य
+	Next Window	फुडलें जनेल
+	No	ना
+	No accessibility issues found.	सुलभताय समस्या मेळ्ळ्यो नात.
+	No add-ins are listed yet.	अजून खंयचेच ॲड-इन वळेरींत नात.
+	No add-ins yet. Add one from the Store.	अजून ॲड-इन नात. स्टोअरांतल्यान एक जोडात.
+	No Border	कड ना
+	No changes (read only)	बदल नात (फकत वाचपाक)
+	No Color	रंग ना
+	No contributor data was built into this copy.	ह्या प्रतींत योगदानकर्त्यांचो डेटा घालूंक ना.
+	No data source yet.	अजून डेटा स्रोत ना.
+	No errors found: every merge field is in the recipient list.	चुको मेळ्ळ्यो नात: दरेक मर्ज फील्ड मेळोवप्यांच्या वळेरींत आसा.
+	No Fill	भरप ना
+	No Glow	उजवाड ना
+	No grid	ग्रिड ना
+	No icons match your search.	तुमच्या सोदाकडेन खंयचेंच चिन्न जुळना.
+	No limit	मर्यादा ना
+	No Line	रेशा ना
+	No Markup	मार्कअप ना
+	No model credits were built into this copy.	ह्या प्रतींत मॉडेलांचें श्रेय घालूंक ना.
+	No Outline	रूपरेखा ना
+	No Paragraph Space	परिच्छेद अंतर ना
+	No pictures found.	चित्रां मेळ्ळीं नात.
+	No Reflection	प्रतिबिंब ना
+	No revisions	पुनरावृत्ती नात
+	No Shadow	सावळी ना
+	No Soft Edges	मोव कडो नात
+	No sources yet.	अजून स्रोत नात.
+	No Spacing	अंतर ना
+	no speech program on this system	ह्या सिस्टमाचेर उलोवपाचो प्रोग्राम ना
+	No templates match your search.	तुमच्या सोदाकडेन खंयचेंच टेम्पलेट जुळना.
+	No Transform	रुपांतर ना
+	No words yet. Add to Dictionary on a misspelled word puts it here.	अजून उतरां नात. चुकीच्या शुद्धलेखनाच्या उतराचेर उतरावळींत जोडात केल्यार तें हांगा येता.
+	No-Width Non Break	शून्य-रुंदायेचें अखंड
+	No-Width Optional Break	शून्य-रुंदायेचो पर्यायी खंड
+	Nonbreaking Hyphen	अखंड हायफन
+	Nonbreaking Space	अखंड सुवात
+	None	कांयच ना
+	Normal	सामान्य
+	Normal  1" all	सामान्य  सगळे 1"
+	Normal Indent	सामान्य इंडेंट
+	Normal probability density	सामान्य संभाव्यताय घनताय
+	Normal speed	सामान्य वेग
+	Normal Style	सामान्य शैली
+	Normal Table	सामान्य कोष्टक
+	Normal Text	सामान्य मजकूर
+	Normal Word Document	सामान्य Word दस्तावेज
+	North	उत्तर
+	Norwegian (Bokmål)	नॉर्वेजियन (बोकमाल)
+	Not	ना
+	Not available right now	आतां मेळना
+	Not equal to	बरोबर ना
+	Not linked: click a text box	जोडिल्लें ना: मजकूर पेटयेचेर क्लिक करात
+	Not saved	सांबाळूंक ना
+	Not saved yet	अजून सांबाळूंक ना
+	Not used by any command	खंयच्याच आदेशान वापरूंक ना
+	Not {name}	{name} न्हय
+	Nothing	कांयच ना
+	Nothing collected yet. Items you copy or cut appear here.	अजून कांयच एकठांय जालें ना. तुमी प्रत वा कातरिल्ल्यो वस्ती हांगा दिसतात.
+	Now used by {command}	आतां {command} वापरता
+	Nudge	हळूच सरकयात
+	Num Occurrences	घडणुकांची संख्या
+	Number	आंकडो
+	Number alignment:	आंकडो संरेखन:
+	Number format	आंकडो रचणूक
+	Number of columns:	स्तंभांची संख्या:
+	Number of rows:	ओळींची संख्या:
+	Number of the page the field sits on	फील्ड ज्या पानार आसा ताचो क्रमांक
+	Number of the section the field sits in	फील्ड ज्या विभागांत आसा ताचो क्रमांक
+	Number style for this level:	ह्या स्तराखातीर आंकडो शैली:
+	Number the equation; the number sits at the right margin (or type # then the number)	समीकरणाक क्रमांक दियात; क्रमांक उजव्या समासार आसता (वा # आनी मागीर क्रमांक टायप करात)
+	Number type:	आंकडो प्रकार:
+	Number:	आंकडो:
+	Numbering	क्रमांकन
+	Numbering:	क्रमांकन:
+	Numbering…	क्रमांकन…
+	Numerals	आंकडे
+	Numerals:	आंकडे:
+	n×n Identity Matrix	n×n एकक मॅट्रिक्स
+	n×n Matrix	n×n मॅट्रिक्स
+	Object	वस्त
+	Odd Page	विशम पान
+	Odd pages only	फकत विशम पानां
+	Off	बंद
+	Office	Office
+	Office 2003 Default	Office 2003 डिफॉल्ट
+	Offset (pt):	ऑफसेट (pt):
+	Offset: Bottom	ऑफसेट: सकयल
+	Offset: Bottom Left	ऑफसेट: सकयल दावें
+	Offset: Bottom Right	ऑफसेट: सकयल उजवें
+	Offset: Center	ऑफसेट: मदीं
+	Offset: Left	ऑफसेट: दावें
+	Offset: Right	ऑफसेट: उजवें
+	Offset: Top	ऑफसेट: वयर
+	Offset: Top Left	ऑफसेट: वयर दावें
+	Offset: Top Right	ऑफसेट: वयर उजवें
+	OK	बरें
+	Omit	वगळात
+	On	चालू
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	चालू: टायप करतना वा बाण कळो वापरतना कॅरेट नव्या सुवातेर घसरता आनी ताचें लुकलुकप फिकें जाता. बंद: तो उडी मारता आनी लुकलुकता.
+	One	एक
+	One half	अर्दो
+	One label per recipient	दर मेळोवप्याक एक लेबल
+	One line per item. Enter adds an item.	दर वस्तूक एक वळ. Enter वस्त जोडटा.
+	One Page	एक पान
+	Online Pictures	ऑनलायन चित्रां
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	ऑनलायन चित्रां (Openverse), अणकार (MyMemory वा तुमचो LibreTranslate सर्वर), ॲड-इन मेळयात आनी सांगून बरोवपाच्या उलोवप मॉडेलाचें डाउनलोड इंटरनेटाक जोडटात, आनी फकत तुमी वापरतात तेन्नाच. बंद आसतना Doc4Me स्वता खंयचोच संबंद करिना.
+	Online Pictures…	ऑनलायन चित्रां…
+	Online services are turned off (File › Options › Trust Center).	ऑनलायन सेवा बंद आसात (फायल › पर्याय › विस्वास केंद्र).
+	Online Video	ऑनलायन व्हिडिओ
+	Only allow this kind of editing:	फकत अशें संपादन मान्य करात:
+	Only comments can be added, except in regions marked editable.	संपादनायोग्य खूण केल्लें क्षेत्र सोडून फकत टिप्पण्यो जोडूंक जातात.
+	Only form fields can be filled in.	फकत फॉर्म फील्डां भरूंक जातात.
+	only https addresses can be used	फकत https पत्ते वापरूंक जातात
+	Only pictures I may use commercially	फकत वेवसायीक वापरपाक जायतीं चित्रां
+	Only the allowed styles can be applied.	फकत परवानगी आशिल्ल्यो शैली लागू करूंक जातात.
+	Only web (http, https) and email (mailto) links can be followed	फकत वेब (http, https) आनी ईमेल (mailto) दुवे उगडूंक जातात
+	Open	उगडात
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	सिस्टम फायल संवाद दिसना तेन्ना Doc4Me च्या स्वताच्या ब्राउझरान फायल उगडात.
+	Open Data Source…	डेटा स्रोत उगडात…
+	Open Hyperlink	हायपरलिंक उगडात
+	OpenDocument Text (*.odt)	OpenDocument मजकूर (*.odt)
+	Opening print dialog…	छापणी संवाद उगडटा…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	आतांसावन .docx, .doc, .rtf आनी .odt फायली आनी Word टेम्पलेट Doc4Me न उगडटा.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	सेटिंग्ज › डिफॉल्ट ॲप उगडटा, थंय तुमी .docx आनी हेर दस्तावेज प्रकारांखातीर Doc4Me वेंचतात.
+	Open…	उगडात…
+	Operator	ऑपरेटर
+	Operator Structures	ऑपरेटर रचना
+	Operators	ऑपरेटर
+	Optional Hyphen	पर्यायी हायफन
+	Options	पर्याय
+	Options…	पर्याय…
+	Or	वा
+	Or save a copy in another format:	वा दुसऱ्या रचणुकेंत प्रत सांबाळात:
+	Ordinals (1st) as superscript	क्रमवाचक (1st) उर्ध्वलेख म्हूण
+	Organizer	संयोजक
+	Organizer…	संयोजक…
+	Orientation	दिशा
+	Original document	मूळ दस्तावेज
+	Other	हेर
+	Other Authorities	हेर अधिकार
+	Other Large Operators	हेर व्हड ऑपरेटर
+	Other paragraph styles	हेर परिच्छेद शैली
+	Other styles and their TOC level:	हेर शैली आनी तांचो विशयसुची स्तर:
+	Otherwise insert:	ना जाल्यार घालात:
+	Outline	रूपरेखा
+	Outline Level	रूपरेखा स्तर
+	Outline level	रूपरेखा स्तर
+	Outline levels	रूपरेखा स्तर
+	Outline State	रूपरेखा स्थिती
+	Outline Tools	रूपरेखा साधनां
+	Outlining	रूपरेखन
+	Outside	भायर
+	Outside border	भायली कड
+	Outside Borders	भायल्यो कडो
+	Outside Margin	भायलो समास
+	Outside:	भायर:
+	Outward Brackets	भायर वटेन कंस
+	Oval	अंडाकृती
+	Overbar	वयली पट्टी
+	Overbars and Underbars	वयल्यो आनी सकयल्यो पट्ट्यो
+	Overbrace	वयलो महिरपी कंस
+	Overtype	वयल्यान बरोवप
+	Overtype (typing replaces the characters after the caret)	वयल्यान बरोवप (टायप केल्यार कॅरेट उपरांतचीं अक्षरां बदलतात)
+	Page	पान
+	Page Background	पान फाटभूंय
+	Page Border	पान कड
+	Page Borders	पान कडो
+	Page Break	पान खंड
+	Page Break Before	आदीं पान खंड
+	Page break before	आदीं पान खंड
+	Page Breaks	पान खंड
+	Page Color	पान रंग
+	Page display	पान दाखोवप
+	Page Down	Page Down
+	Page image (*.jpg, *.jpeg)	पान प्रतिमा (*.jpg, *.jpeg)
+	Page image (*.png)	पान प्रतिमा (*.png)
+	Page Movement	पान हालचाल
+	Page Number	पान क्रमांक
+	Page number style	पान क्रमांक शैली
+	Page numbers at the right margin	उजव्या समासार पान क्रमांक
+	Page on which a bookmarked passage falls	बुकमार्क केल्लो भाग आशिल्लें पान
+	Page Setup	पान सेटअप
+	Page title	पान शीर्षक
+	Page Up	Page Up
+	Page Width	पान रुंदाय
+	Page width	पान रुंदाय
+	Page X of Y	पान X पयकीं Y
+	Page {page}	पान {page}
+	Page {page} of {pages}	पान {page} पयकीं {pages}
+	Page\nBorders	पान\nकडो
+	Page\nColor	पान\nरंग
+	Page\nNumber	पान\nक्रमांक
+	Pages	पानां
+	Pages like 1-3, 5	पानां जशीं 1-3, 5
+	Pages of bookmark:	बुकमार्काचीं पानां:
+	Paragraph	परिच्छेद
+	Paragraph Character	परिच्छेद अक्षर
+	Paragraph Details	परिच्छेद तपशील
+	Paragraph Down	परिच्छेद सकयल
+	Paragraph Mark	परिच्छेद चिन्न
+	Paragraph marks	परिच्छेद चिन्नां
+	Paragraph Settings	परिच्छेद सेटिंग्ज
+	Paragraph Spacing	परिच्छेद अंतर
+	Paragraph style	परिच्छेद शैली
+	Paragraph Up	परिच्छेद वयर
+	Paragraphs	परिच्छेद
+	Paragraph…	परिच्छेद…
+	Parentheses	कंस
+	Parentheses with Separator	विभाजकासयत कंस
+	Partial Differential	आंशिक अवकलन
+	Password	पासवर्ड
+	Password:	पासवर्ड:
+	Paste	चिकटयात
+	Paste All	सगळें चिकटयात
+	Paste as:	अशें चिकटयात:
+	Paste Clipboard Item	क्लिपबोर्ड वस्त चिकटयात
+	Paste Formatting	रचणूक चिकटयात
+	Paste Special	खाशेलें चिकटावप
+	Paste Special…	खाशेलें चिकटावप…
+	Paste Spike	स्पाइक चिकटयात
+	Paste: Keep Text Only	चिकटयात: फकत मजकूर दवरात
+	Paste: Merge Formatting	चिकटयात: रचणूक एकठांय करात
+	Pasting between documents:	दस्तावेजांमदीं चिकटावप:
+	Pasting from other programs:	हेर प्रोग्रामांतल्यान चिकटावप:
+	Pasting within the same document:	त्याच दस्तावेजांत चिकटावप:
+	Pause	विराम
+	Paused	थांबयलें
+	PDF document (*.pdf)	PDF दस्तावेज (*.pdf)
+	Pen	पेन
+	Pencil	पेन्सील
+	Pens	पेन
+	People	लोक
+	Periodical	नियतकालीक
+	Personalize	वैयक्तीक करात
+	Phonetic Guide	उच्चार मार्गदर्शक
+	Pi Over 2	पाय भाग 2
+	Picas	पायका
+	Pick a custom group (New Group makes one)	स्वतःचो गट वेंचात (नवो गट एक तयार करता)
+	Pick a field from the list	वळेरींतल्यान फील्ड वेंचात
+	Picture	चित्र
+	Picture Border	चित्र कड
+	Picture Content Control	चित्र आशय नियंत्रण
+	Picture Format	चित्र रचणूक
+	Picture Styles	चित्र शैली
+	Pictures	चित्रां
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Openverse मदलीं चित्रां. दरेक चित्राच्या परवान्याचो मान दवरात: Doc4Me ताचे सकयल श्रेय वळ जोडटा.
+	Pie	पाय
+	Placeholder Name	प्लेसहोल्डर नांव
+	Placeholder text	प्लेसहोल्डर मजकूर
+	Plain Table 1	सादें कोष्टक 1
+	Plain text (*.txt)	सादो मजकूर (*.txt)
+	Plain Text Content Control	सादो मजकूर आशय नियंत्रण
+	Play	चलयात
+	Play Video	व्हिडिओ चलयात
+	Play/Pause	चलयात/विराम
+	Plus Equal	अदीक बरोबर
+	Points	पॉइंट
+	points and above	पॉइंट आनी चड
+	Polish	पोलिश
+	Portrait	उबें
+	Portuguese (Brazil)	पोर्तुगीज (ब्राझील)
+	Portuguese (Portugal)	पोर्तुगीज (पोर्तुगाल)
+	Position	सुवात
+	Position:	सुवात:
+	Positioning…	सुवात थारावप…
+	Possible spelling mistake	शुद्धलेखनाची शक्य चूक
+	Postal Code	टपाल कोड
+	Power series of (1+x)ⁿ	(1+x)ⁿ ची घात श्रेणी
+	Preferred width:	आवडीची रुंदाय:
+	Preserve	राखात
+	Preserve formatting during updates	अद्यतनां वेळार रचणूक राखात
+	Presets	पूर्वनिर्धारीत
+	Press a key combination	कळ संयोजन दामात
+	Preview	फुडें पळोवप
+	Preview Results	परिणाम फुडें पळोवप
+	Preview\nResults	परिणाम\nफुडें पळोवप
+	Previous	फाटलें
+	Previous 1 or More	फाटलें 1 वा चड
+	Previous Change	फाटलो बदल
+	Previous Comment	फाटली टिप्पणी
+	Previous Field	फाटलें फील्ड
+	Previous Footnote	फाटली पानाटीप
+	Previous Page	फाटलें पान
+	Previous Record	फाटलो रेकॉर्ड
+	Previous Section	फाटलो विभाग
+	Previous Sentence	फाटलें वाक्य
+	Previous sentence	फाटलें वाक्य
+	Previous Window	फाटलें जनेल
+	Print	छापात
+	Print blank lines when data fields are empty	डेटा फील्ड रितीं आसतना रित्यो वळी छापात
+	Print Documents	दस्तावेज छापात
+	Print Documents…	दस्तावेज छापात…
+	Print failed: {error}	छापणी फसली: {error}
+	Print Layout	छापणी मांडणी
+	Print Markup	मार्कअप छापात
+	Print the page color	पान रंग छापात
+	Print to PDF	PDF त छापात
+	Print\nLayout	छापणी\nमांडणी
+	Printer	प्रिंटर
+	Printing	छापणी
+	Process	प्रक्रिया
+	Product	गुणाकार
+	Product of A	A चो गुणाकार
+	Product with Limits	मर्यादांसयत गुणाकार
+	Product with Lower Limit	सकयल्या मर्यादेसयत गुणाकार
+	Product with Subscript-Superscript Limits	अधोलेख-उर्ध्वलेख मर्यादांसयत गुणाकार
+	Products and Coproducts	गुणाकार आनी सहगुणाकार
+	Professional	वेवसायीक
+	Promote	स्तर वयर करात
+	Promote to Heading 1	शीर्षक 1 मेरेन वयर करात
+	Proofing	तपासणी
+	Proofing Issues	तपासणी समस्या
+	Proofing language	तपासणी भास
+	Properties	गुणधर्म
+	Protect	राखात
+	Protect Document	दस्तावेज राखात
+	PRs	PR
+	pt	pt
+	Publisher	प्रकाशक
+	Punctuation	विरामचिन्नां
+	Put the caret in a content control first.	पयलीं कॅरेट आशय नियंत्रणांत दवरात.
+	Put the default commands back on the Quick Access Toolbar?	डिफॉल्ट आदेश बेगीन प्रवेश टूलबाराचेर परत दवरचे?
+	Pyramid	पिरॅमिड
+	Quadratic Root	वर्गमूळ
+	Query Options…	क्वेरी पर्याय…
+	Quick Access Toolbar	बेगीन प्रवेश टूलबार
+	Quick Parts	बेगीन भाग
+	Quick Tables	बेगीन कोष्टकां
+	Quote	उद्धरण
+	Radical	मूळ
+	Radical with Degree	घातांकासयत मूळ
+	Radicals	मूळां
+	Raised/lowered	वयर/सकयल केल्लें
+	Read Aloud	मोठ्यान वाचात
+	Read Aloud couldn't start the speech program: {reason}	मोठ्यान वाचपाक उलोवपाचो प्रोग्राम सुरू जालो ना: {reason}
+	Read Aloud couldn't start: {reason}	मोठ्यान वाचप सुरू जालें ना: {reason}
+	Read Aloud isn't available in the browser	मोठ्यान वाचप ब्राउझरांत मेळना
+	Read Aloud Status	मोठ्यान वाचपाची स्थिती
+	Read Aloud stopped: {reason}	मोठ्यान वाचप थांबलें: {reason}
+	Read Mode	वाचन मोड
+	Read\nAloud	मोठ्यान\nवाचात
+	Read\nMode	वाचन\nमोड
+	Reading	वाचन
+	Reading Column Width	वाचन स्तंभ रुंदाय
+	Reading Highlight	वाचन हायलायट
+	Reading Line Spacing	वाचन वळ अंतर
+	Reading Mode	वाचन मोड
+	Sepia	सेपिया
+	Inverse	उलटें
+	Reading Speed	वाचन वेग
+	Reading Text Size	वाचन मजकूर आकार
+	Reads the clipboard's rich text and keeps its formatting.	क्लिपबोर्डाचो समृद्ध मजकूर वाचता आनी ताची रचणूक दवरता.
+	Reads the clipboard's web content and keeps its formatting.	क्लिपबोर्डाचो वेब आशय वाचता आनी ताची रचणूक दवरता.
+	Real name	खरें नांव
+	Recent	हालींचें
+	Recent Colors	हालींचे रंग
+	Recent documents to show:	दाखोवपाचे हालींचे दस्तावेज:
+	Recently used symbols:	हालींच वापरिल्लीं चिन्नां:
+	Recipient List	मेळोवप्यांची वळेरी
+	Recipient lists	मेळोवप्यांच्यो वळेरी
+	Recipients: {count}	मेळोवपी: {count}
+	Recognized (you can correct it):	वळखलें (तुमी सुदारूंक शकतात):
+	Recognized Functions	वळखिल्लीं फलनां
+	Recognized Functions…	वळखिल्लीं फलनां…
+	Recolor a one-color picture, such as an icon	एकरंगी चित्र, जशें चिन्न, परत रंगयात
+	Recolor Selected Ink	वेंचिल्ली शाय परत रंगयात
+	Record Macro	मॅक्रो नोंद करात
+	Recover Unsaved Documents	सांबाळूंक नाशिल्ले दस्तावेज परत मेळयात
+	Rectangle	आयत
+	Red:	तांबडो:
+	Redo	परत करात
+	Reduce Hanging Indent	लोंबतो इंडेंट उणो करात
+	References	संदर्भ
+	Reflection	प्रतिबिंब
+	Refresh	ताजें करात
+	Registered	नोंदणीकृत
+	Registered Sign	नोंदणीकृत चिन्न
+	Regular expressions	नियमीत पदावळी
+	Regulations	नियम
+	Reject	न्हयकारात
+	Reject All	सगळें न्हयकारात
+	Reject All Changes	सगळे बदल न्हयकारात
+	Reject Change	बदल न्हयकारात
+	Relationship	संबंद
+	relative to	सापेक्ष
+	Relative to:	हाचे सापेक्ष:
+	Relaxed	ढिलें
+	Remove	काडात
+	Remove Added Font	जोडिल्लो फॉन्ट काडात
+	Remove Background	फाटभूंय काडात
+	Remove Content Control	आशय नियंत्रण काडात
+	Remove every custom shortcut and restore the built-in keys?	दरेक स्वतःचो शॉर्टकट काडून भितरल्यो कळो परत हाडच्यो?
+	Remove every custom tab and group and show all tabs again?	दरेक स्वतःचो टॅब आनी गट काडून सगळे टॅब परत दाखोवचे?
+	Remove field	फील्ड काडात
+	Remove Field Name	फील्ड नांव काडात
+	Remove Footer	तळटीप काडात
+	Remove from Quick Access Toolbar	बेगीन प्रवेश टूलबारांतल्यान काडात
+	Remove Header	शीर्शलेख काडात
+	Remove Hyperlink	हायपरलिंक काडात
+	Remove Password	पासवर्ड काडात
+	Remove Pen	पेन काडात
+	Remove Positioning	सुवात थारावप काडात
+	Remove recipient	मेळोवपी काडात
+	Remove row	ओळ काडात
+	Remove series	मालिका काडात
+	Remove Space After Paragraph	परिच्छेदा उपरांतची सुवात काडात
+	Remove Table of Contents	विशयसुची काडात
+	Remove the control once edited	संपादना उपरांत नियंत्रण काडात
+	Remove the space before the punctuation	विरामचिन्ना आदली सुवात काडात
+	Remove Watermark	वॉटरमार्क काडात
+	Rename Style	शैलीचें नांव बदलात
+	Rename…	नांव बदलात…
+	Reopen	परत उगडात
+	Repeat	परत करात
+	Repeat as header row on each page	दरेक पानार शीर्शलेख ओळ म्हूण परत करात
+	Repeat Header Rows	शीर्शलेख ओळी परत करात
+	Repeated words	परत आयिल्लीं उतरां
+	Repeating Section Content Control	परत येवपी विभाग आशय नियंत्रण
+	Replace	बदलात
+	Replace All	सगळें बदलात
+	Replace as you type	टायप करतना बदलात
+	Replace Document Text	दस्तावेज मजकूर बदलात
+	Replace text as you type	टायप करतना मजकूर बदलात
+	Replace with:	हाणें बदलात:
+	Replace:	बदलात:
+	Replay	परत खेळ
+	Reply	जाप दियात
+	Report	अहवाल
+	Research	संशोधन
+	Researcher	संशोधक
+	Researcher needs an online service; Doc4Me keeps your documents offline.	संशोधकाक ऑनलायन सेवा जाय; Doc4Me तुमचे दस्तावेज ऑफलायन दवरता.
+	Reset	परत थारायात
+	Reset All	सगळें परत थारायात
+	Reset All…	सगळें परत थारायात…
+	Reset Character Formatting	अक्षर रचणूक परत थारायात
+	Reset Crop	कातरप परत थारायात
+	Reset Graphic	ग्राफिक परत थारायात
+	Reset Paragraph Formatting	परिच्छेद रचणूक परत थारायात
+	Reset Picture	चित्र परत थारायात
+	Reset to Normal	सामान्याचेर परत थारायात
+	Reset\nGraphic	ग्राफिक\nपरत थारायात
+	Reset…	परत थारायात…
+	Resize Table by Dragging	ओडून कोष्टकाचो आकार बदलात
+	Resolve	सोडयात
+	Resolved	सोडयलें
+	Restart at 1	1 सावन परत सुरू करात
+	Restart Each Page	दरेक पानार परत सुरू करात
+	Restart Each Section	दरेक विभागांत परत सुरू करात
+	Restart list after:	हाचे उपरांत वळेरी परत सुरू करात:
+	Restore	परत हाडात
+	Restore Defaults	डिफॉल्ट परत हाडात
+	Restore Down	सकयल परत हाडात
+	Restore to Normal Word Document	सामान्य Word दस्तावेजांत परत हाडात
+	Restrict Editing	संपादनाचेर निर्बंध घालात
+	Restrict\nEditing	संपादनाचेर\nनिर्बंध घालात
+	Result	परिणाम
+	Results	परिणाम
+	Return address labels	परतीचो पत्तो लेबलां
+	Return address:	परतीचो पत्तो:
+	Reverse the order	क्रम उलटो करात
+	Review	परिक्षण
+	Review AutoFormat Changes	आपसूक रचणूक बदल परतून पळयात
+	Review Changes…	बदल परतून पळयात…
+	Reviewing	परिक्षण चालू
+	Reviewing Pane	परिक्षण फलक
+	Reviewing — edits become suggestions	परिक्षण — संपादनां सुचोवण्यो जातात
+	Revised document	सुदारिल्लो दस्तावेज
+	Revisions	पुनरावृत्ती
+	Rewind	फाटीं घेयात
+	Ribbon	रिबन
+	Ribbon and Quick Access Toolbar:	रिबन आनी बेगीन प्रवेश टूलबार:
+	Ribbon tabs	रिबन टॅब
+	Rich Text Content Control	समृद्ध मजकूर आशय नियंत्रण
+	Rich Text Format (*.rtf)	Rich Text Format (*.rtf)
+	Rich Text Format (RTF)	Rich Text Format (RTF)
+	Right	उजवें
+	Right (vertical)	उजवें (उबें)
+	Right align page numbers	पान क्रमांक उजव्यान संरेखीत करात
+	Right Arrow with Text Above	वयर मजकुरासयत उजवो बाण
+	Right Arrow with Text Below	सकयल मजकुरासयत उजवो बाण
+	Right Border	उजवी कड
+	Right border	उजवी कड
+	Right Bracket Twice	दोन फावटीं उजवो कंस
+	Right indent	उजवो इंडेंट
+	Right Margin	उजवो समास
+	Right Only	फकत उजवें
+	Right only	फकत उजवें
+	Right-to-left	उजव्यासावन दावेकडेन
+	Right-to-Left Section	उजव्यासावन दावेकडेन विभाग
+	Right-to-Left Table	उजव्यासावन दावेकडेन कोष्टक
+	Right-to-Left Text Direction	उजव्यासावन दावेकडेन मजकूर दिशा
+	Right:	उजवें:
+	Rightwards Arrow Above	वयर उजवेकडेन बाण
+	Rightwards Harpoon Above	वयर उजवेकडेन हार्पून
+	Roots of ax²+bx+c	ax²+bx+c चीं मुळां
+	Rotate	घुंवडायात
+	Rotate all text 270°	सगळो मजकूर 270° घुंवडायात
+	Rotate all text 90°	सगळो मजकूर 90° घुंवडायात
+	Rotate Left 90°	दावेकडेन 90° घुंवडायात
+	Rotate Right 90°	उजवेकडेन 90° घुंवडायात
+	Rotation	परिभ्रमण
+	Rotation:	परिभ्रमण:
+	Rounded Rectangle	वाटकुळ्या कोनशांचो आयत
+	Row	ओळ
+	Row:	ओळ:
+	Rows & Columns	ओळी आनी स्तंभ
+	Ruby text:	रुबी मजकूर:
+	Ruler	मोजपट्टी
+	Rules	नेम
+	Run	चलयात
+	Run-in	एकठांय
+	Russian	रशियन
+	Résumé	परिचयपत्र
+	Same as the whole table	पुराय कोष्टका सारकें
+	SAMPLE	नमुनो
+	Sat:	शनि:
+	Save	सांबाळात
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	दुसऱ्या रचणुकेंत प्रत सांबाळात. छापणी PDF वरवीं जाता, जें तुमी खंयच्याय दर्शकांतल्यान छापूंक शकतात.
+	Save As	अशें सांबाळात
+	Save as Template	टेम्पलेट म्हूण सांबाळात
+	Save documents	दस्तावेज सांबाळात
+	Save the document to turn on AutoSave	आपोआप सांबाळप सुरू करपाक दस्तावेज सांबाळात
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	आपोआप सांबाळप सुरू करपाक दस्तावेज सांबाळात (फकत उगडिल्ली फायल तुमी सांबाळ करीसर परत बरयना)
+	Save these pages as PDF…	हीं पानां PDF म्हूण सांबाळात…
+	Save Version	आवृत्ती सांबाळात
+	Saved	सांबाळलें
+	Scale	प्रमाण
+	Scale Drawing	चित्राचें प्रमाण बदलात
+	Scatter	विखुरिल्लें
+	Screen Clipping	स्क्रीन कातरप
+	Screen clipping didn't work: {reason}	स्क्रीन कातरप चलें ना: {reason}
+	Screen clipping ended without a picture.	स्क्रीन कातरप चित्रा बगर सोंपलें.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	स्क्रीन कातरप हांगा मेळना. स्क्रीनाचें चित्र प्रत करात, मागीर चिकटयात.
+	Screenshot	स्क्रीनशॉट
+	Script	लिपी
+	Scripts	लिपी
+	Scroll ribbon left	रिबन दावेकडेन स्क्रोल करात
+	Scroll ribbon right	रिबन उजवेकडेन स्क्रोल करात
+	Search	सोदात
+	Search Commands	आदेश सोदात
+	Search commands and help	आदेश आनी आदार सोदात
+	Search document	दस्तावेज सोदात
+	Search for templates	टेम्पलेट सोदात
+	Search icons	चिन्नां सोदात
+	Search Openverse (Creative Commons pictures)	Openverse सोदात (Creative Commons चित्रां)
+	Search Options	सोद पर्याय
+	Searching…	सोदता…
+	Secant Function	सेकंट फलन
+	Section Break	विभाग खंड
+	Section Breaks	विभाग खंड
+	Section Character	विभाग अक्षर
+	Section direction:	विभाग दिशा:
+	Section Mark	विभाग चिन्न
+	Section Properties	विभाग गुणधर्म
+	Sections	विभाग
+	See	पळयात
+	Select	वेंचात
+	Select a picture, shape, chart or table to describe it.	वर्णन करपाक चित्र, आकार, चार्ट वा कोष्टक वेंचात.
+	Select All	सगळें वेंचात
+	Select Cell	कक्ष वेंचात
+	Select Floating Shapes	तरंगते आकार वेंचात
+	Select Heading and Content	शीर्षक आनी आशय वेंचात
+	Select Line	वळ वेंचात
+	Select Objects	वस्ती वेंचात
+	Select Paragraph	परिच्छेद वेंचात
+	Select Range	व्याप्ती वेंचात
+	Select Recipients	मेळोवपी वेंचात
+	Select recipients first to choose from their fields.	तांच्या फील्डांतल्यान वेंचपाक पयलीं मेळोवपी वेंचात.
+	Select recipients first to match their fields.	तांचीं फील्डां जुळोवपाक पयलीं मेळोवपी वेंचात.
+	Select Row	ओळ वेंचात
+	Select Sentence	वाक्य वेंचात
+	Select Table	कोष्टक वेंचात
+	Select Text	मजकूर वेंचात
+	Select text in the document to translate it.	अणकार करपाक दस्तावेजांत मजकूर वेंचात.
+	Select Text with Similar Formatting	सारकी रचणूक आशिल्लो मजकूर वेंचात
+	Select text, then tick who can still edit it.	मजकूर वेंचात, मागीर कोण अजून संपादन करूंक शकता तें खूण करात.
+	Select the part of the screen to insert.	घालपाक स्क्रीनाचो भाग वेंचात.
+	Select Word	उतर वेंचात
+	Select\nRecipients	मेळोवपी\nवेंचात
+	Selected Fields	वेंचिल्लीं फील्डां
+	Selected pages	वेंचिल्लीं पानां
+	Selection	वेंचणूक
+	Selection Pane	वेंचणूक फलक
+	Send Backward	फाटीं धाडात
+	Send the document straight to the system print dialog, or save a copy in another format below.	दस्तावेज थेट सिस्टम छापणी संवादाक धाडात, वा सकयल दुसऱ्या रचणुकेंत प्रत सांबाळात.
+	Sentence	वाक्य
+	Sentence case.	वाक्या प्रमाण.
+	Separator:	विभाजक:
+	Sequence name:	क्रम नांव:
+	Serbian	सर्बियन
+	Serbian (Cyrillic)	सर्बियन (सिरिलिक)
+	Serbian (Latin)	सर्बियन (लॅटिन)
+	Series name	मालिका नांव
+	Series {n}	मालिका {n}
+	Server address (https://…)	सर्वर पत्तो (https://…)
+	Set	थारायात
+	Set As Default	डिफॉल्ट म्हूण थारायात
+	Set as Default	डिफॉल्ट म्हूण थारायात
+	Set Caret	कॅरेट थारायात
+	Set Character Formatting	अक्षर रचणूक थारायात
+	Set Date	तारीख थारायात
+	Set Equation	समीकरण थारायात
+	Set Numbering Value	क्रमांकन मोल थारायात
+	Set Paragraph Formatting	परिच्छेद रचणूक थारायात
+	Set Proofing Language…	तपासणी भास थारायात…
+	Setting:	सेटिंग:
+	Settings…	सेटिंग्ज…
+	Shading	सावळी
+	Shadow	सावळी
+	Shadow, glow and soft edges	सावळी, उजवाड आनी मोव कडो
+	Shape Effects	आकार परिणाम
+	Shape Fill	आकार भरप
+	Shape Format	आकार रचणूक
+	Shape Outline	आकार रूपरेखा
+	Shape Styles	आकार शैली
+	Shapes	आकार
+	Share	वांटात
+	Sheet:	शीट:
+	Shift cells down	कक्ष सकयल सरकयात
+	Shift cells right	कक्ष उजवेकडेन सरकयात
+	Shift+Tab	Shift+Tab
+	Shipping labels	शिपिंग लेबलां
+	Short citation:	ल्हान उल्लेख:
+	Shortcut key:	शॉर्टकट कळ:
+	Show	दाखयात
+	Show all formatting marks	सगळीं रचणूक चिन्नां दाखयात
+	Show All Levels	सगळे स्तर दाखयात
+	Show all revisions inline	सगळ्यो पुनरावृत्ती वळींत दाखयात
+	Show changes at:	बदल हांगा दाखयात:
+	Show changes in:	बदल हातूंत दाखयात:
+	Show Comments	टिप्पण्यो दाखयात
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	दस्तावेज उलट्या रंगांनी दाखयात, दृश्य › मोड बदलात भशेन. सांबाळप, छापणी आनी PDF बदलनात.
+	Show every bibliography field	दरेक संदर्भसुची फील्ड दाखयात
+	Show First Line Only	फकत पयली वळ दाखयात
+	Show in the Styles gallery	शैली गॅलरींत दाखयात
+	Show KeyTips (Alt or F10)	कीटिप्स दाखयात (Alt वा F10)
+	Show Level	स्तर दाखयात
+	Show Level 1	स्तर 1 दाखयात
+	Show Level 2	स्तर 2 दाखयात
+	Show Level 3	स्तर 3 दाखयात
+	Show Level 4	स्तर 4 दाखयात
+	Show Level 5	स्तर 5 दाखयात
+	Show Level 6	स्तर 6 दाखयात
+	Show Level 7	स्तर 7 दाखयात
+	Show Level 8	स्तर 8 दाखयात
+	Show Level 9	स्तर 9 दाखयात
+	Show Markup	मार्कअप दाखयात
+	Show Notes	टिपो दाखयात
+	Show only comments and formatting in balloons	फुग्यांनी फकत टिप्पण्यो आनी रचणूक दाखयात
+	Show or Hide Style	शैली दाखयात वा लिपयात
+	Show page numbers	पान क्रमांक दाखयात
+	Show revisions in balloons	पुनरावृत्ती फुग्यांनी दाखयात
+	Show rulers	मोजपट्ट्यो दाखयात
+	Show Text Formatting	मजकूर रचणूक दाखयात
+	Show the equation in the line of text	समीकरण मजकुराच्या वळींत दाखयात
+	Show the equation on a line of its own	समीकरण स्वतंत्र वळीर दाखयात
+	Show the mini toolbar when text is selected	मजकूर वेंचतना ल्हान टूलबार दाखयात
+	Show/Hide ¶	दाखयात/लिपयात ¶
+	Show\nComments	टिप्पण्यो\nदाखयात
+	Showing the first {count} items.	पयल्यो {count} वस्ती दाखयता.
+	Shows a tree: each item below the item it belongs to.	झाड दाखयता: दरेक वस्त ती ज्या वस्तूची आसा ताचे सकयल.
+	Shows items around a central idea: the first item is the centre.	मध्यवर्ती कल्पने भोंवतणी वस्ती दाखयता: पयली वस्त केंद्र.
+	Shows items of equal weight as blocks in rows.	समान म्हत्वाच्यो वस्ती ओळींनी ब्लॉक म्हूण दाखयता.
+	Shows overlapping ideas as overlapping circles.	एकामेकांवयर येवपी कल्पना एकामेकांवयर येवपी वर्तुळांनी दाखयता.
+	Shows parts of a whole as quadrants.	पुराय वस्तूचे भाग चतुर्थांश म्हूण दाखयता.
+	Shows parts that build on each other, largest at the bottom.	एकामेकांचेर आदारीत भाग दाखयता, सगळ्यांत व्हड सकयल.
+	Shows steps in order, left to right, with arrows between them.	पावलां क्रमान, दाव्यासावन उजवेकडेन, मदीं बाणांसयत दाखयता.
+	Shows steps that repeat, around a circle.	परत परत येवपी पावलां वर्तुळा भोंवतणी दाखयता.
+	Shrink Font 1 Point	फॉन्ट 1 पॉइंट उणो करात
+	Shrink Selection	वेंचणूक उणी करात
+	Shrink text	मजकूर ल्हान करात
+	Side to Side	कुशीकुशीन
+	Side\nto Side	कुशी\nकुशीन
+	Sides of a right triangle	काटकोन त्रिकोणाच्यो बाजू
+	Signature Line	सही वळ
+	Sine and cosine series of f(x)	f(x) ची सायन आनी कोसायन श्रेणी
+	Sine Function	सायन फलन
+	Sine theta	सायन थीटा
+	Single	एकेरी
+	Single Brackets	एकेरी कंस
+	Single Closing Quote	एकेरी बंद उद्धरण चिन्न
+	Single label	एकूच लेबल
+	Single Left Angle	एकेरी दावो कोन
+	Single Left Bar	एकेरी दावी पट्टी
+	Single Left Brace	एकेरी दावो महिरपी कंस
+	Single Left Bracket	एकेरी दावो चौकोनी कंस
+	Single Left Parenthesis	एकेरी दावो कंस
+	Single Opening Quote	एकेरी उगडें उद्धरण चिन्न
+	Single Right Brace	एकेरी उजवो महिरपी कंस
+	Single Right Bracket	एकेरी उजवो चौकोनी कंस
+	Single Right Parenthesis	एकेरी उजवो कंस
+	Single Spacing	एकेरी अंतर
+	SIST02	SIST02
+	Site name	साइटीचें नांव
+	Size	आकार
+	Size (pt):	आकार (pt):
+	Size and Crop…	आकार आनी कातरप…
+	Size:	आकार:
+	Sketchbook	रेखाटन वही
+	Skewed Fraction	तिरपो अपूर्णांक
+	Skip citations & bibliography	उल्लेख आनी संदर्भसुची वगळात
+	Skip Citations and Bibliography	उल्लेख आनी संदर्भसुची वगळात
+	Skip Record If	जर अशें आसल्यार रेकॉर्ड वगळात
+	Skip Record If…	जर अशें आसल्यार रेकॉर्ड वगळात…
+	Slant Down	सकयल ढळ
+	Slant Up	वयर ढळ
+	Small Caps	ल्हान व्हड अक्षरां
+	Small caps	ल्हान व्हड अक्षरां
+	Small change	ल्हान बदल
+	Smart quotes instead of straight quotes	सरळ उद्धरण चिन्नां बदला स्मार्ट उद्धरण चिन्नां
+	SmartArt	SmartArt
+	SmartArt Design	SmartArt डिझायन
+	SmartArt Styles	SmartArt शैली
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	गुळगुळीत स्क्रोलिंग आनी झूमिंग, आनी हळूहळू दिसपी मेनू आनी बटणां. बंद आसतना दरेक बदल रोखडोच दिसता.
+	Soft Edges	मोव कडो
+	Soft Glow	मोव उजवाड
+	Solid Accent	भरीव उठाव
+	Sort	क्रम लायात
+	Sort by	हाचे प्रमाण क्रम
+	Sort order:	क्रम:
+	Sort Records	रेकॉर्ड क्रमान लायात
+	Source code: github.com/chatraweechai/doc4me	स्रोत कोड: github.com/chatraweechai/doc4me
+	Source Manager	स्रोत वेवस्थापक
+	Source type:	स्रोत प्रकार:
+	Sources in this document:	ह्या दस्तावेजांतले स्रोत:
+	South	दक्षिण
+	Space	सुवात
+	Space after	उपरांत सुवात
+	Space after: {pt} pt	उपरांत सुवात: {pt} pt
+	Space before	आदीं सुवात
+	Space before/after:	आदीं/उपरांत सुवात:
+	Space before: {pt} pt	आदीं सुवात: {pt} pt
+	Spaces	सुवात
+	Spacing	अंतर
+	Spacing (pt):	अंतर (pt):
+	Spacing:	अंतर:
+	Spanish	स्पॅनीश
+	Spanish (Mexico)	स्पॅनीश (मॅक्सिको)
+	Spanish (Spain)	स्पॅनीश (स्पेन)
+	Sparse Matrices	विरळ मॅट्रिक्सां
+	Special	खाशेलें
+	Special Characters	खाशेलीं अक्षरां
+	Specify height:	उंचाय थारायात:
+	Speech	उलोवप
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	उलोवप ह्या कॉम्प्युटराचेर वळखतात (whisper.cpp); ऑनलायन कांयच धाडना.
+	Speed	वेग
+	Spelling	शुद्धलेखन
+	Spelling & Grammar	शुद्धलेखन आनी व्याकरण
+	Spelling &\nGrammar	शुद्धलेखन आनी\nव्याकरण
+	Spelling and grammar are checked in English (United States).	शुद्धलेखन आनी व्याकरण इंग्लीशींत (अमेरिका) तपासतात.
+	Spelling Suggestions	शुद्धलेखन सुचोवण्यो
+	Spike	स्पाइक
+	Split	विभागात
+	Split apart page break and paragraph mark	पान खंड आनी परिच्छेद चिन्न वेगळें करात
+	Split Cells	कक्ष विभागात
+	Split Table	कोष्टक विभागात
+	Spreadsheet Table	स्प्रेडशीट कोष्टक
+	Square	चौकोन
+	Square Root	वर्गमूळ
+	Square Root with Degree	घातांकासयत वर्गमूळ
+	Square Union	चौकोनी संयोग
+	Stack Object	रास वस्त
+	Stack Object (Three)	रास वस्त (तीन)
+	Stacked	रासलेलें
+	Stacked Bar	रासलेलो बार
+	Stacked Column	रासलेलो स्तंभ
+	Stacked Fraction	रासलेलो अपूर्णांक
+	Stacked, no bar	रासलेलें, पट्टी बगर
+	Standard	मानक
+	Standard and Contextual	मानक आनी संदर्भीत
+	Standard Colors	मानक रंग
+	Standard Only	फकत मानक
+	Star	नखेत्र
+	Start at:	हांगासावन सुरू करात:
+	Start Enforcing Protection	संरक्षण अंमलबजावणी सुरू करात
+	Start Mail Merge	मेल मर्ज सुरू करात
+	Start Mail\nMerge	मेल मर्ज\nसुरू करात
+	State	राज्य
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	आंकडेवारी
+	Status Bar	स्थिती पट्टी
+	Statutes	कायदे
+	Stop	थांबयात
+	Stop Protection	संरक्षण थांबयात
+	Stop Reading	वाचप थांबयात
+	Stopped	थांबलें
+	Store	स्टोअर
+	Straight Arrow Connector	सरळ बाण जोडणी
+	Straight Connector	सरळ जोडणी
+	Strikethrough	काटरेखा
+	Stroke {n} of {total}	स्ट्रोक {n} पयकीं {total}
+	Strong	बळिश्ट
+	Structure Actions	रचना कृती
+	Structures	रचना
+	Studio	स्टुडिओ
+	Studio cover	स्टुडिओ मुखपान
+	Studio handbook (sample)	स्टुडिओ पुस्तिका (नमुनो)
+	Style	शैली
+	Style based on:	शैली हाचेर आदारीत:
+	Style Inspector	शैली तपासणीस
+	Style Set	शैली संच
+	Style:	शैली:
+	Style: APA	शैली: APA
+	Style: {style}	शैली: {style}
+	Styles	शैली
+	Styles Pane	शैली फलक
+	Styles:	शैली:
+	Subentry:	उपनोंद:
+	Subject	विशय
+	Subscript	अधोलेख
+	Subscript-Superscript	अधोलेख-उर्ध्वलेख
+	Subscripts and Superscripts	अधोलेख आनी उर्ध्वलेख
+	Subset:	उपसंच:
+	Substituted font	बदली फॉन्ट
+	Subtitle	उपशीर्षक
+	Subtle Emphasis	सौम्य भर
+	Subtle Reference	सौम्य संदर्भ
+	Sum	बेरीज
+	Sum of cosines	कोसायनांची बेरीज
+	Sum or difference of sines	सायनांची बेरीज वा फरक
+	Summation	बेरीज
+	Summation from 0 to n	0 ते n मेरेन बेरीज
+	Summation over binomials	द्विपदांचेर बेरीज
+	Summation with Limits	मर्यादांसयत बेरीज
+	Summation with Lower Limit	सकयल्या मर्यादेसयत बेरीज
+	Summation with Subscript Limit	अधोलेख मर्यादेसयत बेरीज
+	Summation with Subscript-Superscript Limits	अधोलेख-उर्ध्वलेख मर्यादांसयत बेरीज
+	Summations	बेरजो
+	Superscript	उर्ध्वलेख
+	Suppress line numbers	वळ क्रमांक लिपयात
+	Surface Integral	पृष्ठ संकलन
+	Surface Integral with Limits	मर्यादांसयत पृष्ठ संकलन
+	Surface Integral with Stacked Limits	रासलेल्या मर्यादांसयत पृष्ठ संकलन
+	Swap footnotes and endnotes	पानाटिपो आनी अंत्यटिपो अदलाबदल करात
+	Swedish	स्वीडिश
+	Switch Modes	मोड बदलात
+	Switch Windows	जनेलां बदलात
+	Switch\nModes	मोड\nबदलात
+	Symbol	चिन्न
+	Symbol Font	चिन्न फॉन्ट
+	Symbols	चिन्नां
+	Synchronous Scrolling	समकालीन स्क्रोलिंग
+	Synonyms	समानार्थी उतरां
+	System	सिस्टम
+	Tab	Tab
+	Tab Character	टॅब अक्षर
+	Tab character	टॅब अक्षर
+	Tab characters	टॅब अक्षरां
+	Tab leader:	टॅब लीडर:
+	Tab stop position:	टॅब स्टॉप सुवात:
+	Tab stops to be cleared:	साफ करपाचे टॅब स्टॉप:
+	Table	कोष्टक
+	Table AutoFormat	कोष्टक आपसूक रचणूक
+	Table AutoFormat…	कोष्टक आपसूक रचणूक…
+	Table Column Width	कोष्टक स्तंभ रुंदाय
+	Table Design	कोष्टक डिझायन
+	Table direction:	कोष्टक दिशा:
+	Table entry fields	कोष्टक नोंदणी फील्डां
+	Table Grid	कोष्टक ग्रिड
+	Table identifier:	कोष्टक ओळखकार:
+	Table Layout	कोष्टक मांडणी
+	Table of Authorities	अधिकार वळेरी
+	Table of Contents	विशयसुची
+	Table of Contents Options	विशयसुची पर्याय
+	Table of Contents Styles	विशयसुची शैली
+	Table of Figures	आकृती वळेरी
+	Table of Figures Options	आकृती वळेरी पर्याय
+	Table of\nContents	विशय-\nसुची
+	Table Positioning	कोष्टक सुवात
+	Table Properties	कोष्टक गुणधर्म
+	Table Row Height	कोष्टक ओळ उंचाय
+	Table style	कोष्टक शैली
+	Table Style Options	कोष्टक शैली पर्याय
+	Table Styles	कोष्टक शैली
+	Table styles:	कोष्टक शैली:
+	Tables	कोष्टकां
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	टॅब
+	Tabs…	टॅब…
+	Tabular List	कोष्टकरूपी वळेरी
+	Tag	टॅग
+	Tangent formula	टॅन्जंट सूत्र
+	Tangent Function	टॅन्जंट फलन
+	TC entry fields	TC नोंदणी फील्डां
+	Technology	तंत्रगिन्यान
+	Templates	टेम्पलेट
+	Templates and Add-ins	टेम्पलेट आनी ॲड-इन
+	Text	मजकूर
+	Text Box	मजकूर पेटी
+	Text boxes	मजकूर पेटयो
+	Text Direction	मजकूर दिशा
+	Text Effects	मजकूर परिणाम
+	Text Effects and Typography	मजकूर परिणाम आनी टायपोग्राफी
+	Text Fill	मजकूर भरप
+	Text from File	फायलींतलो मजकूर
+	Text Highlight Color	मजकूर हायलायट रंग
+	Text indent at:	मजकूर इंडेंट हांगा:
+	Text isn't squeezed to fit its cell yet.	मजकूर अजून कक्षांत बसपाक आकुंचीत जायना.
+	Text Outline	मजकूर रूपरेखा
+	Text over Colon Equal	अपूर्णविराम बरोबरा वयर मजकूर
+	Text over Equal	बरोबरा वयर मजकूर
+	Text Pane	मजकूर फलक
+	Text size	मजकूर आकार
+	Text snaps to characters	मजकूर अक्षरांक चिकटता
+	Text to display:	दाखोवपाचो मजकूर:
+	Text Wrapping	मजकूर गुंडाळप
+	Text wrapping:	मजकूर गुंडाळप:
+	Text:	मजकूर:
+	Text\nBox	मजकूर\nपेटी
+	Text\nDirection	मजकूर\nदिशा
+	Thai	थाय
+	Thai Distributed	थाय वांटिल्लें
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	ती रचणूक सगळें दवरिना, देखून दस्तावेज अजून उगडो आसा. फुडें वचपाक तो Word दस्तावेज (.docx) म्हूण सांबाळात.
+	That isn't the web address or embed code of an online video.	तो ऑनलायन व्हिडिओचो वेब पत्तो वा एम्बेड कोड न्हय.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	तो पासवर्ड बरोबर ना. तपासात (पासवर्ड अक्षराच्या आकाराक संवेदनशील आसतात) आनी परत यत्न करात.
+	The clipboard is empty.	क्लिपबोर्ड रितें आसा.
+	The date it is today	आयची तारीख
+	The document contains no tracked changes.	दस्तावेजांत मागोवा घेतिल्ले बदल नात.
+	The document has no bookmarks yet.	दस्तावेजांत अजून बुकमार्क नात.
+	The document is read only, except for regions marked editable.	संपादनायोग्य खूण केल्लें क्षेत्र सोडून दस्तावेज फकत वाचपाक आसा.
+	The document will be saved with a password. Save it to protect it.	दस्तावेज पासवर्डासयत सांबाळटलो. तो राखपाक सांबाळात.
+	The first word of a sentence starts with a capital.	वाक्याचें पयलें उतर व्हड अक्षरान सुरू जाता.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	फुकट दिसाची मर्यादा सोंपली (फाल्यां परत यत्न करात, वा ईमेल पत्तो दियात)
+	the LibreTranslate server	LibreTranslate सर्वर
+	The Mail Merge Helper sets up a merge in three steps.	मेल मर्ज आदारी तीन पावलांनी मर्ज थारायता.
+	The new style takes the formatting of the current paragraph.	नवी शैली सद्याच्या परिच्छेदाची रचणूक घेता.
+	The password is optional; without it anyone can stop the protection.	पासवर्ड पर्यायी; ताचे बगर कोणूय संरक्षण थांबोवंक शकता.
+	The password is removed. Save the document to keep the change.	पासवर्ड काडलो. बदल दवरपाक दस्तावेज सांबाळात.
+	The passwords don't match.	पासवर्ड जुळनात.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	प्रिंटर, दोनूय वटांनी छापणी आनी दर शीट पानां त्या संवादांत वेंचतात.
+	The recipient-list field that fills each part of an address block and greeting line.	पत्तो ब्लॉक आनी अभिवादन वळीचो दरेक भाग भरपी मेळोवप्यांच्या वळेरीचें फील्ड.
+	The same word twice in a row.	सलग दोन फावटीं तेंच उतर.
+	The spelling and grammar check is complete.	शुद्धलेखन आनी व्याकरण तपासणी पुराय जाली.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	सिस्टम फायल संवाद मेळना, देखून Doc4Me स्वताचो दाखयता. सिस्टम संवाद मेळोवपाक फायल वेंचणी पोर्टल (जशें xdg-desktop-portal-gtk) वा zenity बसयात.
+	The text is sent to {service} to be translated.	मजकूर अणकाराखातीर {service} कडे धाडटात.
+	The time right now	आतांचो वेळ
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	व्हिडिओ दस्तावेजांत चित्र म्हूण दिसता. तुमच्या ब्राउझरांत पळोवपाक दोन फावटीं क्लिक करात.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	पुराय दस्तावेजाचो अणकार नव्या दस्तावेजांत जाता, जो ह्याची सुवात घेता. पयलीं तुमचें काम सांबाळात.
+	Theme Colors	थीम रंग
+	Theme Fonts	थीम फॉन्ट
+	Theme List	थीम वळेरी
+	Themes	थीम
+	Then by	मागीर हाचे प्रमाण
+	Then insert:	मागीर घालात:
+	There's no text to translate.	अणकार करपाक मजकूर ना.
+	Thesaurus	समानार्थी कोश
+	These marks show even when Show/Hide ¶ is off.	दाखयात/लिपयात ¶ बंद आसलें तरी हीं चिन्नां दिसतात.
+	These merge fields aren't in the recipient list:	हीं मर्ज फील्डां मेळोवप्यांच्या वळेरींत नात:
+	These settings will be used for new documents.	हीं सेटिंग्ज नव्या दस्तावेजांखातीर वापरतले.
+	Thick	जाड
+	Thickness	जाडाय
+	This Device…	हें उपकरण…
+	This document	हो दस्तावेज
+	This field has no options.	ह्या फील्डाक पर्याय नात.
+	This folder can't be read: {error}	हो फोल्डर वाचूंक जायना: {error}
+	This font has no characters to show.	ह्या फॉन्टांत दाखोवपाक अक्षरां नात.
+	This page	हें पान
+	This password type isn't supported.	हो पासवर्ड प्रकार चलना.
+	This point forward	हांगासावन फुडें
+	This section	हो विभाग
+	Three	तीन
+	Through	आरपार
+	Tight	घट्ट
+	Tilde	टिल्ड
+	Tips ({n})	सुचोवण्यो ({n})
+	Title	शीर्षक
+	Title from the document properties	दस्तावेज गुणधर्मांतलें शीर्षक
+	Title:	शीर्षक:
+	To	कडेन
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Word दस्तावेज डिफॉल्ट म्हूण Doc4Me न उगडपाक: Finder त एक वेंचात, File › Get Info वेंचात, Open with हांगा Doc4Me वेंचात, मागीर Change All क्लिक करात.
+	To:	कडेन:
+	TOA Heading	अधिकार वळेरी शीर्षक
+	TOC Heading	विशयसुची शीर्षक
+	TOC {n}	विशयसुची {n}
+	Today	आज
+	tOGGLE cASE	अक्षर उलटें करात
+	Toggle Check Box	चेक बॉक्स बदलात
+	Toggle Field Codes	फील्ड कोड बदलात
+	Toggle Unicode Character	Unicode अक्षर बदलात
+	Tools	साधनां
+	Top	वयर
+	Top and Bottom	वयर आनी सकयल
+	Top Border	वयली कड
+	Top Margin	वयलो समास
+	Top of Next Page	फुडल्या पानाच्या वयर
+	Top of Page	पानाच्या वयर
+	Top of Previous Page	फाटल्या पानाच्या वयर
+	Top of the Window	जनेलाच्या वयर
+	Top:	वयर:
+	Total	एकूण
+	Total Row	एकूण ओळ
+	Track Changes	बदलांचो मागोवो घेयात
+	Track Changes Options	बदल मागोवा पर्याय
+	Track changes while editing	संपादन करतना बदलांचो मागोवो घेयात
+	Track Changes: On	बदल मागोवो: चालू
+	Track formatting	रचणुकेचो मागोवो घेयात
+	Track\nChanges	बदलांचो\nमागोवो
+	Track\nChanges ✓	बदलांचो\nमागोवो ✓
+	Tracked changes	मागोवा घेतिल्ले बदल
+	Tracking	मागोवो
+	Trademark	ट्रेडमार्क
+	Trademark Sign	ट्रेडमार्क चिन्न
+	Transform	रुपांतर
+	Translate	अणकार करात
+	Translate Document	दस्तावेजाचो अणकार करात
+	Translating {done} of {total}	{total} पयकीं {done} चो अणकार चालू
+	Translation service	अणकार सेवा
+	Translator	अणकारकार
+	Transparency	पारदर्शकताय
+	Transparency:	पारदर्शकताय:
+	Transport	वाहतूक
+	Treatises	प्रबंध
+	Triangle	त्रिकोण
+	Triangle Down	त्रिकोण सकयल
+	Triangle Up	त्रिकोण वयर
+	Trigonometric Functions	त्रिकोणमितीय फलनां
+	Triple	तिप्पट
+	Triple Dot	तिप्पट ठिपको
+	Triple Integral	तिप्पट संकलन
+	Triple Integral with Limits	मर्यादांसयत तिप्पट संकलन
+	Triple Integral with Stacked Limits	रासलेल्या मर्यादांसयत तिप्पट संकलन
+	Trust Center	विस्वास केंद्र
+	Tue	मंगळ
+	Turabian	Turabian
+	Turkish	तुर्की
+	Two	दोन
+	Type	प्रकार
+	Type a command, e.g. "insert table"	आदेश टायप करात, जशें "कोष्टक घालात"
+	Type a New List	नवी वळेरी टायप करात
+	Type a New List…	नवी वळेरी टायप करात…
+	Type at least one recipient.	उण्यांत उणें एक मेळोवपी टायप करात.
+	Type equations in LaTeX	समीकरणां LaTeX त टायप करात
+	Type equations in the linear format (UnicodeMath)	समीकरणां रेखीय रचणुकेंत (UnicodeMath) टायप करात
+	Type in Equation	समीकरणांत टायप करात
+	Type normal (non-math) text in the equation	समीकरणांत सादो (गणीत नाशिल्लो) मजकूर टायप करात
+	Type Text	मजकूर टायप करात
+	Type the categories down the side and a column of values per series.	वर्ग कुशीक सकयल आनी दर मालिकेक मोलांचो एक स्तंभ टायप करात.
+	Type the field's name and its switches, for example PAGE \\* roman.	फील्डाचें नांव आनी ताचे स्विच टायप करात, उदा. PAGE \\* roman.
+	Type the password to stop the protection.	संरक्षण थांबोवपाक पासवर्ड टायप करात.
+	Type the recipients, or load them from a file.	मेळोवपी टायप करात, वा फायलींतल्यान लोड करात.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	स्रोताचें टॅग नांव टायप करात. स्रोत संपादित करून तुमी मागीर चड माहिती जोडूंक शकतात.
+	Type:	प्रकार:
+	Typing	टायपिंग
+	Typing replaces selected text	टायप केल्यार वेंचिल्लो मजकूर बदलता
+	Ukrainian	युक्रेनियन
+	Unchecked symbol	खूण नाशिल्लें चिन्न
+	Underbar	सकयली पट्टी
+	Underbrace	सकयलो महिरपी कंस
+	Underline	अधोरेखीत करात
+	Underline color	अधोरेखा रंग
+	Underline Words Only	फकत उतरां अधोरेखीत करात
+	Undo	परत घेयात
+	Undo Stroke	स्ट्रोक परत घेयात
+	Undo {action}	{action} परत घेयात
+	Unformatted Text	रचणूक नाशिल्लो मजकूर
+	Ungroup	गट मोडात
+	Union	संयोग
+	Union of intersections	छेदनांचो संयोग
+	Union with Limits	मर्यादांसयत संयोग
+	Union with Lower Limit	सकयल्या मर्यादेसयत संयोग
+	Union with Plus	अदिकासयत संयोग
+	Union with Subscript-Superscript Limits	अधोलेख-उर्ध्वलेख मर्यादांसयत संयोग
+	Unions and Intersections	संयोग आनी छेदन
+	Unlink Fields	फील्डांचो दुवो काडात
+	Unlink\nCitations	उल्लेखांचो\nदुवो काडात
+	Unlock Fields	फील्डांचें कुलूप काडात
+	Up	वयर
+	Up Diagonal Dots	वयर कर्ण ठिपके
+	Up one level	एक स्तर वयर
+	Update Field	फील्ड अद्यतन करात
+	Update fields before printing	छापचे आदीं फील्डां अद्यतन करात
+	Update Index	सुची अद्यतन करात
+	Update Style to Match Selection	वेंचणुके कडेन जुळपाक शैली अद्यतन करात
+	Update Styles from Template	टेम्पलेटांतल्यान शैली अद्यतन करात
+	Update Table	कोष्टक अद्यतन करात
+	Update Table of Figures	आकृती वळेरी अद्यतन करात
+	Update to Match	जुळपाक अद्यतन करात
+	Update to Match Selection	वेंचणुके कडेन जुळपाक अद्यतन करात
+	UPPERCASE	व्हड अक्षरां
+	URGENT	तातडीचें
+	URL	URL
+	Use "a" before a consonant sound	व्यंजन उच्चारा आदीं "a" वापरात
+	Use "an" before a vowel sound	स्वर उच्चारा आदीं "an" वापरात
+	Use an Existing List…	आसा ती वळेरी वापरात…
+	Use passim (five or more pages)	passim वापरात (पांच वा चड पानां)
+	Use system setting	सिस्टम सेटिंग वापरात
+	Use the Insert key to switch overtype on and off	वयल्यान बरोवप चालू/बंद करपाक Insert कळ वापरात
+	Use wildcards	वायल्डकार्ड वापरात
+	User Name	वापरप्याचें नांव
+	User name:	वापरप्याचें नांव:
+	Username	वापरपी नांव
+	Value	मोल
+	Vector A	सदिश A
+	Vector AB	सदिश AB
+	Version	आवृत्ती
+	Version History	आवृत्ती इतिहास
+	Version {version} ({build})	आवृत्ती {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	दस्तावेज उगडो आसा तोमेरेन आवृत्त्यो दवरतात (.docx फायलीक आवृत्त्यो नात).
+	Vertical	उबें
+	Vertical Alignment	उबें संरेखन
+	Vertical alignment:	उबें संरेखन:
+	Vertical Bars	उब्यो पट्ट्यो
+	Vertical Dots	उबे ठिपके
+	Vertical spacing:	उबें अंतर:
+	Vietnamese	व्हिएतनामी
+	View	दृश्य
+	View Alt Text…	पर्यायी मजकूर पळयात…
+	View Gridlines	ग्रिडलायन पळयात
+	View Side by Side	कुशीकुशीन पळयात
+	View State	दृश्य स्थिती
+	Views	दृश्यां
+	Visual effects	दृश्य परिणाम
+	Voice	आवाज
+	Volume	खंड
+	Volume Integral	घनफळ संकलन
+	Volume Integral with Limits	मर्यादांसयत घनफळ संकलन
+	Volume Integral with Stacked Limits	रासलेल्या मर्यादांसयत घनफळ संकलन
+	W:	रुं:
+	Waiting for Zotero…	Zotero ची वाट पळयता…
+	Warm Gradient with Outline	रूपरेखेसयत उबदार ग्रेडियंट
+	Warnings ({n})	शिटकावण्यो ({n})
+	Watermark	वॉटरमार्क
+	Wave	ल्हार
+	Weather	हवामान
+	web access isn't available here	वेब प्रवेश हांगा मेळना
+	Web Layout	वेब मांडणी
+	Web page (*.html)	वेब पान (*.html)
+	Web\nLayout	वेब\nमांडणी
+	Website	वेबसायट
+	Wed	बुध
+	Weight	वजन
+	West	अस्तंत
+	When merging records	रेकॉर्ड एकठांय करतना
+	When this document was first created	हो दस्तावेज पयलो केन्ना तयार जालो
+	When this document was most recently printed	हो दस्तावेज निमाणो केन्ना छापलो
+	When this document was most recently saved	हो दस्तावेज निमाणो केन्ना सांबाळलो
+	White Space	रिती सुवात
+	White space	रिती सुवात
+	Who the document properties name as author	दस्तावेज गुणधर्मांनी बरोवपी म्हूण कोणाचें नांव आसा
+	Whole document	पुराय दस्तावेज
+	Whole page	पुराय पान
+	Whole Table	पुराय कोष्टक
+	Whole words	पुराय उतरां
+	Wide	रुंद
+	Widow/Orphan Control	विधवा/अनाथ नियंत्रण
+	Widow/Orphan control	विधवा/अनाथ नियंत्रण
+	Width and spacing	रुंदाय आनी अंतर
+	Width:	रुंदाय:
+	Wildcards (regex)	वायल्डकार्ड (regex)
+	Window	जनेल
+	With:	हाणें:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 आनी उपरांतचे
+	Word 97–2003	Word 97–2003
+	Word Count	उतरां मेजणी
+	Word document	Word दस्तावेज
+	Word document (*.docx)	Word दस्तावेज (*.docx)
+	Word forms	Word फॉर्म
+	Word Left	दावें उतर
+	Word level	उतर स्तर
+	Word Right	उजवें उतर
+	Word XML Document (*.xml)	Word XML दस्तावेज (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt शैली
+	Words	उतरां
+	Words only	फकत उतरां
+	Wrap Text	मजकूर गुंडाळात
+	Wrap text	मजकूर गुंडाळात
+	Wrap Text Sides	मजकूर गुंडाळपाच्यो बाजू
+	Wrap\nText	मजकूर\nगुंडाळात
+	Write & Insert Fields	फील्डां बरयात आनी घालात
+	Write a reply	जाप बरयात
+	Write math here with the mouse or a pen.	माउस वा पेनान हांगा गणीत बरयात.
+	Writing Style: Grammar	बरोवपाची शैली: व्याकरण
+	x bar	x बार
+	Year	वर्स
+	Yes	हय
+	Yields	परिणाम दिता
+	Your changes will be lost if you don't save them.	तुमी सांबाळूंक नात जाल्यार तुमचे बदल हेरावतले.
+	Your system doesn't report an animation setting, so animation effects stay on.	तुमची सिस्टम हालचाल सेटिंग कळयना, देखून हालचाल परिणाम चालू उरतात.
+	Your system has animation effects turned off.	तुमच्या सिस्टमाचेर हालचाल परिणाम बंद आसात.
+	Your system has animation effects turned on.	तुमच्या सिस्टमाचेर हालचाल परिणाम चालू आसात.
+	Zoom	झूम
+	Zoom In	झूम इन
+	Zoom Out	झूम आउट
+	Zoom to Page	पानाक झूम करात
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: रद्द
+	Zotero: done	Zotero: जालें
+	{cols}×{rows} Table	{cols}×{rows} कोष्टक
+	{contributors} contributors · {commits} commits	{contributors} योगदानकर्ते · {commits} कमिट
+	{count} items highlighted	{count} वस्ती हायलायट केल्यो
+	{count} of {total} pages will print	{total} पयकीं {count} पानां छापतलीं
+	{count} paragraphs were changed.	{count} परिच्छेद बदलले.
+	{count} records; fields: {fields}	{count} रेकॉर्ड; फील्डां: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ह्या कॉम्प्युटराचेर बसयल्लो ना, देखून हो दस्तावेज {with} वांगडा दाखयता. वळी आनी पानां मूळ फॉन्टा परस वेगळ्या तरेन फुटूं येतात.
+	{group} settings	{group} सेटिंग्ज
+	{key}+Click to follow link	दुवो उगडपाक {key}+क्लिक
+	{language} is now the document's default language.	{language} आतां दस्तावेजाची डिफॉल्ट भास.
+	{name} (Press ENTER to Insert)	{name} (घालपाक ENTER दामात)
+	{name} already exists. Choose Save again to replace it.	{name} पयलींच आसा. बदलपाक परत सांबाळ वेंचात.
+	{name} can't be a folder's name.	{name} फोल्डराचें नांव जावंक शकना.
+	{name} is protected with a password.	{name} पासवर्डान राखिल्लो आसा.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} जोडलें. ताचे मॅक्रो म्हजे ॲड-इन आनी दृश्य › मॅक्रो हांगा आसात.
+	{name} wasn't found.	{name} मेळ्ळें ना.
+	{n} entries marked.	{n} नोंदी खूण केल्यो.
+	{n} lines	{n} वळी
+	{n} of {of} recipients	{of} पयकीं {n} मेळोवपी
+	{n} pt	{n} pt
+	{n} records	{n} रेकॉर्ड
+	{n} revisions	{n} पुनरावृत्ती
+	{selected} of {words} words	{words} पयकीं {selected} उतरां
+	{size} pt	{size} pt
+	{words} words	{words} उतरां
+	{w} × {h} in	{w} × {h} इंच
+	{w} × {h} mm	{w} × {h} मिमी
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) आंकडो न्हय.
+	← Find	← सोदात
+	✓ None	✓ कांयच ना
+	➕ New comment	➕ नवी टिप्पणी
+	📂  Browse…	📂  ब्राउझ करात…
+	Add Help Text…	आदार मजकूर जोडात…
+	AutoText entry:	आपसूक मजकूर नोंद:
+	Calculate on exit	भायर सरतना गणना करात
+	Calculation	गणना
+	Check Box Form Field	चेक बॉक्स फॉर्म फील्ड
+	Check Box Form Field Options	चेक बॉक्स फॉर्म फील्ड पर्याय
+	Check box	चेक बॉक्स
+	Check box enabled	चेक बॉक्स सक्षम
+	Check box size:	चेक बॉक्स आकार:
+	Checked	खूण केल्लें
+	Current date	सद्याची तारीख
+	Current time	सद्याचो वेळ
+	Default value:	डिफॉल्ट मोल:
+	Drop-Down Form Field	ड्रॉप-डाउन फॉर्म फील्ड
+	Drop-Down Form Field Options	ड्रॉप-डाउन फॉर्म फील्ड पर्याय
+	Drop-down	ड्रॉप-डाउन
+	Drop-down enabled	ड्रॉप-डाउन सक्षम
+	Drop-down item:	ड्रॉप-डाउन वस्त:
+	Fill In Form Field	भरपाचें फॉर्म फील्ड
+	Fill-in enabled	भरप सक्षम
+	Form Field	फॉर्म फील्ड
+	Form Field Help Text	फॉर्म फील्ड आदार मजकूर
+	Form Field Options	फॉर्म फील्ड पर्याय
+	Form Field Shading	फॉर्म फील्ड सावळी
+	Form Field at Selection	वेंचणुकेचेर फॉर्म फील्ड
+	Help Key (F1)	आदार कळ (F1)
+	Insert Form Field	फॉर्म फील्ड घालात
+	Items in drop-down list:	ड्रॉप-डाउन वळेरींतल्यो वस्ती:
+	Legacy Tools	पोरनीं साधनां
+	Maximum length:	कमाल लांबाय:
+	Next Form Field	फुडलें फॉर्म फील्ड
+	Not checked	खूण नाशिल्लें
+	Put the caret on a form field first.	पयलीं कॅरेट फॉर्म फील्डाचेर दवरात.
+	Regular text	सादो मजकूर
+	Reset Form Fields	फॉर्म फील्डां परत थारायात
+	Text Form Field	मजकूर फॉर्म फील्ड
+	Text Form Field Options	मजकूर फॉर्म फील्ड पर्याय
+	Type your own:	तुमचें स्वताचें टायप करात:
+	Unlimited	अमर्यादीत
+	Protected sections:	राखिल्ले विभाग:
+	Section Protection	विभाग संरक्षण
+	Section {n}	विभाग {n}
+	Select sections…	विभाग वेंचात…
+	AutoSummarize	आपसूक सारांश
+	Create a new document and put the summary there	नवो दस्तावेज तयार करून सारांश थंय दवरात
+	Highlight key points	मुखेल मुद्दे हायलायट करात
+	Insert an executive summary or abstract at the top of the document	दस्तावेजाच्या वयर कार्यकारी सारांश वा गोशवारो घालात
+	Length of summary	सारांशाची लांबाय
+	Percent of original:	मूळाचे टक्के:
+	Summary: {words} of {of} words	सारांश: {of} पयकीं {words} उतरां
+	Type of summary	सारांशाचो प्रकार
+	Update document statistics	दस्तावेज आंकडेवारी अद्यतन करात
+	{n} sentences	{n} वाक्यां
+	{n} words or less	{n} उतरां वा उणीं
+	At:	हांगा:
+	Distance from text:	मजकुरासावन अंतर:
+	Format Frame	फ्रेम रचात
+	Format Frame…	फ्रेम रचात…
+	Frame	फ्रेम
+	Frame…	फ्रेम…
+	Insert Frame	फ्रेम घालात
+	Lock anchor	अँकर कुलूप करात
+	Remove Frame	फ्रेम काडात
+	Text wrapping	मजकूर गुंडाळप
+	Chinese Conversion	चिनी रुपांतर
+	Chinese Conversion…	चिनी रुपांतर…
+	Converted {n} characters	{n} अक्षरां रुपांतर केलीं
+	Simplified Chinese to Traditional Chinese	सोंपी चिनी ते पारंपारीक चिनी
+	Simplified to Traditional	सोंपें ते पारंपारीक
+	Traditional Chinese to Simplified Chinese	पारंपारीक चिनी ते सोंपी चिनी
+	Traditional to Simplified	पारंपारीक ते सोंपें
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	तैवान, हाँगकाँग SAR आनी मकाओ SAR अक्षर प्रकार वापरात
+	Asian Layout	आशियाई मांडणी
+	Fit Text	मजकूर बसयात
+	Fit Text…	मजकूर बसयात…
+	Two Lines in One	एकांत दोन वळी
+	Two Lines in One…	एकांत दोन वळी…
+	New text width (pt):	नवी मजकूर रुंदाय (pt):
+	Enclose in brackets	कंसांत घालात
+	Bracket pair:	कंस जोडी:
+	Typography	टायपोग्राफी
+	Character spacing control	अक्षर अंतर नियंत्रण
+	Don't compress	आकुंचीत करूं नाकात
+	Compress punctuation only	फकत विरामचिन्नां आकुंचीत करात
+	Compress punctuation and Japanese kana	विरामचिन्नां आनी जपानी काना आकुंचीत करात
+	First and last characters	पयलें आनी निमाणें अक्षर
+	Strict	कडक
+	Cannot start a line:	वळ सुरू करूंक शकना:
+	Cannot end a line:	वळ सोंपोवंक शकना:
+	Japanese Find Options	जपानी सोद पर्याय
+	Sounds like (Japanese)	उच्चारसारकें (जपानी)
+	Match full/half width	पुराय/अर्दी रुंदाय जुळयात
+	Match hiragana/katakana	हिरागाना/काताकाना जुळयात
+	Match small kana	ल्हान काना जुळयात
+	Match prolonged sound marks and dashes	दीर्घ स्वर चिन्नां आनी डॅश जुळयात
+	Japanese Consistency Checker	जपानी सुसंगतताय तपासणीस
+	Japanese Consistency Checker…	जपानी सुसंगतताय तपासणीस…
+	No inconsistent spellings were found.	विसंगत शुद्धलेखन मेळ्ळें ना.
+	Pick the spelling to keep in each group.	दरेक गटांत दवरपाचें शुद्धलेखन वेंचात.
+	Bidirectional text	द्विदिशी मजकूर
+	Bidirectional Text	द्विदिशी मजकूर
+	Default direction:	डिफॉल्ट दिशा:
+	Cursor movement:	कर्सर हालचाल:
+	Logical	तार्कीक
+	Visual	दृश्य
+	Manage Fields	फील्डां वेवस्थापीत करात
+	File locations	फायल सुवाती
+	File Locations	फायल सुवाती
+	Documents:	दस्तावेज:
+	Pictures:	चित्रां:
+	The system's choice	सिस्टमाची वेंचणूक
+	Show Repairs	दुरुस्त्यो दाखयात
+	No repairs were needed.	दुरुस्तीची गरज पडली ना.
+	These problems were found and repaired when the document was opened:	दस्तावेज उगडटना ह्यो समस्या मेळ्ळ्यो आनी दुरुस्त केल्यो:
+	An unreadable entry in the file was skipped: {what}	फायलींतली वाचूंक जायना अशी नोंद वगळ्ळी: {what}
+	An unreadable part was left out: {what}	वाचूंक जायना असो भाग वगळ्ळो: {what}
+	Unreadable relationships were ignored: {what}	वाचूंक जायनात असे संबंद दुर्लक्षीत केले: {what}
+	A missing part of an embedded object was left out: {what}	एम्बेड केल्ल्या वस्तूचो नाशिल्लो भाग वगळ्ळो: {what}
+	Copy File	फायल प्रत करात
+	Find Files	फायली सोदात
+	Letter Wizard	पत्र विझार्ड
+	Recipient's name:	मेळोवप्याचें नांव:
+	Salutation:	अभिवादन:
+	Subject:	विशय:
+	Complimentary closing:	समारोप:
+	Sender's name:	धाडप्याचें नांव:
+	Job title:	पद:
+	Company:	कंपनी:
+	Enclosures:	जोडण्यो:
+	Cc:	प्रत:
+	Edit Links to Files	फायलींचे दुवे संपादित करात
+	Source file	स्रोत फायल
+	Locked	कुलूप केल्लें
+	Change Source	स्रोत बदलात
+	This document has no links to files.	ह्या दस्तावेजांत फायलींचे दुवे नात.
+	Web options	वेब पर्याय
+	Web Options	वेब पर्याय
+	Allow PNG as a graphics format	PNG ग्राफिक रचणूक म्हूण मान्य करात
+	Rely on CSS for font formatting	फॉन्ट रचणुकेखातीर CSS चेर आदारात
+	Rely on VML for displaying graphics in browsers	ब्राउझरांनी ग्राफिक्स दाखोवपाक VML चेर आदारात
+	Organize supporting files in a folder	आदाराच्यो फायली फोल्डरांत मांडात
+	Use long file names whenever possible	शक्य थंय लांब फायल नांवां वापरात
+	Screen size:	स्क्रीन आकार:
+	Pixels per inch:	दर इंचांत पिक्सेल:
+	Hangul Hanja Conversion	हांगुल हांजा रुपांतर
+	Hangul Hanja Conversion…	हांगुल हांजा रुपांतर…
+	Hangul to Hanja	हांगुल ते हांजा
+	Hanja to Hangul	हांजा ते हांगुल
+	Put the caret in Korean text to choose its Hanja.	ताचो हांजा वेंचपाक कॅरेट कोरियन मजकुरांत दवरात.
+	The selection, or the whole document when nothing is selected.	वेंचणूक, वा कांयच वेंचूंक ना जाल्यार पुराय दस्तावेज.
+	Add frame	फ्रेम जोडात
+	Attributes:	गुणधर्म:
+	Border color:	कड रंग:
+	Border width:	कड रुंदाय:
+	Choose how the custom XML editor displays names and removes schema references.	स्वतःचो XML संपादक नांवां कशीं दाखयता आनी स्कीमा संदर्भ कशे काडटा तें वेंचात.
+	Confirm before removing a schema reference	स्कीमा संदर्भ काडचे आदीं पुष्टी करात
+	Elements:	घटक:
+	Enter an absolute HTTP(S) or URN schema URI.	पुराय HTTP(S) वा URN स्कीमा URI घालात.
+	Frame URL	फ्रेम URL
+	Frame borders:	फ्रेम कडो:
+	Frame spacing:	फ्रेम अंतर:
+	Frames:	फ्रेम:
+	Frameset Properties	फ्रेमसेट गुणधर्म
+	Hide	लिपयात
+	Margin height:	समास उंचाय:
+	Margin width:	समास रुंदाय:
+	No resize	आकार बदल ना
+	No schema references	स्कीमा संदर्भ नात
+	Optional	पर्यायी
+	Optional, 0–1000	पर्यायी, 0–1000
+	Pixels (0–100)	पिक्सेल (0–100)
+	Remove Attribute	गुणधर्म काडात
+	Remove schema reference {schema}?	स्कीमा संदर्भ {schema} काडचो?
+	Rows:	ओळी:
+	Schema Library	स्कीमा ग्रंथालय
+	Schema URI:	स्कीमा URI:
+	Schemas:	स्कीमा:
+	Scrolling:	स्क्रोलिंग:
+	Select a custom XML store with editable datastore properties first.	पयलीं संपादनायोग्य डेटास्टोअर गुणधर्म आशिल्लो स्वतःचो XML स्टोअर वेंचात.
+	Select an XML element to add, change, or remove one of its attributes.	ताचो एक गुणधर्म जोडपाक, बदलपाक वा काडपाक XML घटक वेंचात.
+	Selected element: {name}	वेंचिल्लो घटक: {name}
+	Set Attribute	गुणधर्म थारायात
+	Show namespace URIs beside XML names	XML नांवां कुशीक नेमस्पेस URI दाखयात
+	Store: {store}	स्टोअर: {store}
+	This XML store is preserved but cannot be edited here.	हो XML स्टोअर राखून दवरला पूण हांगा संपादित करूंक जायना.
+	This document has no custom XML stores.	ह्या दस्तावेजांत स्वतःचे XML स्टोअर नात.
+	This store has no datastore properties part for schema references.	ह्या स्टोअरांत स्कीमा संदर्भांखातीर डेटास्टोअर गुणधर्म भाग ना.
+	This store has no elements available for editing.	ह्या स्टोअरांत संपादनाखातीर घटक नात.
+	Value:	मोल:
+	View and manage schema references associated with custom XML stores.	स्वतःच्या XML स्टोअराकडेन जोडिल्ले स्कीमा संदर्भ पळयात आनी वेवस्थापीत करात.
+	XML Element Attributes	XML घटक गुणधर्म
+	XML Options	XML पर्याय
+	e.g. 25%,*	उदा. 25%,*
+	e.g. 30%,*	उदा. 30%,*
+	Web	वेब
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	इंटरफेस अजून {language} बरोबर दाखोवंक शकना: जोडटा वा क्रम बदलता अशीं अक्षरां आनी उजव्यान दाव्यान बरयल्लो मजकूर चुकीचो दिसूं येता. तरी वापरूंक जाय?

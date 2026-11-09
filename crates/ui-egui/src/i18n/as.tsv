@@ -1,0 +1,3046 @@
+# Assamese (as) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	পিছৰ শব্দৰ আগত "a" বা "an"; পোলিছ "w"/"we", "z"/"ze"।
+	% of all commits	সকলো কমিটৰ %
+	(All)	(সকলো)
+	(Custom)	(কাষ্টম)
+	(no style)	(কোনো শৈলী নাই)
+	(no suggestions)	(কোনো পৰামৰ্শ নাই)
+	(none)	(একো নাই)
+	(normal text)	(সাধাৰণ পাঠ)
+	(not matched)	(মিলা নাই)
+	(picture or object)	(ছবি বা বস্তু)
+	*Bold* and _italic_ with real formatting	প্ৰকৃত সজ্জাৰে *গাঢ়* আৰু _হেলনীয়া_
+	0 or More Characters	0 বা অধিক আখৰ
+	1. Formatting restrictions	1. সজ্জা সীমাবদ্ধতা
+	1. Main document	1. মূল নথি
+	1.5 Line Spacing	1.5 শাৰী ব্যৱধান
+	1/4 Em Space	1/4 Em খালী ঠাই
+	1×2 Empty Matrix	1×2 খালী মেট্ৰিক্স
+	1×3 Empty Matrix	1×3 খালী মেট্ৰিক্স
+	2. Data source	2. ডেটা উৎস
+	2. Editing restrictions	2. সম্পাদনা সীমাবদ্ধতা
+	2×1 Empty Matrix	2×1 খালী মেট্ৰিক্স
+	2×2 Determinant	2×2 নিৰ্ণায়ক
+	2×2 Empty Matrix	2×2 খালী মেট্ৰিক্স
+	2×2 Identity Matrix	2×2 একক মেট্ৰিক্স
+	2×2 Identity Matrix (sparse)	2×2 একক মেট্ৰিক্স (বিৰল)
+	2×2 Matrix in Brackets	বন্ধনীত 2×2 মেট্ৰিক্স
+	2×2 Matrix in Double Bars	দুডাল ৰেখাৰ মাজত 2×2 মেট্ৰিক্স
+	2×2 Matrix in Parentheses	বন্ধনীৰ ভিতৰত 2×2 মেট্ৰিক্স
+	2×3 Empty Matrix	2×3 খালী মেট্ৰিক্স
+	3-D	3-D
+	3. Merge the data with the document	3. ডেটা নথিৰ সৈতে একত্ৰ কৰক
+	3. Start enforcement	3. প্ৰয়োগ আৰম্ভ কৰক
+	3D Models	3D মডেল
+	3×1 Empty Matrix	3×1 খালী মেট্ৰিক্স
+	3×2 Empty Matrix	3×2 খালী মেট্ৰিক্স
+	3×3 Empty Matrix	3×3 খালী মেট্ৰিক্স
+	3×3 Identity Matrix	3×3 একক মেট্ৰিক্স
+	3×3 Identity Matrix (sparse)	3×3 একক মেট্ৰিক্স (বিৰল)
+	5,000 characters a day; give an email address for 50,000.	দিনত 5,000 আখৰ; 50,000ৰ বাবে ইমেইল ঠিকনা দিয়ক।
+	<< Less	<< কম
+	<< Remove	<< আঁতৰাওক
+	A file dialog is already open.	এটা ফাইল সংলাপ ইতিমধ্যে খোলা আছে।
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Rust-ত আৰম্ভণিৰ পৰা লিখা এটা বিনামূলীয়া, মুক্ত-উৎস ৱৰ্ড প্ৰচেছৰ।\nArtCraft দলৰ WordCraft-ৰ ওপৰত ভিত্তি কৰি।
+	A header source holds the field names for a data source without a header row.	হেডাৰ উৎসত হেডাৰ শাৰী নথকা ডেটা উৎসৰ ফিল্ডৰ নাম থাকে।
+	A mail merge field	মেইল মাৰ্জ ফিল্ড
+	A new document lists the commands with their shortcuts.	এখন নতুন নথিয়ে আদেশ আৰু সেইবোৰৰ চৰ্টকাট তালিকাভুক্ত কৰে।
+	A numbered sequence (figures, tables…)	ক্ৰমিক অনুক্ৰম (চিত্ৰ, তালিকা…)
+	A password is required to open this document.	এই নথি খুলিবলৈ পাছৱৰ্ড লাগে।
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	যতিচিহ্নৰ আগত খালী ঠাই, দুবাৰকৈ চিহ্ন, সংযোজকৰ আগত পোলিছ কমা।
+	A table of contents	সূচীপত্ৰ
+	A table's rows keep the same columns here.	ইয়াত তালিকাৰ শাৰীবোৰে একেই স্তম্ভ ৰাখে।
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	অআইঈ AaBb
+	AaBbYyZz	অআহক্ষ AaZz
+	About	বিষয়ে
+	About Doc4Me	Doc4Me-ৰ বিষয়ে
+	Above Chart	চাৰ্টৰ ওপৰত
+	Above the item	বস্তুৰ ওপৰত
+	Absolute position	নিৰপেক্ষ অৱস্থান
+	Absolute value cases	নিৰপেক্ষ মান ক্ষেত্ৰ
+	Accent	এক্সেণ্ট
+	Accent Gradient	এক্সেণ্ট গ্ৰেডিয়েণ্ট
+	Accent with Reflection	প্ৰতিফলনৰ সৈতে এক্সেণ্ট
+	Accent {n}	এক্সেণ্ট {n}
+	Accents	এক্সেণ্ট
+	Accept	গ্ৰহণ কৰক
+	Accept All	সকলো গ্ৰহণ কৰক
+	Accept All Changes	সকলো সলনি গ্ৰহণ কৰক
+	Accept or Reject Changes	সলনি গ্ৰহণ বা প্ৰত্যাখ্যান কৰক
+	Accept This Change	এই সলনি গ্ৰহণ কৰক
+	Accessed on	প্ৰৱেশৰ তাৰিখ
+	Accessibility	সুলভতা
+	Accessibility Pane	সুলভতা পেন
+	Acute	তীব্ৰ স্বৰাঘাত
+	Add	যোগ কৰক
+	Add >>	যোগ কৰক >>
+	Add a comment	মন্তব্য যোগ কৰক
+	Add a Table	তালিকা যোগ কৰক
+	Add at least one field.	অন্ততঃ এটা ফিল্ড যোগ কৰক।
+	Add caption when inserting:	সুমুৱাওঁতে কেপচন যোগ কৰক:
+	Add Chart Element	চাৰ্ট উপাদান যোগ কৰক
+	Add Field	ফিল্ড যোগ কৰক
+	Add Field Name	ফিল্ডৰ নাম যোগ কৰক
+	Add Font…	ফণ্ট যোগ কৰক…
+	Add line numbering	শাৰী নম্বৰ যোগ কৰক
+	Add New Placeholder	নতুন প্লেচহোল্ডাৰ যোগ কৰক
+	Add New Placeholder…	নতুন প্লেচহোল্ডাৰ যোগ কৰক…
+	Add New Source…	নতুন উৎস যোগ কৰক…
+	Add Object to Selection	বস্তু নিৰ্বাচনত যোগ কৰক
+	Add Pen	কলম যোগ কৰক
+	Add Row	শাৰী যোগ কৰক
+	Add Series	শৃংখলা যোগ কৰক
+	Add Shape	আকৃতি যোগ কৰক
+	Add Space Before Paragraph	অনুচ্ছেদৰ আগত ঠাই যোগ কৰক
+	Add space between Asian and Latin text	এছিয়ান আৰু লেটিন পাঠৰ মাজত ঠাই যোগ কৰক
+	Add space between Asian text and numbers	এছিয়ান পাঠ আৰু সংখ্যাৰ মাজত ঠাই যোগ কৰক
+	Add tab stop at:	টেব ষ্টপ যোগ কৰক:
+	Add Text	পাঠ যোগ কৰক
+	Add the chapter number	অধ্যায় নম্বৰ যোগ কৰক
+	Add to Dictionary	অভিধানত যোগ কৰক
+	Add to Document	নথিত যোগ কৰক
+	Add to Quick Access Toolbar	দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ডত যোগ কৰক
+	Add to Style Gallery	শৈলী গেলেৰীত যোগ কৰক
+	Add-ins	এড-ইন
+	Add/Edit\nBibliography	গ্ৰন্থপঞ্জী\nযোগ/সম্পাদনা
+	Add/Edit\nCitation	উদ্ধৃতি\nযোগ/সম্পাদনা
+	Add\nNote	টোকা\nযোগ কৰক
+	Add\nPen	কলম\nযোগ কৰক
+	Add\nShape	আকৃতি\nযোগ কৰক
+	Added	যোগ কৰা হ'ল
+	Added Fonts	যোগ কৰা ফণ্ট
+	Address	ঠিকনা
+	Address Block	ঠিকনা ব্লক
+	Address labels	ঠিকনা লেবেল
+	Address:	ঠিকনা:
+	Address\nBlock	ঠিকনা\nব্লক
+	Adjust	মিলাওক
+	Advanced	উন্নত
+	Advanced Find	উন্নত সন্ধান
+	Advanced Find…	উন্নত সন্ধান…
+	After:	পিছত:
+	Agents	এজেণ্ট
+	Align	সাৰিবদ্ধ কৰক
+	Align Bottom Center	তলত মাজত সাৰিবদ্ধ কৰক
+	Align Bottom Left	তলত বাওঁফালে সাৰিবদ্ধ কৰক
+	Align Bottom Right	তলত সোঁফালে সাৰিবদ্ধ কৰক
+	Align Center	মাজত সাৰিবদ্ধ কৰক
+	Align Center Left	মাজ বাওঁফালে সাৰিবদ্ধ কৰক
+	Align Center Right	মাজ সোঁফালে সাৰিবদ্ধ কৰক
+	Align Left	বাওঁফালে সাৰিবদ্ধ কৰক
+	Align Right	সোঁফালে সাৰিবদ্ধ কৰক
+	Align Text	পাঠ সাৰিবদ্ধ কৰক
+	Align Top Center	ওপৰত মাজত সাৰিবদ্ধ কৰক
+	Align Top Left	ওপৰত বাওঁফালে সাৰিবদ্ধ কৰক
+	Align Top Right	ওপৰত সোঁফালে সাৰিবদ্ধ কৰক
+	Aligned at:	ইয়াত সাৰিবদ্ধ:
+	Alignment	সাৰিবদ্ধকৰণ
+	Alignment:	সাৰিবদ্ধকৰণ:
+	All	সকলো
+	All - Linear	সকলো - ৰৈখিক
+	All - Professional	সকলো - পেছাদাৰী
+	All Borders	সকলো সীমা
+	All Caps	সকলো ডাঙৰ আখৰ
+	All caps	সকলো ডাঙৰ আখৰ
+	All Commands	সকলো আদেশ
+	All files	সকলো ফাইল
+	All Levels	সকলো স্তৰ
+	All Markup	সকলো মাৰ্কআপ
+	All pages	সকলো পৃষ্ঠা
+	All pages in the range	পৰিসৰৰ সকলো পৃষ্ঠা
+	All records	সকলো ৰেকৰ্ড
+	All symbol sets	সকলো প্ৰতীক ছেট
+	Allow Doc4Me to use online services	Doc4Me-ক অনলাইন সেৱা ব্যৱহাৰ কৰিবলৈ দিয়ক
+	Allow hanging punctuation	ওলমি থকা যতিচিহ্নৰ অনুমতি দিয়ক
+	Allow Latin text to wrap in the middle of a word	লেটিন পাঠক শব্দৰ মাজত মেৰিয়াবলৈ দিয়ক
+	Allow line breaks	শাৰী বিচ্ছেদৰ অনুমতি দিয়ক
+	Allow overlap	অভাৰলেপৰ অনুমতি দিয়ক
+	Allow row to break across pages	শাৰীক পৃষ্ঠাত ভাঙিবলৈ দিয়ক
+	Alphabetical	বৰ্ণানুক্ৰমিক
+	Alt Text	বিকল্প পাঠ
+	Alt text	বিকল্প পাঠ
+	Alt Text Pane	বিকল্প পাঠ পেন
+	Alt:	বিকল্প:
+	Alt\nText	বিকল্প\nপাঠ
+	And	আৰু
+	Angle Brackets	কোণ বন্ধনী
+	Angle Brackets with Separator	বিভাজকৰ সৈতে কোণ বন্ধনী
+	Angle Brackets with Two Separators	দুটা বিভাজকৰ সৈতে কোণ বন্ধনী
+	Animate the caret (it glides and fades)	কেৰেট এনিমেট কৰক (ই পিছলি যায় আৰু ম্লান হয়)
+	Animation	এনিমেচন
+	Animation effects:	এনিমেচন প্ৰভাৱ:
+	Annotation Reference	টীকা উল্লেখ
+	Annotation Subject	টীকা বিষয়
+	Annotation Text	টীকা পাঠ
+	Another file	অন্য ফাইল
+	Any Character	যিকোনো আখৰ
+	Any Digit	যিকোনো অংক
+	Any Letter	যিকোনো বৰ্ণ
+	Anyone can open this document. Encrypt it with a password to keep it private.	যিকোনো লোকে এই নথি খুলিব পাৰে। ব্যক্তিগত ৰাখিবলৈ পাছৱৰ্ডেৰে এনক্ৰিপ্ট কৰক।
+	Anyone who opens the document will need this password.	নথি খোলা প্ৰত্যেকৰে এই পাছৱৰ্ড লাগিব।
+	APA	APA
+	API key (if the server needs one)	API চাবি (ছাৰ্ভাৰক লাগিলে)
+	Apply	প্ৰয়োগ কৰক
+	Apply as you type	টাইপ কৰোঁতে প্ৰয়োগ কৰক
+	Apply Asian line-breaking rules (kinsoku)	এছিয়ান শাৰী-বিচ্ছেদৰ নিয়ম প্ৰয়োগ কৰক (kinsoku)
+	Apply Character Style	আখৰ শৈলী প্ৰয়োগ কৰক
+	Apply formatting to:	সজ্জা ইয়াত প্ৰয়োগ কৰক:
+	Apply special formats to	বিশেষ সজ্জা ইয়াত প্ৰয়োগ কৰক
+	Apply Style	শৈলী প্ৰয়োগ কৰক
+	Apply Styles	শৈলীসমূহ প্ৰয়োগ কৰক
+	Apply to:	ইয়াত প্ৰয়োগ:
+	Arabic	আৰবী
+	Arch Down	তললৈ খিলান
+	Arch Up	ওপৰলৈ খিলান
+	Area	ক্ষেত্ৰ
+	Around	চাৰিওফালে
+	Arrange	সজাওক
+	Arrange All	সকলো সজাওক
+	Arrange\nAll	সকলো\nসজাওক
+	Arrow	কাঁড়
+	Arrows	কাঁড়
+	Artistic Effects	শৈল্পিক প্ৰভাৱ
+	As Recommended	পৰামৰ্শ অনুসৰি
+	As you type	টাইপ কৰোঁতে
+	ASAP	যিমান সোনকালে পাৰি
+	Ascending	ঊৰ্ধ্বক্ৰম
+	Asian text font:	এছিয়ান পাঠৰ ফণ্ট:
+	Asian Typography	এছিয়ান টাইপগ্ৰাফী
+	Assign	নিৰ্ধাৰণ কৰক
+	At least	অন্ততঃ
+	At least {n}	অন্ততঃ {n}
+	Atelier	কৰ্মশালা
+	Atmosphere	পৰিৱেশ
+	Attach Template	টেমপ্লেট সংলগ্ন কৰক
+	Attach…	সংলগ্ন কৰক…
+	Author	লেখক
+	Auto	স্বয়ং
+	AutoCaption	স্বয়ংক্ৰিয় কেপচন
+	AutoCaption…	স্বয়ংক্ৰিয় কেপচন…
+	AutoComplete	স্বয়ংসম্পূৰ্ণ
+	AutoCorrect	স্বয়ংশুধৰণি
+	AutoCorrect Options	স্বয়ংশুধৰণি বিকল্প
+	AutoFit	স্বয়ংফিট
+	AutoFit Contents	বিষয়বস্তুত স্বয়ংফিট
+	AutoFit Window	ৱিণ্ড'ত স্বয়ংফিট
+	AutoFormat	স্বয়ংসজ্জা
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	স্বয়ংসজ্জাই (Ctrl+Alt+K) নিৰ্বাচিত অনুচ্ছেদ বা গোটেই নথি সজায়।
+	AutoFormat and Review Changes…	স্বয়ংসজ্জা কৰি সলনি পৰ্যালোচনা কৰক…
+	AutoFormat As You Type	টাইপ কৰোঁতে স্বয়ংসজ্জা
+	AutoFormat changed {count} paragraphs	স্বয়ংসজ্জাই {count}টা অনুচ্ছেদ সলনি কৰিলে
+	AutoFormat Now	এতিয়াই স্বয়ংসজ্জা
+	Automatic	স্বয়ংক্ৰিয়
+	Automatic ({language})	স্বয়ংক্ৰিয় ({language})
+	Automatic bulleted lists	স্বয়ংক্ৰিয় বুলেট তালিকা
+	Automatic follows your system's language. Menus and commands change; your documents don't.	স্বয়ংক্ৰিয়ই আপোনাৰ ছিষ্টেমৰ ভাষা অনুসৰণ কৰে। মেনু আৰু আদেশ সলনি হয়; আপোনাৰ নথি নহয়।
+	Automatic numbered lists	স্বয়ংক্ৰিয় ক্ৰমিক তালিকা
+	Automatic Table 1 (3 levels)	স্বয়ংক্ৰিয় তালিকা 1 (3 স্তৰ)
+	Automatic Table 2 (2 levels)	স্বয়ংক্ৰিয় তালিকা 2 (2 স্তৰ)
+	Automatically hyphenate document	নথি স্বয়ংক্ৰিয়ভাৱে হাইফেনেট কৰক
+	Automatically Update Document Styles	নথিৰ শৈলী স্বয়ংক্ৰিয়ভাৱে আপডেট কৰক
+	Automatically update document styles	নথিৰ শৈলী স্বয়ংক্ৰিয়ভাৱে আপডেট কৰক
+	AutoSave	স্বয়ংক্ৰিয় সংৰক্ষণ
+	AutoSave documents you have saved in Doc4Me	Doc4Me-ত সংৰক্ষিত নথি স্বয়ংক্ৰিয়ভাৱে সংৰক্ষণ কৰক
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	স্বয়ংক্ৰিয় সংৰক্ষণ বিফল: {error}। পুনৰ অন কৰিবলৈ নথি সংৰক্ষণ কৰক।
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	ব্ৰাউজাৰত স্বয়ংক্ৰিয় সংৰক্ষণ নাই: ই আপোনাৰ ফাইলত লিখিব নোৱাৰে। সংৰক্ষণে এটা প্ৰতিলিপি ডাউনলোড কৰে।
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	স্বয়ংক্ৰিয় সংৰক্ষণে কেৱল .docx, .odt আৰু .rtf ফাইল ৰাখে; {name}-এ সকলো সজ্জা ৰাখিব নোৱাৰে। অন কৰিবলৈ .docx হিচাপে সংৰক্ষণ কৰক।
+	AutoSave saves every change to the file (needs a saved document)	স্বয়ংক্ৰিয় সংৰক্ষণে প্ৰতিটো সলনি ফাইলত ৰাখে (সংৰক্ষিত নথি লাগে)
+	AutoSave writes your changes to the file a moment after you stop typing.	টাইপ বন্ধ কৰাৰ অলপ পিছত স্বয়ংক্ৰিয় সংৰক্ষণে আপোনাৰ সলনি ফাইলত লিখে।
+	AutoText	স্বয়ংপাঠ
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	পিছলৈ
+	Backspace	Backspace
+	Balloons	বেলুন
+	Banded Columns	বেণ্ডেড স্তম্ভ
+	Banded Rows	বেণ্ডেড শাৰী
+	Bar	বাৰ
+	Base text:	মূল পাঠ:
+	Based on: {style}	ভিত্তি: {style}
+	Baseline Dots	ভিত্তিৰেখা বিন্দু
+	Basic Cycle	মৌলিক চক্ৰ
+	Basic List	মৌলিক তালিকা
+	Basic Math	মৌলিক গণিত
+	Basic Matrix	মৌলিক মেট্ৰিক্স
+	Basic Process	মৌলিক প্ৰক্ৰিয়া
+	Basic Pyramid	মৌলিক পিৰামিড
+	Basic Radial	মৌলিক ৰেডিয়েল
+	Basic Venn	মৌলিক ভেন
+	Bayes' rule	বেইজৰ সূত্ৰ
+	Before:	আগত:
+	Beginning of Word	শব্দৰ আৰম্ভণি
+	Behind Text	পাঠৰ পিছফালে
+	Below text	পাঠৰ তলত
+	Below the item	বস্তুৰ তলত
+	Between	মাজত
+	Bibliography	গ্ৰন্থপঞ্জী
+	Binary assets added	বাইনাৰী সম্পদ যোগ হ'ল
+	Binary assets removed	বাইনাৰী সম্পদ আঁতৰোৱা হ'ল
+	Binomial Coefficient	দ্বিপদ সহগ
+	Binomial Coefficient (angle)	দ্বিপদ সহগ (কোণ)
+	Binomial Coefficient with Angle Brackets	কোণ বন্ধনীৰ সৈতে দ্বিপদ সহগ
+	Binomial expansion of (x+a)ⁿ	(x+a)ⁿ-ৰ দ্বিপদ বিস্তাৰ
+	Blank	খালী
+	Blank (Three Columns)	খালী (তিনিটা স্তম্ভ)
+	Blank document	খালী নথি
+	Blank Page	খালী পৃষ্ঠা
+	Block\nAuthors	লেখকক\nবাধা দিয়ক
+	Blue:	নীলা:
+	Body Text	মূল পাঠ
+	Body text in a short paragraph to show spacing.	ব্যৱধান দেখুৱাবলৈ সৰু অনুচ্ছেদত মূল পাঠ।
+	Bold	গাঢ়
+	Book	কিতাপ
+	Book Title	কিতাপৰ শিৰোনাম
+	Book title	কিতাপৰ শিৰোনাম
+	Bookmark	বুকমাৰ্ক
+	Bookmark name:	বুকমাৰ্কৰ নাম:
+	Border lines	সীমাৰ ৰেখা
+	Border Painter	সীমা পেইণ্টাৰ
+	Border\nPainter	সীমা\nপেইণ্টাৰ
+	Borders	সীমা
+	Borders and Shading	সীমা আৰু ছাঁ
+	Borders and Shading…	সীমা আৰু ছাঁ…
+	Border…	সীমা…
+	Both Sides	দুয়োফাল
+	Both sides	দুয়োফাল
+	Bottom	তলত
+	Bottom Border	তলৰ সীমা
+	Bottom Margin	তলৰ মাৰ্জিন
+	Bottom of Page	পৃষ্ঠাৰ তলত
+	Bottom of the Window	ৱিণ্ড'ৰ তলত
+	Bottom:	তলত:
+	Box	বাকচ
+	Boxed Formula	বাকচত থকা সূত্ৰ
+	Boxed Formula (example)	বাকচত থকা সূত্ৰ (উদাহৰণ)
+	Boxed Formulas	বাকচত থকা সূত্ৰ
+	Braces	মজলীয়া বন্ধনী
+	Braces with Separator	বিভাজকৰ সৈতে মজলীয়া বন্ধনী
+	Bracket	বন্ধনী
+	Brackets	বন্ধনী
+	Brackets with Separators	বিভাজকৰ সৈতে বন্ধনী
+	Break Link	সংযোগ ভাঙক
+	Breaks	বিচ্ছেদ
+	Breve	ব্ৰেভ
+	Brightness, contrast and transparency change the picture from how it looks now.	উজ্জ্বলতা, কনট্ৰাষ্ট আৰু স্বচ্ছতাই ছবিখন বৰ্তমানৰ ৰূপৰ পৰা সলনি কৰে।
+	Brightness:	উজ্জ্বলতা:
+	Bring Forward	আগলৈ আনক
+	Browse in Doc4Me…	Doc4Me-ত ব্ৰাউজ কৰক…
+	Browse…	ব্ৰাউজ কৰক…
+	Build table of figures from:	চিত্ৰসূচী ইয়াৰ পৰা তৈয়াৰ কৰক:
+	Building Block Gallery Content Control	বিল্ডিং ব্লক গেলেৰী বিষয়বস্তু নিয়ন্ত্ৰণ
+	Built from the style or table entry fields chosen in Options.	বিকল্পত বাছনি কৰা শৈলী বা তালিকা প্ৰবিষ্টি ফিল্ডৰ পৰা তৈয়াৰী।
+	Built-In	অন্তৰ্নিৰ্মিত
+	Built-in Heading styles	অন্তৰ্নিৰ্মিত শিৰোনাম শৈলী
+	Built-in style	অন্তৰ্নিৰ্মিত শৈলী
+	Built-in styles can't be deleted.	অন্তৰ্নিৰ্মিত শৈলী মচিব নোৱাৰি।
+	Bullet	বুলেট
+	Bullet Library	বুলেট লাইব্ৰেৰী
+	Bullets	বুলেট
+	By author	লেখক অনুসৰি
+	By:	দ্বাৰা:
+	Calendar	কেলেণ্ডাৰ
+	Can't be deleted	মচিব নোৱাৰি
+	Cancel	বাতিল কৰক
+	Canvas Member	কেনভাছ সদস্য
+	Capitalization	ডাঙৰ আখৰ
+	Capitalize Each Word	প্ৰতিটো শব্দৰ প্ৰথম আখৰ ডাঙৰ
+	Capitalize first letter of sentences	বাক্যৰ প্ৰথম আখৰ ডাঙৰ কৰক
+	Capitalize first letter of table cells	তালিকাৰ কোষৰ প্ৰথম আখৰ ডাঙৰ কৰক
+	Capitalize names of days	দিনৰ নাম ডাঙৰ আখৰত
+	Capitalize the first word of a sentence	বাক্যৰ প্ৰথম শব্দ ডাঙৰ আখৰত
+	Caption	কেপচন
+	Caption label:	কেপচন লেবেল:
+	Caption Numbering	কেপচন নম্বৰ
+	Caption text	কেপচন পাঠ
+	Caption:	কেপচন:
+	Captions	কেপচন
+	Caret Character	কেৰেট আখৰ
+	Case changes	আখৰৰ আকাৰ সলনি
+	Cases	ক্ষেত্ৰ
+	Cases (Three Conditions)	ক্ষেত্ৰ (তিনিটা চৰ্ত)
+	Cases (Two Conditions)	ক্ষেত্ৰ (দুটা চৰ্ত)
+	Cases and Stacks	ক্ষেত্ৰ আৰু স্তূপ
+	Catalog	কেটেলগ
+	Categories	শ্ৰেণী
+	Categories:	শ্ৰেণী:
+	Category	শ্ৰেণী
+	Category {n}	শ্ৰেণী {n}
+	Category:	শ্ৰেণী:
+	Category…	শ্ৰেণী…
+	Ceiling	ওপৰৰ পূৰ্ণসংখ্যা
+	Cell	কোষ
+	Cell Margins	কোষৰ মাৰ্জিন
+	Cell margins	কোষৰ মাৰ্জিন
+	Cell Options	কোষৰ বিকল্প
+	Cell Size	কোষৰ আকাৰ
+	Cell\nMargins	কোষৰ\nমাৰ্জিন
+	Center	মাজ
+	Centered	মাজত
+	Centered as Group	গোট হিচাপে মাজত
+	Centimeters	চেণ্টিমিটাৰ
+	Change	সলনি কৰক
+	Change Case	আখৰৰ আকাৰ সলনি কৰক
+	Change Chart Type	চাৰ্টৰ প্ৰকাৰ সলনি কৰক
+	Change Colors	ৰং সলনি কৰক
+	Change in y over change in x	x-ৰ সলনিত y-ৰ সলনি
+	Change Layout	লেআউট সলনি কৰক
+	Change List Level	তালিকাৰ স্তৰ সলনি কৰক
+	Change Password…	পাছৱৰ্ড সলনি কৰক…
+	Change Picture	ছবি সলনি কৰক
+	Change Picture…	ছবি সলনি কৰক…
+	Change Shape	আকৃতি সলনি কৰক
+	Change Structure	গঠন সলনি কৰক
+	Change to Display	প্ৰদৰ্শনলৈ সলনি কৰক
+	Change to Inline	ইনলাইনলৈ সলনি কৰক
+	Change to Level 1	স্তৰ 1লৈ সলনি কৰক
+	Change to Level 2	স্তৰ 2লৈ সলনি কৰক
+	Change to Level 3	স্তৰ 3লৈ সলনি কৰক
+	Change to Level 4	স্তৰ 4লৈ সলনি কৰক
+	Change to Level 5	স্তৰ 5লৈ সলনি কৰক
+	Change to Level 6	স্তৰ 6লৈ সলনি কৰক
+	Change to Level 7	স্তৰ 7লৈ সলনি কৰক
+	Change to Level 8	স্তৰ 8লৈ সলনি কৰক
+	Change to Level 9	স্তৰ 9লৈ সলনি কৰক
+	Change\nChart Type	চাৰ্টৰ প্ৰকাৰ\nসলনি
+	Change\nColors	ৰং\nসলনি
+	Changed	সলনি হ'ল
+	Changed lines:	সলনি হোৱা শাৰী:
+	Changes	সলনি
+	Changes with highlighting	হাইলাইটৰ সৈতে সলনি
+	Changes without highlighting	হাইলাইট নোহোৱাকৈ সলনি
+	Chapter in a book	কিতাপৰ অধ্যায়
+	Chapters begin at:	অধ্যায় আৰম্ভ হয়:
+	Character	আখৰ
+	Character Border	আখৰৰ সীমা
+	Character code:	আখৰৰ ক'ড:
+	Character in Range	পৰিসৰৰ আখৰ
+	Character level	আখৰ স্তৰ
+	Character Position	আখৰৰ অৱস্থান
+	Character Scale	আখৰৰ অনুপাত
+	Character Shading	আখৰৰ ছাঁ
+	Character Spacing	আখৰৰ ব্যৱধান
+	Character spacing	আখৰৰ ব্যৱধান
+	Character style	আখৰ শৈলী
+	Characters	আখৰ
+	Characters (no spaces)	আখৰ (খালী ঠাই বাদে)
+	Characters (with spaces)	আখৰ (খালী ঠাইসহ)
+	Characters per line:	প্ৰতি শাৰীত আখৰ:
+	Chart	চাৰ্ট
+	Chart Design	চাৰ্ট ডিজাইন
+	Chart Layouts	চাৰ্ট লেআউট
+	Chart Title	চাৰ্টৰ শিৰোনাম
+	Check	পৰীক্ষা কৰক
+	Check Accessibility	সুলভতা পৰীক্ষা কৰক
+	Check Box Content Control	চেক বাকচ বিষয়বস্তু নিয়ন্ত্ৰণ
+	Check Compatibility	সামঞ্জস্য পৰীক্ষা কৰক
+	Check Errors…	ত্ৰুটি পৰীক্ষা কৰক…
+	Check for Errors	ত্ৰুটিৰ বাবে পৰীক্ষা কৰক
+	Check Spelling as You Type	টাইপ কৰোঁতে বানান পৰীক্ষা কৰক
+	Check spelling as you type	টাইপ কৰোঁতে বানান পৰীক্ষা কৰক
+	Check\nAccessibility	সুলভতা\nপৰীক্ষা
+	Checked styles are allowed:	চিহ্নিত শৈলীৰ অনুমতি আছে:
+	Checked symbol	চিহ্নিত প্ৰতীক
+	Chevron Down	শ্বেভৰন তললৈ
+	Chevron Up	শ্বেভৰন ওপৰলৈ
+	Chicago	Chicago
+	Chinese (Simplified)	চীনা (সৰলীকৃত)
+	Chinese (Traditional)	চীনা (পৰম্পৰাগত)
+	Choose a command	এটা আদেশ বাছক
+	Choose a shortcut	এটা চৰ্টকাট বাছক
+	Choose List Item	তালিকাৰ বস্তু বাছক
+	Choose the sheet that holds the recipients.	প্ৰাপক থকা শ্বীটখন বাছক।
+	Circle	বৃত্ত
+	Circle area from its radius	ব্যাসাৰ্ধৰ পৰা বৃত্তৰ কালি
+	Circled Dot	বৃত্তত বিন্দু
+	Circled Plus	বৃত্তত যোগ
+	Circled Times	বৃত্তত পূৰণ
+	Citation marked.	উদ্ধৃতি চিহ্নিত কৰা হ'ল।
+	Citation Style	উদ্ধৃতি শৈলী
+	Citations	উদ্ধৃতি
+	Citations & Bibliography	উদ্ধৃতি আৰু গ্ৰন্থপঞ্জী
+	City	চহৰ
+	Clear	মচক
+	Clear All	সকলো মচক
+	Clear All Formatting	সকলো সজ্জা মচক
+	Clear Character Formatting	আখৰ সজ্জা মচক
+	Clear Character Style	আখৰ শৈলী মচক
+	Clear Formatting Level	সজ্জা স্তৰ মচক
+	Clear Paragraph Formatting	অনুচ্ছেদ সজ্জা মচক
+	Click a border between two cells to merge them. Esc stops.	দুটা কোষৰ মাজৰ সীমাত ক্লিক কৰি একত্ৰ কৰক। Esc-এ বন্ধ কৰে।
+	Click an item to paste it.	পেষ্ট কৰিবলৈ এটা বস্তুত ক্লিক কৰক।
+	Click level to modify:	সলনি কৰিবলৈ স্তৰত ক্লিক কৰক:
+	Click the empty text box the text should continue in (Esc cancels)	য'ত পাঠ চলিব সেই খালী পাঠ বাকচত ক্লিক কৰক (Esc-এ বাতিল কৰে)
+	Click to switch back to inserting	সুমুৱাবলৈ উভতিবলৈ ক্লিক কৰক
+	Clipboard	ক্লিপবৰ্ড
+	Clipboard Contents	ক্লিপবৰ্ডৰ বিষয়বস্তু
+	Clipboard Items	ক্লিপবৰ্ডৰ বস্তু
+	Clipboard Pane	ক্লিপবৰ্ড পেন
+	Close	বন্ধ কৰক
+	Close Equation	সমীকৰণ বন্ধ কৰক
+	Close Header and Footer	হেডাৰ আৰু ফুটাৰ বন্ধ কৰক
+	Close Outline View	ৰূপৰেখা দৃশ্য বন্ধ কৰক
+	Close Outline\nView	ৰূপৰেখা দৃশ্য\nবন্ধ কৰক
+	Close Reviewing Pane	পৰ্যালোচনা পেন বন্ধ কৰক
+	Clustered Bar	গোটবদ্ধ বাৰ
+	Clustered Column	গোটবদ্ধ স্তম্ভ
+	Col #:	স্তম্ভ #:
+	Collapse	সংকুচিত কৰক
+	Collapse Selection	নিৰ্বাচন সংকুচিত কৰক
+	Collapse the Ribbon	ৰিবন সংকুচিত কৰক
+	Collate copies	প্ৰতিলিপি ক্ৰমানুসৰি
+	Collect entries from:	প্ৰবিষ্টি ইয়াৰ পৰা সংগ্ৰহ কৰক:
+	Colon Equal	কোলন সমান
+	Color	ৰং
+	Color model:	ৰং মডেল:
+	Color only	কেৱল ৰং
+	Color:	ৰং:
+	Color: {color}	ৰং: {color}
+	Colorful	ৰঙীন
+	Colors	ৰং
+	Colors:	ৰং:
+	Column	স্তম্ভ
+	Column Break	স্তম্ভ বিচ্ছেদ
+	Column Selection	স্তম্ভ নিৰ্বাচন
+	Column selection: the arrow keys extend the block, Esc ends it	স্তম্ভ নিৰ্বাচন: কাঁড় চাবিয়ে ব্লক বঢ়ায়, Esc-এ শেষ কৰে
+	Column width	স্তম্ভৰ প্ৰস্থ
+	Column:	স্তম্ভ:
+	Columns	স্তম্ভ
+	Columns:	স্তম্ভ:
+	Combine	একত্ৰ কৰক
+	Combine Documents	নথি একত্ৰ কৰক
+	Combo Box Content Control	কম্ব' বাকচ বিষয়বস্তু নিয়ন্ত্ৰণ
+	Commands	আদেশ
+	Commands:	আদেশ:
+	Comment	মন্তব্য
+	Comments	মন্তব্য
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	PDF, প্ৰিণ্ট আৰু ছবিত প্ৰতিটো পৃষ্ঠাৰ কাষত মন্তব্য আৰু অনুসৰণ কৰা সলনি; ৱেব পৃষ্ঠা, Markdown আৰু পাঠৰ শেষত মন্তব্যৰ তালিকা।
+	Comments on version	সংস্কৰণৰ মন্তব্য
+	Comments Pane	মন্তব্য পেন
+	Commits	কমিট
+	Common Accent Objects	সাধাৰণ এক্সেণ্ট বস্তু
+	Common Brackets	সাধাৰণ বন্ধনী
+	Common Fractions	সাধাৰণ ভগ্নাংশ
+	Common Functions	সাধাৰণ ফলন
+	Common Large Operators	সাধাৰণ ডাঙৰ অপাৰেটৰ
+	Common Operator Structures	সাধাৰণ অপাৰেটৰ গঠন
+	Common Operators	সাধাৰণ অপাৰেটৰ
+	Common Radicals	সাধাৰণ মূল
+	Common Subscripts and Superscripts	সাধাৰণ নিম্নলিপি আৰু উৰ্ধ্বলিপি
+	Communication	যোগাযোগ
+	Compact	সংক্ষিপ্ত
+	Company	কোম্পানী
+	Compare	তুলনা কৰক
+	Compare Documents	নথি তুলনা কৰক
+	Compare to	ইয়াৰ সৈতে তুলনা
+	Compared: {changes} changes	তুলনা কৰা হ'ল: {changes}টা সলনি
+	Comparing with another file needs the desktop app.	অন্য ফাইলৰ সৈতে তুলনাৰ বাবে ডেস্কটপ এপ লাগে।
+	Comparison	তুলনা
+	Comparison settings	তুলনাৰ ছেটিং
+	Compatibility mode: {version}	সামঞ্জস্য ম'ড: {version}
+	Compatibility Options	সামঞ্জস্যৰ বিকল্প
+	Compatibility Options…	সামঞ্জস্যৰ বিকল্প…
+	Compress Pictures	ছবি সংকুচিত কৰক
+	Compress punctuation at the start of a line	শাৰীৰ আৰম্ভণিত যতিচিহ্ন সংকুচিত কৰক
+	Condensed	সংকুচিত
+	Conference	সন্মিলন
+	Conference paper	সন্মিলন পত্ৰ
+	CONFIDENTIAL	গোপনীয়
+	Confirm password:	পাছৱৰ্ড নিশ্চিত কৰক:
+	Connect Shapes	আকৃতি সংযোগ কৰক
+	Constitutional Provisions	সাংবিধানিক বিধান
+	Container Title	ধাৰকৰ শিৰোনাম
+	Contains	ধাৰণ কৰে
+	Content Control at Selection	নিৰ্বাচনত বিষয়বস্তু নিয়ন্ত্ৰণ
+	Content Control Properties	বিষয়বস্তু নিয়ন্ত্ৰণৰ বৈশিষ্ট্য
+	Contents can't be edited	বিষয়বস্তু সম্পাদনা কৰিব নোৱাৰি
+	Context	প্ৰসংগ
+	Contextual	প্ৰাসংগিক
+	Continuous	অবিচ্ছিন্ন
+	Continuous numbering	অবিচ্ছিন্ন নম্বৰ
+	Contour Integral	কণ্টুৰ অনুকল
+	Contour Integral with Limits	সীমাৰ সৈতে কণ্টুৰ অনুকল
+	Contour Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে কণ্টুৰ অনুকল
+	Contour Integrals	কণ্টুৰ অনুকল
+	Contrast:	কনট্ৰাষ্ট:
+	Contributors	অৱদানকাৰী
+	Controls	নিয়ন্ত্ৰণ
+	Conversions	ৰূপান্তৰ
+	Convert	ৰূপান্তৰ কৰক
+	Convert between built-up and linear form	গঠিত আৰু ৰৈখিক ৰূপৰ মাজত ৰূপান্তৰ কৰক
+	Convert Notes	টোকা ৰূপান্তৰ কৰক
+	Convert Permanently	স্থায়ীভাৱে ৰূপান্তৰ কৰক
+	Convert Text to Table	পাঠক তালিকালৈ ৰূপান্তৰ কৰক
+	Convert Text to Table…	পাঠক তালিকালৈ ৰূপান্তৰ কৰক…
+	Convert to Arabic Digits	আৰবী অংকলৈ ৰূপান্তৰ কৰক
+	Convert to Shapes	আকৃতিলৈ ৰূপান্তৰ কৰক
+	Convert to Text	পাঠলৈ ৰূপান্তৰ কৰক
+	Convert to Thai Digits	থাই অংকলৈ ৰূপান্তৰ কৰক
+	Copies	প্ৰতিলিপি
+	Coproduct	সহগুণফল
+	Coproduct with Limits	সীমাৰ সৈতে সহগুণফল
+	Coproduct with Lower Limit	নিম্নসীমাৰ সৈতে সহগুণফল
+	Coproduct with Subscript-Superscript Limits	নিম্নলিপি-উৰ্ধ্বলিপি সীমাৰ সৈতে সহগুণফল
+	Copy	প্ৰতিলিপি কৰক
+	Copy Formatting	সজ্জা প্ৰতিলিপি কৰক
+	Copy of the text a bookmark marks	বুকমাৰ্কে চিহ্নিত কৰা পাঠৰ প্ৰতিলিপি
+	Copy Styles	শৈলী প্ৰতিলিপি কৰক
+	Copy Text	পাঠ প্ৰতিলিপি কৰক
+	Copy to where?	ক'ত প্ৰতিলিপি কৰিব?
+	Copyright	স্বত্ব
+	Copyright Sign	স্বত্ব চিহ্ন
+	Corrections	সংশোধন
+	Cosecant Function	কোচেকেণ্ট ফলন
+	Cosine 2x	ক'চাইন 2x
+	Cosine Function	ক'চাইন ফলন
+	Cotangent Function	ক'টেনজেণ্ট ফলন
+	Couldn't add {name}: {reason}	{name} যোগ কৰিব পৰা নগ'ল: {reason}
+	Couldn't download the picture: {reason}	ছবি ডাউনলোড কৰিব পৰা নগ'ল: {reason}
+	Couldn't download {name}: {error}	{name} ডাউনলোড কৰিব পৰা নগ'ল: {error}
+	Couldn't get the add-in list: {reason}	এড-ইন তালিকা পোৱা নগ'ল: {reason}
+	Couldn't make Doc4Me the default: {error}	Doc4Me-ক ডিফল্ট কৰিব পৰা নগ'ল: {error}
+	Couldn't open {path}: {error}	{path} খুলিব পৰা নগ'ল: {error}
+	Couldn't search: {reason}	সন্ধান কৰিব পৰা নগ'ল: {reason}
+	Couldn't translate: {reason}	অনুবাদ কৰিব পৰা নগ'ল: {reason}
+	Count by:	ইয়াৰ অনুসৰি গণনা:
+	Count words in text boxes and notes	পাঠ বাকচ আৰু টোকাৰ শব্দ গণনা কৰক
+	Country	দেশ
+	Courtesy Title	সন্মানসূচক উপাধি
+	Cover Page	বেটুপাত
+	Craft	কাৰিকৰী
+	Create	সৃষ্টি কৰক
+	Create a Style	শৈলী সৃষ্টি কৰক
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	আপোনাৰ নথিৰ এটা পাৰস্পৰিক ৰূপৰেখা সৃষ্টি কৰক।\n\nআপুনি ক'ত আছে জানিবলৈ বা বিষয়বস্তু সোনকালে লৰাবলৈ ই এক উত্তম উপায়।\n\nআৰম্ভ কৰিবলৈ হোম টেবলৈ গৈ নথিৰ শিৰোনামত শিৰোনাম শৈলী প্ৰয়োগ কৰক।
+	Create Data Source…	ডেটা উৎস সৃষ্টি কৰক…
+	Create Graphic	গ্ৰাফিক সৃষ্টি কৰক
+	Create Header Source	হেডাৰ উৎস সৃষ্টি কৰক
+	Create Link	সংযোগ সৃষ্টি কৰক
+	Create New Style	নতুন শৈলী সৃষ্টি কৰক
+	Create Source	উৎস সৃষ্টি কৰক
+	Create…	সৃষ্টি কৰক…
+	Crop	কাটক
+	Cross-reference	ক্ৰছ-ৰেফাৰেন্স
+	Cross-reference:	ক্ৰছ-ৰেফাৰেন্স:
+	Cube Root	ঘনমূল
+	Current	বৰ্তমান
+	Current - Linear	বৰ্তমান - ৰৈখিক
+	Current - Professional	বৰ্তমান - পেছাদাৰী
+	Current keyboard settings	বৰ্তমান কীবৰ্ড ছেটিং
+	Current page	বৰ্তমান পৃষ্ঠা
+	Current Position	বৰ্তমান অৱস্থান
+	Current record	বৰ্তমান ৰেকৰ্ড
+	Current style: {style}	বৰ্তমান শৈলী: {style}
+	Curved Arrow Connector	বেঁকা কাঁড় সংযোজক
+	Curved Connector	বেঁকা সংযোজক
+	Custom	কাষ্টম
+	Custom dictionary	কাষ্টম অভিধান
+	Custom Margins…	কাষ্টম মাৰ্জিন…
+	Custom mark:	কাষ্টম চিহ্ন:
+	Custom range	কাষ্টম পৰিসৰ
+	Custom Table of Contents	কাষ্টম সূচীপত্ৰ
+	Custom Table of Contents…	কাষ্টম সূচীপত্ৰ…
+	Custom Watermark	কাষ্টম জলচিহ্ন
+	Custom Watermark…	কাষ্টম জলচিহ্ন…
+	Customize	কাষ্টমাইজ কৰক
+	Customize Keyboard	কীবৰ্ড কাষ্টমাইজ কৰক
+	Customize Quick Access Toolbar	দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ড কাষ্টমাইজ কৰক
+	Customize Quick Access Toolbar…	দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ড কাষ্টমাইজ কৰক…
+	Customize Ribbon	ৰিবন কাষ্টমাইজ কৰক
+	Customize the Ribbon…	ৰিবন কাষ্টমাইজ কৰক…
+	Customize…	কাষ্টমাইজ কৰক…
+	Cut	কাটক
+	Cut, copy, and paste	কটা, প্ৰতিলিপি আৰু পেষ্ট
+	Cycle	চক্ৰ
+	Czech	চেক
+	Danish	ডেনিছ
+	Dark	গাঢ়
+	Dark Mode	গাঢ় ম'ড
+	Dark page (white text on black)	গাঢ় পৃষ্ঠা (ক'লাৰ ওপৰত বগা পাঠ)
+	Dark with Shadow	ছাঁৰ সৈতে গাঢ়
+	Darkroom	আন্ধাৰ কোঠা
+	Dashed	ডেছযুক্ত
+	Data	ডেটা
+	Data Labels	ডেটা লেবেল
+	Data source:	ডেটা উৎস:
+	Date	তাৰিখ
+	Date & Time	তাৰিখ আৰু সময়
+	Date and Time	তাৰিখ আৰু সময়
+	Date format	তাৰিখৰ সজ্জা
+	Date formats:	তাৰিখৰ সজ্জা:
+	Date Picker Content Control	তাৰিখ বাছনিকাৰী বিষয়বস্তু নিয়ন্ত্ৰণ
+	Day	দিন
+	Decimal	দশমিক
+	Decorative objects only add visual interest: screen readers skip them.	শোভাবৰ্ধক বস্তুৱে কেৱল দৃশ্যমান আকৰ্ষণ বঢ়ায়: স্ক্ৰীন ৰিডাৰে এইবোৰ এৰি যায়।
+	Decrease Font Size	ফণ্টৰ আকাৰ কমাওক
+	Decrease Indent	ইণ্ডেণ্ট কমাওক
+	Default	ডিফল্ট
+	Default Paragraph Font	ডিফল্ট অনুচ্ছেদ ফণ্ট
+	Default tab stops:	ডিফল্ট টেব ষ্টপ:
+	Define New Bullet	নতুন বুলেট সংজ্ঞাবদ্ধ কৰক
+	Define New Multilevel List	নতুন বহুস্তৰীয় তালিকা সংজ্ঞাবদ্ধ কৰক
+	Define New Multilevel List…	নতুন বহুস্তৰীয় তালিকা সংজ্ঞাবদ্ধ কৰক…
+	Define New Number Format	নতুন সংখ্যা সজ্জা সংজ্ঞাবদ্ধ কৰক
+	Deflate	চেপা খোৱা
+	Delete	মচক
+	Delete Back in Equation	সমীকৰণত পিছলৈ মচক
+	Delete Cells	কোষ মচক
+	Delete Clipboard Item	ক্লিপবৰ্ড বস্তু মচক
+	Delete Columns	স্তম্ভ মচক
+	Delete Comment	মন্তব্য মচক
+	Delete in Equation	সমীকৰণত মচক
+	Delete Label	লেবেল মচক
+	Delete Next Word	পিছৰ শব্দ মচক
+	Delete Previous Word	আগৰ শব্দ মচক
+	Delete Rows	শাৰী মচক
+	Delete Selected Ink	নিৰ্বাচিত চিয়াঁহী মচক
+	Delete Style	শৈলী মচক
+	Delete Table	তালিকা মচক
+	Delete Table Style	তালিকা শৈলী মচক
+	Deleted	মচা হ'ল
+	Deletions:	মচা:
+	Delivery address:	বিতৰণৰ ঠিকনা:
+	Delta Equal To	ডেল্টা সমান
+	Delta over arrow	কাঁড়ৰ ওপৰত ডেল্টা
+	Demote	স্তৰ নমাওক
+	Demote to Body Text	মূল পাঠলৈ নমাওক
+	Derivative as a limit	সীমা হিচাপে অৱকলজ
+	Descending	অৱৰোহী
+	Describe what this object shows, for people who can't see it.	যিসকলে দেখা নাপায় তেওঁলোকৰ বাবে এই বস্তুৱে কি দেখুৱায় বৰ্ণনা কৰক।
+	Describe what this table shows, for people who can't see it.	যিসকলে দেখা নাপায় তেওঁলোকৰ বাবে এই তালিকাই কি দেখুৱায় বৰ্ণনা কৰক।
+	Description:	বিৱৰণ:
+	Design	ডিজাইন
+	Design Mode	ডিজাইন ম'ড
+	Detach Template	টেমপ্লেট বিচ্ছিন্ন কৰক
+	Detect language automatically	ভাষা স্বয়ংক্ৰিয়ভাৱে চিনাক্ত কৰক
+	Developer	বিকাশক
+	development build	বিকাশ বিল্ড
+	Diagonal	কৰ্ণ
+	Diagonal Dots	কৰ্ণ বিন্দু
+	Diamond	হীৰা
+	Dictate	শ্ৰুতলিপি
+	Dictation isn't available here.	শ্ৰুতলিপি ইয়াত উপলব্ধ নহয়।
+	Dictation stopped.	শ্ৰুতলিপি বন্ধ হ'ল।
+	Dictation stopped: {reason}	শ্ৰুতলিপি বন্ধ হ'ল: {reason}
+	Different First Page	বেলেগ প্ৰথম পৃষ্ঠা
+	Different Odd & Even Pages	বেলেগ অযুগ্ম আৰু যুগ্ম পৃষ্ঠা
+	Differential	অৱকল
+	Differential theta	অৱকল থিটা
+	Differential x	অৱকল x
+	Differential y	অৱকল y
+	Differentials	অৱকল
+	Direct formatting	প্ৰত্যক্ষ সজ্জা
+	Direction:	দিশ:
+	Directory	নিৰ্দেশিকা
+	Display	প্ৰদৰ্শন
+	Display for Review	পৰ্যালোচনাৰ বাবে প্ৰদৰ্শন
+	Display gridlines on screen	স্ক্ৰীনত গ্ৰিডলাইন দেখুৱাওক
+	Display name	প্ৰদৰ্শন নাম
+	Display text	প্ৰদৰ্শন পাঠ
+	Distance from surrounding text	আশে-পাশৰ পাঠৰ পৰা দূৰত্ব
+	Distribute Columns	স্তম্ভ সমানে বিতৰণ কৰক
+	Distribute letters	আখৰ বিতৰণ কৰক
+	Distribute Rows	শাৰী সমানে বিতৰণ কৰক
+	Distribute spacing	ব্যৱধান বিতৰণ কৰক
+	Distributed	বিতৰিত
+	Do Not Check Spelling or Grammar	বানান বা ব্যাকৰণ পৰীক্ষা নকৰিব
+	Do not check spelling or grammar	বানান বা ব্যাকৰণ পৰীক্ষা নকৰিব
+	DO NOT COPY	প্ৰতিলিপি নকৰিব
+	Do Not Show in TOC	সূচীপত্ৰত নেদেখুৱাব
+	Do you want to save changes to {name}?	{name}-ৰ সলনি সংৰক্ষণ কৰিবনে?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me এড-ইন হৈছে Doc4Me-ৰ এড-ইন কেটেলগৰ মেক্ৰ'ৰ বিনামূলীয়া পেক। এইবোৰে কেৱল নথি সম্পাদনা কৰিব পাৰে।
+	Doc4Me is now the default app for Word documents.	Doc4Me এতিয়া Word নথিৰ ডিফল্ট এপ।
+	Document	নথি
+	Document End	নথিৰ শেষ
+	Document Formatting	নথিৰ সজ্জা
+	Document Grid	নথিৰ গ্ৰিড
+	Document Information	নথিৰ তথ্য
+	Document Property	নথিৰ বৈশিষ্ট্য
+	Document Start	নথিৰ আৰম্ভণি
+	Document template:	নথিৰ টেমপ্লেট:
+	Document Text	নথিৰ পাঠ
+	Document Title	নথিৰ শিৰোনাম
+	Document1	নথি1
+	Document\nPreferences	নথিৰ\nপছন্দ
+	Documents	নথি
+	Documents you open will show up here.	আপুনি খোলা নথিবোৰ ইয়াত দেখা যাব।
+	Does not contain	ধাৰণ নকৰে
+	DOI	DOI
+	Don't add space between paragraphs of the same style	একে শৈলীৰ অনুচ্ছেদৰ মাজত ঠাই যোগ নকৰিব
+	Don't capitalize after:	ইয়াৰ পিছত ডাঙৰ আখৰ নকৰিব:
+	Don't hyphenate	হাইফেনেট নকৰিব
+	Don't print blank lines when data fields are empty	ডেটা ফিল্ড খালী থাকিলে খালী শাৰী প্ৰিণ্ট নকৰিব
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Zotero, Mendeley বা EndNote উদ্ধৃতি আৰু গ্ৰন্থপঞ্জী নপঢ়িব
+	Don't Save	সংৰক্ষণ নকৰিব
+	Don't use HTML paragraph auto spacing	HTML অনুচ্ছেদৰ স্বয়ংক্ৰিয় ব্যৱধান ব্যৱহাৰ নকৰিব
+	Dot	বিন্দু
+	Dot dash	বিন্দু ডেছ
+	Dot-dash	বিন্দু-ডেছ
+	Dots	বিন্দু
+	Dotted	বিন্দুযুক্ত
+	Double	দুগুণ
+	Double Bar	দুডাল দণ্ড
+	Double Closing Quote	দুগুণ সমাপ্তি উদ্ধৃতিচিহ্ন
+	Double Dot	দুগুণ বিন্দু
+	Double Integral	দুগুণ অনুকল
+	Double Integral with Limits	সীমাৰ সৈতে দুগুণ অনুকল
+	Double Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে দুগুণ অনুকল
+	Double Left Arrow with Text Above	ওপৰত পাঠৰ সৈতে দুগুণ বাওঁ কাঁড়
+	Double Left Arrow with Text Below	তলত পাঠৰ সৈতে দুগুণ বাওঁ কাঁড়
+	Double Left Right Arrow with Text Above	ওপৰত পাঠৰ সৈতে দুগুণ বাওঁ-সোঁ কাঁড়
+	Double Left Right Arrow with Text Below	তলত পাঠৰ সৈতে দুগুণ বাওঁ-সোঁ কাঁড়
+	Double Opening Quote	দুগুণ আৰম্ভণি উদ্ধৃতিচিহ্ন
+	Double Right Arrow with Text Above	ওপৰত পাঠৰ সৈতে দুগুণ সোঁ কাঁড়
+	Double Right Arrow with Text Below	তলত পাঠৰ সৈতে দুগুণ সোঁ কাঁড়
+	Double Spacing	দুগুণ ব্যৱধান
+	Double Square Brackets	দুগুণ চতুৰ্ভুজ বন্ধনী
+	Double Strikethrough	দুগুণ কটা দাগ
+	Double strikethrough	দুগুণ কটা দাগ
+	Double summation	দুগুণ যোগফল
+	Double Underline	দুগুণ তলৰেখা
+	Double Vertical Bars	দুডাল উলম্ব দণ্ড
+	Doughnut	ড'নাট
+	Down	তললৈ
+	Downloading the speech model ({mb} MB, once)…	কথনৰ মডেল ডাউনলোড হৈ আছে ({mb} MB, এবাৰ)…
+	Downloading…	ডাউনলোড হৈ আছে…
+	DRAFT	খচৰা
+	Draft	খচৰা
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	তালিকা আঁকিবলৈ আয়ত টানক, বা কোষ ভগাবলৈ তাৰ ওপৰেৰে ৰেখা টানক। Esc-এ বন্ধ কৰে।
+	Draw	আঁকক
+	Draw Ink	চিয়াঁহীৰে আঁকক
+	Draw Table	তালিকা আঁকক
+	Draw\nTable	তালিকা\nআঁকক
+	Drawing Canvas	অংকন কেনভাছ
+	Drawing Grid	অংকন গ্ৰিড
+	Drawing Tools	অংকন সঁজুলি
+	Drawing\nCanvas	অংকন\nকেনভাছ
+	Drop Cap	ড্ৰপ কেপ
+	Drop cap	ড্ৰপ কেপ
+	Drop-Down List Content Control	ড্ৰপ-ডাউন তালিকা বিষয়বস্তু নিয়ন্ত্ৰণ
+	Drops all formatting and pastes plain text.	সকলো সজ্জা বাদ দি সাধাৰণ পাঠ পেষ্ট কৰে।
+	Dutch	ডাচ
+	E-mail Messages	ই-মেইল বাৰ্তা
+	Edit Category	শ্ৰেণী সম্পাদনা কৰক
+	Edit Comment	মন্তব্য সম্পাদনা কৰক
+	Edit Data	ডেটা সম্পাদনা কৰক
+	Edit Document	নথি সম্পাদনা কৰক
+	Edit Equation	সমীকৰণ সম্পাদনা কৰক
+	Edit Field Code	ফিল্ড ক'ড সম্পাদনা কৰক
+	Edit Field…	ফিল্ড সম্পাদনা কৰক…
+	Edit Footer	ফুটাৰ সম্পাদনা কৰক
+	Edit Header	হেডাৰ সম্পাদনা কৰক
+	Edit Individual Documents…	পৃথক নথি সম্পাদনা কৰক…
+	Edit Items	বস্তু সম্পাদনা কৰক
+	Edit Recipient List	প্ৰাপক তালিকা সম্পাদনা কৰক
+	Edit Source	উৎস সম্পাদনা কৰক
+	Edit\nData	ডেটা\nসম্পাদনা
+	Edit\nRecipient List	প্ৰাপক তালিকা\nসম্পাদনা
+	Edited	সম্পাদিত
+	Editing	সম্পাদনা
+	Editing header/footer	হেডাৰ/ফুটাৰ সম্পাদনা
+	Editing in this document is restricted.	এই নথিত সম্পাদনা সীমিত।
+	Editing — edit the document directly	সম্পাদনা — নথি প্ৰত্যক্ষভাৱে সম্পাদনা কৰক
+	Edition	সংস্কৰণ
+	Editor	সম্পাদক
+	Edit…	সম্পাদনা…
+	Effects	প্ৰভাৱ
+	Elbow Arrow Connector	কিলাকুটি কাঁড় সংযোজক
+	Elbow Connector	কিলাকুটি সংযোজক
+	Ellipsis	লোপচিহ্ন
+	Em Dash	Em ডেছ
+	Em Space	Em খালী ঠাই
+	Email address (optional)	ইমেইল ঠিকনা (ঐচ্ছিক)
+	Emboss	উত্থিত
+	Emphasis	জোৰ
+	Empty Matrices	খালী মেট্ৰিক্স
+	En Dash	En ডেছ
+	En Space	En খালী ঠাই
+	Enclose Characters	আখৰ আবৰক
+	Enclosure	আৱৰণ
+	Encrypt with Password	পাছৱৰ্ডেৰে এনক্ৰিপ্ট কৰক
+	Encrypt with Password…	পাছৱৰ্ডেৰে এনক্ৰিপ্ট কৰক…
+	End of document	নথিৰ শেষ
+	End of section	শাখাৰ শেষ
+	End of Word	শব্দৰ শেষ
+	Endnote Reference	অন্তটোকা উল্লেখ
+	Endnote Text	অন্তটোকা পাঠ
+	Endnotes	অন্তটোকা
+	Endnotes to footnotes	অন্তটোকাক পাদটোকালৈ
+	English	ইংৰাজী
+	English (United Kingdom)	ইংৰাজী (যুক্তৰাজ্য)
+	English (United States)	ইংৰাজী (মাৰ্কিন যুক্তৰাষ্ট্ৰ)
+	Engrave	খোদিত
+	Enlarge symbol	প্ৰতীক ডাঙৰ কৰক
+	Enter formatting for number:	সংখ্যাৰ বাবে সজ্জা লিখক:
+	Enter in Equation	সমীকৰণত Enter
+	Enter page number:	পৃষ্ঠা নম্বৰ লিখক:
+	Enter the web address or embed code of an online video:	অনলাইন ভিডিঅ'ৰ ৱেব ঠিকনা বা এম্বেড ক'ড লিখক:
+	Entry marked.	প্ৰবিষ্টি চিহ্নিত কৰা হ'ল।
+	Entry:	প্ৰবিষ্টি:
+	Envelope #10   4.12" × 9.50"	খাম #10   4.12" × 9.50"
+	Envelope Address	খামৰ ঠিকনা
+	Envelope DL   4.33" × 8.66"	খাম DL   4.33" × 8.66"
+	Envelope Return	খামৰ উভতি অহা ঠিকনা
+	Envelope size:	খামৰ আকাৰ:
+	Envelopes	খাম
+	Equal by Definition	সংজ্ঞা অনুসৰি সমান
+	Equal column width	সমান স্তম্ভৰ প্ৰস্থ
+	Equal Equal	সমান সমান
+	Equal to	সমান
+	Equals:	সমান:
+	Equation	সমীকৰণ
+	Equation Gallery	সমীকৰণ গেলেৰী
+	Equation Info	সমীকৰণৰ তথ্য
+	Equation Number	সমীকৰণ নম্বৰ
+	Equation Options	সমীকৰণৰ বিকল্প
+	Erase Ink	চিয়াঁহী মচক
+	Eraser	ৰবৰ
+	Errors ({n})	ত্ৰুটি ({n})
+	Estonian	এষ্টোনিয়ান
+	Euler's identity	অয়লাৰৰ অভেদ
+	Even Page	যুগ্ম পৃষ্ঠা
+	Even pages only	কেৱল যুগ্ম পৃষ্ঠা
+	Every change is recorded as a tracked change.	প্ৰতিটো সলনি অনুসৰণ কৰা সলনি হিচাপে লিখা হয়।
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	প্ৰতিটো আদেশ স্ক্ৰিপ্ট আৰু AI এজেণ্টৰ বাবে উপলব্ধ: MCP ছাৰ্ভাৰৰ বাবে `doc4me-cli mcp` চলাওক, বা JSON নিয়ন্ত্ৰণ চেনেলৰ বাবে এপ `--control <port>`ৰে আৰম্ভ কৰক।
+	Every field needs a name.	প্ৰতিটো ফিল্ডৰ নাম লাগে।
+	Every font this document uses is installed.	এই নথিয়ে ব্যৱহাৰ কৰা সকলো ফণ্ট ইনষ্টল কৰা আছে।
+	Everyone	সকলোৱে
+	Exactly	সঠিক
+	Exactly {n}	সঠিক {n}
+	Example: {sample}	উদাহৰণ: {sample}
+	Exceptions (optional)	ব্যতিক্ৰম (ঐচ্ছিক)
+	Exceptions…	ব্যতিক্ৰম…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	প্ৰস্থান
+	Expand	বিস্তাৰ কৰক
+	Expand or Collapse Heading	শিৰোনাম বিস্তাৰ বা সংকুচিত কৰক
+	Expanded	বিস্তাৰিত
+	Exponential	সূচকীয়
+	Exponential series	সূচকীয় শ্ৰেণী
+	Export	ৰপ্তানি কৰক
+	Export a copy to share (PDF, Word document)	ভাগ-বতৰাৰ বাবে প্ৰতিলিপি ৰপ্তানি কৰক (PDF, Word নথি)
+	Export Page as JPEG	পৃষ্ঠা JPEG হিচাপে ৰপ্তানি কৰক
+	Export Page as PNG	পৃষ্ঠা PNG হিচাপে ৰপ্তানি কৰক
+	Export PDF	PDF ৰপ্তানি কৰক
+	Exported {path}	ৰপ্তানি কৰা হ'ল {path}
+	Expression	ৰাশি
+	Extend Selection	নিৰ্বাচন বঢ়াওক
+	Extend Selection by Units	একক অনুসৰি নিৰ্বাচন বঢ়াওক
+	Extra space	অতিৰিক্ত ঠাই
+	Extra spaces between words.	শব্দৰ মাজত অতিৰিক্ত খালী ঠাই।
+	Field	ফিল্ড
+	Field Click	ফিল্ড ক্লিক
+	Field code:	ফিল্ড ক'ড:
+	Field Codes	ফিল্ড ক'ড
+	Field codes:	ফিল্ড ক'ড:
+	Field name	ফিল্ডৰ নাম
+	Field name:	ফিল্ডৰ নাম:
+	Field names must be different.	ফিল্ডৰ নাম বেলেগ হ'ব লাগিব।
+	Field names:	ফিল্ডৰ নাম:
+	Field properties	ফিল্ডৰ বৈশিষ্ট্য
+	Field:	ফিল্ড:
+	Fields	ফিল্ড
+	Fields to insert:	সুমুৱাব লগা ফিল্ড:
+	Fields:	ফিল্ড:
+	Field…	ফিল্ড…
+	Figure	চিত্ৰ
+	File	ফাইল
+	File name:	ফাইলৰ নাম:
+	Fill	পূৰণ
+	Fill & Line	পূৰণ আৰু ৰেখা
+	Fill color:	পূৰণৰ ৰং:
+	Fill:	পূৰণ:
+	Filling in forms	প্ৰপত্ৰ পূৰণ
+	Film	চলচ্চিত্ৰ
+	Filter and Sort	ফিল্টাৰ আৰু সজোৱা
+	Filter and Sort…	ফিল্টাৰ আৰু সজোৱা…
+	Filter Records	ৰেকৰ্ড ফিল্টাৰ কৰক
+	Find	বিচাৰক
+	Find and Replace	বিচাৰক আৰু সলনি কৰক
+	Find Next	পিছৰটো বিচাৰক
+	Find Next Editable Region	পিছৰ সম্পাদনযোগ্য অঞ্চল বিচাৰক
+	Find Previous	আগৰটো বিচাৰক
+	Find Recipient	প্ৰাপক বিচাৰক
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	বিচাৰে পিছৰ সলনি হোৱা অনুচ্ছেদ বাছে; প্ৰত্যাখ্যানে নিৰ্বাচিতটো আগৰ দৰে কৰে।
+	Find What Expression	বিচৰা ৰাশি
+	Find What Text	বিচৰা পাঠ
+	Find what:	কি বিচাৰিব:
+	Find →	বিচাৰক →
+	Find:	বিচাৰক:
+	Finish	সমাপ্ত
+	Finish & Merge	সমাপ্ত আৰু একত্ৰ কৰক
+	Finish &\nMerge	সমাপ্ত আৰু\nএকত্ৰ কৰক
+	Finished	সমাপ্ত
+	Finnish	ফিনিছ
+	First	প্ৰথম
+	First Cell in Column	স্তম্ভৰ প্ৰথম কোষ
+	First Cell in Row	শাৰীৰ প্ৰথম কোষ
+	First Column	প্ৰথম স্তম্ভ
+	First commit	প্ৰথম কমিট
+	First line	প্ৰথম শাৰী
+	First line:	প্ৰথম শাৰী:
+	First Name	প্ৰথম নাম
+	First row of data contains column headers	ডেটাৰ প্ৰথম শাৰীত স্তম্ভৰ শিৰোনাম আছে
+	Fit	খাপ খুওৱা
+	Fit text	পাঠ খাপ খুৱাওক
+	Fix Position on Page	পৃষ্ঠাত অৱস্থান স্থিৰ কৰক
+	Fixed Column Width	স্থিৰ স্তম্ভৰ প্ৰস্থ
+	Flip Horizontal	আনুভূমিকভাৱে ওলোটা কৰক
+	Flip Vertical	উলম্বভাৱে ওলোটা কৰক
+	Floor	তলৰ পূৰ্ণসংখ্যা
+	Focus	মনোযোগ
+	Follow number with:	সংখ্যাৰ পিছত:
+	Font	ফণ্ট
+	Font Color	ফণ্টৰ ৰং
+	Font color	ফণ্টৰ ৰং
+	Font color:	ফণ্টৰ ৰং:
+	Font Dialog	ফণ্ট সংলাপ
+	Font not installed	ফণ্ট ইনষ্টল কৰা নাই
+	Font Size	ফণ্টৰ আকাৰ
+	Font Substitution	ফণ্ট প্ৰতিস্থাপন
+	Font Substitution…	ফণ্ট প্ৰতিস্থাপন…
+	Font:	ফণ্ট:
+	Font: {font}	ফণ্ট: {font}
+	Fonts	ফণ্ট
+	Font…	ফণ্ট…
+	Footer	ফুটাৰ
+	Footnote and Endnote	পাদটোকা আৰু অন্তটোকা
+	Footnote Reference	পাদটোকা উল্লেখ
+	Footnote Text	পাদটোকা পাঠ
+	Footnotes	পাদটোকা
+	Footnotes and endnotes	পাদটোকা আৰু অন্তটোকা
+	Footnotes to endnotes	পাদটোকাক অন্তটোকালৈ
+	Form Letters	প্ৰপত্ৰ চিঠি
+	Format	সজ্জা
+	Format Page Numbers	পৃষ্ঠা নম্বৰ সজাওক
+	Format Page Numbers…	পৃষ্ঠা নম্বৰ সজাওক…
+	Format Painter	সজ্জা পেইণ্টাৰ
+	Format Picture	ছবি সজাওক
+	Format Shape	আকৃতি সজাওক
+	Format:	সজ্জা:
+	Formatted	সজোৱা
+	Formatted Text	সজোৱা পাঠ
+	Formatting	সজ্জা
+	Formatting at Selection	নিৰ্বাচনৰ সজ্জা
+	Formatting completed. You can now:	সজ্জা সম্পূৰ্ণ হ'ল। এতিয়া আপুনি কৰিব পাৰে:
+	Formatting exceptions	সজ্জাৰ ব্যতিক্ৰম
+	Formatting marks	সজ্জা চিহ্ন
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	সজ্জা, আখৰৰ আকাৰ সলনি, খালী ঠাই আৰু তালিকা তুলনা কৰা হয়; আন ছেটিং পিছলৈ ৰখা হয়।
+	Formula	সূত্ৰ
+	Forward	আগলৈ
+	Fraction	ভগ্নাংশ
+	Fractions (1/2) as fraction characters (½)	ভগ্নাংশ (1/2) ভগ্নাংশ আখৰ (½) হিচাপে
+	French	ফৰাচী
+	French (France)	ফৰাচী (ফ্ৰান্স)
+	From	প্ৰেৰক
+	From text:	পাঠৰ পৰা:
+	from Unicode (hex)	Unicode-ৰ পৰা (hex)
+	From:	প্ৰেৰক:
+	Full page of the same label	একেটা লেবেলৰ সম্পূৰ্ণ পৃষ্ঠা
+	Function	ফলন
+	Functions	ফলন
+	Gallery	গেলেৰী
+	GB/T 7714	GB/T 7714
+	General	সাধাৰণ
+	Geometry	জ্যামিতি
+	German	জাৰ্মান
+	German (Germany)	জাৰ্মান (জাৰ্মানী)
+	Get Add-ins	এড-ইন লাভ কৰক
+	Get Data	ডেটা লাভ কৰক
+	Get Data…	ডেটা লাভ কৰক…
+	Getting ready…	সাজু হৈ আছে…
+	Glow	উজ্জ্বল আভা
+	Glow Colors	উজ্জ্বল আভাৰ ৰং
+	Go Back	উভতি যাওক
+	Go To	যাওক
+	Go to	যাওক
+	Go To…	যাওক…
+	Good afternoon	শুভ আবেলি
+	Good evening	শুভ সন্ধিয়া
+	Good morning	শুভ ৰাতিপুৱা
+	GOST (name sort)	GOST (নাম ক্ৰম)
+	GOST (title sort)	GOST (শিৰোনাম ক্ৰম)
+	Grab bag	মিশ্ৰ
+	Grammar	ব্যাকৰণ
+	Grammar Settings	ব্যাকৰণ ছেটিং
+	Graphic	গ্ৰাফিক
+	Grave	গ্ৰেভ
+	Greater than	তকৈ ডাঙৰ
+	Greater than or equal	তকৈ ডাঙৰ বা সমান
+	Greek	গ্ৰীক
+	Greek Letters	গ্ৰীক আখৰ
+	Green:	সেউজীয়া:
+	Greeting Line	অভিবাদন শাৰী
+	Greeting\nLine	অভিবাদন\nশাৰী
+	Grid Settings	গ্ৰিড ছেটিং
+	Grid Table 1 Light	গ্ৰিড তালিকা 1 পাতল
+	Grid Table 4 – Blue	গ্ৰিড তালিকা 4 – নীলা
+	Grid Table 4 – Green	গ্ৰিড তালিকা 4 – সেউজীয়া
+	Grid Table 4 – Orange	গ্ৰিড তালিকা 4 – কমলা
+	Grid Table 4 – Purple	গ্ৰিড তালিকা 4 – বেঙুনীয়া
+	Gridlines	গ্ৰিডলাইন
+	Group	গোটবদ্ধ কৰক
+	Grouping Character Above	ওপৰত গোট আখৰ
+	Grouping Character Below	তলত গোট আখৰ
+	Grow Font 1 Point	ফণ্ট 1 পইণ্ট ডাঙৰ কৰক
+	H:	উ:
+	Hanging Indent	ওলমি থকা ইণ্ডেণ্ট
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	টুপী
+	Header	হেডাৰ
+	Header & Footer	হেডাৰ আৰু ফুটাৰ
+	Header Options	হেডাৰৰ বিকল্প
+	Header Options:	হেডাৰৰ বিকল্প:
+	Header Row	হেডাৰ শাৰী
+	Header source: {file} (the next data source opened here takes its field names)	হেডাৰ উৎস: {file} (ইয়াত খোলা পিছৰ ডেটা উৎসই ইয়াৰ ফিল্ডৰ নাম লয়)
+	Header/Footer Position	হেডাৰ/ফুটাৰৰ অৱস্থান
+	Headers and footers	হেডাৰ আৰু ফুটাৰ
+	Heading 1	শিৰোনাম 1
+	Heading 2	শিৰোনাম 2
+	Heading 3	শিৰোনাম 3
+	Heading styles (levels 1–{n})	শিৰোনাম শৈলী (স্তৰ 1–{n})
+	Heading {n}	শিৰোনাম {n}
+	Headings	শিৰোনাম
+	Heart	হৃদয়
+	Hebrew	হিব্ৰু
+	Height:	উচ্চতা:
+	Help	সহায়
+	Hex:	Hex:
+	Hidden	লুকুৱা
+	Hidden text	লুকুৱা পাঠ
+	Hide Codes	ক'ড লুকুৱাওক
+	Hide from style lists	শৈলী তালিকাৰ পৰা লুকুৱাওক
+	Hide Ink	চিয়াঁহী লুকুৱাওক
+	Hide White Space	খালী ঠাই লুকুৱাওক
+	Hide\nInk	চিয়াঁহী\nলুকুৱাওক
+	Hierarchy	পদানুক্ৰম
+	Highlight	হাইলাইট
+	Highlight Changes	সলনি হাইলাইট কৰক
+	Highlight changes in printed document	প্ৰিণ্ট কৰা নথিত সলনি হাইলাইট কৰক
+	Highlight changes on screen	স্ক্ৰীনত সলনি হাইলাইট কৰক
+	Highlight Merge Fields	মাৰ্জ ফিল্ড হাইলাইট কৰক
+	Highlight\nMerge Fields	মাৰ্জ ফিল্ড\nহাইলাইট
+	Highlighter	হাইলাইটাৰ
+	Hindi	হিন্দী
+	Historical and Discretional	ঐতিহাসিক আৰু ঐচ্ছিক
+	Hollow	খোলা
+	Home	হোম
+	Home folder	হোম ফ'ল্ডাৰ
+	Horizontal	আনুভূমিক
+	Horizontal Line	আনুভূমিক ৰেখা
+	Horizontal spacing:	আনুভূমিক ব্যৱধান:
+	How many pages the whole document has	গোটেই নথিত কিমান পৃষ্ঠা আছে
+	How many pages this section has	এই শাখাত কিমান পৃষ্ঠা আছে
+	How many words the document holds	নথিত কিমান শব্দ আছে
+	HTML Format	HTML সজ্জা
+	Hue:	বৰ্ণছটা:
+	Hungarian	হাংগেৰীয়ান
+	Hyperbolic Cosecant Function	অধিবৃত্তীয় কোচেকেণ্ট ফলন
+	Hyperbolic Cosine Function	অধিবৃত্তীয় ক'চাইন ফলন
+	Hyperbolic Cotangent Function	অধিবৃত্তীয় ক'টেনজেণ্ট ফলন
+	Hyperbolic Functions	অধিবৃত্তীয় ফলন
+	Hyperbolic Secant Function	অধিবৃত্তীয় চেকেণ্ট ফলন
+	Hyperbolic Sine Function	অধিবৃত্তীয় চাইন ফলন
+	Hyperbolic Tangent Function	অধিবৃত্তীয় টেনজেণ্ট ফলন
+	Hyperlink	হাইপাৰলিংক
+	Hyphenate at:	ইয়াত হাইফেনেট কৰক:
+	Hyphenate words in CAPS	ডাঙৰ আখৰৰ শব্দ হাইফেনেট কৰক
+	Hyphenation	হাইফেনেচন
+	Hyphenation Options…	হাইফেনেচন বিকল্প…
+	Hyphenation zone:	হাইফেনেচন অঞ্চল:
+	Hyphens (--) as dashes (—)	হাইফেন (--) ডেছ (—) হিচাপে
+	Hypotenuse	অতিভুজ
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	i, ii, iii, …
+	Icon Color	আইকনৰ ৰং
+	Icons	আইকন
+	Identity Matrices	একক মেট্ৰিক্স
+	IEEE	IEEE
+	If…Then…Else	যদি…তেন্তে…অন্যথা
+	If…Then…Else…	যদি…তেন্তে…অন্যথা…
+	Ignore All	সকলো উপেক্ষা কৰক
+	Ignore punctuation characters	যতিচিহ্ন আখৰ উপেক্ষা কৰক
+	Ignore web and file addresses	ৱেব আৰু ফাইল ঠিকনা উপেক্ষা কৰক
+	Ignore white-space characters	খালী ঠাইৰ আখৰ উপেক্ষা কৰক
+	Ignore words in capitals	ডাঙৰ আখৰৰ শব্দ উপেক্ষা কৰক
+	Ignore words with numbers	সংখ্যাযুক্ত শব্দ উপেক্ষা কৰক
+	Illustrations	চিত্ৰণ
+	Immersive	নিমগ্ন
+	Immersive Reader	নিমগ্ন পাঠক
+	Immersive\nReader	নিমগ্ন\nপাঠক
+	In Default apps, choose Doc4Me for the document types you want it to open.	ডিফল্ট এপত, Doc4Me-ৰে খুলিব বিচৰা নথিৰ প্ৰকাৰবোৰৰ বাবে Doc4Me বাছক।
+	In equations, typing a name after a backslash replaces it with its symbol.	সমীকৰণত বেকশ্লেছৰ পিছত নাম টাইপ কৰিলে সেয়া তাৰ প্ৰতীকেৰে সলনি হয়।
+	In Front of Text	পাঠৰ সন্মুখত
+	In Line with Text	পাঠৰ সৈতে শাৰীত
+	Inches	ইঞ্চি
+	Include label and number	লেবেল আৰু নম্বৰ অন্তৰ্ভুক্ত কৰক
+	Include level number from:	স্তৰ নম্বৰ অন্তৰ্ভুক্ত কৰক:
+	Include page numbers	পৃষ্ঠা নম্বৰ অন্তৰ্ভুক্ত কৰক
+	Increase Font Size	ফণ্টৰ আকাৰ বঢ়াওক
+	Increase Indent	ইণ্ডেণ্ট বঢ়াওক
+	Indent	ইণ্ডেণ্ট
+	Indent from left:	বাওঁফালৰ পৰা ইণ্ডেণ্ট:
+	Indentation	ইণ্ডেণ্টেচন
+	Indented	ইণ্ডেণ্টযুক্ত
+	Indents	ইণ্ডেণ্ট
+	Indents and Spacing	ইণ্ডেণ্ট আৰু ব্যৱধান
+	Index	সূচী
+	Index and Tables	সূচী আৰু তালিকা
+	Index Heading	সূচীৰ শিৰোনাম
+	Index {n}	সূচী {n}
+	Indonesian	ইণ্ডোনেছিয়ান
+	Inflate	ফুলাওক
+	Info	তথ্য
+	Initials:	আদ্যাক্ষৰ:
+	Ink	চিয়াঁহী
+	Ink Equation	চিয়াঁহীৰ সমীকৰণ
+	Ink Replay	চিয়াঁহী পুনৰ প্লে
+	Ink to Math	চিয়াঁহীৰ পৰা গণিত
+	Ink to Shape	চিয়াঁহীৰ পৰা আকৃতি
+	Ink to\nMath	চিয়াঁহীৰ পৰা\nগণিত
+	Ink to\nShape	চিয়াঁহীৰ পৰা\nআকৃতি
+	Ink\nReplay	চিয়াঁহী\nপুনৰ প্লে
+	Inline	ইনলাইন
+	Input Format	ইনপুট সজ্জা
+	Insert	সুমুৱাওক
+	Insert a 3D model from a file (.glb, .stl, .obj)	ফাইলৰ পৰা 3D মডেল সুমুৱাওক (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	নতুন সমীকৰণ সুমুৱাওক (Alt+=)
+	Insert Above	ওপৰত সুমুৱাওক
+	Insert Below	তলত সুমুৱাওক
+	Insert Caption	কেপচন সুমুৱাওক
+	Insert Cells	কোষ সুমুৱাওক
+	Insert Chart	চাৰ্ট সুমুৱাওক
+	Insert Citation	উদ্ধৃতি সুমুৱাওক
+	Insert Columns to the Left	বাওঁফালে স্তম্ভ সুমুৱাওক
+	Insert Columns to the Right	সোঁফালে স্তম্ভ সুমুৱাওক
+	Insert Data	ডেটা সুমুৱাওক
+	Insert Database	ডেটাবেছ সুমুৱাওক
+	Insert Database…	ডেটাবেছ সুমুৱাওক…
+	Insert Date Field	তাৰিখ ফিল্ড সুমুৱাওক
+	Insert Endnote	অন্তটোকা সুমুৱাওক
+	Insert entire column	গোটেই স্তম্ভ সুমুৱাওক
+	Insert entire row	গোটেই শাৰী সুমুৱাওক
+	Insert Footnote	পাদটোকা সুমুৱাওক
+	Insert Hyperlink	হাইপাৰলিংক সুমুৱাওক
+	Insert Index	সূচী সুমুৱাওক
+	Insert Left	বাওঁফালে সুমুৱাওক
+	Insert LISTNUM Field	LISTNUM ফিল্ড সুমুৱাওক
+	Insert Merge Field	মাৰ্জ ফিল্ড সুমুৱাওক
+	Insert Merge\nField	মাৰ্জ ফিল্ড\nসুমুৱাওক
+	Insert New Equation	নতুন সমীকৰণ সুমুৱাওক
+	Insert one text or another, depending on a field's value.	ফিল্ডৰ মান অনুসৰি এটা বা আন পাঠ সুমুৱাওক।
+	Insert Page Field	পৃষ্ঠা ফিল্ড সুমুৱাওক
+	Insert Right	সোঁফালে সুমুৱাওক
+	Insert Rows	শাৰী সুমুৱাওক
+	Insert Rows Above	ওপৰত শাৰী সুমুৱাওক
+	Insert Rows Below	তলত শাৰী সুমুৱাওক
+	Insert Shapes	আকৃতি সুমুৱাওক
+	Insert SmartArt	SmartArt সুমুৱাওক
+	Insert Structure	গঠন সুমুৱাওক
+	Insert Symbol	প্ৰতীক সুমুৱাওক
+	Insert Table	তালিকা সুমুৱাওক
+	Insert Table of Authorities	কৰ্তৃপক্ষৰ তালিকা সুমুৱাওক
+	Insert Table of Figures	চিত্ৰসূচী সুমুৱাওক
+	Insert Table…	তালিকা সুমুৱাওক…
+	Insert Time Field	সময় ফিল্ড সুমুৱাওক
+	Insert Video	ভিডিঅ' সুমুৱাওক
+	Insert\nAbove	ওপৰত\nসুমুৱাওক
+	Insert\nCaption	কেপচন\nসুমুৱাওক
+	Insert\nCitation	উদ্ধৃতি\nসুমুৱাওক
+	Insert\nFootnote	পাদটোকা\nসুমুৱাওক
+	Inserted	সুমুওৱা হ'ল
+	Insertions and Deletions	সুমুওৱা আৰু মচা
+	Insertions:	সুমুওৱা:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	সুমুওৱা: {ins}, মচা: {del}, স্থানান্তৰ: {moves}, সজ্জা: {fmt}, মন্তব্য: {comments}
+	Inside	ভিতৰত
+	Inside Borders	ভিতৰৰ সীমা
+	Inside Margin	ভিতৰৰ মাৰ্জিন
+	Inside:	ভিতৰত:
+	Inspect Document	নথি পৰিদৰ্শন কৰক
+	Inspect Styles at Selection	নিৰ্বাচনত শৈলী পৰিদৰ্শন কৰক
+	Institution	প্ৰতিষ্ঠান
+	Integral	অনুকল
+	Integral of e^(−x²)	e^(−x²)-ৰ অনুকল
+	Integral with Limits	সীমাৰ সৈতে অনুকল
+	Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে অনুকল
+	Integrals	অনুকল
+	Intense Emphasis	তীব্ৰ জোৰ
+	Intense Quote	তীব্ৰ উদ্ধৃতি
+	Intense Reference	তীব্ৰ উল্লেখ
+	Interface	ইণ্টাৰফেচ
+	Interface language	ইণ্টাৰফেচৰ ভাষা
+	Interface language:	ইণ্টাৰফেচৰ ভাষা:
+	Interface size:	ইণ্টাৰফেচৰ আকাৰ:
+	Interface Theme	ইণ্টাৰফেচ থীম
+	Interface theme:	ইণ্টাৰফেচ থীম:
+	Interface\nTheme	ইণ্টাৰফেচ\nথীম
+	Internet addresses as links	ইণ্টাৰনেট ঠিকনা সংযোগ হিচাপে
+	Intersection	ছেদ
+	Intersection with Limits	সীমাৰ সৈতে ছেদ
+	Intersection with Lower Limit	নিম্নসীমাৰ সৈতে ছেদ
+	Intersection with Subscript-Superscript Limits	নিম্নলিপি-উৰ্ধ্বলিপি সীমাৰ সৈতে ছেদ
+	Inverse Cosecant Function	বিপৰীত কোচেকেণ্ট ফলন
+	Inverse Cosine Function	বিপৰীত ক'চাইন ফলন
+	Inverse Cotangent Function	বিপৰীত ক'টেনজেণ্ট ফলন
+	Inverse Functions	বিপৰীত ফলন
+	Inverse Hyperbolic Cosecant Function	বিপৰীত অধিবৃত্তীয় কোচেকেণ্ট ফলন
+	Inverse Hyperbolic Cosine Function	বিপৰীত অধিবৃত্তীয় ক'চাইন ফলন
+	Inverse Hyperbolic Cotangent Function	বিপৰীত অধিবৃত্তীয় ক'টেনজেণ্ট ফলন
+	Inverse Hyperbolic Functions	বিপৰীত অধিবৃত্তীয় ফলন
+	Inverse Hyperbolic Secant Function	বিপৰীত অধিবৃত্তীয় চেকেণ্ট ফলন
+	Inverse Hyperbolic Sine Function	বিপৰীত অধিবৃত্তীয় চাইন ফলন
+	Inverse Hyperbolic Tangent Function	বিপৰীত অধিবৃত্তীয় টেনজেণ্ট ফলন
+	Inverse Secant Function	বিপৰীত চেকেণ্ট ফলন
+	Inverse Sine Function	বিপৰীত চাইন ফলন
+	Inverse Tangent Function	বিপৰীত টেনজেণ্ট ফলন
+	Ionosphere	আয়নমণ্ডল
+	Is blank	খালী
+	Is not blank	খালী নহয়
+	ISO 690 (author-date)	ISO 690 (লেখক-তাৰিখ)
+	ISO 690 (numerical)	ISO 690 (সংখ্যাসূচক)
+	Issue	সংখ্যা
+	it isn't a picture Doc4Me can read	ই Doc4Me-এ পঢ়িব পৰা ছবি নহয়
+	Italian	ইটালীয়
+	Italic	হেলনীয়া
+	Japanese	জাপানী
+	Journal	জাৰ্নেল
+	Justification	সমন্বয়
+	Justification of a display equation	প্ৰদৰ্শন সমীকৰণৰ সমন্বয়
+	Justified	দুয়োফালে সমন্বিত
+	Justify	দুয়োফালে সমন্বয় কৰক
+	Keep Lines Together	শাৰীবোৰ একেলগে ৰাখক
+	Keep lines together	শাৰীবোৰ একেলগে ৰাখক
+	Keep Source Formatting	উৎসৰ সজ্জা ৰাখক
+	Keep Text Only	কেৱল পাঠ ৰাখক
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	পাছৱৰ্ড সুৰক্ষিত ঠাইত ৰাখক: ইয়াৰ অবিহনে Doc4Me-কে ধৰি কোনেও নথি খুলিব নোৱাৰে। পাছৱৰ্ড আঁতৰাবলৈ দুয়োটা বাকচ খালী ৰাখক।
+	Keep with Next	পিছৰটোৰ সৈতে ৰাখক
+	Keep with next	পিছৰটোৰ সৈতে ৰাখক
+	Keeps the fonts and formatting of the copied text.	প্ৰতিলিপি কৰা পাঠৰ ফণ্ট আৰু সজ্জা ৰাখে।
+	Kerning for fonts:	ফণ্টৰ বাবে কাৰ্নিং:
+	Keyboard shortcuts:	কীবৰ্ড চৰ্টকাট:
+	Keys for this command:	এই আদেশৰ চাবি:
+	Keywords	মূল শব্দ
+	Korean	কোৰিয়ান
+	Label changes with:	লেবেল ইয়াৰ সৈতে সলনি হয়:
+	Label:	লেবেল:
+	Labels	লেবেল
+	Landscape	আনুভূমিক
+	Language	ভাষা
+	Language Preferences…	ভাষাৰ পছন্দ…
+	Language…	ভাষা…
+	Large\nOperator	ডাঙৰ\nঅপাৰেটৰ
+	Largest Only	কেৱল আটাইতকৈ ডাঙৰ
+	Largest only	কেৱল আটাইতকৈ ডাঙৰ
+	Lasso	ফান্দ
+	Lasso Select	ফান্দ নিৰ্বাচন
+	Last	শেষ
+	Last Cell in Column	স্তম্ভৰ শেষ কোষ
+	Last Cell in Row	শাৰীৰ শেষ কোষ
+	Last Column	শেষ স্তম্ভ
+	Last commit	শেষ কমিট
+	Last Name	উপাধি
+	Last, First; Last, First	উপাধি, নাম; উপাধি, নাম
+	Latin text font:	লেটিন পাঠৰ ফণ্ট:
+	Layout	লেআউট
+	Layout options for this document	এই নথিৰ লেআউট বিকল্প
+	Layout Summary	লেআউটৰ সাৰাংশ
+	Layouts	লেআউট
+	Leader	লিডাৰ
+	Leave a recipient out of the merge when a field has this value.	ফিল্ডৰ মান এইটো হ'লে প্ৰাপকক মাৰ্জৰ পৰা বাদ দিয়ক।
+	Leave Equation	সমীকৰণ এৰক
+	Leave the equation (Esc)	সমীকৰণ এৰক (Esc)
+	Leave the label out of the caption	কেপচনৰ পৰা লেবেল বাদ দিয়ক
+	Left	বাওঁ
+	Left Arrow with Text Above	ওপৰত পাঠৰ সৈতে বাওঁ কাঁড়
+	Left Arrow with Text Below	তলত পাঠৰ সৈতে বাওঁ কাঁড়
+	Left Border	বাওঁ সীমা
+	Left border	বাওঁ সীমা
+	Left Bracket Twice	দুবাৰ বাওঁ বন্ধনী
+	Left indent	বাওঁ ইণ্ডেণ্ট
+	Left Margin	বাওঁ মাৰ্জিন
+	Left Only	কেৱল বাওঁ
+	Left only	কেৱল বাওঁ
+	Left Right Arrow Above	ওপৰত বাওঁ-সোঁ কাঁড়
+	Left Right Arrow with Text Above	ওপৰত পাঠৰ সৈতে বাওঁ-সোঁ কাঁড়
+	Left Right Arrow with Text Below	তলত পাঠৰ সৈতে বাওঁ-সোঁ কাঁড়
+	Left Subscript-Superscript	বাওঁ নিম্নলিপি-উৰ্ধ্বলিপি
+	Left-to-right	বাওঁফালৰ পৰা সোঁফাললৈ
+	Left-to-Right Text Direction	বাওঁফালৰ পৰা সোঁফাললৈ পাঠৰ দিশ
+	Left:	বাওঁ:
+	Leftwards Arrow Above	ওপৰত বাওঁফালে কাঁড়
+	Leftwards Harpoon Above	ওপৰত বাওঁফালে হাৰপুন
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	আইনী শৈলীৰ নম্বৰ
+	Legend	লেজেণ্ড
+	Less than	তকৈ সৰু
+	Less than or equal	তকৈ সৰু বা সমান
+	Letter	চিঠি
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	আখৰ শিৰোনাম
+	Letter-Like Symbols	আখৰসদৃশ প্ৰতীক
+	Letters	চিঠি
+	Level 1	স্তৰ 1
+	Level 2	স্তৰ 2
+	Level 3	স্তৰ 3
+	Level 4	স্তৰ 4
+	Level 5	স্তৰ 5
+	Level 6	স্তৰ 6
+	Level 7	স্তৰ 7
+	Level 8	স্তৰ 8
+	Level 9	স্তৰ 9
+	Level {n}	স্তৰ {n}
+	Level:	স্তৰ:
+	Levels:	স্তৰ:
+	LibreTranslate server (open source)	LibreTranslate ছাৰ্ভাৰ (মুক্ত উৎস)
+	Ligatures:	যুক্তাক্ষৰ:
+	Light	পাতল
+	Light with Outline	ৰূপৰেখাৰ সৈতে পাতল
+	Limit	সীমা
+	Limit and\nLog	সীমা আৰু\nলগ
+	Limit consecutive hyphens to:	ক্ৰমাগত হাইফেনৰ সীমা:
+	Limit Example	সীমাৰ উদাহৰণ
+	Limit formatting to a selection of styles	সজ্জাক বাছনি কৰা শৈলীত সীমিত কৰক
+	Line	ৰেখা
+	Line and Page Breaks	শাৰী আৰু পৃষ্ঠা বিচ্ছেদ
+	Line and Paragraph Spacing	শাৰী আৰু অনুচ্ছেদ ব্যৱধান
+	Line between	মাজত ৰেখা
+	Line Break	শাৰী বিচ্ছেদ
+	Line breaking	শাৰী ভঙা
+	Line delta	শাৰীৰ পাৰ্থক্য
+	Line End	শাৰীৰ শেষ
+	Line Number	শাৰী নম্বৰ
+	Line Numbering Options…	শাৰী নম্বৰৰ বিকল্প…
+	Line Numbers	শাৰী নম্বৰ
+	Line Spacing	শাৰী ব্যৱধান
+	Line spacing	শাৰী ব্যৱধান
+	Line Spacing Options…	শাৰী ব্যৱধানৰ বিকল্প…
+	Line spacing:	শাৰী ব্যৱধান:
+	Line Start	শাৰীৰ আৰম্ভণি
+	Line width:	ৰেখাৰ প্ৰস্থ:
+	Line:	ৰেখা:
+	Linear	ৰৈখিক
+	Linear Fraction	ৰৈখিক ভগ্নাংশ
+	Lines	শাৰী
+	Lines +/−	শাৰী +/−
+	Lines added	যোগ কৰা শাৰী
+	Lines and characters	শাৰী আৰু আখৰ
+	Lines deleted	মচা শাৰী
+	Lines only	কেৱল ৰেখা
+	Lines per page:	প্ৰতি পৃষ্ঠাত শাৰী:
+	Link	সংযোগ
+	Link entries to their headings	প্ৰবিষ্টিবোৰ সেইবোৰৰ শিৰোনামৰ সৈতে সংযোগ কৰক
+	Link level to style:	স্তৰক শৈলীৰ সৈতে সংযোগ কৰক:
+	Link to Previous	আগৰটোৰ সৈতে সংযোগ কৰক
+	Linked style (paragraph and character)	সংযোগিত শৈলী (অনুচ্ছেদ আৰু আখৰ)
+	Links	সংযোগ
+	Links and References	সংযোগ আৰু উল্লেখ
+	Link…	সংযোগ…
+	List	তালিকা
+	List Commands	আদেশৰ তালিকা
+	List Definition	তালিকাৰ সংজ্ঞা
+	List entries	তালিকাৰ প্ৰবিষ্টি
+	List Paragraph	তালিকা অনুচ্ছেদ
+	List styles	তালিকা শৈলী
+	List Table 3 – Blue	তালিকা টেবুল 3 – নীলা
+	List Table 3 – Green	তালিকা টেবুল 3 – সেউজীয়া
+	List Table 3 – Orange	তালিকা টেবুল 3 – কমলা
+	List Table 3 – Purple	তালিকা টেবুল 3 – বেঙুনীয়া
+	Listening… speak now	শুনি আছোঁ… এতিয়া কওক
+	Location	অৱস্থান
+	Location: {path}	অৱস্থান: {path}
+	Lock aspect ratio	আকাৰৰ অনুপাত লক কৰক
+	Lock Fields	ফিল্ড লক কৰক
+	Logarithm	লগাৰিদম
+	Logarithm with Base	ভিত্তিৰ সৈতে লগাৰিদম
+	Logical AND	যৌক্তিক AND
+	Logical AND with Limits	সীমাৰ সৈতে যৌক্তিক AND
+	Logical OR	যৌক্তিক OR
+	Logical OR with Limits	সীমাৰ সৈতে যৌক্তিক OR
+	Long citation:	দীঘল উদ্ধৃতি:
+	lowercase	সৰু আখৰ
+	Lum:	দীপ্তি:
+	Macros	মেক্ৰ'
+	Made from the author and year when empty	খালী থাকিলে লেখক আৰু বছৰৰ পৰা তৈয়াৰ হয়
+	Magazine or newspaper article	আলোচনী বা বাতৰি কাকতৰ প্ৰবন্ধ
+	Mail Merge	মেইল মাৰ্জ
+	Mail Merge Helper	মেইল মাৰ্জ সহায়ক
+	Mail Merge Helper…	মেইল মাৰ্জ সহায়ক…
+	Mailing Labels	মেইলিং লেবেল
+	Mailings	মেইলিং
+	Main entry:	মূল প্ৰবিষ্টি:
+	Make Doc4Me the default for Word documents…	Doc4Me-ক Word নথিৰ ডিফল্ট কৰক…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	আপোনাৰ ছিষ্টেমৰ ডিছপ্লে স্কেলিঙৰ ওপৰত ৰিবন, মেনু আৰু সংলাপ ডাঙৰ বা সৰু কৰে। নথিৰ জুম পৃথক।
+	Malay	মালয়
+	Manage Sources	উৎস পৰিচালনা কৰক
+	Manage Styles	শৈলী পৰিচালনা কৰক
+	Manage Styles…	শৈলী পৰিচালনা কৰক…
+	Manual Hyphenation	হাতেৰে হাইফেনেচন
+	Manual hyphenation is complete.	হাতেৰে হাইফেনেচন সম্পূৰ্ণ।
+	Manual Line Break	হাতেৰে শাৰী বিচ্ছেদ
+	Manual Page Break	হাতেৰে পৃষ্ঠা বিচ্ছেদ
+	Manual…	হাতেৰে…
+	Many pages	বহু পৃষ্ঠা
+	Margin	মাৰ্জিন
+	Margins	মাৰ্জিন
+	Mark	চিহ্নিত কৰক
+	Mark All	সকলো চিহ্নিত কৰক
+	Mark as decorative	শোভাবৰ্ধক হিচাপে চিহ্নিত কৰক
+	Mark Citation	উদ্ধৃতি চিহ্নিত কৰক
+	Mark Citation…	উদ্ধৃতি চিহ্নিত কৰক…
+	Mark Entry	প্ৰবিষ্টি চিহ্নিত কৰক
+	Mark Entry…	প্ৰবিষ্টি চিহ্নিত কৰক…
+	Mark grammar errors as you type	টাইপ কৰোঁতে ব্যাকৰণৰ ভুল চিহ্নিত কৰক
+	Mark Index Entry	সূচী প্ৰবিষ্টি চিহ্নিত কৰক
+	Mark selected text as:	নিৰ্বাচিত পাঠক এইদৰে চিহ্নিত কৰক:
+	Mark Table of Contents Entry	সূচীপত্ৰ প্ৰবিষ্টি চিহ্নিত কৰক
+	Mark\nCitation	উদ্ধৃতি\nচিহ্নিত
+	Mark\nEntry	প্ৰবিষ্টি\nচিহ্নিত
+	Markdown (*.md)	Markdown (*.md)
+	Match case	আখৰৰ আকাৰ মিলাওক
+	Match Fields	ফিল্ড মিলাওক
+	Match prefix	উপসৰ্গ মিলাওক
+	Match suffix	প্ৰত্যয় মিলাওক
+	Math AutoCorrect	গণিত স্বয়ংশুধৰণি
+	Math Input Control	গণিত ইনপুট নিয়ন্ত্ৰণ
+	Matrices with Brackets	বন্ধনীৰ সৈতে মেট্ৰিক্স
+	Matrix	মেট্ৰিক্স
+	Maximize	সৰ্বাধিক কৰক
+	Maximum	সৰ্বাধিক
+	Maximum Example	সৰ্বাধিকৰ উদাহৰণ
+	Measured By	যাৰে জোখা
+	Measurement units:	জোখৰ একক:
+	Media	মাধ্যম
+	Merge	মাৰ্জ কৰক
+	Merge Cells	কোষ একত্ৰ কৰক
+	Merge Formatting	সজ্জা একত্ৰ কৰক
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	সজ্জা একত্ৰ কৰাই পাঠক য'ত পৰে তাৰ সজ্জাত পেষ্ট কৰে, কেৱল পাঠ ৰাখক-ৰ দৰে।
+	Merge Record #	মাৰ্জ ৰেকৰ্ড #
+	Merge records	ৰেকৰ্ড মাৰ্জ কৰক
+	Merge to New Document	নতুন নথিত মাৰ্জ কৰক
+	Merge to Printer	প্ৰিণ্টাৰত মাৰ্জ কৰক
+	Merge to:	ইয়াত মাৰ্জ কৰক:
+	Merge type: {type}	মাৰ্জৰ প্ৰকাৰ: {type}
+	Merged PRs	মাৰ্জ কৰা PR
+	Merge…	মাৰ্জ…
+	Mesosphere	মধ্যমণ্ডল
+	Middle	মাজ
+	Midline Dots	মধ্যৰেখা বিন্দু
+	Millimeters	মিলিমিটাৰ
+	Minimum	নূন্যতম
+	Minus Equal	বিয়োগ সমান
+	Mirror indents	দাপোন ইণ্ডেণ্ট
+	Mirrored	দাপোন
+	Missing document font	নোহোৱা নথিৰ ফণ্ট
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	মডেল
+	Models	মডেল
+	Moderate	মধ্যমীয়া
+	Modify Style	শৈলী সলনি কৰক
+	Modify Table Style	তালিকা শৈলী সলনি কৰক
+	Modify Table Style…	তালিকা শৈলী সলনি কৰক…
+	Modify…	সলনি…
+	Mon	সোম
+	Month	মাহ
+	More >>	অধিক >>
+	More Colors…	অধিক ৰং…
+	More Columns…	অধিক স্তম্ভ…
+	More Commands…	অধিক আদেশ…
+	More Symbols…	অধিক প্ৰতীক…
+	More templates →	অধিক টেমপ্লেট →
+	Move Down	তললৈ নিয়ক
+	Move in Equation	সমীকৰণত লৰাওক
+	Move object with text	বস্তু পাঠৰ সৈতে লৰাওক
+	Move or Resize	লৰাওক বা আকাৰ সলনি কৰক
+	Move Paragraph Down	অনুচ্ছেদ তললৈ নিয়ক
+	Move Paragraph Up	অনুচ্ছেদ ওপৰলৈ নিয়ক
+	Move Past Citation	উদ্ধৃতি পাৰ হৈ যাওক
+	Move Past\nCitation	উদ্ধৃতি\nপাৰ হওক
+	Move Selected Ink	নিৰ্বাচিত চিয়াঁহী লৰাওক
+	Move Text	পাঠ লৰাওক
+	Move to where?	ক'লৈ নিব?
+	Move Up	ওপৰলৈ নিয়ক
+	Move with Text	পাঠৰ সৈতে লৰাওক
+	Move with text	পাঠৰ সৈতে লৰাওক
+	Moved from	ইয়াৰ পৰা নিয়া হ'ল
+	Moved to	ইয়ালৈ নিয়া হ'ল
+	Moves	স্থানান্তৰ
+	Multilevel List	বহুস্তৰীয় তালিকা
+	Multiple Pages	একাধিক পৃষ্ঠা
+	My Add-ins	মোৰ এড-ইন
+	MyMemory (free, no account)	MyMemory (বিনামূলীয়া, একাউণ্ট নোহোৱাকৈ)
+	Name	নাম
+	Name (A–Z)	নাম (A–Z)
+	Name of the file this document is saved as	এই নথি যি নামেৰে সংৰক্ষিত সেই ফাইলৰ নাম
+	Name:	নাম:
+	Narrow  0.5" all	ঠেক  সকলো 0.5"
+	Natural Logarithm	প্ৰাকৃতিক লগাৰিদম
+	Nature	প্ৰকৃতি
+	Navigation	নেভিগেচন
+	Navigation Pane	নেভিগেচন পেন
+	Negated Relations	অস্বীকৃত সম্পৰ্ক
+	New	নতুন
+	New Comment	নতুন মন্তব্য
+	New comments and tracked changes are recorded under this name and these initials.	নতুন মন্তব্য আৰু অনুসৰণ কৰা সলনি এই নাম আৰু আদ্যাক্ষৰেৰে লিখা হয়।
+	New Document	নতুন নথি
+	New document	নতুন নথি
+	New Drawing Canvas	নতুন অংকন কেনভাছ
+	New Entry	নতুন প্ৰবিষ্টি
+	New Folder	নতুন ফ'ল্ডাৰ
+	New from Template	টেমপ্লেটৰ পৰা নতুন
+	New Group	নতুন গোট
+	New Label	নতুন লেবেল
+	New Label…	নতুন লেবেল…
+	New Paragraph	নতুন অনুচ্ছেদ
+	New shortcut:	নতুন চৰ্টকাট:
+	New Style…	নতুন শৈলী…
+	New Tab	নতুন টেব
+	New Table Style	নতুন তালিকা শৈলী
+	New Table Style…	নতুন তালিকা শৈলী…
+	New Window	নতুন ৱিণ্ড'
+	New word	নতুন শব্দ
+	New\nComment	নতুন\nমন্তব্য
+	New\nWindow	নতুন\nৱিণ্ড'
+	New…	নতুন…
+	Next	পৰৱৰ্তী
+	Next Change	পৰৱৰ্তী সলনি
+	Next Comment	পৰৱৰ্তী মন্তব্য
+	Next Field	পৰৱৰ্তী ফিল্ড
+	Next Footnote	পৰৱৰ্তী পাদটোকা
+	Next Page	পৰৱৰ্তী পৃষ্ঠা
+	Next Record	পৰৱৰ্তী ৰেকৰ্ড
+	Next Section	পৰৱৰ্তী শাখা
+	Next Sentence	পৰৱৰ্তী বাক্য
+	Next sentence	পৰৱৰ্তী বাক্য
+	Next Window	পৰৱৰ্তী ৱিণ্ড'
+	No	নহয়
+	No accessibility issues found.	কোনো সুলভতা সমস্যা পোৱা নগ'ল।
+	No add-ins are listed yet.	এতিয়ালৈকে কোনো এড-ইন তালিকাভুক্ত নাই।
+	No add-ins yet. Add one from the Store.	এতিয়ালৈকে এড-ইন নাই। ষ্ট'ৰৰ পৰা যোগ কৰক।
+	No Border	সীমা নাই
+	No changes (read only)	কোনো সলনি নাই (কেৱল পঢ়িবলৈ)
+	No Color	ৰং নাই
+	No contributor data was built into this copy.	এই প্ৰতিলিপিত অৱদানকাৰীৰ ডেটা নাই।
+	No data source yet.	এতিয়ালৈকে ডেটা উৎস নাই।
+	No errors found: every merge field is in the recipient list.	কোনো ত্ৰুটি নাই: প্ৰতিটো মাৰ্জ ফিল্ড প্ৰাপক তালিকাত আছে।
+	No Fill	পূৰণ নাই
+	No Glow	আভা নাই
+	No grid	গ্ৰিড নাই
+	No icons match your search.	আপোনাৰ সন্ধানৰ সৈতে কোনো আইকন নিমিলিল।
+	No limit	কোনো সীমা নাই
+	No Line	ৰেখা নাই
+	No Markup	মাৰ্কআপ নাই
+	No model credits were built into this copy.	এই প্ৰতিলিপিত মডেলৰ কৃতিত্ব নাই।
+	No Outline	ৰূপৰেখা নাই
+	No Paragraph Space	অনুচ্ছেদ ব্যৱধান নাই
+	No pictures found.	কোনো ছবি পোৱা নগ'ল।
+	No Reflection	প্ৰতিফলন নাই
+	No revisions	কোনো সংশোধন নাই
+	No Shadow	ছাঁ নাই
+	No Soft Edges	কোমল কাষ নাই
+	No sources yet.	এতিয়ালৈকে উৎস নাই।
+	No Spacing	ব্যৱধান নাই
+	no speech program on this system	এই ছিষ্টেমত কোনো কথন প্ৰগ্ৰাম নাই
+	No templates match your search.	আপোনাৰ সন্ধানৰ সৈতে কোনো টেমপ্লেট নিমিলিল।
+	No Transform	ৰূপান্তৰ নাই
+	No words yet. Add to Dictionary on a misspelled word puts it here.	এতিয়ালৈকে কোনো শব্দ নাই। ভুল বানানৰ শব্দত অভিধানত যোগ কৰক কৰিলে সেয়া ইয়াত আহে।
+	No-Width Non Break	শূন্য-প্ৰস্থ অবিচ্ছেদ্য
+	No-Width Optional Break	শূন্য-প্ৰস্থ ঐচ্ছিক বিচ্ছেদ
+	Nonbreaking Hyphen	অবিচ্ছেদ্য হাইফেন
+	Nonbreaking Space	অবিচ্ছেদ্য খালী ঠাই
+	None	একো নাই
+	Normal	সাধাৰণ
+	Normal  1" all	সাধাৰণ  সকলো 1"
+	Normal Indent	সাধাৰণ ইণ্ডেণ্ট
+	Normal probability density	সাধাৰণ সম্ভাৱিতা ঘনত্ব
+	Normal speed	সাধাৰণ গতি
+	Normal Style	সাধাৰণ শৈলী
+	Normal Table	সাধাৰণ তালিকা
+	Normal Text	সাধাৰণ পাঠ
+	Normal Word Document	সাধাৰণ Word নথি
+	North	উত্তৰ
+	Norwegian (Bokmål)	নৰৱেজিয়ান (বোকমাল)
+	Not	নহয়
+	Not available right now	এতিয়া উপলব্ধ নহয়
+	Not equal to	সমান নহয়
+	Not linked: click a text box	সংযোগ নাই: এটা পাঠ বাকচত ক্লিক কৰক
+	Not saved	সংৰক্ষিত নহয়
+	Not saved yet	এতিয়ালৈকে সংৰক্ষিত নহয়
+	Not used by any command	কোনো আদেশে ব্যৱহাৰ নকৰে
+	Not {name}	{name} নহয়
+	Nothing	একো নাই
+	Nothing collected yet. Items you copy or cut appear here.	এতিয়ালৈকে একো সংগ্ৰহ হোৱা নাই। প্ৰতিলিপি বা কটা বস্তু ইয়াত দেখা যায়।
+	Now used by {command}	এতিয়া {command}-এ ব্যৱহাৰ কৰে
+	Nudge	অলপ লৰাওক
+	Num Occurrences	ঘটনাৰ সংখ্যা
+	Number	সংখ্যা
+	Number alignment:	সংখ্যাৰ সাৰিবদ্ধকৰণ:
+	Number format	সংখ্যাৰ সজ্জা
+	Number of columns:	স্তম্ভৰ সংখ্যা:
+	Number of rows:	শাৰীৰ সংখ্যা:
+	Number of the page the field sits on	ফিল্ড থকা পৃষ্ঠাৰ নম্বৰ
+	Number of the section the field sits in	ফিল্ড থকা শাখাৰ নম্বৰ
+	Number style for this level:	এই স্তৰৰ সংখ্যা শৈলী:
+	Number the equation; the number sits at the right margin (or type # then the number)	সমীকৰণত নম্বৰ দিয়ক; নম্বৰ সোঁ মাৰ্জিনত থাকে (বা # তাৰ পিছত নম্বৰ টাইপ কৰক)
+	Number type:	সংখ্যাৰ প্ৰকাৰ:
+	Number:	নম্বৰ:
+	Numbering	নম্বৰ প্ৰদান
+	Numbering:	নম্বৰ প্ৰদান:
+	Numbering…	নম্বৰ প্ৰদান…
+	Numerals	অংক
+	Numerals:	অংক:
+	n×n Identity Matrix	n×n একক মেট্ৰিক্স
+	n×n Matrix	n×n মেট্ৰিক্স
+	Object	বস্তু
+	Odd Page	অযুগ্ম পৃষ্ঠা
+	Odd pages only	কেৱল অযুগ্ম পৃষ্ঠা
+	Off	বন্ধ
+	Office	Office
+	Office 2003 Default	Office 2003 ডিফল্ট
+	Offset (pt):	অফছেট (pt):
+	Offset: Bottom	অফছেট: তলত
+	Offset: Bottom Left	অফছেট: তলত বাওঁ
+	Offset: Bottom Right	অফছেট: তলত সোঁ
+	Offset: Center	অফছেট: মাজ
+	Offset: Left	অফছেট: বাওঁ
+	Offset: Right	অফছেট: সোঁ
+	Offset: Top	অফছেট: ওপৰত
+	Offset: Top Left	অফছেট: ওপৰত বাওঁ
+	Offset: Top Right	অফছেট: ওপৰত সোঁ
+	OK	ঠিক আছে
+	Omit	বাদ দিয়ক
+	On	অন
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	অন: টাইপ কৰোঁতে বা কাঁড় চাবি ব্যৱহাৰ কৰোঁতে কেৰেট নতুন ঠাইলৈ পিছলি যায় আৰু জিলিকনি ম্লান হয়। বন্ধ: ই জঁপিয়ায় আৰু জিলিকে।
+	One	এক
+	One half	আধা
+	One label per recipient	প্ৰতি প্ৰাপকত এটা লেবেল
+	One line per item. Enter adds an item.	প্ৰতি বস্তুত এটা শাৰী। Enter-এ বস্তু যোগ কৰে।
+	One Page	এক পৃষ্ঠা
+	Online Pictures	অনলাইন ছবি
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	অনলাইন ছবি (Openverse), অনুবাদ (MyMemory বা আপোনাৰ LibreTranslate ছাৰ্ভাৰ), এড-ইন লাভ কৰক আৰু শ্ৰুতলিপিৰ কথন মডেলৰ ডাউনলোডে ইণ্টাৰনেটৰ সৈতে সংযোগ কৰে, কেৱল আপুনি ব্যৱহাৰ কৰিলেহে। বন্ধ থাকিলে Doc4Me-এ নিজে কোনো সংযোগ নকৰে।
+	Online Pictures…	অনলাইন ছবি…
+	Online services are turned off (File › Options › Trust Center).	অনলাইন সেৱা বন্ধ (ফাইল › বিকল্প › বিশ্বাস কেন্দ্ৰ)।
+	Online Video	অনলাইন ভিডিঅ'
+	Only allow this kind of editing:	কেৱল এনে সম্পাদনাৰ অনুমতি দিয়ক:
+	Only comments can be added, except in regions marked editable.	সম্পাদনযোগ্য বুলি চিহ্নিত অঞ্চলৰ বাহিৰে কেৱল মন্তব্য যোগ কৰিব পাৰি।
+	Only form fields can be filled in.	কেৱল প্ৰপত্ৰ ফিল্ড পূৰণ কৰিব পাৰি।
+	only https addresses can be used	কেৱল https ঠিকনা ব্যৱহাৰ কৰিব পাৰি
+	Only pictures I may use commercially	কেৱল বাণিজ্যিকভাৱে ব্যৱহাৰযোগ্য ছবি
+	Only the allowed styles can be applied.	কেৱল অনুমোদিত শৈলী প্ৰয়োগ কৰিব পাৰি।
+	Only web (http, https) and email (mailto) links can be followed	কেৱল ৱেব (http, https) আৰু ইমেইল (mailto) সংযোগ খুলিব পাৰি
+	Open	খোলক
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	ছিষ্টেমৰ ফাইল সংলাপ নেদেখা হ'লে Doc4Me-ৰ নিজৰ ব্ৰাউজাৰেৰে ফাইল খোলক।
+	Open Data Source…	ডেটা উৎস খোলক…
+	Open Hyperlink	হাইপাৰলিংক খোলক
+	OpenDocument Text (*.odt)	OpenDocument পাঠ (*.odt)
+	Opening print dialog…	প্ৰিণ্ট সংলাপ খুলি আছে…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	এতিয়াৰ পৰা .docx, .doc, .rtf আৰু .odt ফাইল আৰু Word টেমপ্লেট Doc4Me-ৰে খোলে।
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	ছেটিং › ডিফল্ট এপ খোলে, য'ত .docx আৰু আন নথিৰ প্ৰকাৰৰ বাবে Doc4Me বাছে।
+	Open…	খোলক…
+	Operator	অপাৰেটৰ
+	Operator Structures	অপাৰেটৰ গঠন
+	Operators	অপাৰেটৰ
+	Optional Hyphen	ঐচ্ছিক হাইফেন
+	Options	বিকল্প
+	Options…	বিকল্প…
+	Or	বা
+	Or save a copy in another format:	বা আন সজ্জাত প্ৰতিলিপি সংৰক্ষণ কৰক:
+	Ordinals (1st) as superscript	ক্ৰমবাচক (1st) উৰ্ধ্বলিপি হিচাপে
+	Organizer	সংগঠক
+	Organizer…	সংগঠক…
+	Orientation	দিশবিন্যাস
+	Original document	মূল নথি
+	Other	আন
+	Other Authorities	আন কৰ্তৃপক্ষ
+	Other Large Operators	আন ডাঙৰ অপাৰেটৰ
+	Other paragraph styles	আন অনুচ্ছেদ শৈলী
+	Other styles and their TOC level:	আন শৈলী আৰু সেইবোৰৰ সূচীপত্ৰ স্তৰ:
+	Otherwise insert:	অন্যথা সুমুৱাওক:
+	Outline	ৰূপৰেখা
+	Outline Level	ৰূপৰেখা স্তৰ
+	Outline level	ৰূপৰেখা স্তৰ
+	Outline levels	ৰূপৰেখা স্তৰ
+	Outline State	ৰূপৰেখাৰ অৱস্থা
+	Outline Tools	ৰূপৰেখা সঁজুলি
+	Outlining	ৰূপৰেখা প্ৰস্তুতি
+	Outside	বাহিৰত
+	Outside border	বাহিৰৰ সীমা
+	Outside Borders	বাহিৰৰ সীমা
+	Outside Margin	বাহিৰৰ মাৰ্জিন
+	Outside:	বাহিৰত:
+	Outward Brackets	বাহিৰমুখী বন্ধনী
+	Oval	ডিম্বাকাৰ
+	Overbar	ওপৰৰ দণ্ড
+	Overbars and Underbars	ওপৰ আৰু তলৰ দণ্ড
+	Overbrace	ওপৰৰ মজলীয়া বন্ধনী
+	Overtype	অভাৰটাইপ
+	Overtype (typing replaces the characters after the caret)	অভাৰটাইপ (টাইপ কৰিলে কেৰেটৰ পিছৰ আখৰ সলনি হয়)
+	Page	পৃষ্ঠা
+	Page Background	পৃষ্ঠাৰ পটভূমি
+	Page Border	পৃষ্ঠাৰ সীমা
+	Page Borders	পৃষ্ঠাৰ সীমা
+	Page Break	পৃষ্ঠা বিচ্ছেদ
+	Page Break Before	আগত পৃষ্ঠা বিচ্ছেদ
+	Page break before	আগত পৃষ্ঠা বিচ্ছেদ
+	Page Breaks	পৃষ্ঠা বিচ্ছেদ
+	Page Color	পৃষ্ঠাৰ ৰং
+	Page display	পৃষ্ঠা প্ৰদৰ্শন
+	Page Down	Page Down
+	Page image (*.jpg, *.jpeg)	পৃষ্ঠাৰ ছবি (*.jpg, *.jpeg)
+	Page image (*.png)	পৃষ্ঠাৰ ছবি (*.png)
+	Page Movement	পৃষ্ঠা চলাচল
+	Page Number	পৃষ্ঠা নম্বৰ
+	Page number style	পৃষ্ঠা নম্বৰ শৈলী
+	Page numbers at the right margin	সোঁ মাৰ্জিনত পৃষ্ঠা নম্বৰ
+	Page on which a bookmarked passage falls	বুকমাৰ্ক কৰা অংশ থকা পৃষ্ঠা
+	Page Setup	পৃষ্ঠা ছেটআপ
+	Page title	পৃষ্ঠাৰ শিৰোনাম
+	Page Up	Page Up
+	Page Width	পৃষ্ঠাৰ প্ৰস্থ
+	Page width	পৃষ্ঠাৰ প্ৰস্থ
+	Page X of Y	পৃষ্ঠা X ৰ Y
+	Page {page}	পৃষ্ঠা {page}
+	Page {page} of {pages}	পৃষ্ঠা {page} / {pages}
+	Page\nBorders	পৃষ্ঠাৰ\nসীমা
+	Page\nColor	পৃষ্ঠাৰ\nৰং
+	Page\nNumber	পৃষ্ঠা\nনম্বৰ
+	Pages	পৃষ্ঠা
+	Pages like 1-3, 5	পৃষ্ঠা যেনে 1-3, 5
+	Pages of bookmark:	বুকমাৰ্কৰ পৃষ্ঠা:
+	Paragraph	অনুচ্ছেদ
+	Paragraph Character	অনুচ্ছেদ আখৰ
+	Paragraph Details	অনুচ্ছেদৰ বিৱৰণ
+	Paragraph Down	অনুচ্ছেদ তললৈ
+	Paragraph Mark	অনুচ্ছেদ চিহ্ন
+	Paragraph marks	অনুচ্ছেদ চিহ্ন
+	Paragraph Settings	অনুচ্ছেদ ছেটিং
+	Paragraph Spacing	অনুচ্ছেদ ব্যৱধান
+	Paragraph style	অনুচ্ছেদ শৈলী
+	Paragraph Up	অনুচ্ছেদ ওপৰলৈ
+	Paragraphs	অনুচ্ছেদ
+	Paragraph…	অনুচ্ছেদ…
+	Parentheses	বন্ধনী
+	Parentheses with Separator	বিভাজকৰ সৈতে বন্ধনী
+	Partial Differential	আংশিক অৱকল
+	Password	পাছৱৰ্ড
+	Password:	পাছৱৰ্ড:
+	Paste	পেষ্ট কৰক
+	Paste All	সকলো পেষ্ট কৰক
+	Paste as:	এইদৰে পেষ্ট কৰক:
+	Paste Clipboard Item	ক্লিপবৰ্ড বস্তু পেষ্ট কৰক
+	Paste Formatting	সজ্জা পেষ্ট কৰক
+	Paste Special	বিশেষ পেষ্ট
+	Paste Special…	বিশেষ পেষ্ট…
+	Paste Spike	স্পাইক পেষ্ট কৰক
+	Paste: Keep Text Only	পেষ্ট: কেৱল পাঠ ৰাখক
+	Paste: Merge Formatting	পেষ্ট: সজ্জা একত্ৰ কৰক
+	Pasting between documents:	নথিৰ মাজত পেষ্ট:
+	Pasting from other programs:	আন প্ৰগ্ৰামৰ পৰা পেষ্ট:
+	Pasting within the same document:	একেটা নথিত পেষ্ট:
+	Pause	বিৰতি
+	Paused	বিৰতিত
+	PDF document (*.pdf)	PDF নথি (*.pdf)
+	Pen	কলম
+	Pencil	পেঞ্চিল
+	Pens	কলম
+	People	লোক
+	Periodical	সাময়িকী
+	Personalize	ব্যক্তিগত কৰক
+	Phonetic Guide	ধ্বনিগত নিৰ্দেশিকা
+	Pi Over 2	পাই ভাগ 2
+	Picas	পাইকা
+	Pick a custom group (New Group makes one)	এটা কাষ্টম গোট বাছক (নতুন গোটে সৃষ্টি কৰে)
+	Pick a field from the list	তালিকাৰ পৰা ফিল্ড বাছক
+	Picture	ছবি
+	Picture Border	ছবিৰ সীমা
+	Picture Content Control	ছবি বিষয়বস্তু নিয়ন্ত্ৰণ
+	Picture Format	ছবিৰ সজ্জা
+	Picture Styles	ছবিৰ শৈলী
+	Pictures	ছবি
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Openverse-ৰ ছবি। প্ৰতিখন ছবিৰ অনুজ্ঞাপত্ৰ মানক: Doc4Me-এ তাৰ তলত কৃতিত্বৰ শাৰী যোগ কৰে।
+	Pie	পাই
+	Placeholder Name	প্লেচহোল্ডাৰৰ নাম
+	Placeholder text	প্লেচহোল্ডাৰ পাঠ
+	Plain Table 1	সাধাৰণ তালিকা 1
+	Plain text (*.txt)	সাধাৰণ পাঠ (*.txt)
+	Plain Text Content Control	সাধাৰণ পাঠ বিষয়বস্তু নিয়ন্ত্ৰণ
+	Play	চলাওক
+	Play Video	ভিডিঅ' চলাওক
+	Play/Pause	চলাওক/বিৰতি
+	Plus Equal	যোগ সমান
+	Points	পইণ্ট
+	points and above	পইণ্ট আৰু তাতকৈ বেছি
+	Polish	পোলিছ
+	Portrait	উলম্ব
+	Portuguese (Brazil)	পৰ্তুগীজ (ব্ৰাজিল)
+	Portuguese (Portugal)	পৰ্তুগীজ (পৰ্তুগাল)
+	Position	অৱস্থান
+	Position:	অৱস্থান:
+	Positioning…	অৱস্থান নিৰ্ধাৰণ…
+	Possible spelling mistake	সম্ভাব্য বানান ভুল
+	Postal Code	ডাক ক'ড
+	Power series of (1+x)ⁿ	(1+x)ⁿ-ৰ ঘাত শ্ৰেণী
+	Preferred width:	পছন্দৰ প্ৰস্থ:
+	Preserve	ৰক্ষা কৰক
+	Preserve formatting during updates	আপডেটৰ সময়ত সজ্জা ৰাখক
+	Presets	পূৰ্বনিৰ্ধাৰিত
+	Press a key combination	চাবি সংযোজন টিপক
+	Preview	পূৰ্বদৰ্শন
+	Preview Results	ফলাফলৰ পূৰ্বদৰ্শন
+	Preview\nResults	ফলাফলৰ\nপূৰ্বদৰ্শন
+	Previous	পূৰ্বৱৰ্তী
+	Previous 1 or More	পূৰ্বৱৰ্তী 1 বা অধিক
+	Previous Change	পূৰ্বৱৰ্তী সলনি
+	Previous Comment	পূৰ্বৱৰ্তী মন্তব্য
+	Previous Field	পূৰ্বৱৰ্তী ফিল্ড
+	Previous Footnote	পূৰ্বৱৰ্তী পাদটোকা
+	Previous Page	পূৰ্বৱৰ্তী পৃষ্ঠা
+	Previous Record	পূৰ্বৱৰ্তী ৰেকৰ্ড
+	Previous Section	পূৰ্বৱৰ্তী শাখা
+	Previous Sentence	পূৰ্বৱৰ্তী বাক্য
+	Previous sentence	পূৰ্বৱৰ্তী বাক্য
+	Previous Window	পূৰ্বৱৰ্তী ৱিণ্ড'
+	Print	প্ৰিণ্ট
+	Print blank lines when data fields are empty	ডেটা ফিল্ড খালী থাকিলে খালী শাৰী প্ৰিণ্ট কৰক
+	Print Documents	নথি প্ৰিণ্ট
+	Print Documents…	নথি প্ৰিণ্ট…
+	Print failed: {error}	প্ৰিণ্ট বিফল: {error}
+	Print Layout	প্ৰিণ্ট লেআউট
+	Print Markup	মাৰ্কআপ প্ৰিণ্ট
+	Print the page color	পৃষ্ঠাৰ ৰং প্ৰিণ্ট কৰক
+	Print to PDF	PDF-লৈ প্ৰিণ্ট
+	Print\nLayout	প্ৰিণ্ট\nলেআউট
+	Printer	প্ৰিণ্টাৰ
+	Printing	প্ৰিণ্টিং
+	Process	প্ৰক্ৰিয়া
+	Product	গুণফল
+	Product of A	A-ৰ গুণফল
+	Product with Limits	সীমাৰ সৈতে গুণফল
+	Product with Lower Limit	নিম্নসীমাৰ সৈতে গুণফল
+	Product with Subscript-Superscript Limits	নিম্নলিপি-উৰ্ধ্বলিপি সীমাৰ সৈতে গুণফল
+	Products and Coproducts	গুণফল আৰু সহগুণফল
+	Professional	পেছাদাৰী
+	Promote	স্তৰ উঠাওক
+	Promote to Heading 1	শিৰোনাম 1লৈ উঠাওক
+	Proofing	প্ৰুফিং
+	Proofing Issues	প্ৰুফিং সমস্যা
+	Proofing language	প্ৰুফিং ভাষা
+	Properties	বৈশিষ্ট্য
+	Protect	সুৰক্ষিত কৰক
+	Protect Document	নথি সুৰক্ষিত কৰক
+	PRs	PR
+	pt	pt
+	Publisher	প্ৰকাশক
+	Punctuation	যতিচিহ্ন
+	Put the caret in a content control first.	প্ৰথমে কেৰেট বিষয়বস্তু নিয়ন্ত্ৰণত ৰাখক।
+	Put the default commands back on the Quick Access Toolbar?	ডিফল্ট আদেশ দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ডত ঘূৰাই আনিবনে?
+	Pyramid	পিৰামিড
+	Quadratic Root	দ্বিঘাত মূল
+	Query Options…	কোৱেৰী বিকল্প…
+	Quick Access Toolbar	দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ড
+	Quick Parts	দ্ৰুত অংশ
+	Quick Tables	দ্ৰুত তালিকা
+	Quote	উদ্ধৃতি
+	Radical	মূল
+	Radical with Degree	ঘাতৰ সৈতে মূল
+	Radicals	মূল
+	Raised/lowered	ওখ/চাপৰ
+	Read Aloud	উচ্চস্বৰে পঢ়ক
+	Read Aloud couldn't start the speech program: {reason}	উচ্চস্বৰে পঢ়াই কথন প্ৰগ্ৰাম আৰম্ভ কৰিব নোৱাৰিলে: {reason}
+	Read Aloud couldn't start: {reason}	উচ্চস্বৰে পঢ়া আৰম্ভ হোৱা নাই: {reason}
+	Read Aloud isn't available in the browser	উচ্চস্বৰে পঢ়া ব্ৰাউজাৰত উপলব্ধ নহয়
+	Read Aloud Status	উচ্চস্বৰে পঢ়াৰ অৱস্থা
+	Read Aloud stopped: {reason}	উচ্চস্বৰে পঢ়া বন্ধ হ'ল: {reason}
+	Read Mode	পঢ়া ম'ড
+	Read\nAloud	উচ্চস্বৰে\nপঢ়ক
+	Read\nMode	পঢ়া\nম'ড
+	Reading	পঢ়া
+	Reading Column Width	পঢ়া স্তম্ভৰ প্ৰস্থ
+	Reading Highlight	পঢ়া হাইলাইট
+	Reading Line Spacing	পঢ়া শাৰী ব্যৱধান
+	Reading Mode	পঢ়া ম'ড
+	Sepia	চেপিয়া
+	Inverse	ওলোটা
+	Reading Speed	পঢ়াৰ গতি
+	Reading Text Size	পঢ়া পাঠৰ আকাৰ
+	Reads the clipboard's rich text and keeps its formatting.	ক্লিপবৰ্ডৰ সমৃদ্ধ পাঠ পঢ়ে আৰু সজ্জা ৰাখে।
+	Reads the clipboard's web content and keeps its formatting.	ক্লিপবৰ্ডৰ ৱেব বিষয়বস্তু পঢ়ে আৰু সজ্জা ৰাখে।
+	Real name	প্ৰকৃত নাম
+	Recent	শেহতীয়া
+	Recent Colors	শেহতীয়া ৰং
+	Recent documents to show:	দেখুওৱা শেহতীয়া নথি:
+	Recently used symbols:	শেহতীয়াকৈ ব্যৱহৃত প্ৰতীক:
+	Recipient List	প্ৰাপক তালিকা
+	Recipient lists	প্ৰাপক তালিকা
+	Recipients: {count}	প্ৰাপক: {count}
+	Recognized (you can correct it):	চিনাক্ত (আপুনি শুধৰাব পাৰে):
+	Recognized Functions	চিনাক্ত ফলন
+	Recognized Functions…	চিনাক্ত ফলন…
+	Recolor a one-color picture, such as an icon	এক ৰঙৰ ছবি, যেনে আইকন, পুনৰ ৰং কৰক
+	Recolor Selected Ink	নিৰ্বাচিত চিয়াঁহী পুনৰ ৰং কৰক
+	Record Macro	মেক্ৰ' ৰেকৰ্ড কৰক
+	Recover Unsaved Documents	অসংৰক্ষিত নথি পুনৰুদ্ধাৰ কৰক
+	Rectangle	আয়তক্ষেত্ৰ
+	Red:	ৰঙা:
+	Redo	পুনৰ কৰক
+	Reduce Hanging Indent	ওলমি থকা ইণ্ডেণ্ট কমাওক
+	References	প্ৰসংগ
+	Reflection	প্ৰতিফলন
+	Refresh	সতেজ কৰক
+	Registered	পঞ্জীয়িত
+	Registered Sign	পঞ্জীয়িত চিহ্ন
+	Regular expressions	নিয়মিত ৰাশি
+	Regulations	বিধি
+	Reject	প্ৰত্যাখ্যান কৰক
+	Reject All	সকলো প্ৰত্যাখ্যান কৰক
+	Reject All Changes	সকলো সলনি প্ৰত্যাখ্যান কৰক
+	Reject Change	সলনি প্ৰত্যাখ্যান কৰক
+	Relationship	সম্পৰ্ক
+	relative to	আপেক্ষিক
+	Relative to:	ইয়াৰ সাপেক্ষে:
+	Relaxed	ঢিলা
+	Remove	আঁতৰাওক
+	Remove Added Font	যোগ কৰা ফণ্ট আঁতৰাওক
+	Remove Background	পটভূমি আঁতৰাওক
+	Remove Content Control	বিষয়বস্তু নিয়ন্ত্ৰণ আঁতৰাওক
+	Remove every custom shortcut and restore the built-in keys?	প্ৰতিটো কাষ্টম চৰ্টকাট আঁতৰাই অন্তৰ্নিৰ্মিত চাবি ঘূৰাই আনিবনে?
+	Remove every custom tab and group and show all tabs again?	প্ৰতিটো কাষ্টম টেব আৰু গোট আঁতৰাই সকলো টেব পুনৰ দেখুৱাবনে?
+	Remove field	ফিল্ড আঁতৰাওক
+	Remove Field Name	ফিল্ডৰ নাম আঁতৰাওক
+	Remove Footer	ফুটাৰ আঁতৰাওক
+	Remove from Quick Access Toolbar	দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ডৰ পৰা আঁতৰাওক
+	Remove Header	হেডাৰ আঁতৰাওক
+	Remove Hyperlink	হাইপাৰলিংক আঁতৰাওক
+	Remove Password	পাছৱৰ্ড আঁতৰাওক
+	Remove Pen	কলম আঁতৰাওক
+	Remove Positioning	অৱস্থান নিৰ্ধাৰণ আঁতৰাওক
+	Remove recipient	প্ৰাপক আঁতৰাওক
+	Remove row	শাৰী আঁতৰাওক
+	Remove series	শৃংখলা আঁতৰাওক
+	Remove Space After Paragraph	অনুচ্ছেদৰ পিছৰ ঠাই আঁতৰাওক
+	Remove Table of Contents	সূচীপত্ৰ আঁতৰাওক
+	Remove the control once edited	সম্পাদনাৰ পিছত নিয়ন্ত্ৰণ আঁতৰাওক
+	Remove the space before the punctuation	যতিচিহ্নৰ আগৰ খালী ঠাই আঁতৰাওক
+	Remove Watermark	জলচিহ্ন আঁতৰাওক
+	Rename Style	শৈলীৰ নাম সলনি কৰক
+	Rename…	নাম সলনি কৰক…
+	Reopen	পুনৰ খোলক
+	Repeat	পুনৰাবৃত্তি
+	Repeat as header row on each page	প্ৰতি পৃষ্ঠাত হেডাৰ শাৰী হিচাপে পুনৰাবৃত্তি কৰক
+	Repeat Header Rows	হেডাৰ শাৰী পুনৰাবৃত্তি কৰক
+	Repeated words	পুনৰাবৃত্ত শব্দ
+	Repeating Section Content Control	পুনৰাবৃত্ত শাখা বিষয়বস্তু নিয়ন্ত্ৰণ
+	Replace	সলনি কৰক
+	Replace All	সকলো সলনি কৰক
+	Replace as you type	টাইপ কৰোঁতে সলনি কৰক
+	Replace Document Text	নথিৰ পাঠ সলনি কৰক
+	Replace text as you type	টাইপ কৰোঁতে পাঠ সলনি কৰক
+	Replace with:	ইয়াৰে সলনি কৰক:
+	Replace:	সলনি কৰক:
+	Replay	পুনৰ প্লে
+	Reply	উত্তৰ দিয়ক
+	Report	প্ৰতিবেদন
+	Research	গৱেষণা
+	Researcher	গৱেষক
+	Researcher needs an online service; Doc4Me keeps your documents offline.	গৱেষকক অনলাইন সেৱা লাগে; Doc4Me-এ আপোনাৰ নথি অফলাইন ৰাখে।
+	Reset	ৰিছেট কৰক
+	Reset All	সকলো ৰিছেট কৰক
+	Reset All…	সকলো ৰিছেট কৰক…
+	Reset Character Formatting	আখৰ সজ্জা ৰিছেট কৰক
+	Reset Crop	কটা ৰিছেট কৰক
+	Reset Graphic	গ্ৰাফিক ৰিছেট কৰক
+	Reset Paragraph Formatting	অনুচ্ছেদ সজ্জা ৰিছেট কৰক
+	Reset Picture	ছবি ৰিছেট কৰক
+	Reset to Normal	সাধাৰণলৈ ৰিছেট কৰক
+	Reset\nGraphic	গ্ৰাফিক\nৰিছেট
+	Reset…	ৰিছেট…
+	Resize Table by Dragging	টানি তালিকাৰ আকাৰ সলনি কৰক
+	Resolve	সমাধান কৰক
+	Resolved	সমাধান হ'ল
+	Restart at 1	1ৰ পৰা পুনৰ আৰম্ভ কৰক
+	Restart Each Page	প্ৰতি পৃষ্ঠাত পুনৰ আৰম্ভ কৰক
+	Restart Each Section	প্ৰতি শাখাত পুনৰ আৰম্ভ কৰক
+	Restart list after:	ইয়াৰ পিছত তালিকা পুনৰ আৰম্ভ কৰক:
+	Restore	পুনৰুদ্ধাৰ কৰক
+	Restore Defaults	ডিফল্ট পুনৰুদ্ধাৰ কৰক
+	Restore Down	সৰু কৰি পুনৰুদ্ধাৰ
+	Restore to Normal Word Document	সাধাৰণ Word নথিলৈ পুনৰুদ্ধাৰ কৰক
+	Restrict Editing	সম্পাদনা সীমিত কৰক
+	Restrict\nEditing	সম্পাদনা\nসীমিত কৰক
+	Result	ফলাফল
+	Results	ফলাফল
+	Return address labels	উভতি অহা ঠিকনাৰ লেবেল
+	Return address:	উভতি অহা ঠিকনা:
+	Reverse the order	ক্ৰম ওলোটা কৰক
+	Review	পৰ্যালোচনা
+	Review AutoFormat Changes	স্বয়ংসজ্জাৰ সলনি পৰ্যালোচনা কৰক
+	Review Changes…	সলনি পৰ্যালোচনা কৰক…
+	Reviewing	পৰ্যালোচনা চলি আছে
+	Reviewing Pane	পৰ্যালোচনা পেন
+	Reviewing — edits become suggestions	পৰ্যালোচনা — সম্পাদনা পৰামৰ্শলৈ পৰিণত হয়
+	Revised document	সংশোধিত নথি
+	Revisions	সংশোধনী
+	Rewind	পিছলৈ ঘূৰাওক
+	Ribbon	ৰিবন
+	Ribbon and Quick Access Toolbar:	ৰিবন আৰু দ্ৰুত প্ৰৱেশ সঁজুলিদণ্ড:
+	Ribbon tabs	ৰিবন টেব
+	Rich Text Content Control	সমৃদ্ধ পাঠ বিষয়বস্তু নিয়ন্ত্ৰণ
+	Rich Text Format (*.rtf)	Rich Text Format (*.rtf)
+	Rich Text Format (RTF)	Rich Text Format (RTF)
+	Right	সোঁ
+	Right (vertical)	সোঁ (উলম্ব)
+	Right align page numbers	পৃষ্ঠা নম্বৰ সোঁফালে সাৰিবদ্ধ কৰক
+	Right Arrow with Text Above	ওপৰত পাঠৰ সৈতে সোঁ কাঁড়
+	Right Arrow with Text Below	তলত পাঠৰ সৈতে সোঁ কাঁড়
+	Right Border	সোঁ সীমা
+	Right border	সোঁ সীমা
+	Right Bracket Twice	দুবাৰ সোঁ বন্ধনী
+	Right indent	সোঁ ইণ্ডেণ্ট
+	Right Margin	সোঁ মাৰ্জিন
+	Right Only	কেৱল সোঁ
+	Right only	কেৱল সোঁ
+	Right-to-left	সোঁফালৰ পৰা বাওঁফাললৈ
+	Right-to-Left Section	সোঁফালৰ পৰা বাওঁফাললৈ শাখা
+	Right-to-Left Table	সোঁফালৰ পৰা বাওঁফাললৈ তালিকা
+	Right-to-Left Text Direction	সোঁফালৰ পৰা বাওঁফাললৈ পাঠৰ দিশ
+	Right:	সোঁ:
+	Rightwards Arrow Above	ওপৰত সোঁফালে কাঁড়
+	Rightwards Harpoon Above	ওপৰত সোঁফালে হাৰপুন
+	Roots of ax²+bx+c	ax²+bx+c-ৰ মূল
+	Rotate	ঘূৰাওক
+	Rotate all text 270°	সকলো পাঠ 270° ঘূৰাওক
+	Rotate all text 90°	সকলো পাঠ 90° ঘূৰাওক
+	Rotate Left 90°	বাওঁফালে 90° ঘূৰাওক
+	Rotate Right 90°	সোঁফালে 90° ঘূৰাওক
+	Rotation	ঘূৰ্ণন
+	Rotation:	ঘূৰ্ণন:
+	Rounded Rectangle	গোলাকাৰ চুকৰ আয়তক্ষেত্ৰ
+	Row	শাৰী
+	Row:	শাৰী:
+	Rows & Columns	শাৰী আৰু স্তম্ভ
+	Ruby text:	ৰুবী পাঠ:
+	Ruler	জোখ-মাপ
+	Rules	নিয়ম
+	Run	চলাওক
+	Run-in	একত্ৰিত
+	Russian	ৰাছিয়ান
+	Résumé	জীৱনবৃত্তান্ত
+	Same as the whole table	গোটেই তালিকাৰ দৰে
+	SAMPLE	নমুনা
+	Sat:	শনি:
+	Save	সংৰক্ষণ কৰক
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	আন সজ্জাত প্ৰতিলিপি সংৰক্ষণ কৰক। প্ৰিণ্ট এটা PDF-ৰ জৰিয়তে হয় যিটো যিকোনো দৰ্শকৰ পৰা প্ৰিণ্ট কৰিব পাৰি।
+	Save As	এই হিচাপে সংৰক্ষণ
+	Save as Template	টেমপ্লেট হিচাপে সংৰক্ষণ
+	Save documents	নথি সংৰক্ষণ
+	Save the document to turn on AutoSave	স্বয়ংক্ৰিয় সংৰক্ষণ অন কৰিবলৈ নথি সংৰক্ষণ কৰক
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	স্বয়ংক্ৰিয় সংৰক্ষণ অন কৰিবলৈ নথি সংৰক্ষণ কৰক (কেৱল খোলা ফাইল সংৰক্ষণ নকৰালৈকে পুনৰ লিখা নহয়)
+	Save these pages as PDF…	এই পৃষ্ঠাবোৰ PDF হিচাপে সংৰক্ষণ কৰক…
+	Save Version	সংস্কৰণ সংৰক্ষণ
+	Saved	সংৰক্ষিত
+	Scale	স্কেল
+	Scale Drawing	অংকনৰ স্কেল সলনি কৰক
+	Scatter	বিক্ষিপ্ত
+	Screen Clipping	স্ক্ৰীন ক্লিপিং
+	Screen clipping didn't work: {reason}	স্ক্ৰীন ক্লিপিঙে কাম নকৰিলে: {reason}
+	Screen clipping ended without a picture.	স্ক্ৰীন ক্লিপিং ছবি নোহোৱাকৈ শেষ হ'ল।
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	স্ক্ৰীন ক্লিপিং ইয়াত উপলব্ধ নহয়। স্ক্ৰীনৰ ছবি প্ৰতিলিপি কৰি পেষ্ট কৰক।
+	Screenshot	স্ক্ৰীনশ্বট
+	Script	লিপি
+	Scripts	লিপি
+	Scroll ribbon left	ৰিবন বাওঁফালে স্ক্ৰ'ল কৰক
+	Scroll ribbon right	ৰিবন সোঁফালে স্ক্ৰ'ল কৰক
+	Search	সন্ধান কৰক
+	Search Commands	আদেশ সন্ধান কৰক
+	Search commands and help	আদেশ আৰু সহায় সন্ধান কৰক
+	Search document	নথি সন্ধান কৰক
+	Search for templates	টেমপ্লেট সন্ধান কৰক
+	Search icons	আইকন সন্ধান কৰক
+	Search Openverse (Creative Commons pictures)	Openverse সন্ধান কৰক (Creative Commons ছবি)
+	Search Options	সন্ধান বিকল্প
+	Searching…	সন্ধান কৰি আছে…
+	Secant Function	চেকেণ্ট ফলন
+	Section Break	শাখা বিচ্ছেদ
+	Section Breaks	শাখা বিচ্ছেদ
+	Section Character	শাখা আখৰ
+	Section direction:	শাখাৰ দিশ:
+	Section Mark	শাখা চিহ্ন
+	Section Properties	শাখাৰ বৈশিষ্ট্য
+	Sections	শাখা
+	See	চাওক
+	Select	নিৰ্বাচন
+	Select a picture, shape, chart or table to describe it.	বৰ্ণনা কৰিবলৈ ছবি, আকৃতি, চাৰ্ট বা তালিকা বাছক।
+	Select All	সকলো নিৰ্বাচন
+	Select Cell	কোষ নিৰ্বাচন
+	Select Floating Shapes	ওপঙা আকৃতি নিৰ্বাচন
+	Select Heading and Content	শিৰোনাম আৰু বিষয়বস্তু নিৰ্বাচন
+	Select Line	শাৰী নিৰ্বাচন
+	Select Objects	বস্তু নিৰ্বাচন
+	Select Paragraph	অনুচ্ছেদ নিৰ্বাচন
+	Select Range	পৰিসৰ নিৰ্বাচন
+	Select Recipients	প্ৰাপক নিৰ্বাচন
+	Select recipients first to choose from their fields.	তেওঁলোকৰ ফিল্ডৰ পৰা বাছিবলৈ প্ৰথমে প্ৰাপক বাছক।
+	Select recipients first to match their fields.	তেওঁলোকৰ ফিল্ড মিলাবলৈ প্ৰথমে প্ৰাপক বাছক।
+	Select Row	শাৰী নিৰ্বাচন
+	Select Sentence	বাক্য নিৰ্বাচন
+	Select Table	তালিকা নিৰ্বাচন
+	Select Text	পাঠ নিৰ্বাচন
+	Select text in the document to translate it.	অনুবাদ কৰিবলৈ নথিত পাঠ বাছক।
+	Select Text with Similar Formatting	একে সজ্জাৰ পাঠ নিৰ্বাচন
+	Select text, then tick who can still edit it.	পাঠ বাছক, তাৰ পিছত কোনে এতিয়াও সম্পাদনা কৰিব পাৰে চিহ্নিত কৰক।
+	Select the part of the screen to insert.	সুমুৱাবলৈ স্ক্ৰীনৰ অংশ বাছক।
+	Select Word	শব্দ নিৰ্বাচন
+	Select\nRecipients	প্ৰাপক\nনিৰ্বাচন
+	Selected Fields	নিৰ্বাচিত ফিল্ড
+	Selected pages	নিৰ্বাচিত পৃষ্ঠা
+	Selection	নিৰ্বাচন
+	Selection Pane	নিৰ্বাচন পেন
+	Send Backward	পিছলৈ পঠাওক
+	Send the document straight to the system print dialog, or save a copy in another format below.	নথি প্ৰত্যক্ষভাৱে ছিষ্টেমৰ প্ৰিণ্ট সংলাপলৈ পঠাওক, বা তলত আন সজ্জাত প্ৰতিলিপি সংৰক্ষণ কৰক।
+	Sentence	বাক্য
+	Sentence case.	বাক্যৰ দৰে।
+	Separator:	বিভাজক:
+	Sequence name:	অনুক্ৰমৰ নাম:
+	Serbian	ছাৰ্বিয়ান
+	Serbian (Cyrillic)	ছাৰ্বিয়ান (চিৰিলিক)
+	Serbian (Latin)	ছাৰ্বিয়ান (লেটিন)
+	Series name	শৃংখলাৰ নাম
+	Series {n}	শৃংখলা {n}
+	Server address (https://…)	ছাৰ্ভাৰৰ ঠিকনা (https://…)
+	Set	নিৰ্ধাৰণ কৰক
+	Set As Default	ডিফল্ট হিচাপে নিৰ্ধাৰণ কৰক
+	Set as Default	ডিফল্ট হিচাপে নিৰ্ধাৰণ কৰক
+	Set Caret	কেৰেট নিৰ্ধাৰণ কৰক
+	Set Character Formatting	আখৰ সজ্জা নিৰ্ধাৰণ কৰক
+	Set Date	তাৰিখ নিৰ্ধাৰণ কৰক
+	Set Equation	সমীকৰণ নিৰ্ধাৰণ কৰক
+	Set Numbering Value	নম্বৰৰ মান নিৰ্ধাৰণ কৰক
+	Set Paragraph Formatting	অনুচ্ছেদ সজ্জা নিৰ্ধাৰণ কৰক
+	Set Proofing Language…	প্ৰুফিং ভাষা নিৰ্ধাৰণ কৰক…
+	Setting:	ছেটিং:
+	Settings…	ছেটিং…
+	Shading	ছাঁ
+	Shadow	ছাঁ
+	Shadow, glow and soft edges	ছাঁ, আভা আৰু কোমল কাষ
+	Shape Effects	আকৃতিৰ প্ৰভাৱ
+	Shape Fill	আকৃতি পূৰণ
+	Shape Format	আকৃতিৰ সজ্জা
+	Shape Outline	আকৃতিৰ ৰূপৰেখা
+	Shape Styles	আকৃতিৰ শৈলী
+	Shapes	আকৃতি
+	Share	ভাগ-বতৰা কৰক
+	Sheet:	শ্বীট:
+	Shift cells down	কোষ তললৈ লৰাওক
+	Shift cells right	কোষ সোঁফাললৈ লৰাওক
+	Shift+Tab	Shift+Tab
+	Shipping labels	শ্বিপিং লেবেল
+	Short citation:	চমু উদ্ধৃতি:
+	Shortcut key:	চৰ্টকাট চাবি:
+	Show	দেখুৱাওক
+	Show all formatting marks	সকলো সজ্জা চিহ্ন দেখুৱাওক
+	Show All Levels	সকলো স্তৰ দেখুৱাওক
+	Show all revisions inline	সকলো সংশোধনী শাৰীত দেখুৱাওক
+	Show changes at:	সলনি ইয়াত দেখুৱাওক:
+	Show changes in:	সলনি ইয়াত দেখুৱাওক:
+	Show Comments	মন্তব্য দেখুৱাওক
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	নথি ওলোটা ৰঙত দেখুৱাওক, দৃশ্য › ম'ড সলনিৰ দৰে। সংৰক্ষণ, প্ৰিণ্ট আৰু PDF অপৰিৱৰ্তিত থাকে।
+	Show every bibliography field	প্ৰতিটো গ্ৰন্থপঞ্জী ফিল্ড দেখুৱাওক
+	Show First Line Only	কেৱল প্ৰথম শাৰী দেখুৱাওক
+	Show in the Styles gallery	শৈলী গেলেৰীত দেখুৱাওক
+	Show KeyTips (Alt or F10)	কীটিপছ দেখুৱাওক (Alt বা F10)
+	Show Level	স্তৰ দেখুৱাওক
+	Show Level 1	স্তৰ 1 দেখুৱাওক
+	Show Level 2	স্তৰ 2 দেখুৱাওক
+	Show Level 3	স্তৰ 3 দেখুৱাওক
+	Show Level 4	স্তৰ 4 দেখুৱাওক
+	Show Level 5	স্তৰ 5 দেখুৱাওক
+	Show Level 6	স্তৰ 6 দেখুৱাওক
+	Show Level 7	স্তৰ 7 দেখুৱাওক
+	Show Level 8	স্তৰ 8 দেখুৱাওক
+	Show Level 9	স্তৰ 9 দেখুৱাওক
+	Show Markup	মাৰ্কআপ দেখুৱাওক
+	Show Notes	টোকা দেখুৱাওক
+	Show only comments and formatting in balloons	বেলুনত কেৱল মন্তব্য আৰু সজ্জা দেখুৱাওক
+	Show or Hide Style	শৈলী দেখুৱাওক বা লুকুৱাওক
+	Show page numbers	পৃষ্ঠা নম্বৰ দেখুৱাওক
+	Show revisions in balloons	সংশোধনী বেলুনত দেখুৱাওক
+	Show rulers	জোখ-মাপ দেখুৱাওক
+	Show Text Formatting	পাঠৰ সজ্জা দেখুৱাওক
+	Show the equation in the line of text	সমীকৰণ পাঠৰ শাৰীত দেখুৱাওক
+	Show the equation on a line of its own	সমীকৰণ পৃথক শাৰীত দেখুৱাওক
+	Show the mini toolbar when text is selected	পাঠ নিৰ্বাচন কৰোঁতে সৰু সঁজুলিদণ্ড দেখুৱাওক
+	Show/Hide ¶	দেখুৱাওক/লুকুৱাওক ¶
+	Show\nComments	মন্তব্য\nদেখুৱাওক
+	Showing the first {count} items.	প্ৰথম {count}টা বস্তু দেখুওৱা হৈছে।
+	Shows a tree: each item below the item it belongs to.	এটা গছ দেখুৱায়: প্ৰতিটো বস্তু যাৰ অন্তৰ্গত তাৰ তলত।
+	Shows items around a central idea: the first item is the centre.	কেন্দ্ৰীয় ধাৰণাৰ চাৰিওফালে বস্তু দেখুৱায়: প্ৰথম বস্তু কেন্দ্ৰ।
+	Shows items of equal weight as blocks in rows.	সমান গুৰুত্বৰ বস্তু শাৰীত ব্লক হিচাপে দেখুৱায়।
+	Shows overlapping ideas as overlapping circles.	পৰস্পৰ ঢাকি থকা ধাৰণা ঢাকি থকা বৃত্ত হিচাপে দেখুৱায়।
+	Shows parts of a whole as quadrants.	সম্পূৰ্ণৰ অংশ চতুৰ্থাংশ হিচাপে দেখুৱায়।
+	Shows parts that build on each other, largest at the bottom.	এটাৰ ওপৰত আনটো গঢ় লোৱা অংশ দেখুৱায়, আটাইতকৈ ডাঙৰটো তলত।
+	Shows steps in order, left to right, with arrows between them.	পদক্ষেপবোৰ ক্ৰমানুসৰি, বাওঁৰ পৰা সোঁলৈ, মাজত কাঁড়ৰ সৈতে দেখুৱায়।
+	Shows steps that repeat, around a circle.	পুনৰাবৃত্ত পদক্ষেপ এটা বৃত্তৰ চাৰিওফালে দেখুৱায়।
+	Shrink Font 1 Point	ফণ্ট 1 পইণ্ট সৰু কৰক
+	Shrink Selection	নিৰ্বাচন কমাওক
+	Shrink text	পাঠ সৰু কৰক
+	Side to Side	কাষে কাষে
+	Side\nto Side	কাষে\nকাষে
+	Sides of a right triangle	সমকোণী ত্ৰিভুজৰ বাহু
+	Signature Line	স্বাক্ষৰ শাৰী
+	Sine and cosine series of f(x)	f(x)-ৰ চাইন আৰু ক'চাইন শ্ৰেণী
+	Sine Function	চাইন ফলন
+	Sine theta	চাইন থিটা
+	Single	একক
+	Single Brackets	একক বন্ধনী
+	Single Closing Quote	একক সমাপ্তি উদ্ধৃতিচিহ্ন
+	Single label	একক লেবেল
+	Single Left Angle	একক বাওঁ কোণ
+	Single Left Bar	একক বাওঁ দণ্ড
+	Single Left Brace	একক বাওঁ মজলীয়া বন্ধনী
+	Single Left Bracket	একক বাওঁ চতুৰ্ভুজ বন্ধনী
+	Single Left Parenthesis	একক বাওঁ বন্ধনী
+	Single Opening Quote	একক আৰম্ভণি উদ্ধৃতিচিহ্ন
+	Single Right Brace	একক সোঁ মজলীয়া বন্ধনী
+	Single Right Bracket	একক সোঁ চতুৰ্ভুজ বন্ধনী
+	Single Right Parenthesis	একক সোঁ বন্ধনী
+	Single Spacing	একক ব্যৱধান
+	SIST02	SIST02
+	Site name	ছাইটৰ নাম
+	Size	আকাৰ
+	Size (pt):	আকাৰ (pt):
+	Size and Crop…	আকাৰ আৰু কটা…
+	Size:	আকাৰ:
+	Sketchbook	স্কেচবুক
+	Skewed Fraction	হেলনীয়া ভগ্নাংশ
+	Skip citations & bibliography	উদ্ধৃতি আৰু গ্ৰন্থপঞ্জী এৰি যাওক
+	Skip Citations and Bibliography	উদ্ধৃতি আৰু গ্ৰন্থপঞ্জী এৰি যাওক
+	Skip Record If	যদি হয় তেন্তে ৰেকৰ্ড এৰি যাওক
+	Skip Record If…	যদি হয় তেন্তে ৰেকৰ্ড এৰি যাওক…
+	Slant Down	তললৈ হেলনীয়া
+	Slant Up	ওপৰলৈ হেলনীয়া
+	Small Caps	সৰু ডাঙৰ আখৰ
+	Small caps	সৰু ডাঙৰ আখৰ
+	Small change	সৰু সলনি
+	Smart quotes instead of straight quotes	পোন উদ্ধৃতিচিহ্নৰ সলনি স্মাৰ্ট উদ্ধৃতিচিহ্ন
+	SmartArt	SmartArt
+	SmartArt Design	SmartArt ডিজাইন
+	SmartArt Styles	SmartArt শৈলী
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	মসৃণ স্ক্ৰ'লিং আৰু জুমিং, আৰু লাহে লাহে দেখা দিয়া মেনু আৰু বুটাম। বন্ধ থাকিলে প্ৰতিটো সলনি লগে লগে দেখা যায়।
+	Soft Edges	কোমল কাষ
+	Soft Glow	কোমল আভা
+	Solid Accent	নিৰেট এক্সেণ্ট
+	Sort	সজাওক
+	Sort by	ইয়াৰ অনুসৰি সজাওক
+	Sort order:	সজোৱা ক্ৰম:
+	Sort Records	ৰেকৰ্ড সজাওক
+	Source code: github.com/chatraweechai/doc4me	উৎস ক'ড: github.com/chatraweechai/doc4me
+	Source Manager	উৎস পৰিচালক
+	Source type:	উৎসৰ প্ৰকাৰ:
+	Sources in this document:	এই নথিৰ উৎস:
+	South	দক্ষিণ
+	Space	খালী ঠাই
+	Space after	পিছত ঠাই
+	Space after: {pt} pt	পিছত ঠাই: {pt} pt
+	Space before	আগত ঠাই
+	Space before/after:	আগত/পিছত ঠাই:
+	Space before: {pt} pt	আগত ঠাই: {pt} pt
+	Spaces	খালী ঠাই
+	Spacing	ব্যৱধান
+	Spacing (pt):	ব্যৱধান (pt):
+	Spacing:	ব্যৱধান:
+	Spanish	স্পেনিছ
+	Spanish (Mexico)	স্পেনিছ (মেক্সিকো)
+	Spanish (Spain)	স্পেনিছ (স্পেইন)
+	Sparse Matrices	বিৰল মেট্ৰিক্স
+	Special	বিশেষ
+	Special Characters	বিশেষ আখৰ
+	Specify height:	উচ্চতা নিৰ্দিষ্ট কৰক:
+	Speech	কথন
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	কথন এই কম্পিউটাৰতে চিনাক্ত হয় (whisper.cpp); একো অনলাইনত পঠিওৱা নহয়।
+	Speed	গতি
+	Spelling	বানান
+	Spelling & Grammar	বানান আৰু ব্যাকৰণ
+	Spelling &\nGrammar	বানান আৰু\nব্যাকৰণ
+	Spelling and grammar are checked in English (United States).	বানান আৰু ব্যাকৰণ ইংৰাজীত (মাৰ্কিন যুক্তৰাষ্ট্ৰ) পৰীক্ষা কৰা হয়।
+	Spelling Suggestions	বানানৰ পৰামৰ্শ
+	Spike	স্পাইক
+	Split	বিভক্ত কৰক
+	Split apart page break and paragraph mark	পৃষ্ঠা বিচ্ছেদ আৰু অনুচ্ছেদ চিহ্ন পৃথক কৰক
+	Split Cells	কোষ বিভক্ত কৰক
+	Split Table	তালিকা বিভক্ত কৰক
+	Spreadsheet Table	স্প্ৰেডশ্বীট তালিকা
+	Square	বৰ্গ
+	Square Root	বৰ্গমূল
+	Square Root with Degree	ঘাতৰ সৈতে বৰ্গমূল
+	Square Union	বৰ্গ সংযোগ
+	Stack Object	স্তূপ বস্তু
+	Stack Object (Three)	স্তূপ বস্তু (তিনি)
+	Stacked	থুপ খোৱা
+	Stacked Bar	থুপ খোৱা বাৰ
+	Stacked Column	থুপ খোৱা স্তম্ভ
+	Stacked Fraction	থুপ খোৱা ভগ্নাংশ
+	Stacked, no bar	থুপ খোৱা, দণ্ড নোহোৱাকৈ
+	Standard	মানক
+	Standard and Contextual	মানক আৰু প্ৰাসংগিক
+	Standard Colors	মানক ৰং
+	Standard Only	কেৱল মানক
+	Star	তৰা
+	Start at:	ইয়াৰ পৰা আৰম্ভ কৰক:
+	Start Enforcing Protection	সুৰক্ষা প্ৰয়োগ আৰম্ভ কৰক
+	Start Mail Merge	মেইল মাৰ্জ আৰম্ভ কৰক
+	Start Mail\nMerge	মেইল মাৰ্জ\nআৰম্ভ কৰক
+	State	ৰাজ্য
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	পৰিসংখ্যা
+	Status Bar	স্থিতি দণ্ড
+	Statutes	আইন
+	Stop	ৰখাওক
+	Stop Protection	সুৰক্ষা ৰখাওক
+	Stop Reading	পঢ়া ৰখাওক
+	Stopped	ৰখা হ'ল
+	Store	ষ্ট'ৰ
+	Straight Arrow Connector	পোন কাঁড় সংযোজক
+	Straight Connector	পোন সংযোজক
+	Strikethrough	কটা দাগ
+	Stroke {n} of {total}	স্ট্ৰ'ক {n} / {total}
+	Strong	শক্তিশালী
+	Structure Actions	গঠনৰ কাৰ্য
+	Structures	গঠন
+	Studio	ষ্টুডিঅ'
+	Studio cover	ষ্টুডিঅ' বেটুপাত
+	Studio handbook (sample)	ষ্টুডিঅ' পুস্তিকা (নমুনা)
+	Style	শৈলী
+	Style based on:	শৈলীৰ ভিত্তি:
+	Style Inspector	শৈলী পৰিদৰ্শক
+	Style Set	শৈলী ছেট
+	Style:	শৈলী:
+	Style: APA	শৈলী: APA
+	Style: {style}	শৈলী: {style}
+	Styles	শৈলী
+	Styles Pane	শৈলী পেন
+	Styles:	শৈলী:
+	Subentry:	উপ-প্ৰবিষ্টি:
+	Subject	বিষয়
+	Subscript	নিম্নলিপি
+	Subscript-Superscript	নিম্নলিপি-উৰ্ধ্বলিপি
+	Subscripts and Superscripts	নিম্নলিপি আৰু উৰ্ধ্বলিপি
+	Subset:	উপগোট:
+	Substituted font	প্ৰতিস্থাপিত ফণ্ট
+	Subtitle	উপশিৰোনাম
+	Subtle Emphasis	সূক্ষ্ম জোৰ
+	Subtle Reference	সূক্ষ্ম উল্লেখ
+	Sum	যোগফল
+	Sum of cosines	ক'চাইনৰ যোগফল
+	Sum or difference of sines	চাইনৰ যোগফল বা বিয়োগফল
+	Summation	সমষ্টি
+	Summation from 0 to n	0ৰ পৰা nলৈ সমষ্টি
+	Summation over binomials	দ্বিপদৰ ওপৰত সমষ্টি
+	Summation with Limits	সীমাৰ সৈতে সমষ্টি
+	Summation with Lower Limit	নিম্নসীমাৰ সৈতে সমষ্টি
+	Summation with Subscript Limit	নিম্নলিপি সীমাৰ সৈতে সমষ্টি
+	Summation with Subscript-Superscript Limits	নিম্নলিপি-উৰ্ধ্বলিপি সীমাৰ সৈতে সমষ্টি
+	Summations	সমষ্টি
+	Superscript	উৰ্ধ্বলিপি
+	Suppress line numbers	শাৰী নম্বৰ লুকুৱাওক
+	Surface Integral	পৃষ্ঠ অনুকল
+	Surface Integral with Limits	সীমাৰ সৈতে পৃষ্ঠ অনুকল
+	Surface Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে পৃষ্ঠ অনুকল
+	Swap footnotes and endnotes	পাদটোকা আৰু অন্তটোকা সালসলনি কৰক
+	Swedish	ছুইডিছ
+	Switch Modes	ম'ড সলনি
+	Switch Windows	ৱিণ্ড' সলনি
+	Switch\nModes	ম'ড\nসলনি
+	Symbol	প্ৰতীক
+	Symbol Font	প্ৰতীক ফণ্ট
+	Symbols	প্ৰতীক
+	Synchronous Scrolling	সমকালীন স্ক্ৰ'লিং
+	Synonyms	সমাৰ্থক শব্দ
+	System	ছিষ্টেম
+	Tab	Tab
+	Tab Character	টেব আখৰ
+	Tab character	টেব আখৰ
+	Tab characters	টেব আখৰ
+	Tab leader:	টেব লিডাৰ:
+	Tab stop position:	টেব ষ্টপৰ অৱস্থান:
+	Tab stops to be cleared:	মচিবলগীয়া টেব ষ্টপ:
+	Table	তালিকা
+	Table AutoFormat	তালিকা স্বয়ংসজ্জা
+	Table AutoFormat…	তালিকা স্বয়ংসজ্জা…
+	Table Column Width	তালিকাৰ স্তম্ভৰ প্ৰস্থ
+	Table Design	তালিকাৰ ডিজাইন
+	Table direction:	তালিকাৰ দিশ:
+	Table entry fields	তালিকা প্ৰবিষ্টি ফিল্ড
+	Table Grid	তালিকা গ্ৰিড
+	Table identifier:	তালিকাৰ চিনাক্তকাৰী:
+	Table Layout	তালিকাৰ লেআউট
+	Table of Authorities	কৰ্তৃপক্ষৰ তালিকা
+	Table of Contents	সূচীপত্ৰ
+	Table of Contents Options	সূচীপত্ৰৰ বিকল্প
+	Table of Contents Styles	সূচীপত্ৰৰ শৈলী
+	Table of Figures	চিত্ৰসূচী
+	Table of Figures Options	চিত্ৰসূচীৰ বিকল্প
+	Table of\nContents	সূচী-\nপত্ৰ
+	Table Positioning	তালিকাৰ অৱস্থান
+	Table Properties	তালিকাৰ বৈশিষ্ট্য
+	Table Row Height	তালিকাৰ শাৰীৰ উচ্চতা
+	Table style	তালিকাৰ শৈলী
+	Table Style Options	তালিকাৰ শৈলীৰ বিকল্প
+	Table Styles	তালিকাৰ শৈলী
+	Table styles:	তালিকাৰ শৈলী:
+	Tables	তালিকা
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	টেব
+	Tabs…	টেব…
+	Tabular List	তালিকাবদ্ধ তালিকা
+	Tag	টেগ
+	Tangent formula	টেনজেণ্ট সূত্ৰ
+	Tangent Function	টেনজেণ্ট ফলন
+	TC entry fields	TC প্ৰবিষ্টি ফিল্ড
+	Technology	প্ৰযুক্তি
+	Templates	টেমপ্লেট
+	Templates and Add-ins	টেমপ্লেট আৰু এড-ইন
+	Text	পাঠ
+	Text Box	পাঠ বাকচ
+	Text boxes	পাঠ বাকচ
+	Text Direction	পাঠৰ দিশ
+	Text Effects	পাঠৰ প্ৰভাৱ
+	Text Effects and Typography	পাঠৰ প্ৰভাৱ আৰু টাইপগ্ৰাফী
+	Text Fill	পাঠ পূৰণ
+	Text from File	ফাইলৰ পৰা পাঠ
+	Text Highlight Color	পাঠ হাইলাইটৰ ৰং
+	Text indent at:	পাঠৰ ইণ্ডেণ্ট:
+	Text isn't squeezed to fit its cell yet.	পাঠ এতিয়াও কোষত খাপ খাবলৈ সংকুচিত নহয়।
+	Text Outline	পাঠৰ ৰূপৰেখা
+	Text over Colon Equal	কোলন সমানৰ ওপৰত পাঠ
+	Text over Equal	সমানৰ ওপৰত পাঠ
+	Text Pane	পাঠ পেন
+	Text size	পাঠৰ আকাৰ
+	Text snaps to characters	পাঠ আখৰত মিলে
+	Text to display:	প্ৰদৰ্শনৰ পাঠ:
+	Text Wrapping	পাঠ মেৰিওৱা
+	Text wrapping:	পাঠ মেৰিওৱা:
+	Text:	পাঠ:
+	Text\nBox	পাঠ\nবাকচ
+	Text\nDirection	পাঠৰ\nদিশ
+	Thai	থাই
+	Thai Distributed	থাই বিতৰিত
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	সেই সজ্জাই সকলো নাৰাখে, সেয়ে নথি এতিয়াও খোলা আছে। আগবাঢ়িবলৈ Word নথি (.docx) হিচাপে সংৰক্ষণ কৰক।
+	That isn't the web address or embed code of an online video.	এইটো অনলাইন ভিডিঅ'ৰ ৱেব ঠিকনা বা এম্বেড ক'ড নহয়।
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	পাছৱৰ্ড শুদ্ধ নহয়। পৰীক্ষা কৰক (পাছৱৰ্ডে আখৰৰ আকাৰ পৃথক কৰে) আৰু পুনৰ চেষ্টা কৰক।
+	The clipboard is empty.	ক্লিপবৰ্ড খালী।
+	The date it is today	আজিৰ তাৰিখ
+	The document contains no tracked changes.	নথিত কোনো অনুসৰণ কৰা সলনি নাই।
+	The document has no bookmarks yet.	নথিত এতিয়ালৈকে বুকমাৰ্ক নাই।
+	The document is read only, except for regions marked editable.	সম্পাদনযোগ্য বুলি চিহ্নিত অঞ্চলৰ বাহিৰে নথি কেৱল পঢ়িবলৈ।
+	The document will be saved with a password. Save it to protect it.	নথি পাছৱৰ্ডৰ সৈতে সংৰক্ষিত হ'ব। সুৰক্ষাৰ বাবে সংৰক্ষণ কৰক।
+	The first word of a sentence starts with a capital.	বাক্যৰ প্ৰথম শব্দ ডাঙৰ আখৰেৰে আৰম্ভ হয়।
+	the free daily allowance is used up (try again tomorrow, or give an email address)	বিনামূলীয়া দৈনিক সীমা শেষ হ'ল (কাইলৈ পুনৰ চেষ্টা কৰক, বা ইমেইল ঠিকনা দিয়ক)
+	the LibreTranslate server	LibreTranslate ছাৰ্ভাৰ
+	The Mail Merge Helper sets up a merge in three steps.	মেইল মাৰ্জ সহায়কে তিনিটা পদক্ষেপত মাৰ্জ সাজু কৰে।
+	The new style takes the formatting of the current paragraph.	নতুন শৈলীয়ে বৰ্তমান অনুচ্ছেদৰ সজ্জা লয়।
+	The password is optional; without it anyone can stop the protection.	পাছৱৰ্ড ঐচ্ছিক; ইয়াৰ অবিহনে যিকোনোৱে সুৰক্ষা ৰখাব পাৰে।
+	The password is removed. Save the document to keep the change.	পাছৱৰ্ড আঁতৰোৱা হ'ল। সলনি ৰাখিবলৈ নথি সংৰক্ষণ কৰক।
+	The passwords don't match.	পাছৱৰ্ড মিলা নাই।
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	প্ৰিণ্টাৰ, দুয়োপিঠি প্ৰিণ্ট আৰু প্ৰতি শ্বীটত পৃষ্ঠা সেই সংলাপত বাছনি কৰা হয়।
+	The recipient-list field that fills each part of an address block and greeting line.	প্ৰাপক-তালিকাৰ যি ফিল্ডে ঠিকনা ব্লক আৰু অভিবাদন শাৰীৰ প্ৰতিটো অংশ পূৰণ কৰে।
+	The same word twice in a row.	পৰ পৰ দুবাৰ একেটা শব্দ।
+	The spelling and grammar check is complete.	বানান আৰু ব্যাকৰণ পৰীক্ষা সম্পূৰ্ণ।
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	ছিষ্টেমৰ ফাইল সংলাপ উপলব্ধ নহয়, সেয়ে Doc4Me-এ নিজৰটো দেখুৱায়। ছিষ্টেম সংলাপ পাবলৈ ফাইল বাছনিকাৰী প'ৰ্টেল (যেনে xdg-desktop-portal-gtk) বা zenity ইনষ্টল কৰক।
+	The text is sent to {service} to be translated.	পাঠ অনুবাদৰ বাবে {service}-লৈ পঠিওৱা হয়।
+	The time right now	এতিয়াৰ সময়
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	ভিডিঅ' নথিত ছবি হিচাপে দেখা যায়। ব্ৰাউজাৰত চাবলৈ দুবাৰ ক্লিক কৰক।
+	The whole document is translated into a new document, which replaces this one. Save your work first.	গোটেই নথি নতুন নথিলৈ অনুবাদ হয়, যিয়ে ইয়াৰ স্থান লয়। আগতে আপোনাৰ কাম সংৰক্ষণ কৰক।
+	Theme Colors	থীমৰ ৰং
+	Theme Fonts	থীমৰ ফণ্ট
+	Theme List	থীম তালিকা
+	Themes	থীম
+	Then by	তাৰ পিছত ইয়াৰ অনুসৰি
+	Then insert:	তাৰ পিছত সুমুৱাওক:
+	There's no text to translate.	অনুবাদৰ বাবে কোনো পাঠ নাই।
+	Thesaurus	সমাৰ্থক কোষ
+	These marks show even when Show/Hide ¶ is off.	দেখুৱাওক/লুকুৱাওক ¶ বন্ধ থাকিলেও এই চিহ্নবোৰ দেখা যায়।
+	These merge fields aren't in the recipient list:	এই মাৰ্জ ফিল্ডবোৰ প্ৰাপক তালিকাত নাই:
+	These settings will be used for new documents.	এই ছেটিং নতুন নথিত ব্যৱহাৰ হ'ব।
+	Thick	ডাঠ
+	Thickness	ডাঠতা
+	This Device…	এই ডিভাইচ…
+	This document	এই নথি
+	This field has no options.	এই ফিল্ডৰ কোনো বিকল্প নাই।
+	This folder can't be read: {error}	এই ফ'ল্ডাৰ পঢ়িব নোৱাৰি: {error}
+	This font has no characters to show.	এই ফণ্টত দেখুৱাবলৈ আখৰ নাই।
+	This page	এই পৃষ্ঠা
+	This password type isn't supported.	এই পাছৱৰ্ডৰ প্ৰকাৰ সমৰ্থিত নহয়।
+	This point forward	ইয়াৰ পৰা আগলৈ
+	This section	এই শাখা
+	Three	তিনি
+	Through	আৰপাৰ
+	Tight	টান
+	Tilde	টিল্ড
+	Tips ({n})	পৰামৰ্শ ({n})
+	Title	শিৰোনাম
+	Title from the document properties	নথিৰ বৈশিষ্ট্যৰ পৰা শিৰোনাম
+	Title:	শিৰোনাম:
+	To	প্ৰতি
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Word নথি ডিফল্টভাৱে Doc4Me-ৰে খুলিবলৈ: Finder-ত এখন বাছক, File › Get Info বাছক, Open with-ত Doc4Me বাছক, তাৰ পিছত Change All ক্লিক কৰক।
+	To:	প্ৰতি:
+	TOA Heading	কৰ্তৃপক্ষৰ তালিকাৰ শিৰোনাম
+	TOC Heading	সূচীপত্ৰৰ শিৰোনাম
+	TOC {n}	সূচীপত্ৰ {n}
+	Today	আজি
+	tOGGLE cASE	আখৰৰ আকাৰ ওলোটা
+	Toggle Check Box	চেক বাকচ টগল কৰক
+	Toggle Field Codes	ফিল্ড ক'ড টগল কৰক
+	Toggle Unicode Character	Unicode আখৰ টগল কৰক
+	Tools	সঁজুলি
+	Top	ওপৰত
+	Top and Bottom	ওপৰত আৰু তলত
+	Top Border	ওপৰৰ সীমা
+	Top Margin	ওপৰৰ মাৰ্জিন
+	Top of Next Page	পিছৰ পৃষ্ঠাৰ ওপৰত
+	Top of Page	পৃষ্ঠাৰ ওপৰত
+	Top of Previous Page	আগৰ পৃষ্ঠাৰ ওপৰত
+	Top of the Window	ৱিণ্ড'ৰ ওপৰত
+	Top:	ওপৰত:
+	Total	মুঠ
+	Total Row	মুঠ শাৰী
+	Track Changes	সলনি অনুসৰণ কৰক
+	Track Changes Options	সলনি অনুসৰণৰ বিকল্প
+	Track changes while editing	সম্পাদনা কৰোঁতে সলনি অনুসৰণ কৰক
+	Track Changes: On	সলনি অনুসৰণ: অন
+	Track formatting	সজ্জা অনুসৰণ কৰক
+	Track\nChanges	সলনি\nঅনুসৰণ
+	Track\nChanges ✓	সলনি\nঅনুসৰণ ✓
+	Tracked changes	অনুসৰণ কৰা সলনি
+	Tracking	অনুসৰণ
+	Trademark	ট্ৰেডমাৰ্ক
+	Trademark Sign	ট্ৰেডমাৰ্ক চিহ্ন
+	Transform	ৰূপান্তৰ
+	Translate	অনুবাদ কৰক
+	Translate Document	নথি অনুবাদ কৰক
+	Translating {done} of {total}	{total}ৰ ভিতৰত {done} অনুবাদ হৈ আছে
+	Translation service	অনুবাদ সেৱা
+	Translator	অনুবাদক
+	Transparency	স্বচ্ছতা
+	Transparency:	স্বচ্ছতা:
+	Transport	পৰিবহণ
+	Treatises	গ্ৰন্থ
+	Triangle	ত্ৰিভুজ
+	Triangle Down	ত্ৰিভুজ তললৈ
+	Triangle Up	ত্ৰিভুজ ওপৰলৈ
+	Trigonometric Functions	ত্ৰিকোণমিতিক ফলন
+	Triple	তিনিগুণ
+	Triple Dot	তিনিগুণ বিন্দু
+	Triple Integral	তিনিগুণ অনুকল
+	Triple Integral with Limits	সীমাৰ সৈতে তিনিগুণ অনুকল
+	Triple Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে তিনিগুণ অনুকল
+	Trust Center	বিশ্বাস কেন্দ্ৰ
+	Tue	মংগল
+	Turabian	Turabian
+	Turkish	তুৰ্কী
+	Two	দুই
+	Type	প্ৰকাৰ
+	Type a command, e.g. "insert table"	এটা আদেশ টাইপ কৰক, যেনে "তালিকা সুমুৱাওক"
+	Type a New List	নতুন তালিকা টাইপ কৰক
+	Type a New List…	নতুন তালিকা টাইপ কৰক…
+	Type at least one recipient.	অন্ততঃ এজন প্ৰাপক টাইপ কৰক।
+	Type equations in LaTeX	সমীকৰণ LaTeX-ত টাইপ কৰক
+	Type equations in the linear format (UnicodeMath)	সমীকৰণ ৰৈখিক সজ্জাত (UnicodeMath) টাইপ কৰক
+	Type in Equation	সমীকৰণত টাইপ কৰক
+	Type normal (non-math) text in the equation	সমীকৰণত সাধাৰণ (অগাণিতিক) পাঠ টাইপ কৰক
+	Type Text	পাঠ টাইপ কৰক
+	Type the categories down the side and a column of values per series.	শ্ৰেণীবোৰ কাষত তলমুৱাকৈ আৰু প্ৰতিটো শৃংখলাৰ বাবে মানৰ এটা স্তম্ভ টাইপ কৰক।
+	Type the field's name and its switches, for example PAGE \\* roman.	ফিল্ডৰ নাম আৰু ইয়াৰ ছুইচ টাইপ কৰক, যেনে PAGE \\* roman।
+	Type the password to stop the protection.	সুৰক্ষা ৰখাবলৈ পাছৱৰ্ড টাইপ কৰক।
+	Type the recipients, or load them from a file.	প্ৰাপক টাইপ কৰক, বা ফাইলৰ পৰা ল'ড কৰক।
+	Type the tag name of the source. You can add more information to this source later by editing the source.	উৎসৰ টেগ নাম টাইপ কৰক। উৎস সম্পাদনা কৰি পিছত অধিক তথ্য যোগ কৰিব পাৰে।
+	Type:	প্ৰকাৰ:
+	Typing	টাইপিং
+	Typing replaces selected text	টাইপ কৰিলে নিৰ্বাচিত পাঠ সলনি হয়
+	Ukrainian	ইউক্ৰেইনিয়ান
+	Unchecked symbol	অচিহ্নিত প্ৰতীক
+	Underbar	তলৰ দণ্ড
+	Underbrace	তলৰ মজলীয়া বন্ধনী
+	Underline	তলৰেখা
+	Underline color	তলৰেখাৰ ৰং
+	Underline Words Only	কেৱল শব্দত তলৰেখা
+	Undo	আনডু কৰক
+	Undo Stroke	স্ট্ৰ'ক আনডু কৰক
+	Undo {action}	{action} আনডু কৰক
+	Unformatted Text	সজ্জাবিহীন পাঠ
+	Ungroup	গোট ভাঙক
+	Union	সংযোগ
+	Union of intersections	ছেদৰ সংযোগ
+	Union with Limits	সীমাৰ সৈতে সংযোগ
+	Union with Lower Limit	নিম্নসীমাৰ সৈতে সংযোগ
+	Union with Plus	যোগৰ সৈতে সংযোগ
+	Union with Subscript-Superscript Limits	নিম্নলিপি-উৰ্ধ্বলিপি সীমাৰ সৈতে সংযোগ
+	Unions and Intersections	সংযোগ আৰু ছেদ
+	Unlink Fields	ফিল্ডৰ সংযোগ বিচ্ছিন্ন কৰক
+	Unlink\nCitations	উদ্ধৃতিৰ\nসংযোগ বিচ্ছিন্ন
+	Unlock Fields	ফিল্ড আনলক কৰক
+	Up	ওপৰলৈ
+	Up Diagonal Dots	ওপৰলৈ কৰ্ণ বিন্দু
+	Up one level	এক স্তৰ ওপৰলৈ
+	Update Field	ফিল্ড আপডেট কৰক
+	Update fields before printing	প্ৰিণ্টৰ আগতে ফিল্ড আপডেট কৰক
+	Update Index	সূচী আপডেট কৰক
+	Update Style to Match Selection	নিৰ্বাচনৰ সৈতে মিলাবলৈ শৈলী আপডেট কৰক
+	Update Styles from Template	টেমপ্লেটৰ পৰা শৈলী আপডেট কৰক
+	Update Table	তালিকা আপডেট কৰক
+	Update Table of Figures	চিত্ৰসূচী আপডেট কৰক
+	Update to Match	মিলাবলৈ আপডেট কৰক
+	Update to Match Selection	নিৰ্বাচনৰ সৈতে মিলাবলৈ আপডেট কৰক
+	UPPERCASE	ডাঙৰ আখৰ
+	URGENT	জৰুৰী
+	URL	URL
+	Use "a" before a consonant sound	ব্যঞ্জন ধ্বনিৰ আগত "a" ব্যৱহাৰ কৰক
+	Use "an" before a vowel sound	স্বৰ ধ্বনিৰ আগত "an" ব্যৱহাৰ কৰক
+	Use an Existing List…	থকা তালিকা ব্যৱহাৰ কৰক…
+	Use passim (five or more pages)	passim ব্যৱহাৰ কৰক (পাঁচ বা অধিক পৃষ্ঠা)
+	Use system setting	ছিষ্টেম ছেটিং ব্যৱহাৰ কৰক
+	Use the Insert key to switch overtype on and off	অভাৰটাইপ অন/অফ কৰিবলৈ Insert চাবি ব্যৱহাৰ কৰক
+	Use wildcards	ৱাইল্ডকাৰ্ড ব্যৱহাৰ কৰক
+	User Name	ব্যৱহাৰকাৰীৰ নাম
+	User name:	ব্যৱহাৰকাৰীৰ নাম:
+	Username	ব্যৱহাৰকাৰী নাম
+	Value	মান
+	Vector A	ভেক্টৰ A
+	Vector AB	ভেক্টৰ AB
+	Version	সংস্কৰণ
+	Version History	সংস্কৰণৰ ইতিহাস
+	Version {version} ({build})	সংস্কৰণ {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	নথি খোলা থকালৈকে সংস্কৰণ ৰখা হয় (.docx ফাইলত সংস্কৰণ নাথাকে)।
+	Vertical	উলম্ব
+	Vertical Alignment	উলম্ব সাৰিবদ্ধকৰণ
+	Vertical alignment:	উলম্ব সাৰিবদ্ধকৰণ:
+	Vertical Bars	উলম্ব দণ্ড
+	Vertical Dots	উলম্ব বিন্দু
+	Vertical spacing:	উলম্ব ব্যৱধান:
+	Vietnamese	ভিয়েটনামী
+	View	দৃশ্য
+	View Alt Text…	বিকল্প পাঠ চাওক…
+	View Gridlines	গ্ৰিডলাইন চাওক
+	View Side by Side	কাষে কাষে চাওক
+	View State	দৃশ্যৰ অৱস্থা
+	Views	দৃশ্য
+	Visual effects	দৃশ্যমান প্ৰভাৱ
+	Voice	কণ্ঠ
+	Volume	খণ্ড
+	Volume Integral	আয়তন অনুকল
+	Volume Integral with Limits	সীমাৰ সৈতে আয়তন অনুকল
+	Volume Integral with Stacked Limits	থুপ খোৱা সীমাৰ সৈতে আয়তন অনুকল
+	W:	প্ৰ:
+	Waiting for Zotero…	Zotero-লৈ অপেক্ষা কৰি আছে…
+	Warm Gradient with Outline	ৰূপৰেখাৰ সৈতে উষ্ণ গ্ৰেডিয়েণ্ট
+	Warnings ({n})	সতৰ্কবাণী ({n})
+	Watermark	জলচিহ্ন
+	Wave	ঢৌ
+	Weather	বতৰ
+	web access isn't available here	ৱেব প্ৰৱেশ ইয়াত উপলব্ধ নহয়
+	Web Layout	ৱেব লেআউট
+	Web page (*.html)	ৱেব পৃষ্ঠা (*.html)
+	Web\nLayout	ৱেব\nলেআউট
+	Website	ৱেবছাইট
+	Wed	বুধ
+	Weight	ওজন
+	West	পশ্চিম
+	When merging records	ৰেকৰ্ড মাৰ্জ কৰোঁতে
+	When this document was first created	এই নথি প্ৰথম কেতিয়া সৃষ্টি হৈছিল
+	When this document was most recently printed	এই নথি শেষবাৰ কেতিয়া প্ৰিণ্ট কৰা হৈছিল
+	When this document was most recently saved	এই নথি শেষবাৰ কেতিয়া সংৰক্ষণ কৰা হৈছিল
+	White Space	খালী ঠাই
+	White space	খালী ঠাই
+	Who the document properties name as author	নথিৰ বৈশিষ্ট্যত লেখক হিচাপে কাৰ নাম আছে
+	Whole document	গোটেই নথি
+	Whole page	গোটেই পৃষ্ঠা
+	Whole Table	গোটেই তালিকা
+	Whole words	সম্পূৰ্ণ শব্দ
+	Wide	বহল
+	Widow/Orphan Control	বিধৱা/অনাথ নিয়ন্ত্ৰণ
+	Widow/Orphan control	বিধৱা/অনাথ নিয়ন্ত্ৰণ
+	Width and spacing	প্ৰস্থ আৰু ব্যৱধান
+	Width:	প্ৰস্থ:
+	Wildcards (regex)	ৱাইল্ডকাৰ্ড (regex)
+	Window	ৱিণ্ড'
+	With:	ইয়াৰে:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 আৰু পৰৱৰ্তী
+	Word 97–2003	Word 97–2003
+	Word Count	শব্দ গণনা
+	Word document	Word নথি
+	Word document (*.docx)	Word নথি (*.docx)
+	Word forms	Word প্ৰপত্ৰ
+	Word Left	বাওঁ শব্দ
+	Word level	শব্দ স্তৰ
+	Word Right	সোঁ শব্দ
+	Word XML Document (*.xml)	Word XML নথি (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt শৈলী
+	Words	শব্দ
+	Words only	কেৱল শব্দ
+	Wrap Text	পাঠ মেৰিয়াওক
+	Wrap text	পাঠ মেৰিয়াওক
+	Wrap Text Sides	পাঠ মেৰিওৱাৰ দিশ
+	Wrap\nText	পাঠ\nমেৰিয়াওক
+	Write & Insert Fields	ফিল্ড লিখক আৰু সুমুৱাওক
+	Write a reply	উত্তৰ লিখক
+	Write math here with the mouse or a pen.	মাউছ বা কলমেৰে ইয়াত গণিত লিখক।
+	Writing Style: Grammar	লিখাৰ শৈলী: ব্যাকৰণ
+	x bar	x বাৰ
+	Year	বছৰ
+	Yes	হয়
+	Yields	ফল দিয়ে
+	Your changes will be lost if you don't save them.	সংৰক্ষণ নকৰিলে আপোনাৰ সলনি হেৰাই যাব।
+	Your system doesn't report an animation setting, so animation effects stay on.	আপোনাৰ ছিষ্টেমে এনিমেচন ছেটিং নজনায়, সেয়ে এনিমেচন প্ৰভাৱ অন থাকে।
+	Your system has animation effects turned off.	আপোনাৰ ছিষ্টেমত এনিমেচন প্ৰভাৱ বন্ধ।
+	Your system has animation effects turned on.	আপোনাৰ ছিষ্টেমত এনিমেচন প্ৰভাৱ অন।
+	Zoom	জুম
+	Zoom In	জুম ইন
+	Zoom Out	জুম আউট
+	Zoom to Page	পৃষ্ঠালৈ জুম কৰক
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: বাতিল
+	Zotero: done	Zotero: সম্পন্ন
+	{cols}×{rows} Table	{cols}×{rows} তালিকা
+	{contributors} contributors · {commits} commits	{contributors} অৱদানকাৰী · {commits} কমিট
+	{count} items highlighted	{count}টা বস্তু হাইলাইট কৰা হ'ল
+	{count} of {total} pages will print	{total}ৰ ভিতৰত {count} পৃষ্ঠা প্ৰিণ্ট হ'ব
+	{count} paragraphs were changed.	{count}টা অনুচ্ছেদ সলনি হ'ল।
+	{count} records; fields: {fields}	{count}টা ৰেকৰ্ড; ফিল্ড: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} এই কম্পিউটাৰত ইনষ্টল কৰা নাই, সেয়ে এই নথি {with}-ৰে দেখুওৱা হৈছে। শাৰী আৰু পৃষ্ঠা মূল ফণ্টতকৈ বেলেগধৰণে ভাঙিব পাৰে।
+	{group} settings	{group} ছেটিং
+	{key}+Click to follow link	সংযোগলৈ যাবলৈ {key}+ক্লিক
+	{language} is now the document's default language.	{language} এতিয়া নথিৰ ডিফল্ট ভাষা।
+	{name} (Press ENTER to Insert)	{name} (সুমুৱাবলৈ ENTER টিপক)
+	{name} already exists. Choose Save again to replace it.	{name} ইতিমধ্যে আছে। সলনি কৰিবলৈ পুনৰ সংৰক্ষণ বাছক।
+	{name} can't be a folder's name.	{name} ফ'ল্ডাৰৰ নাম হ'ব নোৱাৰে।
+	{name} is protected with a password.	{name} পাছৱৰ্ডেৰে সুৰক্ষিত।
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} যোগ কৰা হ'ল। ইয়াৰ মেক্ৰ' মোৰ এড-ইন আৰু দৃশ্য › মেক্ৰ'ত আছে।
+	{name} wasn't found.	{name} পোৱা নগ'ল।
+	{n} entries marked.	{n}টা প্ৰবিষ্টি চিহ্নিত কৰা হ'ল।
+	{n} lines	{n} শাৰী
+	{n} of {of} recipients	{of}ৰ ভিতৰত {n} প্ৰাপক
+	{n} pt	{n} pt
+	{n} records	{n}টা ৰেকৰ্ড
+	{n} revisions	{n}টা সংশোধনী
+	{selected} of {words} words	{words}ৰ ভিতৰত {selected} শব্দ
+	{size} pt	{size} pt
+	{words} words	{words} শব্দ
+	{w} × {h} in	{w} × {h} ইঞ্চি
+	{w} × {h} mm	{w} × {h} মিমি
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) সংখ্যা নহয়।
+	← Find	← বিচাৰক
+	✓ None	✓ একো নাই
+	➕ New comment	➕ নতুন মন্তব্য
+	📂  Browse…	📂  ব্ৰাউজ কৰক…
+	Add Help Text…	সহায় পাঠ যোগ কৰক…
+	AutoText entry:	স্বয়ংপাঠ প্ৰবিষ্টি:
+	Calculate on exit	ওলাই যাওঁতে গণনা কৰক
+	Calculation	গণনা
+	Check Box Form Field	চেক বাকচ প্ৰপত্ৰ ফিল্ড
+	Check Box Form Field Options	চেক বাকচ প্ৰপত্ৰ ফিল্ডৰ বিকল্প
+	Check box	চেক বাকচ
+	Check box enabled	চেক বাকচ সক্ৰিয়
+	Check box size:	চেক বাকচৰ আকাৰ:
+	Checked	চিহ্নিত
+	Current date	বৰ্তমান তাৰিখ
+	Current time	বৰ্তমান সময়
+	Default value:	ডিফল্ট মান:
+	Drop-Down Form Field	ড্ৰপ-ডাউন প্ৰপত্ৰ ফিল্ড
+	Drop-Down Form Field Options	ড্ৰপ-ডাউন প্ৰপত্ৰ ফিল্ডৰ বিকল্প
+	Drop-down	ড্ৰপ-ডাউন
+	Drop-down enabled	ড্ৰপ-ডাউন সক্ৰিয়
+	Drop-down item:	ড্ৰপ-ডাউন বস্তু:
+	Fill In Form Field	পূৰণযোগ্য প্ৰপত্ৰ ফিল্ড
+	Fill-in enabled	পূৰণ সক্ৰিয়
+	Form Field	প্ৰপত্ৰ ফিল্ড
+	Form Field Help Text	প্ৰপত্ৰ ফিল্ডৰ সহায় পাঠ
+	Form Field Options	প্ৰপত্ৰ ফিল্ডৰ বিকল্প
+	Form Field Shading	প্ৰপত্ৰ ফিল্ডৰ ছাঁ
+	Form Field at Selection	নিৰ্বাচনত প্ৰপত্ৰ ফিল্ড
+	Help Key (F1)	সহায় চাবি (F1)
+	Insert Form Field	প্ৰপত্ৰ ফিল্ড সুমুৱাওক
+	Items in drop-down list:	ড্ৰপ-ডাউন তালিকাৰ বস্তু:
+	Legacy Tools	পুৰণি সঁজুলি
+	Maximum length:	সৰ্বাধিক দৈৰ্ঘ্য:
+	Next Form Field	পৰৱৰ্তী প্ৰপত্ৰ ফিল্ড
+	Not checked	অচিহ্নিত
+	Put the caret on a form field first.	প্ৰথমে কেৰেট প্ৰপত্ৰ ফিল্ডত ৰাখক।
+	Regular text	সাধাৰণ পাঠ
+	Reset Form Fields	প্ৰপত্ৰ ফিল্ড ৰিছেট কৰক
+	Text Form Field	পাঠ প্ৰপত্ৰ ফিল্ড
+	Text Form Field Options	পাঠ প্ৰপত্ৰ ফিল্ডৰ বিকল্প
+	Type your own:	নিজৰ মতে টাইপ কৰক:
+	Unlimited	অসীমিত
+	Protected sections:	সুৰক্ষিত শাখা:
+	Section Protection	শাখা সুৰক্ষা
+	Section {n}	শাখা {n}
+	Select sections…	শাখা বাছক…
+	AutoSummarize	স্বয়ংসাৰাংশ
+	Create a new document and put the summary there	নতুন নথি সৃষ্টি কৰি সাৰাংশ তাত ৰাখক
+	Highlight key points	মূল বিষয়বোৰ হাইলাইট কৰক
+	Insert an executive summary or abstract at the top of the document	নথিৰ শীৰ্ষত কাৰ্যবাহী সাৰাংশ বা সাৰসংক্ষেপ সুমুৱাওক
+	Length of summary	সাৰাংশৰ দৈৰ্ঘ্য
+	Percent of original:	মূলৰ শতাংশ:
+	Summary: {words} of {of} words	সাৰাংশ: {of}ৰ ভিতৰত {words} শব্দ
+	Type of summary	সাৰাংশৰ প্ৰকাৰ
+	Update document statistics	নথিৰ পৰিসংখ্যা আপডেট কৰক
+	{n} sentences	{n}টা বাক্য
+	{n} words or less	{n}টা বা কম শব্দ
+	At:	স্থান:
+	Distance from text:	পাঠৰ পৰা দূৰত্ব:
+	Format Frame	ফ্ৰেম সজাওক
+	Format Frame…	ফ্ৰেম সজাওক…
+	Frame	ফ্ৰেম
+	Frame…	ফ্ৰেম…
+	Insert Frame	ফ্ৰেম সুমুৱাওক
+	Lock anchor	এংকৰ লক কৰক
+	Remove Frame	ফ্ৰেম আঁতৰাওক
+	Text wrapping	পাঠ মেৰিওৱা
+	Chinese Conversion	চীনা ৰূপান্তৰ
+	Chinese Conversion…	চীনা ৰূপান্তৰ…
+	Converted {n} characters	{n}টা আখৰ ৰূপান্তৰিত
+	Simplified Chinese to Traditional Chinese	সৰলীকৃত চীনাৰ পৰা পৰম্পৰাগত চীনা
+	Simplified to Traditional	সৰলীকৃতৰ পৰা পৰম্পৰাগত
+	Traditional Chinese to Simplified Chinese	পৰম্পৰাগত চীনাৰ পৰা সৰলীকৃত চীনা
+	Traditional to Simplified	পৰম্পৰাগতৰ পৰা সৰলীকৃত
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	টাইৱান, হংকং SAR আৰু মাকাও SAR আখৰৰ ৰূপ ব্যৱহাৰ কৰক
+	Asian Layout	এছিয়ান লেআউট
+	Fit Text	পাঠ খাপ খুৱাওক
+	Fit Text…	পাঠ খাপ খুৱাওক…
+	Two Lines in One	এটাত দুটা শাৰী
+	Two Lines in One…	এটাত দুটা শাৰী…
+	New text width (pt):	নতুন পাঠৰ প্ৰস্থ (pt):
+	Enclose in brackets	বন্ধনীত ৰাখক
+	Bracket pair:	বন্ধনীৰ যোৰা:
+	Typography	টাইপগ্ৰাফী
+	Character spacing control	আখৰৰ ব্যৱধান নিয়ন্ত্ৰণ
+	Don't compress	সংকুচিত নকৰিব
+	Compress punctuation only	কেৱল যতিচিহ্ন সংকুচিত কৰক
+	Compress punctuation and Japanese kana	যতিচিহ্ন আৰু জাপানী কানা সংকুচিত কৰক
+	First and last characters	প্ৰথম আৰু শেষ আখৰ
+	Strict	কঠোৰ
+	Cannot start a line:	শাৰী আৰম্ভ কৰিব নোৱাৰে:
+	Cannot end a line:	শাৰী শেষ কৰিব নোৱাৰে:
+	Japanese Find Options	জাপানী সন্ধান বিকল্প
+	Sounds like (Japanese)	উচ্চাৰণত মিল (জাপানী)
+	Match full/half width	সম্পূৰ্ণ/আধা প্ৰস্থ মিলাওক
+	Match hiragana/katakana	হিৰাগানা/কাটাকানা মিলাওক
+	Match small kana	সৰু কানা মিলাওক
+	Match prolonged sound marks and dashes	দীঘল ধ্বনিচিহ্ন আৰু ডেছ মিলাওক
+	Japanese Consistency Checker	জাপানী সামঞ্জস্য পৰীক্ষক
+	Japanese Consistency Checker…	জাপানী সামঞ্জস্য পৰীক্ষক…
+	No inconsistent spellings were found.	কোনো অসামঞ্জস্য বানান পোৱা নগ'ল।
+	Pick the spelling to keep in each group.	প্ৰতিটো গোটত ৰাখিবলগীয়া বানান বাছক।
+	Bidirectional text	দ্বিমুখী পাঠ
+	Bidirectional Text	দ্বিমুখী পাঠ
+	Default direction:	ডিফল্ট দিশ:
+	Cursor movement:	কাৰ্চাৰৰ চলাচল:
+	Logical	যৌক্তিক
+	Visual	দৃশ্যগত
+	Manage Fields	ফিল্ড পৰিচালনা কৰক
+	File locations	ফাইলৰ অৱস্থান
+	File Locations	ফাইলৰ অৱস্থান
+	Documents:	নথি:
+	Pictures:	ছবি:
+	The system's choice	ছিষ্টেমৰ পছন্দ
+	Show Repairs	মেৰামতি দেখুৱাওক
+	No repairs were needed.	মেৰামতিৰ প্ৰয়োজন নহ'ল।
+	These problems were found and repaired when the document was opened:	নথি খোলোঁতে এই সমস্যাবোৰ পোৱা গ'ল আৰু মেৰামতি কৰা হ'ল:
+	An unreadable entry in the file was skipped: {what}	ফাইলৰ এটা পঢ়িব নোৱৰা প্ৰবিষ্টি এৰি দিয়া হ'ল: {what}
+	An unreadable part was left out: {what}	এটা পঢ়িব নোৱৰা অংশ এৰি দিয়া হ'ল: {what}
+	Unreadable relationships were ignored: {what}	পঢ়িব নোৱৰা সম্পৰ্ক উপেক্ষা কৰা হ'ল: {what}
+	A missing part of an embedded object was left out: {what}	এম্বেড কৰা বস্তুৰ নোহোৱা অংশ এৰি দিয়া হ'ল: {what}
+	Copy File	ফাইল প্ৰতিলিপি কৰক
+	Find Files	ফাইল বিচাৰক
+	Letter Wizard	চিঠি উইজাৰ্ড
+	Recipient's name:	প্ৰাপকৰ নাম:
+	Salutation:	সম্বোধন:
+	Subject:	বিষয়:
+	Complimentary closing:	সমাপনী:
+	Sender's name:	প্ৰেৰকৰ নাম:
+	Job title:	পদবী:
+	Company:	কোম্পানী:
+	Enclosures:	সংলগ্নি:
+	Cc:	প্ৰতিলিপি:
+	Edit Links to Files	ফাইলৰ সংযোগ সম্পাদনা কৰক
+	Source file	উৎস ফাইল
+	Locked	লক কৰা
+	Change Source	উৎস সলনি কৰক
+	This document has no links to files.	এই নথিত ফাইলৰ কোনো সংযোগ নাই।
+	Web options	ৱেব বিকল্প
+	Web Options	ৱেব বিকল্প
+	Allow PNG as a graphics format	PNG-ক গ্ৰাফিক সজ্জা হিচাপে অনুমতি দিয়ক
+	Rely on CSS for font formatting	ফণ্ট সজ্জাৰ বাবে CSS-ৰ ওপৰত নিৰ্ভৰ কৰক
+	Rely on VML for displaying graphics in browsers	ব্ৰাউজাৰত গ্ৰাফিক্স দেখুৱাবলৈ VML-ৰ ওপৰত নিৰ্ভৰ কৰক
+	Organize supporting files in a folder	সহায়ক ফাইল এটা ফ'ল্ডাৰত সজাওক
+	Use long file names whenever possible	সম্ভৱ হ'লে দীঘল ফাইলৰ নাম ব্যৱহাৰ কৰক
+	Screen size:	স্ক্ৰীনৰ আকাৰ:
+	Pixels per inch:	প্ৰতি ইঞ্চিত পিক্সেল:
+	Hangul Hanja Conversion	হাংগুল হানজা ৰূপান্তৰ
+	Hangul Hanja Conversion…	হাংগুল হানজা ৰূপান্তৰ…
+	Hangul to Hanja	হাংগুলৰ পৰা হানজা
+	Hanja to Hangul	হানজাৰ পৰা হাংগুল
+	Put the caret in Korean text to choose its Hanja.	ইয়াৰ হানজা বাছিবলৈ কেৰেট কোৰিয়ান পাঠত ৰাখক।
+	The selection, or the whole document when nothing is selected.	নিৰ্বাচন, বা একো নিৰ্বাচিত নাথাকিলে গোটেই নথি।
+	Add frame	ফ্ৰেম যোগ কৰক
+	Attributes:	বৈশিষ্ট্য:
+	Border color:	সীমাৰ ৰং:
+	Border width:	সীমাৰ প্ৰস্থ:
+	Choose how the custom XML editor displays names and removes schema references.	কাষ্টম XML সম্পাদকে কেনেকৈ নাম দেখুৱায় আৰু স্কিমা উল্লেখ আঁতৰায় বাছক।
+	Confirm before removing a schema reference	স্কিমা উল্লেখ আঁতৰোৱাৰ আগতে নিশ্চিত কৰক
+	Elements:	উপাদান:
+	Enter an absolute HTTP(S) or URN schema URI.	এটা সম্পূৰ্ণ HTTP(S) বা URN স্কিমা URI লিখক।
+	Frame URL	ফ্ৰেম URL
+	Frame borders:	ফ্ৰেমৰ সীমা:
+	Frame spacing:	ফ্ৰেমৰ ব্যৱধান:
+	Frames:	ফ্ৰেম:
+	Frameset Properties	ফ্ৰেমছেটৰ বৈশিষ্ট্য
+	Hide	লুকুৱাওক
+	Margin height:	মাৰ্জিনৰ উচ্চতা:
+	Margin width:	মাৰ্জিনৰ প্ৰস্থ:
+	No resize	আকাৰ সলনি নহয়
+	No schema references	কোনো স্কিমা উল্লেখ নাই
+	Optional	ঐচ্ছিক
+	Optional, 0–1000	ঐচ্ছিক, 0–1000
+	Pixels (0–100)	পিক্সেল (0–100)
+	Remove Attribute	বৈশিষ্ট্য আঁতৰাওক
+	Remove schema reference {schema}?	স্কিমা উল্লেখ {schema} আঁতৰাবনে?
+	Rows:	শাৰী:
+	Schema Library	স্কিমা লাইব্ৰেৰী
+	Schema URI:	স্কিমা URI:
+	Schemas:	স্কিমা:
+	Scrolling:	স্ক্ৰ'লিং:
+	Select a custom XML store with editable datastore properties first.	প্ৰথমে সম্পাদনযোগ্য ডেটাষ্ট'ৰ বৈশিষ্ট্যৰ সৈতে এটা কাষ্টম XML ষ্ট'ৰ বাছক।
+	Select an XML element to add, change, or remove one of its attributes.	ইয়াৰ এটা বৈশিষ্ট্য যোগ, সলনি বা আঁতৰাবলৈ এটা XML উপাদান বাছক।
+	Selected element: {name}	নিৰ্বাচিত উপাদান: {name}
+	Set Attribute	বৈশিষ্ট্য নিৰ্ধাৰণ কৰক
+	Show namespace URIs beside XML names	XML নামৰ কাষত নেমস্পেচ URI দেখুৱাওক
+	Store: {store}	ষ্ট'ৰ: {store}
+	This XML store is preserved but cannot be edited here.	এই XML ষ্ট'ৰ ৰক্ষা কৰা হয় কিন্তু ইয়াত সম্পাদনা কৰিব নোৱাৰি।
+	This document has no custom XML stores.	এই নথিত কোনো কাষ্টম XML ষ্ট'ৰ নাই।
+	This store has no datastore properties part for schema references.	এই ষ্ট'ৰত স্কিমা উল্লেখৰ বাবে ডেটাষ্ট'ৰ বৈশিষ্ট্যৰ অংশ নাই।
+	This store has no elements available for editing.	এই ষ্ট'ৰত সম্পাদনাৰ বাবে কোনো উপাদান নাই।
+	Value:	মান:
+	View and manage schema references associated with custom XML stores.	কাষ্টম XML ষ্ট'ৰৰ সৈতে জড়িত স্কিমা উল্লেখ চাওক আৰু পৰিচালনা কৰক।
+	XML Element Attributes	XML উপাদানৰ বৈশিষ্ট্য
+	XML Options	XML বিকল্প
+	e.g. 25%,*	যেনে 25%,*
+	e.g. 30%,*	যেনে 30%,*
+	Web	ৱেব
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	ইণ্টাৰফেচে এতিয়াও {language} শুদ্ধকৈ আঁকিব নোৱাৰে: যুক্ত হোৱা বা ক্ৰম সলনি হোৱা আখৰ আৰু সোঁফালৰ পৰা বাওঁফাললৈ লিখা পাঠ ভুল দেখা যাব পাৰে। তথাপি ব্যৱহাৰ কৰিবনে?
