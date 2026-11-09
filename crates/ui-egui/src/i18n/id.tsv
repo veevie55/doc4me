@@ -3048,3 +3048,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Antarmuka belum dapat menggambar {language} dengan benar: huruf yang tersambung atau berubah urutan, serta teks kanan ke kiri, mungkin tampak salah. Tetap gunakan?

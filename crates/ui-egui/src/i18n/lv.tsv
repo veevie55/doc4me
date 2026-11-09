@@ -3049,3 +3049,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Saskarne vēl nevar pareizi attēlot {language}: burti, kas savienojas vai maina secību, un teksts no labās uz kreiso var izskatīties nepareizi. Tomēr izmantot?

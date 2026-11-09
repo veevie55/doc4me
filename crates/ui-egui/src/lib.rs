@@ -428,6 +428,9 @@ pub struct WordApp {
     /// CJK text is (about to be) on screen in a non-CJK interface, e.g. the language names in
     /// File ▸ Options: load the installed CJK fallback font if no embedded face covers it.
     pub(crate) want_system_cjk: bool,
+    /// File › Options › Interface language: a language the interface draws only imperfectly,
+    /// picked and waiting for the user to confirm it ([`i18n::Lang::renders_imperfectly`]).
+    pub(crate) language_warning: Option<i18n::Lang>,
     fonts_frames: u32,
     /// The effective interface theme last installed in egui ([`theme::apply`]).
     applied_theme: Option<theme::Appearance>,
@@ -556,6 +559,7 @@ impl WordApp {
             fonts_hans: false,
             fonts_system_cjk: false,
             want_system_cjk: false,
+            language_warning: None,
             fonts_frames: 0,
             applied_theme: None,
             // Inert until the app binary calls `watch_desktop_theme`.

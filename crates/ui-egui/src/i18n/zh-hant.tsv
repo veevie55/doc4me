@@ -3049,3 +3049,4 @@ spacing	Normal	標準
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	介面暫時無法正確繪製{language}：相連或改變順序的字母以及從右到左的文字可能顯示不正確。仍要使用嗎？

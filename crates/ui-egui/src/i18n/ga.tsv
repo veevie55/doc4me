@@ -3046,3 +3046,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Ní féidir leis an gcomhéadan {language} a tharraingt i gceart fós: d'fhéadfadh litreacha a nascann nó a athraíonn ord, agus téacs ó dheis go clé, cuma mhícheart a bheith orthu. É a úsáid mar sin féin?

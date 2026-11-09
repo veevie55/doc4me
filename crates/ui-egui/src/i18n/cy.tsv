@@ -3046,3 +3046,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Ni all y rhyngwyneb lunio {language} yn gywir eto: gall llythrennau sy'n ymuno neu'n newid trefn, a thestun o'r dde i'r chwith, edrych yn anghywir. Ei ddefnyddio beth bynnag?

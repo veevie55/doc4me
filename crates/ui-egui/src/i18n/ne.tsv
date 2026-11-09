@@ -1,0 +1,3046 @@
+# Nepali (ne) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	अर्को शब्दअघि "a" वा "an"; पोलिस "w"/"we", "z"/"ze"।
+	% of all commits	सबै कमिटको %
+	(All)	(सबै)
+	(Custom)	(अनुकूलित)
+	(no style)	(शैली छैन)
+	(no suggestions)	(सुझाव छैन)
+	(none)	(कुनै पनि छैन)
+	(normal text)	(सामान्य पाठ)
+	(not matched)	(मेल खाएन)
+	(picture or object)	(चित्र वा वस्तु)
+	*Bold* and _italic_ with real formatting	*बोल्ड* र _इटालिक_ वास्तविक ढाँचासहित
+	0 or More Characters	0 वा बढी वर्ण
+	1. Formatting restrictions	1. ढाँचा प्रतिबन्ध
+	1. Main document	1. मुख्य कागजात
+	1.5 Line Spacing	1.5 पङ्क्ति अन्तर
+	1/4 Em Space	1/4 Em खाली ठाउँ
+	1×2 Empty Matrix	1×2 खाली म्याट्रिक्स
+	1×3 Empty Matrix	1×3 खाली म्याट्रिक्स
+	2. Data source	2. डेटा स्रोत
+	2. Editing restrictions	2. सम्पादन प्रतिबन्ध
+	2×1 Empty Matrix	2×1 खाली म्याट्रिक्स
+	2×2 Determinant	2×2 डिटर्मिनेन्ट
+	2×2 Empty Matrix	2×2 खाली म्याट्रिक्स
+	2×2 Identity Matrix	2×2 एकाइ म्याट्रिक्स
+	2×2 Identity Matrix (sparse)	2×2 एकाइ म्याट्रिक्स (विरल)
+	2×2 Matrix in Brackets	ठूलो कोष्ठकमा 2×2 म्याट्रिक्स
+	2×2 Matrix in Double Bars	दोहोरो रेखाभित्र 2×2 म्याट्रिक्स
+	2×2 Matrix in Parentheses	सानो कोष्ठकमा 2×2 म्याट्रिक्स
+	2×3 Empty Matrix	2×3 खाली म्याट्रिक्स
+	3-D	3-D
+	3. Merge the data with the document	3. डेटालाई कागजातसँग मर्ज गर्नुहोस्
+	3. Start enforcement	3. लागू गर्न सुरु गर्नुहोस्
+	3D Models	3D मोडेलहरू
+	3×1 Empty Matrix	3×1 खाली म्याट्रिक्स
+	3×2 Empty Matrix	3×2 खाली म्याट्रिक्स
+	3×3 Empty Matrix	3×3 खाली म्याट्रिक्स
+	3×3 Identity Matrix	3×3 एकाइ म्याट्रिक्स
+	3×3 Identity Matrix (sparse)	3×3 एकाइ म्याट्रिक्स (विरल)
+	5,000 characters a day; give an email address for 50,000.	दिनमा 5,000 वर्ण; 50,000 का लागि इमेल ठेगाना दिनुहोस्।
+	<< Less	<< कम
+	<< Remove	<< हटाउनुहोस्
+	A file dialog is already open.	फाइल संवाद पहिले नै खुला छ।
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Rust मा सुरुदेखि लेखिएको निःशुल्क, खुला-स्रोत वर्ड प्रोसेसर।\nArtCraft टोलीको WordCraft मा आधारित।
+	A header source holds the field names for a data source without a header row.	हेडर स्रोतमा हेडर पङ्क्ति नभएको डेटा स्रोतका फिल्ड नामहरू हुन्छन्।
+	A mail merge field	मेल मर्ज फिल्ड
+	A new document lists the commands with their shortcuts.	नयाँ कागजातमा आदेशहरू र तिनका सर्टकटहरू सूचीबद्ध हुन्छन्।
+	A numbered sequence (figures, tables…)	क्रमाङ्कित अनुक्रम (चित्र, तालिका…)
+	A password is required to open this document.	यो कागजात खोल्न पासवर्ड चाहिन्छ।
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	विराम चिह्नअघि खाली ठाउँ, दोहोरिएका चिह्न, संयोजकअघि पोलिस अल्पविराम।
+	A table of contents	विषयसूची
+	A table's rows keep the same columns here.	यहाँ तालिकाका पङ्क्तिहरूले उही स्तम्भ राख्छन्।
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	अआइई AaBb
+	AaBbYyZz	अआहक्ष AaZz
+	About	बारेमा
+	About Doc4Me	Doc4Me को बारेमा
+	Above Chart	चार्टमाथि
+	Above the item	वस्तुमाथि
+	Absolute position	निरपेक्ष स्थिति
+	Absolute value cases	निरपेक्ष मान अवस्थाहरू
+	Accent	एक्सेन्ट
+	Accent Gradient	एक्सेन्ट ग्रेडियन्ट
+	Accent with Reflection	प्रतिबिम्बसहित एक्सेन्ट
+	Accent {n}	एक्सेन्ट {n}
+	Accents	एक्सेन्टहरू
+	Accept	स्वीकार गर्नुहोस्
+	Accept All	सबै स्वीकार गर्नुहोस्
+	Accept All Changes	सबै परिवर्तन स्वीकार गर्नुहोस्
+	Accept or Reject Changes	परिवर्तन स्वीकार वा अस्वीकार गर्नुहोस्
+	Accept This Change	यो परिवर्तन स्वीकार गर्नुहोस्
+	Accessed on	पहुँच मिति
+	Accessibility	पहुँचयोग्यता
+	Accessibility Pane	पहुँचयोग्यता प्यान
+	Acute	एक्युट
+	Add	थप्नुहोस्
+	Add >>	थप्नुहोस् >>
+	Add a comment	टिप्पणी थप्नुहोस्
+	Add a Table	तालिका थप्नुहोस्
+	Add at least one field.	कम्तीमा एउटा फिल्ड थप्नुहोस्।
+	Add caption when inserting:	घुसाउँदा क्याप्सन थप्नुहोस्:
+	Add Chart Element	चार्ट तत्व थप्नुहोस्
+	Add Field	फिल्ड थप्नुहोस्
+	Add Field Name	फिल्ड नाम थप्नुहोस्
+	Add Font…	फन्ट थप्नुहोस्…
+	Add line numbering	पङ्क्ति क्रमाङ्कन थप्नुहोस्
+	Add New Placeholder	नयाँ प्लेसहोल्डर थप्नुहोस्
+	Add New Placeholder…	नयाँ प्लेसहोल्डर थप्नुहोस्…
+	Add New Source…	नयाँ स्रोत थप्नुहोस्…
+	Add Object to Selection	वस्तुलाई चयनमा थप्नुहोस्
+	Add Pen	कलम थप्नुहोस्
+	Add Row	पङ्क्ति थप्नुहोस्
+	Add Series	शृङ्खला थप्नुहोस्
+	Add Shape	आकृति थप्नुहोस्
+	Add Space Before Paragraph	अनुच्छेदअघि ठाउँ थप्नुहोस्
+	Add space between Asian and Latin text	एसियाली र ल्याटिन पाठबीच ठाउँ थप्नुहोस्
+	Add space between Asian text and numbers	एसियाली पाठ र अङ्कबीच ठाउँ थप्नुहोस्
+	Add tab stop at:	ट्याब स्टप थप्नुहोस्:
+	Add Text	पाठ थप्नुहोस्
+	Add the chapter number	अध्याय नम्बर थप्नुहोस्
+	Add to Dictionary	शब्दकोशमा थप्नुहोस्
+	Add to Document	कागजातमा थप्नुहोस्
+	Add to Quick Access Toolbar	द्रुत पहुँच उपकरणपट्टीमा थप्नुहोस्
+	Add to Style Gallery	शैली ग्यालेरीमा थप्नुहोस्
+	Add-ins	एड-इनहरू
+	Add/Edit\nBibliography	सन्दर्भसूची\nथप्नुहोस्/सम्पादन गर्नुहोस्
+	Add/Edit\nCitation	उद्धरण\nथप्नुहोस्/सम्पादन गर्नुहोस्
+	Add\nNote	नोट\nथप्नुहोस्
+	Add\nPen	कलम\nथप्नुहोस्
+	Add\nShape	आकृति\nथप्नुहोस्
+	Added	थपियो
+	Added Fonts	थपिएका फन्टहरू
+	Address	ठेगाना
+	Address Block	ठेगाना ब्लक
+	Address labels	ठेगाना लेबलहरू
+	Address:	ठेगाना:
+	Address\nBlock	ठेगाना\nब्लक
+	Adjust	समायोजन गर्नुहोस्
+	Advanced	उन्नत
+	Advanced Find	उन्नत खोज
+	Advanced Find…	उन्नत खोज…
+	After:	पछि:
+	Agents	एजेन्टहरू
+	Align	पङ्क्तिबद्ध गर्नुहोस्
+	Align Bottom Center	तल बीचमा पङ्क्तिबद्ध गर्नुहोस्
+	Align Bottom Left	तल बायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Bottom Right	तल दायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Center	बीचमा पङ्क्तिबद्ध गर्नुहोस्
+	Align Center Left	बीच बायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Center Right	बीच दायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Left	बायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Right	दायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Text	पाठ पङ्क्तिबद्ध गर्नुहोस्
+	Align Top Center	माथि बीचमा पङ्क्तिबद्ध गर्नुहोस्
+	Align Top Left	माथि बायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Align Top Right	माथि दायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Aligned at:	यहाँ पङ्क्तिबद्ध:
+	Alignment	पङ्क्तिबद्धता
+	Alignment:	पङ्क्तिबद्धता:
+	All	सबै
+	All - Linear	सबै - रेखीय
+	All - Professional	सबै - व्यावसायिक
+	All Borders	सबै किनारा
+	All Caps	सबै ठूला अक्षर
+	All caps	सबै ठूला अक्षर
+	All Commands	सबै आदेशहरू
+	All files	सबै फाइलहरू
+	All Levels	सबै तहहरू
+	All Markup	सबै मार्कअप
+	All pages	सबै पृष्ठहरू
+	All pages in the range	दायराका सबै पृष्ठहरू
+	All records	सबै रेकर्डहरू
+	All symbol sets	सबै प्रतीक सेटहरू
+	Allow Doc4Me to use online services	Doc4Me लाई अनलाइन सेवा प्रयोग गर्न दिनुहोस्
+	Allow hanging punctuation	झुन्डिने विराम चिह्नलाई अनुमति दिनुहोस्
+	Allow Latin text to wrap in the middle of a word	ल्याटिन पाठलाई शब्दको बीचमा बेरिन दिनुहोस्
+	Allow line breaks	पङ्क्ति विच्छेदलाई अनुमति दिनुहोस्
+	Allow overlap	ओभरल्यापलाई अनुमति दिनुहोस्
+	Allow row to break across pages	पङ्क्तिलाई पृष्ठहरूमा टुट्न दिनुहोस्
+	Alphabetical	वर्णानुक्रमिक
+	Alt Text	वैकल्पिक पाठ
+	Alt text	वैकल्पिक पाठ
+	Alt Text Pane	वैकल्पिक पाठ प्यान
+	Alt:	वैकल्पिक:
+	Alt\nText	वैकल्पिक\nपाठ
+	And	र
+	Angle Brackets	कोण कोष्ठक
+	Angle Brackets with Separator	विभाजकसहित कोण कोष्ठक
+	Angle Brackets with Two Separators	दुई विभाजकसहित कोण कोष्ठक
+	Animate the caret (it glides and fades)	कर्सर एनिमेट गर्नुहोस् (यो चिप्लन्छ र मधुरो हुन्छ)
+	Animation	एनिमेसन
+	Animation effects:	एनिमेसन प्रभावहरू:
+	Annotation Reference	टिप्पणी सन्दर्भ
+	Annotation Subject	टिप्पणी विषय
+	Annotation Text	टिप्पणी पाठ
+	Another file	अर्को फाइल
+	Any Character	कुनै पनि वर्ण
+	Any Digit	कुनै पनि अङ्क
+	Any Letter	कुनै पनि अक्षर
+	Anyone can open this document. Encrypt it with a password to keep it private.	जोसुकैले यो कागजात खोल्न सक्छ। निजी राख्न पासवर्डले इन्क्रिप्ट गर्नुहोस्।
+	Anyone who opens the document will need this password.	कागजात खोल्ने सबैलाई यो पासवर्ड चाहिनेछ।
+	APA	APA
+	API key (if the server needs one)	API कुञ्जी (सर्भरलाई चाहिएमा)
+	Apply	लागू गर्नुहोस्
+	Apply as you type	टाइप गर्दा लागू गर्नुहोस्
+	Apply Asian line-breaking rules (kinsoku)	एसियाली पङ्क्ति विच्छेद नियम लागू गर्नुहोस् (kinsoku)
+	Apply Character Style	वर्ण शैली लागू गर्नुहोस्
+	Apply formatting to:	ढाँचा यसमा लागू गर्नुहोस्:
+	Apply special formats to	विशेष ढाँचा यसमा लागू गर्नुहोस्
+	Apply Style	शैली लागू गर्नुहोस्
+	Apply Styles	शैलीहरू लागू गर्नुहोस्
+	Apply to:	यसमा लागू गर्नुहोस्:
+	Arabic	अरबी
+	Arch Down	तलतिर आर्च
+	Arch Up	माथितिर आर्च
+	Area	क्षेत्र
+	Around	वरिपरि
+	Arrange	मिलाउनुहोस्
+	Arrange All	सबै मिलाउनुहोस्
+	Arrange\nAll	सबै\nमिलाउनुहोस्
+	Arrow	तीर
+	Arrows	तीरहरू
+	Artistic Effects	कलात्मक प्रभावहरू
+	As Recommended	सिफारिस अनुसार
+	As you type	टाइप गर्दा
+	ASAP	सकेसम्म चाँडो
+	Ascending	आरोही
+	Asian text font:	एसियाली पाठ फन्ट:
+	Asian Typography	एसियाली टाइपोग्राफी
+	Assign	तोक्नुहोस्
+	At least	कम्तीमा
+	At least {n}	कम्तीमा {n}
+	Atelier	एटेलियर
+	Atmosphere	वातावरण
+	Attach Template	टेम्प्लेट संलग्न गर्नुहोस्
+	Attach…	संलग्न गर्नुहोस्…
+	Author	लेखक
+	Auto	स्वतः
+	AutoCaption	स्वतः क्याप्सन
+	AutoCaption…	स्वतः क्याप्सन…
+	AutoComplete	स्वतः पूरा
+	AutoCorrect	स्वतः सुधार
+	AutoCorrect Options	स्वतः सुधार विकल्पहरू
+	AutoFit	स्वतः फिट
+	AutoFit Contents	सामग्रीमा स्वतः फिट
+	AutoFit Window	सञ्झ्यालमा स्वतः फिट
+	AutoFormat	स्वतः ढाँचा
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	स्वतः ढाँचा (Ctrl+Alt+K) ले चयन गरिएका अनुच्छेद वा सम्पूर्ण कागजात ढाँचाबद्ध गर्छ।
+	AutoFormat and Review Changes…	स्वतः ढाँचा र परिवर्तन समीक्षा…
+	AutoFormat As You Type	टाइप गर्दा स्वतः ढाँचा
+	AutoFormat changed {count} paragraphs	स्वतः ढाँचाले {count} अनुच्छेद परिवर्तन गर्‍यो
+	AutoFormat Now	अहिले स्वतः ढाँचा
+	Automatic	स्वचालित
+	Automatic ({language})	स्वचालित ({language})
+	Automatic bulleted lists	स्वचालित बुलेट सूचीहरू
+	Automatic follows your system's language. Menus and commands change; your documents don't.	स्वचालितले तपाईंको प्रणालीको भाषा पछ्याउँछ। मेनु र आदेशहरू बदलिन्छन्; कागजातहरू बदलिँदैनन्।
+	Automatic numbered lists	स्वचालित क्रमाङ्कित सूचीहरू
+	Automatic Table 1 (3 levels)	स्वचालित तालिका 1 (3 तह)
+	Automatic Table 2 (2 levels)	स्वचालित तालिका 2 (2 तह)
+	Automatically hyphenate document	कागजातलाई स्वतः हाइफन गर्नुहोस्
+	Automatically Update Document Styles	कागजात शैलीहरू स्वतः अद्यावधिक गर्नुहोस्
+	Automatically update document styles	कागजात शैलीहरू स्वतः अद्यावधिक गर्नुहोस्
+	AutoSave	स्वतः सुरक्षित
+	AutoSave documents you have saved in Doc4Me	Doc4Me मा सुरक्षित गरिएका कागजात स्वतः सुरक्षित गर्नुहोस्
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	स्वतः सुरक्षित असफल: {error}। फेरि खोल्न कागजात सुरक्षित गर्नुहोस्।
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	ब्राउजरमा स्वतः सुरक्षित उपलब्ध छैन: यसले तपाईंका फाइलमा लेख्न सक्दैन। सुरक्षित गर्दा प्रतिलिपि डाउनलोड हुन्छ।
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	स्वतः सुरक्षितले .docx, .odt र .rtf फाइल मात्र राख्छ; {name} ले सबै ढाँचा राख्न सक्दैन। खोल्न .docx को रूपमा सुरक्षित गर्नुहोस्।
+	AutoSave saves every change to the file (needs a saved document)	स्वतः सुरक्षितले हरेक परिवर्तन फाइलमा राख्छ (सुरक्षित कागजात चाहिन्छ)
+	AutoSave writes your changes to the file a moment after you stop typing.	टाइप गर्न रोकेको केही बेरपछि स्वतः सुरक्षितले परिवर्तन फाइलमा लेख्छ।
+	AutoText	स्वतः पाठ
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	पछाडि
+	Backspace	Backspace
+	Balloons	बेलुनहरू
+	Banded Columns	ब्यान्डेड स्तम्भ
+	Banded Rows	ब्यान्डेड पङ्क्ति
+	Bar	बार
+	Base text:	आधार पाठ:
+	Based on: {style}	आधारित: {style}
+	Baseline Dots	आधार रेखा बिन्दु
+	Basic Cycle	आधारभूत चक्र
+	Basic List	आधारभूत सूची
+	Basic Math	आधारभूत गणित
+	Basic Matrix	आधारभूत म्याट्रिक्स
+	Basic Process	आधारभूत प्रक्रिया
+	Basic Pyramid	आधारभूत पिरामिड
+	Basic Radial	आधारभूत रेडियल
+	Basic Venn	आधारभूत भेन
+	Bayes' rule	बेइजको नियम
+	Before:	अघि:
+	Beginning of Word	शब्दको सुरु
+	Behind Text	पाठपछाडि
+	Below text	पाठमुनि
+	Below the item	वस्तुमुनि
+	Between	बीचमा
+	Bibliography	सन्दर्भसूची
+	Binary assets added	बाइनरी सम्पत्ति थपियो
+	Binary assets removed	बाइनरी सम्पत्ति हटाइयो
+	Binomial Coefficient	द्विपद गुणाङ्क
+	Binomial Coefficient (angle)	द्विपद गुणाङ्क (कोण)
+	Binomial Coefficient with Angle Brackets	कोण कोष्ठकसहित द्विपद गुणाङ्क
+	Binomial expansion of (x+a)ⁿ	(x+a)ⁿ को द्विपद विस्तार
+	Blank	खाली
+	Blank (Three Columns)	खाली (तीन स्तम्भ)
+	Blank document	खाली कागजात
+	Blank Page	खाली पृष्ठ
+	Block\nAuthors	लेखकहरू\nरोक्नुहोस्
+	Blue:	निलो:
+	Body Text	मुख्य पाठ
+	Body text in a short paragraph to show spacing.	अन्तर देखाउन छोटो अनुच्छेदमा मुख्य पाठ।
+	Bold	बोल्ड
+	Book	पुस्तक
+	Book Title	पुस्तक शीर्षक
+	Book title	पुस्तक शीर्षक
+	Bookmark	बुकमार्क
+	Bookmark name:	बुकमार्क नाम:
+	Border lines	किनारा रेखाहरू
+	Border Painter	किनारा पेन्टर
+	Border\nPainter	किनारा\nपेन्टर
+	Borders	किनाराहरू
+	Borders and Shading	किनारा र छायाँ
+	Borders and Shading…	किनारा र छायाँ…
+	Border…	किनारा…
+	Both Sides	दुवै पक्ष
+	Both sides	दुवै पक्ष
+	Bottom	तल
+	Bottom Border	तल्लो किनारा
+	Bottom Margin	तल्लो मार्जिन
+	Bottom of Page	पृष्ठको तल
+	Bottom of the Window	सञ्झ्यालको तल
+	Bottom:	तल:
+	Box	बाकस
+	Boxed Formula	बाकसभित्र सूत्र
+	Boxed Formula (example)	बाकसभित्र सूत्र (उदाहरण)
+	Boxed Formulas	बाकसभित्र सूत्रहरू
+	Braces	मझौला कोष्ठक
+	Braces with Separator	विभाजकसहित मझौला कोष्ठक
+	Bracket	कोष्ठक
+	Brackets	कोष्ठकहरू
+	Brackets with Separators	विभाजकसहित कोष्ठक
+	Break Link	लिङ्क तोड्नुहोस्
+	Breaks	विच्छेदहरू
+	Breve	ब्रेभ
+	Brightness, contrast and transparency change the picture from how it looks now.	चमक, कन्ट्रास्ट र पारदर्शिताले चित्रलाई अहिलेको रूपबाट बदल्छ।
+	Brightness:	चमक:
+	Bring Forward	अगाडि ल्याउनुहोस्
+	Browse in Doc4Me…	Doc4Me मा ब्राउज गर्नुहोस्…
+	Browse…	ब्राउज गर्नुहोस्…
+	Build table of figures from:	चित्र तालिका यसबाट बनाउनुहोस्:
+	Building Block Gallery Content Control	बिल्डिङ ब्लक ग्यालेरी सामग्री नियन्त्रण
+	Built from the style or table entry fields chosen in Options.	विकल्पमा छानिएको शैली वा तालिका प्रविष्टि फिल्डबाट बनाइएको।
+	Built-In	भित्रभित्रै बनेको
+	Built-in Heading styles	भित्री शीर्षक शैलीहरू
+	Built-in style	भित्री शैली
+	Built-in styles can't be deleted.	भित्री शैलीहरू मेटाउन सकिँदैन।
+	Bullet	बुलेट
+	Bullet Library	बुलेट पुस्तकालय
+	Bullets	बुलेटहरू
+	By author	लेखक अनुसार
+	By:	द्वारा:
+	Calendar	पात्रो
+	Can't be deleted	मेटाउन सकिँदैन
+	Cancel	रद्द गर्नुहोस्
+	Canvas Member	क्यानभास सदस्य
+	Capitalization	ठूलो अक्षर
+	Capitalize Each Word	हरेक शब्दको पहिलो अक्षर ठूलो
+	Capitalize first letter of sentences	वाक्यको पहिलो अक्षर ठूलो बनाउनुहोस्
+	Capitalize first letter of table cells	तालिका कक्षको पहिलो अक्षर ठूलो बनाउनुहोस्
+	Capitalize names of days	दिनका नाम ठूलो अक्षरमा
+	Capitalize the first word of a sentence	वाक्यको पहिलो शब्द ठूलो अक्षरमा
+	Caption	क्याप्सन
+	Caption label:	क्याप्सन लेबल:
+	Caption Numbering	क्याप्सन क्रमाङ्कन
+	Caption text	क्याप्सन पाठ
+	Caption:	क्याप्सन:
+	Captions	क्याप्सनहरू
+	Caret Character	क्यारेट वर्ण
+	Case changes	अक्षर परिवर्तन
+	Cases	अवस्थाहरू
+	Cases (Three Conditions)	अवस्थाहरू (तीन सर्त)
+	Cases (Two Conditions)	अवस्थाहरू (दुई सर्त)
+	Cases and Stacks	अवस्था र स्ट्याक
+	Catalog	सूचीपत्र
+	Categories	श्रेणीहरू
+	Categories:	श्रेणीहरू:
+	Category	श्रेणी
+	Category {n}	श्रेणी {n}
+	Category:	श्रेणी:
+	Category…	श्रेणी…
+	Ceiling	माथिल्लो पूर्णाङ्क
+	Cell	कक्ष
+	Cell Margins	कक्ष मार्जिन
+	Cell margins	कक्ष मार्जिन
+	Cell Options	कक्ष विकल्पहरू
+	Cell Size	कक्ष आकार
+	Cell\nMargins	कक्ष\nमार्जिन
+	Center	बीच
+	Centered	बीचमा
+	Centered as Group	समूहको रूपमा बीचमा
+	Centimeters	सेन्टिमिटर
+	Change	परिवर्तन गर्नुहोस्
+	Change Case	अक्षर परिवर्तन गर्नुहोस्
+	Change Chart Type	चार्ट प्रकार परिवर्तन गर्नुहोस्
+	Change Colors	रङ परिवर्तन गर्नुहोस्
+	Change in y over change in x	x को परिवर्तनमा y को परिवर्तन
+	Change Layout	लेआउट परिवर्तन गर्नुहोस्
+	Change List Level	सूची तह परिवर्तन गर्नुहोस्
+	Change Password…	पासवर्ड परिवर्तन गर्नुहोस्…
+	Change Picture	चित्र परिवर्तन गर्नुहोस्
+	Change Picture…	चित्र परिवर्तन गर्नुहोस्…
+	Change Shape	आकृति परिवर्तन गर्नुहोस्
+	Change Structure	संरचना परिवर्तन गर्नुहोस्
+	Change to Display	डिस्प्लेमा परिवर्तन गर्नुहोस्
+	Change to Inline	इनलाइनमा परिवर्तन गर्नुहोस्
+	Change to Level 1	तह 1 मा परिवर्तन गर्नुहोस्
+	Change to Level 2	तह 2 मा परिवर्तन गर्नुहोस्
+	Change to Level 3	तह 3 मा परिवर्तन गर्नुहोस्
+	Change to Level 4	तह 4 मा परिवर्तन गर्नुहोस्
+	Change to Level 5	तह 5 मा परिवर्तन गर्नुहोस्
+	Change to Level 6	तह 6 मा परिवर्तन गर्नुहोस्
+	Change to Level 7	तह 7 मा परिवर्तन गर्नुहोस्
+	Change to Level 8	तह 8 मा परिवर्तन गर्नुहोस्
+	Change to Level 9	तह 9 मा परिवर्तन गर्नुहोस्
+	Change\nChart Type	चार्ट प्रकार\nपरिवर्तन
+	Change\nColors	रङ\nपरिवर्तन
+	Changed	परिवर्तन भयो
+	Changed lines:	परिवर्तित पङ्क्तिहरू:
+	Changes	परिवर्तनहरू
+	Changes with highlighting	हाइलाइटसहित परिवर्तन
+	Changes without highlighting	हाइलाइटबिना परिवर्तन
+	Chapter in a book	पुस्तकको अध्याय
+	Chapters begin at:	अध्याय यहाँबाट सुरु हुन्छन्:
+	Character	वर्ण
+	Character Border	वर्ण किनारा
+	Character code:	वर्ण कोड:
+	Character in Range	दायराभित्रको वर्ण
+	Character level	वर्ण तह
+	Character Position	वर्ण स्थिति
+	Character Scale	वर्ण मापन
+	Character Shading	वर्ण छायाँ
+	Character Spacing	वर्ण अन्तर
+	Character spacing	वर्ण अन्तर
+	Character style	वर्ण शैली
+	Characters	वर्णहरू
+	Characters (no spaces)	वर्ण (खाली ठाउँबिना)
+	Characters (with spaces)	वर्ण (खाली ठाउँसहित)
+	Characters per line:	प्रति पङ्क्ति वर्ण:
+	Chart	चार्ट
+	Chart Design	चार्ट डिजाइन
+	Chart Layouts	चार्ट लेआउटहरू
+	Chart Title	चार्ट शीर्षक
+	Check	जाँच गर्नुहोस्
+	Check Accessibility	पहुँचयोग्यता जाँच्नुहोस्
+	Check Box Content Control	चेक बाकस सामग्री नियन्त्रण
+	Check Compatibility	अनुकूलता जाँच्नुहोस्
+	Check Errors…	त्रुटि जाँच्नुहोस्…
+	Check for Errors	त्रुटिहरू जाँच्नुहोस्
+	Check Spelling as You Type	टाइप गर्दा हिज्जे जाँच्नुहोस्
+	Check spelling as you type	टाइप गर्दा हिज्जे जाँच्नुहोस्
+	Check\nAccessibility	पहुँचयोग्यता\nजाँच्नुहोस्
+	Checked styles are allowed:	चिन्ह लगाइएका शैलीहरू अनुमत छन्:
+	Checked symbol	चिन्ह लगाइएको प्रतीक
+	Chevron Down	शेभरन तल
+	Chevron Up	शेभरन माथि
+	Chicago	Chicago
+	Chinese (Simplified)	चिनियाँ (सरलीकृत)
+	Chinese (Traditional)	चिनियाँ (परम्परागत)
+	Choose a command	आदेश छान्नुहोस्
+	Choose a shortcut	सर्टकट छान्नुहोस्
+	Choose List Item	सूची वस्तु छान्नुहोस्
+	Choose the sheet that holds the recipients.	प्रापकहरू भएको पाना छान्नुहोस्।
+	Circle	वृत्त
+	Circle area from its radius	अर्धव्यासबाट वृत्तको क्षेत्रफल
+	Circled Dot	वृत्तभित्र बिन्दु
+	Circled Plus	वृत्तभित्र जोड
+	Circled Times	वृत्तभित्र गुणन
+	Citation marked.	उद्धरण चिन्ह लगाइयो।
+	Citation Style	उद्धरण शैली
+	Citations	उद्धरणहरू
+	Citations & Bibliography	उद्धरण र सन्दर्भसूची
+	City	सहर
+	Clear	खाली गर्नुहोस्
+	Clear All	सबै खाली गर्नुहोस्
+	Clear All Formatting	सबै ढाँचा हटाउनुहोस्
+	Clear Character Formatting	वर्ण ढाँचा हटाउनुहोस्
+	Clear Character Style	वर्ण शैली हटाउनुहोस्
+	Clear Formatting Level	ढाँचा तह हटाउनुहोस्
+	Clear Paragraph Formatting	अनुच्छेद ढाँचा हटाउनुहोस्
+	Click a border between two cells to merge them. Esc stops.	दुई कक्षबीचको किनारामा क्लिक गरी मर्ज गर्नुहोस्। Esc ले रोक्छ।
+	Click an item to paste it.	टाँस्न वस्तुमा क्लिक गर्नुहोस्।
+	Click level to modify:	परिमार्जन गर्न तहमा क्लिक गर्नुहोस्:
+	Click the empty text box the text should continue in (Esc cancels)	पाठ जारी रहने खाली पाठ बाकसमा क्लिक गर्नुहोस् (Esc ले रद्द गर्छ)
+	Click to switch back to inserting	घुसाउनमा फर्कन क्लिक गर्नुहोस्
+	Clipboard	क्लिपबोर्ड
+	Clipboard Contents	क्लिपबोर्ड सामग्री
+	Clipboard Items	क्लिपबोर्ड वस्तुहरू
+	Clipboard Pane	क्लिपबोर्ड प्यान
+	Close	बन्द गर्नुहोस्
+	Close Equation	समीकरण बन्द गर्नुहोस्
+	Close Header and Footer	हेडर र फुटर बन्द गर्नुहोस्
+	Close Outline View	रूपरेखा दृश्य बन्द गर्नुहोस्
+	Close Outline\nView	रूपरेखा दृश्य\nबन्द गर्नुहोस्
+	Close Reviewing Pane	समीक्षा प्यान बन्द गर्नुहोस्
+	Clustered Bar	समूहित बार
+	Clustered Column	समूहित स्तम्भ
+	Col #:	स्तम्भ #:
+	Collapse	खुम्च्याउनुहोस्
+	Collapse Selection	चयन खुम्च्याउनुहोस्
+	Collapse the Ribbon	रिबन खुम्च्याउनुहोस्
+	Collate copies	प्रतिलिपि क्रमबद्ध
+	Collect entries from:	प्रविष्टिहरू यसबाट सङ्कलन गर्नुहोस्:
+	Colon Equal	कोलन बराबर
+	Color	रङ
+	Color model:	रङ मोडेल:
+	Color only	रङ मात्र
+	Color:	रङ:
+	Color: {color}	रङ: {color}
+	Colorful	रङ्गीन
+	Colors	रङहरू
+	Colors:	रङहरू:
+	Column	स्तम्भ
+	Column Break	स्तम्भ विच्छेद
+	Column Selection	स्तम्भ चयन
+	Column selection: the arrow keys extend the block, Esc ends it	स्तम्भ चयन: तीर कुञ्जीले ब्लक बढाउँछ, Esc ले अन्त्य गर्छ
+	Column width	स्तम्भ चौडाइ
+	Column:	स्तम्भ:
+	Columns	स्तम्भहरू
+	Columns:	स्तम्भहरू:
+	Combine	संयोजन गर्नुहोस्
+	Combine Documents	कागजात संयोजन गर्नुहोस्
+	Combo Box Content Control	कम्बो बाकस सामग्री नियन्त्रण
+	Commands	आदेशहरू
+	Commands:	आदेशहरू:
+	Comment	टिप्पणी
+	Comments	टिप्पणीहरू
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	PDF, प्रिन्ट र छविमा हरेक पृष्ठछेउ टिप्पणी र ट्र्याक गरिएका परिवर्तन; वेब पृष्ठ, Markdown र पाठको अन्त्यमा टिप्पणी सूची।
+	Comments on version	संस्करणमा टिप्पणी
+	Comments Pane	टिप्पणी प्यान
+	Commits	कमिटहरू
+	Common Accent Objects	सामान्य एक्सेन्ट वस्तुहरू
+	Common Brackets	सामान्य कोष्ठक
+	Common Fractions	सामान्य भिन्न
+	Common Functions	सामान्य फलन
+	Common Large Operators	सामान्य ठूला अपरेटर
+	Common Operator Structures	सामान्य अपरेटर संरचना
+	Common Operators	सामान्य अपरेटर
+	Common Radicals	सामान्य मूल
+	Common Subscripts and Superscripts	सामान्य सबस्क्रिप्ट र सुपरस्क्रिप्ट
+	Communication	सञ्चार
+	Compact	सघन
+	Company	कम्पनी
+	Compare	तुलना गर्नुहोस्
+	Compare Documents	कागजात तुलना गर्नुहोस्
+	Compare to	यससँग तुलना गर्नुहोस्
+	Compared: {changes} changes	तुलना गरियो: {changes} परिवर्तन
+	Comparing with another file needs the desktop app.	अर्को फाइलसँग तुलना गर्न डेस्कटप एप चाहिन्छ।
+	Comparison	तुलना
+	Comparison settings	तुलना सेटिङ
+	Compatibility mode: {version}	अनुकूलता मोड: {version}
+	Compatibility Options	अनुकूलता विकल्पहरू
+	Compatibility Options…	अनुकूलता विकल्पहरू…
+	Compress Pictures	चित्र सङ्कुचन गर्नुहोस्
+	Compress punctuation at the start of a line	पङ्क्तिको सुरुमा विराम चिह्न सङ्कुचन गर्नुहोस्
+	Condensed	सङ्कुचित
+	Conference	सम्मेलन
+	Conference paper	सम्मेलन पत्र
+	CONFIDENTIAL	गोप्य
+	Confirm password:	पासवर्ड पुष्टि गर्नुहोस्:
+	Connect Shapes	आकृतिहरू जोड्नुहोस्
+	Constitutional Provisions	संवैधानिक प्रावधान
+	Container Title	कन्टेनर शीर्षक
+	Contains	समावेश छ
+	Content Control at Selection	चयनमा सामग्री नियन्त्रण
+	Content Control Properties	सामग्री नियन्त्रण गुणहरू
+	Contents can't be edited	सामग्री सम्पादन गर्न सकिँदैन
+	Context	सन्दर्भ
+	Contextual	सान्दर्भिक
+	Continuous	निरन्तर
+	Continuous numbering	निरन्तर क्रमाङ्कन
+	Contour Integral	कन्टुर इन्टिग्रल
+	Contour Integral with Limits	सीमासहित कन्टुर इन्टिग्रल
+	Contour Integral with Stacked Limits	थाक लगाइएको सीमासहित कन्टुर इन्टिग्रल
+	Contour Integrals	कन्टुर इन्टिग्रलहरू
+	Contrast:	कन्ट्रास्ट:
+	Contributors	योगदानकर्ताहरू
+	Controls	नियन्त्रणहरू
+	Conversions	रूपान्तरणहरू
+	Convert	रूपान्तरण गर्नुहोस्
+	Convert between built-up and linear form	निर्मित र रेखीय रूपबीच रूपान्तरण गर्नुहोस्
+	Convert Notes	नोटहरू रूपान्तरण गर्नुहोस्
+	Convert Permanently	स्थायी रूपमा रूपान्तरण गर्नुहोस्
+	Convert Text to Table	पाठलाई तालिकामा रूपान्तरण गर्नुहोस्
+	Convert Text to Table…	पाठलाई तालिकामा रूपान्तरण गर्नुहोस्…
+	Convert to Arabic Digits	अरबी अङ्कमा रूपान्तरण गर्नुहोस्
+	Convert to Shapes	आकृतिमा रूपान्तरण गर्नुहोस्
+	Convert to Text	पाठमा रूपान्तरण गर्नुहोस्
+	Convert to Thai Digits	थाई अङ्कमा रूपान्तरण गर्नुहोस्
+	Copies	प्रतिलिपिहरू
+	Coproduct	सहगुणनफल
+	Coproduct with Limits	सीमासहित सहगुणनफल
+	Coproduct with Lower Limit	तल्लो सीमासहित सहगुणनफल
+	Coproduct with Subscript-Superscript Limits	सबस्क्रिप्ट-सुपरस्क्रिप्ट सीमासहित सहगुणनफल
+	Copy	प्रतिलिपि गर्नुहोस्
+	Copy Formatting	ढाँचा प्रतिलिपि गर्नुहोस्
+	Copy of the text a bookmark marks	बुकमार्कले चिन्ह लगाएको पाठको प्रतिलिपि
+	Copy Styles	शैलीहरू प्रतिलिपि गर्नुहोस्
+	Copy Text	पाठ प्रतिलिपि गर्नुहोस्
+	Copy to where?	कहाँ प्रतिलिपि गर्ने?
+	Copyright	प्रतिलिपि अधिकार
+	Copyright Sign	प्रतिलिपि अधिकार चिह्न
+	Corrections	सुधारहरू
+	Cosecant Function	कोसेकेन्ट फलन
+	Cosine 2x	कोसाइन 2x
+	Cosine Function	कोसाइन फलन
+	Cotangent Function	कोट्यान्जेन्ट फलन
+	Couldn't add {name}: {reason}	{name} थप्न सकिएन: {reason}
+	Couldn't download the picture: {reason}	चित्र डाउनलोड गर्न सकिएन: {reason}
+	Couldn't download {name}: {error}	{name} डाउनलोड गर्न सकिएन: {error}
+	Couldn't get the add-in list: {reason}	एड-इन सूची प्राप्त गर्न सकिएन: {reason}
+	Couldn't make Doc4Me the default: {error}	Doc4Me लाई पूर्वनिर्धारित बनाउन सकिएन: {error}
+	Couldn't open {path}: {error}	{path} खोल्न सकिएन: {error}
+	Couldn't search: {reason}	खोज्न सकिएन: {reason}
+	Couldn't translate: {reason}	अनुवाद गर्न सकिएन: {reason}
+	Count by:	यस अनुसार गन्नुहोस्:
+	Count words in text boxes and notes	पाठ बाकस र नोटमा शब्द गन्नुहोस्
+	Country	देश
+	Courtesy Title	सम्मानसूचक उपाधि
+	Cover Page	आवरण पृष्ठ
+	Craft	शिल्प
+	Create	बनाउनुहोस्
+	Create a Style	शैली बनाउनुहोस्
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	तपाईंको कागजातको अन्तरक्रियात्मक रूपरेखा बनाउनुहोस्।\n\nतपाईं कहाँ हुनुहुन्छ थाहा पाउन वा सामग्री छिटो सार्न यो उत्तम तरिका हो।\n\nसुरु गर्न गृह ट्याबमा गएर कागजातका शीर्षकहरूमा शीर्षक शैली लागू गर्नुहोस्।
+	Create Data Source…	डेटा स्रोत बनाउनुहोस्…
+	Create Graphic	ग्राफिक बनाउनुहोस्
+	Create Header Source	हेडर स्रोत बनाउनुहोस्
+	Create Link	लिङ्क बनाउनुहोस्
+	Create New Style	नयाँ शैली बनाउनुहोस्
+	Create Source	स्रोत बनाउनुहोस्
+	Create…	बनाउनुहोस्…
+	Crop	क्रप गर्नुहोस्
+	Cross-reference	क्रस-सन्दर्भ
+	Cross-reference:	क्रस-सन्दर्भ:
+	Cube Root	घनमूल
+	Current	हालको
+	Current - Linear	हालको - रेखीय
+	Current - Professional	हालको - व्यावसायिक
+	Current keyboard settings	हालको किबोर्ड सेटिङ
+	Current page	हालको पृष्ठ
+	Current Position	हालको स्थिति
+	Current record	हालको रेकर्ड
+	Current style: {style}	हालको शैली: {style}
+	Curved Arrow Connector	घुमाउरो तीर जोडक
+	Curved Connector	घुमाउरो जोडक
+	Custom	अनुकूलित
+	Custom dictionary	अनुकूलित शब्दकोश
+	Custom Margins…	अनुकूलित मार्जिन…
+	Custom mark:	अनुकूलित चिह्न:
+	Custom range	अनुकूलित दायरा
+	Custom Table of Contents	अनुकूलित विषयसूची
+	Custom Table of Contents…	अनुकूलित विषयसूची…
+	Custom Watermark	अनुकूलित वाटरमार्क
+	Custom Watermark…	अनुकूलित वाटरमार्क…
+	Customize	अनुकूलन गर्नुहोस्
+	Customize Keyboard	किबोर्ड अनुकूलन गर्नुहोस्
+	Customize Quick Access Toolbar	द्रुत पहुँच उपकरणपट्टी अनुकूलन गर्नुहोस्
+	Customize Quick Access Toolbar…	द्रुत पहुँच उपकरणपट्टी अनुकूलन गर्नुहोस्…
+	Customize Ribbon	रिबन अनुकूलन गर्नुहोस्
+	Customize the Ribbon…	रिबन अनुकूलन गर्नुहोस्…
+	Customize…	अनुकूलन गर्नुहोस्…
+	Cut	काट्नुहोस्
+	Cut, copy, and paste	काट्ने, प्रतिलिपि र टाँस्ने
+	Cycle	चक्र
+	Czech	चेक
+	Danish	डेनिस
+	Dark	गाढा
+	Dark Mode	गाढा मोड
+	Dark page (white text on black)	गाढा पृष्ठ (कालोमा सेतो पाठ)
+	Dark with Shadow	छायासहित गाढा
+	Darkroom	डार्करुम
+	Dashed	ड्यास भएको
+	Data	डेटा
+	Data Labels	डेटा लेबलहरू
+	Data source:	डेटा स्रोत:
+	Date	मिति
+	Date & Time	मिति र समय
+	Date and Time	मिति र समय
+	Date format	मिति ढाँचा
+	Date formats:	मिति ढाँचाहरू:
+	Date Picker Content Control	मिति छनोटकर्ता सामग्री नियन्त्रण
+	Day	दिन
+	Decimal	दशमलव
+	Decorative objects only add visual interest: screen readers skip them.	सजावटी वस्तुले दृश्य आकर्षण मात्र थप्छन्: स्क्रिन रिडरले तिनलाई छोड्छन्।
+	Decrease Font Size	फन्ट आकार घटाउनुहोस्
+	Decrease Indent	इन्डेन्ट घटाउनुहोस्
+	Default	पूर्वनिर्धारित
+	Default Paragraph Font	पूर्वनिर्धारित अनुच्छेद फन्ट
+	Default tab stops:	पूर्वनिर्धारित ट्याब स्टप:
+	Define New Bullet	नयाँ बुलेट परिभाषित गर्नुहोस्
+	Define New Multilevel List	नयाँ बहुतह सूची परिभाषित गर्नुहोस्
+	Define New Multilevel List…	नयाँ बहुतह सूची परिभाषित गर्नुहोस्…
+	Define New Number Format	नयाँ नम्बर ढाँचा परिभाषित गर्नुहोस्
+	Deflate	खुम्च्याउनुहोस्
+	Delete	मेटाउनुहोस्
+	Delete Back in Equation	समीकरणमा पछाडि मेटाउनुहोस्
+	Delete Cells	कक्ष मेटाउनुहोस्
+	Delete Clipboard Item	क्लिपबोर्ड वस्तु मेटाउनुहोस्
+	Delete Columns	स्तम्भ मेटाउनुहोस्
+	Delete Comment	टिप्पणी मेटाउनुहोस्
+	Delete in Equation	समीकरणमा मेटाउनुहोस्
+	Delete Label	लेबल मेटाउनुहोस्
+	Delete Next Word	अर्को शब्द मेटाउनुहोस्
+	Delete Previous Word	अघिल्लो शब्द मेटाउनुहोस्
+	Delete Rows	पङ्क्ति मेटाउनुहोस्
+	Delete Selected Ink	चयन गरिएको मसी मेटाउनुहोस्
+	Delete Style	शैली मेटाउनुहोस्
+	Delete Table	तालिका मेटाउनुहोस्
+	Delete Table Style	तालिका शैली मेटाउनुहोस्
+	Deleted	मेटाइयो
+	Deletions:	मेटाइएका:
+	Delivery address:	डेलिभरी ठेगाना:
+	Delta Equal To	डेल्टा बराबर
+	Delta over arrow	तीरमाथि डेल्टा
+	Demote	तह घटाउनुहोस्
+	Demote to Body Text	मुख्य पाठसम्म घटाउनुहोस्
+	Derivative as a limit	सीमाको रूपमा अवकलज
+	Descending	अवरोही
+	Describe what this object shows, for people who can't see it.	हेर्न नसक्नेहरूका लागि यो वस्तुले के देखाउँछ वर्णन गर्नुहोस्।
+	Describe what this table shows, for people who can't see it.	हेर्न नसक्नेहरूका लागि यो तालिकाले के देखाउँछ वर्णन गर्नुहोस्।
+	Description:	विवरण:
+	Design	डिजाइन
+	Design Mode	डिजाइन मोड
+	Detach Template	टेम्प्लेट छुट्याउनुहोस्
+	Detect language automatically	भाषा स्वतः पत्ता लगाउनुहोस्
+	Developer	विकासकर्ता
+	development build	विकास बिल्ड
+	Diagonal	विकर्ण
+	Diagonal Dots	विकर्ण बिन्दु
+	Diamond	हीरा
+	Dictate	श्रुतलेखन
+	Dictation isn't available here.	श्रुतलेखन यहाँ उपलब्ध छैन।
+	Dictation stopped.	श्रुतलेखन रोकियो।
+	Dictation stopped: {reason}	श्रुतलेखन रोकियो: {reason}
+	Different First Page	फरक पहिलो पृष्ठ
+	Different Odd & Even Pages	फरक बिजोर र जोर पृष्ठ
+	Differential	अवकल
+	Differential theta	अवकल थेटा
+	Differential x	अवकल x
+	Differential y	अवकल y
+	Differentials	अवकलहरू
+	Direct formatting	प्रत्यक्ष ढाँचा
+	Direction:	दिशा:
+	Directory	निर्देशिका
+	Display	प्रदर्शन
+	Display for Review	समीक्षाका लागि देखाउनुहोस्
+	Display gridlines on screen	स्क्रिनमा ग्रिडलाइन देखाउनुहोस्
+	Display name	प्रदर्शन नाम
+	Display text	प्रदर्शन पाठ
+	Distance from surrounding text	वरिपरिको पाठबाट दूरी
+	Distribute Columns	स्तम्भ समान बाँड्नुहोस्
+	Distribute letters	अक्षर बाँड्नुहोस्
+	Distribute Rows	पङ्क्ति समान बाँड्नुहोस्
+	Distribute spacing	अन्तर बाँड्नुहोस्
+	Distributed	वितरित
+	Do Not Check Spelling or Grammar	हिज्जे वा व्याकरण नजाँच्नुहोस्
+	Do not check spelling or grammar	हिज्जे वा व्याकरण नजाँच्नुहोस्
+	DO NOT COPY	प्रतिलिपि नगर्नुहोस्
+	Do Not Show in TOC	विषयसूचीमा नदेखाउनुहोस्
+	Do you want to save changes to {name}?	के तपाईं {name} मा परिवर्तन सुरक्षित गर्न चाहनुहुन्छ?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me एड-इनहरू Doc4Me को एड-इन सूचीबाट म्याक्रोका निःशुल्क प्याक हुन्। तिनले कागजात मात्र सम्पादन गर्न सक्छन्।
+	Doc4Me is now the default app for Word documents.	Doc4Me अब Word कागजातका लागि पूर्वनिर्धारित एप हो।
+	Document	कागजात
+	Document End	कागजातको अन्त्य
+	Document Formatting	कागजात ढाँचा
+	Document Grid	कागजात ग्रिड
+	Document Information	कागजात जानकारी
+	Document Property	कागजात गुण
+	Document Start	कागजातको सुरु
+	Document template:	कागजात टेम्प्लेट:
+	Document Text	कागजात पाठ
+	Document Title	कागजात शीर्षक
+	Document1	कागजात1
+	Document\nPreferences	कागजात\nप्राथमिकता
+	Documents	कागजातहरू
+	Documents you open will show up here.	तपाईंले खोलेका कागजात यहाँ देखिनेछन्।
+	Does not contain	समावेश छैन
+	DOI	DOI
+	Don't add space between paragraphs of the same style	उही शैलीका अनुच्छेदबीच ठाउँ नथप्नुहोस्
+	Don't capitalize after:	यसपछि ठूलो अक्षर नबनाउनुहोस्:
+	Don't hyphenate	हाइफन नलगाउनुहोस्
+	Don't print blank lines when data fields are empty	डेटा फिल्ड खाली हुँदा खाली पङ्क्ति प्रिन्ट नगर्नुहोस्
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Zotero, Mendeley वा EndNote उद्धरण र सन्दर्भसूची नपढ्नुहोस्
+	Don't Save	सुरक्षित नगर्नुहोस्
+	Don't use HTML paragraph auto spacing	HTML अनुच्छेद स्वतः अन्तर प्रयोग नगर्नुहोस्
+	Dot	बिन्दु
+	Dot dash	बिन्दु ड्यास
+	Dot-dash	बिन्दु-ड्यास
+	Dots	बिन्दुहरू
+	Dotted	थोप्लेदार
+	Double	दोहोरो
+	Double Bar	दोहोरो पट्टी
+	Double Closing Quote	दोहोरो बन्द उद्धरण चिह्न
+	Double Dot	दोहोरो बिन्दु
+	Double Integral	दोहोरो इन्टिग्रल
+	Double Integral with Limits	सीमासहित दोहोरो इन्टिग्रल
+	Double Integral with Stacked Limits	थाक लगाइएको सीमासहित दोहोरो इन्टिग्रल
+	Double Left Arrow with Text Above	माथि पाठसहित दोहोरो बायाँ तीर
+	Double Left Arrow with Text Below	तल पाठसहित दोहोरो बायाँ तीर
+	Double Left Right Arrow with Text Above	माथि पाठसहित दोहोरो बायाँ-दायाँ तीर
+	Double Left Right Arrow with Text Below	तल पाठसहित दोहोरो बायाँ-दायाँ तीर
+	Double Opening Quote	दोहोरो खुला उद्धरण चिह्न
+	Double Right Arrow with Text Above	माथि पाठसहित दोहोरो दायाँ तीर
+	Double Right Arrow with Text Below	तल पाठसहित दोहोरो दायाँ तीर
+	Double Spacing	दोहोरो अन्तर
+	Double Square Brackets	दोहोरो ठूलो कोष्ठक
+	Double Strikethrough	दोहोरो काटरेखा
+	Double strikethrough	दोहोरो काटरेखा
+	Double summation	दोहोरो योग
+	Double Underline	दोहोरो रेखाङ्कन
+	Double Vertical Bars	दोहोरो ठाडो पट्टी
+	Doughnut	डोनट
+	Down	तल
+	Downloading the speech model ({mb} MB, once)…	वाक् मोडेल डाउनलोड हुँदै ({mb} MB, एक पटक)…
+	Downloading…	डाउनलोड हुँदै…
+	DRAFT	मस्यौदा
+	Draft	मस्यौदा
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	तालिका बनाउन आयत तान्नुहोस्, वा कक्ष विभाजन गर्न तिनमाथि रेखा तान्नुहोस्। Esc ले रोक्छ।
+	Draw	चित्र कोर्नुहोस्
+	Draw Ink	मसीले कोर्नुहोस्
+	Draw Table	तालिका कोर्नुहोस्
+	Draw\nTable	तालिका\nकोर्नुहोस्
+	Drawing Canvas	रेखाचित्र क्यानभास
+	Drawing Grid	रेखाचित्र ग्रिड
+	Drawing Tools	रेखाचित्र उपकरण
+	Drawing\nCanvas	रेखाचित्र\nक्यानभास
+	Drop Cap	ड्रप क्याप
+	Drop cap	ड्रप क्याप
+	Drop-Down List Content Control	ड्रप-डाउन सूची सामग्री नियन्त्रण
+	Drops all formatting and pastes plain text.	सबै ढाँचा हटाएर सादा पाठ टाँस्छ।
+	Dutch	डच
+	E-mail Messages	इमेल सन्देशहरू
+	Edit Category	श्रेणी सम्पादन गर्नुहोस्
+	Edit Comment	टिप्पणी सम्पादन गर्नुहोस्
+	Edit Data	डेटा सम्पादन गर्नुहोस्
+	Edit Document	कागजात सम्पादन गर्नुहोस्
+	Edit Equation	समीकरण सम्पादन गर्नुहोस्
+	Edit Field Code	फिल्ड कोड सम्पादन गर्नुहोस्
+	Edit Field…	फिल्ड सम्पादन गर्नुहोस्…
+	Edit Footer	फुटर सम्पादन गर्नुहोस्
+	Edit Header	हेडर सम्पादन गर्नुहोस्
+	Edit Individual Documents…	व्यक्तिगत कागजात सम्पादन गर्नुहोस्…
+	Edit Items	वस्तुहरू सम्पादन गर्नुहोस्
+	Edit Recipient List	प्रापक सूची सम्पादन गर्नुहोस्
+	Edit Source	स्रोत सम्पादन गर्नुहोस्
+	Edit\nData	डेटा\nसम्पादन
+	Edit\nRecipient List	प्रापक सूची\nसम्पादन
+	Edited	सम्पादित
+	Editing	सम्पादन
+	Editing header/footer	हेडर/फुटर सम्पादन
+	Editing in this document is restricted.	यो कागजातमा सम्पादन प्रतिबन्धित छ।
+	Editing — edit the document directly	सम्पादन — कागजात सिधै सम्पादन गर्नुहोस्
+	Edition	संस्करण
+	Editor	सम्पादक
+	Edit…	सम्पादन गर्नुहोस्…
+	Effects	प्रभावहरू
+	Elbow Arrow Connector	कुहिना तीर जोडक
+	Elbow Connector	कुहिना जोडक
+	Ellipsis	लोप चिह्न
+	Em Dash	Em ड्यास
+	Em Space	Em खाली ठाउँ
+	Email address (optional)	इमेल ठेगाना (ऐच्छिक)
+	Emboss	उठेको
+	Emphasis	जोड
+	Empty Matrices	खाली म्याट्रिक्सहरू
+	En Dash	En ड्यास
+	En Space	En खाली ठाउँ
+	Enclose Characters	वर्ण घेर्नुहोस्
+	Enclosure	घेरा
+	Encrypt with Password	पासवर्डले इन्क्रिप्ट गर्नुहोस्
+	Encrypt with Password…	पासवर्डले इन्क्रिप्ट गर्नुहोस्…
+	End of document	कागजातको अन्त्य
+	End of section	खण्डको अन्त्य
+	End of Word	शब्दको अन्त्य
+	Endnote Reference	अन्त्य टिप्पणी सन्दर्भ
+	Endnote Text	अन्त्य टिप्पणी पाठ
+	Endnotes	अन्त्य टिप्पणीहरू
+	Endnotes to footnotes	अन्त्य टिप्पणीलाई फुटनोटमा
+	English	अङ्ग्रेजी
+	English (United Kingdom)	अङ्ग्रेजी (संयुक्त अधिराज्य)
+	English (United States)	अङ्ग्रेजी (संयुक्त राज्य)
+	Engrave	कुँदिएको
+	Enlarge symbol	प्रतीक ठूलो बनाउनुहोस्
+	Enter formatting for number:	नम्बरका लागि ढाँचा प्रविष्ट गर्नुहोस्:
+	Enter in Equation	समीकरणमा Enter
+	Enter page number:	पृष्ठ नम्बर प्रविष्ट गर्नुहोस्:
+	Enter the web address or embed code of an online video:	अनलाइन भिडियोको वेब ठेगाना वा एम्बेड कोड प्रविष्ट गर्नुहोस्:
+	Entry marked.	प्रविष्टि चिन्ह लगाइयो।
+	Entry:	प्रविष्टि:
+	Envelope #10   4.12" × 9.50"	खाम #10   4.12" × 9.50"
+	Envelope Address	खाम ठेगाना
+	Envelope DL   4.33" × 8.66"	खाम DL   4.33" × 8.66"
+	Envelope Return	खाम फिर्ती ठेगाना
+	Envelope size:	खाम आकार:
+	Envelopes	खामहरू
+	Equal by Definition	परिभाषाअनुसार बराबर
+	Equal column width	समान स्तम्भ चौडाइ
+	Equal Equal	बराबर बराबर
+	Equal to	बराबर
+	Equals:	बराबर:
+	Equation	समीकरण
+	Equation Gallery	समीकरण ग्यालेरी
+	Equation Info	समीकरण जानकारी
+	Equation Number	समीकरण नम्बर
+	Equation Options	समीकरण विकल्पहरू
+	Erase Ink	मसी मेटाउनुहोस्
+	Eraser	इरेजर
+	Errors ({n})	त्रुटिहरू ({n})
+	Estonian	इस्टोनियाली
+	Euler's identity	अयलरको सर्वसमिका
+	Even Page	जोर पृष्ठ
+	Even pages only	जोर पृष्ठ मात्र
+	Every change is recorded as a tracked change.	हरेक परिवर्तन ट्र्याक गरिएको परिवर्तनको रूपमा रेकर्ड हुन्छ।
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	हरेक आदेश स्क्रिप्ट र AI एजेन्टका लागि उपलब्ध छ: MCP सर्भरका लागि `doc4me-cli mcp` चलाउनुहोस्, वा JSON नियन्त्रण च्यानलका लागि एप `--control <port>` सँग सुरु गर्नुहोस्।
+	Every field needs a name.	हरेक फिल्डको नाम चाहिन्छ।
+	Every font this document uses is installed.	यो कागजातले प्रयोग गर्ने सबै फन्ट स्थापित छन्।
+	Everyone	सबैजना
+	Exactly	ठ्याक्कै
+	Exactly {n}	ठ्याक्कै {n}
+	Example: {sample}	उदाहरण: {sample}
+	Exceptions (optional)	अपवाद (ऐच्छिक)
+	Exceptions…	अपवाद…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	बाहिर निस्कनुहोस्
+	Expand	विस्तार गर्नुहोस्
+	Expand or Collapse Heading	शीर्षक विस्तार वा खुम्च्याउनुहोस्
+	Expanded	विस्तारित
+	Exponential	घातीय
+	Exponential series	घातीय शृङ्खला
+	Export	निर्यात गर्नुहोस्
+	Export a copy to share (PDF, Word document)	साझा गर्न प्रतिलिपि निर्यात गर्नुहोस् (PDF, Word कागजात)
+	Export Page as JPEG	पृष्ठ JPEG को रूपमा निर्यात गर्नुहोस्
+	Export Page as PNG	पृष्ठ PNG को रूपमा निर्यात गर्नुहोस्
+	Export PDF	PDF निर्यात गर्नुहोस्
+	Exported {path}	निर्यात गरियो {path}
+	Expression	अभिव्यक्ति
+	Extend Selection	चयन बढाउनुहोस्
+	Extend Selection by Units	एकाइअनुसार चयन बढाउनुहोस्
+	Extra space	अतिरिक्त ठाउँ
+	Extra spaces between words.	शब्दबीच अतिरिक्त खाली ठाउँ।
+	Field	फिल्ड
+	Field Click	फिल्ड क्लिक
+	Field code:	फिल्ड कोड:
+	Field Codes	फिल्ड कोडहरू
+	Field codes:	फिल्ड कोडहरू:
+	Field name	फिल्ड नाम
+	Field name:	फिल्ड नाम:
+	Field names must be different.	फिल्ड नामहरू फरक हुनुपर्छ।
+	Field names:	फिल्ड नामहरू:
+	Field properties	फिल्ड गुणहरू
+	Field:	फिल्ड:
+	Fields	फिल्डहरू
+	Fields to insert:	घुसाउने फिल्डहरू:
+	Fields:	फिल्डहरू:
+	Field…	फिल्ड…
+	Figure	चित्र
+	File	फाइल
+	File name:	फाइल नाम:
+	Fill	भराइ
+	Fill & Line	भराइ र रेखा
+	Fill color:	भराइ रङ:
+	Fill:	भराइ:
+	Filling in forms	फारम भर्ने
+	Film	फिल्म
+	Filter and Sort	फिल्टर र क्रमबद्ध
+	Filter and Sort…	फिल्टर र क्रमबद्ध…
+	Filter Records	रेकर्ड फिल्टर गर्नुहोस्
+	Find	खोज्नुहोस्
+	Find and Replace	खोज्नुहोस् र बदल्नुहोस्
+	Find Next	अर्को खोज्नुहोस्
+	Find Next Editable Region	अर्को सम्पादनयोग्य क्षेत्र खोज्नुहोस्
+	Find Previous	अघिल्लो खोज्नुहोस्
+	Find Recipient	प्रापक खोज्नुहोस्
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	खोजले अर्को परिवर्तित अनुच्छेद छान्छ; अस्वीकारले चयन गरिएकोलाई पहिलेजस्तै बनाउँछ।
+	Find What Expression	खोज्ने अभिव्यक्ति
+	Find What Text	खोज्ने पाठ
+	Find what:	के खोज्ने:
+	Find →	खोज्नुहोस् →
+	Find:	खोज्नुहोस्:
+	Finish	समाप्त गर्नुहोस्
+	Finish & Merge	समाप्त र मर्ज गर्नुहोस्
+	Finish &\nMerge	समाप्त र\nमर्ज गर्नुहोस्
+	Finished	समाप्त
+	Finnish	फिनिस
+	First	पहिलो
+	First Cell in Column	स्तम्भको पहिलो कक्ष
+	First Cell in Row	पङ्क्तिको पहिलो कक्ष
+	First Column	पहिलो स्तम्भ
+	First commit	पहिलो कमिट
+	First line	पहिलो पङ्क्ति
+	First line:	पहिलो पङ्क्ति:
+	First Name	पहिलो नाम
+	First row of data contains column headers	डेटाको पहिलो पङ्क्तिमा स्तम्भ शीर्षक छन्
+	Fit	फिट गर्नुहोस्
+	Fit text	पाठ फिट गर्नुहोस्
+	Fix Position on Page	पृष्ठमा स्थिति स्थिर गर्नुहोस्
+	Fixed Column Width	स्थिर स्तम्भ चौडाइ
+	Flip Horizontal	तेर्सो पल्टाउनुहोस्
+	Flip Vertical	ठाडो पल्टाउनुहोस्
+	Floor	तल्लो पूर्णाङ्क
+	Focus	फोकस
+	Follow number with:	नम्बरपछि:
+	Font	फन्ट
+	Font Color	फन्ट रङ
+	Font color	फन्ट रङ
+	Font color:	फन्ट रङ:
+	Font Dialog	फन्ट संवाद
+	Font not installed	फन्ट स्थापित छैन
+	Font Size	फन्ट आकार
+	Font Substitution	फन्ट प्रतिस्थापन
+	Font Substitution…	फन्ट प्रतिस्थापन…
+	Font:	फन्ट:
+	Font: {font}	फन्ट: {font}
+	Fonts	फन्टहरू
+	Font…	फन्ट…
+	Footer	फुटर
+	Footnote and Endnote	फुटनोट र अन्त्य टिप्पणी
+	Footnote Reference	फुटनोट सन्दर्भ
+	Footnote Text	फुटनोट पाठ
+	Footnotes	फुटनोटहरू
+	Footnotes and endnotes	फुटनोट र अन्त्य टिप्पणी
+	Footnotes to endnotes	फुटनोटलाई अन्त्य टिप्पणीमा
+	Form Letters	फारम पत्रहरू
+	Format	ढाँचा
+	Format Page Numbers	पृष्ठ नम्बर ढाँचाबद्ध गर्नुहोस्
+	Format Page Numbers…	पृष्ठ नम्बर ढाँचाबद्ध गर्नुहोस्…
+	Format Painter	ढाँचा पेन्टर
+	Format Picture	चित्र ढाँचाबद्ध गर्नुहोस्
+	Format Shape	आकृति ढाँचाबद्ध गर्नुहोस्
+	Format:	ढाँचा:
+	Formatted	ढाँचाबद्ध
+	Formatted Text	ढाँचाबद्ध पाठ
+	Formatting	ढाँचा
+	Formatting at Selection	चयनमा ढाँचा
+	Formatting completed. You can now:	ढाँचा पूरा भयो। अब तपाईं यो गर्न सक्नुहुन्छ:
+	Formatting exceptions	ढाँचा अपवादहरू
+	Formatting marks	ढाँचा चिह्नहरू
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	ढाँचा, अक्षर परिवर्तन, खाली ठाउँ र तालिकाको तुलना हुन्छ; अन्य सेटिङ पछिका लागि राखिन्छन्।
+	Formula	सूत्र
+	Forward	अगाडि
+	Fraction	भिन्न
+	Fractions (1/2) as fraction characters (½)	भिन्न (1/2) लाई भिन्न वर्ण (½) को रूपमा
+	French	फ्रान्सेली
+	French (France)	फ्रान्सेली (फ्रान्स)
+	From	प्रेषक
+	From text:	पाठबाट:
+	from Unicode (hex)	Unicode बाट (hex)
+	From:	प्रेषक:
+	Full page of the same label	एउटै लेबलको पूरा पृष्ठ
+	Function	फलन
+	Functions	फलनहरू
+	Gallery	ग्यालेरी
+	GB/T 7714	GB/T 7714
+	General	सामान्य
+	Geometry	ज्यामिति
+	German	जर्मन
+	German (Germany)	जर्मन (जर्मनी)
+	Get Add-ins	एड-इन प्राप्त गर्नुहोस्
+	Get Data	डेटा प्राप्त गर्नुहोस्
+	Get Data…	डेटा प्राप्त गर्नुहोस्…
+	Getting ready…	तयारी हुँदैछ…
+	Glow	चमक
+	Glow Colors	चमक रङहरू
+	Go Back	फर्कनुहोस्
+	Go To	जानुहोस्
+	Go to	जानुहोस्
+	Go To…	जानुहोस्…
+	Good afternoon	शुभ दिउँसो
+	Good evening	शुभ साँझ
+	Good morning	शुभ प्रभात
+	GOST (name sort)	GOST (नाम क्रम)
+	GOST (title sort)	GOST (शीर्षक क्रम)
+	Grab bag	मिश्रित
+	Grammar	व्याकरण
+	Grammar Settings	व्याकरण सेटिङ
+	Graphic	ग्राफिक
+	Grave	ग्रेभ
+	Greater than	भन्दा ठूलो
+	Greater than or equal	भन्दा ठूलो वा बराबर
+	Greek	ग्रीक
+	Greek Letters	ग्रीक अक्षरहरू
+	Green:	हरियो:
+	Greeting Line	अभिवादन पङ्क्ति
+	Greeting\nLine	अभिवादन\nपङ्क्ति
+	Grid Settings	ग्रिड सेटिङ
+	Grid Table 1 Light	ग्रिड तालिका 1 हल्का
+	Grid Table 4 – Blue	ग्रिड तालिका 4 – निलो
+	Grid Table 4 – Green	ग्रिड तालिका 4 – हरियो
+	Grid Table 4 – Orange	ग्रिड तालिका 4 – सुन्तला
+	Grid Table 4 – Purple	ग्रिड तालिका 4 – बैजनी
+	Gridlines	ग्रिडलाइनहरू
+	Group	समूह बनाउनुहोस्
+	Grouping Character Above	माथि समूहन वर्ण
+	Grouping Character Below	तल समूहन वर्ण
+	Grow Font 1 Point	फन्ट 1 पोइन्ट बढाउनुहोस्
+	H:	उ:
+	Hanging Indent	झुन्डिने इन्डेन्ट
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	ह्याट
+	Header	हेडर
+	Header & Footer	हेडर र फुटर
+	Header Options	हेडर विकल्पहरू
+	Header Options:	हेडर विकल्पहरू:
+	Header Row	हेडर पङ्क्ति
+	Header source: {file} (the next data source opened here takes its field names)	हेडर स्रोत: {file} (यहाँ खोलिने अर्को डेटा स्रोतले यसका फिल्ड नाम लिन्छ)
+	Header/Footer Position	हेडर/फुटर स्थिति
+	Headers and footers	हेडर र फुटरहरू
+	Heading 1	शीर्षक 1
+	Heading 2	शीर्षक 2
+	Heading 3	शीर्षक 3
+	Heading styles (levels 1–{n})	शीर्षक शैलीहरू (तह 1–{n})
+	Heading {n}	शीर्षक {n}
+	Headings	शीर्षकहरू
+	Heart	मुटु
+	Hebrew	हिब्रू
+	Height:	उचाइ:
+	Help	सहायता
+	Hex:	Hex:
+	Hidden	लुकेको
+	Hidden text	लुकेको पाठ
+	Hide Codes	कोड लुकाउनुहोस्
+	Hide from style lists	शैली सूचीबाट लुकाउनुहोस्
+	Hide Ink	मसी लुकाउनुहोस्
+	Hide White Space	खाली ठाउँ लुकाउनुहोस्
+	Hide\nInk	मसी\nलुकाउनुहोस्
+	Hierarchy	पदानुक्रम
+	Highlight	हाइलाइट
+	Highlight Changes	परिवर्तन हाइलाइट गर्नुहोस्
+	Highlight changes in printed document	प्रिन्ट गरिएको कागजातमा परिवर्तन हाइलाइट गर्नुहोस्
+	Highlight changes on screen	स्क्रिनमा परिवर्तन हाइलाइट गर्नुहोस्
+	Highlight Merge Fields	मर्ज फिल्ड हाइलाइट गर्नुहोस्
+	Highlight\nMerge Fields	मर्ज फिल्ड\nहाइलाइट
+	Highlighter	हाइलाइटर
+	Hindi	हिन्दी
+	Historical and Discretional	ऐतिहासिक र ऐच्छिक
+	Hollow	खोक्रो
+	Home	गृह
+	Home folder	गृह फोल्डर
+	Horizontal	तेर्सो
+	Horizontal Line	तेर्सो रेखा
+	Horizontal spacing:	तेर्सो अन्तर:
+	How many pages the whole document has	सम्पूर्ण कागजातमा कति पृष्ठ छन्
+	How many pages this section has	यो खण्डमा कति पृष्ठ छन्
+	How many words the document holds	कागजातमा कति शब्द छन्
+	HTML Format	HTML ढाँचा
+	Hue:	रङ्गत:
+	Hungarian	हङ्गेरियाली
+	Hyperbolic Cosecant Function	हाइपरबोलिक कोसेकेन्ट फलन
+	Hyperbolic Cosine Function	हाइपरबोलिक कोसाइन फलन
+	Hyperbolic Cotangent Function	हाइपरबोलिक कोट्यान्जेन्ट फलन
+	Hyperbolic Functions	हाइपरबोलिक फलनहरू
+	Hyperbolic Secant Function	हाइपरबोलिक सेकेन्ट फलन
+	Hyperbolic Sine Function	हाइपरबोलिक साइन फलन
+	Hyperbolic Tangent Function	हाइपरबोलिक ट्यान्जेन्ट फलन
+	Hyperlink	हाइपरलिङ्क
+	Hyphenate at:	यहाँ हाइफन गर्नुहोस्:
+	Hyphenate words in CAPS	ठूला अक्षरका शब्द हाइफन गर्नुहोस्
+	Hyphenation	हाइफनेसन
+	Hyphenation Options…	हाइफनेसन विकल्पहरू…
+	Hyphenation zone:	हाइफनेसन क्षेत्र:
+	Hyphens (--) as dashes (—)	हाइफन (--) लाई ड्यास (—) को रूपमा
+	Hypotenuse	कर्ण
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	i, ii, iii, …
+	Icon Color	आइकन रङ
+	Icons	आइकनहरू
+	Identity Matrices	एकाइ म्याट्रिक्सहरू
+	IEEE	IEEE
+	If…Then…Else	यदि…भने…अन्यथा
+	If…Then…Else…	यदि…भने…अन्यथा…
+	Ignore All	सबै बेवास्ता गर्नुहोस्
+	Ignore punctuation characters	विराम चिह्न वर्ण बेवास्ता गर्नुहोस्
+	Ignore web and file addresses	वेब र फाइल ठेगाना बेवास्ता गर्नुहोस्
+	Ignore white-space characters	खाली ठाउँ वर्ण बेवास्ता गर्नुहोस्
+	Ignore words in capitals	ठूला अक्षरका शब्द बेवास्ता गर्नुहोस्
+	Ignore words with numbers	अङ्क भएका शब्द बेवास्ता गर्नुहोस्
+	Illustrations	चित्रणहरू
+	Immersive	तल्लीन
+	Immersive Reader	तल्लीन पाठक
+	Immersive\nReader	तल्लीन\nपाठक
+	In Default apps, choose Doc4Me for the document types you want it to open.	पूर्वनिर्धारित एपमा, Doc4Me ले खोल्न चाहेका कागजात प्रकारका लागि Doc4Me छान्नुहोस्।
+	In equations, typing a name after a backslash replaces it with its symbol.	समीकरणमा, ब्याकस्ल्यासपछि नाम टाइप गर्दा त्यो प्रतीकले बदलिन्छ।
+	In Front of Text	पाठको अगाडि
+	In Line with Text	पाठसँग पङ्क्तिमा
+	Inches	इन्च
+	Include label and number	लेबल र नम्बर समावेश गर्नुहोस्
+	Include level number from:	तह नम्बर यसबाट समावेश गर्नुहोस्:
+	Include page numbers	पृष्ठ नम्बर समावेश गर्नुहोस्
+	Increase Font Size	फन्ट आकार बढाउनुहोस्
+	Increase Indent	इन्डेन्ट बढाउनुहोस्
+	Indent	इन्डेन्ट
+	Indent from left:	बायाँबाट इन्डेन्ट:
+	Indentation	इन्डेन्टेसन
+	Indented	इन्डेन्ट गरिएको
+	Indents	इन्डेन्टहरू
+	Indents and Spacing	इन्डेन्ट र अन्तर
+	Index	अनुक्रमणिका
+	Index and Tables	अनुक्रमणिका र तालिकाहरू
+	Index Heading	अनुक्रमणिका शीर्षक
+	Index {n}	अनुक्रमणिका {n}
+	Indonesian	इन्डोनेसियाली
+	Inflate	फुलाउनुहोस्
+	Info	जानकारी
+	Initials:	नामका पहिलो अक्षर:
+	Ink	मसी
+	Ink Equation	मसी समीकरण
+	Ink Replay	मसी पुनः प्ले
+	Ink to Math	मसीबाट गणित
+	Ink to Shape	मसीबाट आकृति
+	Ink to\nMath	मसीबाट\nगणित
+	Ink to\nShape	मसीबाट\nआकृति
+	Ink\nReplay	मसी\nपुनः प्ले
+	Inline	इनलाइन
+	Input Format	इनपुट ढाँचा
+	Insert	घुसाउनुहोस्
+	Insert a 3D model from a file (.glb, .stl, .obj)	फाइलबाट 3D मोडेल घुसाउनुहोस् (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	नयाँ समीकरण घुसाउनुहोस् (Alt+=)
+	Insert Above	माथि घुसाउनुहोस्
+	Insert Below	तल घुसाउनुहोस्
+	Insert Caption	क्याप्सन घुसाउनुहोस्
+	Insert Cells	कक्ष घुसाउनुहोस्
+	Insert Chart	चार्ट घुसाउनुहोस्
+	Insert Citation	उद्धरण घुसाउनुहोस्
+	Insert Columns to the Left	बायाँ स्तम्भ घुसाउनुहोस्
+	Insert Columns to the Right	दायाँ स्तम्भ घुसाउनुहोस्
+	Insert Data	डेटा घुसाउनुहोस्
+	Insert Database	डेटाबेस घुसाउनुहोस्
+	Insert Database…	डेटाबेस घुसाउनुहोस्…
+	Insert Date Field	मिति फिल्ड घुसाउनुहोस्
+	Insert Endnote	अन्त्य टिप्पणी घुसाउनुहोस्
+	Insert entire column	पूरा स्तम्भ घुसाउनुहोस्
+	Insert entire row	पूरा पङ्क्ति घुसाउनुहोस्
+	Insert Footnote	फुटनोट घुसाउनुहोस्
+	Insert Hyperlink	हाइपरलिङ्क घुसाउनुहोस्
+	Insert Index	अनुक्रमणिका घुसाउनुहोस्
+	Insert Left	बायाँ घुसाउनुहोस्
+	Insert LISTNUM Field	LISTNUM फिल्ड घुसाउनुहोस्
+	Insert Merge Field	मर्ज फिल्ड घुसाउनुहोस्
+	Insert Merge\nField	मर्ज फिल्ड\nघुसाउनुहोस्
+	Insert New Equation	नयाँ समीकरण घुसाउनुहोस्
+	Insert one text or another, depending on a field's value.	फिल्डको मानअनुसार एउटा वा अर्को पाठ घुसाउनुहोस्।
+	Insert Page Field	पृष्ठ फिल्ड घुसाउनुहोस्
+	Insert Right	दायाँ घुसाउनुहोस्
+	Insert Rows	पङ्क्ति घुसाउनुहोस्
+	Insert Rows Above	माथि पङ्क्ति घुसाउनुहोस्
+	Insert Rows Below	तल पङ्क्ति घुसाउनुहोस्
+	Insert Shapes	आकृति घुसाउनुहोस्
+	Insert SmartArt	SmartArt घुसाउनुहोस्
+	Insert Structure	संरचना घुसाउनुहोस्
+	Insert Symbol	प्रतीक घुसाउनुहोस्
+	Insert Table	तालिका घुसाउनुहोस्
+	Insert Table of Authorities	अधिकारी तालिका घुसाउनुहोस्
+	Insert Table of Figures	चित्र तालिका घुसाउनुहोस्
+	Insert Table…	तालिका घुसाउनुहोस्…
+	Insert Time Field	समय फिल्ड घुसाउनुहोस्
+	Insert Video	भिडियो घुसाउनुहोस्
+	Insert\nAbove	माथि\nघुसाउनुहोस्
+	Insert\nCaption	क्याप्सन\nघुसाउनुहोस्
+	Insert\nCitation	उद्धरण\nघुसाउनुहोस्
+	Insert\nFootnote	फुटनोट\nघुसाउनुहोस्
+	Inserted	घुसाइयो
+	Insertions and Deletions	घुसाइ र मेटाइ
+	Insertions:	घुसाइ:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	घुसाइ: {ins}, मेटाइ: {del}, सराइ: {moves}, ढाँचा: {fmt}, टिप्पणी: {comments}
+	Inside	भित्र
+	Inside Borders	भित्री किनारा
+	Inside Margin	भित्री मार्जिन
+	Inside:	भित्र:
+	Inspect Document	कागजात निरीक्षण गर्नुहोस्
+	Inspect Styles at Selection	चयनमा शैली निरीक्षण गर्नुहोस्
+	Institution	संस्था
+	Integral	इन्टिग्रल
+	Integral of e^(−x²)	e^(−x²) को इन्टिग्रल
+	Integral with Limits	सीमासहित इन्टिग्रल
+	Integral with Stacked Limits	थाक लगाइएको सीमासहित इन्टिग्रल
+	Integrals	इन्टिग्रलहरू
+	Intense Emphasis	गहन जोड
+	Intense Quote	गहन उद्धरण
+	Intense Reference	गहन सन्दर्भ
+	Interface	इन्टरफेस
+	Interface language	इन्टरफेस भाषा
+	Interface language:	इन्टरफेस भाषा:
+	Interface size:	इन्टरफेस आकार:
+	Interface Theme	इन्टरफेस थिम
+	Interface theme:	इन्टरफेस थिम:
+	Interface\nTheme	इन्टरफेस\nथिम
+	Internet addresses as links	इन्टरनेट ठेगाना लिङ्कको रूपमा
+	Intersection	प्रतिच्छेदन
+	Intersection with Limits	सीमासहित प्रतिच्छेदन
+	Intersection with Lower Limit	तल्लो सीमासहित प्रतिच्छेदन
+	Intersection with Subscript-Superscript Limits	सबस्क्रिप्ट-सुपरस्क्रिप्ट सीमासहित प्रतिच्छेदन
+	Inverse Cosecant Function	व्युत्क्रम कोसेकेन्ट फलन
+	Inverse Cosine Function	व्युत्क्रम कोसाइन फलन
+	Inverse Cotangent Function	व्युत्क्रम कोट्यान्जेन्ट फलन
+	Inverse Functions	व्युत्क्रम फलनहरू
+	Inverse Hyperbolic Cosecant Function	व्युत्क्रम हाइपरबोलिक कोसेकेन्ट फलन
+	Inverse Hyperbolic Cosine Function	व्युत्क्रम हाइपरबोलिक कोसाइन फलन
+	Inverse Hyperbolic Cotangent Function	व्युत्क्रम हाइपरबोलिक कोट्यान्जेन्ट फलन
+	Inverse Hyperbolic Functions	व्युत्क्रम हाइपरबोलिक फलनहरू
+	Inverse Hyperbolic Secant Function	व्युत्क्रम हाइपरबोलिक सेकेन्ट फलन
+	Inverse Hyperbolic Sine Function	व्युत्क्रम हाइपरबोलिक साइन फलन
+	Inverse Hyperbolic Tangent Function	व्युत्क्रम हाइपरबोलिक ट्यान्जेन्ट फलन
+	Inverse Secant Function	व्युत्क्रम सेकेन्ट फलन
+	Inverse Sine Function	व्युत्क्रम साइन फलन
+	Inverse Tangent Function	व्युत्क्रम ट्यान्जेन्ट फलन
+	Ionosphere	आयनमण्डल
+	Is blank	खाली छ
+	Is not blank	खाली छैन
+	ISO 690 (author-date)	ISO 690 (लेखक-मिति)
+	ISO 690 (numerical)	ISO 690 (सङ्ख्यात्मक)
+	Issue	अङ्क
+	it isn't a picture Doc4Me can read	यो Doc4Me ले पढ्न सक्ने चित्र होइन
+	Italian	इटालियन
+	Italic	इटालिक
+	Japanese	जापानी
+	Journal	जर्नल
+	Justification	मिलान
+	Justification of a display equation	प्रदर्शन समीकरणको मिलान
+	Justified	दुवैतिर मिलाइएको
+	Justify	दुवैतिर मिलाउनुहोस्
+	Keep Lines Together	पङ्क्तिहरू सँगै राख्नुहोस्
+	Keep lines together	पङ्क्तिहरू सँगै राख्नुहोस्
+	Keep Source Formatting	स्रोत ढाँचा राख्नुहोस्
+	Keep Text Only	पाठ मात्र राख्नुहोस्
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	पासवर्ड सुरक्षित ठाउँमा राख्नुहोस्: यसबिना Doc4Me सहित कसैले कागजात खोल्न सक्दैन। पासवर्ड हटाउन दुवै बाकस खाली छोड्नुहोस्।
+	Keep with Next	अर्कोसँग राख्नुहोस्
+	Keep with next	अर्कोसँग राख्नुहोस्
+	Keeps the fonts and formatting of the copied text.	प्रतिलिपि गरिएको पाठको फन्ट र ढाँचा राख्छ।
+	Kerning for fonts:	फन्टका लागि कर्निङ:
+	Keyboard shortcuts:	किबोर्ड सर्टकट:
+	Keys for this command:	यो आदेशका कुञ्जीहरू:
+	Keywords	मुख्य शब्दहरू
+	Korean	कोरियाली
+	Label changes with:	लेबल यससँग बदलिन्छ:
+	Label:	लेबल:
+	Labels	लेबलहरू
+	Landscape	तेर्सो
+	Language	भाषा
+	Language Preferences…	भाषा प्राथमिकता…
+	Language…	भाषा…
+	Large\nOperator	ठूलो\nअपरेटर
+	Largest Only	सबैभन्दा ठूलो मात्र
+	Largest only	सबैभन्दा ठूलो मात्र
+	Lasso	लासो
+	Lasso Select	लासो चयन
+	Last	अन्तिम
+	Last Cell in Column	स्तम्भको अन्तिम कक्ष
+	Last Cell in Row	पङ्क्तिको अन्तिम कक्ष
+	Last Column	अन्तिम स्तम्भ
+	Last commit	अन्तिम कमिट
+	Last Name	थर
+	Last, First; Last, First	थर, नाम; थर, नाम
+	Latin text font:	ल्याटिन पाठ फन्ट:
+	Layout	लेआउट
+	Layout options for this document	यो कागजातका लागि लेआउट विकल्पहरू
+	Layout Summary	लेआउट सारांश
+	Layouts	लेआउटहरू
+	Leader	लिडर
+	Leave a recipient out of the merge when a field has this value.	फिल्डको यो मान हुँदा प्रापकलाई मर्जबाट हटाउनुहोस्।
+	Leave Equation	समीकरण छोड्नुहोस्
+	Leave the equation (Esc)	समीकरण छोड्नुहोस् (Esc)
+	Leave the label out of the caption	क्याप्सनबाट लेबल हटाउनुहोस्
+	Left	बायाँ
+	Left Arrow with Text Above	माथि पाठसहित बायाँ तीर
+	Left Arrow with Text Below	तल पाठसहित बायाँ तीर
+	Left Border	बायाँ किनारा
+	Left border	बायाँ किनारा
+	Left Bracket Twice	दुई पटक बायाँ कोष्ठक
+	Left indent	बायाँ इन्डेन्ट
+	Left Margin	बायाँ मार्जिन
+	Left Only	बायाँ मात्र
+	Left only	बायाँ मात्र
+	Left Right Arrow Above	माथि बायाँ-दायाँ तीर
+	Left Right Arrow with Text Above	माथि पाठसहित बायाँ-दायाँ तीर
+	Left Right Arrow with Text Below	तल पाठसहित बायाँ-दायाँ तीर
+	Left Subscript-Superscript	बायाँ सबस्क्रिप्ट-सुपरस्क्रिप्ट
+	Left-to-right	बायाँबाट दायाँ
+	Left-to-Right Text Direction	बायाँबाट दायाँ पाठ दिशा
+	Left:	बायाँ:
+	Leftwards Arrow Above	माथि बायाँतर्फ तीर
+	Leftwards Harpoon Above	माथि बायाँतर्फ हार्पुन
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	कानुनी शैली क्रमाङ्कन
+	Legend	लेजेन्ड
+	Less than	भन्दा सानो
+	Less than or equal	भन्दा सानो वा बराबर
+	Letter	पत्र
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	अक्षर शीर्षकहरू
+	Letter-Like Symbols	अक्षरजस्ता प्रतीकहरू
+	Letters	पत्रहरू
+	Level 1	तह 1
+	Level 2	तह 2
+	Level 3	तह 3
+	Level 4	तह 4
+	Level 5	तह 5
+	Level 6	तह 6
+	Level 7	तह 7
+	Level 8	तह 8
+	Level 9	तह 9
+	Level {n}	तह {n}
+	Level:	तह:
+	Levels:	तहहरू:
+	LibreTranslate server (open source)	LibreTranslate सर्भर (खुला स्रोत)
+	Ligatures:	संयुक्ताक्षर:
+	Light	हल्का
+	Light with Outline	रूपरेखासहित हल्का
+	Limit	सीमा
+	Limit and\nLog	सीमा र\nलग
+	Limit consecutive hyphens to:	लगातार हाइफनको सीमा:
+	Limit Example	सीमा उदाहरण
+	Limit formatting to a selection of styles	ढाँचालाई छानिएका शैलीमा सीमित गर्नुहोस्
+	Line	रेखा
+	Line and Page Breaks	पङ्क्ति र पृष्ठ विच्छेद
+	Line and Paragraph Spacing	पङ्क्ति र अनुच्छेद अन्तर
+	Line between	बीचमा रेखा
+	Line Break	पङ्क्ति विच्छेद
+	Line breaking	पङ्क्ति विभाजन
+	Line delta	पङ्क्ति फरक
+	Line End	पङ्क्तिको अन्त्य
+	Line Number	पङ्क्ति नम्बर
+	Line Numbering Options…	पङ्क्ति क्रमाङ्कन विकल्पहरू…
+	Line Numbers	पङ्क्ति नम्बरहरू
+	Line Spacing	पङ्क्ति अन्तर
+	Line spacing	पङ्क्ति अन्तर
+	Line Spacing Options…	पङ्क्ति अन्तर विकल्पहरू…
+	Line spacing:	पङ्क्ति अन्तर:
+	Line Start	पङ्क्तिको सुरु
+	Line width:	रेखाको चौडाइ:
+	Line:	रेखा:
+	Linear	रेखीय
+	Linear Fraction	रेखीय भिन्न
+	Lines	पङ्क्तिहरू
+	Lines +/−	पङ्क्ति +/−
+	Lines added	थपिएका पङ्क्ति
+	Lines and characters	पङ्क्ति र वर्ण
+	Lines deleted	मेटाइएका पङ्क्ति
+	Lines only	रेखा मात्र
+	Lines per page:	प्रति पृष्ठ पङ्क्ति:
+	Link	लिङ्क
+	Link entries to their headings	प्रविष्टिहरूलाई शीर्षकसँग लिङ्क गर्नुहोस्
+	Link level to style:	तहलाई शैलीसँग लिङ्क गर्नुहोस्:
+	Link to Previous	अघिल्लोसँग लिङ्क गर्नुहोस्
+	Linked style (paragraph and character)	लिङ्क गरिएको शैली (अनुच्छेद र वर्ण)
+	Links	लिङ्कहरू
+	Links and References	लिङ्क र सन्दर्भ
+	Link…	लिङ्क…
+	List	सूची
+	List Commands	आदेश सूचीबद्ध गर्नुहोस्
+	List Definition	सूची परिभाषा
+	List entries	सूची प्रविष्टिहरू
+	List Paragraph	सूची अनुच्छेद
+	List styles	सूची शैलीहरू
+	List Table 3 – Blue	सूची तालिका 3 – निलो
+	List Table 3 – Green	सूची तालिका 3 – हरियो
+	List Table 3 – Orange	सूची तालिका 3 – सुन्तला
+	List Table 3 – Purple	सूची तालिका 3 – बैजनी
+	Listening… speak now	सुन्दैछ… अब बोल्नुहोस्
+	Location	स्थान
+	Location: {path}	स्थान: {path}
+	Lock aspect ratio	पक्ष अनुपात लक गर्नुहोस्
+	Lock Fields	फिल्ड लक गर्नुहोस्
+	Logarithm	लघुगणक
+	Logarithm with Base	आधारसहित लघुगणक
+	Logical AND	तार्किक AND
+	Logical AND with Limits	सीमासहित तार्किक AND
+	Logical OR	तार्किक OR
+	Logical OR with Limits	सीमासहित तार्किक OR
+	Long citation:	लामो उद्धरण:
+	lowercase	सानो अक्षर
+	Lum:	प्रकाश:
+	Macros	म्याक्रोहरू
+	Made from the author and year when empty	खाली हुँदा लेखक र वर्षबाट बनाइन्छ
+	Magazine or newspaper article	पत्रिका वा समाचारपत्र लेख
+	Mail Merge	मेल मर्ज
+	Mail Merge Helper	मेल मर्ज सहायक
+	Mail Merge Helper…	मेल मर्ज सहायक…
+	Mailing Labels	मेलिङ लेबलहरू
+	Mailings	मेलिङहरू
+	Main entry:	मुख्य प्रविष्टि:
+	Make Doc4Me the default for Word documents…	Doc4Me लाई Word कागजातका लागि पूर्वनिर्धारित बनाउनुहोस्…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	तपाईंको प्रणालीको डिस्प्ले स्केलिङमाथि रिबन, मेनु र संवाद ठूलो वा सानो बनाउँछ। कागजात जुम छुट्टै छ।
+	Malay	मलाय
+	Manage Sources	स्रोत व्यवस्थापन गर्नुहोस्
+	Manage Styles	शैलीहरू व्यवस्थापन गर्नुहोस्
+	Manage Styles…	शैलीहरू व्यवस्थापन गर्नुहोस्…
+	Manual Hyphenation	म्यानुअल हाइफनेसन
+	Manual hyphenation is complete.	म्यानुअल हाइफनेसन पूरा भयो।
+	Manual Line Break	म्यानुअल पङ्क्ति विच्छेद
+	Manual Page Break	म्यानुअल पृष्ठ विच्छेद
+	Manual…	म्यानुअल…
+	Many pages	धेरै पृष्ठ
+	Margin	मार्जिन
+	Margins	मार्जिनहरू
+	Mark	चिन्ह लगाउनुहोस्
+	Mark All	सबैमा चिन्ह लगाउनुहोस्
+	Mark as decorative	सजावटीको रूपमा चिन्ह लगाउनुहोस्
+	Mark Citation	उद्धरणमा चिन्ह लगाउनुहोस्
+	Mark Citation…	उद्धरणमा चिन्ह लगाउनुहोस्…
+	Mark Entry	प्रविष्टिमा चिन्ह लगाउनुहोस्
+	Mark Entry…	प्रविष्टिमा चिन्ह लगाउनुहोस्…
+	Mark grammar errors as you type	टाइप गर्दा व्याकरण त्रुटि चिन्ह लगाउनुहोस्
+	Mark Index Entry	अनुक्रमणिका प्रविष्टिमा चिन्ह लगाउनुहोस्
+	Mark selected text as:	चयन गरिएको पाठलाई यस रूपमा चिन्ह लगाउनुहोस्:
+	Mark Table of Contents Entry	विषयसूची प्रविष्टिमा चिन्ह लगाउनुहोस्
+	Mark\nCitation	उद्धरण\nचिन्ह लगाउनुहोस्
+	Mark\nEntry	प्रविष्टि\nचिन्ह लगाउनुहोस्
+	Markdown (*.md)	Markdown (*.md)
+	Match case	अक्षर मिलाउनुहोस्
+	Match Fields	फिल्ड मिलाउनुहोस्
+	Match prefix	उपसर्ग मिलाउनुहोस्
+	Match suffix	प्रत्यय मिलाउनुहोस्
+	Math AutoCorrect	गणित स्वतः सुधार
+	Math Input Control	गणित इनपुट नियन्त्रण
+	Matrices with Brackets	कोष्ठकसहित म्याट्रिक्स
+	Matrix	म्याट्रिक्स
+	Maximize	ठूलो बनाउनुहोस्
+	Maximum	अधिकतम
+	Maximum Example	अधिकतम उदाहरण
+	Measured By	द्वारा मापन
+	Measurement units:	मापन एकाइहरू:
+	Media	मिडिया
+	Merge	मर्ज गर्नुहोस्
+	Merge Cells	कक्ष मर्ज गर्नुहोस्
+	Merge Formatting	ढाँचा मर्ज गर्नुहोस्
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	ढाँचा मर्जले पाठलाई जहाँ पर्छ त्यहीँको ढाँचामा टाँस्छ, पाठ मात्र राख्नुहोस् जस्तै।
+	Merge Record #	मर्ज रेकर्ड #
+	Merge records	रेकर्ड मर्ज गर्नुहोस्
+	Merge to New Document	नयाँ कागजातमा मर्ज गर्नुहोस्
+	Merge to Printer	प्रिन्टरमा मर्ज गर्नुहोस्
+	Merge to:	यसमा मर्ज गर्नुहोस्:
+	Merge type: {type}	मर्ज प्रकार: {type}
+	Merged PRs	मर्ज गरिएका PR
+	Merge…	मर्ज गर्नुहोस्…
+	Mesosphere	मध्यमण्डल
+	Middle	बीच
+	Midline Dots	बीच रेखा बिन्दु
+	Millimeters	मिलिमिटर
+	Minimum	न्यूनतम
+	Minus Equal	घटाउ बराबर
+	Mirror indents	मिरर इन्डेन्ट
+	Mirrored	मिरर
+	Missing document font	हराएको कागजात फन्ट
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	मोडेल
+	Models	मोडेलहरू
+	Moderate	मध्यम
+	Modify Style	शैली परिमार्जन गर्नुहोस्
+	Modify Table Style	तालिका शैली परिमार्जन गर्नुहोस्
+	Modify Table Style…	तालिका शैली परिमार्जन गर्नुहोस्…
+	Modify…	परिमार्जन गर्नुहोस्…
+	Mon	सोम
+	Month	महिना
+	More >>	थप >>
+	More Colors…	थप रङहरू…
+	More Columns…	थप स्तम्भहरू…
+	More Commands…	थप आदेशहरू…
+	More Symbols…	थप प्रतीकहरू…
+	More templates →	थप टेम्प्लेटहरू →
+	Move Down	तल सार्नुहोस्
+	Move in Equation	समीकरणमा सार्नुहोस्
+	Move object with text	वस्तुलाई पाठसँग सार्नुहोस्
+	Move or Resize	सार्नुहोस् वा आकार बदल्नुहोस्
+	Move Paragraph Down	अनुच्छेद तल सार्नुहोस्
+	Move Paragraph Up	अनुच्छेद माथि सार्नुहोस्
+	Move Past Citation	उद्धरणभन्दा पर जानुहोस्
+	Move Past\nCitation	उद्धरणभन्दा\nपर जानुहोस्
+	Move Selected Ink	चयन गरिएको मसी सार्नुहोस्
+	Move Text	पाठ सार्नुहोस्
+	Move to where?	कहाँ सार्ने?
+	Move Up	माथि सार्नुहोस्
+	Move with Text	पाठसँग सार्नुहोस्
+	Move with text	पाठसँग सार्नुहोस्
+	Moved from	यहाँबाट सारियो
+	Moved to	यहाँ सारियो
+	Moves	सराइहरू
+	Multilevel List	बहुतह सूची
+	Multiple Pages	धेरै पृष्ठ
+	My Add-ins	मेरा एड-इनहरू
+	MyMemory (free, no account)	MyMemory (निःशुल्क, खाता बिना)
+	Name	नाम
+	Name (A–Z)	नाम (A–Z)
+	Name of the file this document is saved as	यो कागजात सुरक्षित गरिएको फाइलको नाम
+	Name:	नाम:
+	Narrow  0.5" all	साँघुरो  सबै 0.5"
+	Natural Logarithm	प्राकृतिक लघुगणक
+	Nature	प्रकृति
+	Navigation	नेभिगेसन
+	Navigation Pane	नेभिगेसन प्यान
+	Negated Relations	निषेधित सम्बन्ध
+	New	नयाँ
+	New Comment	नयाँ टिप्पणी
+	New comments and tracked changes are recorded under this name and these initials.	नयाँ टिप्पणी र ट्र्याक गरिएका परिवर्तन यो नाम र यी अक्षरमा रेकर्ड हुन्छन्।
+	New Document	नयाँ कागजात
+	New document	नयाँ कागजात
+	New Drawing Canvas	नयाँ रेखाचित्र क्यानभास
+	New Entry	नयाँ प्रविष्टि
+	New Folder	नयाँ फोल्डर
+	New from Template	टेम्प्लेटबाट नयाँ
+	New Group	नयाँ समूह
+	New Label	नयाँ लेबल
+	New Label…	नयाँ लेबल…
+	New Paragraph	नयाँ अनुच्छेद
+	New shortcut:	नयाँ सर्टकट:
+	New Style…	नयाँ शैली…
+	New Tab	नयाँ ट्याब
+	New Table Style	नयाँ तालिका शैली
+	New Table Style…	नयाँ तालिका शैली…
+	New Window	नयाँ सञ्झ्याल
+	New word	नयाँ शब्द
+	New\nComment	नयाँ\nटिप्पणी
+	New\nWindow	नयाँ\nसञ्झ्याल
+	New…	नयाँ…
+	Next	अर्को
+	Next Change	अर्को परिवर्तन
+	Next Comment	अर्को टिप्पणी
+	Next Field	अर्को फिल्ड
+	Next Footnote	अर्को फुटनोट
+	Next Page	अर्को पृष्ठ
+	Next Record	अर्को रेकर्ड
+	Next Section	अर्को खण्ड
+	Next Sentence	अर्को वाक्य
+	Next sentence	अर्को वाक्य
+	Next Window	अर्को सञ्झ्याल
+	No	होइन
+	No accessibility issues found.	पहुँचयोग्यता समस्या फेला परेन।
+	No add-ins are listed yet.	अहिलेसम्म कुनै एड-इन सूचीमा छैन।
+	No add-ins yet. Add one from the Store.	अहिलेसम्म एड-इन छैन। स्टोरबाट थप्नुहोस्।
+	No Border	किनारा छैन
+	No changes (read only)	परिवर्तन छैन (पढ्न मात्र)
+	No Color	रङ छैन
+	No contributor data was built into this copy.	यो प्रतिलिपिमा योगदानकर्ता डेटा समावेश गरिएको छैन।
+	No data source yet.	अहिलेसम्म डेटा स्रोत छैन।
+	No errors found: every merge field is in the recipient list.	त्रुटि फेला परेन: हरेक मर्ज फिल्ड प्रापक सूचीमा छ।
+	No Fill	भराइ छैन
+	No Glow	चमक छैन
+	No grid	ग्रिड छैन
+	No icons match your search.	तपाईंको खोजसँग कुनै आइकन मेल खाएन।
+	No limit	सीमा छैन
+	No Line	रेखा छैन
+	No Markup	मार्कअप छैन
+	No model credits were built into this copy.	यो प्रतिलिपिमा मोडेल श्रेय समावेश गरिएको छैन।
+	No Outline	रूपरेखा छैन
+	No Paragraph Space	अनुच्छेद अन्तर छैन
+	No pictures found.	चित्र फेला परेन।
+	No Reflection	प्रतिबिम्ब छैन
+	No revisions	संशोधन छैन
+	No Shadow	छाया छैन
+	No Soft Edges	नरम किनारा छैन
+	No sources yet.	अहिलेसम्म स्रोत छैन।
+	No Spacing	अन्तर छैन
+	no speech program on this system	यो प्रणालीमा वाक् कार्यक्रम छैन
+	No templates match your search.	तपाईंको खोजसँग कुनै टेम्प्लेट मेल खाएन।
+	No Transform	रूपान्तरण छैन
+	No words yet. Add to Dictionary on a misspelled word puts it here.	अहिलेसम्म शब्द छैन। गलत हिज्जे भएको शब्दमा शब्दकोशमा थप्नुहोस् गर्दा यहाँ आउँछ।
+	No-Width Non Break	शून्य-चौडाइ नटुट्ने
+	No-Width Optional Break	शून्य-चौडाइ ऐच्छिक विच्छेद
+	Nonbreaking Hyphen	नटुट्ने हाइफन
+	Nonbreaking Space	नटुट्ने खाली ठाउँ
+	None	कुनै पनि छैन
+	Normal	सामान्य
+	Normal  1" all	सामान्य  सबै 1"
+	Normal Indent	सामान्य इन्डेन्ट
+	Normal probability density	सामान्य सम्भाव्यता घनत्व
+	Normal speed	सामान्य गति
+	Normal Style	सामान्य शैली
+	Normal Table	सामान्य तालिका
+	Normal Text	सामान्य पाठ
+	Normal Word Document	सामान्य Word कागजात
+	North	उत्तर
+	Norwegian (Bokmål)	नर्वेजियन (बोकमाल)
+	Not	होइन
+	Not available right now	अहिले उपलब्ध छैन
+	Not equal to	बराबर छैन
+	Not linked: click a text box	लिङ्क छैन: पाठ बाकसमा क्लिक गर्नुहोस्
+	Not saved	सुरक्षित गरिएको छैन
+	Not saved yet	अहिलेसम्म सुरक्षित गरिएको छैन
+	Not used by any command	कुनै आदेशले प्रयोग गर्दैन
+	Not {name}	{name} होइन
+	Nothing	केही छैन
+	Nothing collected yet. Items you copy or cut appear here.	अहिलेसम्म केही सङ्कलन भएको छैन। प्रतिलिपि वा काटिएका वस्तु यहाँ देखिन्छन्।
+	Now used by {command}	अब {command} ले प्रयोग गर्छ
+	Nudge	अलिकति सार्नुहोस्
+	Num Occurrences	पटक सङ्ख्या
+	Number	सङ्ख्या
+	Number alignment:	नम्बर पङ्क्तिबद्धता:
+	Number format	नम्बर ढाँचा
+	Number of columns:	स्तम्भ सङ्ख्या:
+	Number of rows:	पङ्क्ति सङ्ख्या:
+	Number of the page the field sits on	फिल्ड रहेको पृष्ठको नम्बर
+	Number of the section the field sits in	फिल्ड रहेको खण्डको नम्बर
+	Number style for this level:	यो तहको नम्बर शैली:
+	Number the equation; the number sits at the right margin (or type # then the number)	समीकरणमा नम्बर दिनुहोस्; नम्बर दायाँ मार्जिनमा रहन्छ (वा # पछि नम्बर टाइप गर्नुहोस्)
+	Number type:	नम्बर प्रकार:
+	Number:	नम्बर:
+	Numbering	क्रमाङ्कन
+	Numbering:	क्रमाङ्कन:
+	Numbering…	क्रमाङ्कन…
+	Numerals	अङ्कहरू
+	Numerals:	अङ्कहरू:
+	n×n Identity Matrix	n×n एकाइ म्याट्रिक्स
+	n×n Matrix	n×n म्याट्रिक्स
+	Object	वस्तु
+	Odd Page	बिजोर पृष्ठ
+	Odd pages only	बिजोर पृष्ठ मात्र
+	Off	बन्द
+	Office	Office
+	Office 2003 Default	Office 2003 पूर्वनिर्धारित
+	Offset (pt):	अफसेट (pt):
+	Offset: Bottom	अफसेट: तल
+	Offset: Bottom Left	अफसेट: तल बायाँ
+	Offset: Bottom Right	अफसेट: तल दायाँ
+	Offset: Center	अफसेट: बीच
+	Offset: Left	अफसेट: बायाँ
+	Offset: Right	अफसेट: दायाँ
+	Offset: Top	अफसेट: माथि
+	Offset: Top Left	अफसेट: माथि बायाँ
+	Offset: Top Right	अफसेट: माथि दायाँ
+	OK	ठीक छ
+	Omit	छोड्नुहोस्
+	On	खुला
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	खुला: टाइप गर्दा वा तीर कुञ्जी प्रयोग गर्दा कर्सर नयाँ ठाउँमा चिप्लन्छ र झिम्काइ मधुरो हुन्छ। बन्द: यो उफ्रन्छ र झिम्किन्छ।
+	One	एक
+	One half	आधा
+	One label per recipient	प्रति प्रापक एउटा लेबल
+	One line per item. Enter adds an item.	प्रति वस्तु एउटा पङ्क्ति। Enter ले वस्तु थप्छ।
+	One Page	एक पृष्ठ
+	Online Pictures	अनलाइन चित्रहरू
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	अनलाइन चित्र (Openverse), अनुवाद (MyMemory वा तपाईंको LibreTranslate सर्भर), एड-इन प्राप्त गर्नुहोस् र श्रुतलेखनको वाक् मोडेल डाउनलोड इन्टरनेटमा जोडिन्छन्, र तपाईंले प्रयोग गर्दा मात्र। बन्द हुँदा Doc4Me ले आफैँ कुनै जडान गर्दैन।
+	Online Pictures…	अनलाइन चित्रहरू…
+	Online services are turned off (File › Options › Trust Center).	अनलाइन सेवा बन्द छन् (फाइल › विकल्प › विश्वास केन्द्र)।
+	Online Video	अनलाइन भिडियो
+	Only allow this kind of editing:	यस प्रकारको सम्पादन मात्र अनुमति दिनुहोस्:
+	Only comments can be added, except in regions marked editable.	सम्पादनयोग्य चिन्ह लगाइएका क्षेत्रबाहेक टिप्पणी मात्र थप्न सकिन्छ।
+	Only form fields can be filled in.	फारम फिल्ड मात्र भर्न सकिन्छ।
+	only https addresses can be used	https ठेगाना मात्र प्रयोग गर्न सकिन्छ
+	Only pictures I may use commercially	व्यावसायिक प्रयोग गर्न सकिने चित्र मात्र
+	Only the allowed styles can be applied.	अनुमत शैली मात्र लागू गर्न सकिन्छ।
+	Only web (http, https) and email (mailto) links can be followed	वेब (http, https) र इमेल (mailto) लिङ्क मात्र खोल्न सकिन्छ
+	Open	खोल्नुहोस्
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	प्रणालीको फाइल संवाद नदेखिँदा Doc4Me को आफ्नै ब्राउजरले फाइल खोल्नुहोस्।
+	Open Data Source…	डेटा स्रोत खोल्नुहोस्…
+	Open Hyperlink	हाइपरलिङ्क खोल्नुहोस्
+	OpenDocument Text (*.odt)	OpenDocument पाठ (*.odt)
+	Opening print dialog…	प्रिन्ट संवाद खुल्दैछ…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	अबदेखि .docx, .doc, .rtf र .odt फाइल तथा Word टेम्प्लेट Doc4Me ले खोल्छ।
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	सेटिङ › पूर्वनिर्धारित एप खोल्छ, जहाँ .docx र अन्य कागजात प्रकारका लागि Doc4Me छान्नुहुन्छ।
+	Open…	खोल्नुहोस्…
+	Operator	अपरेटर
+	Operator Structures	अपरेटर संरचना
+	Operators	अपरेटरहरू
+	Optional Hyphen	ऐच्छिक हाइफन
+	Options	विकल्पहरू
+	Options…	विकल्पहरू…
+	Or	वा
+	Or save a copy in another format:	वा अर्को ढाँचामा प्रतिलिपि सुरक्षित गर्नुहोस्:
+	Ordinals (1st) as superscript	क्रमसूचक (1st) सुपरस्क्रिप्टको रूपमा
+	Organizer	आयोजक
+	Organizer…	आयोजक…
+	Orientation	अभिमुखीकरण
+	Original document	मूल कागजात
+	Other	अन्य
+	Other Authorities	अन्य अधिकारी
+	Other Large Operators	अन्य ठूला अपरेटर
+	Other paragraph styles	अन्य अनुच्छेद शैलीहरू
+	Other styles and their TOC level:	अन्य शैली र तिनको विषयसूची तह:
+	Otherwise insert:	अन्यथा घुसाउनुहोस्:
+	Outline	रूपरेखा
+	Outline Level	रूपरेखा तह
+	Outline level	रूपरेखा तह
+	Outline levels	रूपरेखा तहहरू
+	Outline State	रूपरेखा अवस्था
+	Outline Tools	रूपरेखा उपकरण
+	Outlining	रूपरेखाङ्कन
+	Outside	बाहिर
+	Outside border	बाहिरी किनारा
+	Outside Borders	बाहिरी किनाराहरू
+	Outside Margin	बाहिरी मार्जिन
+	Outside:	बाहिर:
+	Outward Brackets	बाहिरतर्फ कोष्ठक
+	Oval	अण्डाकार
+	Overbar	माथिल्लो पट्टी
+	Overbars and Underbars	माथिल्लो र तल्लो पट्टी
+	Overbrace	माथिल्लो मझौला कोष्ठक
+	Overtype	अधिलेखन
+	Overtype (typing replaces the characters after the caret)	अधिलेखन (टाइप गर्दा कर्सरपछिका वर्ण बदलिन्छन्)
+	Page	पृष्ठ
+	Page Background	पृष्ठ पृष्ठभूमि
+	Page Border	पृष्ठ किनारा
+	Page Borders	पृष्ठ किनाराहरू
+	Page Break	पृष्ठ विच्छेद
+	Page Break Before	अघि पृष्ठ विच्छेद
+	Page break before	अघि पृष्ठ विच्छेद
+	Page Breaks	पृष्ठ विच्छेदहरू
+	Page Color	पृष्ठ रङ
+	Page display	पृष्ठ प्रदर्शन
+	Page Down	Page Down
+	Page image (*.jpg, *.jpeg)	पृष्ठ छवि (*.jpg, *.jpeg)
+	Page image (*.png)	पृष्ठ छवि (*.png)
+	Page Movement	पृष्ठ सञ्चालन
+	Page Number	पृष्ठ नम्बर
+	Page number style	पृष्ठ नम्बर शैली
+	Page numbers at the right margin	दायाँ मार्जिनमा पृष्ठ नम्बर
+	Page on which a bookmarked passage falls	बुकमार्क गरिएको अंश रहेको पृष्ठ
+	Page Setup	पृष्ठ सेटअप
+	Page title	पृष्ठ शीर्षक
+	Page Up	Page Up
+	Page Width	पृष्ठ चौडाइ
+	Page width	पृष्ठ चौडाइ
+	Page X of Y	पृष्ठ X मध्ये Y
+	Page {page}	पृष्ठ {page}
+	Page {page} of {pages}	पृष्ठ {page} मध्ये {pages}
+	Page\nBorders	पृष्ठ\nकिनारा
+	Page\nColor	पृष्ठ\nरङ
+	Page\nNumber	पृष्ठ\nनम्बर
+	Pages	पृष्ठहरू
+	Pages like 1-3, 5	पृष्ठ जस्तै 1-3, 5
+	Pages of bookmark:	बुकमार्कका पृष्ठ:
+	Paragraph	अनुच्छेद
+	Paragraph Character	अनुच्छेद वर्ण
+	Paragraph Details	अनुच्छेद विवरण
+	Paragraph Down	अनुच्छेद तल
+	Paragraph Mark	अनुच्छेद चिह्न
+	Paragraph marks	अनुच्छेद चिह्नहरू
+	Paragraph Settings	अनुच्छेद सेटिङ
+	Paragraph Spacing	अनुच्छेद अन्तर
+	Paragraph style	अनुच्छेद शैली
+	Paragraph Up	अनुच्छेद माथि
+	Paragraphs	अनुच्छेदहरू
+	Paragraph…	अनुच्छेद…
+	Parentheses	सानो कोष्ठक
+	Parentheses with Separator	विभाजकसहित सानो कोष्ठक
+	Partial Differential	आंशिक अवकल
+	Password	पासवर्ड
+	Password:	पासवर्ड:
+	Paste	टाँस्नुहोस्
+	Paste All	सबै टाँस्नुहोस्
+	Paste as:	यस रूपमा टाँस्नुहोस्:
+	Paste Clipboard Item	क्लिपबोर्ड वस्तु टाँस्नुहोस्
+	Paste Formatting	ढाँचा टाँस्नुहोस्
+	Paste Special	विशेष टाँस्नुहोस्
+	Paste Special…	विशेष टाँस्नुहोस्…
+	Paste Spike	स्पाइक टाँस्नुहोस्
+	Paste: Keep Text Only	टाँस्नुहोस्: पाठ मात्र राख्नुहोस्
+	Paste: Merge Formatting	टाँस्नुहोस्: ढाँचा मर्ज गर्नुहोस्
+	Pasting between documents:	कागजातबीच टाँस्दा:
+	Pasting from other programs:	अन्य कार्यक्रमबाट टाँस्दा:
+	Pasting within the same document:	उही कागजातभित्र टाँस्दा:
+	Pause	रोक्नुहोस्
+	Paused	रोकिएको
+	PDF document (*.pdf)	PDF कागजात (*.pdf)
+	Pen	कलम
+	Pencil	पेन्सिल
+	Pens	कलमहरू
+	People	मानिसहरू
+	Periodical	पत्रपत्रिका
+	Personalize	निजीकरण गर्नुहोस्
+	Phonetic Guide	ध्वन्यात्मक मार्गदर्शक
+	Pi Over 2	पाई भाग 2
+	Picas	पाइका
+	Pick a custom group (New Group makes one)	अनुकूलित समूह छान्नुहोस् (नयाँ समूहले बनाउँछ)
+	Pick a field from the list	सूचीबाट फिल्ड छान्नुहोस्
+	Picture	चित्र
+	Picture Border	चित्र किनारा
+	Picture Content Control	चित्र सामग्री नियन्त्रण
+	Picture Format	चित्र ढाँचा
+	Picture Styles	चित्र शैलीहरू
+	Pictures	चित्रहरू
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Openverse का चित्रहरू। हरेक चित्रको इजाजतपत्रको सम्मान गर्नुहोस्: Doc4Me ले मुनि श्रेय पङ्क्ति थप्छ।
+	Pie	पाई
+	Placeholder Name	प्लेसहोल्डर नाम
+	Placeholder text	प्लेसहोल्डर पाठ
+	Plain Table 1	सादा तालिका 1
+	Plain text (*.txt)	सादा पाठ (*.txt)
+	Plain Text Content Control	सादा पाठ सामग्री नियन्त्रण
+	Play	बजाउनुहोस्
+	Play Video	भिडियो बजाउनुहोस्
+	Play/Pause	बजाउनुहोस्/रोक्नुहोस्
+	Plus Equal	जोड बराबर
+	Points	पोइन्ट
+	points and above	पोइन्ट र माथि
+	Polish	पोलिस
+	Portrait	ठाडो
+	Portuguese (Brazil)	पोर्तुगाली (ब्राजिल)
+	Portuguese (Portugal)	पोर्तुगाली (पोर्चुगल)
+	Position	स्थिति
+	Position:	स्थिति:
+	Positioning…	स्थिति निर्धारण…
+	Possible spelling mistake	सम्भावित हिज्जे गल्ती
+	Postal Code	हुलाक कोड
+	Power series of (1+x)ⁿ	(1+x)ⁿ को घात शृङ्खला
+	Preferred width:	रुचाइएको चौडाइ:
+	Preserve	जोगाउनुहोस्
+	Preserve formatting during updates	अद्यावधिक गर्दा ढाँचा जोगाउनुहोस्
+	Presets	पूर्वनिर्धारित
+	Press a key combination	कुञ्जी संयोजन थिच्नुहोस्
+	Preview	पूर्वावलोकन
+	Preview Results	परिणाम पूर्वावलोकन
+	Preview\nResults	परिणाम\nपूर्वावलोकन
+	Previous	अघिल्लो
+	Previous 1 or More	अघिल्लो 1 वा बढी
+	Previous Change	अघिल्लो परिवर्तन
+	Previous Comment	अघिल्लो टिप्पणी
+	Previous Field	अघिल्लो फिल्ड
+	Previous Footnote	अघिल्लो फुटनोट
+	Previous Page	अघिल्लो पृष्ठ
+	Previous Record	अघिल्लो रेकर्ड
+	Previous Section	अघिल्लो खण्ड
+	Previous Sentence	अघिल्लो वाक्य
+	Previous sentence	अघिल्लो वाक्य
+	Previous Window	अघिल्लो सञ्झ्याल
+	Print	प्रिन्ट गर्नुहोस्
+	Print blank lines when data fields are empty	डेटा फिल्ड खाली हुँदा खाली पङ्क्ति प्रिन्ट गर्नुहोस्
+	Print Documents	कागजात प्रिन्ट गर्नुहोस्
+	Print Documents…	कागजात प्रिन्ट गर्नुहोस्…
+	Print failed: {error}	प्रिन्ट असफल: {error}
+	Print Layout	प्रिन्ट लेआउट
+	Print Markup	मार्कअप प्रिन्ट गर्नुहोस्
+	Print the page color	पृष्ठ रङ प्रिन्ट गर्नुहोस्
+	Print to PDF	PDF मा प्रिन्ट गर्नुहोस्
+	Print\nLayout	प्रिन्ट\nलेआउट
+	Printer	प्रिन्टर
+	Printing	प्रिन्टिङ
+	Process	प्रक्रिया
+	Product	गुणनफल
+	Product of A	A को गुणनफल
+	Product with Limits	सीमासहित गुणनफल
+	Product with Lower Limit	तल्लो सीमासहित गुणनफल
+	Product with Subscript-Superscript Limits	सबस्क्रिप्ट-सुपरस्क्रिप्ट सीमासहित गुणनफल
+	Products and Coproducts	गुणनफल र सहगुणनफल
+	Professional	व्यावसायिक
+	Promote	तह बढाउनुहोस्
+	Promote to Heading 1	शीर्षक 1 सम्म बढाउनुहोस्
+	Proofing	प्रूफिङ
+	Proofing Issues	प्रूफिङ समस्याहरू
+	Proofing language	प्रूफिङ भाषा
+	Properties	गुणहरू
+	Protect	सुरक्षित गर्नुहोस्
+	Protect Document	कागजात सुरक्षित गर्नुहोस्
+	PRs	PR
+	pt	pt
+	Publisher	प्रकाशक
+	Punctuation	विराम चिह्न
+	Put the caret in a content control first.	पहिले कर्सर सामग्री नियन्त्रणमा राख्नुहोस्।
+	Put the default commands back on the Quick Access Toolbar?	पूर्वनिर्धारित आदेश द्रुत पहुँच उपकरणपट्टीमा फर्काउने?
+	Pyramid	पिरामिड
+	Quadratic Root	द्विघात मूल
+	Query Options…	क्वेरी विकल्पहरू…
+	Quick Access Toolbar	द्रुत पहुँच उपकरणपट्टी
+	Quick Parts	द्रुत भागहरू
+	Quick Tables	द्रुत तालिकाहरू
+	Quote	उद्धरण
+	Radical	मूल
+	Radical with Degree	घातसहित मूल
+	Radicals	मूलहरू
+	Raised/lowered	उठाइएको/झारिएको
+	Read Aloud	ठूलो स्वरमा पढ्नुहोस्
+	Read Aloud couldn't start the speech program: {reason}	ठूलो स्वरमा पढ्नेले वाक् कार्यक्रम सुरु गर्न सकेन: {reason}
+	Read Aloud couldn't start: {reason}	ठूलो स्वरमा पढ्ने सुरु हुन सकेन: {reason}
+	Read Aloud isn't available in the browser	ठूलो स्वरमा पढ्ने ब्राउजरमा उपलब्ध छैन
+	Read Aloud Status	ठूलो स्वरमा पढ्ने स्थिति
+	Read Aloud stopped: {reason}	ठूलो स्वरमा पढ्ने रोकियो: {reason}
+	Read Mode	पठन मोड
+	Read\nAloud	ठूलो स्वरमा\nपढ्नुहोस्
+	Read\nMode	पठन\nमोड
+	Reading	पठन
+	Reading Column Width	पठन स्तम्भ चौडाइ
+	Reading Highlight	पठन हाइलाइट
+	Reading Line Spacing	पठन पङ्क्ति अन्तर
+	Reading Mode	पठन मोड
+	Sepia	सेपिया
+	Inverse	उल्टो
+	Reading Speed	पठन गति
+	Reading Text Size	पठन पाठ आकार
+	Reads the clipboard's rich text and keeps its formatting.	क्लिपबोर्डको रिच पाठ पढ्छ र यसको ढाँचा राख्छ।
+	Reads the clipboard's web content and keeps its formatting.	क्लिपबोर्डको वेब सामग्री पढ्छ र यसको ढाँचा राख्छ।
+	Real name	वास्तविक नाम
+	Recent	हालैका
+	Recent Colors	हालैका रङहरू
+	Recent documents to show:	देखाउने हालैका कागजात:
+	Recently used symbols:	हालै प्रयोग गरिएका प्रतीक:
+	Recipient List	प्रापक सूची
+	Recipient lists	प्रापक सूचीहरू
+	Recipients: {count}	प्रापक: {count}
+	Recognized (you can correct it):	पहिचान गरियो (तपाईं सच्याउन सक्नुहुन्छ):
+	Recognized Functions	पहिचान गरिएका फलनहरू
+	Recognized Functions…	पहिचान गरिएका फलनहरू…
+	Recolor a one-color picture, such as an icon	एक-रङे चित्र, जस्तै आइकन, पुनः रङ लगाउनुहोस्
+	Recolor Selected Ink	चयन गरिएको मसी पुनः रङ लगाउनुहोस्
+	Record Macro	म्याक्रो रेकर्ड गर्नुहोस्
+	Recover Unsaved Documents	सुरक्षित नगरिएका कागजात पुनःप्राप्त गर्नुहोस्
+	Rectangle	आयत
+	Red:	रातो:
+	Redo	पुनः गर्नुहोस्
+	Reduce Hanging Indent	झुन्डिने इन्डेन्ट घटाउनुहोस्
+	References	सन्दर्भहरू
+	Reflection	प्रतिबिम्ब
+	Refresh	ताजा गर्नुहोस्
+	Registered	दर्ता गरिएको
+	Registered Sign	दर्ता चिह्न
+	Regular expressions	नियमित अभिव्यक्ति
+	Regulations	नियमावली
+	Reject	अस्वीकार गर्नुहोस्
+	Reject All	सबै अस्वीकार गर्नुहोस्
+	Reject All Changes	सबै परिवर्तन अस्वीकार गर्नुहोस्
+	Reject Change	परिवर्तन अस्वीकार गर्नुहोस्
+	Relationship	सम्बन्ध
+	relative to	सापेक्ष
+	Relative to:	यसको सापेक्ष:
+	Relaxed	खुकुलो
+	Remove	हटाउनुहोस्
+	Remove Added Font	थपिएको फन्ट हटाउनुहोस्
+	Remove Background	पृष्ठभूमि हटाउनुहोस्
+	Remove Content Control	सामग्री नियन्त्रण हटाउनुहोस्
+	Remove every custom shortcut and restore the built-in keys?	हरेक अनुकूलित सर्टकट हटाएर भित्री कुञ्जी पुनर्स्थापना गर्ने?
+	Remove every custom tab and group and show all tabs again?	हरेक अनुकूलित ट्याब र समूह हटाएर सबै ट्याब फेरि देखाउने?
+	Remove field	फिल्ड हटाउनुहोस्
+	Remove Field Name	फिल्ड नाम हटाउनुहोस्
+	Remove Footer	फुटर हटाउनुहोस्
+	Remove from Quick Access Toolbar	द्रुत पहुँच उपकरणपट्टीबाट हटाउनुहोस्
+	Remove Header	हेडर हटाउनुहोस्
+	Remove Hyperlink	हाइपरलिङ्क हटाउनुहोस्
+	Remove Password	पासवर्ड हटाउनुहोस्
+	Remove Pen	कलम हटाउनुहोस्
+	Remove Positioning	स्थिति निर्धारण हटाउनुहोस्
+	Remove recipient	प्रापक हटाउनुहोस्
+	Remove row	पङ्क्ति हटाउनुहोस्
+	Remove series	शृङ्खला हटाउनुहोस्
+	Remove Space After Paragraph	अनुच्छेदपछिको ठाउँ हटाउनुहोस्
+	Remove Table of Contents	विषयसूची हटाउनुहोस्
+	Remove the control once edited	सम्पादनपछि नियन्त्रण हटाउनुहोस्
+	Remove the space before the punctuation	विराम चिह्नअघिको खाली ठाउँ हटाउनुहोस्
+	Remove Watermark	वाटरमार्क हटाउनुहोस्
+	Rename Style	शैलीको नाम बदल्नुहोस्
+	Rename…	नाम बदल्नुहोस्…
+	Reopen	पुनः खोल्नुहोस्
+	Repeat	दोहोर्‍याउनुहोस्
+	Repeat as header row on each page	हरेक पृष्ठमा हेडर पङ्क्तिको रूपमा दोहोर्‍याउनुहोस्
+	Repeat Header Rows	हेडर पङ्क्ति दोहोर्‍याउनुहोस्
+	Repeated words	दोहोरिएका शब्द
+	Repeating Section Content Control	दोहोरिने खण्ड सामग्री नियन्त्रण
+	Replace	बदल्नुहोस्
+	Replace All	सबै बदल्नुहोस्
+	Replace as you type	टाइप गर्दा बदल्नुहोस्
+	Replace Document Text	कागजात पाठ बदल्नुहोस्
+	Replace text as you type	टाइप गर्दा पाठ बदल्नुहोस्
+	Replace with:	यसले बदल्नुहोस्:
+	Replace:	बदल्नुहोस्:
+	Replay	पुनः प्ले
+	Reply	जवाफ दिनुहोस्
+	Report	प्रतिवेदन
+	Research	अनुसन्धान
+	Researcher	अनुसन्धानकर्ता
+	Researcher needs an online service; Doc4Me keeps your documents offline.	अनुसन्धानकर्तालाई अनलाइन सेवा चाहिन्छ; Doc4Me ले कागजात अफलाइन राख्छ।
+	Reset	रिसेट गर्नुहोस्
+	Reset All	सबै रिसेट गर्नुहोस्
+	Reset All…	सबै रिसेट गर्नुहोस्…
+	Reset Character Formatting	वर्ण ढाँचा रिसेट गर्नुहोस्
+	Reset Crop	क्रप रिसेट गर्नुहोस्
+	Reset Graphic	ग्राफिक रिसेट गर्नुहोस्
+	Reset Paragraph Formatting	अनुच्छेद ढाँचा रिसेट गर्नुहोस्
+	Reset Picture	चित्र रिसेट गर्नुहोस्
+	Reset to Normal	सामान्यमा रिसेट गर्नुहोस्
+	Reset\nGraphic	ग्राफिक\nरिसेट गर्नुहोस्
+	Reset…	रिसेट गर्नुहोस्…
+	Resize Table by Dragging	तानेर तालिकाको आकार बदल्नुहोस्
+	Resolve	समाधान गर्नुहोस्
+	Resolved	समाधान भयो
+	Restart at 1	1 बाट पुनः सुरु गर्नुहोस्
+	Restart Each Page	हरेक पृष्ठमा पुनः सुरु गर्नुहोस्
+	Restart Each Section	हरेक खण्डमा पुनः सुरु गर्नुहोस्
+	Restart list after:	यसपछि सूची पुनः सुरु गर्नुहोस्:
+	Restore	पुनर्स्थापना गर्नुहोस्
+	Restore Defaults	पूर्वनिर्धारित पुनर्स्थापना गर्नुहोस्
+	Restore Down	सानो पुनर्स्थापना गर्नुहोस्
+	Restore to Normal Word Document	सामान्य Word कागजातमा पुनर्स्थापना गर्नुहोस्
+	Restrict Editing	सम्पादन प्रतिबन्धित गर्नुहोस्
+	Restrict\nEditing	सम्पादन\nप्रतिबन्धित गर्नुहोस्
+	Result	परिणाम
+	Results	परिणामहरू
+	Return address labels	फिर्ती ठेगाना लेबलहरू
+	Return address:	फिर्ती ठेगाना:
+	Reverse the order	क्रम उल्टाउनुहोस्
+	Review	समीक्षा
+	Review AutoFormat Changes	स्वतः ढाँचा परिवर्तन समीक्षा गर्नुहोस्
+	Review Changes…	परिवर्तन समीक्षा गर्नुहोस्…
+	Reviewing	समीक्षा गर्दै
+	Reviewing Pane	समीक्षा प्यान
+	Reviewing — edits become suggestions	समीक्षा — सम्पादन सुझाव बन्छन्
+	Revised document	संशोधित कागजात
+	Revisions	संशोधनहरू
+	Rewind	रिवाइन्ड गर्नुहोस्
+	Ribbon	रिबन
+	Ribbon and Quick Access Toolbar:	रिबन र द्रुत पहुँच उपकरणपट्टी:
+	Ribbon tabs	रिबन ट्याबहरू
+	Rich Text Content Control	रिच पाठ सामग्री नियन्त्रण
+	Rich Text Format (*.rtf)	Rich Text Format (*.rtf)
+	Rich Text Format (RTF)	Rich Text Format (RTF)
+	Right	दायाँ
+	Right (vertical)	दायाँ (ठाडो)
+	Right align page numbers	पृष्ठ नम्बर दायाँ पङ्क्तिबद्ध गर्नुहोस्
+	Right Arrow with Text Above	माथि पाठसहित दायाँ तीर
+	Right Arrow with Text Below	तल पाठसहित दायाँ तीर
+	Right Border	दायाँ किनारा
+	Right border	दायाँ किनारा
+	Right Bracket Twice	दुई पटक दायाँ कोष्ठक
+	Right indent	दायाँ इन्डेन्ट
+	Right Margin	दायाँ मार्जिन
+	Right Only	दायाँ मात्र
+	Right only	दायाँ मात्र
+	Right-to-left	दायाँबाट बायाँ
+	Right-to-Left Section	दायाँबाट बायाँ खण्ड
+	Right-to-Left Table	दायाँबाट बायाँ तालिका
+	Right-to-Left Text Direction	दायाँबाट बायाँ पाठ दिशा
+	Right:	दायाँ:
+	Rightwards Arrow Above	माथि दायाँतर्फ तीर
+	Rightwards Harpoon Above	माथि दायाँतर्फ हार्पुन
+	Roots of ax²+bx+c	ax²+bx+c का मूल
+	Rotate	घुमाउनुहोस्
+	Rotate all text 270°	सबै पाठ 270° घुमाउनुहोस्
+	Rotate all text 90°	सबै पाठ 90° घुमाउनुहोस्
+	Rotate Left 90°	बायाँ 90° घुमाउनुहोस्
+	Rotate Right 90°	दायाँ 90° घुमाउनुहोस्
+	Rotation	घुमाइ
+	Rotation:	घुमाइ:
+	Rounded Rectangle	गोलाकार कुनाको आयत
+	Row	पङ्क्ति
+	Row:	पङ्क्ति:
+	Rows & Columns	पङ्क्ति र स्तम्भ
+	Ruby text:	रुबी पाठ:
+	Ruler	रुलर
+	Rules	नियमहरू
+	Run	चलाउनुहोस्
+	Run-in	भित्र जोडिएको
+	Russian	रुसी
+	Résumé	बायोडाटा
+	Same as the whole table	पूरा तालिकाजस्तै
+	SAMPLE	नमुना
+	Sat:	शनि:
+	Save	सुरक्षित गर्नुहोस्
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	अर्को ढाँचामा प्रतिलिपि सुरक्षित गर्नुहोस्। प्रिन्ट PDF मार्फत हुन्छ जुन जुनसुकै दर्शकबाट प्रिन्ट गर्न सकिन्छ।
+	Save As	यस रूपमा सुरक्षित गर्नुहोस्
+	Save as Template	टेम्प्लेटको रूपमा सुरक्षित गर्नुहोस्
+	Save documents	कागजात सुरक्षित गर्नुहोस्
+	Save the document to turn on AutoSave	स्वतः सुरक्षित खोल्न कागजात सुरक्षित गर्नुहोस्
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	स्वतः सुरक्षित खोल्न कागजात सुरक्षित गर्नुहोस् (खोलेको मात्र फाइल सुरक्षित नगरेसम्म पुनः लेखिँदैन)
+	Save these pages as PDF…	यी पृष्ठ PDF को रूपमा सुरक्षित गर्नुहोस्…
+	Save Version	संस्करण सुरक्षित गर्नुहोस्
+	Saved	सुरक्षित भयो
+	Scale	मापन
+	Scale Drawing	रेखाचित्र मापन गर्नुहोस्
+	Scatter	स्क्याटर
+	Screen Clipping	स्क्रिन क्लिपिङ
+	Screen clipping didn't work: {reason}	स्क्रिन क्लिपिङ काम गरेन: {reason}
+	Screen clipping ended without a picture.	स्क्रिन क्लिपिङ चित्रबिना सकियो।
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	स्क्रिन क्लिपिङ यहाँ उपलब्ध छैन। स्क्रिनको चित्र प्रतिलिपि गरी टाँस्नुहोस्।
+	Screenshot	स्क्रिनसट
+	Script	लिपि
+	Scripts	लिपिहरू
+	Scroll ribbon left	रिबन बायाँ स्क्रोल गर्नुहोस्
+	Scroll ribbon right	रिबन दायाँ स्क्रोल गर्नुहोस्
+	Search	खोज्नुहोस्
+	Search Commands	आदेश खोज्नुहोस्
+	Search commands and help	आदेश र सहायता खोज्नुहोस्
+	Search document	कागजात खोज्नुहोस्
+	Search for templates	टेम्प्लेट खोज्नुहोस्
+	Search icons	आइकन खोज्नुहोस्
+	Search Openverse (Creative Commons pictures)	Openverse खोज्नुहोस् (Creative Commons चित्र)
+	Search Options	खोज विकल्पहरू
+	Searching…	खोज्दैछ…
+	Secant Function	सेकेन्ट फलन
+	Section Break	खण्ड विच्छेद
+	Section Breaks	खण्ड विच्छेदहरू
+	Section Character	खण्ड वर्ण
+	Section direction:	खण्ड दिशा:
+	Section Mark	खण्ड चिह्न
+	Section Properties	खण्ड गुणहरू
+	Sections	खण्डहरू
+	See	हेर्नुहोस्
+	Select	छान्नुहोस्
+	Select a picture, shape, chart or table to describe it.	वर्णन गर्न चित्र, आकृति, चार्ट वा तालिका छान्नुहोस्।
+	Select All	सबै छान्नुहोस्
+	Select Cell	कक्ष छान्नुहोस्
+	Select Floating Shapes	तैरिने आकृति छान्नुहोस्
+	Select Heading and Content	शीर्षक र सामग्री छान्नुहोस्
+	Select Line	पङ्क्ति छान्नुहोस्
+	Select Objects	वस्तुहरू छान्नुहोस्
+	Select Paragraph	अनुच्छेद छान्नुहोस्
+	Select Range	दायरा छान्नुहोस्
+	Select Recipients	प्रापक छान्नुहोस्
+	Select recipients first to choose from their fields.	तिनका फिल्डबाट छान्न पहिले प्रापक छान्नुहोस्।
+	Select recipients first to match their fields.	तिनका फिल्ड मिलाउन पहिले प्रापक छान्नुहोस्।
+	Select Row	पङ्क्ति छान्नुहोस्
+	Select Sentence	वाक्य छान्नुहोस्
+	Select Table	तालिका छान्नुहोस्
+	Select Text	पाठ छान्नुहोस्
+	Select text in the document to translate it.	अनुवाद गर्न कागजातमा पाठ छान्नुहोस्।
+	Select Text with Similar Formatting	उस्तै ढाँचाको पाठ छान्नुहोस्
+	Select text, then tick who can still edit it.	पाठ छानेर अझै कसले सम्पादन गर्न सक्छ चिन्ह लगाउनुहोस्।
+	Select the part of the screen to insert.	घुसाउन स्क्रिनको भाग छान्नुहोस्।
+	Select Word	शब्द छान्नुहोस्
+	Select\nRecipients	प्रापक\nछान्नुहोस्
+	Selected Fields	चयन गरिएका फिल्ड
+	Selected pages	चयन गरिएका पृष्ठ
+	Selection	चयन
+	Selection Pane	चयन प्यान
+	Send Backward	पछाडि पठाउनुहोस्
+	Send the document straight to the system print dialog, or save a copy in another format below.	कागजात सिधै प्रणालीको प्रिन्ट संवादमा पठाउनुहोस्, वा तल अर्को ढाँचामा प्रतिलिपि सुरक्षित गर्नुहोस्।
+	Sentence	वाक्य
+	Sentence case.	वाक्यजस्तै।
+	Separator:	विभाजक:
+	Sequence name:	अनुक्रम नाम:
+	Serbian	सर्बियाली
+	Serbian (Cyrillic)	सर्बियाली (सिरिलिक)
+	Serbian (Latin)	सर्बियाली (ल्याटिन)
+	Series name	शृङ्खला नाम
+	Series {n}	शृङ्खला {n}
+	Server address (https://…)	सर्भर ठेगाना (https://…)
+	Set	सेट गर्नुहोस्
+	Set As Default	पूर्वनिर्धारितको रूपमा सेट गर्नुहोस्
+	Set as Default	पूर्वनिर्धारितको रूपमा सेट गर्नुहोस्
+	Set Caret	कर्सर सेट गर्नुहोस्
+	Set Character Formatting	वर्ण ढाँचा सेट गर्नुहोस्
+	Set Date	मिति सेट गर्नुहोस्
+	Set Equation	समीकरण सेट गर्नुहोस्
+	Set Numbering Value	क्रमाङ्कन मान सेट गर्नुहोस्
+	Set Paragraph Formatting	अनुच्छेद ढाँचा सेट गर्नुहोस्
+	Set Proofing Language…	प्रूफिङ भाषा सेट गर्नुहोस्…
+	Setting:	सेटिङ:
+	Settings…	सेटिङहरू…
+	Shading	छायाँ
+	Shadow	छाया
+	Shadow, glow and soft edges	छाया, चमक र नरम किनारा
+	Shape Effects	आकृति प्रभावहरू
+	Shape Fill	आकृति भराइ
+	Shape Format	आकृति ढाँचा
+	Shape Outline	आकृति रूपरेखा
+	Shape Styles	आकृति शैलीहरू
+	Shapes	आकृतिहरू
+	Share	साझा गर्नुहोस्
+	Sheet:	पाना:
+	Shift cells down	कक्ष तल सार्नुहोस्
+	Shift cells right	कक्ष दायाँ सार्नुहोस्
+	Shift+Tab	Shift+Tab
+	Shipping labels	ढुवानी लेबलहरू
+	Short citation:	छोटो उद्धरण:
+	Shortcut key:	सर्टकट कुञ्जी:
+	Show	देखाउनुहोस्
+	Show all formatting marks	सबै ढाँचा चिह्न देखाउनुहोस्
+	Show All Levels	सबै तह देखाउनुहोस्
+	Show all revisions inline	सबै संशोधन पङ्क्तिभित्र देखाउनुहोस्
+	Show changes at:	परिवर्तन यहाँ देखाउनुहोस्:
+	Show changes in:	परिवर्तन यसमा देखाउनुहोस्:
+	Show Comments	टिप्पणी देखाउनुहोस्
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	कागजात उल्टो रङमा देखाउनुहोस्, दृश्य › मोड बदल्नुहोस् जस्तै। सुरक्षित, प्रिन्ट र PDF परिवर्तन हुँदैनन्।
+	Show every bibliography field	हरेक सन्दर्भसूची फिल्ड देखाउनुहोस्
+	Show First Line Only	पहिलो पङ्क्ति मात्र देखाउनुहोस्
+	Show in the Styles gallery	शैली ग्यालेरीमा देखाउनुहोस्
+	Show KeyTips (Alt or F10)	किटिप्स देखाउनुहोस् (Alt वा F10)
+	Show Level	तह देखाउनुहोस्
+	Show Level 1	तह 1 देखाउनुहोस्
+	Show Level 2	तह 2 देखाउनुहोस्
+	Show Level 3	तह 3 देखाउनुहोस्
+	Show Level 4	तह 4 देखाउनुहोस्
+	Show Level 5	तह 5 देखाउनुहोस्
+	Show Level 6	तह 6 देखाउनुहोस्
+	Show Level 7	तह 7 देखाउनुहोस्
+	Show Level 8	तह 8 देखाउनुहोस्
+	Show Level 9	तह 9 देखाउनुहोस्
+	Show Markup	मार्कअप देखाउनुहोस्
+	Show Notes	नोटहरू देखाउनुहोस्
+	Show only comments and formatting in balloons	बेलुनमा टिप्पणी र ढाँचा मात्र देखाउनुहोस्
+	Show or Hide Style	शैली देखाउनुहोस् वा लुकाउनुहोस्
+	Show page numbers	पृष्ठ नम्बर देखाउनुहोस्
+	Show revisions in balloons	संशोधन बेलुनमा देखाउनुहोस्
+	Show rulers	रुलर देखाउनुहोस्
+	Show Text Formatting	पाठ ढाँचा देखाउनुहोस्
+	Show the equation in the line of text	समीकरणलाई पाठको पङ्क्तिमा देखाउनुहोस्
+	Show the equation on a line of its own	समीकरणलाई छुट्टै पङ्क्तिमा देखाउनुहोस्
+	Show the mini toolbar when text is selected	पाठ चयन गर्दा सानो उपकरणपट्टी देखाउनुहोस्
+	Show/Hide ¶	देखाउनुहोस्/लुकाउनुहोस् ¶
+	Show\nComments	टिप्पणी\nदेखाउनुहोस्
+	Showing the first {count} items.	पहिला {count} वस्तु देखाउँदै।
+	Shows a tree: each item below the item it belongs to.	रूख देखाउँछ: हरेक वस्तु आफू सम्बन्धित वस्तुमुनि।
+	Shows items around a central idea: the first item is the centre.	केन्द्रीय विचारवरिपरि वस्तु देखाउँछ: पहिलो वस्तु केन्द्र हो।
+	Shows items of equal weight as blocks in rows.	समान महत्त्वका वस्तुलाई पङ्क्तिमा ब्लकको रूपमा देखाउँछ।
+	Shows overlapping ideas as overlapping circles.	एकअर्कामा खप्टिने विचारलाई खप्टिने वृत्तको रूपमा देखाउँछ।
+	Shows parts of a whole as quadrants.	पूर्णका भागलाई चतुर्थांशको रूपमा देखाउँछ।
+	Shows parts that build on each other, largest at the bottom.	एकअर्कामाथि बनेका भाग देखाउँछ, सबैभन्दा ठूलो तल।
+	Shows steps in order, left to right, with arrows between them.	चरणहरू क्रमैसँग, बायाँबाट दायाँ, बीचमा तीरसहित देखाउँछ।
+	Shows steps that repeat, around a circle.	दोहोरिने चरणहरू वृत्तवरिपरि देखाउँछ।
+	Shrink Font 1 Point	फन्ट 1 पोइन्ट घटाउनुहोस्
+	Shrink Selection	चयन घटाउनुहोस्
+	Shrink text	पाठ सानो बनाउनुहोस्
+	Side to Side	छेउछाउ
+	Side\nto Side	छेउ\nछाउ
+	Sides of a right triangle	समकोण त्रिभुजका भुजा
+	Signature Line	हस्ताक्षर पङ्क्ति
+	Sine and cosine series of f(x)	f(x) को साइन र कोसाइन शृङ्खला
+	Sine Function	साइन फलन
+	Sine theta	साइन थेटा
+	Single	एकल
+	Single Brackets	एकल कोष्ठक
+	Single Closing Quote	एकल बन्द उद्धरण चिह्न
+	Single label	एकल लेबल
+	Single Left Angle	एकल बायाँ कोण
+	Single Left Bar	एकल बायाँ पट्टी
+	Single Left Brace	एकल बायाँ मझौला कोष्ठक
+	Single Left Bracket	एकल बायाँ ठूलो कोष्ठक
+	Single Left Parenthesis	एकल बायाँ सानो कोष्ठक
+	Single Opening Quote	एकल खुला उद्धरण चिह्न
+	Single Right Brace	एकल दायाँ मझौला कोष्ठक
+	Single Right Bracket	एकल दायाँ ठूलो कोष्ठक
+	Single Right Parenthesis	एकल दायाँ सानो कोष्ठक
+	Single Spacing	एकल अन्तर
+	SIST02	SIST02
+	Site name	साइटको नाम
+	Size	आकार
+	Size (pt):	आकार (pt):
+	Size and Crop…	आकार र क्रप…
+	Size:	आकार:
+	Sketchbook	स्केचबुक
+	Skewed Fraction	तेर्सो भिन्न
+	Skip citations & bibliography	उद्धरण र सन्दर्भसूची छोड्नुहोस्
+	Skip Citations and Bibliography	उद्धरण र सन्दर्भसूची छोड्नुहोस्
+	Skip Record If	रेकर्ड छोड्नुहोस् यदि
+	Skip Record If…	रेकर्ड छोड्नुहोस् यदि…
+	Slant Down	तलतिर झुकाव
+	Slant Up	माथितिर झुकाव
+	Small Caps	साना ठूला अक्षर
+	Small caps	साना ठूला अक्षर
+	Small change	सानो परिवर्तन
+	Smart quotes instead of straight quotes	सिधा उद्धरण चिह्नको सट्टा स्मार्ट उद्धरण चिह्न
+	SmartArt	SmartArt
+	SmartArt Design	SmartArt डिजाइन
+	SmartArt Styles	SmartArt शैलीहरू
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	सहज स्क्रोल र जुम, र बिस्तारै देखिने मेनु र बटन। बन्द हुँदा हरेक परिवर्तन तुरुन्तै देखिन्छ।
+	Soft Edges	नरम किनारा
+	Soft Glow	नरम चमक
+	Solid Accent	ठोस एक्सेन्ट
+	Sort	क्रमबद्ध गर्नुहोस्
+	Sort by	यस अनुसार क्रमबद्ध
+	Sort order:	क्रम:
+	Sort Records	रेकर्ड क्रमबद्ध गर्नुहोस्
+	Source code: github.com/chatraweechai/doc4me	स्रोत कोड: github.com/chatraweechai/doc4me
+	Source Manager	स्रोत व्यवस्थापक
+	Source type:	स्रोत प्रकार:
+	Sources in this document:	यो कागजातका स्रोत:
+	South	दक्षिण
+	Space	खाली ठाउँ
+	Space after	पछि ठाउँ
+	Space after: {pt} pt	पछि ठाउँ: {pt} pt
+	Space before	अघि ठाउँ
+	Space before/after:	अघि/पछि ठाउँ:
+	Space before: {pt} pt	अघि ठाउँ: {pt} pt
+	Spaces	खाली ठाउँहरू
+	Spacing	अन्तर
+	Spacing (pt):	अन्तर (pt):
+	Spacing:	अन्तर:
+	Spanish	स्पेनी
+	Spanish (Mexico)	स्पेनी (मेक्सिको)
+	Spanish (Spain)	स्पेनी (स्पेन)
+	Sparse Matrices	विरल म्याट्रिक्सहरू
+	Special	विशेष
+	Special Characters	विशेष वर्णहरू
+	Specify height:	उचाइ निर्दिष्ट गर्नुहोस्:
+	Speech	वाक्
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	वाक् यही कम्प्युटरमा पहिचान हुन्छ (whisper.cpp); केही पनि अनलाइन पठाइँदैन।
+	Speed	गति
+	Spelling	हिज्जे
+	Spelling & Grammar	हिज्जे र व्याकरण
+	Spelling &\nGrammar	हिज्जे र\nव्याकरण
+	Spelling and grammar are checked in English (United States).	हिज्जे र व्याकरण अङ्ग्रेजी (संयुक्त राज्य) मा जाँचिन्छ।
+	Spelling Suggestions	हिज्जे सुझाव
+	Spike	स्पाइक
+	Split	विभाजन गर्नुहोस्
+	Split apart page break and paragraph mark	पृष्ठ विच्छेद र अनुच्छेद चिह्न छुट्याउनुहोस्
+	Split Cells	कक्ष विभाजन गर्नुहोस्
+	Split Table	तालिका विभाजन गर्नुहोस्
+	Spreadsheet Table	स्प्रेडसिट तालिका
+	Square	वर्ग
+	Square Root	वर्गमूल
+	Square Root with Degree	घातसहित वर्गमूल
+	Square Union	वर्ग संयोजन
+	Stack Object	स्ट्याक वस्तु
+	Stack Object (Three)	स्ट्याक वस्तु (तीन)
+	Stacked	थाक लगाइएको
+	Stacked Bar	थाक लगाइएको बार
+	Stacked Column	थाक लगाइएको स्तम्भ
+	Stacked Fraction	थाक लगाइएको भिन्न
+	Stacked, no bar	थाक लगाइएको, पट्टीबिना
+	Standard	मानक
+	Standard and Contextual	मानक र सान्दर्भिक
+	Standard Colors	मानक रङहरू
+	Standard Only	मानक मात्र
+	Star	तारा
+	Start at:	यहाँबाट सुरु गर्नुहोस्:
+	Start Enforcing Protection	सुरक्षा लागू गर्न सुरु गर्नुहोस्
+	Start Mail Merge	मेल मर्ज सुरु गर्नुहोस्
+	Start Mail\nMerge	मेल मर्ज\nसुरु गर्नुहोस्
+	State	प्रदेश
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	तथ्याङ्क
+	Status Bar	स्थिति पट्टी
+	Statutes	ऐनहरू
+	Stop	रोक्नुहोस्
+	Stop Protection	सुरक्षा रोक्नुहोस्
+	Stop Reading	पढ्न रोक्नुहोस्
+	Stopped	रोकियो
+	Store	स्टोर
+	Straight Arrow Connector	सिधा तीर जोडक
+	Straight Connector	सिधा जोडक
+	Strikethrough	काटरेखा
+	Stroke {n} of {total}	स्ट्रोक {n} मध्ये {total}
+	Strong	बलियो
+	Structure Actions	संरचना कार्यहरू
+	Structures	संरचनाहरू
+	Studio	स्टुडियो
+	Studio cover	स्टुडियो आवरण
+	Studio handbook (sample)	स्टुडियो पुस्तिका (नमुना)
+	Style	शैली
+	Style based on:	शैली यसमा आधारित:
+	Style Inspector	शैली निरीक्षक
+	Style Set	शैली सेट
+	Style:	शैली:
+	Style: APA	शैली: APA
+	Style: {style}	शैली: {style}
+	Styles	शैलीहरू
+	Styles Pane	शैली प्यान
+	Styles:	शैलीहरू:
+	Subentry:	उप-प्रविष्टि:
+	Subject	विषय
+	Subscript	सबस्क्रिप्ट
+	Subscript-Superscript	सबस्क्रिप्ट-सुपरस्क्रिप्ट
+	Subscripts and Superscripts	सबस्क्रिप्ट र सुपरस्क्रिप्ट
+	Subset:	उपसमूह:
+	Substituted font	प्रतिस्थापित फन्ट
+	Subtitle	उपशीर्षक
+	Subtle Emphasis	सूक्ष्म जोड
+	Subtle Reference	सूक्ष्म सन्दर्भ
+	Sum	योग
+	Sum of cosines	कोसाइनको योग
+	Sum or difference of sines	साइनको योग वा फरक
+	Summation	योगफल
+	Summation from 0 to n	0 देखि n सम्म योग
+	Summation over binomials	द्विपदमाथि योग
+	Summation with Limits	सीमासहित योग
+	Summation with Lower Limit	तल्लो सीमासहित योग
+	Summation with Subscript Limit	सबस्क्रिप्ट सीमासहित योग
+	Summation with Subscript-Superscript Limits	सबस्क्रिप्ट-सुपरस्क्रिप्ट सीमासहित योग
+	Summations	योगहरू
+	Superscript	सुपरस्क्रिप्ट
+	Suppress line numbers	पङ्क्ति नम्बर लुकाउनुहोस्
+	Surface Integral	सतह इन्टिग्रल
+	Surface Integral with Limits	सीमासहित सतह इन्टिग्रल
+	Surface Integral with Stacked Limits	थाक लगाइएको सीमासहित सतह इन्टिग्रल
+	Swap footnotes and endnotes	फुटनोट र अन्त्य टिप्पणी साटफेर गर्नुहोस्
+	Swedish	स्विडिस
+	Switch Modes	मोड बदल्नुहोस्
+	Switch Windows	सञ्झ्याल बदल्नुहोस्
+	Switch\nModes	मोड\nबदल्नुहोस्
+	Symbol	प्रतीक
+	Symbol Font	प्रतीक फन्ट
+	Symbols	प्रतीकहरू
+	Synchronous Scrolling	समकालिक स्क्रोल
+	Synonyms	पर्यायवाची
+	System	प्रणाली
+	Tab	Tab
+	Tab Character	ट्याब वर्ण
+	Tab character	ट्याब वर्ण
+	Tab characters	ट्याब वर्णहरू
+	Tab leader:	ट्याब लिडर:
+	Tab stop position:	ट्याब स्टप स्थिति:
+	Tab stops to be cleared:	हटाउने ट्याब स्टप:
+	Table	तालिका
+	Table AutoFormat	तालिका स्वतः ढाँचा
+	Table AutoFormat…	तालिका स्वतः ढाँचा…
+	Table Column Width	तालिका स्तम्भ चौडाइ
+	Table Design	तालिका डिजाइन
+	Table direction:	तालिका दिशा:
+	Table entry fields	तालिका प्रविष्टि फिल्ड
+	Table Grid	तालिका ग्रिड
+	Table identifier:	तालिका पहिचानकर्ता:
+	Table Layout	तालिका लेआउट
+	Table of Authorities	अधिकारी तालिका
+	Table of Contents	विषयसूची
+	Table of Contents Options	विषयसूची विकल्पहरू
+	Table of Contents Styles	विषयसूची शैलीहरू
+	Table of Figures	चित्र तालिका
+	Table of Figures Options	चित्र तालिका विकल्पहरू
+	Table of\nContents	विषय-\nसूची
+	Table Positioning	तालिका स्थिति
+	Table Properties	तालिका गुणहरू
+	Table Row Height	तालिका पङ्क्ति उचाइ
+	Table style	तालिका शैली
+	Table Style Options	तालिका शैली विकल्पहरू
+	Table Styles	तालिका शैलीहरू
+	Table styles:	तालिका शैलीहरू:
+	Tables	तालिकाहरू
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	ट्याबहरू
+	Tabs…	ट्याबहरू…
+	Tabular List	तालिकाबद्ध सूची
+	Tag	ट्याग
+	Tangent formula	ट्यान्जेन्ट सूत्र
+	Tangent Function	ट्यान्जेन्ट फलन
+	TC entry fields	TC प्रविष्टि फिल्ड
+	Technology	प्रविधि
+	Templates	टेम्प्लेटहरू
+	Templates and Add-ins	टेम्प्लेट र एड-इन
+	Text	पाठ
+	Text Box	पाठ बाकस
+	Text boxes	पाठ बाकसहरू
+	Text Direction	पाठ दिशा
+	Text Effects	पाठ प्रभावहरू
+	Text Effects and Typography	पाठ प्रभाव र टाइपोग्राफी
+	Text Fill	पाठ भराइ
+	Text from File	फाइलबाट पाठ
+	Text Highlight Color	पाठ हाइलाइट रङ
+	Text indent at:	पाठ इन्डेन्ट यहाँ:
+	Text isn't squeezed to fit its cell yet.	पाठ अहिलेसम्म कक्षमा अटाउन खुम्चिँदैन।
+	Text Outline	पाठ रूपरेखा
+	Text over Colon Equal	कोलन बराबरमाथि पाठ
+	Text over Equal	बराबरमाथि पाठ
+	Text Pane	पाठ प्यान
+	Text size	पाठ आकार
+	Text snaps to characters	पाठ वर्णमा मिल्छ
+	Text to display:	देखाउने पाठ:
+	Text Wrapping	पाठ बेराइ
+	Text wrapping:	पाठ बेराइ:
+	Text:	पाठ:
+	Text\nBox	पाठ\nबाकस
+	Text\nDirection	पाठ\nदिशा
+	Thai	थाई
+	Thai Distributed	थाई वितरित
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	त्यो ढाँचाले सबै राख्दैन, त्यसैले कागजात अझै खुला छ। जारी राख्न Word कागजात (.docx) को रूपमा सुरक्षित गर्नुहोस्।
+	That isn't the web address or embed code of an online video.	त्यो अनलाइन भिडियोको वेब ठेगाना वा एम्बेड कोड होइन।
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	त्यो पासवर्ड सही छैन। जाँच गर्नुहोस् (पासवर्ड ठूलो-सानो अक्षर छुट्याउँछ) र फेरि प्रयास गर्नुहोस्।
+	The clipboard is empty.	क्लिपबोर्ड खाली छ।
+	The date it is today	आजको मिति
+	The document contains no tracked changes.	कागजातमा ट्र्याक गरिएका परिवर्तन छैनन्।
+	The document has no bookmarks yet.	कागजातमा अहिलेसम्म बुकमार्क छैन।
+	The document is read only, except for regions marked editable.	सम्पादनयोग्य चिन्ह लगाइएका क्षेत्रबाहेक कागजात पढ्न मात्र हो।
+	The document will be saved with a password. Save it to protect it.	कागजात पासवर्डसहित सुरक्षित हुनेछ। जोगाउन सुरक्षित गर्नुहोस्।
+	The first word of a sentence starts with a capital.	वाक्यको पहिलो शब्द ठूलो अक्षरबाट सुरु हुन्छ।
+	the free daily allowance is used up (try again tomorrow, or give an email address)	निःशुल्क दैनिक सीमा सकियो (भोलि फेरि प्रयास गर्नुहोस्, वा इमेल ठेगाना दिनुहोस्)
+	the LibreTranslate server	LibreTranslate सर्भर
+	The Mail Merge Helper sets up a merge in three steps.	मेल मर्ज सहायकले तीन चरणमा मर्ज सेट गर्छ।
+	The new style takes the formatting of the current paragraph.	नयाँ शैलीले हालको अनुच्छेदको ढाँचा लिन्छ।
+	The password is optional; without it anyone can stop the protection.	पासवर्ड ऐच्छिक हो; यसबिना जोसुकैले सुरक्षा रोक्न सक्छ।
+	The password is removed. Save the document to keep the change.	पासवर्ड हटाइयो। परिवर्तन राख्न कागजात सुरक्षित गर्नुहोस्।
+	The passwords don't match.	पासवर्ड मेल खाँदैनन्।
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	प्रिन्टर, दुवैतर्फी प्रिन्ट र प्रति पाना पृष्ठ त्यो संवादमा छानिन्छ।
+	The recipient-list field that fills each part of an address block and greeting line.	पता ब्लक र अभिवादन पङ्क्तिको हरेक भाग भर्ने प्रापक-सूची फिल्ड।
+	The same word twice in a row.	लगातार दुई पटक एउटै शब्द।
+	The spelling and grammar check is complete.	हिज्जे र व्याकरण जाँच पूरा भयो।
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	प्रणालीको फाइल संवाद उपलब्ध छैन, त्यसैले Doc4Me ले आफ्नै देखाउँछ। प्रणाली संवादका लागि फाइल छनोट पोर्टल (जस्तै xdg-desktop-portal-gtk) वा zenity स्थापना गर्नुहोस्।
+	The text is sent to {service} to be translated.	पाठ अनुवादका लागि {service} मा पठाइन्छ।
+	The time right now	अहिलेको समय
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	भिडियो कागजातमा चित्रको रूपमा देखिन्छ। ब्राउजरमा हेर्न डबल-क्लिक गर्नुहोस्।
+	The whole document is translated into a new document, which replaces this one. Save your work first.	सम्पूर्ण कागजात नयाँ कागजातमा अनुवाद हुन्छ, जसले यसलाई प्रतिस्थापन गर्छ। पहिले काम सुरक्षित गर्नुहोस्।
+	Theme Colors	थिम रङहरू
+	Theme Fonts	थिम फन्टहरू
+	Theme List	थिम सूची
+	Themes	थिमहरू
+	Then by	त्यसपछि यस अनुसार
+	Then insert:	त्यसपछि घुसाउनुहोस्:
+	There's no text to translate.	अनुवाद गर्ने पाठ छैन।
+	Thesaurus	पर्यायकोश
+	These marks show even when Show/Hide ¶ is off.	देखाउनुहोस्/लुकाउनुहोस् ¶ बन्द हुँदा पनि यी चिह्न देखिन्छन्।
+	These merge fields aren't in the recipient list:	यी मर्ज फिल्ड प्रापक सूचीमा छैनन्:
+	These settings will be used for new documents.	यी सेटिङ नयाँ कागजातका लागि प्रयोग हुनेछन्।
+	Thick	मोटो
+	Thickness	मोटाइ
+	This Device…	यो यन्त्र…
+	This document	यो कागजात
+	This field has no options.	यो फिल्डमा विकल्प छैनन्।
+	This folder can't be read: {error}	यो फोल्डर पढ्न सकिँदैन: {error}
+	This font has no characters to show.	यो फन्टमा देखाउने वर्ण छैनन्।
+	This page	यो पृष्ठ
+	This password type isn't supported.	यो पासवर्ड प्रकार समर्थित छैन।
+	This point forward	यहाँदेखि अगाडि
+	This section	यो खण्ड
+	Three	तीन
+	Through	आरपार
+	Tight	कसिलो
+	Tilde	टिल्डे
+	Tips ({n})	सुझाव ({n})
+	Title	शीर्षक
+	Title from the document properties	कागजात गुणबाट शीर्षक
+	Title:	शीर्षक:
+	To	प्रति
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Word कागजात पूर्वनिर्धारित रूपमा Doc4Me ले खोल्न: Finder मा एउटा छान्नुहोस्, File › Get Info छान्नुहोस्, Open with मा Doc4Me छान्नुहोस्, अनि Change All क्लिक गर्नुहोस्।
+	To:	प्रति:
+	TOA Heading	अधिकारी तालिका शीर्षक
+	TOC Heading	विषयसूची शीर्षक
+	TOC {n}	विषयसूची {n}
+	Today	आज
+	tOGGLE cASE	अक्षर उल्टाउनुहोस्
+	Toggle Check Box	चेक बाकस टगल गर्नुहोस्
+	Toggle Field Codes	फिल्ड कोड टगल गर्नुहोस्
+	Toggle Unicode Character	Unicode वर्ण टगल गर्नुहोस्
+	Tools	उपकरणहरू
+	Top	माथि
+	Top and Bottom	माथि र तल
+	Top Border	माथिल्लो किनारा
+	Top Margin	माथिल्लो मार्जिन
+	Top of Next Page	अर्को पृष्ठको माथि
+	Top of Page	पृष्ठको माथि
+	Top of Previous Page	अघिल्लो पृष्ठको माथि
+	Top of the Window	सञ्झ्यालको माथि
+	Top:	माथि:
+	Total	जम्मा
+	Total Row	जम्मा पङ्क्ति
+	Track Changes	परिवर्तन ट्र्याक गर्नुहोस्
+	Track Changes Options	परिवर्तन ट्र्याक विकल्पहरू
+	Track changes while editing	सम्पादन गर्दा परिवर्तन ट्र्याक गर्नुहोस्
+	Track Changes: On	परिवर्तन ट्र्याक: खुला
+	Track formatting	ढाँचा ट्र्याक गर्नुहोस्
+	Track\nChanges	परिवर्तन\nट्र्याक
+	Track\nChanges ✓	परिवर्तन\nट्र्याक ✓
+	Tracked changes	ट्र्याक गरिएका परिवर्तन
+	Tracking	ट्र्याकिङ
+	Trademark	ट्रेडमार्क
+	Trademark Sign	ट्रेडमार्क चिह्न
+	Transform	रूपान्तरण
+	Translate	अनुवाद गर्नुहोस्
+	Translate Document	कागजात अनुवाद गर्नुहोस्
+	Translating {done} of {total}	{total} मध्ये {done} अनुवाद हुँदै
+	Translation service	अनुवाद सेवा
+	Translator	अनुवादक
+	Transparency	पारदर्शिता
+	Transparency:	पारदर्शिता:
+	Transport	यातायात
+	Treatises	ग्रन्थहरू
+	Triangle	त्रिभुज
+	Triangle Down	त्रिभुज तल
+	Triangle Up	त्रिभुज माथि
+	Trigonometric Functions	त्रिकोणमितीय फलनहरू
+	Triple	तेहोरो
+	Triple Dot	तेहोरो बिन्दु
+	Triple Integral	तेहोरो इन्टिग्रल
+	Triple Integral with Limits	सीमासहित तेहोरो इन्टिग्रल
+	Triple Integral with Stacked Limits	थाक लगाइएको सीमासहित तेहोरो इन्टिग्रल
+	Trust Center	विश्वास केन्द्र
+	Tue	मङ्गल
+	Turabian	Turabian
+	Turkish	टर्की
+	Two	दुई
+	Type	प्रकार
+	Type a command, e.g. "insert table"	आदेश टाइप गर्नुहोस्, जस्तै "तालिका घुसाउनुहोस्"
+	Type a New List	नयाँ सूची टाइप गर्नुहोस्
+	Type a New List…	नयाँ सूची टाइप गर्नुहोस्…
+	Type at least one recipient.	कम्तीमा एउटा प्रापक टाइप गर्नुहोस्।
+	Type equations in LaTeX	समीकरण LaTeX मा टाइप गर्नुहोस्
+	Type equations in the linear format (UnicodeMath)	समीकरण रेखीय ढाँचामा (UnicodeMath) टाइप गर्नुहोस्
+	Type in Equation	समीकरणमा टाइप गर्नुहोस्
+	Type normal (non-math) text in the equation	समीकरणमा सामान्य (गैर-गणितीय) पाठ टाइप गर्नुहोस्
+	Type Text	पाठ टाइप गर्नुहोस्
+	Type the categories down the side and a column of values per series.	श्रेणीहरू छेउमा तलतिर र प्रत्येक शृङ्खलाका लागि मानको एउटा स्तम्भ टाइप गर्नुहोस्।
+	Type the field's name and its switches, for example PAGE \\* roman.	फिल्डको नाम र स्विच टाइप गर्नुहोस्, उदाहरणका लागि PAGE \\* roman।
+	Type the password to stop the protection.	सुरक्षा रोक्न पासवर्ड टाइप गर्नुहोस्।
+	Type the recipients, or load them from a file.	प्रापक टाइप गर्नुहोस्, वा फाइलबाट लोड गर्नुहोस्।
+	Type the tag name of the source. You can add more information to this source later by editing the source.	स्रोतको ट्याग नाम टाइप गर्नुहोस्। स्रोत सम्पादन गरेर पछि थप जानकारी थप्न सक्नुहुन्छ।
+	Type:	प्रकार:
+	Typing	टाइपिङ
+	Typing replaces selected text	टाइप गर्दा चयन गरिएको पाठ बदलिन्छ
+	Ukrainian	युक्रेनी
+	Unchecked symbol	चिन्ह नलगाइएको प्रतीक
+	Underbar	तल्लो पट्टी
+	Underbrace	तल्लो मझौला कोष्ठक
+	Underline	रेखाङ्कन गर्नुहोस्
+	Underline color	रेखाङ्कन रङ
+	Underline Words Only	शब्द मात्र रेखाङ्कन गर्नुहोस्
+	Undo	पूर्ववत गर्नुहोस्
+	Undo Stroke	स्ट्रोक पूर्ववत गर्नुहोस्
+	Undo {action}	{action} पूर्ववत गर्नुहोस्
+	Unformatted Text	ढाँचाबिनाको पाठ
+	Ungroup	समूह हटाउनुहोस्
+	Union	संयोजन
+	Union of intersections	प्रतिच्छेदनको संयोजन
+	Union with Limits	सीमासहित संयोजन
+	Union with Lower Limit	तल्लो सीमासहित संयोजन
+	Union with Plus	जोडसहित संयोजन
+	Union with Subscript-Superscript Limits	सबस्क्रिप्ट-सुपरस्क्रिप्ट सीमासहित संयोजन
+	Unions and Intersections	संयोजन र प्रतिच्छेदन
+	Unlink Fields	फिल्ड अनलिङ्क गर्नुहोस्
+	Unlink\nCitations	उद्धरण\nअनलिङ्क गर्नुहोस्
+	Unlock Fields	फिल्ड अनलक गर्नुहोस्
+	Up	माथि
+	Up Diagonal Dots	माथि विकर्ण बिन्दु
+	Up one level	एक तह माथि
+	Update Field	फिल्ड अद्यावधिक गर्नुहोस्
+	Update fields before printing	प्रिन्ट गर्नुअघि फिल्ड अद्यावधिक गर्नुहोस्
+	Update Index	अनुक्रमणिका अद्यावधिक गर्नुहोस्
+	Update Style to Match Selection	चयनसँग मिल्ने गरी शैली अद्यावधिक गर्नुहोस्
+	Update Styles from Template	टेम्प्लेटबाट शैली अद्यावधिक गर्नुहोस्
+	Update Table	तालिका अद्यावधिक गर्नुहोस्
+	Update Table of Figures	चित्र तालिका अद्यावधिक गर्नुहोस्
+	Update to Match	मिल्ने गरी अद्यावधिक गर्नुहोस्
+	Update to Match Selection	चयनसँग मिल्ने गरी अद्यावधिक गर्नुहोस्
+	UPPERCASE	ठूला अक्षर
+	URGENT	अत्यावश्यक
+	URL	URL
+	Use "a" before a consonant sound	व्यञ्जन ध्वनिअघि "a" प्रयोग गर्नुहोस्
+	Use "an" before a vowel sound	स्वर ध्वनिअघि "an" प्रयोग गर्नुहोस्
+	Use an Existing List…	अवस्थित सूची प्रयोग गर्नुहोस्…
+	Use passim (five or more pages)	passim प्रयोग गर्नुहोस् (पाँच वा बढी पृष्ठ)
+	Use system setting	प्रणाली सेटिङ प्रयोग गर्नुहोस्
+	Use the Insert key to switch overtype on and off	अधिलेखन खोल्न/बन्द गर्न Insert कुञ्जी प्रयोग गर्नुहोस्
+	Use wildcards	वाइल्डकार्ड प्रयोग गर्नुहोस्
+	User Name	प्रयोगकर्ता नाम
+	User name:	प्रयोगकर्ता नाम:
+	Username	प्रयोगकर्ता नाम
+	Value	मान
+	Vector A	भेक्टर A
+	Vector AB	भेक्टर AB
+	Version	संस्करण
+	Version History	संस्करण इतिहास
+	Version {version} ({build})	संस्करण {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	कागजात खुला रहँदासम्म संस्करण राखिन्छन् (.docx फाइलमा संस्करण हुँदैनन्)।
+	Vertical	ठाडो
+	Vertical Alignment	ठाडो पङ्क्तिबद्धता
+	Vertical alignment:	ठाडो पङ्क्तिबद्धता:
+	Vertical Bars	ठाडो पट्टीहरू
+	Vertical Dots	ठाडो बिन्दु
+	Vertical spacing:	ठाडो अन्तर:
+	Vietnamese	भियतनामी
+	View	दृश्य
+	View Alt Text…	वैकल्पिक पाठ हेर्नुहोस्…
+	View Gridlines	ग्रिडलाइन हेर्नुहोस्
+	View Side by Side	छेउछाउ हेर्नुहोस्
+	View State	दृश्य अवस्था
+	Views	दृश्यहरू
+	Visual effects	दृश्य प्रभावहरू
+	Voice	आवाज
+	Volume	खण्ड
+	Volume Integral	आयतन इन्टिग्रल
+	Volume Integral with Limits	सीमासहित आयतन इन्टिग्रल
+	Volume Integral with Stacked Limits	थाक लगाइएको सीमासहित आयतन इन्टिग्रल
+	W:	चौ:
+	Waiting for Zotero…	Zotero को प्रतीक्षा…
+	Warm Gradient with Outline	रूपरेखासहित न्यानो ग्रेडियन्ट
+	Warnings ({n})	चेतावनीहरू ({n})
+	Watermark	वाटरमार्क
+	Wave	छाल
+	Weather	मौसम
+	web access isn't available here	वेब पहुँच यहाँ उपलब्ध छैन
+	Web Layout	वेब लेआउट
+	Web page (*.html)	वेब पृष्ठ (*.html)
+	Web\nLayout	वेब\nलेआउट
+	Website	वेबसाइट
+	Wed	बुध
+	Weight	तौल
+	West	पश्चिम
+	When merging records	रेकर्ड मर्ज गर्दा
+	When this document was first created	यो कागजात पहिलो पटक कहिले बनाइयो
+	When this document was most recently printed	यो कागजात पछिल्लो पटक कहिले प्रिन्ट गरियो
+	When this document was most recently saved	यो कागजात पछिल्लो पटक कहिले सुरक्षित गरियो
+	White Space	खाली ठाउँ
+	White space	खाली ठाउँ
+	Who the document properties name as author	कागजात गुणमा लेखकको रूपमा कसको नाम छ
+	Whole document	सम्पूर्ण कागजात
+	Whole page	पूरा पृष्ठ
+	Whole Table	पूरा तालिका
+	Whole words	पूरा शब्द
+	Wide	चौडा
+	Widow/Orphan Control	विधवा/अनाथ नियन्त्रण
+	Widow/Orphan control	विधवा/अनाथ नियन्त्रण
+	Width and spacing	चौडाइ र अन्तर
+	Width:	चौडाइ:
+	Wildcards (regex)	वाइल्डकार्ड (regex)
+	Window	सञ्झ्याल
+	With:	यसले:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 र पछिका
+	Word 97–2003	Word 97–2003
+	Word Count	शब्द गणना
+	Word document	Word कागजात
+	Word document (*.docx)	Word कागजात (*.docx)
+	Word forms	Word फारमहरू
+	Word Left	बायाँ शब्द
+	Word level	शब्द तह
+	Word Right	दायाँ शब्द
+	Word XML Document (*.xml)	Word XML कागजात (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt शैलीहरू
+	Words	शब्दहरू
+	Words only	शब्द मात्र
+	Wrap Text	पाठ बेर्नुहोस्
+	Wrap text	पाठ बेर्नुहोस्
+	Wrap Text Sides	पाठ बेर्ने पक्ष
+	Wrap\nText	पाठ\nबेर्नुहोस्
+	Write & Insert Fields	फिल्ड लेख्नुहोस् र घुसाउनुहोस्
+	Write a reply	जवाफ लेख्नुहोस्
+	Write math here with the mouse or a pen.	माउस वा कलमले यहाँ गणित लेख्नुहोस्।
+	Writing Style: Grammar	लेखन शैली: व्याकरण
+	x bar	x बार
+	Year	वर्ष
+	Yes	हो
+	Yields	परिणाम दिन्छ
+	Your changes will be lost if you don't save them.	सुरक्षित नगरे तपाईंका परिवर्तन हराउनेछन्।
+	Your system doesn't report an animation setting, so animation effects stay on.	तपाईंको प्रणालीले एनिमेसन सेटिङ बताउँदैन, त्यसैले एनिमेसन प्रभाव खुला रहन्छन्।
+	Your system has animation effects turned off.	तपाईंको प्रणालीमा एनिमेसन प्रभाव बन्द छन्।
+	Your system has animation effects turned on.	तपाईंको प्रणालीमा एनिमेसन प्रभाव खुला छन्।
+	Zoom	जुम
+	Zoom In	जुम इन
+	Zoom Out	जुम आउट
+	Zoom to Page	पृष्ठमा जुम गर्नुहोस्
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: रद्द
+	Zotero: done	Zotero: पूरा
+	{cols}×{rows} Table	{cols}×{rows} तालिका
+	{contributors} contributors · {commits} commits	{contributors} योगदानकर्ता · {commits} कमिट
+	{count} items highlighted	{count} वस्तु हाइलाइट गरियो
+	{count} of {total} pages will print	{total} मध्ये {count} पृष्ठ प्रिन्ट हुनेछन्
+	{count} paragraphs were changed.	{count} अनुच्छेद परिवर्तन भए।
+	{count} records; fields: {fields}	{count} रेकर्ड; फिल्ड: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} यो कम्प्युटरमा स्थापित छैन, त्यसैले यो कागजात {with} सँग देखाइन्छ। पङ्क्ति र पृष्ठ मूल फन्टभन्दा फरक तरिकाले टुट्न सक्छन्।
+	{group} settings	{group} सेटिङ
+	{key}+Click to follow link	लिङ्क खोल्न {key}+क्लिक
+	{language} is now the document's default language.	{language} अब कागजातको पूर्वनिर्धारित भाषा हो।
+	{name} (Press ENTER to Insert)	{name} (घुसाउन ENTER थिच्नुहोस्)
+	{name} already exists. Choose Save again to replace it.	{name} पहिले नै अवस्थित छ। बदल्न फेरि सुरक्षित छान्नुहोस्।
+	{name} can't be a folder's name.	{name} फोल्डरको नाम हुन सक्दैन।
+	{name} is protected with a password.	{name} पासवर्डले सुरक्षित छ।
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} थपियो। यसका म्याक्रो मेरा एड-इन र दृश्य › म्याक्रोमा छन्।
+	{name} wasn't found.	{name} फेला परेन।
+	{n} entries marked.	{n} प्रविष्टि चिन्ह लगाइयो।
+	{n} lines	{n} पङ्क्ति
+	{n} of {of} recipients	{of} मध्ये {n} प्रापक
+	{n} pt	{n} pt
+	{n} records	{n} रेकर्ड
+	{n} revisions	{n} संशोधन
+	{selected} of {words} words	{words} मध्ये {selected} शब्द
+	{size} pt	{size} pt
+	{words} words	{words} शब्द
+	{w} × {h} in	{w} × {h} इन्च
+	{w} × {h} mm	{w} × {h} मिमि
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) सङ्ख्या होइन।
+	← Find	← खोज्नुहोस्
+	✓ None	✓ कुनै पनि छैन
+	➕ New comment	➕ नयाँ टिप्पणी
+	📂  Browse…	📂  ब्राउज गर्नुहोस्…
+	Add Help Text…	सहायता पाठ थप्नुहोस्…
+	AutoText entry:	स्वतः पाठ प्रविष्टि:
+	Calculate on exit	बाहिर निस्कँदा गणना गर्नुहोस्
+	Calculation	गणना
+	Check Box Form Field	चेक बाकस फारम फिल्ड
+	Check Box Form Field Options	चेक बाकस फारम फिल्ड विकल्पहरू
+	Check box	चेक बाकस
+	Check box enabled	चेक बाकस सक्षम
+	Check box size:	चेक बाकस आकार:
+	Checked	चिन्ह लगाइएको
+	Current date	हालको मिति
+	Current time	हालको समय
+	Default value:	पूर्वनिर्धारित मान:
+	Drop-Down Form Field	ड्रप-डाउन फारम फिल्ड
+	Drop-Down Form Field Options	ड्रप-डाउन फारम फिल्ड विकल्पहरू
+	Drop-down	ड्रप-डाउन
+	Drop-down enabled	ड्रप-डाउन सक्षम
+	Drop-down item:	ड्रप-डाउन वस्तु:
+	Fill In Form Field	भर्ने फारम फिल्ड
+	Fill-in enabled	भर्ने सक्षम
+	Form Field	फारम फिल्ड
+	Form Field Help Text	फारम फिल्ड सहायता पाठ
+	Form Field Options	फारम फिल्ड विकल्पहरू
+	Form Field Shading	फारम फिल्ड छायाँ
+	Form Field at Selection	चयनमा फारम फिल्ड
+	Help Key (F1)	सहायता कुञ्जी (F1)
+	Insert Form Field	फारम फिल्ड घुसाउनुहोस्
+	Items in drop-down list:	ड्रप-डाउन सूचीका वस्तु:
+	Legacy Tools	पुराना उपकरण
+	Maximum length:	अधिकतम लम्बाइ:
+	Next Form Field	अर्को फारम फिल्ड
+	Not checked	चिन्ह नलगाइएको
+	Put the caret on a form field first.	पहिले कर्सर फारम फिल्डमा राख्नुहोस्।
+	Regular text	सामान्य पाठ
+	Reset Form Fields	फारम फिल्ड रिसेट गर्नुहोस्
+	Text Form Field	पाठ फारम फिल्ड
+	Text Form Field Options	पाठ फारम फिल्ड विकल्पहरू
+	Type your own:	आफ्नै टाइप गर्नुहोस्:
+	Unlimited	असीमित
+	Protected sections:	सुरक्षित खण्डहरू:
+	Section Protection	खण्ड सुरक्षा
+	Section {n}	खण्ड {n}
+	Select sections…	खण्ड छान्नुहोस्…
+	AutoSummarize	स्वतः सारांश
+	Create a new document and put the summary there	नयाँ कागजात बनाएर सारांश त्यहाँ राख्नुहोस्
+	Highlight key points	मुख्य बुँदा हाइलाइट गर्नुहोस्
+	Insert an executive summary or abstract at the top of the document	कागजातको माथि कार्यकारी सारांश वा सार घुसाउनुहोस्
+	Length of summary	सारांशको लम्बाइ
+	Percent of original:	मूलको प्रतिशत:
+	Summary: {words} of {of} words	सारांश: {of} मध्ये {words} शब्द
+	Type of summary	सारांशको प्रकार
+	Update document statistics	कागजात तथ्याङ्क अद्यावधिक गर्नुहोस्
+	{n} sentences	{n} वाक्य
+	{n} words or less	{n} शब्द वा कम
+	At:	मा:
+	Distance from text:	पाठबाट दूरी:
+	Format Frame	फ्रेम ढाँचाबद्ध गर्नुहोस्
+	Format Frame…	फ्रेम ढाँचाबद्ध गर्नुहोस्…
+	Frame	फ्रेम
+	Frame…	फ्रेम…
+	Insert Frame	फ्रेम घुसाउनुहोस्
+	Lock anchor	एङ्कर लक गर्नुहोस्
+	Remove Frame	फ्रेम हटाउनुहोस्
+	Text wrapping	पाठ बेराइ
+	Chinese Conversion	चिनियाँ रूपान्तरण
+	Chinese Conversion…	चिनियाँ रूपान्तरण…
+	Converted {n} characters	{n} वर्ण रूपान्तरण गरियो
+	Simplified Chinese to Traditional Chinese	सरलीकृत चिनियाँबाट परम्परागत चिनियाँ
+	Simplified to Traditional	सरलीकृतबाट परम्परागत
+	Traditional Chinese to Simplified Chinese	परम्परागत चिनियाँबाट सरलीकृत चिनियाँ
+	Traditional to Simplified	परम्परागतबाट सरलीकृत
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	ताइवान, हङकङ SAR र मकाउ SAR वर्ण रूप प्रयोग गर्नुहोस्
+	Asian Layout	एसियाली लेआउट
+	Fit Text	पाठ फिट गर्नुहोस्
+	Fit Text…	पाठ फिट गर्नुहोस्…
+	Two Lines in One	एउटामा दुई पङ्क्ति
+	Two Lines in One…	एउटामा दुई पङ्क्ति…
+	New text width (pt):	नयाँ पाठ चौडाइ (pt):
+	Enclose in brackets	कोष्ठकमा राख्नुहोस्
+	Bracket pair:	कोष्ठक जोडी:
+	Typography	टाइपोग्राफी
+	Character spacing control	वर्ण अन्तर नियन्त्रण
+	Don't compress	सङ्कुचन नगर्नुहोस्
+	Compress punctuation only	विराम चिह्न मात्र सङ्कुचन गर्नुहोस्
+	Compress punctuation and Japanese kana	विराम चिह्न र जापानी काना सङ्कुचन गर्नुहोस्
+	First and last characters	पहिलो र अन्तिम वर्ण
+	Strict	कडा
+	Cannot start a line:	पङ्क्ति सुरु गर्न सक्दैन:
+	Cannot end a line:	पङ्क्ति अन्त्य गर्न सक्दैन:
+	Japanese Find Options	जापानी खोज विकल्पहरू
+	Sounds like (Japanese)	ध्वनि मिल्ने (जापानी)
+	Match full/half width	पूर्ण/आधा चौडाइ मिलाउनुहोस्
+	Match hiragana/katakana	हिरागाना/काताकाना मिलाउनुहोस्
+	Match small kana	सानो काना मिलाउनुहोस्
+	Match prolonged sound marks and dashes	दीर्घ ध्वनि चिह्न र ड्यास मिलाउनुहोस्
+	Japanese Consistency Checker	जापानी एकरूपता जाँचकर्ता
+	Japanese Consistency Checker…	जापानी एकरूपता जाँचकर्ता…
+	No inconsistent spellings were found.	असङ्गत हिज्जे फेला परेन।
+	Pick the spelling to keep in each group.	हरेक समूहमा राख्ने हिज्जे छान्नुहोस्।
+	Bidirectional text	द्विदिशात्मक पाठ
+	Bidirectional Text	द्विदिशात्मक पाठ
+	Default direction:	पूर्वनिर्धारित दिशा:
+	Cursor movement:	कर्सर चाल:
+	Logical	तार्किक
+	Visual	दृश्य
+	Manage Fields	फिल्ड व्यवस्थापन गर्नुहोस्
+	File locations	फाइल स्थानहरू
+	File Locations	फाइल स्थानहरू
+	Documents:	कागजातहरू:
+	Pictures:	चित्रहरू:
+	The system's choice	प्रणालीको छनोट
+	Show Repairs	मर्मत देखाउनुहोस्
+	No repairs were needed.	मर्मत आवश्यक परेन।
+	These problems were found and repaired when the document was opened:	कागजात खोल्दा यी समस्या भेटिए र मर्मत गरिए:
+	An unreadable entry in the file was skipped: {what}	फाइलको पढ्न नसकिने प्रविष्टि छोडियो: {what}
+	An unreadable part was left out: {what}	पढ्न नसकिने भाग छोडियो: {what}
+	Unreadable relationships were ignored: {what}	पढ्न नसकिने सम्बन्ध बेवास्ता गरियो: {what}
+	A missing part of an embedded object was left out: {what}	सम्मिलित वस्तुको हराएको भाग छोडियो: {what}
+	Copy File	फाइल प्रतिलिपि गर्नुहोस्
+	Find Files	फाइलहरू खोज्नुहोस्
+	Letter Wizard	पत्र विजार्ड
+	Recipient's name:	प्रापकको नाम:
+	Salutation:	अभिवादन:
+	Subject:	विषय:
+	Complimentary closing:	समापन:
+	Sender's name:	प्रेषकको नाम:
+	Job title:	पद:
+	Company:	कम्पनी:
+	Enclosures:	संलग्नकहरू:
+	Cc:	प्रतिलिपि:
+	Edit Links to Files	फाइलका लिङ्क सम्पादन गर्नुहोस्
+	Source file	स्रोत फाइल
+	Locked	लक गरिएको
+	Change Source	स्रोत बदल्नुहोस्
+	This document has no links to files.	यो कागजातमा फाइलका लिङ्क छैनन्।
+	Web options	वेब विकल्पहरू
+	Web Options	वेब विकल्पहरू
+	Allow PNG as a graphics format	PNG लाई ग्राफिक ढाँचाको रूपमा अनुमति दिनुहोस्
+	Rely on CSS for font formatting	फन्ट ढाँचाका लागि CSS मा भर पर्नुहोस्
+	Rely on VML for displaying graphics in browsers	ब्राउजरमा ग्राफिक देखाउन VML मा भर पर्नुहोस्
+	Organize supporting files in a folder	सहायक फाइलहरू फोल्डरमा मिलाउनुहोस्
+	Use long file names whenever possible	सम्भव भएसम्म लामो फाइल नाम प्रयोग गर्नुहोस्
+	Screen size:	स्क्रिन आकार:
+	Pixels per inch:	पिक्सेल प्रति इन्च:
+	Hangul Hanja Conversion	हाङ्गुल हान्जा रूपान्तरण
+	Hangul Hanja Conversion…	हाङ्गुल हान्जा रूपान्तरण…
+	Hangul to Hanja	हाङ्गुलबाट हान्जा
+	Hanja to Hangul	हान्जाबाट हाङ्गुल
+	Put the caret in Korean text to choose its Hanja.	यसको हान्जा छान्न कर्सर कोरियाली पाठमा राख्नुहोस्।
+	The selection, or the whole document when nothing is selected.	चयन, वा केही चयन नभएमा सम्पूर्ण कागजात।
+	Add frame	फ्रेम थप्नुहोस्
+	Attributes:	विशेषताहरू:
+	Border color:	किनारा रङ:
+	Border width:	किनारा चौडाइ:
+	Choose how the custom XML editor displays names and removes schema references.	अनुकूलित XML सम्पादकले नाम कसरी देखाउँछ र स्किमा सन्दर्भ कसरी हटाउँछ छान्नुहोस्।
+	Confirm before removing a schema reference	स्किमा सन्दर्भ हटाउनुअघि पुष्टि गर्नुहोस्
+	Elements:	तत्वहरू:
+	Enter an absolute HTTP(S) or URN schema URI.	पूर्ण HTTP(S) वा URN स्किमा URI प्रविष्ट गर्नुहोस्।
+	Frame URL	फ्रेम URL
+	Frame borders:	फ्रेम किनारा:
+	Frame spacing:	फ्रेम अन्तर:
+	Frames:	फ्रेमहरू:
+	Frameset Properties	फ्रेमसेट गुणहरू
+	Hide	लुकाउनुहोस्
+	Margin height:	मार्जिन उचाइ:
+	Margin width:	मार्जिन चौडाइ:
+	No resize	आकार नबदल्ने
+	No schema references	स्किमा सन्दर्भ छैन
+	Optional	ऐच्छिक
+	Optional, 0–1000	ऐच्छिक, 0–1000
+	Pixels (0–100)	पिक्सेल (0–100)
+	Remove Attribute	विशेषता हटाउनुहोस्
+	Remove schema reference {schema}?	स्किमा सन्दर्भ {schema} हटाउने?
+	Rows:	पङ्क्तिहरू:
+	Schema Library	स्किमा पुस्तकालय
+	Schema URI:	स्किमा URI:
+	Schemas:	स्किमाहरू:
+	Scrolling:	स्क्रोल:
+	Select a custom XML store with editable datastore properties first.	पहिले सम्पादनयोग्य डेटास्टोर गुण भएको अनुकूलित XML स्टोर छान्नुहोस्।
+	Select an XML element to add, change, or remove one of its attributes.	यसको विशेषता थप्न, बदल्न वा हटाउन XML तत्व छान्नुहोस्।
+	Selected element: {name}	चयन गरिएको तत्व: {name}
+	Set Attribute	विशेषता सेट गर्नुहोस्
+	Show namespace URIs beside XML names	XML नामछेउ नेमस्पेस URI देखाउनुहोस्
+	Store: {store}	स्टोर: {store}
+	This XML store is preserved but cannot be edited here.	यो XML स्टोर जोगाइन्छ तर यहाँ सम्पादन गर्न सकिँदैन।
+	This document has no custom XML stores.	यो कागजातमा अनुकूलित XML स्टोर छैन।
+	This store has no datastore properties part for schema references.	यो स्टोरमा स्किमा सन्दर्भका लागि डेटास्टोर गुण भाग छैन।
+	This store has no elements available for editing.	यो स्टोरमा सम्पादनका लागि तत्व उपलब्ध छैन।
+	Value:	मान:
+	View and manage schema references associated with custom XML stores.	अनुकूलित XML स्टोरसँग सम्बन्धित स्किमा सन्दर्भ हेर्नुहोस् र व्यवस्थापन गर्नुहोस्।
+	XML Element Attributes	XML तत्व विशेषताहरू
+	XML Options	XML विकल्पहरू
+	e.g. 25%,*	जस्तै 25%,*
+	e.g. 30%,*	जस्तै 30%,*
+	Web	वेब
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	इन्टरफेसले अझै {language} सही रूपमा देखाउन सक्दैन: जोडिने वा क्रम बदल्ने अक्षर र दायाँबाट बायाँ लेखिएको पाठ गलत देखिन सक्छ। तैपनि प्रयोग गर्ने?

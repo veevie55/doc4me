@@ -3046,3 +3046,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Grensesnittet kan enno ikkje teikne {language} rett: bokstavar som heng saman eller byter rekkjefølgje, og tekst frå høgre mot venstre, kan sjå feil ut. Bruke det likevel?

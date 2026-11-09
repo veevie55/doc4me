@@ -3075,3 +3075,4 @@ spacing	Normal	Normal
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Arayüz {language} dilini henüz doğru çizemiyor: birleşen veya sırası değişen harfler ve sağdan sola metin yanlış görünebilir. Yine de kullanılsın mı?

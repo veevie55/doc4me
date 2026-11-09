@@ -3056,3 +3056,4 @@ spacing	Normal	Tavaline
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Liides ei suuda veel keelt {language} õigesti joonistada: liituvad või järjekorda muutvad tähed ning paremalt vasakule tekst võivad välja näha valesti. Kas kasutada siiski?

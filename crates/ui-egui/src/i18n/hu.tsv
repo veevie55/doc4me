@@ -3049,3 +3049,4 @@ spacing	Normal	Normál
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	A felület még nem tudja helyesen megjeleníteni a(z) {language} nyelvet: az összekapcsolódó vagy sorrendet váltó betűk és a jobbról balra írt szöveg hibásan nézhet ki. Mégis használja?

@@ -3043,3 +3043,4 @@
 	e.g. 30%,*	օր.՝ 30%,*
 	Web	Վեբ
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Միջերեսը դեռ չի կարող ճիշտ պատկերել {language}-ը. միացող կամ հերթականությունը փոխող տառերը և աջից ձախ տեքստը կարող են սխալ երևալ։ Միևնույն է օգտագործե՞լ։

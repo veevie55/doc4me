@@ -630,12 +630,41 @@ fn language_picker(app: &mut WordApp, ui: &mut Ui) {
             }
             for lang in Lang::for_picker() {
                 if ui.selectable_label(app.ui.language == lang.code(), lang.name()).clicked() {
-                    let _ = app.run("ui.language", json!({"value": lang.code()}));
+                    pick_language(app, lang);
                 }
             }
         });
     });
+    if let Some(lang) = app.language_warning {
+        egui::Frame::group(ui.style()).show(ui, |ui| {
+            let text = crate::i18n::fmt(
+                tl!("The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?"),
+                &[("language", lang.name())],
+            );
+            ui.label(text);
+            ui.horizontal(|ui| {
+                if ui.button(tl!("OK")).clicked() {
+                    app.language_warning = None;
+                    let _ = app.run("ui.language", json!({"value": lang.code()}));
+                }
+                if ui.button(tl!("Cancel")).clicked() {
+                    app.language_warning = None;
+                }
+            });
+        });
+    }
     ui.label(RichText::new(tl!("Automatic follows your system's language. Menus and commands change; your documents don't.")).small().weak());
+}
+
+/// A language picked in the list: used at once, or, when the interface draws it only imperfectly,
+/// held until the warning under the list is confirmed.
+fn pick_language(app: &mut WordApp, lang: crate::i18n::Lang) {
+    if lang.renders_imperfectly() && app.ui.language != lang.code() {
+        app.language_warning = Some(lang);
+    } else {
+        app.language_warning = None;
+        let _ = app.run("ui.language", json!({"value": lang.code()}));
+    }
 }
 
 /// Deserialize `input` over `T`'s defaults one setting at a time: a value of the wrong type is
@@ -970,6 +999,47 @@ mod tests {
         assert_eq!(h.state().ui.animations, Animations::On);
         assert!(h.state().animations_on());
         assert!(h.query_by_label("Your system has animation effects turned off.").is_none(), "only said while the system is followed");
+    }
+
+    /// File › Options › Language: picking a language the interface draws only imperfectly asks
+    /// first; Cancel keeps the current language and OK switches.
+    #[test]
+    fn a_language_drawn_imperfectly_is_confirmed_before_it_is_used() {
+        let mut a = app();
+        a.run("file.options", json!({"pane": "language"})).unwrap();
+        let mut h = egui_kittest::Harness::builder().with_size(egui::vec2(1440.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            a,
+        );
+        h.run_steps(4);
+        let before = h.state().ui.language.clone();
+        let warning =
+            "The interface can't draw हिन्दी correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?";
+        // The list is long; the pick goes through the same function the list item calls.
+        let pick = |h: &mut egui_kittest::Harness<'_, WordApp>| {
+            super::pick_language(h.state_mut(), crate::i18n::Lang::from_pref("hi"));
+            h.run_steps(4);
+        };
+        super::pick_language(h.state_mut(), crate::i18n::Lang::from_pref("es"));
+        assert_eq!((h.state().ui.language.as_str(), h.state().language_warning), ("es", None), "other languages switch at once");
+        h.state_mut().run("ui.language", json!({"value": before.as_str()})).unwrap();
+        h.run_steps(4);
+        pick(&mut h);
+        assert_eq!(h.state().ui.language, before, "not switched yet");
+        assert_eq!(h.state().language_warning.map(|l| l.code()), Some("hi"), "the warning is pending");
+        assert!(h.query_by_label(warning).is_some(), "the warning asks first");
+        h.get_by_label("Cancel").click();
+        h.run_steps(4);
+        assert_eq!(h.state().ui.language, before, "Cancel keeps the language");
+        assert!(h.query_by_label(warning).is_none());
+        pick(&mut h);
+        h.get_by_label("OK").click();
+        h.run_steps(4);
+        assert_eq!(h.state().ui.language, "hi", "OK switches");
     }
 
     /// File › Options › Advanced › Animation: the checkbox is the `ui.caretAnimation` setting,

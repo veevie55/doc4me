@@ -474,6 +474,18 @@ fn cjk_catalogs_are_covered_by_the_embedded_interface_faces() {
     }
 }
 
+/// Languages the interface draws only imperfectly (shaping, right-to-left) are never chosen by
+/// "Automatic": a system that prefers Hindi, then English, gets English until Hindi is picked by hand.
+#[test]
+fn automatic_passes_over_languages_drawn_imperfectly() {
+    let hi = lang("hi");
+    assert!(hi.renders_imperfectly() && !lang("ko").renders_imperfectly() && !Lang::EN.renders_imperfectly());
+    assert_eq!(lang_from_tag("hi-IN"), Some(hi), "the catalog is found by its tag");
+    assert_eq!(first_supported(["hi-IN", "en-US"]), Some(Lang::EN));
+    assert_eq!(first_supported(["mr-IN", "ne-NP"]), None);
+    assert_eq!(Lang::from_pref("hi"), hi, "picked by hand, it is used");
+}
+
 #[test]
 fn only_cjk_languages_ask_for_an_installed_cjk_font() {
     // #241 follow-up: an English interface must not read a large system CJK font on startup.

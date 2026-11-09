@@ -3045,3 +3045,4 @@ spacing	Normal	Normal
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	L'interface ne peut pas encore afficher correctement {language} : les lettres qui se lient ou changent d'ordre et le texte de droite à gauche peuvent mal s'afficher. L'utiliser quand même ?

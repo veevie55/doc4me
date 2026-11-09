@@ -3048,3 +3048,4 @@
 	e.g. 30%,*	e.g. 30%,*
 	Web	Web
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	A interface aínda non pode debuxar correctamente {language}: as letras que se unen ou cambian de orde e o texto de dereita a esquerda poden verse mal. Usalo igualmente?

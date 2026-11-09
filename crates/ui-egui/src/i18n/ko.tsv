@@ -3043,3 +3043,4 @@
 	e.g. 30%,*	예: 30%,*
 	Web	웹
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	인터페이스가 아직 {language}을(를) 올바르게 그리지 못합니다. 이어지거나 순서가 바뀌는 글자와 오른쪽에서 왼쪽으로 쓰는 텍스트가 잘못 보일 수 있습니다. 그래도 사용하시겠습니까?

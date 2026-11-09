@@ -31,7 +31,7 @@ lang-029	Greek	el-GR	el
 lang-030	Gujarati	gu-IN	-
 lang-031	Hausa	ha-Latn-NG	ha
 lang-032	Hebrew	he-IL	-
-lang-033	Hindi	hi-IN	-
+lang-033	Hindi	hi-IN	hi
 lang-034	Hungarian	hu-HU	hu
 lang-035	Icelandic	is-IS	is
 lang-036	Igbo	ig-NG	ig
@@ -56,8 +56,8 @@ lang-054	Malay (Latin)	ms-MY	ms
 lang-055	Malayalam	ml-IN	-
 lang-056	Maltese	mt-MT	mt
 lang-057	Maori	mi-NZ	mi
-lang-058	Marathi	mr-IN	-
-lang-059	Nepali	ne-NP	-
+lang-058	Marathi	mr-IN	mr
+lang-059	Nepali	ne-NP	ne
 lang-060	Norwegian Bokmål	nb-NO	nb
 lang-061	Norwegian Nynorsk	nn-NO	nn
 lang-062	Odia	or-IN	-

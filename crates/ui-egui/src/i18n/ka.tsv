@@ -3043,3 +3043,4 @@
 	e.g. 30%,*	მაგ. 30%,*
 	Web	ვები
 	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	ინტერფეისს ჯერ არ შეუძლია {language}-ის სწორად დახატვა: ერთმანეთთან შეერთებული ან რიგის შემცვლელი ასოები და მარჯვნიდან მარცხნივ ტექსტი შეიძლება არასწორად გამოჩნდეს. მაინც გამოვიყენო?

@@ -32,6 +32,11 @@ use std::sync::OnceLock;
 
 use catalog::Catalog;
 
+/// Languages the interface draws only imperfectly ([`Lang::renders_imperfectly`]): Indic scripts
+/// need shaping and Arabic-script and Hebrew text needs right-to-left layout as well.
+const IMPERFECT_RENDERING: [&str; 19] =
+    ["ar", "as", "bn", "fa", "gu", "he", "hi", "kn", "kok", "ml", "mr", "ne", "or", "pa", "ps", "si", "ta", "te", "ur"];
+
 /// The `language` setting that follows the system.
 pub const AUTO: &str = "auto";
 
@@ -52,7 +57,7 @@ pub struct LangInfo {
 }
 
 /// The registry. English first: it is the fallback and the source language.
-pub static LANGUAGES: [LangInfo; 72] = [
+pub static LANGUAGES: [LangInfo; 75] = [
     LangInfo { code: "en", name: "English", source: "", prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
     // British English (colour, centre, customise); `en-GB` and `en_GB.UTF-8` resolve here, other
     // English regions keep the built-in US English. New documents stay in Doc4Me's default
@@ -260,6 +265,19 @@ pub static LANGUAGES: [LangInfo; 72] = [
     },
     // AI-generated draft from English source meanings; native-speaker review is still required.
     LangInfo { code: "ko", name: "한국어", source: include_str!("ko.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; the interface draws Devanagari only imperfectly (no shaping yet), so
+    // picking it asks first ([`Lang::renders_imperfectly`]).
+    LangInfo {
+        code: "hi", name: "हिन्दी", source: include_str!("hi.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Hindi.
+    LangInfo {
+        code: "mr", name: "मराठी", source: include_str!("mr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Hindi.
+    LangInfo {
+        code: "ne", name: "नेपाली", source: include_str!("ne.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
 ];
 
 impl LangInfo {
@@ -323,6 +341,13 @@ impl Lang {
     pub fn cjk_font_text(hans: bool) -> (Vec<&'static str>, String) {
         let catalogs = Lang::all().filter(|l| l.uses_cjk() && l.prefers_hans() == hans).map(|l| l.0.source).collect();
         (catalogs, Lang::all().map(Lang::name).collect::<Vec<_>>().join(" "))
+    }
+
+    /// Does the interface draw this language only imperfectly? Its text needs shaping (letters that
+    /// join or change order) or right-to-left layout, which the interface's text drawing doesn't do
+    /// yet. Picking one in File › Options asks first, and "Automatic" never chooses one.
+    pub fn renders_imperfectly(self) -> bool {
+        IMPERFECT_RENDERING.contains(&self.0.code)
     }
 
     /// A language by its exact code (any case).
@@ -398,8 +423,10 @@ pub fn lang_from_tag(tag: &str) -> Option<Lang> {
 
 /// The first of the system's preferred languages Doc4Me has, in the user's order: someone
 /// who prefers French, then Japanese, gets Japanese rather than English.
+/// Languages the interface draws only imperfectly are passed over: they are used only when picked
+/// (and confirmed) by hand.
 pub fn first_supported<'a>(tags: impl IntoIterator<Item = &'a str>) -> Option<Lang> {
-    tags.into_iter().find_map(lang_from_tag)
+    tags.into_iter().find_map(|tag| lang_from_tag(tag).filter(|l| !l.renders_imperfectly()))
 }
 
 /// The system language (looked up once). English when it can't be determined or isn't supported.
