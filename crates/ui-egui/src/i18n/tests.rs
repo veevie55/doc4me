@@ -51,8 +51,8 @@ fn the_first_supported_preferred_language_wins() {
     assert_eq!(first_supported(["en-US", "ja-JP"]), Some(Lang::EN));
     assert_eq!(first_supported([UNSUPPORTED, "qtz"]), None);
     assert_eq!(first_supported(["fr-FR", "de-DE"]), Some(lang("fr")));
-    assert_eq!(first_supported(["ka-GE", "de-DE"]), Some(lang("de")));
-    assert_eq!(first_supported(["ka-GE", UNSUPPORTED]), None);
+    assert_eq!(first_supported(["km-KH", "de-DE"]), Some(lang("de")));
+    assert_eq!(first_supported(["km-KH", UNSUPPORTED]), None);
     assert_eq!(first_supported([]), None);
 }
 
@@ -478,7 +478,7 @@ fn cjk_catalogs_are_covered_by_the_embedded_interface_faces() {
 fn only_cjk_languages_ask_for_an_installed_cjk_font() {
     // #241 follow-up: an English interface must not read a large system CJK font on startup.
     let cjk: Vec<&str> = Lang::all().filter(|l| l.uses_cjk()).map(Lang::code).collect();
-    assert_eq!(cjk, ["zh-hans", "zh-hant", "ja"]);
+    assert_eq!(cjk, ["zh-hans", "zh-hant", "ja", "ko"]);
 }
 
 #[test]
