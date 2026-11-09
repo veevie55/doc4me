@@ -9,7 +9,7 @@ description = "Doc4Me egui front end (Word-style ribbon UI); swappable: nothing 
 workspace = true
 
 [dependencies]
-doc4me-geom = { workspace = true }
+doc4me-geom = { workspace = true, features = ["image"] }
 doc4me-doc = { workspace = true }
 doc4me-fonts = { workspace = true }
 doc4me-layout = { workspace = true }

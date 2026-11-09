@@ -452,6 +452,9 @@ impl Series {
     }
 }
 
+/// Longest number-format code honoured (the limit spreadsheet apps use); longer ones are ignored.
+const MAX_FORMAT_CODE: usize = 255;
+
 /// Category labels of a `c:cat` (string or number cache), capped. Numbers show in the cache's
 /// format code (dates included); text and `General` numbers as they are stored.
 fn labels(el: Option<&El>, cap: usize, date1904: bool) -> Vec<String> {
@@ -459,7 +462,8 @@ fn labels(el: Option<&El>, cap: usize, date1904: bool) -> Vec<String> {
     let Some(cache) = el.find("c:strCache").or_else(|| el.find("c:numCache")).or_else(|| el.find("c:strLit")).or_else(|| el.find("c:numLit")) else {
         return Vec::new();
     };
-    let code = cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && !f.eq_ignore_ascii_case("General"));
+    let code =
+        cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE && !f.eq_ignore_ascii_case("General"));
     pts(cache, cap)
         .into_iter()
         .map(|p| {
@@ -486,7 +490,7 @@ fn numbers(el: Option<&El>, cap: usize) -> (Vec<Option<f64>>, Option<String>) {
     let Some(cache) = el.and_then(|e| e.find("c:numCache").or_else(|| e.find("c:numLit"))) else {
         return (Vec::new(), None);
     };
-    let fmt = cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty());
+    let fmt = cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE);
     let vals = pts(cache, cap).into_iter().map(|p| p.and_then(|t| t.trim().parse::<f64>().ok()).filter(|v| v.is_finite())).collect();
     (vals, fmt)
 }
@@ -522,7 +526,12 @@ fn axis(a: Option<&El>) -> Axis {
         mid: a.child("c:crossBetween").and_then(|c| c.attr("val")) == Some("midCat"),
         min: num("c:min"),
         max: num("c:max"),
-        fmt: a.child("c:numFmt").filter(|f| f.attr("sourceLinked") != Some("1")).and_then(|f| f.attr("formatCode")).map(str::to_string),
+        fmt: a
+            .child("c:numFmt")
+            .filter(|f| f.attr("sourceLinked") != Some("1"))
+            .and_then(|f| f.attr("formatCode"))
+            .filter(|f| f.len() <= MAX_FORMAT_CODE)
+            .map(str::to_string),
     }
 }
 
@@ -2100,5 +2109,43 @@ mod tests {
         assert_eq!(format_value(0.00012, "0.0E+0", 0.0001), "1.2E-4");
         assert_eq!(format_value(0.0, "0.00E+00", 1.0), "0.00E+00");
         assert_eq!(format_value(-12345.0, "0.0E-00", 1.0), "-1.2E04");
+    }
+
+    #[test]
+    fn category_format_code_length_is_capped() {
+        let cat = |code: &str| -> Vec<String> {
+            let x = format!(
+                r#"<c:cat {NS}><c:numRef><c:numCache><c:formatCode>{code}</c:formatCode><c:ptCount val="1"/><c:pt idx="0"><c:v>5</c:v></c:pt></c:numCache></c:numRef></c:cat>"#
+            );
+            labels(Some(&crate::xml::parse(x.as_bytes()).unwrap()), 10, false)
+        };
+        let ok = format!("{}0", "x".repeat(254));
+        assert!(cat(&ok)[0].starts_with("xxx"));
+        let long = format!("{}0", "x".repeat(300));
+        assert_eq!(cat(&long), ["5"]);
+    }
+
+    #[test]
+    fn value_format_code_length_is_capped() {
+        let val = |code: &str| -> Option<String> {
+            let x = format!(
+                r#"<c:val {NS}><c:numRef><c:numCache><c:formatCode>{code}</c:formatCode><c:ptCount val="1"/><c:pt idx="0"><c:v>5</c:v></c:pt></c:numCache></c:numRef></c:val>"#
+            );
+            numbers(Some(&crate::xml::parse(x.as_bytes()).unwrap()), 10).1
+        };
+        let ok = format!("{}0", "x".repeat(254));
+        assert_eq!(val(&ok), Some(ok.clone()));
+        assert_eq!(val(&format!("{}0", "x".repeat(300))), None);
+    }
+
+    #[test]
+    fn axis_format_code_length_is_capped() {
+        let fmt = |code: &str| -> Option<String> {
+            let x = format!(r#"<c:valAx {NS}><c:numFmt formatCode="{code}" sourceLinked="0"/></c:valAx>"#);
+            axis(Some(&crate::xml::parse(x.as_bytes()).unwrap())).fmt
+        };
+        let ok = format!("{}0", "x".repeat(254));
+        assert_eq!(fmt(&ok), Some(ok.clone()));
+        assert_eq!(fmt(&format!("{}0", "x".repeat(300))), None);
     }
 }

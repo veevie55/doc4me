@@ -1302,7 +1302,8 @@ fn adjust(s: &mut Session, f: impl Fn(image::DynamicImage) -> image::DynamicImag
     let (_, o) = selected(s).ok_or_else(|| CmdError::Disabled("no picture".into()))?;
     let InlineObject::Image { media, .. } = o else { return Err(CmdError::Disabled("not a picture".into())) };
     let bytes = s.doc.media.get(&media).cloned().ok_or_else(|| CmdError::Failed("picture data missing".into()))?;
-    let img = image::load_from_memory(&bytes).map_err(|e| CmdError::Failed(format!("can't decode the picture: {e}")))?;
+    let img = doc4me_geom::picture::decode(&bytes, doc4me_geom::MAX_DECODED_BYTES)
+        .map_err(|e| CmdError::Failed(format!("can't decode the picture: {e}")))?;
     if (img.width() as u64) * (img.height() as u64) > 80_000_000 {
         return Err(CmdError::Failed("picture is too large to edit".into()));
     }

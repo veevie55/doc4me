@@ -10,7 +10,7 @@ workspace = true
 
 [dependencies]
 doc4me-doc = { workspace = true }
-doc4me-geom = { workspace = true }
+doc4me-geom = { workspace = true, features = ["image"] }
 image = { workspace = true }
 quick-xml = { workspace = true }
 zip = { workspace = true }

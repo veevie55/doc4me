@@ -299,7 +299,7 @@ fn licence_name(code: &str, version: Option<&str>) -> String {
 /// A WebP picture as JPEG (or PNG when it has transparency), so older Word versions show it.
 fn webp_to_jpeg_or_png(bytes: &[u8]) -> Result<Vec<u8>, CmdError> {
     let img =
-        image::load_from_memory_with_format(bytes, image::ImageFormat::WebP).map_err(|e| CmdError::Failed(format!("not a readable picture: {e}")))?;
+        doc4me_geom::picture::decode(bytes, doc4me_geom::MAX_DECODED_BYTES).map_err(|e| CmdError::Failed(format!("not a readable picture: {e}")))?;
     let mut out = Vec::new();
     let mut cur = std::io::Cursor::new(&mut out);
     if img.color().has_alpha() {

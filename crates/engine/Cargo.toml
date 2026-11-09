@@ -9,7 +9,7 @@ description = "Doc4Me engine: session, selection, undo, the command registry (ev
 workspace = true
 
 [dependencies]
-doc4me-geom = { workspace = true }
+doc4me-geom = { workspace = true, features = ["image"] }
 doc4me-doc = { workspace = true }
 doc4me-fonts = { workspace = true }
 doc4me-layout = { workspace = true }

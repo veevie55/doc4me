@@ -1919,6 +1919,27 @@ pub(crate) fn quote_space_open_breaks(text: &str) -> Vec<usize> {
     out
 }
 
+/// The width of the word that starts at each cluster: the clusters up to the first break
+/// opportunity that isn't a hyphenation point, their advance, spaces aside (WordCraft #3808).
+/// Every word is measured once, before the line is broken. The sum includes negative advances
+/// (a font that pulls a glyph back takes the width off again), added from the word's end.
+pub(crate) fn word_widths(clusters: &[Cluster], hyph_after: &[u32]) -> Vec<f32> {
+    let n = clusters.len();
+    let mut width = vec![0.0f32; n + 1];
+    for k in (0..n).rev() {
+        let Some(c) = clusters.get(k) else { continue };
+        let adv = if c.kind == ClKind::Space { 0.0 } else { c.adv };
+        // The word ends at a break opportunity. A hyphenation point isn't one: the break there
+        // is optional, so the word runs on to the next.
+        let next = width.get(k + 1).copied().unwrap_or(0.0);
+        let w = if c.break_after && hyph_after.binary_search(&(k as u32)).is_err() { adv } else { adv + next };
+        if let Some(slot) = width.get_mut(k) {
+            *slot = w;
+        }
+    }
+    width
+}
+
 fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Option<&Level>) {
     let suffix = level.map(|l| l.suffix);
     let rp = pl.rp.clone();
@@ -1934,6 +1955,10 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
     let zone = Some(env.doc.settings.hyphenation_zone).filter(|z| z.is_finite() && *z >= 0.0).unwrap_or(HYPHENATION_ZONE).min(1584.0);
     let hyph_limit = env.doc.settings.consecutive_hyphen_limit as usize;
     let n = pl.clusters.len();
+    // The width of every word, measured once: the word beside a float is measured again for
+    // every row it is tried on, and a word with no break opportunity in it (a long URL, or a
+    // run of letters) was walked again on every line, quadratic in its length (WordCraft #3808).
+    let widths = word_widths(&pl.clusters, &pl.hyph_after);
     // A right-to-left paragraph is laid out from its start edge, as if mirrored: indents, tabs,
     // the list label and alignment are measured from the right. Lines are mirrored back (and
     // bidirectional text reordered) once broken; floating objects are mirrored in.
@@ -2169,17 +2194,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     // floating object and the word fits the full line; then it tries the row's
                     // next span, or the next row. The word runs to the next break that isn't a
                     // hyphenation point.
-                    let word: f32 = (c0..n)
-                        .filter_map(|k| pl.clusters.get(k).map(|c| (k, c)))
-                        .scan(false, |done, (k, c)| {
-                            let end = c.break_after && pl.hyph_after.binary_search(&(k as u32)).is_err();
-                            (!std::mem::replace(done, end)).then_some(c)
-                        })
-                        .filter(|c| c.kind != ClKind::Space)
-                        .map(|c| c.adv)
-                        .sum();
                     let full = base_right - row_lo;
-                    skip = narrowed && skipped < 50 && word <= full + 0.01;
+                    skip = narrowed && skipped < 50 && widths.get(c0).is_some_and(|w| *w <= full + 0.01);
                 }
                 break;
             }

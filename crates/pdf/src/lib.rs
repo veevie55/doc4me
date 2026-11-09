@@ -1490,12 +1490,15 @@ fn load_image(data: &Arc<Vec<u8>>) -> Option<Image> {
 /// [`load_image`] with an explicit RGBA byte budget (a small one in tests): the header's size is
 /// checked before anything is allocated (WordCraft #1321).
 fn load_image_within(data: &Arc<Vec<u8>>, budget: u64) -> Option<Image> {
-    let fmt = image::guess_format(data).ok()?;
-    let (hw, hh) = image::ImageReader::new(std::io::Cursor::new(data.as_slice())).with_guessed_format().ok()?.into_dimensions().ok()?;
-    if hw > MAX_IMAGE_SIDE || hh > MAX_IMAGE_SIDE || !doc4me_geom::decode_fits(hw, hh, budget) {
+    // One decoder for every picture: the header's size, the decoder's own working memory (a
+    // progressive JPEG's coefficients) and the format (no TIFF with JPEG strips) are checked
+    // against the budget before anything is allocated (WordCraft #3644, #3645).
+    let probe = doc4me_geom::picture::probe(data).ok()?;
+    let fmt = probe.format;
+    if probe.width > MAX_IMAGE_SIDE || probe.height > MAX_IMAGE_SIDE {
         return None;
     }
-    let dec = image::load_from_memory_with_format(data, fmt).ok()?;
+    let dec = probe.decode(budget).ok()?;
     let (w, h) = (dec.width(), dec.height());
     if w == 0 || h == 0 || w > MAX_IMAGE_SIDE || h > MAX_IMAGE_SIDE {
         return None;

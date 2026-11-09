@@ -149,7 +149,7 @@ fn thumb_texture(ctx: &egui::Context, key: &str, bytes: &[u8]) -> Option<egui::T
     if w == 0 || h == 0 || w > MAX_DECODE_SIDE || h > MAX_DECODE_SIDE {
         return None;
     }
-    let img = image::load_from_memory(bytes).ok()?.thumbnail(THUMB_PX, THUMB_PX).to_rgba8();
+    let img = doc4me_geom::picture::decode(bytes, doc4me_geom::MAX_DECODED_BYTES).ok()?.thumbnail(THUMB_PX, THUMB_PX).to_rgba8();
     let size = [img.width() as usize, img.height() as usize];
     Some(ctx.load_texture(key, egui::ColorImage::from_rgba_unmultiplied(size, img.as_raw()), egui::TextureOptions::LINEAR))
 }

@@ -189,17 +189,13 @@ pub fn decode_pixmap(bytes: &[u8]) -> Option<Pixmap> {
 /// the size: a small file declaring a huge picture is refused before the decoder (and the RGBA
 /// copy) allocate anything (WordCraft #1321).
 fn decode_pixmap_within(bytes: &[u8], budget: u64) -> Option<Pixmap> {
-    let (hw, hh) = image_size(bytes)?;
-    if hw > MAX_DECODE_SIDE || hh > MAX_DECODE_SIDE || !doc4me_geom::decode_fits(hw, hh, budget) {
+    // One decoder for every picture (`doc4me_geom::picture`): header, decoder working memory and
+    // format checked against the budget first (WordCraft #3644, #3645).
+    let probe = doc4me_geom::picture::probe(bytes).ok()?;
+    if probe.width > MAX_DECODE_SIDE || probe.height > MAX_DECODE_SIDE {
         return None;
     }
-    // The decoder holds the side limit too, in case the frame it decodes differs from the header.
-    let mut reader = image::ImageReader::new(std::io::Cursor::new(bytes)).with_guessed_format().ok()?;
-    let mut limits = image::Limits::default();
-    limits.max_image_width = Some(MAX_DECODE_SIDE);
-    limits.max_image_height = Some(MAX_DECODE_SIDE);
-    reader.limits(limits);
-    let img = reader.decode().ok()?.into_rgba8();
+    let img = probe.decode(budget).ok()?.into_rgba8();
     let (w, h) = img.dimensions();
     premul_pixmap(w, h, img.as_raw())
 }

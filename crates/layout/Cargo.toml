@@ -9,7 +9,7 @@ description = "Doc4Me layout: shaping, line breaking, tabs, lists, tables, pagin
 workspace = true
 
 [dependencies]
-doc4me-geom = { workspace = true }
+doc4me-geom = { workspace = true, features = ["image"] }
 doc4me-doc = { workspace = true }
 doc4me-fonts = { workspace = true }
 doc4me-proof = { workspace = true }

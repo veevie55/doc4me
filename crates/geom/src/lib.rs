@@ -8,6 +8,8 @@
 
 use serde::{Deserialize, Serialize};
 
+#[cfg(feature = "image")]
+pub mod picture;
 mod pixels;
 pub use pixels::{MAX_DECODED_BYTES, MAX_RASTER_PIXELS, decode_fits, fit_pixels, rgba_bytes, rgba_fits};
 

@@ -888,11 +888,9 @@ const MAX_DECODE_ALLOC: u64 = 512 << 20;
 /// dimensions can't exhaust memory when a picture is re-encoded on export. `None` when it would
 /// be too large or doesn't decode.
 pub fn decode_bounded(data: &[u8]) -> Option<image::DynamicImage> {
-    let mut reader = image::ImageReader::new(std::io::Cursor::new(data)).with_guessed_format().ok()?;
-    let mut limits = image::Limits::default();
-    limits.max_alloc = Some(MAX_DECODE_ALLOC);
-    reader.limits(limits);
-    reader.decode().ok()
+    // The shared decoder checks the header, the decoder's working memory and the format against
+    // the budget before allocating (WordCraft #3644, #3645).
+    doc4me_geom::picture::decode(data, MAX_DECODE_ALLOC).ok()
 }
 
 /// A picture from bytes with an optional display size (points); the natural size (96 dpi) is
