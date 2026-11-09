@@ -126,7 +126,7 @@ pub fn specs() -> Vec<CommandSpec> {
         .key("Mod+Shift+F6")
         .pure(),
         CommandSpec::new("view.collapseRibbon", "Collapse the Ribbon", "View", |s, _| {
-            s.ui_requests.push(json!({"ui": "collapseRibbon"}));
+            s.push_ui_request(json!({"ui": "collapseRibbon"}));
             sel_result(s)
         })
         .key("Mod+F1")
@@ -217,7 +217,7 @@ fn zoom(s: &mut Session, v: &Value) -> CmdResult {
             s.view.multi_page = false;
         }
         None => {
-            s.ui_requests.push(json!({"open": "zoom"}));
+            s.push_ui_request(json!({"open": "zoom"}));
         }
     }
     Ok(json!({"zoom": s.view.zoom, "fit": s.view.fit}))
@@ -225,6 +225,6 @@ fn zoom(s: &mut Session, v: &Value) -> CmdResult {
 
 /// A View › Window request for the interface; headless, nothing to show.
 fn window(s: &mut Session, req: Value) -> CmdResult {
-    s.ui_requests.push(req);
+    s.push_ui_request(req);
     sel_result(s)
 }

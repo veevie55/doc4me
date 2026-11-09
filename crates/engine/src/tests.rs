@@ -6054,3 +6054,14 @@ fn file_reads_refuse_devices_folders_and_named_pipes_without_blocking() {
     assert!(t.elapsed().as_secs() < 5, "{:?}", t.elapsed());
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// WordCraft #3997: a headless session never drains the front-end requests, so the queue keeps
+/// only the newest `MAX_UI_REQUESTS`.
+#[test]
+fn headless_ui_requests_stay_bounded() {
+    let mut s = s();
+    for _ in 0..(crate::session::MAX_UI_REQUESTS * 3) {
+        run(&mut s, "help.about", json!({}));
+    }
+    assert_eq!(s.ui_requests.len(), crate::session::MAX_UI_REQUESTS);
+}

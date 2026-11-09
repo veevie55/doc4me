@@ -216,7 +216,7 @@ pub fn specs() -> Vec<CommandSpec> {
         // browser (`doc4me_doc::video::WebVideo::watch_url`).
         CommandSpec::new("picture.playVideo", "Play Video", "Picture Format", |s, _| {
             let url = selected_video(s).and_then(|v| v.watch_url()).ok_or_else(|| CmdError::Disabled("the video has no web address".into()))?;
-            s.ui_requests.push(json!({"openUrl": url}));
+            s.push_ui_request(json!({"openUrl": url}));
             Ok(json!({"url": url}))
         })
         .pure()

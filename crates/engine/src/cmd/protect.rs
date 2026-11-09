@@ -250,6 +250,24 @@ fn always_allowed(id: &str) -> bool {
 /// [`outside_unchanged`]).
 pub(crate) fn check_before(s: &Session, id: &str, params: &Value) -> Result<bool, CmdError> {
     let Some(mode) = s.doc.settings.protection.as_deref() else { return Ok(false) };
+    // File commands are let through below, but two of them change the document: its properties,
+    // and the Document Inspector's removals (comments, revisions, hidden text, headers…). They
+    // aren't tracked, so under any protection mode they would change a protected document, or
+    // one that tracks changes with no revision to show for it (WordCraft #1327 follow-up,
+    // `f87ab00a`, `ec1b5393`). Reading the properties or inspecting without removing still works.
+    let changes = |key: Option<&str>| match key {
+        Some(k) => params.get(k).is_some_and(|v| v.as_array().is_none_or(|a| !a.is_empty())),
+        None => params.as_object().is_some_and(|o| !o.is_empty()),
+    };
+    match id {
+        "file.properties" if changes(None) => {
+            return Err(CmdError::Disabled(format!("{id}: stop protection before changing the document's properties")));
+        }
+        "file.inspect" if changes(Some("remove")) => {
+            return Err(CmdError::Disabled(format!("{id}: stop protection before removing content with the inspector")));
+        }
+        _ => {}
+    }
     if always_allowed(id) {
         return Ok(false);
     }
@@ -460,6 +478,31 @@ mod tests {
         s.run("select.text", &json!({"text": text})).unwrap();
     }
 
+    /// WordCraft #1327 follow-up: the document's properties and the inspector's removals are
+    /// refused in every protection mode, and still work without protection.
+    #[test]
+    fn protected_documents_refuse_property_changes_and_inspector_removals() {
+        for mode in ["readOnly", "forms", "comments", "trackedChanges"] {
+            for (id, params) in [("file.properties", json!({"title": "New title"})), ("file.inspect", json!({"remove": ["comments"]}))] {
+                let mut s = Session::new(Document::from_text("Some text."));
+                s.run("review.newComment", &json!({"text": "note"})).unwrap();
+                s.run("review.restrict", &json!({"mode": mode})).unwrap();
+                let before = s.doc.clone();
+                assert!(s.run(id, &params).is_err(), "{mode} {id}: a protected document took the change");
+                assert_eq!(s.doc, before, "{mode} {id}");
+            }
+            // Reading still works.
+            let mut s = Session::new(Document::from_text("Some text."));
+            s.run("review.restrict", &json!({"mode": mode})).unwrap();
+            assert!(s.run("file.properties", &json!({})).is_ok(), "{mode}");
+            assert!(s.run("file.inspect", &json!({})).is_ok(), "{mode}");
+        }
+        let mut s = Session::new(Document::from_text("Some text."));
+        s.run("review.newComment", &json!({"text": "note"})).unwrap();
+        s.run("file.inspect", &json!({"remove": ["comments"]})).unwrap();
+        assert!(s.doc.comments.is_empty());
+    }
+
     /// WordCraft #3692: with formatting limited to the document's styles, Copy Styles (which
     /// replaces style definitions, locked flags included) is refused like Modify Style.
     #[test]
@@ -560,5 +603,26 @@ mod tests {
         let e = s.run("review.restrict", &json!({"stop": true, "password": "anything"})).unwrap_err();
         assert!(e.to_string().contains(super::UNSUPPORTED_PASSWORD));
         assert!(super::enforced(&s.doc));
+    }
+
+    /// A password guards the protection whatever its mode: a formatting-only protection with a
+    /// password can't have that password replaced (and then removed) without knowing it.
+    #[test]
+    fn a_password_guards_the_formatting_only_protection_too() {
+        let mut s = Session::new(Document::from_text("Some text."));
+        s.run("review.restrict", &json!({"mode": "none", "formatting": true, "password": "pw"})).unwrap();
+        assert_eq!(s.doc.settings.protection.as_deref(), Some("none"));
+        let hash = s.doc.settings.protect_hash.clone();
+        assert!(!hash.is_empty(), "the password is set");
+        // Replacing the protection would replace the password with one of the caller's choosing.
+        assert!(s.run("review.restrict", &json!({"mode": "readOnly", "password": "other"})).is_err());
+        assert_eq!(s.doc.settings.protect_hash, hash, "the password was replaced");
+        assert_eq!(s.doc.settings.protection.as_deref(), Some("none"), "the protection was replaced");
+        // And stopping it needs the password.
+        assert!(s.run("review.restrict", &json!({"stop": true})).is_err());
+        assert!(s.run("review.restrict", &json!({"stop": true, "password": "wrong"})).is_err());
+        assert_eq!(s.doc.settings.protection.as_deref(), Some("none"), "the protection was stopped");
+        s.run("review.restrict", &json!({"stop": true, "password": "pw"})).unwrap();
+        assert!(s.doc.settings.protection.is_none());
     }
 }

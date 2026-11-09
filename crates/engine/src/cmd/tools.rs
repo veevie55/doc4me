@@ -349,7 +349,7 @@ pub fn specs() -> Vec<CommandSpec> {
                 Some(false) => "off",
                 None => "toggle",
             };
-            s.ui_requests.push(json!({"dictate": what}));
+            s.push_ui_request(json!({"dictate": what}));
             Ok(json!({"dictate": what}))
         })
         .params(r#"{"value"?: bool (on or off; omit to switch)}"#)
@@ -451,7 +451,7 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .pure(),
         CommandSpec::new("file.share", "Share", "File", |s, _| {
-            s.ui_requests.push(json!({"open": "saveAs"}));
+            s.push_ui_request(json!({"open": "saveAs"}));
             Ok(json!({"hint": "Save or export a copy (PDF, Word document) to share it."}))
         })
         .pure(),
@@ -1535,7 +1535,7 @@ fn customize_keyboard(s: &mut Session, v: &Value) -> CmdResult {
     }
     out.insert("custom".into(), serde_json::to_value(&s.keymap).unwrap_or(Value::Null));
     if !asked {
-        s.ui_requests.push(json!({"open": "customizeKeyboard"}));
+        s.push_ui_request(json!({"open": "customizeKeyboard"}));
     }
     Ok(Value::Object(out))
 }
@@ -1615,7 +1615,7 @@ fn customize_ribbon(s: &mut Session, v: &Value) -> CmdResult {
     out.insert("tabs".into(), serde_json::to_value(l.tabs().as_ref()).unwrap_or(Value::Null));
     out.insert("qat".into(), json!(l.qat()));
     if !asked {
-        s.ui_requests.push(json!({"open": "customizeRibbon"}));
+        s.push_ui_request(json!({"open": "customizeRibbon"}));
     }
     Ok(Value::Object(out))
 }

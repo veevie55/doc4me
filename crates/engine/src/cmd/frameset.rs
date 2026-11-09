@@ -112,7 +112,7 @@ fn frameset(s: &mut Session, v: &Value) -> CmdResult {
     let fields = v.as_object();
     if fields.is_none_or(|fields| fields.is_empty()) {
         s.only_read();
-        s.ui_requests.push(json!({"open": "framesetProperties"}));
+        s.push_ui_request(json!({"open": "framesetProperties"}));
         let mut result = state(s)?;
         if let Some(o) = result.as_object_mut() {
             o.insert("opened".into(), json!(true));

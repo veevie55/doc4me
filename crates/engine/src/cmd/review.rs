@@ -36,7 +36,7 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("review.previousChange", "Previous Change", "Review › Changes", |s, _| nav_change(s, -1)).pure(),
         // Word's Accept or Reject Changes dialog: find each change, then accept or reject it.
         CommandSpec::new("review.acceptReject", "Accept or Reject Changes", "Review › Changes", |s, _| {
-            s.ui_requests.push(json!({"open": "acceptRejectChanges"}));
+            s.push_ui_request(json!({"open": "acceptRejectChanges"}));
             Ok(json!({"changes": changes(s).len()}))
         })
         .pure(),

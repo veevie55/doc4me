@@ -193,7 +193,7 @@ fn get(s: &mut Session, v: &Value) -> CmdResult {
     } else if let Some(id) = p::str(v, "remove") {
         remove(s, id);
     } else {
-        s.ui_requests.push(json!({"open": "getAddins"}));
+        s.push_ui_request(json!({"open": "getAddins"}));
     }
     Ok(json!({"installed": installed, "catalog": CATALOG_URL}))
 }

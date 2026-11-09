@@ -629,7 +629,7 @@ fn read_opts(s: &mut Session, v: &Value) {
 fn fuzzy_options(s: &mut Session, v: &Value) -> CmdResult {
     let keys = ["width", "kana", "smallKana", "longVowel"];
     if !keys.iter().any(|k| v.get(*k).is_some_and(|x| !x.is_null())) {
-        s.ui_requests.push(json!({"open": "fuzzyOptions"}));
+        s.push_ui_request(json!({"open": "fuzzyOptions"}));
     }
     let f = &mut s.find.fuzzy;
     for (k, slot) in keys.into_iter().zip([&mut f.width, &mut f.kana, &mut f.small_kana, &mut f.long_vowel]) {
@@ -645,7 +645,7 @@ fn find(s: &mut Session, v: &Value) -> CmdResult {
     read_opts(s, v);
     if p::str(v, "text").is_none() {
         s.view.nav_pane = true;
-        s.ui_requests.push(json!({"open": "find"}));
+        s.push_ui_request(json!({"open": "find"}));
         return Ok(json!({"count": s.find.results.len()}));
     }
     let story = s.sel.focus.story;
@@ -666,7 +666,7 @@ fn find(s: &mut Session, v: &Value) -> CmdResult {
 /// Find in the classic dialog: every match in the body or the selection, optionally highlighted while you read.
 fn advanced_find(s: &mut Session, v: &Value) -> CmdResult {
     if p::str(v, "text").is_none() && v.get("highlight").is_none() {
-        s.ui_requests.push(json!({"open": "find"}));
+        s.push_ui_request(json!({"open": "find"}));
         return Ok(json!({"count": s.find.results.len()}));
     }
     read_opts(s, v);
@@ -892,7 +892,7 @@ fn goto(s: &mut Session, v: &Value) -> CmdResult {
             s.page_hint = page;
             s.goal_x = None;
         }
-        s.ui_requests.push(json!({"scrollTo": "caret"}));
+        s.push_ui_request(json!({"scrollTo": "caret"}));
         return sel_result(s);
     }
     if let Some(pg) = p::u64(v, "page") {
@@ -910,7 +910,7 @@ fn goto(s: &mut Session, v: &Value) -> CmdResult {
             s.sel = Selection::caret(t);
             s.page_hint = idx;
         }
-        s.ui_requests.push(json!({"scrollTo": "caret"}));
+        s.push_ui_request(json!({"scrollTo": "caret"}));
         return sel_result(s);
     }
     if let Some(name) = p::str(v, "bookmark") {
@@ -925,7 +925,7 @@ fn goto(s: &mut Session, v: &Value) -> CmdResult {
         }
         return sel_result(s);
     }
-    s.ui_requests.push(json!({"open": "goto"}));
+    s.push_ui_request(json!({"open": "goto"}));
     sel_result(s)
 }
 
@@ -996,7 +996,7 @@ fn follow_link(s: &mut Session, v: &Value) -> CmdResult {
     };
     let Some(name) = link.strip_prefix('#') else {
         // The interface opens web and email addresses only.
-        s.ui_requests.push(json!({"openUrl": link}));
+        s.push_ui_request(json!({"openUrl": link}));
         return Ok(json!({"url": link}));
     };
     let at = s

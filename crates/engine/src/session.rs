@@ -277,6 +277,9 @@ impl EditSnapshot {
     }
 }
 
+/// Most pending front-end requests a session keeps.
+pub const MAX_UI_REQUESTS: usize = 64;
+
 /// An editing session.
 pub struct Session {
     pub doc: Document,
@@ -1137,6 +1140,15 @@ impl Session {
     /// Run a command by id with JSON params (the single entry point for the UI, CLI, MCP and
     /// control channel). Mutating commands are undoable; a failed command leaves the document as
     /// it was; a panic inside a command becomes an error.
+    /// Queue a request for the front end. A headless session (CLI, MCP) never drains the queue,
+    /// so only the newest [`MAX_UI_REQUESTS`] are kept (WordCraft #3997).
+    pub fn push_ui_request(&mut self, req: Value) {
+        if self.ui_requests.len() >= MAX_UI_REQUESTS {
+            self.ui_requests.remove(0);
+        }
+        self.ui_requests.push(req);
+    }
+
     pub fn run(&mut self, id: &str, params: &Value) -> Result<Value, CmdError> {
         let join = std::mem::take(&mut self.join_next);
         let reg = self.registry.clone();

@@ -52,7 +52,7 @@ fn translate(s: &mut Session, v: &Value) -> CmdResult {
         }
         Some("selection") | None => {
             if v.get("scope").is_none() {
-                s.ui_requests.push(json!({"open": "translator"}));
+                s.push_ui_request(json!({"open": "translator"}));
             }
             let text = s.selected_text();
             let language = language_of(s, &s.sel.focus.path.clone());

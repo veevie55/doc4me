@@ -107,7 +107,7 @@ fn web_options(s: &mut Session, v: &Value) -> CmdResult {
     }
     if !any {
         s.only_read();
-        s.ui_requests.push(json!({"open": "options", "pane": "advanced"}));
+        s.push_ui_request(json!({"open": "options", "pane": "advanced"}));
         let mut r = web_state(s);
         if let Some(o) = r.as_object_mut() {
             o.insert("opened".into(), json!(true));
@@ -125,7 +125,7 @@ fn css_links(s: &mut Session, v: &Value) -> CmdResult {
     match v.get("linkStyles") {
         None | Some(Value::Null) => {
             s.only_read();
-            s.ui_requests.push(json!({"open": "options", "pane": "advanced"}));
+            s.push_ui_request(json!({"open": "options", "pane": "advanced"}));
             Ok(json!({"linkStyles": s.doc.settings.web.rely_on_css, "opened": true}))
         }
         Some(Value::Bool(link)) => {
@@ -182,7 +182,7 @@ fn typography(s: &mut Session, v: &Value) -> CmdResult {
         return Err(CmdError::Params("`noLineStart` and `noLineEnd` set custom lists: give them with kinsoku `custom`".into()));
     }
     if spacing.is_none() && level.is_none() && start.is_none() && end.is_none() {
-        s.ui_requests.push(json!({"open": "options", "pane": "typography"}));
+        s.push_ui_request(json!({"open": "options", "pane": "typography"}));
         let mut r = state(s);
         if let Some(o) = r.as_object_mut() {
             o.insert("opened".into(), json!(true));

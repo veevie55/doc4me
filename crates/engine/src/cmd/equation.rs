@@ -215,7 +215,7 @@ fn ink_equation(s: &mut Session, v: &Value) -> CmdResult {
     } else if let Some(strokes) = v.get("strokes") {
         crate::ink_math::recognize(&strokes_from(strokes)?).map_err(CmdError::Failed)?
     } else {
-        s.ui_requests.push(json!({"open": "inkEquation"}));
+        s.push_ui_request(json!({"open": "inkEquation"}));
         return sel_result(s);
     };
     if linear.is_empty() {

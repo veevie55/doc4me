@@ -8,17 +8,17 @@ use crate::CommandSpec;
 pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("help.about", "About", "Help", |s, _| {
-            s.ui_requests.push(json!({"open": "about"}));
+            s.push_ui_request(json!({"open": "about"}));
             Ok(json!({"opened": "about"}))
         })
         .pure(),
         CommandSpec::new("help.wordPerfect", "Search commands and help", "Help", |s, _| {
-            s.ui_requests.push(json!({"open": "wordPerfectHelp"}));
+            s.push_ui_request(json!({"open": "wordPerfectHelp"}));
             Ok(json!({"opened": "wordPerfectHelp"}))
         })
         .pure(),
         CommandSpec::new("help.wordPerfectOptions", "Search Options", "Help", |s, _| {
-            s.ui_requests.push(json!({"open": "wordPerfectHelpOptions"}));
+            s.push_ui_request(json!({"open": "wordPerfectHelpOptions"}));
             Ok(json!({"opened": "wordPerfectHelpOptions"}))
         })
         .pure(),

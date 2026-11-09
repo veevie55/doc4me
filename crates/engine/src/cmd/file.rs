@@ -79,7 +79,7 @@ pub fn specs() -> Vec<CommandSpec> {
             )
             .pure(),
         CommandSpec::new("file.print", "Print", "File", |s, _| {
-            s.ui_requests.push(json!({"open": "print"}));
+            s.push_ui_request(json!({"open": "print"}));
             sel_result(s)
         })
         .key("Mod+P / Mod+Shift+F12 / Mod+F2 / Mod+Alt+I")
@@ -111,13 +111,13 @@ pub fn specs() -> Vec<CommandSpec> {
             .params(r#"{"convert"?: [font name] (replace these missing fonts with their substitutes, Convert Permanently)} → {"fonts": [{"font", "substitute"}], "converted"}"#),
         // F1: open Doc4Me's offline command help.
         CommandSpec::new("help.show", "Help", "Help", |s, _| {
-            s.ui_requests.push(json!({"open": "wordPerfectHelp"}));
+            s.push_ui_request(json!({"open": "wordPerfectHelp"}));
             sel_result(s)
         })
         .key("F1")
         .pure(),
         CommandSpec::new("file.close", "Close", "File", |s, _| {
-            s.ui_requests.push(json!({"close": true}));
+            s.push_ui_request(json!({"close": true}));
             sel_result(s)
         })
         .key("Mod+W / Mod+F4")
@@ -125,7 +125,7 @@ pub fn specs() -> Vec<CommandSpec> {
         // Alt+F4: Word's Exit. Doc4Me has one document per window, so it closes it, asking first
         // about unsaved changes, as Close does.
         CommandSpec::new("file.exit", "Exit", "File", |s, _| {
-            s.ui_requests.push(json!({"close": true}));
+            s.push_ui_request(json!({"close": true}));
             sel_result(s)
         })
         .key(super::non_mac("Alt+F4"))
@@ -190,7 +190,7 @@ fn new(s: &mut Session, v: &Value) -> CmdResult {
 
 fn open(s: &mut Session, v: &Value) -> CmdResult {
     let Some(path) = p::str(v, "path") else {
-        s.ui_requests.push(json!({"open": "openFile"}));
+        s.push_ui_request(json!({"open": "openFile"}));
         return sel_result(s);
     };
     let password = p::str(v, "password");
@@ -215,11 +215,11 @@ fn open(s: &mut Session, v: &Value) -> CmdResult {
     }
     let substituted = unmatched_fonts(&s.doc);
     if !substituted.is_empty() {
-        s.ui_requests.push(json!({"fontsSubstituted": substituted, "with": "Sarabun"}));
+        s.push_ui_request(json!({"fontsSubstituted": substituted, "with": "Sarabun"}));
     }
     // A damaged file opened with parts left out: Word's Show Repairs says what.
     if !s.doc.repairs.is_empty() {
-        s.ui_requests.push(json!({"open": "showRepairs"}));
+        s.push_ui_request(json!({"open": "showRepairs"}));
     }
     Ok(json!({
         "path": path,
@@ -274,7 +274,7 @@ fn letter_wizard(s: &mut Session, v: &Value) -> CmdResult {
         }
     }
     if got.is_empty() {
-        s.ui_requests.push(json!({"open": "letterWizard"}));
+        s.push_ui_request(json!({"open": "letterWizard"}));
         return Ok(json!({"opened": true}));
     }
     let mut take = |k: &str| got.remove(k).unwrap_or_default();
@@ -649,7 +649,7 @@ fn save(s: &mut Session, v: &Value) -> CmdResult {
     let path = match p::str(v, "path").map(std::path::PathBuf::from).or_else(|| s.path.clone()) {
         Some(p) => p,
         None => {
-            s.ui_requests.push(json!({"open": "saveAs"}));
+            s.push_ui_request(json!({"open": "saveAs"}));
             return Ok(json!({"saved": false}));
         }
     };
@@ -677,7 +677,7 @@ fn save(s: &mut Session, v: &Value) -> CmdResult {
 
 fn save_as(s: &mut Session, v: &Value) -> CmdResult {
     if p::str(v, "path").is_none() {
-        s.ui_requests.push(json!({"open": "saveAs"}));
+        s.push_ui_request(json!({"open": "saveAs"}));
         return Ok(json!({"saved": false}));
     }
     save(s, v)

@@ -179,7 +179,7 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"props": ParaProps}"#),
         CommandSpec::new("para.dialog", "Paragraph Settings", "Home › Paragraph", |s, _| {
-            s.ui_requests.push(json!({"open": "paragraph"}));
+            s.push_ui_request(json!({"open": "paragraph"}));
             sel_result(s)
         })
         .pure(),
@@ -193,7 +193,7 @@ pub fn specs() -> Vec<CommandSpec> {
                 return Err(CmdError::Params(format!("unknown sort `{sort}` (recommended|alphabetical)")));
             }
             let list = manage_list(s, sort == "alphabetical");
-            s.ui_requests.push(json!({"open": "manageStyles"}));
+            s.push_ui_request(json!({"open": "manageStyles"}));
             Ok(list)
         })
         .params(r#"{"sort"?: "recommended|alphabetical"} → [{id, name, type: "paragraph|character|linked|table", builtIn, inGallery, hidden, basedOn, priority, format}]"#)

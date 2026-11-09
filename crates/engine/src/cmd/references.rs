@@ -20,7 +20,7 @@ pub fn specs() -> Vec<CommandSpec> {
         }),
         // Custom Table of Contents… (Word's Table of Contents dialog, with its Options and Modify).
         CommandSpec::new("references.customToc", "Custom Table of Contents", "References › Table of Contents", |s, _| {
-            s.ui_requests.push(json!({"open": "toc"}));
+            s.push_ui_request(json!({"open": "toc"}));
             sel_result(s)
         })
         .pure(),

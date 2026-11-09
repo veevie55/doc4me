@@ -919,7 +919,7 @@ fn schema_library(s: &mut Session, v: &Value) -> CmdResult {
     }
     if action == "list" && v.as_object().is_none_or(|m| m.is_empty()) {
         s.only_read();
-        s.ui_requests.push(json!({"open": "xmlSchemaLibrary"}));
+        s.push_ui_request(json!({"open": "xmlSchemaLibrary"}));
     }
     if !changed {
         s.only_read();
@@ -930,7 +930,7 @@ fn schema_library(s: &mut Session, v: &Value) -> CmdResult {
 fn xml_element_attributes(s: &mut Session, v: &Value) -> CmdResult {
     if v.as_object().is_none_or(|m| m.is_empty()) {
         s.only_read();
-        s.ui_requests.push(json!({"open": "xmlElementAttributes"}));
+        s.push_ui_request(json!({"open": "xmlElementAttributes"}));
         return Ok(json!({"stores": store_infos(s), "opened": true}));
     }
     let Some(store) = v.get("store").and_then(Value::as_str) else {
@@ -977,7 +977,7 @@ fn xml_options(s: &mut Session, v: &Value) -> CmdResult {
     }
     if v.as_object().is_none_or(|m| m.is_empty()) {
         s.only_read();
-        s.ui_requests.push(json!({"open": "xmlOptions"}));
+        s.push_ui_request(json!({"open": "xmlOptions"}));
     }
     s.only_read();
     Ok(

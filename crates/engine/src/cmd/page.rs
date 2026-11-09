@@ -64,7 +64,7 @@ pub fn specs() -> Vec<CommandSpec> {
                 let new: SectionProps = serde_json::from_value(props.clone()).map_err(|e| CmdError::Params(e.to_string()))?;
                 return with_sect(s, |x| *x = new.clone());
             }
-            s.ui_requests.push(json!({"open": "pageSetup"}));
+            s.push_ui_request(json!({"open": "pageSetup"}));
             Ok(serde_json::to_value(sect(s)).unwrap_or(Value::Null))
         })
         .params(r#"{"section"?: SectionProps}"#),

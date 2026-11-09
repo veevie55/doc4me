@@ -306,7 +306,7 @@ fn page_top(s: &mut Session, v: &Value, dir: i32) -> CmdResult {
 }
 
 fn screen_edge(s: &mut Session, v: &Value, edge: &str) -> CmdResult {
-    s.ui_requests.push(serde_json::json!({"caretScreen": edge, "extend": extend(v)}));
+    s.push_ui_request(serde_json::json!({"caretScreen": edge, "extend": extend(v)}));
     sel_result(s)
 }
 

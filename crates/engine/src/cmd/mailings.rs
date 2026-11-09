@@ -60,7 +60,7 @@ pub fn specs() -> Vec<CommandSpec> {
         // Select Recipients › Type a New List…: Word's New Address List dialog, whose rows become
         // the recipients (`mailings.recipients` with `rows`).
         CommandSpec::new("mailings.newList", "Type a New List", "Mailings › Start Mail Merge", |s, _| {
-            s.ui_requests.push(json!({"open": "newRecipientList"}));
+            s.push_ui_request(json!({"open": "newRecipientList"}));
             sel_result(s)
         })
         .pure(),
@@ -157,7 +157,7 @@ pub fn specs() -> Vec<CommandSpec> {
         // does (the window asks to save it first).
         CommandSpec::new("mailings.print", "Print Documents", "Mailings › Finish › Finish & Merge", |s, v| {
             let r = finish(s, v)?;
-            s.ui_requests.push(json!({"open": "print"}));
+            s.push_ui_request(json!({"open": "print"}));
             Ok(r)
         })
         .params(r#"{"from"?: n, "to"?: n, "current"?: bool, "blankLines"?: bool (as for mailings.finish)}"#)
@@ -424,7 +424,7 @@ fn manage_fields(s: &mut Session, v: &Value) -> CmdResult {
         Some(_) => return Err(CmdError::Params("`rename` must be {\"from\", \"to\"}".into())),
     };
     if add.is_none() && remove.is_none() && rename.is_none() {
-        s.ui_requests.push(json!({"open": "recipientList"}));
+        s.push_ui_request(json!({"open": "recipientList"}));
         return Ok(json!({"fields": s.merge.headers, "opened": true}));
     }
     // Check everything against the fields as they will be before changing anything.

@@ -25,7 +25,7 @@ pub fn specs() -> Vec<CommandSpec> {
         // Screen Clipping: the front end starts the system's screen clipping and inserts the clip
         // with `insert.picture`, so starting it changes nothing (no undo step, no unsaved change).
         CommandSpec::new("insert.screenshot", "Screenshot", "Insert › Illustrations", |s, _| {
-            s.ui_requests.push(json!({"open": "screenClipping"}));
+            s.push_ui_request(json!({"open": "screenClipping"}));
             sel_result(s)
         })
         .pure(),
@@ -214,7 +214,7 @@ fn picture(s: &mut Session, v: &Value) -> CmdResult {
     } else if let Some(path) = p::str(v, "path") {
         crate::io::read_file(path).map_err(CmdError::Failed)?
     } else {
-        s.ui_requests.push(json!({"open": "insertPicture"}));
+        s.push_ui_request(json!({"open": "insertPicture"}));
         return sel_result(s);
     };
     let r = place_picture(s, bytes, p::f32(v, "width"), p::str(v, "alt").unwrap_or(""))?;
@@ -231,7 +231,7 @@ fn picture(s: &mut Session, v: &Value) -> CmdResult {
 /// WebP pictures become JPEG or PNG, which every Word reads.
 fn online_picture(s: &mut Session, v: &Value) -> CmdResult {
     let Some(data) = p::str(v, "data") else {
-        s.ui_requests.push(json!({"open": "onlinePictures"}));
+        s.push_ui_request(json!({"open": "onlinePictures"}));
         return sel_result(s);
     };
     let mut bytes = base64_decode(data).ok_or_else(|| CmdError::Params("bad base64 data".into()))?;
@@ -320,7 +320,7 @@ fn model3d(s: &mut Session, v: &Value) -> CmdResult {
     } else if let Some(path) = p::str(v, "path") {
         (crate::io::read_file(path).map_err(CmdError::Failed)?, path.to_string())
     } else {
-        s.ui_requests.push(json!({"open": "insertModel3d"}));
+        s.push_ui_request(json!({"open": "insertModel3d"}));
         return sel_result(s);
     };
     // The file name, whichever system's separators the path has.
@@ -348,7 +348,7 @@ fn model3d(s: &mut Session, v: &Value) -> CmdResult {
 /// column). Without a `url` it asks the front end for Insert Video.
 fn video(s: &mut Session, v: &Value) -> CmdResult {
     let Some(input) = p::str(v, "url") else {
-        s.ui_requests.push(json!({"open": "insertVideo"}));
+        s.push_ui_request(json!({"open": "insertVideo"}));
         return sel_result(s);
     };
     let video = doc4me_doc::video::WebVideo::from_input(input).map_err(CmdError::Params)?;
@@ -422,7 +422,7 @@ fn icon(s: &mut Session, v: &Value) -> CmdResult {
             .iter()
             .map(|i| json!({"id": i.id, "name": i.name, "category": i.category.name(), "keywords": i.keywords}))
             .collect();
-        s.ui_requests.push(json!({"open": "icons"}));
+        s.push_ui_request(json!({"open": "icons"}));
         return Ok(json!({"icons": icons}));
     };
     let icon = icon_lib::find(id).ok_or_else(|| CmdError::Params(format!("no icon {id:?} (insert.icon without an id lists them)")))?;
@@ -513,7 +513,7 @@ fn text_box(s: &mut Session, v: &Value) -> CmdResult {
 
 fn link(s: &mut Session, v: &Value) -> CmdResult {
     let Some(url) = p::str(v, "url").map(str::to_string) else {
-        s.ui_requests.push(json!({"open": "link"}));
+        s.push_ui_request(json!({"open": "link"}));
         return sel_result(s);
     };
     if url.is_empty() || url.len() > 4096 {
