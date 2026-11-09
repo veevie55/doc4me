@@ -13,6 +13,15 @@
 
 ### ความปลอดภัย
 
+- **งานแบบกำลังสองใน balloon, PDF และ metafile; การเข้ารหัสภาพที่ใหญ่เกินไป** (รอบที่ 3 ชุดที่ 8; WordCraft `ee96c4c9`, `05ee2e01`, `c98efffc`, `0d5a1490`, ส่วน cluster ends ของ `f4c9c89c`)
+  - balloon ของ revision/comment: จัดอันดับผู้เขียนผ่าน memo (`author_rank` ใน `crates/layout/src/display.rs`, ใช้ใน `balloons.rs`) แทนการสแกนรายชื่อผู้เขียนทุกครั้ง; เพิ่ม 3 เทสต์ใน `crates/layout/src/tests_linear.rs` (เกณฑ์ `ratio < 32.0` ด้วยเหตุผลเดียวกับชุดที่ 7)
+  - PDF: หาจุดสิ้นสุด cluster ของ glyph ด้วย `cluster_ends` (monotonic stack ย้อนหลังครั้งเดียว) แทนการค้นหาไปข้างหน้าต่อ glyph ซึ่งเป็นกำลังสองกับบรรทัดยาว (`crates/pdf/src/lib.rs`); เทสต์ `cluster_ends_match_the_forward_search`
+  - metafile (EMF/WMF): คิดต้นทุนการวาดตาม capacity ที่จองจริง (`crates/metafile/src/canvas.rs`, `geom.rs`, `tests.rs`) ไฟล์ปลอมจึงจองหน่วยความจำเกินงบไม่ได้
+  - render: `to_jpeg`/`to_png` ตรวจขนาดด้วย `encodable()` ก่อนเข้ารหัส ภาพที่ใหญ่เกิน encoder คืนผลว่างพร้อม log แทนการล่ม (`crates/render/src/lib.rs`)
+  - ไม่มีผลต่อไฟล์ .docx เดิม, การติดตั้งทับ หรือภาษาไทย
+  - ไม่นำมา (ยัง): ส่วน clip เซลล์ของ `f4c9c89c` (doc4me ไม่มีการ clip เซลล์), `2a647661`; `1225f561` ค้างเพราะอ้าง `MAX_GLYPH_PIXELS`/`OVERSIZED_GLYPHS_NOTED` จาก commit ก่อนหน้าที่ยังไม่ port (ดู handoff.md)
+  - ตรวจสอบ: แต่ละ commit ผ่าน build และเทสต์ของ crate ที่แก้ทีละขั้นในสคริปต์ port; `cluster_ends_match_the_forward_search` และเทสต์ linear ใหม่ผ่าน; `cargo fmt --all` แล้ว ยังไม่ได้รัน clippy/เทสต์ทั้ง workspace และ `cargo xtask wasm` สำหรับชุดนี้ (commit ก่อนตามกฎผู้ใช้ ตรวจทีหลัง — ดู handoff.md)
+
 - **ภาพใหญ่ในการแก้ภาพ, cache ภาพ, Zotero, พจนานุกรม และงานแบบกำลังสองใน layout** (รอบที่ 3 ชุดที่ 7; WordCraft #3611 `856938d5`, #3647 `8c9b8faa`, #3665 `7a7a05c7` `fc9b5557`, #3692 `ab26f22c` `5a07c465` `62971158` `6c20b3e6` `7d31c01f` `897add99`, #3613 `45556583`)
   - **โปรแกรมล่มจริงใน doc4me ที่แก้แล้ว**: Picture Styles (Thick Frame, Shadow, กรอบเริ่มต้น) และ Picture Border คำนวณขนาดบิตแมปจากภาพโดยไม่ตรวจ ภาพ PNG ขนาด 1 × 2,000,000 พิกเซล (ไฟล์ไม่กี่ KB) กับ Thick Frame ขอหน่วยความจำราว 1.8 TB แล้ว abort นอก panic guard ทำให้งานที่ยังไม่บันทึกหาย; ตอนนี้ทุกบิตแมปที่วาดผ่าน `canvas()` ซึ่งปฏิเสธขนาดที่วาดไม่ได้ก่อนจอง และบวกขนาดแบบ checked (`crates/engine/src/cmd/objects.rs`)
   - Remove Background เติมทีละช่วงแถวแทนการ push เพื่อนบ้านทุกพิกเซล (stack ไม่โตตามภาพ); เงาวาดจาก profile สองแกนแทนการ blur ด้วย kernel ที่โตตามภาพ ผลเหมือนเดิม
