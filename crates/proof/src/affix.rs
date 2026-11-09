@@ -245,6 +245,26 @@ fn zero_empty(s: &str) -> String {
 }
 
 /// Read Hunspell `.aff` text (already decoded to UTF-8).
+/// Most distinct `TRY` characters kept; a hostile `.aff` could otherwise make every suggestion
+/// round cost time and memory proportional to the file size (WordCraft #3981).
+const MAX_TRY_CHARS: usize = 128;
+
+/// Keeps the first [`MAX_TRY_CHARS`] distinct characters of a `TRY` value, in order.
+fn cap_try(s: &str) -> String {
+    let mut out = String::new();
+    let mut n = 0;
+    for c in s.chars() {
+        if n >= MAX_TRY_CHARS {
+            break;
+        }
+        if !out.contains(c) {
+            out.push(c);
+            n += 1;
+        }
+    }
+    out
+}
+
 fn parse_aff(aff: &str) -> Result<Rules, String> {
     let mut r = Rules::default();
     let mut cross: HashMap<(bool, char), bool> = HashMap::new();
@@ -261,7 +281,7 @@ fn parse_aff(aff: &str) -> Result<Rules, String> {
             "SET" | "LANG" | "NAME" | "VERSION" | "HOME" | "WORDCHARS" | "KEY" | "MAXNGRAMSUGS" | "MAXDIFF" | "ONLYMAXDIFF" | "NOSPLITSUGS"
             | "SUGSWITHDOTS" | "NOSUGGEST" | "WARN" | "FORBIDWARN" | "MAXCPDSUGS" => {}
             "FLAG" => return Err(format!("line {}: FLAG {} is not supported (one-character flags only)", n + 1, at(1))),
-            "TRY" => r.try_chars = at(1).to_string(),
+            "TRY" => r.try_chars = cap_try(at(1)),
             "MAP" => {
                 if !map_header && at(1).parse::<usize>().is_ok() {
                     map_header = true;
@@ -700,7 +720,7 @@ impl AffixDict {
             let f: Vec<&str> = line.split_whitespace().collect();
             let at = |k: usize| f.get(k).copied().unwrap_or("");
             match at(0) {
-                "TRY" => rules.try_chars = at(1).to_string(),
+                "TRY" => rules.try_chars = cap_try(at(1)),
                 "MAP" => rules.map.push(at(1).chars().collect()),
                 "REP" => rules.rep.push((at(1).replace('_', " "), at(2).replace('_', " "))),
                 kind @ ("PFX" | "SFX") => {
@@ -753,6 +773,29 @@ impl AffixDict {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn try_alphabet_is_capped_and_deduplicated() {
+        let aff = format!("TRY {}\n", "abcdefghijklmnopqrstuvwxyz".repeat(10_000));
+        let d = AffixDict::from_hunspell(&aff, "1\nkot\n", &[]).unwrap();
+        assert_eq!(d.try_chars(), "abcdefghijklmnopqrstuvwxyz");
+        let compact = AffixDict::from_bytes(&d.to_bytes()).unwrap();
+        assert_eq!(compact.try_chars(), "abcdefghijklmnopqrstuvwxyz");
+
+        // More distinct characters than the cap, each repeated: keep the first 128 in order.
+        let many: String = (0x100u32..0x100 + 300).filter_map(char::from_u32).collect();
+        let aff = format!("TRY {many}{many}\n");
+        let want: String = many.chars().take(128).collect();
+        let d = AffixDict::from_hunspell(&aff, "1\nkot\n", &[]).unwrap();
+        assert_eq!(d.try_chars(), want);
+        let compact = AffixDict::from_bytes(&d.to_bytes()).unwrap();
+        assert_eq!(compact.try_chars(), want);
+
+        // An oversized TRY line fed straight to the compact reader is capped as well.
+        let raw = format!("{MAGIC}\nTRY {many}{many}\nWORDS\n\0kot\n");
+        let bytes = miniz_oxide::deflate::compress_to_vec(raw.as_bytes(), 6);
+        assert_eq!(AffixDict::from_bytes(&bytes).unwrap().try_chars(), want);
+    }
 
     const AFF: &str = "SET UTF-8\nTRY aeoiułkr\n\nPFX b Y 1\nPFX b   0   nie   .\n\nSFX a Y 3\nSFX a   0   y     [^y]\nSFX a   ek  ka    ek\nSFX a   0   em    .\n\nSFX c N 1\nSFX c   a   ą     a\n\nMAP 2\nMAP aą\nMAP oóu\nREP 2\nREP ż rz\nREP u ó\n";
     const DIC: &str = "4\nkot/ab\npiesek/a\nkrowa/c\nWarszawa/c\n";

@@ -176,7 +176,18 @@ fn vectors() -> &'static Mutex<MediaCache<Option<Arc<Vector>>>> {
 
 /// Decode an encoded image to a premultiplied pixmap.
 pub fn decode_pixmap(bytes: &[u8]) -> Option<Pixmap> {
-    let img = image::load_from_memory(bytes).ok()?.to_rgba8();
+    decode_pixmap_within(bytes, doc4me_geom::MAX_DECODED_BYTES)
+}
+
+/// [`decode_pixmap`] with an explicit RGBA byte budget (a small one in tests). The header gives
+/// the size: a small file declaring a huge picture is refused before the decoder (and the RGBA
+/// copy) allocate anything (WordCraft #1321).
+fn decode_pixmap_within(bytes: &[u8], budget: u64) -> Option<Pixmap> {
+    let (hw, hh) = image_size(bytes)?;
+    if hw > u16::MAX as u32 || hh > u16::MAX as u32 || !doc4me_geom::decode_fits(hw, hh, budget) {
+        return None;
+    }
+    let img = image::load_from_memory(bytes).ok()?.into_rgba8();
     let (w, h) = img.dimensions();
     premul_pixmap(w, h, img.as_raw())
 }
@@ -416,7 +427,17 @@ pub fn render_page_area(doc: &Document, page: &Page, scale: f32, x: u32, y: u32,
 
 /// Render a page into a `w`×`h` raster with `view` (page points → pixels).
 pub fn render_region(doc: &Document, page: &Page, w: u32, h: u32, view: Affine, opts: &RenderOptions) -> Rendered {
-    let (w16, h16) = (w.clamp(1, MAX_SIDE) as u16, h.clamp(1, MAX_SIDE) as u16);
+    render_region_capped(doc, page, w, h, view, opts, doc4me_geom::MAX_RASTER_PIXELS)
+}
+
+/// [`render_region`] with an explicit pixel cap (a small one in tests): over the cap the whole
+/// page is drawn smaller, not cropped, so a huge zoom or export size can't take gigabytes
+/// (16000×16000 RGBA is 1 GB; WordCraft #1321).
+fn render_region_capped(doc: &Document, page: &Page, w: u32, h: u32, view: Affine, opts: &RenderOptions, max_pixels: u64) -> Rendered {
+    let (w, h) = (w.clamp(1, MAX_SIDE), h.clamp(1, MAX_SIDE));
+    let (cw, ch) = doc4me_geom::fit_pixels(w, h, max_pixels);
+    let view = if (cw, ch) == (w, h) { view } else { Affine::scale_non_uniform(cw as f64 / w as f64, ch as f64 / h as f64) * view };
+    let (w16, h16) = (cw as u16, ch as u16);
     let mut ctx = RenderContext::new_with(w16, h16, vello_cpu::RenderSettings { num_threads: default_threads(), ..Default::default() });
     ctx.set_transform(Affine::IDENTITY);
     ctx.set_paint(color(opts.ink(doc.settings.page_color.unwrap_or(opts.paper)), 1.0));
@@ -1098,6 +1119,59 @@ mod tests {
         assert!(b as f64 > a as f64 * 1.08 && (b as f64) < a as f64 * 1.6, "plain {a}, darkened {b}");
         // Off by default: exports and thumbnails are untouched.
         assert!(!RenderOptions::default().text_darkening);
+    }
+
+    /// A PNG signature, an IHDR declaring `w`×`h` 8-bit RGBA and a short IDAT (all CRCs valid, so
+    /// the header parses), with no real pixel data.
+    fn ihdr_only_png(w: u32, h: u32) -> Vec<u8> {
+        fn chunk(out: &mut Vec<u8>, kind: &[u8; 4], data: &[u8]) {
+            let mut body = kind.to_vec();
+            body.extend_from_slice(data);
+            let mut crc = 0xFFFF_FFFFu32;
+            for b in &body {
+                crc ^= *b as u32;
+                for _ in 0..8 {
+                    crc = if crc & 1 != 0 { (crc >> 1) ^ 0xEDB8_8320 } else { crc >> 1 };
+                }
+            }
+            out.extend_from_slice(&(data.len() as u32).to_be_bytes());
+            out.extend_from_slice(&body);
+            out.extend_from_slice(&(!crc).to_be_bytes());
+        }
+        let mut out = vec![0x89, b'P', b'N', b'G', 0x0D, 0x0A, 0x1A, 0x0A];
+        let mut ihdr = w.to_be_bytes().to_vec();
+        ihdr.extend_from_slice(&h.to_be_bytes());
+        ihdr.extend_from_slice(&[8, 6, 0, 0, 0]);
+        chunk(&mut out, b"IHDR", &ihdr);
+        chunk(&mut out, b"IDAT", &[0x78, 0x9c, 0, 0]);
+        out
+    }
+
+    #[test]
+    fn decode_budget_is_checked_from_the_header() {
+        let mut buf = Vec::new();
+        let img = image::RgbaImage::from_fn(16, 8, |x, y| image::Rgba([x as u8, y as u8, 9, 255]));
+        img.write_to(&mut std::io::Cursor::new(&mut buf), image::ImageFormat::Png).unwrap();
+        // Decode, the RGBA conversion and the premultiplied copy are charged: two buffers at peak.
+        assert!(decode_pixmap_within(&buf, 1024).is_some());
+        assert!(decode_pixmap_within(&buf, 1023).is_none());
+        // A header (valid CRC) claiming 60000x60000 with no pixel data reads fine, then the budget refuses it.
+        let hdr = ihdr_only_png(60_000, 60_000);
+        assert_eq!(image_size(&hdr), Some((60_000, 60_000)));
+        assert!(decode_pixmap(&hdr).is_none());
+    }
+
+    #[test]
+    fn page_raster_is_capped_by_total_pixels() {
+        let d = Document::new();
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+        let opts = RenderOptions::default();
+        let big = render_region_capped(&d, &l.pages[0], 3000, 2000, Affine::scale(4.0), &opts, 100_000);
+        assert!(big.width as u64 * big.height as u64 <= 100_000, "{}x{}", big.width, big.height);
+        assert!(big.width > 300 && big.height > 200);
+        assert_eq!(big.pixels.len() as u64, big.width as u64 * big.height as u64 * 4);
+        let ok = render_region_capped(&d, &l.pages[0], 300, 200, Affine::IDENTITY, &opts, 100_000);
+        assert_eq!((ok.width, ok.height), (300, 200));
     }
 
     #[test]

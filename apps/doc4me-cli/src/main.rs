@@ -378,14 +378,14 @@ fn run(args: &[String]) -> Result<(), Failure> {
             let out = doc4me_zotero::client::run_command(&opts, command, &mut |call| {
                 let r = bridge.handle(&mut s, &mut host, call);
                 if trace {
-                    eprintln!("← {} {}", call.method, clip(&Value::Array(call.args.clone()).to_string()));
-                    eprintln!("→ {}", clip(&String::from_utf8_lossy(&doc4me_zotero::wire::encode_reply(&r))));
+                    eprintln!("← {} {}", escape_peer(&call.method), escape_peer(&clip(&Value::Array(call.args.clone()).to_string())));
+                    eprintln!("→ {}", escape_peer(&clip(&String::from_utf8_lossy(&doc4me_zotero::wire::encode_reply(&r)))));
                 }
                 r
             })
             .map_err(|e| e.to_string())?;
             for a in &host.alerts {
-                eprintln!("Zotero: {a}");
+                eprintln!("Zotero: {}", escape_peer(a));
             }
             eprintln!("{} calls, {}", out.calls, if out.completed { "completed" } else { "ended without completing (cancelled?)" });
             if let Some(o) = arg_value(&rest, "--save") {
@@ -406,6 +406,27 @@ fn clip(s: &str) -> String {
         Some((i, _)) => format!("{}…", s.get(..i).unwrap_or(s)),
         None => s.to_string(),
     }
+}
+
+/// Text from another program (Zotero, or whatever answered on its port) for one diagnostic
+/// line: backslashes, control characters (newline, escape, C1…), line separators and bidi
+/// overrides are shown as escapes (`\\`, `\n`, `\u{1b}`), so it can't end its line, drive the
+/// terminal or pass for other output.
+fn escape_peer(s: &str) -> String {
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if c.is_control() || matches!(c, '\u{061c}' | '\u{200e}' | '\u{200f}' | '\u{2028}'..='\u{202e}' | '\u{2066}'..='\u{2069}') => {
+                out.extend(c.escape_unicode())
+            }
+            c => out.push(c),
+        }
+    }
+    out
 }
 
 fn parity_markdown(p: &Value) -> String {
@@ -434,8 +455,15 @@ fn parity_markdown(p: &Value) -> String {
     s
 }
 
+/// The arguments as text. `std::env::args` panics on an argument that isn't valid Unicode (a
+/// Latin-1 file name on Linux, WordCraft #1440); such an argument is taken lossily instead, so a
+/// file of that name is reported as not found rather than crashing the CLI.
+fn text_args(raw: impl IntoIterator<Item = std::ffi::OsString>) -> Vec<String> {
+    raw.into_iter().map(|a| a.to_string_lossy().into_owned()).collect()
+}
+
 fn main() -> ExitCode {
-    let args: Vec<String> = std::env::args().skip(1).collect();
+    let args = text_args(std::env::args_os().skip(1));
     match run(&args) {
         Ok(()) | Err(Failure::StdoutClosed) => ExitCode::SUCCESS,
         Err(Failure::Error(e)) => {
@@ -447,6 +475,18 @@ fn main() -> ExitCode {
 
 #[cfg(test)]
 mod tests {
+    /// WordCraft #1440: an argument that isn't valid Unicode no longer panics; the command gets a
+    /// lossy name and reports the file it can't open.
+    #[cfg(unix)]
+    #[test]
+    fn an_argument_that_is_not_unicode_does_not_panic() {
+        use std::os::unix::ffi::OsStringExt;
+        let raw = vec![std::ffi::OsString::from("text"), std::ffi::OsString::from_vec(b"caf\xe9.docx".to_vec())];
+        let args = super::text_args(raw);
+        assert_eq!(args, vec!["text".to_string(), "caf\u{fffd}.docx".to_string()]);
+        assert!(super::run(&args).is_err());
+    }
+
     use super::*;
 
     #[test]
@@ -460,6 +500,15 @@ mod tests {
 
     fn args(values: &[&str]) -> Vec<String> {
         values.iter().map(|value| (*value).into()).collect()
+    }
+
+    #[test]
+    fn peer_text_stays_on_one_visible_line() {
+        let alert = "Done.\nwrote /etc/passwd\r\u{1b}[2J\u{9b}31m\u{202e}txt.exe\\n\tok é";
+        let shown = escape_peer(alert);
+        assert_eq!(shown, "Done.\\nwrote /etc/passwd\\r\\u{1b}[2J\\u{9b}31m\\u{202e}txt.exe\\\\n\\tok é");
+        assert!(!shown.chars().any(|c| c.is_control()));
+        assert_eq!(escape_peer("Citation (Doe, 2020) — “ok”"), "Citation (Doe, 2020) — “ok”");
     }
 
     #[test]

@@ -109,7 +109,15 @@ impl Reader<'_> {
     /// Keep one part's bytes and content type (not its relationships).
     fn keep_part(&mut self, part: &str) -> bool {
         let lower = part.to_ascii_lowercase();
-        if !manifest_field_ok(part) || lower.ends_with(".rels") || lower == "[content_types].xml" || part.eq_ignore_ascii_case(&self.main) {
+        // `doc4me:` names are Doc4Me's own bookkeeping in `passthrough` (the embedded-part
+        // manifest, custom XML roots, the original settings), never a file's part: carried, a
+        // forged one would be read back as that bookkeeping (WordCraft #5411).
+        if !manifest_field_ok(part)
+            || lower.ends_with(".rels")
+            || lower == "[content_types].xml"
+            || lower.starts_with("doc4me:")
+            || part.eq_ignore_ascii_case(&self.main)
+        {
             log::warn!("docx: not carrying part {part:?} for an embedded object");
             return false;
         }

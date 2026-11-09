@@ -13,7 +13,19 @@ pub fn is_web_or_mail_link(url: &str) -> bool {
 /// a web or email link, a bookmark (`#name`) or a relative path. Scripts (`javascript:`,
 /// `vbscript:`), `data:`, `file:` and every other scheme are refused, read the way a browser reads
 /// a URL: ASCII control characters and spaces are dropped first, so `java\nscript:` is a script.
+/// A protocol-relative `//host` or UNC `\\host` reference names another machine (following it on
+/// Windows sends the user's NTLM credentials there), so it is refused too (WordCraft #3862).
 pub fn is_safe_href(url: &str) -> bool {
+    // Exporters drop other control characters and noncharacters when they write the link
+    // (`file\u{85}:` comes out `file:`), so a link holding one is refused, not judged as it
+    // stands and written as something else (WordCraft #5426).
+    if url.chars().any(|c| (c.is_control() && !c.is_ascii_control()) || matches!(c, '\u{FFFE}' | '\u{FFFF}')) {
+        return false;
+    }
+    let cleaned: String = url.chars().filter(|c| !c.is_ascii_control() && *c != ' ').collect();
+    if cleaned.replace('\\', "/").starts_with("//") {
+        return false;
+    }
     match scheme(url) {
         Some(s) => matches!(s.as_str(), "http" | "https" | "mailto"),
         None => !url.trim().is_empty(),
@@ -33,6 +45,27 @@ fn scheme(url: &str) -> Option<String> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// WordCraft #3862 and #5426: another machine (`//host`, `\\host`) and links hiding a scheme
+    /// behind characters the exporters drop are not written as an `href`.
+    #[test]
+    fn remote_hosts_and_hidden_schemes_are_not_safe_hrefs() {
+        for bad in [
+            "//attacker.example/x",
+            "\\\\attacker.example\\share\\x",
+            "\\/attacker.example/x",
+            " //attacker.example/x",
+            "/\t/attacker.example/x",
+            "file\u{85}:///etc/passwd",
+            "java\u{9F}script:alert(1)",
+            "/\u{FFFE}/attacker.example/x",
+        ] {
+            assert!(!is_safe_href(bad), "{bad:?}");
+        }
+        for ok in ["/docs/a.html", "a/b.html", "#top", "https://example.com", "mailto:a@example.com", "ภาษาไทย.html"] {
+            assert!(is_safe_href(ok), "{ok:?}");
+        }
+    }
 
     #[test]
     fn only_web_and_mail_links_are_followable() {

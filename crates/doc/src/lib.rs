@@ -41,6 +41,7 @@ pub mod table;
 pub mod video;
 pub mod wordart;
 pub mod wrap;
+pub mod zip_guard;
 
 use std::collections::BTreeMap;
 use std::sync::Arc;
@@ -1525,6 +1526,18 @@ impl Document {
                     }
                     fill(&mut p.mark);
                 });
+            }
+        }
+    }
+
+    /// Repair every paragraph's runs (see [`Paragraph::normalize`]); for models from untrusted
+    /// JSON, whose run lengths may overflow, fall short or split a character.
+    pub fn normalize_runs(&mut self) {
+        let mut stories: Vec<&mut Blocks> = vec![&mut self.body];
+        stories.extend(self.parts.values_mut().map(|p| &mut p.blocks));
+        for blocks in stories {
+            for b in blocks.iter_mut() {
+                edit::each_para_mut(Arc::make_mut(b), 0, &mut Paragraph::normalize);
             }
         }
     }

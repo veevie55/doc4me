@@ -177,3 +177,31 @@ fn reserved_part_targets_are_renamed_instead_of_shadowing_or_looping() {
         assert!(text(out, "docProps/core.xml").contains("coreProperties"));
     });
 }
+
+/// A part named like Doc4Me's own bookkeeping (`doc4me:settings.orig`, `doc4me:embedded.parts`)
+/// is not carried as a custom XML store: kept, it would be read back as that bookkeeping and
+/// merged into the saved settings or add parts the file chose (WordCraft #5411).
+#[test]
+fn parts_named_like_bookkeeping_are_not_carried() {
+    let mut parts = fixture();
+    parts.insert(
+        "word/_rels/document.xml.rels".into(),
+        rels(&[
+            ("data", "customXml", "../customXml/item1.xml", false),
+            ("forged1", "customXml", "/doc4me:settings.orig", false),
+            ("forged2", "customXml", "/doc4me:embedded.parts", false),
+        ])
+        .into_bytes(),
+    );
+    let forged = r#"<w:settings xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:docVars><w:docVar w:name="Forged" w:val="1"/></w:docVars></w:settings>"#;
+    parts.insert("doc4me:settings.orig".into(), forged.as_bytes().to_vec());
+    parts.insert("doc4me:embedded.parts".into(), b"P\tword/evil.xml\tapplication/xml\n".to_vec());
+    let doc = doc4me_docx::read(&zip(&parts)).unwrap();
+    assert!(!doc.passthrough.contains_key("doc4me:settings.orig"));
+    assert!(doc.passthrough.get("doc4me:embedded.parts").is_none_or(|m| !String::from_utf8_lossy(m).contains("evil")));
+    let saved = unzip(&doc4me_docx::write(&doc).unwrap());
+    assert!(!text(&saved, "word/settings.xml").contains("Forged"));
+    assert!(saved.keys().all(|k| !k.starts_with("doc4me:")), "{:?}", saved.keys().collect::<Vec<_>>());
+    // The real store is still kept.
+    assert!(saved.contains_key("customXml/item1.xml"));
+}

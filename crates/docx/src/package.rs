@@ -161,6 +161,8 @@ impl Package {
     }
 
     pub fn open_limited(bytes: &[u8], max_part: u64, max_total: u64) -> Result<Package, DocxError> {
+        // Before `zip` parses every entry the end record declares (#3660).
+        doc4me_doc::zip_guard::check(bytes, MAX_ENTRIES as u64).map_err(DocxError::Limit)?;
         let mut zip = zip::ZipArchive::new(Cursor::new(bytes)).map_err(|e| DocxError::Zip(e.to_string()))?;
         if zip.len() > MAX_ENTRIES {
             return Err(DocxError::Limit(format!("{} zip entries", zip.len())));
@@ -392,6 +394,19 @@ mod tests {
     fn zip_of(entries: &[(&str, Vec<u8>)]) -> Vec<u8> {
         let e: Vec<(String, Vec<u8>)> = entries.iter().map(|(n, b)| (n.to_string(), b.clone())).collect();
         zip_entries(&e).unwrap()
+    }
+
+    #[test]
+    fn a_package_declaring_too_many_entries_is_refused_before_zip_reads_them() {
+        // #3660: a ZIP64 end record declaring more than MAX_ENTRIES.
+        let bomb = doc4me_doc::zip_guard::zip64_entry_count_sample(MAX_ENTRIES as u64 + 1);
+        assert!(matches!(Package::open(&bomb), Err(DocxError::Limit(e)) if e.contains("declares")));
+        // A real package still opens.
+        let z = zip_of(&[(
+            "docProps/core.xml",
+            br#"<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:title>Plan</dc:title></cp:coreProperties>"#.to_vec(),
+        )]);
+        assert!(Package::open(&z).is_ok());
     }
 
     #[test]

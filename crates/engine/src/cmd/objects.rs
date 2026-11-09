@@ -129,7 +129,8 @@ pub fn specs() -> Vec<CommandSpec> {
                 }
                 if sharpen > 0.0 {
                     img = img.unsharpen(1.0 + sharpen / 50.0, 2);
-                } else if sharpen < 0.0 {
+                } else if sharpen < 0.0 && (-sharpen / 25.0).is_normal() {
+                    // `blur` asserts on a subnormal width.
                     img = img.blur(-sharpen / 25.0);
                 }
                 img
@@ -2362,5 +2363,17 @@ mod tests {
         let mid = (cols[0].0 + cols[0].1) / 2.0;
         let got = anchor_paragraph(&s.doc, &layout, 1, (mid, top + 1.0), StoryRef::Body);
         assert_eq!(got, Some(doc4me_doc::Path::top(plain)));
+    }
+
+    /// A `sharpen` too small to be a normal blur width must not reach the blur, which asserts on
+    /// it (WordCraft #3646).
+    #[test]
+    fn a_tiny_sharpen_value_does_not_panic() {
+        let mut s = Session::new(doc4me_doc::Document::new());
+        let data = super::super::insert::base64_encode(&png(20, 10));
+        s.run("insert.picture", &json!({"data": data})).unwrap();
+        for sharpen in [-1e-40_f64, -1e-45, -1e-38, 1e-40, -1e-30, 0.0, -0.5] {
+            s.run("picture.corrections", &json!({"sharpen": sharpen})).unwrap_or_else(|e| panic!("sharpen {sharpen}: {e:?}"));
+        }
     }
 }

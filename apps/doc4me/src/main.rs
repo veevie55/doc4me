@@ -235,7 +235,10 @@ fn main() -> eframe::Result {
     let mut files = Vec::new();
     let mut sample = false;
     let mut bad_control: Option<Option<String>> = None;
-    let mut args = std::env::args().skip(1).peekable();
+    // Not `std::env::args`, which panics on an argument that isn't valid Unicode (a Latin-1 file
+    // name on Linux, WordCraft #1440): such a name is taken lossily and its open fails with a
+    // warning instead of the app not starting.
+    let mut args = std::env::args_os().skip(1).map(|a| a.to_string_lossy().into_owned()).peekable();
     while let Some(a) = args.next() {
         match a.as_str() {
             // A flag after `--control` stays a flag; a bad or missing port is an error (#1426).

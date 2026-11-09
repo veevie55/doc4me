@@ -17,4 +17,5 @@ zip = { workspace = true }
 log = { workspace = true }
 
 [dev-dependencies]
+doc4me-doc = { workspace = true, features = ["test-support"] }
 proptest = { workspace = true }

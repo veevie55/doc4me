@@ -1395,16 +1395,14 @@ impl WordApp {
     /// Document title for the title bar (and the suggested file name). An untitled document is
     /// named in the interface language, as `Document1` is in English.
     pub fn title_stem(&self) -> String {
-        match &self.session.path {
-            Some(p) => p.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_else(|| tl!("Document1").into()),
-            None => {
-                if self.session.doc.core.title.is_empty() {
-                    tl!("Document1").into()
-                } else {
-                    self.session.doc.core.title.clone()
-                }
-            }
-        }
+        let mut title = match &self.session.path {
+            Some(p) => p.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default(),
+            None => self.session.doc.core.title.clone(),
+        };
+        // X11 turns window titles into C strings, which cannot hold NUL: a title from a file's
+        // properties with one crashed the app on Linux (WordCraft #3634).
+        title.retain(|c| c != '\0');
+        if title.is_empty() { tl!("Document1").into() } else { title }
     }
 
     /// Per-frame logic before layout: control requests, screenshots, shortcuts, file drops.
@@ -2054,6 +2052,19 @@ mod tests {
 
     fn app() -> WordApp {
         WordApp::new(Session::new(doc4me_doc::Document::new()), Services::default())
+    }
+
+    /// WordCraft #3634: a NUL in the document's title (from its properties) or file name never
+    /// reaches the window title, which X11 turns into a C string.
+    #[test]
+    fn window_title_never_holds_nul() {
+        let mut a = app();
+        a.session.doc.core.title = "Re\0port".into();
+        assert_eq!(a.title_stem(), "Report");
+        a.session.doc.core.title = "\0\0".into();
+        assert_eq!(a.title_stem(), tl!("Document1"));
+        a.session.path = Some(std::path::PathBuf::from("/tmp/na\0me.docx"));
+        assert!(!a.title_stem().contains('\0'));
     }
 
     /// File › Options › Advanced › Animation: the caret's animation is a UI command, kept between

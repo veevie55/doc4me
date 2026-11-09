@@ -131,6 +131,21 @@ fn many_fields_and_huge_attribute_values() {
     assert!(d.plain_text(doc4me_doc::StoryRef::Body).contains("later"));
 }
 
+/// A paragraph with 2,000,000 attributes deflates to ~15 KB. Opening it is refused with a
+/// limit error, or the extras are dropped and the text survives (#3702, WC-06).
+#[test]
+fn millions_of_attributes_on_one_paragraph_are_capped() {
+    let attrs: String = (0..2_000_000).map(|i| format!(" a{i}=\"\"")).collect();
+    let x = format!("<w:document {W_NS}><w:body><w:p{attrs}><w:r><w:t>kept</w:t></w:r></w:p></w:body></w:document>");
+    let start = std::time::Instant::now();
+    match read(&doc_zip(x.as_bytes())) {
+        Err(DocxError::Limit(_)) => {}
+        Ok(d) => assert!(d.plain_text(doc4me_doc::StoryRef::Body).contains("kept")),
+        Err(e) => panic!("expected a Limit error or a document, got {e}"),
+    }
+    assert!(start.elapsed() < std::time::Duration::from_secs(10), "took {:?}", start.elapsed());
+}
+
 /// A small valid document.xml to mutate.
 fn base_xml() -> String {
     format!(
@@ -237,4 +252,31 @@ proptest! {
         z.extend(&bytes);
         let _ = read(&z);
     }
+}
+
+#[test]
+fn long_header_reference_chain_is_cut_off() {
+    const HDR_REL: &str = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/header";
+    const RELS_NS: &str = "http://schemas.openxmlformats.org/package/2006/relationships";
+    let rels_for = |next: usize| {
+        let rel = format!(r#"<Relationship Id="rId1" Type="{HDR_REL}" Target="header{next}.xml"/>"#);
+        format!(r#"<Relationships xmlns="{RELS_NS}">{rel}</Relationships>"#)
+    };
+    let sect = r#"<w:sectPr><w:headerReference w:type="default" r:id="rId1"/></w:sectPr>"#;
+    let doc = format!("<w:document {W_NS}><w:body><w:p><w:r><w:t>body</w:t></w:r></w:p>{sect}</w:body></w:document>");
+    // header0 -> header1 -> ... -> header59: every header's last paragraph holds a section that points at the next one.
+    let mut entries: Vec<(String, Vec<u8>)> = vec![
+        ("_rels/.rels".into(), ROOT_RELS.as_bytes().to_vec()),
+        ("word/document.xml".into(), doc.into_bytes()),
+        ("word/_rels/document.xml.rels".into(), rels_for(0).into_bytes()),
+    ];
+    for i in 0..60 {
+        let hdr = format!("<w:hdr {W_NS}><w:p><w:pPr>{sect}</w:pPr><w:r><w:t>h{i}</w:t></w:r></w:p></w:hdr>");
+        entries.push((format!("word/header{i}.xml"), hdr.into_bytes()));
+        entries.push((format!("word/_rels/header{i}.xml.rels"), rels_for(i + 1).into_bytes()));
+    }
+    let refs: Vec<(&str, &[u8])> = entries.iter().map(|(n, b)| (n.as_str(), b.as_slice())).collect();
+    let d = read(&zip(&refs)).unwrap();
+    assert!(!d.parts.is_empty());
+    assert!(d.parts.len() <= 8, "followed {} chained headers", d.parts.len());
 }

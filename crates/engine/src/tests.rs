@@ -5853,6 +5853,27 @@ fn grammar_settings_turn_rules_off() {
 }
 
 #[test]
+fn json_open_repairs_hostile_run_lengths() {
+    use doc4me_doc::{Block, Document};
+    // "héllo": é is two bytes (1..3); a run ending at 2 splits it, usize::MAX overflows a sum.
+    for lens in [vec![2, 4], vec![usize::MAX, usize::MAX], vec![1], vec![], vec![0, 99]] {
+        let mut d = Document::from_text("héllo");
+        if let Some(Block::Para(p)) = d.body.first_mut().map(std::sync::Arc::make_mut) {
+            p.runs = lens.iter().map(|&len| doc4me_doc::para::Run { len, props: Default::default() }).collect();
+        }
+        let bytes = serde_json::to_vec(&d).unwrap();
+        let (doc, _) = crate::io::open_bytes_with("x.json", &bytes, None).unwrap();
+        let Some(Block::Para(p)) = doc.body.first().map(|b| &**b) else { panic!("no paragraph") };
+        let mut end = 0;
+        for (r, _) in p.run_ranges() {
+            assert!(p.text.is_char_boundary(r.end) && r.end > r.start, "{lens:?}");
+            end = r.end;
+        }
+        assert_eq!(end, p.text.len(), "{lens:?}");
+    }
+}
+
+#[test]
 fn go_to_takes_word_s_destinations() {
     // Section 1: "Intro"; section 2 (new page): 150 numbered lines, so four or more pages.
     let mut s = Session::new(doc4me_doc::Document::from_text("Intro"));
