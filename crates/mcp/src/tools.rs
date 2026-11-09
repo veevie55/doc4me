@@ -4,6 +4,9 @@ use serde_json::{Value, json};
 
 use crate::backend::Backend;
 
+/// Most lines `type_text` with `paragraphs` types in one call (WordCraft #3692).
+pub const MAX_TYPED_PARAGRAPHS: usize = 10_000;
+
 /// An image tool result from a reply carrying base64 PNG in `png`.
 fn png_result(v: &Value, info: &Value) -> ToolResult {
     match v.get("png").and_then(Value::as_str) {
@@ -233,6 +236,12 @@ pub fn call_tool(b: &mut dyn Backend, name: &str, a: &Value) -> ToolResult {
         "type_text" => {
             let t = st("text").unwrap_or("");
             if a.get("paragraphs").and_then(Value::as_bool).unwrap_or(false) {
+                // Each line is a command and an undo snapshot of the whole document: a text of
+                // millions of lines would take as many (WordCraft #3692). Refused before typing.
+                let lines = t.split('\n').count();
+                if lines > MAX_TYPED_PARAGRAPHS {
+                    return wrap(Err(format!("type_text: `text` has {lines} lines; type at most {MAX_TYPED_PARAGRAPHS} paragraphs per call")));
+                }
                 let mut last = Ok(Value::Null);
                 for (i, line) in t.split('\n').enumerate() {
                     if i > 0 {

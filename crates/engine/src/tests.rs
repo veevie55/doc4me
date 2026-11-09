@@ -5985,3 +5985,72 @@ fn letter_wizard_writes_a_letter_from_its_fields() {
     );
     assert!(s.path.is_none());
 }
+
+/// WordCraft #3696: `file.exportPng` writes only to `.png` paths, so automation can't replace
+/// other files with page images.
+#[cfg(not(target_arch = "wasm32"))]
+#[test]
+fn export_png_refuses_a_path_that_is_not_png() {
+    let dir = scratch_dir("export-png-extension");
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "Hello"}));
+    for name in ["notes.txt", "config", "report.docx", "page.png.txt"] {
+        let target = dir.join(name);
+        std::fs::write(&target, b"precious user notes").unwrap();
+        let r = s.run("file.exportPng", &json!({"path": target.to_string_lossy()}));
+        assert!(matches!(r, Err(crate::CmdError::Params(_))), "{name}: {r:?}");
+        assert_eq!(std::fs::read(&target).unwrap(), b"precious user notes", "{name} was changed");
+    }
+    for name in ["page.png", "PAGE.PNG"] {
+        let target = dir.join(name);
+        s.run("file.exportPng", &json!({"path": target.to_string_lossy()})).unwrap();
+        assert!(std::fs::read(&target).unwrap().starts_with(b"\x89PNG"), "{name} is not a PNG");
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+}
+
+/// WordCraft #3736: the HTML file is checked through its link, but its pictures load from beside
+/// the link. Opened through a link outside the read root, they must not come from there.
+#[cfg(unix)]
+#[test]
+fn html_pictures_load_only_from_inside_the_read_root() {
+    let root = scratch_dir("html-img-root");
+    for d in ["in", "outside"] {
+        std::fs::create_dir_all(root.join(d)).unwrap();
+    }
+    std::fs::write(root.join("in/page.html"), r#"<p><img src="pic.png" alt="Pic"></p>"#).unwrap();
+    std::fs::write(root.join("in/pic.png"), tiny_png()).unwrap();
+    std::fs::write(root.join("outside/pic.png"), tiny_png()).unwrap();
+    std::os::unix::fs::symlink(root.join("in/page.html"), root.join("outside/page.html")).unwrap();
+    let roots = crate::file_access::AutomationRoots::new(Some(&root.join("in")), None).unwrap();
+    let through_link = crate::file_access::confine(roots.as_ref(), || crate::io::open_path(&root.join("outside/page.html")));
+    let direct = crate::file_access::confine(roots.as_ref(), || crate::io::open_path(&root.join("in/page.html")));
+    let _ = std::fs::remove_dir_all(&root);
+    let through_link = through_link.unwrap();
+    assert!(through_link.media.is_empty(), "no picture from outside the read root");
+    assert_eq!(direct.unwrap().media.len(), 1, "pictures inside the root still load");
+}
+
+/// WordCraft #3666: reading a path the user or automation names opens only a regular file, at
+/// most the limit, and never blocks on a named pipe or reads a device forever.
+#[cfg(unix)]
+#[test]
+fn file_reads_refuse_devices_folders_and_named_pipes_without_blocking() {
+    let dir = scratch_dir("regular-files-only");
+    let t = std::time::Instant::now();
+    for p in ["/dev/zero", dir.to_str().unwrap()] {
+        assert!(crate::io::read_file(p).unwrap_err().contains("not a file"), "{p}");
+        assert!(crate::io::open_path(std::path::Path::new(p)).is_err(), "{p}");
+    }
+    let fifo = dir.join("pipe.docx");
+    if std::process::Command::new("mkfifo").arg(&fifo).status().is_ok_and(|s| s.success()) {
+        assert!(crate::io::read_file(&fifo.to_string_lossy()).unwrap_err().contains("not a file"));
+        assert!(crate::io::open_path(&fifo).is_err());
+    }
+    let big = dir.join("big.bin");
+    std::fs::write(&big, vec![0u8; 2048]).unwrap();
+    assert!(crate::io::read_file_capped(&big.to_string_lossy(), 1024, "picture").unwrap_err().contains("larger than"));
+    assert_eq!(crate::io::read_file_capped(&big.to_string_lossy(), 4096, "picture").unwrap().len(), 2048);
+    assert!(t.elapsed().as_secs() < 5, "{:?}", t.elapsed());
+    let _ = std::fs::remove_dir_all(&dir);
+}

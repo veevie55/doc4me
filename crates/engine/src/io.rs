@@ -235,11 +235,16 @@ pub fn open_path(path: &std::path::Path) -> Result<Document, String> {
 #[cfg(not(target_arch = "wasm32"))]
 pub fn open_path_with(path: &std::path::Path, password: Option<&str>) -> Result<(Document, bool), String> {
     crate::file_access::check_read(&path.to_string_lossy())?;
-    let meta = std::fs::metadata(path).map_err(|e| format!("{}: {e}", path.display()))?;
-    if meta.len() > 2 << 30 {
+    // Only a regular file, read at most 2 GB + 1 byte: a named pipe would block and a device such
+    // as `/dev/zero` never ends (WordCraft #3666).
+    let (file, meta) = open_regular_file(path)?;
+    if meta.len() > MAX_READ_FILE {
         return Err(format!("{}: file is larger than 2 GB", path.display()));
     }
-    let bytes = std::fs::read(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let bytes = read_bounded(file, &meta, MAX_READ_FILE).map_err(|e| format!("{}: {e}", path.display()))?;
+    if bytes.len() as u64 > MAX_READ_FILE {
+        return Err(format!("{}: file is larger than 2 GB", path.display()));
+    }
     let name = path.to_string_lossy();
     if matches!(ext_of(&name).as_str(), "html" | "htm" | "xhtml") {
         // Pictures referenced by a relative path load from beside the HTML file.
@@ -318,7 +323,7 @@ impl LocalImages {
         left.map(|_| ())
     }
 
-    /// The canonical path `src` names, if it's inside the folder.
+    /// The canonical path `src` names, if it's inside the folder and may be read.
     fn resolve(&self, src: &str) -> Option<std::path::PathBuf> {
         let src = src.split(['#', '?']).next().unwrap_or("");
         if src.is_empty() || src.starts_with("//") || src.split_once(':').is_some_and(|(scheme, _)| !scheme.contains('/')) {
@@ -332,6 +337,9 @@ impl LocalImages {
         let dir = self.dir.as_ref()?;
         // Canonical paths have `..` and symlinks resolved, so this keeps both inside the folder.
         let path = std::fs::canonicalize(dir.join(rel)).ok()?;
+        // The folder is the one the HTML path names, which may be a link from outside the
+        // automation read root; the picture itself must be inside it (WordCraft #3736).
+        crate::file_access::check_read(&path.to_string_lossy()).ok()?;
         path.starts_with(dir).then_some(path)
     }
 }
@@ -342,18 +350,42 @@ impl LocalImages {
 /// and the read is bounded whatever length the file reports.
 #[cfg(not(target_arch = "wasm32"))]
 fn read_regular_file(path: &std::path::Path, limit: u64) -> Option<Vec<u8>> {
-    use std::io::Read;
-    if !std::fs::metadata(path).ok()?.is_file() {
-        return None;
-    }
-    let file = std::fs::File::open(path).ok()?;
-    let meta = file.metadata().ok()?;
+    let (file, meta) = open_regular_file(path).ok()?;
+    read_bounded(file, &meta, limit).ok()
+}
+
+/// The regular file at `path`, opened once, with the opened handle's metadata. The path is
+/// checked before opening (a named pipe blocks in `open` until a writer appears) and the handle
+/// after (the path may have been swapped in between); anything but a regular file is "not a
+/// file" (WordCraft #3666).
+#[cfg(not(target_arch = "wasm32"))]
+fn open_regular_file(path: &std::path::Path) -> Result<(std::fs::File, std::fs::Metadata), String> {
+    let meta = std::fs::metadata(path).map_err(|e| format!("{}: {e}", path.display()))?;
     if !meta.is_file() {
-        return None;
+        return Err(format!("{}: not a file", path.display()));
     }
+    let mut open = std::fs::OpenOptions::new();
+    open.read(true);
+    // A path swapped for a named pipe since the check above would block `open`; non-blocking
+    // opens it at once (no effect on a regular file) and the handle check below refuses it.
+    #[cfg(unix)]
+    std::os::unix::fs::OpenOptionsExt::custom_flags(&mut open, libc::O_NONBLOCK);
+    let file = open.open(path).map_err(|e| format!("{}: {e}", path.display()))?;
+    let meta = file.metadata().map_err(|e| format!("{}: {e}", path.display()))?;
+    if !meta.is_file() {
+        return Err(format!("{}: not a file", path.display()));
+    }
+    Ok((file, meta))
+}
+
+/// Up to `limit + 1` bytes of `file` (more than `limit` means too large), however long it says
+/// it is.
+#[cfg(not(target_arch = "wasm32"))]
+fn read_bounded(file: std::fs::File, meta: &std::fs::Metadata, limit: u64) -> std::io::Result<Vec<u8>> {
+    use std::io::Read;
     let mut out = Vec::with_capacity(usize::try_from(meta.len().min(limit)).unwrap_or(0));
-    file.take(limit.saturating_add(1)).read_to_end(&mut out).ok()?;
-    Some(out)
+    file.take(limit.saturating_add(1)).read_to_end(&mut out)?;
+    Ok(out)
 }
 
 /// Largest file [`read_file`] reads whole — the same 2 GB ceiling [`open_path_with`] gives a
@@ -379,14 +411,18 @@ pub fn read_file(path: &str) -> Result<Vec<u8>, String> {
 #[cfg(not(target_arch = "wasm32"))]
 pub fn read_file_capped(path: &str, max: u64, what: &str) -> Result<Vec<u8>, String> {
     crate::file_access::check_read(path)?;
-    let meta = std::fs::metadata(path).map_err(|e| format!("{path}: {e}"))?;
-    if !meta.is_file() {
-        return Err(format!("{path}: not a file"));
-    }
+    // Opened once and read at most `max + 1` bytes, so a file swapped or grown after the check is
+    // refused too (WordCraft #3666).
+    let too_large = || format!("{path}: the {what} is larger than {} MB", max >> 20);
+    let (file, meta) = open_regular_file(std::path::Path::new(path))?;
     if meta.len() > max {
-        return Err(format!("{path}: the {what} is larger than {} MB", max >> 20));
+        return Err(too_large());
     }
-    std::fs::read(path).map_err(|e| format!("{path}: {e}"))
+    let bytes = read_bounded(file, &meta, max).map_err(|e| format!("{path}: {e}"))?;
+    if bytes.len() as u64 > max {
+        return Err(too_large());
+    }
+    Ok(bytes)
 }
 
 /// Write `bytes` to the file at `path`, inside the automation write root when there is one.

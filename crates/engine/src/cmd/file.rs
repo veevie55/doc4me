@@ -691,6 +691,11 @@ pub fn export_options(s: &Session, v: &Value) -> crate::io::ExportOptions {
 }
 
 fn export_png(s: &mut Session, v: &Value) -> CmdResult {
+    // Only `.png` paths, so automation can't replace other files with page images
+    // (WordCraft #3696).
+    if !p::req_str(v, "path")?.to_ascii_lowercase().ends_with(".png") {
+        return Err(CmdError::Params("path must end in .png".into()));
+    }
     export_page(s, v, None)
 }
 

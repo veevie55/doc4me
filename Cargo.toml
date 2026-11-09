@@ -80,6 +80,8 @@ hmac = "0.13"
 base64 = "0.22"
 getrandom = "0.3"
 zeroize = "1"
+# O_NONBLOCK for opening a path that may have been swapped for a named pipe (engine, Unix only).
+libc = "0.2"
 # The computer's time zone for the dates and times people see (desktop; the web asks the browser).
 chrono = { version = "0.4", default-features = false, features = ["clock"] }
 

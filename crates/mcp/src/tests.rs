@@ -107,3 +107,18 @@ fn render_and_screenshot_through_the_app_use_no_temp_file() {
         assert!(params.get("path").is_none(), "{tool} asked for a file: {params}");
     }
 }
+
+/// WordCraft #3692: `type_text` with `paragraphs` types each line as a command and an undo
+/// snapshot, so a text of more than `MAX_TYPED_PARAGRAPHS` lines is refused before anything is
+/// typed.
+#[test]
+fn type_text_refuses_too_many_paragraphs_before_typing() {
+    let mut s = Server::new(Box::new(Headless::default()));
+    tool(&mut s, "new_document", json!({}));
+    let before = tool(&mut s, "get_text", json!({}));
+    let many = "x\n".repeat(crate::tools::MAX_TYPED_PARAGRAPHS);
+    let r = call(&mut s, 9, "tools/call", json!({"name": "type_text", "arguments": {"text": many, "paragraphs": true}}));
+    assert_eq!(r["result"]["isError"], true, "{r}");
+    assert_eq!(tool(&mut s, "get_text", json!({})), before, "nothing was typed");
+    tool(&mut s, "type_text", json!({"text": "a\nb", "paragraphs": true}));
+}

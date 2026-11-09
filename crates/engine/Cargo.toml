@@ -36,6 +36,10 @@ quick-xml = { workspace = true }
 # The system time zone for `now_local` (the web reads the browser's instead).
 chrono = { workspace = true }
 
+[target.'cfg(unix)'.dependencies]
+# O_NONBLOCK, so a path swapped for a named pipe can't block `open` (WordCraft #3666).
+libc = { workspace = true }
+
 [target.'cfg(target_arch = "wasm32")'.dependencies]
 # The browser clock for `now_iso` (`SystemTime::now()` panics on wasm32).
 js-sys = "0.3"

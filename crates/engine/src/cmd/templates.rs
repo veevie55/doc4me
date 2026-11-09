@@ -185,17 +185,23 @@ fn load_other(name: &str, data: Option<&str>, base: Option<&Path>) -> Result<Doc
     if name.len() > MAX_PATH {
         return Err(CmdError::Params("`path` is too long".into()));
     }
-    let local = local_path(name, base).ok_or_else(|| CmdError::Failed(format!("`{name}` is not a local file")))?;
-    let ext = local.extension().map(|e| e.to_string_lossy().to_ascii_lowercase()).unwrap_or_default();
+    // With the bytes given nothing is read, so the name only gives the format: no path is
+    // resolved, and a document on a share (or a `\\?\` path) can still use a relative name
+    // (WordCraft #3698).
+    let file = match data {
+        Some(_) => PathBuf::from(name),
+        None => local_path(name, base).ok_or_else(|| CmdError::Failed(format!("`{name}` is not a local file")))?,
+    };
+    let ext = file.extension().map(|e| e.to_string_lossy().to_ascii_lowercase()).unwrap_or_default();
     if matches!(ext.as_str(), "" | "txt" | "text") {
         return Err(CmdError::Params(format!("`{name}` is not a document or template with styles")));
     }
     match data {
         Some(d) => {
             let bytes = super::insert::base64_decode(d).ok_or_else(|| CmdError::Params("bad base64".into()))?;
-            crate::io::open_bytes(&local.to_string_lossy(), &bytes).map_err(CmdError::Failed)
+            crate::io::open_bytes(name, &bytes).map_err(CmdError::Failed)
         }
-        None => crate::io::open_path(&local).map_err(CmdError::Failed),
+        None => crate::io::open_path(&file).map_err(CmdError::Failed),
     }
 }
 
@@ -231,18 +237,36 @@ pub fn local_path(target: &str, base: Option<&Path>) -> Option<PathBuf> {
         return None;
     }
     let p = PathBuf::from(&path);
-    if p.is_relative()
-        && !is_windows_absolute(&path)
-        && let Some(dir) = base.and_then(Path::parent)
-    {
-        return Some(dir.join(p));
-    }
-    Some(p)
+    let p = match base.and_then(Path::parent) {
+        Some(dir) if p.is_relative() && !is_windows_absolute(&path) => dir.join(p),
+        _ => p,
+    };
+    // Checked again once joined: the document's own folder may be on another machine
+    // (WordCraft #3698).
+    (!is_network_path(&p.to_string_lossy())).then_some(p)
 }
 
-fn is_network_path(p: &str) -> bool {
+/// Does `p` name another machine or a device, whatever separators it mixes: `\\host\share`,
+/// `//host`, `\\?\UNC\…`, `\\.\UNC\…`, other devices, and the NT namespace `\??\…`. The
+/// verbatim, device and NT prefixes are local when a drive letter follows (`\\?\C:\…`,
+/// `\\.\C:\…`, `\??\C:\…`, WordCraft #3698). Purely lexical, so it is the same on every
+/// platform.
+pub(crate) fn is_network_path(p: &str) -> bool {
+    let sep = |c: Option<&u8>| matches!(c, Some(b'\\' | b'/'));
     let b = p.as_bytes();
-    matches!((b.first(), b.get(1)), (Some(b'\\' | b'/'), Some(b'\\' | b'/')))
+    // `\\?\`, `\\.\` or `\??\`, then `X:` and the end or a separator.
+    let prefix = sep(b.first())
+        && sep(b.get(3))
+        && match (b.get(1), b.get(2)) {
+            (Some(b'?'), Some(b'?')) => true,
+            (c, Some(b'?' | b'.')) => sep(c),
+            _ => false,
+        };
+    let drive = b.get(4).is_some_and(u8::is_ascii_alphabetic) && b.get(5) == Some(&b':') && (b.len() == 6 || sep(b.get(6)));
+    if prefix {
+        return !drive;
+    }
+    sep(b.first()) && sep(b.get(1))
 }
 
 fn is_windows_absolute(p: &str) -> bool {
@@ -377,6 +401,29 @@ fn import_num(doc: &mut Document, src: &Document, num: u32, map: &HashMap<String
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// WordCraft #3698: the NT namespace and device paths name other machines unless a drive
+    /// follows, whatever separators they mix, and a relative name is checked again once joined
+    /// to a document folder that is itself on another machine.
+    #[test]
+    fn nt_namespace_device_and_joined_remote_paths_are_not_local() {
+        for remote in [
+            "\\??\\UNC\\evil.example\\share\\T.dotx",
+            "/??/UNC/evil.example/share/T.dotx",
+            "\\??/UNC\\evil.example/share/T.dotx",
+            "\\??\\GLOBALROOT\\Device\\Mup\\evil.example\\share\\T.dotx",
+            "\\\\.\\UNC\\evil.example\\share\\T.dotx",
+            "\\\\?\\UNC\\evil.example\\share\\T.dotx",
+        ] {
+            assert_eq!(local_path(remote, None), None, "{remote}");
+        }
+        assert_eq!(local_path("T.dotx", Some(Path::new("//evil.example/share/Letter.docx"))), None);
+        assert_eq!(local_path("file:T.dotx", Some(Path::new("//evil.example/share/Letter.docx"))), None);
+        for local in ["\\??\\C:\\Templates\\T.dotx", "\\??\\C:", "\\\\?\\C:\\T.dotx", "\\\\.\\C:\\T.dotx", "C:\\T.dotx", "/home/a/T.dotx"] {
+            assert!(!is_network_path(local), "{local}");
+        }
+        assert!(is_network_path("\\??\\C:evil"));
+    }
     use doc4me_doc::numbering::ListKind;
     use doc4me_doc::props::{CharProps, NumRef};
 

@@ -317,7 +317,9 @@ fn check_formatting(s: &Session, id: &str, params: &Value) -> Result<(), CmdErro
         || id.starts_with("styles.create")
         || id.starts_with("styles.modify")
         || id.starts_with("styles.update")
-        || id.starts_with("styles.delete");
+        || id.starts_with("styles.delete")
+        // Copies style definitions in from another file, locked flags included (WordCraft #3692).
+        || id == "styles.copyFrom";
     if direct {
         return Err(CmdError::Disabled(format!("{id}: formatting is limited to the document's styles")));
     }
@@ -456,6 +458,20 @@ mod tests {
 
     fn select(s: &mut Session, text: &str) {
         s.run("select.text", &json!({"text": text})).unwrap();
+    }
+
+    /// WordCraft #3692: with formatting limited to the document's styles, Copy Styles (which
+    /// replaces style definitions, locked flags included) is refused like Modify Style.
+    #[test]
+    fn formatting_restriction_refuses_copy_styles() {
+        let mut s = Session::new(Document::from_text("Body"));
+        let data = crate::cmd::insert::base64_encode(&doc4me_docx::write(&Document::from_text("Template")).unwrap());
+        s.doc.settings.protection = Some("none".into());
+        s.doc.settings.protect_formatting = true;
+        let before = s.doc.clone();
+        let e = s.run("styles.copyFrom", &json!({"path": "Report.dotx", "styles": ["Heading 1"], "data": data})).unwrap_err().to_string();
+        assert!(e.contains("formatting is limited"), "{e}");
+        assert_eq!(s.doc, before);
     }
 
     #[test]

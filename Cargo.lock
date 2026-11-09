@@ -1217,6 +1217,7 @@ dependencies = [
  "icu_segmenter",
  "image",
  "js-sys",
+ "libc",
  "log",
  "quick-xml",
  "regex",

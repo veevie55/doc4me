@@ -19,6 +19,9 @@ use serde_json::{Value, json};
 
 /// Longest sentence handed to the speech program (longer ones are split at a space).
 const MAX_SENTENCE: usize = 600;
+/// Longest utterance, even with no space to split at (a long URL, a run of letters): it is cut
+/// there, mid-word (WordCraft #3680).
+const MAX_UTTERANCE: usize = 2 * MAX_SENTENCE;
 /// Most sentences in one queue.
 const MAX_SENTENCES: usize = 20_000;
 /// Speed limits (1.0 = the normal speed).
@@ -120,12 +123,15 @@ pub fn sentences(doc: &Document, from: &Pos, to: Option<&Pos>, skip_citations: b
                 }
             }
         }
+        // Sliced per sentence; skipping from the start each time was quadratic in the paragraph
+        // (WordCraft #3680).
+        let text_chars: Vec<char> = text.chars().collect();
         for (a, b) in split_sentences(&text) {
             if out.len() >= MAX_SENTENCES {
+                log::warn!("Read Aloud: the queue holds at most {MAX_SENTENCES} sentences; the rest of the text is not read");
                 return out;
             }
-            let chars: Vec<char> = text.chars().skip(a).take(b - a).collect();
-            let spoken = tidy(&chars.iter().collect::<String>());
+            let spoken = tidy(&text_chars.get(a..b).unwrap_or(&[]).iter().collect::<String>());
             if !spoken.chars().any(char::is_alphanumeric) {
                 continue;
             }
@@ -180,6 +186,14 @@ fn push_trimmed(chars: &[char], mut a: usize, mut b: usize, out: &mut Vec<(usize
     while b > a && chars.get(b - 1).is_some_and(|c| c.is_whitespace()) {
         b -= 1;
     }
+    // No space to split at (a long URL, a run of letters or full stops): cut the span hard.
+    while b - a > MAX_UTTERANCE {
+        out.push((a, a + MAX_UTTERANCE));
+        a += MAX_UTTERANCE;
+        while a < b && chars.get(a).is_some_and(|c| c.is_whitespace()) {
+            a += 1;
+        }
+    }
     if a < b {
         out.push((a, b));
     }
@@ -204,18 +218,40 @@ fn is_abbreviation(chars: &[char], start: usize, dot: usize) -> bool {
 }
 
 /// Collapse whitespace and tidy what removed citations leave behind: "( )", "[]", " ." → ".".
+/// One pass, linear in `s` (WordCraft #3680; repeated whole-string replacements took ~50 s on
+/// 40,000 nested empty brackets): a closing bracket right after its opening one (or after it and
+/// a space) removes the pair, so nested empty brackets "( [ ] )" go too.
 fn tidy(s: &str) -> String {
-    let mut t: String = s.split_whitespace().collect::<Vec<_>>().join(" ");
-    loop {
-        let before = t.len();
-        for (from, to) in [("()", ""), ("[]", ""), ("( )", ""), ("[ ]", ""), (" .", "."), (" ,", ","), (" ;", ";"), (" :", ":"), ("  ", " ")] {
-            t = t.replace(from, to);
+    let mut t = String::with_capacity(s.len());
+    for c in s.chars() {
+        if c.is_whitespace() {
+            if !t.is_empty() && !t.ends_with(' ') {
+                t.push(' ');
+            }
+            continue;
         }
-        if t.len() == before {
-            break;
+        let open = match c {
+            ')' => Some('('),
+            ']' => Some('['),
+            _ => None,
+        };
+        if let Some(open) = open {
+            let body = t.strip_suffix(' ').unwrap_or(&t);
+            if let Some(rest) = body.strip_suffix(open) {
+                let keep = rest.len();
+                t.truncate(keep);
+                continue;
+            }
         }
+        if matches!(c, '.' | ',' | ';' | ':') && t.ends_with(' ') {
+            t.pop();
+        }
+        t.push(c);
     }
-    t.trim().to_string()
+    if t.ends_with(' ') {
+        t.pop();
+    }
+    t
 }
 
 /// Reading state.
@@ -654,6 +690,22 @@ mod tests {
     fn tidy_removes_citation_leftovers() {
         assert_eq!(tidy("as shown  ( ) ."), "as shown.");
         assert_eq!(tidy("as shown [] , and"), "as shown, and");
+    }
+
+    /// WordCraft #3680: nested empty brackets go in one linear pass, and a sentence with no space
+    /// to split at is cut at MAX_UTTERANCE characters.
+    #[test]
+    fn tidy_is_linear_and_space_free_sentences_are_cut() {
+        assert_eq!(tidy("see ( [ ( ) ] ) here ."), "see here.");
+        assert_eq!(tidy("a(b)c"), "a(b)c");
+        let nested = format!("x {}{} y", "(".repeat(40_000), ")".repeat(40_000));
+        assert_eq!(tidy(&nested), "x y");
+        let run = "a".repeat(MAX_UTTERANCE * 3 + 7);
+        let spans = split_sentences(&run);
+        assert_eq!(spans.len(), 4);
+        assert!(spans.iter().all(|(a, b)| b - a <= MAX_UTTERANCE));
+        // Thai text keeps its words.
+        assert_eq!(tidy("สวัสดี  ครับ ."), "สวัสดี ครับ.");
     }
 
     #[test]
