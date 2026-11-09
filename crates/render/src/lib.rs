@@ -2,7 +2,7 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
 use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use std::sync::{Arc, Mutex, Weak};
 
 use doc4me_doc::Document;
 use doc4me_doc::para::ShapeKind;
@@ -120,16 +120,16 @@ const CACHE_BYTES: usize = 256 * 1024 * 1024 / 2;
 /// Upper bound on cached entries per cache.
 const CACHE_ENTRIES: usize = 256;
 
-/// Decoded media by media key, shared across renders, with an approximate byte budget. An entry holds
-/// the source bytes it was decoded from, so a hit needs the same allocation (`Arc::ptr_eq`), and that
-/// allocation cannot be freed and its address reused while the entry lives.
+/// Decoded media by media key, shared across renders, with an approximate byte budget. An entry knows
+/// its source allocation weakly: a hit needs the same allocation, whose address can't be reused while
+/// the entry lives, and the source bytes are still freed with the document.
 struct MediaCache<T> {
     map: HashMap<String, Entry<T>>,
     bytes: usize,
 }
 
 struct Entry<T> {
-    src: Arc<Vec<u8>>,
+    src: Weak<Vec<u8>>,
     val: T,
     size: usize,
 }
@@ -137,14 +137,12 @@ struct Entry<T> {
 impl<T: Clone> MediaCache<T> {
     fn get(&self, key: &str, src: &Arc<Vec<u8>>) -> Option<T> {
         let e = self.map.get(key)?;
-        Arc::ptr_eq(&e.src, src).then(|| e.val.clone())
+        std::ptr::eq(e.src.as_ptr(), Arc::as_ptr(src)).then(|| e.val.clone())
     }
 
-    /// Stores `val` (about `size` bytes) with its source, whose bytes the entry keeps alive and so counts
-    /// too. Clears the cache first when the budget or entry cap is hit; an entry larger than the whole
-    /// budget is not kept.
+    /// Stores `val` (about `size` bytes) for `src`. Clears the cache first when the budget or entry
+    /// cap is hit; an entry larger than the whole budget is not kept.
     fn insert(&mut self, key: &str, src: &Arc<Vec<u8>>, val: T, size: usize) {
-        let size = size.saturating_add(src.len());
         if size > CACHE_BYTES {
             return;
         }
@@ -155,7 +153,7 @@ impl<T: Clone> MediaCache<T> {
             self.map.clear();
             self.bytes = 0;
         }
-        self.map.insert(key.to_string(), Entry { src: src.clone(), val, size });
+        self.map.insert(key.to_string(), Entry { src: Arc::downgrade(src), val, size });
         self.bytes = self.bytes.saturating_add(size);
     }
 }
@@ -344,10 +342,59 @@ fn pixmap_for(doc: &Document, key: &str) -> Option<Arc<Pixmap>> {
     if let Some(v) = lock(images()).get(key, bytes) {
         return v;
     }
-    let pm = decode_pixmap(bytes).map(Arc::new);
+    let pm = decode_pixmap(bytes).map(|p| Arc::new(cacheable(p, bytes.len())));
     let size = pm.as_ref().map_or(0, |p| p.width() as usize * p.height() as usize * 4);
     lock(images()).insert(key, bytes, pm.clone(), size);
     pm
+}
+
+/// A decoded picture at a size the media cache keeps. One too large for the whole cache (an entry
+/// counts its source bytes too) is box-averaged down to half of it, so it is decoded once instead
+/// of on every render (WordCraft #3665); pages draw it scaled to its frame either way.
+fn cacheable(pm: Pixmap, src_len: usize) -> Pixmap {
+    let bytes = pm.width() as usize * pm.height() as usize * 4;
+    if bytes.saturating_add(src_len) <= CACHE_BYTES {
+        return pm;
+    }
+    let room = (CACHE_BYTES / 2).saturating_sub(src_len) / 4;
+    shrink(&pm, room as u64).unwrap_or(pm)
+}
+
+/// `pm` averaged over square blocks, the smallest whole number of pixels a side that brings it to
+/// at most `max_pixels`; None when it already fits or none are allowed. Premultiplied pixels
+/// average without colour fringes.
+fn shrink(pm: &Pixmap, max_pixels: u64) -> Option<Pixmap> {
+    let (w, h) = (usize::from(pm.width()), usize::from(pm.height()));
+    if (w * h) as u64 <= max_pixels || max_pixels == 0 {
+        return None;
+    }
+    let mut k = (((w * h) as f64 / max_pixels as f64).sqrt().ceil() as usize).max(2);
+    while (w.div_ceil(k) * h.div_ceil(k)) as u64 > max_pixels {
+        k += 1;
+    }
+    let (nw, nh) = (w.div_ceil(k), h.div_ceil(k));
+    let mut out = Vec::with_capacity(nw * nh);
+    let mut sums = vec![[0u64; 4]; nw];
+    for (oy, band) in pm.data().chunks(w * k).enumerate() {
+        sums.fill([0; 4]);
+        for row in band.chunks(w) {
+            for (sum, block) in sums.iter_mut().zip(row.chunks(k)) {
+                for p in block {
+                    sum[0] += u64::from(p.r);
+                    sum[1] += u64::from(p.g);
+                    sum[2] += u64::from(p.b);
+                    sum[3] += u64::from(p.a);
+                }
+            }
+        }
+        let rows = (h - oy * k).min(k);
+        for (ox, sum) in sums.iter().enumerate() {
+            let n = (((w - ox * k).min(k)) * rows).max(1) as u64;
+            let [r, g, b, a] = sum.map(|s| (s / n) as u8);
+            out.push(vello_cpu::color::PremulRgba8 { r, g, b, a });
+        }
+    }
+    Some(Pixmap::from_parts(out, nw as u16, nh as u16))
 }
 
 /// Options for a page raster.
@@ -1435,3 +1482,33 @@ mod tests {
 
 #[cfg(test)]
 mod cache_tests;
+
+/// #3665: a picture too large for the whole cache is kept at half of it, so it is cached
+/// instead of decoded again on every render.
+#[test]
+fn pictures_too_large_for_the_cache_are_kept_smaller() {
+    let px = vello_cpu::color::PremulRgba8 { r: 40, g: 80, b: 120, a: 200 };
+    // 6000 × 6000 is 144 MB of RGBA, past the 128 MB cache.
+    let big = Pixmap::from_parts(vec![px; 6000 * 6000], 6000, 6000);
+    let small = cacheable(big, 1000);
+    let bytes = small.width() as usize * small.height() as usize * 4;
+    assert!(bytes + 1000 <= CACHE_BYTES / 2, "{} x {}", small.width(), small.height());
+    assert!(small.width() >= 3000 && small.width() == small.height(), "aspect kept");
+    assert!(small.data().iter().all(|p| (p.r, p.g, p.b, p.a) == (40, 80, 120, 200)), "flat stays flat");
+    let mut cache = MediaCache { map: HashMap::new(), bytes: 0 };
+    let src = Arc::new(vec![0u8; 1000]);
+    cache.insert("big", &src, Some(Arc::new(small)), bytes);
+    assert!(cache.get("big", &src).is_some(), "cached");
+    // Pictures the cache holds as they are keep their size.
+    assert_eq!(cacheable(Pixmap::from_parts(vec![px; 100 * 50], 100, 50), 10).width(), 100);
+}
+
+#[test]
+fn shrinking_averages_premultiplied_pixels() {
+    let p = |v: u8| vello_cpu::color::PremulRgba8 { r: v, g: v, b: v, a: 255 };
+    let pm = Pixmap::from_parts(vec![p(0), p(100), p(200), p(40)], 4, 1);
+    let out = shrink(&pm, 2).unwrap();
+    assert_eq!((out.width(), out.height()), (2, 1));
+    assert_eq!(out.data().iter().map(|q| q.r).collect::<Vec<_>>(), [50, 120]);
+    assert!(shrink(&pm, 4).is_none() && shrink(&pm, 0).is_none());
+}

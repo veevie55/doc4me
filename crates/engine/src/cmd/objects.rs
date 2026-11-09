@@ -241,14 +241,14 @@ pub fn specs() -> Vec<CommandSpec> {
         .when(has_picture),
         CommandSpec::new("picture.style", "Picture Styles", "Picture Format › Picture Styles", |s, v| {
             let style = p::str(v, "style").unwrap_or("simpleFrame").to_string();
-            adjust(s, move |img| picture_style(img, &style))
+            adjust_try(s, move |img| picture_style(img, &style))
         })
         .params(r#"{"style": "simpleFrame|thickFrame|rounded|softEdge|shadow"}"#)
         .when(has_picture),
         CommandSpec::new("picture.border", "Picture Border", "Picture Format › Picture Styles", |s, v| {
             let c = p::str(v, "color").and_then(Rgb::parse).unwrap_or(Rgb::BLACK);
             let w = p::u64(v, "width").unwrap_or(4).clamp(1, 200) as u32;
-            adjust(s, move |img| frame(img, w, [c.0, c.1, c.2, 255]))
+            adjust_try(s, move |img| frame(img, w, [c.0, c.1, c.2, 255]))
         })
         .params(r#"{"color"?: "RRGGBB", "width"?: px}"#)
         .when(has_picture),
@@ -1299,15 +1299,21 @@ fn size(s: &mut Session, v: &Value) -> CmdResult {
 
 /// Apply an image operation to the selected picture's bitmap (stored as a new PNG).
 fn adjust(s: &mut Session, f: impl Fn(image::DynamicImage) -> image::DynamicImage) -> CmdResult {
+    adjust_try(s, |img| Ok(f(img)))
+}
+
+/// [`adjust`] for an edit that can refuse: one that draws a bigger bitmap (a frame, a shadow)
+/// checks its size first (WordCraft #3611).
+fn adjust_try(s: &mut Session, f: impl Fn(image::DynamicImage) -> Result<image::DynamicImage, CmdError>) -> CmdResult {
     let (_, o) = selected(s).ok_or_else(|| CmdError::Disabled("no picture".into()))?;
     let InlineObject::Image { media, .. } = o else { return Err(CmdError::Disabled("not a picture".into())) };
     let bytes = s.doc.media.get(&media).cloned().ok_or_else(|| CmdError::Failed("picture data missing".into()))?;
     let img = doc4me_geom::picture::decode(&bytes, doc4me_geom::MAX_DECODED_BYTES)
         .map_err(|e| CmdError::Failed(format!("can't decode the picture: {e}")))?;
     if (img.width() as u64) * (img.height() as u64) > 80_000_000 {
-        return Err(CmdError::Failed("picture is too large to edit".into()));
+        return Err(too_large());
     }
-    let out = f(img);
+    let out = f(img)?;
     let mut png = Vec::new();
     out.write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png).map_err(|e| CmdError::Failed(e.to_string()))?;
     let key = s.doc.add_media(png, "png");
@@ -1364,62 +1370,78 @@ fn recolor(img: image::DynamicImage, mode: &str, sat: f32) -> image::DynamicImag
 /// Flood the border-connected region close to the corner colour with transparency.
 fn remove_background(img: image::DynamicImage, tol: f32) -> image::DynamicImage {
     let mut rgba = img.to_rgba8();
-    let (w, h) = rgba.dimensions();
-    if w == 0 || h == 0 {
-        return image::DynamicImage::ImageRgba8(rgba);
-    }
-    let bg = rgba.get_pixel(0, 0).0;
-    let close = |p: [u8; 4]| (0..3).map(|i| (p[i] as f32 - bg[i] as f32).abs()).fold(0.0f32, f32::max) <= tol;
-    let mut seen = vec![false; (w as usize) * (h as usize)];
-    let mut stack: Vec<(u32, u32)> = Vec::new();
-    for x in 0..w {
-        stack.push((x, 0));
-        stack.push((x, h - 1));
-    }
-    for y in 0..h {
-        stack.push((0, y));
-        stack.push((w - 1, y));
-    }
-    while let Some((x, y)) = stack.pop() {
-        let i = (y as usize) * (w as usize) + x as usize;
-        if seen.get(i).copied().unwrap_or(true) {
-            continue;
-        }
-        if let Some(sv) = seen.get_mut(i) {
-            *sv = true;
-        }
-        let p = rgba.get_pixel(x, y).0;
-        if !close(p) {
-            continue;
-        }
-        rgba.put_pixel(x, y, image::Rgba([p[0], p[1], p[2], 0]));
-        if x > 0 {
-            stack.push((x - 1, y));
-        }
-        if x + 1 < w {
-            stack.push((x + 1, y));
-        }
-        if y > 0 {
-            stack.push((x, y - 1));
-        }
-        if y + 1 < h {
-            stack.push((x, y + 1));
-        }
-    }
+    clear_background(&mut rgba, tol);
     image::DynamicImage::ImageRgba8(rgba)
 }
 
-fn frame(img: image::DynamicImage, border: u32, color: [u8; 4]) -> image::DynamicImage {
-    let (w, h) = (img.width(), img.height());
-    let mut out = image::RgbaImage::from_pixel(w + 2 * border, h + 2 * border, image::Rgba(color));
-    image::imageops::overlay(&mut out, &img.to_rgba8(), border as i64, border as i64);
-    image::DynamicImage::ImageRgba8(out)
+/// [`remove_background`] on `rgba`, a row span at a time: besides the border's seeds, the stack
+/// holds one for each run of matching pixels beside a filled span, instead of four for every
+/// pixel filled (#3647). Returns the most seeds it held.
+fn clear_background(rgba: &mut image::RgbaImage, tol: f32) -> usize {
+    let (w, h) = rgba.dimensions();
+    let Some(bg) = rgba.get_pixel_checked(0, 0).map(|p| p.0) else { return 0 };
+    let close = |p: [u8; 4]| (0..3).map(|i| (p[i] as f32 - bg[i] as f32).abs()).fold(0.0f32, f32::max) <= tol;
+    let at = |x: u32, y: u32| y as usize * w as usize + x as usize;
+    // Not cleared yet, and close to the corner colour.
+    let open = |rgba: &image::RgbaImage, seen: &[bool], x: u32, y: u32| {
+        !seen.get(at(x, y)).copied().unwrap_or(true) && rgba.get_pixel_checked(x, y).is_some_and(|p| close(p.0))
+    };
+    let mut seen = vec![false; (w as usize) * (h as usize)];
+    let mut stack = border_pixels(w, h);
+    let mut most = stack.len();
+    while let Some((x, y)) = stack.pop() {
+        if !open(rgba, &seen, x, y) {
+            continue;
+        }
+        let (x0, x1) = run_span(x, y, w, |xi, yi| open(rgba, &seen, xi, yi));
+        for xi in x0..=x1 {
+            if let Some(s) = seen.get_mut(at(xi, y)) {
+                *s = true;
+            }
+            if let Some(p) = rgba.get_pixel_mut_checked(xi, y) {
+                p.0[3] = 0;
+            }
+        }
+        for ny in [y.checked_sub(1), y.checked_add(1).filter(|&n| n < h)].into_iter().flatten() {
+            push_open_runs(&mut stack, x0, x1, ny, |xi, yi| open(rgba, &seen, xi, yi));
+        }
+        most = most.max(stack.len());
+    }
+    most
 }
 
-fn picture_style(img: image::DynamicImage, style: &str) -> image::DynamicImage {
+fn too_large() -> CmdError {
+    CmdError::Failed("picture is too large to edit".into())
+}
+
+/// A `w` × `h` bitmap of `fill` for an edit to draw on, refused when the picture it makes would be
+/// too large to draw (two RGBA buffers within the decode budget), before it is allocated
+/// (WordCraft #3611: Thick Frame on a 1 × 2,000,000 picture asked for about 1.8 TB and aborted the
+/// process, outside `Session::run`'s panic guard).
+fn canvas(w: u32, h: u32, fill: [u8; 4]) -> Result<image::RgbaImage, CmdError> {
+    if !doc4me_geom::decode_fits(w, h, doc4me_geom::MAX_DECODED_BYTES) {
+        return Err(too_large());
+    }
+    Ok(image::RgbaImage::from_pixel(w, h, image::Rgba(fill)))
+}
+
+/// `w` and `h` grown by `pad` on every side, None past `u32`.
+fn grown(w: u32, h: u32, pad: u32) -> Option<(u32, u32)> {
+    let twice = pad.checked_mul(2)?;
+    Some((w.checked_add(twice)?, h.checked_add(twice)?))
+}
+
+fn frame(img: image::DynamicImage, border: u32, color: [u8; 4]) -> Result<image::DynamicImage, CmdError> {
+    let (w, h) = grown(img.width(), img.height(), border).ok_or_else(too_large)?;
+    let mut out = canvas(w, h, color)?;
+    image::imageops::overlay(&mut out, &img.to_rgba8(), border as i64, border as i64);
+    Ok(image::DynamicImage::ImageRgba8(out))
+}
+
+fn picture_style(img: image::DynamicImage, style: &str) -> Result<image::DynamicImage, CmdError> {
     let m = (img.width().max(img.height()) / 40).max(4);
-    match style {
-        "thickFrame" => frame(frame(img, m * 2, [255, 255, 255, 255]), m / 2, [40, 40, 40, 255]),
+    Ok(match style {
+        "thickFrame" => frame(frame(img, m * 2, [255, 255, 255, 255])?, m / 2, [40, 40, 40, 255])?,
         "rounded" | "softEdge" => {
             let mut rgba = img.to_rgba8();
             let (w, h) = rgba.dimensions();
@@ -1442,17 +1464,88 @@ fn picture_style(img: image::DynamicImage, style: &str) -> image::DynamicImage {
         "shadow" => {
             let (w, h) = (img.width(), img.height());
             let off = m;
-            let mut out = image::RgbaImage::from_pixel(w + off * 2, h + off * 2, image::Rgba([0, 0, 0, 0]));
-            let shadow = image::RgbaImage::from_pixel(w, h, image::Rgba([0, 0, 0, 90]));
-            let shadow = image::DynamicImage::ImageRgba8(shadow);
-            let mut padded = image::RgbaImage::from_pixel(w + off * 2, h + off * 2, image::Rgba([0, 0, 0, 0]));
-            image::imageops::overlay(&mut padded, &shadow.to_rgba8(), (off + off / 2) as i64, (off + off / 2) as i64);
-            let blurred = image::DynamicImage::ImageRgba8(padded).blur(off as f32 / 2.0).to_rgba8();
-            image::imageops::overlay(&mut out, &blurred, 0, 0);
+            let (pw, ph) = grown(w, h, off).ok_or_else(too_large)?;
+            let mut out = canvas(pw, ph, [0, 0, 0, 0])?;
+            // A rectangle of alpha 90 the picture's size, one and a half margins in, blurred. Its
+            // blur is the product of its sides' blurs along each axis, so it is drawn from two
+            // profiles, not by blurring every pixel with a kernel that grows with the picture
+            // (WordCraft #3647).
+            let (sigma, start) = (off as f32 / 2.0, off + off / 2);
+            let (xs, ys) = (blurred_span(pw, start, w, sigma), blurred_span(ph, start, h, sigma));
+            for (x, y, p) in out.enumerate_pixels_mut() {
+                let k = xs.get(x as usize).copied().unwrap_or(0.0) * ys.get(y as usize).copied().unwrap_or(0.0);
+                p.0[3] = (90.0 * k).round() as u8;
+            }
             image::imageops::overlay(&mut out, &img.to_rgba8(), 0, 0);
             image::DynamicImage::ImageRgba8(out)
         }
-        _ => frame(img, m, [255, 255, 255, 255]),
+        _ => frame(img, m, [255, 255, 255, 255])?,
+    })
+}
+
+/// How much of a span `len` long from `start` covers each of `n` positions once blurred with the
+/// Gaussian `image::imageops::blur` uses for `sigma` (outside the `n` positions counts as clear):
+/// 0 to 1. Each position is one difference of the kernel's running sums.
+fn blurred_span(n: u32, start: u32, len: u32, sigma: f32) -> Vec<f32> {
+    let kernel = gaussian_kernel(sigma);
+    let mut sums = vec![0.0f32];
+    for k in &kernel {
+        sums.push(sums.last().copied().unwrap_or(0.0) + k);
+    }
+    let (size, r) = (kernel.len() as i64, (kernel.len() / 2) as i64);
+    let sum_to = |k: i64| sums.get(k.clamp(0, size) as usize).copied().unwrap_or(0.0);
+    let (start, end) = (i64::from(start), i64::from(start) + i64::from(len));
+    // Position i takes weight k from i + k - r, inside the span for k in [start - i + r, end - i + r).
+    (0..i64::from(n)).map(|i| sum_to(end - i + r) - sum_to(start - i + r)).collect()
+}
+
+/// The normalized kernel `image::imageops::blur` (0.25) uses for `sigma`: odd, about 6.7 σ wide.
+fn gaussian_kernel(sigma: f32) -> Vec<f32> {
+    let size = ((((sigma - 0.8) / 0.3 + 1.0) * 2.0 + 1.0).max(3.0) as usize) | 1;
+    let mean = (size / 2) as f32;
+    let weights: Vec<f32> = (0..size).map(|x| (-0.5 * ((x as f32 - mean) / sigma).powi(2)).exp()).collect();
+    let total: f32 = weights.iter().sum();
+    weights.into_iter().map(|v| v / total).collect()
+}
+
+/// Every pixel on the image's edge, the flood-fill seeds.
+fn border_pixels(w: u32, h: u32) -> Vec<(u32, u32)> {
+    let mut stack = Vec::new();
+    for x in 0..w {
+        stack.push((x, 0));
+        stack.push((x, h - 1));
+    }
+    for y in 0..h {
+        stack.push((0, y));
+        stack.push((w - 1, y));
+    }
+    stack
+}
+
+/// The horizontal run of open pixels around `(x, y)`, both ends included.
+fn run_span(x: u32, y: u32, w: u32, open: impl Fn(u32, u32) -> bool) -> (u32, u32) {
+    let (mut x0, mut x1) = (x, x);
+    while x0 > 0 && open(x0 - 1, y) {
+        x0 -= 1;
+    }
+    while x1 + 1 < w && open(x1 + 1, y) {
+        x1 += 1;
+    }
+    (x0, x1)
+}
+
+/// Queues the first pixel of each open run in row `ny` between `x0` and `x1`.
+fn push_open_runs(stack: &mut Vec<(u32, u32)>, x0: u32, x1: u32, ny: u32, open: impl Fn(u32, u32) -> bool) {
+    let mut xi = x0;
+    while xi <= x1 {
+        if open(xi, ny) {
+            stack.push((xi, ny));
+            while xi <= x1 && open(xi, ny) {
+                xi += 1;
+            }
+        } else {
+            xi += 1;
+        }
     }
 }
 
@@ -2376,5 +2469,77 @@ mod tests {
         for sharpen in [-1e-40_f64, -1e-45, -1e-38, 1e-40, -1e-30, 0.0, -0.5] {
             s.run("picture.corrections", &json!({"sharpen": sharpen})).unwrap_or_else(|e| panic!("sharpen {sharpen}: {e:?}"));
         }
+    }
+
+    /// WordCraft #3611: a style or border is drawn only when the picture it makes can still be
+    /// drawn. On a 1 × 2,000,000 picture Thick Frame asked for about 1.8 TB and aborted the process.
+    #[test]
+    fn picture_styles_and_borders_check_the_size_they_draw() {
+        let mut thin = Vec::new();
+        image::GrayImage::new(1, 2_000_000).write_to(&mut std::io::Cursor::new(&mut thin), image::ImageFormat::Png).unwrap();
+        let mut s = Session::new(doc4me_doc::Document::new());
+        s.run("insert.picture", &json!({"data": super::super::insert::base64_encode(&thin)})).unwrap();
+        let media = s.doc.media.len();
+        for (id, v) in [
+            ("picture.style", json!({"style": "thickFrame"})),
+            ("picture.style", json!({"style": "shadow"})),
+            ("picture.style", json!({})),
+            ("picture.border", json!({"width": 200})),
+        ] {
+            let e = s.run(id, &v).unwrap_err().to_string();
+            assert!(e.contains("too large to edit"), "{id} {v}: {e}");
+        }
+        assert_eq!(s.doc.media.len(), media, "nothing was drawn");
+        assert_eq!(grown(u32::MAX, 1, 1), None);
+    }
+
+    /// The Shadow style before #3647: the rectangle blurred with `image`'s Gaussian.
+    fn blurred_shadow(img: &image::DynamicImage) -> image::RgbaImage {
+        let (w, h) = (img.width(), img.height());
+        let off = (w.max(h) / 40).max(4);
+        let mut out = image::RgbaImage::from_pixel(w + off * 2, h + off * 2, image::Rgba([0, 0, 0, 0]));
+        let shadow = image::RgbaImage::from_pixel(w, h, image::Rgba([0, 0, 0, 90]));
+        let mut padded = image::RgbaImage::from_pixel(w + off * 2, h + off * 2, image::Rgba([0, 0, 0, 0]));
+        image::imageops::overlay(&mut padded, &shadow, (off + off / 2) as i64, (off + off / 2) as i64);
+        let blurred = image::DynamicImage::ImageRgba8(padded).blur(off as f32 / 2.0).to_rgba8();
+        image::imageops::overlay(&mut out, &blurred, 0, 0);
+        image::imageops::overlay(&mut out, &img.to_rgba8(), 0, 0);
+        out
+    }
+
+    /// #3647: the shadow drawn from two profiles looks like the blur it replaces.
+    #[test]
+    fn the_shadow_style_matches_the_blur_it_replaces() {
+        for (w, h) in [(80, 40), (400, 220), (37, 300)] {
+            let img = image::DynamicImage::ImageRgba8(image::RgbaImage::from_fn(w, h, |x, y| {
+                image::Rgba([(x * 7) as u8, (y * 5) as u8, 90, if (x + y) % 3 == 0 { 255 } else { 120 }])
+            }));
+            let new = picture_style(img.clone(), "shadow").unwrap().to_rgba8();
+            let old = blurred_shadow(&img);
+            assert_eq!(new.dimensions(), old.dimensions());
+            let worst = new.pixels().zip(old.pixels()).flat_map(|(a, b)| a.0.into_iter().zip(b.0).map(|(a, b)| a.abs_diff(b))).max();
+            assert!(worst.is_some_and(|d| d <= 2), "{w} x {h}: {worst:?}");
+        }
+    }
+
+    /// #3647: Remove Background fills a span at a time, so its stack stays near the border's seeds
+    /// instead of growing with the picture, and it clears the same region.
+    #[test]
+    fn remove_background_keeps_a_small_stack() {
+        let mut uniform = image::RgbaImage::from_pixel(2000, 2000, image::Rgba([250, 250, 250, 255]));
+        let most = clear_background(&mut uniform, 30.0);
+        assert!(most <= 4 * (2000 + 2000) + 8, "{most}");
+        assert!(uniform.pixels().all(|p| p.0[3] == 0));
+        // A square ring keeps what it encloses: only background reachable from the border goes.
+        let mut ring = image::RgbaImage::from_fn(60, 60, |x, y| {
+            let d = (x as i32 - 30).abs().max((y as i32 - 30).abs());
+            if (10..14).contains(&d) { image::Rgba([200, 20, 20, 255]) } else { image::Rgba([255, 255, 255, 255]) }
+        });
+        clear_background(&mut ring, 30.0);
+        assert_eq!(ring.get_pixel(0, 0).0, [255, 255, 255, 0], "outside: cleared, colour kept");
+        assert_eq!(ring.get_pixel(5, 30).0[3], 0);
+        assert_eq!(ring.get_pixel(30, 18).0[3], 255, "the ring");
+        assert_eq!(ring.get_pixel(30, 30).0[3], 255, "inside the ring");
+        assert_eq!(clear_background(&mut image::RgbaImage::new(0, 0), 30.0), 0);
     }
 }

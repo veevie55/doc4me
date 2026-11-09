@@ -424,12 +424,18 @@ impl AffixDict {
     /// Build the suffix index and the stem hash table.
     fn index(&mut self) {
         let mut idx: FxMap<Box<str>, Vec<SfxGroup>> = FxMap::default();
+        // Each (append, strip) group found by hash, not by scanning the append's groups: many
+        // strips for one append made building quadratic (WordCraft #3613, finding 6).
+        let mut at: FxMap<(Box<str>, Box<str>), usize> = FxMap::default();
         for (i, r) in self.suffixes.iter().enumerate() {
             let groups = idx.entry(r.add.clone()).or_default();
             let Ok(i) = u32::try_from(i) else { break };
-            match groups.iter_mut().find(|g| g.strip == r.strip) {
+            match at.get(&(r.add.clone(), r.strip.clone())).and_then(|&k| groups.get_mut(k)) {
                 Some(g) => g.rules.push(i),
-                None => groups.push(SfxGroup { strip: r.strip.clone(), rules: vec![i] }),
+                None => {
+                    at.insert((r.add.clone(), r.strip.clone()), groups.len());
+                    groups.push(SfxGroup { strip: r.strip.clone(), rules: vec![i] });
+                }
             }
         }
         self.max_sfx_chars = self.suffixes.iter().map(|r| r.add.chars().count()).max().unwrap_or(0);
@@ -884,5 +890,20 @@ mod tests {
             let _ = AffixDict::from_bytes(&bytes);
             let _ = AffixDict::from_bytes(&miniz_oxide::deflate::compress_to_vec(&bytes, 1));
         }
+    }
+
+    /// WordCraft #3613 finding 6: thousands of suffix rules sharing one append with different
+    /// strips build the index in linear time, and each lookup still finds its rule.
+    #[test]
+    fn many_strips_for_one_append_index_quickly() {
+        let n = 20_000;
+        let mut aff = format!("SET UTF-8\nSFX a Y {n}\n");
+        for k in 0..n {
+            aff.push_str(&format!("SFX a q{k} x .\n"));
+        }
+        let t = std::time::Instant::now();
+        let d = AffixDict::from_hunspell(&aff, "2\nbaq7/a\nbaq19999/a\n", &[]).unwrap();
+        assert!(t.elapsed().as_secs() < 20, "{:?}", t.elapsed());
+        assert!(d.contains("bax"));
     }
 }

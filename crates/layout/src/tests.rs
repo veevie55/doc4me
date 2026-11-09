@@ -319,7 +319,7 @@ pub(crate) fn cost_ratio(scale: usize, mut small: impl FnMut(), mut big: impl Fn
 }
 
 /// [`cost_ratio`] of laying out `doc(SCALE * n)` against `doc(n)`.
-fn layout_time_ratio(doc: impl Fn(usize) -> Document, n: usize, opts: &LayoutOptions) -> (f64, f64, f64) {
+pub(crate) fn layout_time_ratio(doc: impl Fn(usize) -> Document, n: usize, opts: &LayoutOptions) -> (f64, f64, f64) {
     let (small, big) = (doc(n), doc(SCALE * n));
     cost_ratio(
         SCALE,

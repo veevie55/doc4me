@@ -13,6 +13,17 @@
 
 ### ความปลอดภัย
 
+- **ภาพใหญ่ในการแก้ภาพ, cache ภาพ, Zotero, พจนานุกรม และงานแบบกำลังสองใน layout** (รอบที่ 3 ชุดที่ 7; WordCraft #3611 `856938d5`, #3647 `8c9b8faa`, #3665 `7a7a05c7` `fc9b5557`, #3692 `ab26f22c` `5a07c465` `62971158` `6c20b3e6` `7d31c01f` `897add99`, #3613 `45556583`)
+  - **โปรแกรมล่มจริงใน doc4me ที่แก้แล้ว**: Picture Styles (Thick Frame, Shadow, กรอบเริ่มต้น) และ Picture Border คำนวณขนาดบิตแมปจากภาพโดยไม่ตรวจ ภาพ PNG ขนาด 1 × 2,000,000 พิกเซล (ไฟล์ไม่กี่ KB) กับ Thick Frame ขอหน่วยความจำราว 1.8 TB แล้ว abort นอก panic guard ทำให้งานที่ยังไม่บันทึกหาย; ตอนนี้ทุกบิตแมปที่วาดผ่าน `canvas()` ซึ่งปฏิเสธขนาดที่วาดไม่ได้ก่อนจอง และบวกขนาดแบบ checked (`crates/engine/src/cmd/objects.rs`)
+  - Remove Background เติมทีละช่วงแถวแทนการ push เพื่อนบ้านทุกพิกเซล (stack ไม่โตตามภาพ); เงาวาดจาก profile สองแกนแทนการ blur ด้วย kernel ที่โตตามภาพ ผลเหมือนเดิม
+  - cache ภาพของการวาดหน้า: ภาพที่ใหญ่เกิน cache ถูกย่อลงครึ่งหนึ่งของ cache (นับ byte ต้นฉบับด้วย) จึงถอดครั้งเดียวแทนการถอดทุกครั้งที่วาด (`crates/render/src/lib.rs`)
+  - Zotero: ตรวจ id ของฟิลด์ผ่าน index แทนการสแกนรายการทั้งหมดต่อฟิลด์ (`crates/zotero/src/bridge.rs`)
+  - พจนานุกรม: ดัชนี suffix หากลุ่ม (append, strip) ด้วย hash (finding 6) ส่วนอื่นของ `45556583` ไม่เกี่ยว เพราะตัวอ่าน affix ของ doc4me ไม่มี continuation class ซึ่งเป็นต้นเหตุ
+  - layout: การเลือกข้อความข้าม header, autofit ตาราง, `proof_text` (เดินตาม run ครั้งเดียว), คลิกและเลื่อน caret ในบรรทัดสองทิศทาง (`line_carets`) และ header/footer ที่สืบทอดผ่าน section (`linked_all` คำนวณครั้งเดียวต่อ layout แทนการย้อนดูทุก section ต่อ section และต่อหน้า; เอกสาร 2,000 section จาก 1.67 เหลือ 0.23 วินาทีในเทสต์) ทำงานเชิงเส้นแล้ว; เพิ่ม `crates/layout/src/tests_linear.rs`
+  - เกณฑ์ของ `proof_text_walks_the_runs_once` ผ่อนจาก 24 เป็น 32 เท่า เพราะ `CharProps` ของ doc4me ใหญ่กว่าของต้นทาง ทำให้ input ใหญ่ cache miss (วัดได้ราว 24–27 เท่า ขณะที่งานกำลังสองจะได้ราว 64 เท่า) โดยโค้ดตรงกับต้นทางทุกบรรทัด
+  - ไม่นำมา: `34285531` (doc4me ไม่มีการ clip เซลล์), `2cff091c` (doc4me ไม่มีตัวตัดคำภาษารัสเซีย)
+  - ตรวจสอบ: เทสต์ใหม่ `picture_styles_and_borders_check_the_size_they_draw`, `remove_background_keeps_a_small_stack`, `the_shadow_style_matches_the_blur_it_replaces`, `many_strips_for_one_append_index_quickly` และเทสต์ linear 5 รายการผ่าน; clippy `-D warnings` ทั้ง workspace ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่าน 2,390 ไม่ผ่าน 0
+
 - **ตัวถอดภาพตัวเดียวที่ตรวจงบก่อน, คำยาวไม่ทำให้ layout ช้าแบบกำลังสอง และอื่น ๆ** (รอบที่ 3 ชุดที่ 6; WordCraft #3644 `d7429d21` `f82319de`, #3645 `c99eb500`, #5337 `ab0020d6`, #3808 `7f36836a`, #3963 `2d4f146c`, #3954 `112dab41`, #3734 `05839461`)
   - `crates/geom/src/picture.rs` ใหม่ (รุ่นล่าสุดของต้นทาง, feature `image` ของ `doc4me-geom`): อ่าน header แล้วประเมินหน่วยความจำสูงสุดรวมสิ่งที่ decoder ถือไว้ (สัมประสิทธิ์ DCT ของ JPEG แบบ progressive), ไม่ถอด TIFF ที่ใช้ JPEG strip (decoder ของ `tiff` ไม่ถูกจำกัดงบ) และ TIFF ที่ระบุ compression ซ้ำ; ใช้แทนการถอดภาพทุกจุดในเอกสาร: วาดหน้า (`crates/render`), PDF (`crates/pdf`), ส่งออก RTF (`model::decode_bounded`), การปรับภาพ (`picture.*` ใน `crates/engine/src/cmd/objects.rs`), WebP ตอนแทรก และภาพย่อ Online Pictures
   - layout: ความกว้างของคำวัดครั้งเดียวก่อนตัดบรรทัด (`word_widths` ใน `crates/layout/src/para.rs`) แทนการเดินคำซ้ำทุกบรรทัดเมื่ออยู่ข้างวัตถุลอย คำที่ไม่มีจุดตัด 1 MB เคยใช้ราว 29 วินาที; การตัดคำภาษาไทยด้วยพจนานุกรมยังใช้ `break_after` เดิม จึงไม่เปลี่ยนตำแหน่งตัดบรรทัด

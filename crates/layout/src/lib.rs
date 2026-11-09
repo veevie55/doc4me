@@ -1989,6 +1989,7 @@ fn layout_pass(
         track_totals: true,
     };
     let sections = doc.sections();
+    let (all_heads, all_feet) = (linked_all(&sections, |s| s.headers), linked_all(&sections, |s| s.footers));
     let web = matches!(opts.view, ViewMode::Web | ViewMode::Draft | ViewMode::Outline);
     let read = opts.view == ViewMode::Read;
     let reflow = web || read;
@@ -2093,7 +2094,7 @@ fn layout_pass(
         ctx.fields.section = u32::try_from(si).unwrap_or(u32::MAX).saturating_add(1);
         ctx.fields.section_pages = totals.section(si);
         // Headers and footers left out are linked to the previous section's, and take its room.
-        let (heads, feet) = (linked(&sections, si, |s| s.headers), linked(&sections, si, |s| s.footers));
+        let (heads, feet) = (all_heads.get(si).copied().unwrap_or_default(), all_feet.get(si).copied().unwrap_or_default());
         let body_top = if reflow || turn.is_turned() { sect.margin_top } else { body_top_for(&mut ctx, sect, heads.default) };
         let first_top = if reflow || turn.is_turned() || !sect.title_page { body_top } else { body_top_for(&mut ctx, sect, heads.first) };
         let foot_top = if reflow || turn.is_turned() { f32::MAX } else { foot_top_for(&mut ctx, sect, feet.default) };
@@ -3704,20 +3705,20 @@ fn below(excl: &[WrapArea], mut y: f32, x0: f32, x1: f32) -> f32 {
     y
 }
 
-/// Section `si`'s headers (or footers, as `get` picks), with those it leaves out inherited from
-/// the sections before it (Word's "link to previous").
-fn linked(sections: &[(usize, &SectionProps)], si: usize, get: fn(&SectionProps) -> HeaderSet) -> HeaderSet {
-    let mut set = sections.get(si).map(|(_, s)| get(s)).unwrap_or_default();
-    for (_, s) in sections.iter().take(si).rev() {
-        if set.default.is_some() && set.first.is_some() && set.even.is_some() {
-            break;
-        }
-        let o = get(s);
-        set.default = set.default.or(o.default);
-        set.first = set.first.or(o.first);
-        set.even = set.even.or(o.even);
-    }
-    set
+/// Every section's headers (or footers, as `get` picks), with those it leaves out inherited from
+/// the sections before it (Word's "link to previous"), resolved once in document order. Looking
+/// back over the sections before it for every section and every page made a document of many
+/// sections quadratic (WordCraft #3692, finding 13).
+fn linked_all(sections: &[(usize, &SectionProps)], get: fn(&SectionProps) -> HeaderSet) -> Vec<HeaderSet> {
+    let mut prev = HeaderSet::default();
+    sections
+        .iter()
+        .map(|(_, s)| {
+            let o = get(s);
+            prev = HeaderSet { default: o.default.or(prev.default), first: o.first.or(prev.first), even: o.even.or(prev.even) };
+            prev
+        })
+        .collect()
 }
 
 fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &SectionProps)]) {
@@ -3728,6 +3729,7 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
         *per_section.entry(p.section).or_default() += 1;
     }
     let even_odd = ctx.doc.settings.even_odd_headers;
+    let (all_heads, all_feet) = (linked_all(sections, |s| s.headers), linked_all(sections, |s| s.footers));
     let mut first_of_section: HashSet<usize> = HashSet::new();
     let mut seen = HashSet::new();
     for (i, p) in pages.iter().enumerate() {
@@ -3738,8 +3740,8 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
     for (i, page) in pages.iter_mut().enumerate() {
         let Some((_, sect)) = sections.get(page.section) else { continue };
         // Inherit header/footer references from earlier sections (Word's "link to previous").
-        let pick = |get: fn(&SectionProps) -> HeaderSet| -> Option<u32> {
-            let set = linked(sections, page.section, get);
+        let pick = |all: &[HeaderSet]| -> Option<u32> {
+            let set = all.get(page.section).copied().unwrap_or_default();
             if sect.title_page && first_of_section.contains(&i) {
                 return set.first;
             }
@@ -3748,8 +3750,8 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
             }
             set.default
         };
-        let hid = pick(|s| s.headers);
-        let fid = pick(|s| s.footers);
+        let hid = pick(&all_heads);
+        let fid = pick(&all_feet);
         ctx.fields.page = page.number;
         ctx.fields.page_format = sect.page_num_format;
         ctx.fields.pages = total;
@@ -3832,6 +3834,8 @@ mod tests_bidi;
 mod tests_complex;
 #[cfg(test)]
 mod tests_grid;
+#[cfg(test)]
+mod tests_linear;
 #[cfg(test)]
 mod tests_numeral;
 #[cfg(test)]
