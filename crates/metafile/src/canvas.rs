@@ -238,8 +238,9 @@ impl Canvas {
 
     fn push(&mut self, raw: Raw) {
         let cost = match &raw {
-            Raw::Path { ops, .. } => ops.len() * std::mem::size_of::<Op>(),
-            Raw::Bitmap { img, .. } => img.px.len(),
+            // What is held, capacity and all (WordCraft #3692).
+            Raw::Path { ops, .. } => ops.capacity().saturating_mul(std::mem::size_of::<Op>()),
+            Raw::Bitmap { img, .. } => img.px.capacity(),
         };
         if self.items.len() >= MAX_ITEMS || self.used.saturating_add(cost) > MAX_BYTES {
             self.full = true;

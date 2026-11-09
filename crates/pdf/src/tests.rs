@@ -991,3 +991,17 @@ fn image_budget_is_checked_from_the_header() {
     assert_eq!(dims, (30_000, 30_000));
     assert!(load_image(&Arc::new(hdr)).is_none());
 }
+
+/// WordCraft #3692: each glyph's text end is the first later cluster past its own, found in one
+/// pass (a run of glyphs sharing a cluster was quadratic).
+#[test]
+fn cluster_ends_match_the_forward_search() {
+    for clusters in [vec![], vec![0], vec![0, 0, 0, 3, 3, 7], vec![5, 3, 3, 0], vec![0, 4, 2, 4, 9, 1]] {
+        let len = 12;
+        let want: Vec<usize> =
+            clusters.iter().enumerate().map(|(i, c)| clusters.iter().skip(i + 1).copied().find(|n| n > c).unwrap_or(len)).collect();
+        assert_eq!(super::cluster_ends(&clusters, len), want, "{clusters:?}");
+    }
+    let many = vec![0usize; 200_000];
+    assert!(super::cluster_ends(&many, 1).iter().all(|&e| e == 1));
+}

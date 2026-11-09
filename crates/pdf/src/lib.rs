@@ -1354,11 +1354,14 @@ impl Exporter<'_> {
         if font.is_none() && !self.outlined.contains(&face.id()) {
             return;
         }
+        // Each glyph's text end in one pass: searching ahead from every glyph was quadratic in a
+        // run of glyphs sharing a cluster (a letter with many combining marks; WordCraft #3692).
+        let ends = cluster_ends(&shaped.iter().map(|g| g.cluster).collect::<Vec<_>>(), text.len());
         let glyphs: Vec<KrillaGlyph> = shaped
             .iter()
             .enumerate()
             .map(|(i, g)| {
-                let end = shaped.iter().skip(i + 1).map(|n| n.cluster).find(|cl| *cl > g.cluster).unwrap_or(text.len());
+                let end = ends.get(i).copied().unwrap_or(text.len());
                 let start = g.cluster.min(end);
                 KrillaGlyph::new(
                     GlyphId::new(g.gid),
@@ -1507,6 +1510,23 @@ fn load_image_within(data: &Arc<Vec<u8>>, budget: u64) -> Option<Image> {
         return Image::from_jpeg(data.clone().into(), true).ok();
     }
     Some(Image::from_rgba8(dec.to_rgba8().into_raw(), w, h))
+}
+
+/// Where each glyph's text ends: the cluster (byte offset) of the first later glyph whose cluster
+/// is past the glyph's own, else `len`. One backward pass keeping the later clusters that can
+/// still be an answer, so a long run of glyphs sharing a cluster (combining marks) stays linear.
+fn cluster_ends(clusters: &[usize], len: usize) -> Vec<usize> {
+    let mut ends = vec![len; clusters.len()];
+    // Later clusters, nearest last, each greater than every one nearer.
+    let mut later: Vec<usize> = Vec::new();
+    for (end, &c) in ends.iter_mut().zip(clusters).rev() {
+        while later.last().is_some_and(|&n| n <= c) {
+            later.pop();
+        }
+        *end = later.last().copied().unwrap_or(len);
+        later.push(c);
+    }
+    ends
 }
 
 #[cfg(test)]

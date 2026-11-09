@@ -105,13 +105,7 @@ pub fn replies(doc: &Document) -> BTreeMap<u32, Vec<u32>> {
 
 /// The comment authors in order of first appearance (for their colours).
 fn author_index(doc: &Document, author: &str) -> u32 {
-    let mut seen: Vec<&str> = Vec::new();
-    for c in doc.comments.values() {
-        if !seen.contains(&c.author.as_str()) {
-            seen.push(&c.author);
-        }
-    }
-    seen.iter().position(|a| *a == author).unwrap_or(0) as u32
+    crate::display::author_rank(doc.comments.values().map(|c| c.author.as_str()), author)
 }
 
 fn author_name(a: &str) -> &str {

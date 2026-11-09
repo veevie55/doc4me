@@ -1466,14 +1466,36 @@ pub(crate) fn text_glyphs(doc: &Document, r: Rect, it: &GraphicItem, alpha: f32,
     out
 }
 
+/// The revision authors in order of first appearance (for their colours): `author`'s place.
 fn author_index(doc: &Document, author: &str) -> u32 {
-    let mut seen: Vec<&str> = Vec::new();
-    for r in &doc.revisions {
-        if !seen.contains(&r.author.as_str()) {
-            seen.push(&r.author);
-        }
+    author_rank(doc.revisions.iter().map(|r| r.author.as_str()), author)
+}
+
+/// Authors ranked by first appearance, remembered for the list they were ranked from. Ranking
+/// the whole list again for every tracked run, paragraph mark or comment drawn was quadratic in
+/// the revisions or comments (WordCraft #3706, finding 30). The list is recognised by its length
+/// and the addresses of its first and last authors' text, which change whenever the list does.
+pub(crate) fn author_rank<'a>(authors: impl ExactSizeIterator<Item = &'a str> + Clone, author: &str) -> u32 {
+    type Key = (usize, usize, usize);
+    thread_local! {
+        static RANKS: std::cell::RefCell<(Option<Key>, std::collections::HashMap<String, u32>)> = Default::default();
     }
-    seen.iter().position(|a| *a == author).unwrap_or(0) as u32
+    let len = authors.len();
+    let first = authors.clone().next().map_or(0, |a| a.as_ptr() as usize);
+    let last = authors.clone().last().map_or(0, |a| a.as_ptr() as usize);
+    let key = (len, first, last);
+    RANKS.with(|cell| {
+        let mut cell = cell.borrow_mut();
+        if cell.0 != Some(key) {
+            let mut order = std::collections::HashMap::new();
+            for a in authors {
+                let n = order.len() as u32;
+                order.entry(a.to_string()).or_insert(n);
+            }
+            *cell = (Some(key), order);
+        }
+        cell.1.get(author).copied().unwrap_or(0)
+    })
 }
 
 /// Automatic colour is black, or white on a dark background.

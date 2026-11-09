@@ -57,11 +57,22 @@ impl Rendered {
         }
         out
     }
+    /// Whether the pixels are exactly `width`×`height` RGBA, within a page raster's budget
+    /// ([`doc4me_geom::MAX_RASTER_PIXELS`]): the fields are public, so an encoder is never asked
+    /// to pad a short buffer out to a huge claimed size (or, for JPEG, to assert on a mismatch).
+    fn encodable(&self) -> bool {
+        let budget = doc4me_geom::MAX_RASTER_PIXELS.saturating_mul(4);
+        doc4me_geom::rgba_fits(self.width, self.height, budget)
+            && doc4me_geom::rgba_bytes(self.width, self.height).is_some_and(|b| b == self.pixels.len() as u64)
+    }
     /// PNG bytes (empty on failure, logged).
     pub fn to_png(&self) -> Vec<u8> {
-        let mut px = self.to_straight();
-        px.resize(self.width as usize * self.height as usize * 4, 0);
-        let Some(img) = image::RgbaImage::from_raw(self.width, self.height, px) else {
+        // Never pad a short buffer out to a huge claimed size (WordCraft #3692).
+        if !self.encodable() {
+            log::error!("PNG encode: {} bytes for {}×{} pixels", self.pixels.len(), self.width, self.height);
+            return Vec::new();
+        }
+        let Some(img) = image::RgbaImage::from_raw(self.width, self.height, self.to_straight()) else {
             log::error!("PNG encode: bad size {}×{}", self.width, self.height);
             return Vec::new();
         };
@@ -75,6 +86,10 @@ impl Rendered {
     /// JPEG bytes at `quality` (1–100), composited on white since JPEG has no transparency
     /// (empty on failure, logged: JPEG stops at 65,535 px a side).
     pub fn to_jpeg(&self, quality: u8) -> Vec<u8> {
+        if !self.encodable() {
+            log::error!("JPEG encode: {} bytes for {}×{} pixels", self.pixels.len(), self.width, self.height);
+            return Vec::new();
+        }
         let rgba = self.to_straight();
         let rgb: Vec<u8> = rgba
             .as_chunks::<4>()
@@ -1216,6 +1231,24 @@ mod tests {
         assert!(decode_pixmap(&hdr).is_none());
     }
 
+    /// A `Rendered` whose pixels don't match its claimed size isn't padded out to that size: a
+    /// 60000×60000 claim over no pixels would allocate 14 GB. It, and any mismatch, encodes to
+    /// nothing (JPEG used to assert on the length).
+    #[test]
+    fn encoders_refuse_pixels_that_dont_match_the_size() {
+        let huge = Rendered { width: 60_000, height: 60_000, pixels: Vec::new() };
+        assert!(huge.to_png().is_empty());
+        assert!(huge.to_jpeg(80).is_empty());
+        let short = Rendered { width: 2, height: 2, pixels: vec![255; 4] };
+        assert!(short.to_png().is_empty());
+        assert!(short.to_jpeg(80).is_empty());
+        let long = Rendered { width: 1, height: 1, pixels: vec![255; 8] };
+        assert!(long.to_png().is_empty());
+        let ok = Rendered { width: 2, height: 2, pixels: vec![255; 16] };
+        assert!(!ok.to_png().is_empty());
+        assert!(!ok.to_jpeg(80).is_empty());
+    }
+
     #[test]
     fn page_raster_is_capped_by_total_pixels() {
         let d = Document::new();
@@ -1477,6 +1510,43 @@ mod tests {
     fn a_line_runs_from_top_left_to_bottom_right() {
         let p = shape_path(ShapeKind::Line, kurbo::Rect::new(10.0, 20.0, 30.0, 60.0));
         assert_eq!(p.elements(), &[kurbo::PathEl::MoveTo((10.0, 20.0).into()), kurbo::PathEl::LineTo((30.0, 60.0).into())]);
+    }
+
+    /// An EMF text run whose anchor sits inside the picture but whose font is billions of units
+    /// tall: each glyph's curves would span billions of device pixels, which the rasteriser
+    /// subdivides for ever. Glyphs that big (or off the raster) are left out; the page renders.
+    #[test]
+    fn metafile_text_with_a_huge_font_is_left_out() {
+        let mut font = emf_rec(82, &le32(&[1, -2_000_000_000, 0, 0, 0, 400, 0, 0]));
+        let mut name: Vec<u8> = "Arial".encode_utf16().flat_map(|u| u.to_le_bytes()).collect();
+        name.resize(64, 0);
+        font.extend(name);
+        font[4..8].copy_from_slice(&104u32.to_le_bytes());
+        let mut text = emf_rec(84, &le32(&[0, 0, 100, 100, 1, 0, 0, 5, 40, 4, 76, 0, 0, 0, 0, 0, 0]));
+        text.extend("WOWS".encode_utf16().flat_map(|u| u.to_le_bytes()));
+        text[4..8].copy_from_slice(&84u32.to_le_bytes());
+        let mut emf = red_right_half_emf()[..88].to_vec();
+        emf.extend([font, emf_rec(37, &le32(&[1])), emf_rec(24, &le32(&[0])), text, emf_rec(14, &[0; 12])].concat());
+        let mut d = Document::new();
+        let media = d.add_media(emf, "emf");
+        let mut p = doc4me_doc::Paragraph::new();
+        let obj = doc4me_doc::para::InlineObject::Image {
+            media,
+            w: 70.0,
+            h: 70.0,
+            alt: String::new(),
+            float: Default::default(),
+            crop: [0.0; 4],
+            ole: None,
+            video: None,
+        };
+        p.insert_object(0, obj, &Default::default()).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+        let start = std::time::Instant::now();
+        let img = render_page(&d, &l.pages[0], 1.0, &RenderOptions::default());
+        assert!(start.elapsed() < std::time::Duration::from_secs(2), "{:?}", start.elapsed());
+        assert_eq!(img.width, 612);
     }
 }
 
