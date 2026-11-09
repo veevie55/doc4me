@@ -71,6 +71,9 @@ pub enum DocbinError {
 
 /// Read a `.doc` (Word 97-2003 binary) file into a [`Document`].
 pub fn read(bytes: &[u8]) -> Result<Document, DocbinError> {
+    // `cfb` builds the whole FAT the DIFAT lists before checking it: a small file listing one
+    // sector thousands of times took hundreds of megabytes (WordCraft #3642).
+    doc4me_doc::cfb_guard::check(bytes).map_err(DocbinError::Container)?;
     let mut comp = cfb::CompoundFile::open(std::io::Cursor::new(bytes)).map_err(|e| DocbinError::Container(e.to_string()))?;
     let word = stream(&mut comp, "WordDocument").ok_or_else(|| DocbinError::NotWord("no WordDocument stream".into()))?;
     if word.len() as u64 > MAX_STREAM {

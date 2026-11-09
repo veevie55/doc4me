@@ -2039,3 +2039,23 @@ fn section_marks_end_paragraphs() {
     let doc = read(&struct_doc(&spec)).expect("opens");
     assert_eq!(body_texts(&doc), ["a\u{C}b"]);
 }
+
+/// WordCraft #3642: a small compound file whose DIFAT names one FAT sector thousands of times
+/// made `cfb` build a FAT of hundreds of megabytes before checking it. The precheck refuses it.
+#[test]
+fn a_difat_repeating_one_fat_sector_is_refused_before_cfb_builds_the_fat() {
+    let f = doc4me_doc::cfb_guard::repeating_difat_sample();
+    // The precheck's own error is the proof that it ran before cfb.
+    assert!(matches!(read(&f), Err(super::DocbinError::Container(e)) if e.contains("FAT sectors in a file of")));
+    // A file cfb wrote itself passes, in 512- and 4096-byte sectors, and with a DIFAT chain
+    // (a stream past what the header's 109 FAT slots map).
+    assert!(doc4me_doc::cfb_guard::check(&cfb_file(&[("WordDocument", &[0u8; 4096])])).is_ok());
+    for version in [cfb::Version::V3, cfb::Version::V4] {
+        let mut comp = cfb::CompoundFile::create_with_version(version, std::io::Cursor::new(Vec::new())).unwrap();
+        std::io::Write::write_all(&mut comp.create_stream("/WordDocument").unwrap(), &[1u8; 4096]).unwrap();
+        let big: Vec<u8> = (0..(8usize << 20)).map(|i| (i % 251) as u8).collect();
+        std::io::Write::write_all(&mut comp.create_stream("/Data").unwrap(), &big).unwrap();
+        let f = comp.into_inner().into_inner();
+        assert_eq!(doc4me_doc::cfb_guard::check(&f), Ok(()), "{version:?}");
+    }
+}
