@@ -28,7 +28,7 @@ pub fn is_safe_href(url: &str) -> bool {
     }
     match scheme(url) {
         Some(s) => matches!(s.as_str(), "http" | "https" | "mailto"),
-        None => !url.trim().is_empty(),
+        None => !cleaned.is_empty(),
     }
 }
 
@@ -106,6 +106,11 @@ mod tests {
             "data:text/html,<script>alert(1)</script>",
             "file:///etc/passwd",
             "ms-msdt:/id",
+            // Protocol-relative and UNC references name another machine (NTLM leak on Windows).
+            "//attacker.example/share/x",
+            "\\\\attacker.example\\share\\x",
+            "/\\attacker.example\\x",
+            " //attacker.example/x",
             "",
         ] {
             assert!(!is_safe_href(bad), "{bad:?}");

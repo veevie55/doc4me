@@ -174,7 +174,13 @@ fn vectors() -> &'static Mutex<MediaCache<Option<Arc<Vector>>>> {
     C.get_or_init(|| Mutex::new(MediaCache { map: HashMap::new(), bytes: 0 }))
 }
 
-/// Decode an encoded image to a premultiplied pixmap.
+/// Largest side (pixels) a document picture may decode to: what a `Pixmap` can hold (`u16`
+/// sides, which [`premul_pixmap`] enforces after decoding). Applying it as a decode limit rejects
+/// a small file that declares a bigger image at header time, before anything is allocated.
+const MAX_DECODE_SIDE: u32 = u16::MAX as u32;
+
+/// Decode an encoded image to a premultiplied pixmap. The dimension limit above and the default
+/// allocation cap (512 MB, what `load_from_memory` applied) bound the decode during paint.
 pub fn decode_pixmap(bytes: &[u8]) -> Option<Pixmap> {
     decode_pixmap_within(bytes, doc4me_geom::MAX_DECODED_BYTES)
 }
@@ -184,10 +190,16 @@ pub fn decode_pixmap(bytes: &[u8]) -> Option<Pixmap> {
 /// copy) allocate anything (WordCraft #1321).
 fn decode_pixmap_within(bytes: &[u8], budget: u64) -> Option<Pixmap> {
     let (hw, hh) = image_size(bytes)?;
-    if hw > u16::MAX as u32 || hh > u16::MAX as u32 || !doc4me_geom::decode_fits(hw, hh, budget) {
+    if hw > MAX_DECODE_SIDE || hh > MAX_DECODE_SIDE || !doc4me_geom::decode_fits(hw, hh, budget) {
         return None;
     }
-    let img = image::load_from_memory(bytes).ok()?.into_rgba8();
+    // The decoder holds the side limit too, in case the frame it decodes differs from the header.
+    let mut reader = image::ImageReader::new(std::io::Cursor::new(bytes)).with_guessed_format().ok()?;
+    let mut limits = image::Limits::default();
+    limits.max_image_width = Some(MAX_DECODE_SIDE);
+    limits.max_image_height = Some(MAX_DECODE_SIDE);
+    reader.limits(limits);
+    let img = reader.decode().ok()?.into_rgba8();
     let (w, h) = img.dimensions();
     premul_pixmap(w, h, img.as_raw())
 }

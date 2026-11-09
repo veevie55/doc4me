@@ -13,6 +13,17 @@
 
 ### ความปลอดภัย
 
+- **กันเอกสารที่ทำให้จองหน่วยความจำหรือคำนวณไม่จำกัด (ชุดใหญ่ของ WordCraft)** (รอบที่ 3 ชุดที่ 3; WordCraft #1235 `c3bdcd73`, #1334 `3e11278a`, #1590 `952eb576`, ส่วนหัวตารางตาม #3692 `96579e6b`) ย้ายด้วย 3-way merge ต่อไฟล์ (ฐานคือ WordCraft ก่อน commit) แล้วแก้ conflict ด้วยมือ
+  - layout: แถวหัวตารางที่ทำซ้ำทุกหน้าถูกจำกัดรวม 500,000 item ต่อตาราง (นับตาม item ไม่ใช่แถว ตามรุ่นล่าสุดของต้นทาง เพราะแถวสูงคงที่เก็บข้อความล้นได้ไม่จำกัด) ใส่ครบทั้ง 4 จุดที่ doc4me ทำซ้ำหัวตาราง (`crates/layout/src/lib.rs`; ไฟล์ 2 KB เคยใช้ 1.1 GB)
+  - HTML/ตาราง: ตารางที่มี `<tr>` จำนวนมากพร้อม rowspan ใหญ่ถูกจำกัดแถวก่อน `insert_covered` และจำกัดงานรวม (`crates/formats/src/model.rs`, `html.rs`)
+  - DOCX: เส้นโค้ง Bézier ของ custom geometry จำกัดจุดต่อ segment (flatten แบบกำลังสอง, `crates/docx/src/read/freeform.rs`)
+  - `.doc`: จำนวนตัวอักษรที่ดึงจาก footnote/header/text box/piece table ซึ่งชี้ข้อความเดียวกันซ้ำได้ ถูกจำกัดที่สองเท่าของ WordDocument stream (`crates/docbin/src/lib.rs`; ไฟล์ 45 KB เคยใช้เกิน 1.2 GB); ภาพใน `.doc` และ ODT อ่านครั้งเดียวภายในงบ byte (`crates/docbin/src/media.rs`, `crates/formats/src/odt.rs`); การแปลง DIB ของ `.doc` เป็น PNG จำกัด byte ทั้งตอน decode และระหว่าง encode (`crates/docbin/src/officeart.rs`)
+  - ลิงก์ที่ส่งออกเป็น RTF `HYPERLINK`, ODT `xlink:href` และ LaTeX `\href` ผ่าน `is_safe_href` เหมือน HTML/Markdown แล้ว (`rtf.rs`, `odt.rs`, `latex.rs`)
+  - render: decoder ใช้ `image::Limits` จำกัดด้านด้วย นอกจากการตรวจ header ที่มีอยู่แล้ว
+  - ปรับเทสต์ `pictures_over_the_budget_are_not_inflated` ให้ตรงกับ `zip` 9 ของ doc4me ที่หยุดคลายที่ขนาดที่ประกาศอยู่แล้ว (ต้นทางใช้ `zip` 3 ซึ่งอ่านเกินจนเต็มงบ) จึงตรวจว่า entry ที่โกหกขนาดถูกปฏิเสธและกินงบไม่เกินขนาดที่ประกาศ
+  - ผลต่อผู้ใช้: เอกสารปกติแสดงเหมือนเดิม ตารางที่ยาวเกิน 5,000 หน้าโดยประมาณจะไม่มีหัวตารางซ้ำในหน้าท้าย ๆ
+  - ตรวจสอบ: เทสต์ที่ติดมากับ commit ต้นทาง (เช่น `insert_covered_is_bounded_on_hostile_rowspan`, เทสต์งบตัวอักษร `.doc`, เทสต์ Bézier และ DIB) ผ่าน; clippy `-D warnings` ทั้ง workspace ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่าน 2,328 ไม่ผ่าน 0
+
 - **จำกัดพื้นที่ไฟล์ของ automation และการอ่านไฟล์ที่ผู้ใช้ระบุ** (รอบที่ 3 ชุดที่ 2; WordCraft #3698 `c7dfd92f` `6b23f3b3`, #3736 `02fffea7`, #3696 `4045d760`, #3692 `66e92e36` `3d944e73` `3a8ff6b6` `3d51cd3d`, #3666/#3680 `4095cc34`)
   - เส้นทางเทมเพลต (`crates/engine/src/cmd/templates.rs`): ปฏิเสธ NT namespace (`\??\UNC\…`, `\??\GLOBALROOT\…`) และ device path (`\\.\UNC\…`, `\\?\UNC\…`) ทุกแบบของตัวคั่น ยกเว้นเมื่อตามด้วยไดรฟ์ และตรวจซ้ำหลังต่อกับโฟลเดอร์ของเอกสาร เพราะโฟลเดอร์นั้นอาจอยู่บนเครื่องอื่น (เปิดไฟล์บนเครื่องอื่นทำให้ Windows ส่งข้อมูลรับรอง NTLM); เมื่อส่ง bytes ของเทมเพลตมาเอง (`data`) จะไม่ resolve path
   - ภาพใน HTML ต้องอยู่ใน read root ของ automation ด้วย ไม่ใช่แค่ไฟล์ HTML: เปิดผ่าน link จากนอก root จะไม่โหลดภาพจากข้าง link (`crates/engine/src/io.rs`)

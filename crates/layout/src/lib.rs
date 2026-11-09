@@ -3427,6 +3427,10 @@ fn row_keeps_with_next(ctx: &mut Ctx, row: &doc4me_doc::Row) -> bool {
     any
 }
 
+/// Most header-row items repeated across one table's pages (a row counts at least one): far
+/// above any real table (three ordinary header rows over some 5,000 pages).
+const MAX_HEADER_ITEMS: usize = 500_000;
+
 fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block: usize, body_top: f32) {
     pb.prev = None;
     let width = pb.col_w();
@@ -3462,6 +3466,13 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
     // Rows that keep with the next one (see `row_keeps_with_next`).
     let keeps: Vec<bool> = t.rows.iter().map(|r| row_keeps_with_next(ctx, r)).collect();
     let header_h: f32 = header_rows.iter().filter_map(|r| tl.rows.get(*r)).map(|r| r.height).sum();
+    // Header rows are re-placed on every page a table spills onto, so a table is O(header items ×
+    // pages) placed items, and an exact-height header row keeps all its overflowing text without
+    // growing: a few KB of document could otherwise fill memory (WordCraft #1235, #3692). Once
+    // `MAX_HEADER_ITEMS` items have been repeated across the table, later pages carry no header
+    // rows; pagination still finishes.
+    let header_cost = header_rows.iter().filter_map(|i| tl.rows.get(*i)).map(|r| r.items.len().max(1)).fold(0, usize::saturating_add);
+    let mut header_repeats = 0usize;
     for (ri, row) in tl.rows.iter().enumerate() {
         let splittable = !header_rows.contains(&ri) && !t.rows.get(ri).is_some_and(|r| r.props.cant_split);
         // A run of rows that keep with the next goes to the next page with that row's start when
@@ -3480,7 +3491,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 need += if cant_split { next.height } else { table::first_line_bottom(next).min(next.height) };
                 if pb.y + need > pb.bottom + 0.01 && need + header_h <= pb.uncapped_bottom() - pb.top {
                     pb.advance(block, body_top);
-                    for hr in &header_rows {
+                    let repeat = header_repeats.saturating_add(header_cost) <= MAX_HEADER_ITEMS;
+                    if repeat {
+                        header_repeats += header_cost;
+                    }
+                    for hr in header_rows.iter().filter(|_| repeat) {
                         if let Some(h) = tl.rows.get(*hr) {
                             place(pb, h);
                         }
@@ -3509,7 +3524,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         if leading_break && (!pb.at_top() || pb.col > 0) {
             pb.new_page(block, body_top);
             if !header_rows.contains(&ri) {
-                for hr in &header_rows {
+                let repeat = header_repeats.saturating_add(header_cost) <= MAX_HEADER_ITEMS;
+                if repeat {
+                    header_repeats += header_cost;
+                }
+                for hr in header_rows.iter().filter(|_| repeat) {
                     if let Some(h) = tl.rows.get(*hr) {
                         place(pb, h);
                     }
@@ -3543,7 +3562,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 pb.advance(block, body_top);
                 // Repeat header rows.
                 if !header_rows.contains(&ri) {
-                    for hr in &header_rows {
+                    let repeat = header_repeats.saturating_add(header_cost) <= MAX_HEADER_ITEMS;
+                    if repeat {
+                        header_repeats += header_cost;
+                    }
+                    for hr in header_rows.iter().filter(|_| repeat) {
                         if let Some(h) = tl.rows.get(*hr) {
                             place(pb, h);
                         }
@@ -3557,7 +3580,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
             if pi + 1 < n_pieces {
                 pb.advance(block, body_top);
                 if !header_rows.contains(&ri) {
-                    for hr in &header_rows {
+                    let repeat = header_repeats.saturating_add(header_cost) <= MAX_HEADER_ITEMS;
+                    if repeat {
+                        header_repeats += header_cost;
+                    }
+                    for hr in header_rows.iter().filter(|_| repeat) {
                         if let Some(h) = tl.rows.get(*hr) {
                             place(pb, h);
                         }
