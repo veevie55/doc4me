@@ -142,6 +142,7 @@ pub fn read(bytes: &[u8]) -> Result<Document, DocbinError> {
         notes: &[],
         marks: &[],
         drawn: &[],
+        sect_ends: &[],
     };
 
     // Drawings: text box stories become parts first, then the floating shapes and pictures
@@ -215,11 +216,18 @@ pub fn read(bytes: &[u8]) -> Result<Document, DocbinError> {
     // Sorted so the main walk finds each reference by binary search.
     note_links.sort_by_key(|(cp, _, _)| *cp);
     let marks = notes::parse_bookmarks(&table, &fib);
-    let ctx = WalkCtx { notes: &note_links, marks: &marks, ..ctx };
+    let mut sect_ends: Vec<u32> = sects.iter().map(|s| s.end_cp).collect();
+    sect_ends.sort_unstable();
+    let ctx = WalkCtx { notes: &note_links, marks: &marks, sect_ends: &sect_ends, ..ctx };
 
     // Sections: each section's properties attach to the paragraph that ends it (its story of
     // header/footer parts included); the section reaching the end of the text is the final one.
     let mut paras = walk(&ctx, 0, fib.ccp.text, &mut pics);
+    // The first paragraph ending at each CP, found once rather than by a scan per section.
+    let mut ending: std::collections::HashMap<u32, usize> = std::collections::HashMap::new();
+    for (i, p) in paras.iter().enumerate() {
+        ending.entry(p.end_cp).or_insert(i);
+    }
     let last = sects.last().map(|s| s.props.clone());
     for (si, sec) in sects.iter().enumerate() {
         let mut props = sec.props.clone();
@@ -230,11 +238,8 @@ pub fn read(bytes: &[u8]) -> Result<Document, DocbinError> {
         if is_final {
             continue; // handled below through `last`
         }
-        for p in paras.iter_mut() {
-            if p.end_cp == sec.end_cp {
-                p.para.section = Some(Box::new(props));
-                break;
-            }
+        if let Some(p) = ending.get(&sec.end_cp).and_then(|&i| paras.get_mut(i)) {
+            p.para.section = Some(Box::new(props));
         }
     }
     if let Some(mut l) = last {
@@ -277,6 +282,9 @@ struct WalkCtx<'a> {
     marks: &'a [(u32, notes::Mark)],
     /// Floating shapes and pictures by anchor CP (absolute), sorted.
     drawn: &'a [(u32, InlineObject)],
+    /// Where sections end (main-document CPs, sorted): the section mark (0x0C) just before
+    /// each ends the section's last paragraph, it isn't a page break inside it.
+    sect_ends: &'a [u32],
 }
 
 /// State while assembling one paragraph from per-CP formatting.
@@ -350,8 +358,10 @@ fn walk(ctx: &WalkCtx, cp_start: u32, cp_end: u32, pics: &mut media::Pictures) -
                 continue;
             }
         };
+        // A section mark (0x0C) at a section's end is that section's last paragraph mark.
+        let section_mark = c == '\u{C}' && ctx.sect_ends.binary_search(&cp.saturating_add(1)).is_ok();
         match c {
-            '\r' | '\u{7}' => {
+            '\r' | '\u{7}' | '\u{C}' if c != '\u{C}' || section_mark => {
                 // Paragraph mark: its PAPX covers the FC range of the paragraph it ends, so
                 // querying at the mark's own FC finds that paragraph's properties.
                 let fc_mark = ctx.pieces.fc_of_cp(cp).unwrap_or(0);
@@ -520,30 +530,80 @@ fn finish_field(pb: &mut ParaBuild, f: FieldBuild) {
 /// `HYPERLINK "url"` / `HYPERLINK url \l "bookmark"` → the model link target
 /// (`#bookmark` for internal links); `None` when not a hyperlink.
 fn hyperlink_target(instr: &str) -> Option<String> {
-    let rest = instr.strip_prefix("HYPERLINK").or_else(|| instr.strip_prefix("hyperlink"))?;
-    let rest = rest.strip_prefix(' ').unwrap_or(rest);
+    let t = instr.trim();
+    let rest = if t.get(..9).is_some_and(|h| h.eq_ignore_ascii_case("hyperlink")) {
+        t[9..].trim()
+    } else {
+        return None;
+    };
     if rest.is_empty() {
         return None;
     }
-    let mut quoted = None;
-    let mut local = None;
-    let mut tokens = rest.split_whitespace().peekable();
-    while let Some(tok) = tokens.next() {
-        match tok {
-            "\\l" => {
-                local = Some(tokens.next().unwrap_or_default().trim_matches('"').to_string());
+
+    let mut url: Option<String> = None;
+    let mut local: Option<String> = None;
+    let mut switch: Option<&str> = None;
+
+    let mut i = 0;
+    let bytes = rest.as_bytes();
+    while i < bytes.len() {
+        while i < bytes.len() && bytes[i].is_ascii_whitespace() {
+            i += 1;
+        }
+        if i >= bytes.len() {
+            break;
+        }
+        if bytes[i] == b'\\' {
+            let start = i;
+            i += 1;
+            while i < bytes.len() && (bytes[i].is_ascii_alphabetic() || bytes[i] == b'*') {
+                i += 1;
             }
-            "\\o" | "\\m" | "\\n" | "\\t" => {
-                let _ = tokens.next();
+            switch = Some(&rest[start..i]);
+            continue;
+        }
+        let arg = if bytes[i] == b'"' {
+            i += 1;
+            let start = i;
+            while i < bytes.len() && bytes[i] != b'"' {
+                i += 1;
             }
-            _ if quoted.is_none() => quoted = Some(tok.trim_matches('"').to_string()),
-            _ => {}
+            let val = &rest[start..i];
+            if i < bytes.len() && bytes[i] == b'"' {
+                i += 1;
+            }
+            val.to_string()
+        } else {
+            let start = i;
+            while i < bytes.len() && !bytes[i].is_ascii_whitespace() {
+                i += 1;
+            }
+            rest[start..i].to_string()
+        };
+        let clean_arg = arg.replace("%22", "\"");
+        match switch.take() {
+            Some("\\l") => local = Some(clean_arg),
+            Some(_) => {}
+            None => {
+                if url.is_none() {
+                    url = Some(clean_arg);
+                }
+            }
         }
     }
-    Some(match local {
-        Some(name) if !name.is_empty() => format!("#{name}"),
-        _ => quoted.unwrap_or_default(),
-    })
+
+    match (url, local) {
+        (Some(u), Some(l)) if !u.is_empty() && !l.is_empty() => {
+            let frag = l.trim_start_matches('#');
+            if u.contains('#') { Some(u) } else { Some(format!("{u}#{frag}")) }
+        }
+        (Some(u), _) if !u.is_empty() => Some(u),
+        (None, Some(l)) if !l.is_empty() => {
+            let frag = l.trim_start_matches('#');
+            Some(format!("#{frag}"))
+        }
+        _ => None,
+    }
 }
 
 /// `sprmCPicLocation` from a CHPX grpprl: the fc of the picture in the Data stream.

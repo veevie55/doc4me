@@ -57,9 +57,9 @@ pub enum ViewMode {
 /// How digits look on screen (Word › File › Options › Advanced › Numeral).
 ///
 /// Display only: the document text keeps the typed codepoints, so find, spelling, copying and
-/// the saved file all see the original digits. Extended Arabic-Indic digits (U+06F0–U+06F9,
-/// Persian/Urdu ۰۱۲۳…) always show as typed; only ASCII and Arabic-Indic (U+0660–U+0669) digits
-/// are substituted.
+/// the saved file all see the original digits. Only ASCII digits are substituted: Arabic-Indic
+/// (U+0660–U+0669) and Extended Arabic-Indic digits (U+06F0–U+06F9, Persian/Urdu ۰۱۲۳…) always
+/// show as typed, so fonts that ligate them (e.g. the end-of-ayah mark U+06DD) keep working.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Default, serde::Serialize, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub enum NumeralMode {
@@ -120,13 +120,7 @@ impl NumeralMode {
             NumeralMode::Context => rtl,
             NumeralMode::System => false,
         };
-        if hindi {
-            if c.is_ascii_digit() { char::from_u32(0x660 + (c as u32 - '0' as u32)).unwrap_or(c) } else { c }
-        } else if ('\u{660}'..='\u{669}').contains(&c) {
-            (b'0' + (c as u32 - 0x660) as u8) as char
-        } else {
-            c
-        }
+        if hindi { if c.is_ascii_digit() { char::from_u32(0x660 + (c as u32 - '0' as u32)).unwrap_or(c) } else { c } } else { c }
     }
 }
 
@@ -2768,7 +2762,17 @@ fn place_objects(
     let Some(fl) = pl.lines.get(l0) else { return (behind, front) };
     // Objects left out of the layout (hidden, or deleted in the final text) aren't placed.
     let left_out = left_out_objects(ctx.doc, p, at.table_chr, ctx.opts.show_hidden, ctx.hide_deleted);
-    for li in l0..l1 {
+    // A floating object belongs to its paragraph, not to its line: Word puts it on the page the
+    // paragraph starts on (a cover page is a paragraph holding a page break and then the text
+    // box with the title; the box stays on the cover). So the paragraph's first piece places
+    // every floating object, whichever of its lines holds the anchor, and later pieces none;
+    // inline objects go with their own line.
+    let first = l0 == 0;
+    for li in 0..pl.lines.len() {
+        let in_piece = (l0..l1).contains(&li);
+        if !in_piece && !first {
+            continue;
+        }
         let Some(line) = pl.lines.get(li) else { continue };
         for k in line.c0..line.c1 {
             let Some(c) = pl.clusters.get(k) else { continue };
@@ -2779,6 +2783,9 @@ fn place_objects(
             let Some(obj) = p.objects.get(oi) else { continue };
             let Some((w, h, float)) = obj.frame() else { continue };
             let floating = float.wrap != Wrap::Inline;
+            if if floating { !first } else { !in_piece } {
+                continue;
+            }
             let rect = if floating {
                 floats.get(&oi).copied().unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float))
             } else {

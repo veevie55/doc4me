@@ -156,6 +156,7 @@ fn write(doc: &Document, lay: &DocLayout, opts: &PdfOptions, pages: &[usize], ou
         tags: Vec::new(),
         tag_index: HashMap::new(),
         links: Vec::new(),
+        bookmarks: std::cell::OnceCell::new(),
     };
     if let Some(o) = ex.outline(pages) {
         pdf.set_outline(o);
@@ -404,8 +405,10 @@ fn shape_effects(s: &mut Surface, kind: ShapeKind, rect: &Rect, fx: &doc4me_doc:
 }
 
 /// Outline of a basic shape in a rectangle (same geometry as the raster renderer).
+/// A line or connector may be flat (zero width or height: horizontal or vertical), not both.
 fn shape_path(kind: ShapeKind, r: &Rect) -> Option<Path> {
-    if !(ok(r.x) && ok(r.y) && ok(r.w) && ok(r.h)) || r.w <= 0.0 || r.h <= 0.0 {
+    let flat_ok = kind.is_open() && r.w.max(r.h) > 0.0 && r.w.min(r.h) >= 0.0;
+    if !(ok(r.x) && ok(r.y) && ok(r.w) && ok(r.h)) || !(flat_ok || r.w > 0.0 && r.h > 0.0) {
         return None;
     }
     let (x0, y0, x1, y1) = (r.x, r.y, r.x + r.w, r.y + r.h);
@@ -522,6 +525,10 @@ struct Exporter<'a> {
     tag_index: HashMap<(StoryRef, DocPath), usize>,
     /// Link rectangles on the current page: (x0, y0, x1, y1, target).
     links: Vec<(f32, f32, f32, f32, String)>,
+    /// Bookmark positions by name (the first of a name wins), gathered once: looking each internal
+    /// link up by walking the whole document made a long document with a linked table of contents
+    /// take seconds to export.
+    bookmarks: std::cell::OnceCell<HashMap<String, doc4me_doc::Pos>>,
 }
 
 /// What the content being drawn is, for tagging.
@@ -1031,9 +1038,7 @@ impl Exporter<'_> {
             s.set_fill(None);
             return;
         };
-        let [cl, ct, cr, cb] = crop.map(|v| if v.is_finite() { v.clamp(0.0, 0.95) } else { 0.0 });
-        let vis_w = (1.0 - cl - cr).max(0.05);
-        let vis_h = (1.0 - ct - cb).max(0.05);
+        let [cl, ct, vis_w, vis_h] = doc4me_metafile::crop_window(*crop).map(|v| v as f32);
         let (fw, fh) = (rect.w / vis_w, rect.h / vis_h);
         let Some(size) = Size::from_wh(fw.max(0.01), fh.max(0.01)) else { return };
         let fade = alpha < 0.999;
@@ -1210,7 +1215,14 @@ impl Exporter<'_> {
     /// Where a bookmark is: (output page, x, y) — the page and line its start lands on, which
     /// in a paragraph split across pages need not be the paragraph's first page.
     fn bookmark(&self, name: &str) -> Option<(usize, f32, f32)> {
-        let (_, pos) = self.doc.bookmarks().into_iter().find(|(n, _)| n == name)?;
+        let marks = self.bookmarks.get_or_init(|| {
+            let mut m = HashMap::new();
+            for (n, pos) in self.doc.bookmarks() {
+                m.entry(n).or_insert(pos);
+            }
+            m
+        });
+        let pos = marks.get(name)?.clone();
         if let Some(c) = self.lay.caret(&pos)
             && let Some(out) = self.out_index.get(&c.page)
         {

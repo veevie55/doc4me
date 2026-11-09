@@ -639,19 +639,18 @@ impl Ctx<'_> {
             last_gid = Some(g.gid);
         }
         b.w = x;
-        // Character boundaries: where the first glyph of each character starts.
+        // Character boundaries: where the first glyph of each character starts. The glyph for a
+        // boundary is never before the previous boundary's, so one walk of the glyphs finds all.
         let mut cuts = Vec::with_capacity(text.len() + 1);
+        let (mut j, mut gx) = (0usize, 0.0f32);
         for (cb, _) in text.char_indices() {
-            let mut gx = 0.0f32;
-            let mut found = None;
-            for g in &shaped {
-                if g.cluster >= cb {
-                    found = Some(gx);
-                    break;
-                }
+            while let Some(g) = shaped.get(j)
+                && g.cluster < cb
+            {
                 gx += g.x_advance as f32 * k;
+                j += 1;
             }
-            cuts.push(found.unwrap_or(x));
+            cuts.push(if j < shaped.len() { gx } else { x });
         }
         cuts.push(x);
         b.cuts = cuts;
@@ -1537,7 +1536,8 @@ impl Ctx<'_> {
         }
         let ncols = segs_rows.iter().map(|r| r.len()).max().unwrap_or(1);
         let mut col_w = vec![0.0f32; ncols];
-        for r in &segs_rows {
+        // Rows without `&` take no part in the alignment columns (they centre instead).
+        for r in segs_rows.iter().filter(|r| ncols == 1 || r.len() > 1) {
             for (i, b) in r.iter().enumerate() {
                 if let Some(c) = col_w.get_mut(i) {
                     *c = c.max(b.w);
@@ -1556,8 +1556,8 @@ impl Ctx<'_> {
                 let dx = if ncols == 1 {
                     0.0
                 } else if single {
-                    // A row without `&` aligns with the first column's right edge.
-                    cw - bw
+                    // A row without `&` is centred across the whole array.
+                    (total - bw) / 2.0
                 } else if i % 2 == 0 {
                     cw - bw
                 } else {
@@ -2288,6 +2288,21 @@ mod tests {
     }
 
     #[test]
+    fn eqarr_rows_without_an_align_marker_are_centred() {
+        use doc4me_doc::math::*;
+        // A row without `&` must not widen the alignment columns; it centres across the
+        // array instead of right-aligning at the first column's edge.
+        let rows: Vec<Vec<MNode>> = vec![vec![MNode::Run(MRun::new("mmm"))], vec![MNode::Run(MRun::new("x&yyyyyyyy"))]];
+        let math = Math { nodes: vec![MNode::EqArr { rows }], ..Default::default() };
+        let ls = lines(&lay_in(&math, "", true, 400.0, &MathProps::default()));
+        assert_eq!(ls.len(), 2, "{ls:?}");
+        let left: Vec<f32> = ls.iter().map(|(_, gs)| gs.iter().map(|(x, _)| *x).fold(f32::MAX, |a, b| if b < a { b } else { a })).collect();
+        assert!(left.iter().all(|x| *x >= -0.5), "nothing hangs left of the array: {left:?}");
+        // The short row starts right of the aligned row's first segment.
+        assert!(ls[0].1.first().is_some_and(|(x, _)| *x > left[1] + 1.0), "short row centred, not flush left: {ls:?}");
+    }
+
+    #[test]
     fn hostile_trees_never_panic() {
         use doc4me_doc::math::*;
         // Deep nesting.
@@ -2315,5 +2330,20 @@ mod tests {
                 assert!(m.width.is_finite() && m.descent.is_finite());
             }
         }
+    }
+
+    /// Finding 23: each character's boundary in a run of text was found by walking the run's
+    /// glyphs from the first.
+    #[test]
+    fn a_long_text_run_lays_out_in_linear_time() {
+        use crate::tests::{SCALE, cost_ratio};
+        use doc4me_doc::math::*;
+        let eq = |n: usize| Math { nodes: vec![MNode::Run(MRun { nor: true, ..MRun::new("a".repeat(n)) })], ..Default::default() };
+        let (small, big) = (eq(400), eq(SCALE * 400));
+        // Each timed 16 times over, so the timings are long against the clock's tick.
+        let lay_16 = |m: &Math| (0..16).for_each(|_| drop(std::hint::black_box(lay_in(m, "", false, 1e6, &MathProps::default()))));
+        let (t1, tk, ratio) = cost_ratio(SCALE, || lay_16(&small), || lay_16(&big));
+        eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+        assert!(ratio < 24.0, "8x the text took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
     }
 }

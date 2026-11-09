@@ -351,12 +351,17 @@ fn read_regular_file(path: &std::path::Path, limit: u64) -> Option<Vec<u8>> {
     Some(out)
 }
 
+/// Largest file [`read_file`] reads whole — the same 2 GB ceiling [`open_path_with`] gives a
+/// document.
+pub const MAX_READ_FILE: u64 = 2 << 30;
+
 /// The bytes of the file at `path`, for commands that take a path (pictures, mail-merge data).
 /// Every such read goes through here so the automation read root applies ([`crate::file_access`]).
+/// Only a regular file is read, and at most [`MAX_READ_FILE`] bytes of it: a named pipe blocks
+/// when opened and a device like `/dev/zero` never reaches end of file.
 #[cfg(not(target_arch = "wasm32"))]
 pub fn read_file(path: &str) -> Result<Vec<u8>, String> {
-    crate::file_access::check_read(path)?;
-    std::fs::read(path).map_err(|e| format!("{path}: {e}"))
+    read_file_capped(path, MAX_READ_FILE, "file")
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -383,7 +388,8 @@ pub fn read_file_capped(path: &str, max: u64, what: &str) -> Result<Vec<u8>, Str
 #[cfg(not(target_arch = "wasm32"))]
 pub fn write_file(path: &str, bytes: &[u8]) -> Result<(), String> {
     crate::file_access::check_write(path)?;
-    std::fs::write(path, bytes).map_err(|e| format!("{path}: {e}"))
+    // Like a document save: the old file is replaced only once the new bytes are fully written.
+    safe_save::write(std::path::Path::new(path), bytes).map_err(|e| format!("{path}: {e}"))
 }
 
 #[cfg(target_arch = "wasm32")]

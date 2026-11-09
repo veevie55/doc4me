@@ -13,6 +13,157 @@
 
 ### เพิ่ม
 
+- **นำการแก้ไขจาก WordCraft ต้นทางที่ doc4me ยังไม่มีมาใช้ 141 รายการ** (เทียบโค้ดกับ `veevie55/wordcraft` `main` ที่ `4b0d3995`, 2026-11-08): doc4me แยกจาก WordCraft ราว 2026-10-12 (จุดที่ `crates/geom/src/lib.rs` ตรงกันล่าสุดคือ `00ed5051`) หลังจากนั้นต้นทางมี commit ที่ไม่ใช่ merge 2,220 รายการ วิธีเลือก: แปลงชื่อ `wordcraft`→`doc4me` ใน diff ของแต่ละ commit (เฉพาะ `crates/` และ `apps/`; ส่วนของ `xtask/` และเอกสารไม่ได้นำมา เช่นใน `6b163b33d` ได้เฉพาะการตรวจว่าไฟล์รูปของ Paste Special เป็นไฟล์ปกติ) แล้วรับเฉพาะรายการที่ `git apply` ลงโค้ด doc4me ได้ตรงทุกบรรทัดโดยไม่ต้อง fuzz (166 รายการ) ส่วนที่ต้องแก้ด้วยมือหรือชนกับงานของ doc4me (ประมาณ 2,050 รายการ) ยังไม่ได้นำมา เพราะงานไทยและ readiness ของ doc4me เป็นหลัก
+  - ที่ได้: แก้ crash/ช่องโหว่จากไฟล์ที่ไม่น่าไว้ใจ (เช่น บังคับตรวจ HMAC ของ `.docx` ที่เข้ารหัส, ตรวจขนาด WOFF/WOFF2 ก่อนจองหน่วยความจำ, จำกัดความยาว label ของรายการลำดับ, จำกัดความลึกของ parser สมการ, Flat OPC อ่านแบบมีขอบเขต, `read_file` อ่านเฉพาะไฟล์ปกติที่มีขนาดจำกัด, Zotero คุยเฉพาะเครื่องนี้, MCP ส่ง control key ไปเฉพาะ 127.0.0.1, ไฟล์ฟอนต์ชั่วคราวสร้างใหม่ไม่เขียนผ่าน link, ช่อง Size ที่พิมพ์ "NaN" ไม่ทำโปรแกรมปิด, span ของเซลล์จาก `.json` ไม่ overflow), การนำเข้า/ส่งออก LaTeX, HTML, Markdown, RTF, ODT, spreadsheet, `.doc` ที่ถูกต้องขึ้น, การจัดหน้าและรายการลำดับหลายกรณี, Track Changes, ฟิลด์ REF/PAGEREF และประสิทธิภาพ (ไม่สแกนซ้ำ)
+  - `word/settings.xml` ของไฟล์ที่เปิดมาถูก merge แทนการสร้างใหม่ (WordCraft #1034, `crates/docx/src/write/settings_merge.rs`) จึงไม่ทำ rsids, docVars, compatibility options, proofState ฯลฯ ของไฟล์หาย; ปรับให้ตรงกับ doc4me: รายการที่โมเดลเป็นเจ้าของตรงกับที่ `settings_xml` ของ doc4me เขียนจริง — `w:removePersonalInformation`/`w:removeDateAndTime` ซึ่ง doc4me ไม่มีในโมเดลถูกคงไว้ตามไฟล์ (ของต้นทางจะลบทิ้ง), เพิ่ม `w:strictFirstAndLastChars`/`w:noLineBreaksAfter`/`w:noLineBreaksBefore` เพื่อไม่ให้ซ้ำ และ flag `w:doNotUseHTMLParagraphAutoSpacing`/`w:splitPgBreakAndParaMark` ใน `w:compat` ตามโมเดลโดยแทรกตามลำดับ CT_Compat พร้อมเทสต์ใหม่ 2 รายการ
+  - dependency ใหม่ใน workspace: `brotli-decompressor = "5"` (BSD-3-Clause/MIT, เวอร์ชันเดียวกับที่ `wuff` ใช้อยู่แล้วใน `Cargo.lock` จึงไม่มีโค้ดใหม่ใน build)
+  - ไม่นำมา (apply ได้แต่ไม่เหมาะกับ doc4me หรือเทสต์ไม่ผ่าน): ย้ายไฟล์ `mod.rs` 5 รายการ และ refactor MCP/test scan 2 รายการ (โครงสร้างไฟล์ของ doc4me ต่าง), `958867b7e`/`ed231fd02` (ต้องใช้ `Paragraph::objects_with_offsets`), `ecdc90cdc`/`82418896f` (ต้องใช้ helper/pack ที่ไม่มี), `823684807` (เทสต์อธิบายพฤติกรรม `review.restrict` ที่ doc4me ไม่มี), `8196624e8` และ `6f62716f0` (การแก้ไม่ได้ผลกับ layout ของ doc4me), `2814dfcae` (คำศัพท์ British ไม่อยู่ใน word list ของ doc4me), `5b9010f6a` (slider ความโปร่งใสใช้ DragValue แบบ clamp ซึ่งเทสต์ guard ของ doc4me ห้าม), `be492ddc9` (เทสต์ต้องใช้ GPU); และ 8 รายการที่ apply ไม่ได้หลังรายการก่อนหน้า (`71d327163`, `07ecf526a`, `65127c272`, `9cd34ebc8`, `afbfa4335`, `6c2671480`, `dbebb2eca`, `08da5c543`)
+  - ปรับเทสต์ที่ติดมาให้ตรงกับ doc4me: `InlineObject::Image` มี `video`, `FieldStart` ไม่มี `dirty`, `Placed::Cell` ไม่มี `clip`, `Comment::date_utc` เป็น `String`, zip 9 คืน `Result` จาก `name()`, ไม่มี `table.selectColumn` (ใช้ `table.selectRow`), Update Table ของ doc4me เขียนตารางใหม่เสมอ; `NumFormat` และ `note_refs(s, kind)` ใน `crates/engine/src/cmd/references.rs`
+  - ผลต่อผู้ใช้และความเข้ากันได้: ไม่เปลี่ยนรูปแบบไฟล์ของ doc4me, ไฟล์ `.docx` เดิมเปิดได้เหมือนเดิมและเก็บ settings ของไฟล์ไว้ครบขึ้น, ไฟล์ `.docx` เข้ารหัสที่ไม่มี `dataIntegrity` จะเปิดไม่ได้ (ตามข้อกำหนด §2.3.4.14), ไม่กระทบการติดตั้งทับและภาษาไทย
+  - รายการ commit ต้นทางที่นำมา (ชื่อตาม WordCraft):
+    - `0a82b684f` fix(ui): equation gallery tiles follow the dark theme (#817) (#827)
+    - `e347ef203` Accept and Reject at the caret cover a tracked change split by a comment (#809) (#830)
+    - `bc60cbaad` Zoom after One Page keeps one page per row (#768) (#832)
+    - `da5da66e5` Tables: row borders stay apart around a vertical merge (#640) (#841)
+    - `912d49f38` PDF export: look internal links up in a map, not the whole document (#937)
+    - `0acf6bd51` fix(windows): start 32-bit builds on OpenGL so launch no longer exits (#839)
+    - `906e0f8ac` .doc import: tab stops, and sections that end at their section marks (#925)
+    - `7ee3cea87` Fonts: documents use the craft-fonts Simplified Chinese face too (#888)
+    - `169570524` #861: the save prompt answers from the keyboard (#870)
+    - `35b3600ea` #852: a section break inserted over a selection keeps the selected text (#875)
+    - `36af03623` PRINT: scope XDG absolute-path regression to Unix
+    - `1350cb959` Font list previews no longer keep every family in memory (#848) (#874)
+    - `591cbb6f6` i18n: French wording fixes after #729 (#901)
+    - `b1d0aab48` styles.modify takes the hex colours format.color takes (#865) (#881)
+    - `dbfa2af68` Drawing ink no longer jumps the view back to the caret (#859) (#892)
+    - `159b84f54` Track Changes: Accept All no longer joins an extra paragraph after a tracked delete from a paragraph end (#864) (#914)
+    - `f322c60bd` wordcraft-cli text keeps bullet and number labels on list items (#1080) (#1094)
+    - `4fe989157` LaTeX: a "[" after a line break or at the start of a list item stays text (#1099)
+    - `dcef93407` Markdown: list items that start like a block keep their text (#1100)
+    - `0837c8b7e` Charts of undrawn types (radar, stock...) show a placeholder (#1092)
+    - `15127fb53` Backstage: add Close to the side menu, after Export (#1125)
+    - `2dcde6222` A dragged shape anchors in the column it lands in, so that column's text wraps around it (#884) (#1139)
+    - `04f6f53b8` Read Aloud starts PowerShell without a console window (#1122) (#1150)
+    - `48f1b6b84` Dark theme: the ruler text area is lighter than its margins (#1154)
+    - `7d3767ba9` Zotero: text typed just after a citation goes outside its field (#1162)
+    - `533615620` Equations: bound parser tree depth, escape text in LaTeX, merge runs everywhere (#1456) (#1457)
+    - `45d2546b6` Metafile: WMF object table without scanning, in-place shape ops, cropped DIB decode (#1463) (#1466)
+    - `5ff69b8ba` PDF: draw horizontal and vertical lines inside groups (#1474)
+    - `666b9afc5` Draw: Ink to Shape recognises arrows (#1520)
+    - `b34a8744d` Reset table tools on table deletion and preserve Draw Table outside tables (#1006)
+    - `163462338` fix(markdown): preserve table cells containing code spans and pipes (#1009)
+    - `e9d5da31d` Track Changes: rejecting a whole inserted paragraph keeps the next paragraph's style and numbering (#1020)
+    - `85dd93a2b` Table eraser: borders beside vertically merged cells merge as in Word (#1039) (#1044)
+    - `2d2e064ac` engine: read_file reads only a bounded regular file, so a pipe or device path can't hang or exhaust memory
+    - `5b84776c0` formats: the Markdown code fence outgrows any backtick run in its content, so a round trip keeps it
+    - `d2ff87856` DOCX: merge settings.xml into the original instead of regenerating it (#1034) (#1059)
+    - `322454a8c` test: Farsi Yeh joins correctly (covers #824 shaping core)
+    - `b8e46b244` UI: combo boxes join their dropdown arrow (field rounded left, arrow right) (#1083)
+    - `6655ba675` UI: fix Select icon polygon rendering (#1193)
+    - `00c8ee340` Fonts: the interface CJK fallback skips faces without outlines (#1250)
+    - `36553301d` fix: remove dead-code unwrap_or magic string in percent_decode (#1257)
+    - `e5780698f` Accessibility: Windows Magnifier follows the caret onto a new line (#1119) (#1247)
+    - `48ab79679` feat: add SVG and ICO MIME types to mime_of helper (#1262)
+    - `44787764a` Table Layout: the Cell Size boxes apply to the whole selection (#1242) (#1276)
+    - `ae8048e3f` Improve Polish spelling suggestions for final consonant devoicing (#1298)
+    - `426227641` Print to PDF and PNG export replace the file only after it is fully written (#1355) (#1408)
+    - `d1b14504d` Restart Numbering keeps the list's own level definitions (#1351) (#1409)
+    - `3a201c824` Document::delete_range checks both ends before editing, so an error leaves the document unchanged (#1350) (#1410)
+    - `910a2bb31` Convert Text to Table refuses to drop fields or a table in the selection (#1318) (#1416)
+    - `e3ed7da1b` #967: keep with next, keep lines together, page break before and widow control list their {"value"?: bool} (#1427)
+    - `18ecff6fb` wordcraft --control checks its port (#1426) (#1436)
+    - `85aa9cdea` #1376: a word too wide for the strip beside a floating picture moves on whole (#1439)
+    - `4d2649738` Markdown import: brackets no longer turn later links in the paragraph into plain text (#1452) (#1453)
+    - `8ba285cde` fix(engine): handle multi-byte UTF-8 characters before em-dash in dash_autoformat (#1570)
+    - `1b05f9a66` .doc import: notes, headers and text boxes read their text once (#1319) (#1572)
+    - `663de991d` Flat OPC: reading bounded everywhere in the file, CDATA base64 read (#1353) (#1580)
+    - `4175d68be` Text boxes in tables nested deeper than 16 survive edits (#1339) (#1591)
+    - `64e430354` Tabs left of the margin stay on a default stop they already sit on (Word) (#1631)
+    - `6eeb6d10d` A floating object anchored after a page break stays on the page its paragraph starts on (#1632)
+    - `116e7697a` View Gridlines outlines header and footer tables (#1628) (#1633)
+    - `cd3109516` perf: lowercase HTML tag names during collection to avoid double String allocation (#1261)
+    - `a9d359754` Tables: Backspace after a nested table stays in its cell (#906)
+    - `57a000e97` Linux: scan the Flatpak host font folders (#1937)
+    - `68479ee33` fix(formats): support column break in RTF import and export
+    - `9e477da0e` fix(formats): support small and big tags and relative/large font-size keywords in HTML
+    - `a4e2cebc0` fix(formats): support borderless and bordered tables in LaTeX import and export
+    - `f9808ae49` fix(docx): correctly parse emu and case-insensitive units in measure
+    - `4818b7b8f` fix(formats): parse case-insensitive and pica units in ODT lengths
+    - `5817874b6` fix(formats): parse leading plus and case-insensitive units in LaTeX lengths
+    - `772cccf03` fix(formats): support xs:time, string-value, and case-insensitive cell types in spreadsheets
+    - `48ff1e52b` fix(formats): support bullet, top, bot, hslash, accents, bm, and mod in LaTeX math
+    - `0137a5157` Fix numbered list levels that start at 0 or are overridden to 1
+    - `b407859f7` #2174: HYPERLINK fields read as links
+    - `f2d7a4fe7` M-ctl: MCP bridge never replays a mutation of unknown outcome; queued control requests honour the caller's timeout (#1326, #1331)
+    - `4a9f24f64` eqarr rows without an align marker centre across the array; they no longer widen the alignment columns
+    - `2f6311cc3` M15: keep inherited proofing choices in Language dialog (#2717) (#2736)
+    - `8c1a39ba9` A new source's Tag follows Word's format; editing keeps the Tag (#2094) (#2571)
+    - `33f00e8df` Keep custom footnote/endnote marks as text inside the note on DOCX save (#2647)
+    - `a93932d49` fix(engine): ensure nextFootnote navigates only footnotes and skips endnotes (#2114)
+    - `8812fe068` fix(engine): support switches and quoted bookmarks when updating REF and PAGEREF fields (#2149)
+    - `cdb13144b` Lists: Enter on an empty nested item numbered by its paragraph style moves it up a level (#2143) (#2151)
+    - `986d7e2a5` Layout: the caret after spaces hanging past the margin stays at the margin (#2152)
+    - `540692515` fix(engine): resolve section and section pages context when unlinking fields (#2156)
+    - `7fc2bbf24` fix(doc): preserve overparen, underparen, and brackets in LaTeX group characters (#2163)
+    - `8cdd85f7e` fix(engine): support none in wordart reflection and outline color (#2238)
+    - `211d6c0c0` UI: Font dropdown list height doesn't update when filter results increase (#1732)
+    - `0c4558cd0` #1906: content-control Properties OK inherits theme text (#1920)
+    - `2db55b549` fix(smart_art): normalize layout and color identifiers and preserve item text with leading whitespace (#2365)
+    - `56d0a162b` Share AutoFit donor reductions equally (#2464)
+    - `2707ac403` mcp: let open_document take a password (#1796)
+    - `d4a329283` Proofing: -ically adverbs such as "specifically" are no longer flagged (#1694) (#1854)
+    - `f7de98a71` DOCX: a w:u without w:val draws no underline (fixes #2362) (#2380)
+    - `4c8508cd9` Insert › Shapes menu: an icon for each shape and connector (#2142)
+    - `11f8881cd` #537: test that System pins the title bar to the desktop's light/dark answer on Linux (#2559)
+    - `0786b2eae` Keep the Insert SmartArt dialog within the window (#2832) (#2902)
+    - `d26b8dcae` #3035: WordArt reflection swatch follows the theme's dimmed text colour (#3055)
+    - `ab968b072` #3034: SmartArt Pyramid separators follow the theme line colour (#3052)
+    - `2304bf6ac` Fix Paragraph::sentence_at at the first character of a sentence (#3105)
+    - `b8debb305` Content controls: typed text takes the control's formatting, in any language (#3116)
+    - `06a120b19` Drop a picture near the bottom of a page where it lands (#3169)
+    - `0cca2f7d2` #1899: a picture cropped to a sliver is drawn at the size the file gives
+    - `c55402452` Reject non-digit characters in numeric HTML entities
+    - `dfb9e1a85` Reject signs and repeated '#' in Rgb::parse
+    - `ea61d1fcb` Options: list the languages alphabetically by their own name
+    - `7f77660e0` A document with many content controls saves in the time they take
+    - `83771b147` Test: a failed AutoSave-switch Save As stays silent-free too
+    - `b33388522` fix(formats): support 4/8-digit hex, space-separated rgb and hsl in parse_color
+    - `22ae9e896` fix(docbin): preserve external URLs with sublocations in doc hyperlink fields
+    - `fb588fcd4` Accept uppercase D and Y in date pictures (#3486)
+    - `957b1c3e6` Drop U+FFFE and U+FFFF from ODT export text (#3817)
+    - `32f8e2c2a` Fix spurious 零 after a group's trailing zeros in Chinese numerals (#3745)
+    - `c023a71d7` Rename kept docx parts whose names are not valid OPC part names (#3947)
+    - `4e692b412` #3637: A table cell span from a .json file no longer overflows (#3927)
+    - `3183c03be` #3663: "NaN" in the Font dialog's Size box no longer closes the app (#3928)
+    - `b2e4722bf` Load ui.json with many unknown keys in linear time (#3968)
+    - `1ce8d3e59` Refuse arrange.group when members exceed the group child cap (#3958)
+    - `f2343fa78` Fix .doc bookmark table desync on names longer than 40 characters (#3949)
+    - `02e71f2b3` Compare: don't let a character-level diff scramble a reordered digit run (#3224)
+    - `8ce3eb58c` #3735: automation writes check the directory entry they replace, not only the link's target
+    - `97a6a26ca` Format negative zero as 0 in spreadsheet import (#4040)
+    - `74eb4b184` Ignore quoted text when detecting recipient CSV delimiter (#4125)
+    - `e6c4fb2c9` Route ui.screenshot path writes through the guarded engine writer (#4048)
+    - `e2d484f40` Reject '+' sign in print page ranges
+    - `ee558313b` Import LaTeX ^{} and ~{} as plain ^ and ~
+    - `a499d1d67` Parity catalog: the checklist counts Read Mode's Column Width, Page Color and Layout
+    - `6622e21af` Tests: no stale layout after a command that changes nothing (#4004); new comments and replies carry their UTC time (#4079)
+    - `b4da59f0c` security: require the data integrity check on encrypted DOCX packages (#4223)
+    - `500f9cdfe` proof: remove the unused Patterns::from_parts
+    - `52d81d02d` Parse genfrac in LaTeX import so binomials survive export (#4242)
+    - `84c2d37a4` Cap list label length when expanding level template text (#4003)
+    - `4bf785c4c` Keep Arabic-Indic digits as typed in Arabic numeral mode (#3329)
+    - `b729cf0cb` fix(proof): keep inflate error output out of messages
+    - `90efee763` #3692: Zotero lists each note's fields once, within a field and code-byte budget
+    - `a9cc06dc0` #3692: Zotero client talks only to this computer and, on Linux, only to our own user
+    - `4d027de40` #3692: math text runs find character boundaries in one walk
+    - `5155d2c18` #3703: WOFF and WOFF2 sizes are checked before the decoder allocates from them
+    - `d69c386f8` #3692: review — a font's temporary file is created afresh, so a link planted at its name is not written through
+    - `1955793aa` #3648: a chart part is written within the chart limits whatever the model
+    - `d39be3bab` Avoid repeated reference scans when converting notes (#4750) (#4752)
+    - `cf23ca73c` DOC import: attach sections to their paragraphs through an index of paragraph ends (#5373)
+    - `6b163b33d` xtask: no symlink walks, exclusive test dir; Paste Special picture files must be regular files (#5471)
+  - ตรวจสอบ (Linux x86_64, rustc 1.97.0): `cargo fmt --all -- --check` ผ่าน; `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่าน 2,270 ไม่ผ่าน 0 (รวม `hostile_params_never_panic`, `settings_merge` ทั้ง unit และ integration); `cargo xtask assets` (112 ไฟล์มีแถวใน ATTRIBUTION.md), `cargo xtask layers` (20 crates ไม่ผิด layer) และ `cargo xtask wasm` ผ่าน; ยังไม่ได้รันบน Windows และยังไม่ได้วัด readiness corpus ใหม่
+
 - **เพิ่มคีย์ลัดแป้นตัวเลขสามรายการ** (`text.enDash`, `table.selectTable`, `outline.showFormatting`; readiness `ks-164`, `ks-193`, `ks-260`): Ctrl+NumpadSubtract แทรก en dash โดย Ctrl+Minus แถวหลักยังซูมออก, Alt+Numpad5 ขณะปิด Num Lock เลือกทั้งตาราง, และ NumpadDivide สลับ character formatting ใน Outline view. ปรับ event conversion ของ vendored `egui-winit` ให้แยกปุ่ม subtract/divide และ NumLock-off Clear+Numpad5 โดยไม่เปลี่ยน logical key ทั่วไป; เพิ่มผลลัพธ์ใน command finder 1 รายการเพื่อให้ Insert Table ยังปรากฏเมื่อค้นหา `INSERT`. ไม่มีการเปลี่ยนรูปแบบเอกสาร; ตรวจด้วย engine, synthetic UI และ physical-key conversion regressions; ไม่อ้างว่าทดสอบคีย์บอร์ดจริงหรือ Windows event delivery แล้ว.
 
 - **ปรับ Windows ARM64 ให้ใช้ C/C++ static CRT ตรงกับ Rust** (`packaging/windows/package.ps1`, readiness `plat-002`): หลัง `/EHsc` แก้การคอมไพล์ `gguf.cpp` ใน run 42211563835 แล้ว run 42213688289 ล้มตอนลิงก์ด้วย unresolved `__imp_*` 23 รายการจาก whisper/ggml. กำหนด CMake `CMP0091=NEW` และ `CMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded` เฉพาะ ARM64 เพื่อให้ CMake ใช้ static CRT ตาม Rust `+crt-static`; run 42262956358 ยืนยันโดย build และตรวจ MSI กับ portable ZIP สำเร็จ (ค่า SHA-256 อยู่ใน `docs/readiness/manual.tsv`). แพ็กเกจยัง unsigned และ workflow ไม่ได้อัปโหลดหรือออก Release.

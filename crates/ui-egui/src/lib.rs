@@ -797,6 +797,7 @@ impl WordApp {
             if matches!(self.dialog, Some(dialogs::Dialog::SaveChanges { .. })) {
                 self.dialog = None;
             }
+            crate::table_pen::stop(self);
         }
         // An explicit save to the document's own file lets AutoSave keep writing there.
         if let Ok(v) = &r
@@ -942,7 +943,8 @@ impl WordApp {
         if id == "view.readMode" {
             self.canvas.read_first_visible = None;
         }
-        if !id.starts_with("view.") && !id.starts_with("document.") && !id.starts_with("format.state") {
+        // Drawing leaves the caret where it was: following it would pull the view off the ink.
+        if !id.starts_with("view.") && !id.starts_with("document.") && !id.starts_with("format.state") && !id.starts_with("draw.") {
             self.canvas.scroll_to_caret = true;
         }
         for req in std::mem::take(&mut self.session.ui_requests) {
@@ -962,6 +964,11 @@ impl WordApp {
             i18n::pseudo::note_status(&s);
             let s = tl!(&s).to_string();
             self.status(s);
+        }
+        if matches!(id, "table.deleteTable")
+            || (self.canvas.table_tool == Some(crate::table_pen::TableTool::Erase) && self.session.sel.focus.path.cell().is_none())
+        {
+            crate::table_pen::stop(self);
         }
     }
 
@@ -1705,6 +1712,11 @@ impl WordApp {
         let Some(rx) = self.control_rx.take() else { return };
         while let Ok(req) = rx.try_recv() {
             let reply = req.reply.clone();
+            if !req.start() {
+                // The caller timed out while this waited in the queue and was told it did not run.
+                log::debug!("control request {} dropped: its caller gave up", req.method);
+                continue;
+            }
             match control::handle(self, ctx, &req) {
                 control::Outcome::Done(v) => {
                     let _ = reply.send(v);
@@ -2696,6 +2708,43 @@ mod tests {
         assert_eq!(caret.page, 3);
     }
 
+    /// Issue #768: after One Page, zooming out (Zoom Out, the Zoom box, Ctrl + wheel) keeps one page per row.
+    #[test]
+    fn zoom_after_one_page_keeps_one_page_per_row() {
+        let ctx = egui::Context::default();
+        let mut a = app();
+        for _ in 0..3 {
+            a.run("insert.pageBreak", json!({})).unwrap();
+        }
+        let screen = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(1280.0, 800.0));
+        let mut t = 0.0;
+        let mut frame = |a: &mut WordApp| {
+            t += 1.0 / 60.0;
+            let input = egui::RawInput { time: Some(t), screen_rect: Some(screen), ..Default::default() };
+            ctx.run_ui(input, |ui| {
+                a.logic(ui.ctx());
+                a.ui(ui);
+            })
+            .drop_without_applying_deltas();
+        };
+        a.run("view.onePage", json!({})).unwrap();
+        for _ in 0..3 {
+            frame(&mut a);
+        }
+        assert_eq!(a.canvas.cols, 1);
+        a.run("view.zoom", json!({"value": 30})).unwrap();
+        for _ in 0..3 {
+            frame(&mut a);
+        }
+        assert_eq!(a.canvas.cols, 1, "30% after One Page: still one page per row");
+        a.run("view.multiplePages", json!({})).unwrap();
+        a.run("view.zoom", json!({"value": 30})).unwrap();
+        for _ in 0..3 {
+            frame(&mut a);
+        }
+        assert_eq!(a.canvas.cols, 4, "30% after Multiple Pages: all four pages fit across");
+    }
+
     #[test]
     fn user_name_survives_restart() {
         let mut first = app();
@@ -2912,6 +2961,59 @@ mod tests {
             assert_eq!(prompt(a), None, "{focus:?}: answered");
             assert_eq!(a.quit_requested, quits, "{focus:?}: quit");
             assert_eq!(std::fs::read(&path).unwrap() != before, saves, "{focus:?}: file written");
+            let _ = std::fs::remove_dir_all(&dir);
+        }
+    }
+
+    /// #861: the save prompt answers from the keyboard alone. Save has focus when it opens, and
+    /// Left/Right move the focus between Save, Don't Save and Cancel (stopping at the ends).
+    #[test]
+    fn arrow_keys_choose_the_save_prompt_answer() {
+        use egui_kittest::kittest::Queryable;
+        for (arrows, focused, quits, saves) in [
+            (vec![egui::Key::ArrowLeft], "Save", true, true),
+            (vec![egui::Key::ArrowRight], "Don't Save", true, false),
+            (vec![egui::Key::ArrowRight, egui::Key::ArrowRight, egui::Key::ArrowRight], "Cancel", false, false),
+            (vec![egui::Key::ArrowRight, egui::Key::ArrowRight, egui::Key::ArrowLeft], "Don't Save", true, false),
+        ] {
+            let dir = scratch(&format!("arrows-{}-{}", arrows.len(), focused.len()));
+            let path = docx_on_disk(&dir, "Draft");
+            let before = std::fs::read(&path).unwrap();
+            let mut a = app();
+            a.run("file.open", json!({"path": path.to_string_lossy()})).unwrap();
+            a.run("text.insert", json!({"text": "Revised "})).unwrap();
+            a.run("file.close", json!({})).unwrap();
+            assert_eq!(prompt(&a), Some("saveChanges"));
+            let mut fonts = false;
+            let mut h = egui_kittest::Harness::builder().build_ui_state(
+                move |ui, app: &mut WordApp| {
+                    let ctx = ui.ctx().clone();
+                    if fonts {
+                        dialogs::show(app, &ctx);
+                    } else {
+                        theme::install_fonts_for(&ctx, false);
+                        fonts = true;
+                    }
+                },
+                a,
+            );
+            for _ in 0..3 {
+                h.step();
+            }
+            assert!(h.get_by_label("Save").is_focused(), "Save has focus when the prompt opens");
+            for key in &arrows {
+                h.key_press(*key);
+                h.step();
+            }
+            assert!(h.get_by_label(focused).is_focused(), "{arrows:?}: {focused} has focus");
+            h.key_press(egui::Key::Enter);
+            for _ in 0..3 {
+                h.step();
+            }
+            let a = h.state();
+            assert_eq!(prompt(a), None, "{arrows:?}: answered");
+            assert_eq!(a.quit_requested, quits, "{arrows:?}: quit");
+            assert_eq!(std::fs::read(&path).unwrap() != before, saves, "{arrows:?}: file written");
             let _ = std::fs::remove_dir_all(&dir);
         }
     }
@@ -3851,6 +3953,24 @@ mod tests {
         assert!(theme::Tokens::get(&ctx).dark);
     }
 
+    /// #537: where winit reports no OS theme (Linux), System follows the desktop portal's answer
+    /// and pins the window to it, so GNOME's client-side title bar matches the interface and
+    /// follows a theme switch made while the app runs.
+    #[test]
+    fn system_theme_pins_the_title_bar_to_the_desktop_answer() {
+        use egui::{SystemTheme, ViewportCommand};
+        let ctx = egui::Context::default();
+        let mut a = app();
+        a.run("ui.theme", json!({"value": "system"})).unwrap();
+        for dark in [false, true, false] {
+            a.desktop_dark = Some(dark);
+            let sent = theme_frame(&ctx, &mut a, None);
+            let want = if dark { SystemTheme::Dark } else { SystemTheme::Light };
+            assert!(sent.contains(&ViewportCommand::SetTheme(want)), "desktop dark {dark}: {sent:?}");
+            assert_eq!(theme::Tokens::get(&ctx).dark, dark);
+        }
+    }
+
     /// #312: Dark page darkens only the pages; the interface keeps following its own setting.
     #[test]
     fn dark_page_leaves_the_interface_theme_alone() {
@@ -4162,6 +4282,27 @@ mod tests {
         a.run("ui.openRecipientList", json!({})).unwrap();
         a.run("format.bold", json!({})).unwrap();
         assert!(!a.recipient_list_pending);
+    }
+
+    /// Issue #859: lifting the pen jumped the view back to the caret, usually on page 1. Drawing
+    /// leaves the caret where it was, so the view stays on the ink; typing still follows the caret.
+    #[test]
+    fn drawing_ink_keeps_the_view_where_it_is() {
+        let mut a = typed();
+        let keeps_view = |a: &mut WordApp, id: &str, params: Value| {
+            a.canvas.scroll_to_caret = false;
+            let r = a.run(id, params);
+            assert!(r.is_ok(), "{id}: {r:?}");
+            assert!(!a.canvas.scroll_to_caret, "{id} scrolled to the caret");
+        };
+        keeps_view(&mut a, "draw.stroke", json!({"page": 0, "points": [[100, 300], [200, 320]], "tool": "pen"}));
+        keeps_view(&mut a, "draw.lasso", json!({"page": 0, "points": [[80, 280], [220, 280], [220, 340], [80, 340]]}));
+        keeps_view(&mut a, "draw.lassoMove", json!({"dx": 10, "dy": 10}));
+        keeps_view(&mut a, "draw.stroke", json!({"page": 0, "points": [[300, 500], [400, 500]], "tool": "pencil"}));
+        keeps_view(&mut a, "draw.erase", json!({"page": 0, "x": 350, "y": 500}));
+        a.canvas.scroll_to_caret = false;
+        a.run("text.insert", json!({"text": "x"})).unwrap();
+        assert!(a.canvas.scroll_to_caret, "typing still brings the caret into view");
     }
 
     /// `ui.render` and `ui.screenshot` without a `path` return the PNG in the reply instead of

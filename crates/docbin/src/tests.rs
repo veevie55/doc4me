@@ -960,6 +960,32 @@ fn two_sections_box_the_first() {
 }
 
 #[test]
+fn sections_ending_off_a_paragraph_mark_attach_nowhere() {
+    // Hostile section ends that miss every paragraph mark are skipped; the one that ends a
+    // paragraph still boxes it. Paragraphs are found by their end, not scanned per section.
+    let mut sections: Vec<(u32, Vec<u8>)> = (1..6).map(|cp| (cp, Vec::new())).collect();
+    sections.push((6, grpprl(&[(0x300A, &[0x01])])));
+    sections.push((12, Vec::new()));
+    let spec = StructSpec {
+        text: "first\rsecond\r",
+        header_stories: vec![],
+        sections,
+        chpx_runs: vec![(0, Vec::new())],
+        papx_entries: vec![(0, 0, Vec::new()), (6, 0, Vec::new())],
+        plf_lst: Vec::new(),
+        plf_lfo: Vec::new(),
+        note_stories: vec![],
+        endnote_stories: vec![],
+        extra_pairs: Vec::new(),
+        data_stream: Vec::new(),
+    };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    let paras: Vec<_> = doc.body.iter().filter_map(|b| b.as_para()).collect();
+    assert!(paras.first().and_then(|p| p.section.as_ref()).expect("first paragraph boxed").title_page);
+    assert_eq!(paras.iter().filter(|p| p.section.is_some()).count(), 1, "the missing ends attach nowhere");
+}
+
+#[test]
 fn header_story_becomes_part() {
     let spec = StructSpec {
         text: "body\r",
@@ -1369,6 +1395,15 @@ fn fields_and_hyperlinks() {
 }
 
 #[test]
+fn hyperlink_target_sublocation_and_quotes() {
+    assert_eq!(super::hyperlink_target(r#"HYPERLINK "http://example.com" \l "heading""#), Some("http://example.com#heading".into()));
+    assert_eq!(super::hyperlink_target(r#"HYPERLINK \l "heading""#), Some("#heading".into()));
+    assert_eq!(super::hyperlink_target(r#"Hyperlink "http://example.com/a path""#), Some("http://example.com/a path".into()));
+    assert_eq!(super::hyperlink_target(r#"HYPERLINK "http://example.com" \o "Help text""#), Some("http://example.com".into()));
+    assert_eq!(super::hyperlink_target(r#"HYPERLINK \l "bm" \o "tip""#), Some("#bm".into()));
+}
+
+#[test]
 fn bookmarks_become_objects() {
     let text = "Hello world\r";
     let ccp = text.chars().count() as u32;
@@ -1510,6 +1545,92 @@ fn huge_story_ranges_are_clamped_to_their_subdocument() {
     assert!(footnote.blocks.iter().any(|b| b.as_para().is_some_and(|p| p.text == "Note body")));
     // The endnote story starts past the endnote subdocument: nothing to read.
     assert!(!doc.parts.values().any(|p| p.kind == doc4me_doc::PartKind::Endnote));
+}
+
+/// The text of each note a paragraph references, in order.
+fn note_texts(doc: &doc4me_doc::Document, p: &doc4me_doc::Paragraph) -> Vec<String> {
+    p.objects
+        .iter()
+        .filter_map(|o| match o {
+            doc4me_doc::para::InlineObject::NoteRef { id, .. } => doc.parts.get(id),
+            _ => None,
+        })
+        .map(|part| part.blocks.iter().filter_map(|b| b.as_para()).map(|para| para.text.as_str()).collect::<Vec<_>>().join("\n"))
+        .collect()
+}
+
+#[test]
+fn note_stories_pointing_at_the_same_text_are_read_once() {
+    // 2000 footnote references whose PlcffndTxt steps back to CP 0 after every story
+    // ([0, 10, 0, 10, …]): every other one was read into its own part, a copy of the whole
+    // footnote subdocument each (1001 parts here; a large story times thousands of
+    // references in a hostile file).
+    let n = 2000u32;
+    let text: &'static str = Box::leak(format!("A{}\r", "\u{2}".repeat(n as usize)).into_boxed_str());
+    let ccp = text.chars().count() as u32;
+    let refs: Vec<u32> = (1..=n).chain([ccp]).collect();
+    let spec = StructSpec {
+        text,
+        note_stories: vec!["Note body\r"],
+        extra_pairs: vec![(2, plc(&refs, &1u16.to_le_bytes().repeat(n as usize))), (3, plc(&[0u32, 10].repeat(n as usize / 2 + 1), &[]))],
+        ..structured_spec(text, ccp)
+    };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    assert_eq!(doc.parts.values().filter(|p| p.kind == doc4me_doc::PartKind::Footnote).count(), 1);
+    let p0 = doc.body.first().and_then(|b| b.as_para()).expect("para");
+    assert_eq!(note_texts(&doc, p0), vec!["Note body".to_string()]);
+}
+
+#[test]
+fn note_stories_stepping_back_are_dropped_and_ordered_ones_kept() {
+    // Story CPs [0, 5, 10, 3, 10] for four footnotes and four endnotes: the first two
+    // stories are in order and read (the control); the third runs backwards and the fourth
+    // starts inside the first, so the third and fourth references get no note.
+    let text = "a\u{2}b\u{2}c\u{2}d\u{2}e\u{2}f\u{2}g\u{2}h\u{2}\r";
+    let ccp = text.chars().count() as u32;
+    let stories = plc(&[0, 5, 10, 3, 10], &[]);
+    let spec = StructSpec {
+        text,
+        note_stories: vec!["Aaaa\rBbbb\r"],
+        endnote_stories: vec!["Cccc\rDddd\r"],
+        extra_pairs: vec![
+            (2, plc(&[1, 3, 5, 7, ccp], &1u16.to_le_bytes().repeat(4))),
+            (3, stories.clone()),
+            (46, plc(&[9, 11, 13, 15, ccp], &1u16.to_le_bytes().repeat(4))),
+            (47, stories),
+        ],
+        ..structured_spec(text, ccp)
+    };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    let p0 = doc.body.first().and_then(|b| b.as_para()).expect("para");
+    assert_eq!(note_texts(&doc, p0), ["Aaaa", "Bbbb", "Cccc", "Dddd"].map(String::from));
+    assert_eq!(doc.parts.len(), 4);
+}
+
+#[test]
+fn header_stories_pointing_at_the_same_text_are_read_once() {
+    // Two sections whose odd headers both claim the header subdocument's [0, 5) (Plcfhdd
+    // steps back to CP 0 inside the second section's slots): the second used to become a
+    // second copy of the text. Its slot is now empty, which links it to the first section's.
+    let text = "a\rb\r";
+    let ccp = text.chars().count() as u32;
+    // Six empty separator stories, then each section's six slots; the odd header is the
+    // second slot.
+    let hdd = plc(&[0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 0, 5, 5, 5, 5, 5], &[]);
+    let spec = StructSpec {
+        text,
+        header_stories: vec!["Head\r"],
+        sections: vec![(2, Vec::new()), (ccp, Vec::new())],
+        papx_entries: vec![(0, 0, Vec::new()), (2, 0, Vec::new())],
+        extra_pairs: vec![(11, hdd)],
+        ..structured_spec(text, ccp)
+    };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    assert_eq!(doc.parts.values().filter(|p| p.kind == doc4me_doc::PartKind::Header).count(), 1);
+    let first = doc.body.first().and_then(|b| b.as_para()).and_then(|p| p.section.as_ref()).expect("first section");
+    let header = first.headers.default.and_then(|id| doc.parts.get(&id)).expect("first section's header");
+    assert!(header.blocks.iter().any(|b| b.as_para().is_some_and(|p| p.text == "Head")), "header: {:?}", header.blocks);
+    assert_eq!(doc.last_section.headers.default, None);
 }
 
 /// A document whose piece table is given raw (cps + one Pcd per piece), with `text` bytes
@@ -1814,4 +1935,107 @@ fn alternate_font_name_keeps_later_entries() {
         let fonts: Vec<Option<String>> = para0(&doc).runs.iter().map(|r| r.props.font.clone()).collect();
         assert_eq!(fonts, [Some("Arial".to_string()), Some("Courier New".to_string())], "alt {alt:?}");
     }
+}
+
+/// PChgTabsPapxOperand bytes: cb, removed stops, added stops with their TBDs.
+fn tabs_papx(del: &[i16], add: &[(i16, u8)]) -> Vec<u8> {
+    let mut v = vec![0u8, del.len() as u8];
+    for d in del {
+        v.extend_from_slice(&d.to_le_bytes());
+    }
+    v.push(add.len() as u8);
+    for (x, _) in add {
+        v.extend_from_slice(&x.to_le_bytes());
+    }
+    v.extend(add.iter().map(|(_, tbd)| *tbd));
+    v[0] = (v.len() - 1) as u8;
+    v
+}
+
+/// Custom tab stops ([MS-DOC] sprmPChgTabsPapx, sprmPChgTabs) were skipped, so tab-aligned text
+/// (centred titles, right-aligned dates, dot leaders in forms) lost its alignment. Stops added by
+/// a style and by the paragraph, stops it removes, and the TBD's alignment and leader are read.
+#[test]
+fn tab_stops_read_from_styles_and_paragraphs() {
+    use doc4me_doc::props::{TabAlign, TabLeader};
+    // Normal: centre at 3.25" (4680 tw), right at 6.5" (9360 tw) with a dot leader (tlc 1).
+    let normal = grpprl(&[(0xC60D, &tabs_papx(&[], &[(4680, 1), (9360, 2 | 1 << 3)]))]);
+    // The paragraph drops the centre stop and adds a left stop at 0.5" and a bar at 1".
+    let direct = grpprl(&[(0xC60D, &tabs_papx(&[4680], &[(720, 0), (1440, 4)]))]);
+    // The second paragraph uses the older sprmPChgTabs: removals carry a "close" distance.
+    let mut old = vec![0u8, 1];
+    old.extend_from_slice(&9360i16.to_le_bytes());
+    old.extend_from_slice(&25i16.to_le_bytes());
+    old.push(1);
+    old.extend_from_slice(&2880i16.to_le_bytes());
+    old.push(3 | 5 << 3); // decimal, middle dot
+    old[0] = (old.len() - 1) as u8;
+    let spec = RichSpec {
+        text: "\tA\tB\r\tC\r",
+        styles: vec![(1, 0x0FFF, "Normal", normal, Vec::new())],
+        fonts: vec!["Calibri"],
+        chpx_runs: vec![(0, Vec::new())],
+        papx_entries: vec![(0, 0, direct), (5, 0, grpprl(&[(0xC615, &old)]))],
+    };
+    let doc = read(&rich_doc(&spec)).expect("opens");
+    let tabs = |i: usize| {
+        let p = doc.body.get(i).and_then(|b| b.as_para()).expect("para");
+        doc.styles.resolve_para(&p.props).tabs.iter().map(|t| (t.pos, t.align, t.leader)).collect::<Vec<_>>()
+    };
+    assert_eq!(
+        tabs(0),
+        [(36.0, TabAlign::Left, TabLeader::None), (72.0, TabAlign::Bar, TabLeader::None), (468.0, TabAlign::Right, TabLeader::Dot)],
+        "the style's stops, less the removed one, plus the paragraph's"
+    );
+    assert_eq!(tabs(1), [(144.0, TabAlign::Decimal, TabLeader::MiddleDot), (234.0, TabAlign::Center, TabLeader::None)], "sprmPChgTabs");
+    assert_eq!(doc.styles.styles.iter().find(|s| s.name == "Normal").and_then(|s| s.para.tabs.as_ref()).map(Vec::len), Some(2));
+}
+
+/// Hostile tab operands (counts past the end, more than 64 stops, cb 255) never panic and
+/// never swallow the sprms after them.
+#[test]
+fn hostile_tab_operands_are_safe() {
+    for operand in [vec![2u8, 200, 9], vec![0], vec![255, 1, 0x10, 0x00], vec![255, 3], vec![5, 0, 70, 0, 1, 2]] {
+        let papx = grpprl(&[(0xC615, &operand), (0x2403, &[1])]);
+        let spec = RichSpec {
+            text: "x\r",
+            styles: vec![(1, 0x0FFF, "Normal", Vec::new(), Vec::new())],
+            fonts: vec!["Calibri"],
+            chpx_runs: vec![(0, Vec::new())],
+            papx_entries: vec![(0, 0, papx)],
+        };
+        let _ = read(&rich_doc(&spec));
+    }
+    let mut iter = crate::sprm::iter(&[0x15, 0xC6, 3, 0, 0, 0, 0x03, 0x24, 1]);
+    assert_eq!(iter.next().map(|p| (p.op, p.operand.len())), Some((0xC615, 4)), "cb is one byte: the operand is cb + 1 bytes");
+    assert_eq!(iter.next().map(|p| p.op), Some(0x2403), "the next sprm is still read");
+}
+
+/// A section mark (0x0C) at a section's end is the section's last paragraph mark, not a page
+/// break inside a paragraph: the section's properties (here continuous) land on that paragraph.
+/// Before, every section of such a file was lost and each section mark became a page break.
+#[test]
+fn section_marks_end_paragraphs() {
+    use doc4me_doc::section::SectionStart;
+    let spec = StructSpec {
+        text: "first\u{C}second\r",
+        header_stories: vec![],
+        sections: vec![(6, grpprl(&[(0x3009, &[0x00])])), (13, Vec::new())],
+        chpx_runs: vec![(0, Vec::new())],
+        papx_entries: vec![(0, 0, Vec::new()), (6, 0, Vec::new())],
+        plf_lst: Vec::new(),
+        plf_lfo: Vec::new(),
+        note_stories: vec![],
+        endnote_stories: vec![],
+        extra_pairs: Vec::new(),
+        data_stream: Vec::new(),
+    };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    assert_eq!(body_texts(&doc), ["first", "second"]);
+    let p0 = doc.body.first().and_then(|b| b.as_para()).expect("para");
+    assert_eq!(p0.section.as_ref().map(|s| s.start), Some(SectionStart::Continuous), "the section ends at its mark");
+    // A page break inside a section stays a page break.
+    let spec = StructSpec { text: "a\u{C}b\r", sections: vec![(4, Vec::new())], papx_entries: vec![(0, 0, Vec::new())], ..spec };
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    assert_eq!(body_texts(&doc), ["a\u{C}b"]);
 }

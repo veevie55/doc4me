@@ -456,6 +456,25 @@ fn backspace_and_delete() {
     assert_eq!(text(&s), "");
 }
 
+/// Backspace at the start of the paragraph after a table nested in a cell goes into the nested
+/// table's last cell, not into the last cell of the table around it.
+#[test]
+fn backspace_after_a_nested_table_stays_in_its_cell() {
+    let mut s = s();
+    run(&mut s, "table.quick", json!({"kind": "matrix"}));
+    run(&mut s, "caret.set", json!({"pos": {"story": "body", "path": [1, 1, 1, 0], "off": 0}}));
+    run(&mut s, "insert.table", json!({"rows": 2, "cols": 2}));
+    let outer = s.doc.body.get(1).and_then(|b| b.as_table()).expect("the outer table");
+    let blocks = &outer.rows[1].cells[1].blocks;
+    let nested = blocks.iter().position(|b| b.as_table().is_some()).expect("a nested table");
+    assert!(nested + 1 < blocks.len(), "a paragraph follows the nested table");
+    let after = nested as u32 + 1;
+    run(&mut s, "caret.set", json!({"pos": {"story": "body", "path": [1, 1, 1, after], "off": 0}}));
+    run(&mut s, "text.backspace", json!({}));
+    // The nested table's last cell: row 1, cell 1, its first paragraph.
+    assert_eq!(s.sel.focus.path.0, vec![1, 1, 1, after - 1, 1, 1, 0]);
+}
+
 #[test]
 fn bold_toggles_selection_and_caret_word() {
     let mut s = s();
@@ -1045,6 +1064,39 @@ fn cell_size_boxes_set_row_height_and_column_width() {
     assert_eq!(s.doc.body.iter().find_map(|b| b.as_table()).unwrap(), &t0);
 }
 
+/// The Height and Width boxes act on every row and column the selection covers (#1242), not only
+/// on the caret's: the whole table, a row, a column, and the caret alone.
+#[test]
+fn cell_size_boxes_apply_to_the_whole_selection() {
+    let mut s = s();
+    run(&mut s, "insert.table", json!({"rows": 3, "cols": 3}));
+    run(&mut s, "table.autofit", json!({"mode": "window"}));
+    let table = |s: &Session| s.doc.body.iter().find_map(|b| b.as_table()).unwrap().clone();
+    let heights = |s: &Session| table(s).rows.iter().map(|r| r.props.height).collect::<Vec<_>>();
+    let widths = |s: &Session| table(s).grid;
+    let before = widths(&s);
+    // The caret alone changes its own row and column.
+    run(&mut s, "table.rowHeight", json!({"height": 20.0}));
+    run(&mut s, "table.columnWidth", json!({"width": 80.0}));
+    assert_eq!(heights(&s), vec![Some(20.0), None, None]);
+    assert_eq!(widths(&s)[0], 80.0);
+    assert_eq!(&widths(&s)[1..], &before[1..]);
+    // Doc4Me has no table.selectColumn: a selected row changes its height only.
+    run(&mut s, "table.selectRow", json!({}));
+    run(&mut s, "table.rowHeight", json!({"height": 30.0}));
+    assert_eq!(heights(&s), vec![Some(30.0), None, None]);
+    // The whole table: every row and every column, one Undo per edit.
+    let mid = (heights(&s), widths(&s));
+    run(&mut s, "table.selectTable", json!({}));
+    run(&mut s, "table.rowHeight", json!({"height": 40.0}));
+    assert_eq!(heights(&s), vec![Some(40.0); 3]);
+    run(&mut s, "table.columnWidth", json!({"width": 90.0}));
+    assert_eq!(widths(&s), vec![90.0; 3]);
+    assert!(table(&s).rows.iter().all(|r| r.cells.iter().all(|c| c.props.width == Some(90.0))), "cell widths follow the grid");
+    run(&mut s, "edit.undo", json!({}));
+    run(&mut s, "edit.undo", json!({}));
+    assert_eq!((heights(&s), widths(&s)), mid);
+}
 /// Table Properties (#44): table, row, column and cell settings land as one undo step, and
 /// without settings the command reports the current ones (the dialog's source).
 #[test]
@@ -1343,6 +1395,55 @@ fn accept_all_keeps_a_tracked_paragraph_break() {
     assert_eq!(run(&mut s, "review.changes", json!({})), json!([]));
 }
 
+/// Issue #864: five paragraphs, a tracked deletion from the end of the first to the end of the
+/// third. The two breaks inside the range and the text of the second and third paragraphs are
+/// deleted; the third paragraph's own break is not.
+fn tracked_delete_from_paragraph_end() -> Session {
+    let mut s = s();
+    for (i, word) in ["Alpha", "Bravo", "Charlie", "Delta", "Echo"].iter().enumerate() {
+        if i > 0 {
+            run(&mut s, "text.newParagraph", json!({}));
+        }
+        run(&mut s, "text.insert", json!({"text": word}));
+    }
+    run(&mut s, "review.trackChanges", json!({"value": true}));
+    let range = json!({"anchor": {"path": [0], "off": 5, "story": "body"}, "focus": {"path": [2], "off": 7, "story": "body"}});
+    run(&mut s, "select.range", range);
+    run(&mut s, "text.delete", json!({}));
+    s
+}
+
+#[test]
+fn accept_all_after_a_tracked_delete_from_a_paragraph_end_keeps_the_next_paragraph() {
+    let mut s = tracked_delete_from_paragraph_end();
+    assert_eq!(body_texts(&s), ["Alpha", "Bravo", "Charlie", "Delta", "Echo"], "tracked deletions stay in the text");
+    run(&mut s, "review.acceptAll", json!({}));
+    assert_eq!(body_texts(&s), ["Alpha", "Delta", "Echo"]);
+    assert!(s.doc.revisions.is_empty());
+    assert!(s.doc.body.iter().filter_map(|b| b.as_para()).all(|p| p.mark.ins.is_none() && p.mark.del.is_none()));
+    // Rejecting instead restores everything, as it already did.
+    let mut s = tracked_delete_from_paragraph_end();
+    run(&mut s, "review.rejectAll", json!({}));
+    assert_eq!(body_texts(&s), ["Alpha", "Bravo", "Charlie", "Delta", "Echo"]);
+}
+
+#[test]
+fn reject_all_after_typing_into_an_empty_paragraph_keeps_the_paragraph() {
+    // Same cause as #864 seen from the other side: rejecting the typed text emptied the
+    // paragraph, and its mark picked up the text's insertion, so it was rejected as well.
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "One"}));
+    run(&mut s, "text.newParagraph", json!({}));
+    run(&mut s, "text.newParagraph", json!({}));
+    run(&mut s, "text.insert", json!({"text": "Three"}));
+    run(&mut s, "review.trackChanges", json!({"value": true}));
+    run(&mut s, "caret.set", json!({"pos": {"block": 1, "off": 0}}));
+    run(&mut s, "text.insert", json!({"text": "Two"}));
+    assert_eq!(body_texts(&s), ["One", "Two", "Three"]);
+    run(&mut s, "review.rejectAll", json!({}));
+    assert_eq!(body_texts(&s), ["One", "", "Three"]);
+}
+
 #[test]
 fn reject_one_paragraph_break_and_rejecting_a_typed_paragraph() {
     // Reject with the caret on the break (Next Change selects it), or at the end of its paragraph.
@@ -1370,6 +1471,35 @@ fn reject_one_paragraph_break_and_rejecting_a_typed_paragraph() {
     run(&mut s, "review.rejectAll", json!({}));
     assert_eq!(body_texts(&s), ["Title"]);
     assert_eq!(s.doc.para_at(&Pos::body(0, 0)).unwrap().props.style.as_deref(), Some("Heading1"));
+}
+
+#[test]
+fn reject_all_of_an_inserted_paragraph_keeps_the_next_paragraphs_style() {
+    // A whole paragraph inserted before a heading, in another style: rejecting it removes the
+    // paragraph, and the heading keeps its own style (it used to take the rejected one's).
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "Intro"}));
+    run(&mut s, "text.newParagraph", json!({}));
+    run(&mut s, "text.insert", json!({"text": "Heading"}));
+    run(&mut s, "para.style", json!({"style": "Heading1"}));
+    run(&mut s, "review.trackChanges", json!({"value": true}));
+    run(&mut s, "caret.set", json!({"pos": {"block": 1, "off": 0}}));
+    run(&mut s, "text.insert", json!({"text": "Inserted"}));
+    run(&mut s, "text.newParagraph", json!({}));
+    run(&mut s, "review.trackChanges", json!({"value": false}));
+    run(&mut s, "caret.set", json!({"pos": {"block": 1, "off": 0}}));
+    run(&mut s, "para.style", json!({"style": "Normal"}));
+    assert_eq!(body_texts(&s), ["Intro", "Inserted", "Heading"]);
+    let style = |s: &Session, i: usize| s.doc.para_at(&Pos::body(i, 0)).unwrap().props.style.clone();
+    assert_eq!(style(&s, 2).as_deref(), Some("Heading1"));
+    run(&mut s, "review.rejectAll", json!({}));
+    assert_eq!(body_texts(&s), ["Intro", "Heading"]);
+    assert_eq!(style(&s, 1).as_deref(), Some("Heading1"));
+    // Accepting instead keeps all three, each with its style.
+    run(&mut s, "edit.undo", json!({}));
+    run(&mut s, "review.acceptAll", json!({}));
+    assert_eq!(body_texts(&s), ["Intro", "Inserted", "Heading"]);
+    assert_eq!(style(&s, 2).as_deref(), Some("Heading1"));
 }
 
 #[test]
@@ -1471,6 +1601,40 @@ fn track_changes_and_set_author_list_their_params() {
 }
 
 #[test]
+fn line_and_page_break_toggles_take_an_explicit_value() {
+    // #967: a script sets keep with next on a heading and clears it on the paragraph after,
+    // which inherits it through Enter, without tracking the toggle state.
+    let reg = cmd::registry();
+    type Field = fn(&doc4me_doc::ParaProps) -> Option<bool>;
+    let cases: [(&str, Field); 4] = [
+        ("para.keepNext", |p| p.keep_next),
+        ("para.keepLines", |p| p.keep_lines),
+        ("para.pageBreakBefore", |p| p.page_break_before),
+        ("para.widowControl", |p| p.widow_control),
+    ];
+    for (id, field) in cases {
+        assert!(reg.get(id).unwrap().params.contains(r#""value"?: bool"#), "{id} lists its param");
+        let mut s = s();
+        run(&mut s, "text.insert", json!({"text": "Heading"}));
+        let at = |s: &Session, block| s.doc.para_at(&Pos::body(block, 0)).and_then(|p| field(&p.props));
+        for value in [true, true, false, false, true] {
+            run(&mut s, id, json!({"value": value}));
+            assert_eq!(at(&s, 0), Some(value), "{id} value {value} sets, never toggles");
+        }
+        run(&mut s, "text.newParagraph", json!({}));
+        assert_eq!(at(&s, 1), Some(true), "{id} carries over to the new paragraph");
+        run(&mut s, id, json!({"value": false}));
+        assert_eq!((at(&s, 0), at(&s, 1)), (Some(true), Some(false)), "{id} clears only the new paragraph");
+        run(&mut s, id, json!({}));
+        assert_eq!(at(&s, 1), Some(true), "{id} without value toggles");
+        run(&mut s, id, json!({}));
+        assert_eq!(at(&s, 1), Some(false), "{id} without value toggles back");
+        run(&mut s, id, json!({"value": "yes"}));
+        assert_eq!(at(&s, 1), Some(true), "{id} ignores a value that isn't a bool and toggles, as format.bold does");
+    }
+}
+
+#[test]
 fn no_markup_view_lays_out_the_final_text() {
     let mut s = s();
     run(&mut s, "text.insert", json!({"text": "original"}));
@@ -1538,6 +1702,42 @@ fn toc_and_fields() {
     assert!(t.contains("Summary\t1"), "{t}");
     run(&mut s, "references.updateToc", json!({}));
     assert_eq!(s.doc.plain_text(StoryRef::Body).matches("Summary\t").count(), 1, "one TOC entry after update");
+}
+
+/// A comment or reply made here carries its UTC time as `date_utc` too, so it shows in local time
+/// and is saved as `dateUtc`.
+#[test]
+fn new_comments_and_replies_carry_their_utc_time() {
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": "Some text"}));
+    run(&mut s, "select.all", json!({}));
+    let id = run(&mut s, "review.newComment", json!({"text": "one"}))["id"].as_u64().unwrap();
+    run(&mut s, "review.reply", json!({"id": id, "text": "two"}));
+    assert_eq!(s.doc.comments.len(), 2);
+    for c in s.doc.comments.values() {
+        assert!(c.date.ends_with('Z'), "{}", c.date);
+        assert_eq!(c.date_utc.as_str(), c.date.as_str());
+    }
+}
+
+/// Update Table with nothing to change lays the document out at the revisions it touches, then
+/// puts the revision back. The next edits reach those numbers again with a different document, so
+/// the layout must be the new one.
+#[test]
+fn a_command_that_changes_nothing_leaves_no_stale_layout() {
+    let mut s = Session::new(crate::sample::report());
+    run(&mut s, "caret.docStart", json!({}));
+    run(&mut s, "references.toc", json!({}));
+    let (rev, steps) = (s.rev(), s.undo_depth());
+    let pages = s.layout().pages.len();
+    run(&mut s, "references.updateToc", json!({}));
+    // Doc4Me's Update Table rewrites the table even when nothing changed, so only the stale-layout
+    // half of the WordCraft test applies.
+    let _ = (rev, steps);
+    run(&mut s, "caret.docEnd", json!({}));
+    run(&mut s, "text.insert", json!({"text": "A"}));
+    run(&mut s, "text.insert", json!({"text": "word ".repeat(4000)}));
+    assert!(s.layout().pages.len() > pages, "the layout has the inserted text");
 }
 
 #[test]
@@ -1921,6 +2121,24 @@ fn arrange_bounds_resizes_and_moves_objects() {
     assert_eq!(box_area(&mut s).rect, n);
 }
 
+/// An object dropped near the bottom of a page lands there, though at the top of the paragraph
+/// it anchors to it would push that paragraph onto the next page (#3169).
+#[test]
+fn an_object_dropped_near_the_bottom_of_a_page_lands_there() {
+    let para = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+    let mut s = Session::new(doc4me_doc::Document::from_text(&vec![para; 20].join("\n")));
+    run(&mut s, "insert.textBox", json!({"text": "Box"}));
+    select_box(&mut s);
+    run(&mut s, "arrange.bounds", json!({"width": 450, "height": 300}));
+    for y in [400.0, 600.0, 760.0] {
+        select_box(&mut s);
+        run(&mut s, "arrange.bounds", json!({"page": 0, "x": 80, "y": y}));
+        let o = box_area(&mut s);
+        assert_eq!(o.page, 0);
+        assert!((o.rect.x - 80.0).abs() < 0.01 && (o.rect.y - y).abs() < 0.01, "dropped at {y}: {:?}", o.rect);
+    }
+}
+
 #[test]
 fn nudging_an_aligned_object_moves_it_from_where_it_is() {
     use doc4me_doc::para::{Anchor, FloatAlign};
@@ -2026,6 +2244,50 @@ fn deleted_text_box_takes_its_text_with_it_until_undo() {
     let (_, part) = s.doc.parts.iter().next().unwrap();
     assert_eq!(part.kind, doc4me_doc::PartKind::TextBox);
     assert_eq!(s.doc.word_count_including_notes(), 2);
+}
+
+#[test]
+fn text_box_in_a_table_nested_seventeen_deep_survives_an_edit_and_a_save() {
+    // #1339: opened from a .docx, a box shown only from a table nested deeper than 16 was taken
+    // for unshown, so the next unrelated edit pruned its story and saving dropped its text.
+    use doc4me_doc::{Block, Document, InlineObject, Paragraph, PartKind, Path, Table, para_block};
+    let mut d = Document::from_text("Intro");
+    let id = d.add_part(PartKind::TextBox, vec![para_block(Paragraph::with_text("Deep box", Default::default()))]);
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w: 72.0,
+        h: 36.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 0.75,
+        float: Default::default(),
+        story: Some(id),
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    let mut p = Paragraph::with_text("Cell", Default::default());
+    p.insert_object(0, shape, &Default::default()).unwrap();
+    d.body.extend((0..17).fold(vec![para_block(p)], |inner, _| {
+        let mut t = Table::new(1, 1, 300.0);
+        t.rows[0].cells[0].blocks = inner;
+        vec![std::sync::Arc::new(Block::Table(t))]
+    }));
+    // The innermost cell's paragraph: the table after "Intro", then row, cell and block 0 down.
+    let path = Path([vec![1], vec![0; 17 * 3]].concat());
+    let deep_box = |doc: &Document| {
+        let id = doc.para(StoryRef::Body, &path)?.objects.iter().find_map(InlineObject::text_box)?;
+        doc.parts.get(&id).filter(|p| p.kind == PartKind::TextBox).map(|_| doc.plain_text(StoryRef::Part(id)))
+    };
+    let mut s = Session::new(doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap());
+    assert_eq!(deep_box(&s.doc).as_deref(), Some("Deep box"), "opened");
+    let unshown = s.doc.add_part(PartKind::TextBox, vec![para_block(Paragraph::with_text("Shown nowhere", Default::default()))]);
+    run(&mut s, "text.insert", json!({"text": "Edited. "}));
+    assert_eq!(deep_box(&s.doc).as_deref(), Some("Deep box"), "kept through the edit");
+    assert!(!s.doc.parts.contains_key(&unshown), "a box shown nowhere still goes");
+    let back = doc4me_docx::read(&doc4me_docx::write(&s.doc).unwrap()).unwrap();
+    assert_eq!(deep_box(&back).as_deref(), Some("Deep box"), "saved");
+    assert!(back.plain_text(StoryRef::Body).starts_with("Edited. Intro"));
 }
 
 #[test]
@@ -2221,6 +2483,37 @@ fn html_picture_that_is_a_named_pipe_is_skipped_without_blocking() {
     assert!(doc.plain_text(StoryRef::Body).contains("Pipe"));
 }
 
+/// #98's rule for HTML pictures, for `insert.picture`'s own paths: opening a named pipe blocks
+/// until a writer appears, and a device like `/dev/zero` never reaches end of file, so a picture
+/// path that is not a regular file must be refused, not opened.
+#[cfg(unix)]
+#[test]
+fn insert_picture_from_a_named_pipe_is_refused_without_blocking() {
+    let dir = scratch_dir("insert-img-fifo");
+    let fifo = dir.join("pipe.png");
+    let made = std::process::Command::new("mkfifo").arg(&fifo).status();
+    if !made.is_ok_and(|s| s.success()) {
+        let _ = std::fs::remove_dir_all(&dir);
+        eprintln!("mkfifo unavailable; skipping");
+        return;
+    }
+    let (tx, rx) = std::sync::mpsc::channel();
+    let path = fifo.to_string_lossy().into_owned();
+    std::thread::spawn(move || {
+        let _ = tx.send(crate::io::read_file(&path));
+    });
+    let got = rx.recv_timeout(std::time::Duration::from_secs(10));
+    if got.is_err() {
+        // Unblock the stuck reader so the thread ends, then fail.
+        let _ = std::fs::OpenOptions::new().write(true).open(&fifo);
+    }
+    let _ = std::fs::remove_dir_all(&dir);
+    assert!(got.expect("reading a picture path blocked on a named pipe").is_err(), "a pipe is not a file to read");
+    if std::path::Path::new("/dev/zero").exists() {
+        assert!(crate::io::read_file("/dev/zero").is_err(), "a device is not a file to read");
+    }
+}
+
 #[cfg(not(target_arch = "wasm32"))]
 #[test]
 fn html_picture_size_limit_holds_whatever_length_the_file_reports() {
@@ -2378,6 +2671,35 @@ fn styles_apply_multi_paragraph_selection() {
     run(&mut s, "edit.undo", json!({}));
     for i in 0..3 {
         assert_eq!(para_style(&s, i), None, "paragraph {i}");
+    }
+}
+
+/// #865: `styles.modify` takes a colour the way `format.color` does (`RRGGBB`, `#RRGGBB`, `auto`),
+/// still reads the serialized forms, and rejects a bad colour without touching the style.
+#[test]
+fn modify_style_takes_hex_colours_like_format_color() {
+    use doc4me_doc::{CharProps, Rgb, TextColor};
+    let mut s = s();
+    let color = |s: &Session| s.doc.styles.get("Heading1").and_then(|st| st.chr.color);
+    let modify = |s: &mut Session, c: serde_json::Value| s.run("styles.modify", &json!({"style": "Heading1", "chr": {"color": c}}));
+
+    modify(&mut s, json!("1B1611")).unwrap();
+    assert_eq!(color(&s), Some(TextColor::Rgb(Rgb(0x1B, 0x16, 0x11))));
+    modify(&mut s, json!("auto")).unwrap();
+    assert_eq!(color(&s), Some(TextColor::Auto));
+    modify(&mut s, json!("#1B1611")).unwrap();
+    assert_eq!(color(&s), Some(TextColor::Rgb(Rgb(0x1B, 0x16, 0x11))));
+    modify(&mut s, json!("Auto")).unwrap();
+    assert_eq!(color(&s), Some(TextColor::Auto));
+    modify(&mut s, json!({"Rgb": [192, 0, 0]})).unwrap();
+    let red = TextColor::Rgb(Rgb(0xC0, 0, 0));
+    assert_eq!(color(&s), Some(red));
+    assert_eq!(s.doc.styles.resolve_char(Some("Heading1"), &CharProps::default()).color, red);
+
+    for bad in [json!("1B16"), json!("not a colour"), json!({"Rgb": "1B1611"}), json!(7)] {
+        let r = modify(&mut s, bad.clone());
+        assert!(matches!(r, Err(crate::CmdError::Params(_))), "{bad}: {r:?}");
+        assert_eq!(color(&s), Some(red), "{bad} leaves the style alone");
     }
 }
 
@@ -2747,6 +3069,25 @@ fn page_and_table_gridlines_toggle_independently() {
     let state = run(&mut s, "view.state", json!({}));
     assert_eq!(state["gridlines"], false);
     assert_eq!(state["tableGridlines"], false);
+}
+
+/// Issue #768: zooming by percent after One Page or Page Width keeps one page per row.
+#[test]
+fn zoom_after_one_page_keeps_single_column() {
+    let mut s = s();
+    run(&mut s, "view.onePage", json!({}));
+    assert!(s.view.single_column);
+    run(&mut s, "view.zoomOut", json!({}));
+    assert!(s.view.fit.is_empty() && s.view.single_column);
+    run(&mut s, "view.zoom", json!({"value": 50}));
+    assert!(s.view.single_column);
+    run(&mut s, "view.multiplePages", json!({}));
+    assert!(!s.view.single_column);
+    run(&mut s, "view.zoomIn", json!({}));
+    assert!(!s.view.single_column);
+    run(&mut s, "view.pageWidth", json!({}));
+    run(&mut s, "view.sideToSide", json!({}));
+    assert!(!s.view.single_column);
 }
 
 #[test]
@@ -4102,6 +4443,34 @@ fn table_texts(s: &Session) -> Vec<Vec<String>> {
 }
 
 #[test]
+fn convert_text_to_table_refuses_to_drop_content() {
+    // Issue #1318: a 64th field and a table between the selected paragraphs were silently lost.
+    {
+        let wide = (0..64).map(|i| i.to_string()).collect::<Vec<_>>().join("\t");
+        let mut s = s();
+        run(&mut s, "document.setText", json!({"text": wide}));
+        run(&mut s, "select.all", json!({}));
+        let depth = s.undo_depth();
+        assert!(s.run("table.fromText", &json!({})).is_err());
+        assert_eq!(s.doc.body.len(), 1);
+        assert!(s.doc.body.iter().all(|b| b.as_table().is_none()));
+        assert_eq!(s.undo_depth(), depth);
+    }
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": "x\ny\nz"}));
+    let at = |i: u32| json!({"story": "body", "path": [i], "off": 0});
+    run(&mut s, "select.range", json!({"anchor": at(1), "focus": at(1)}));
+    run(&mut s, "table.fromText", json!({}));
+    assert!(s.doc.body.get(1).and_then(|b| b.as_table()).is_some());
+    run(&mut s, "select.range", json!({"anchor": at(0), "focus": at(2)}));
+    let depth = s.undo_depth();
+    assert!(s.run("table.fromText", &json!({})).is_err());
+    assert_eq!(s.doc.body.len(), 3);
+    assert!(s.doc.body.get(1).and_then(|b| b.as_table()).is_some());
+    assert_eq!(s.undo_depth(), depth);
+}
+
+#[test]
 fn delete_columns_deletes_every_selected_column() {
     // Issue #431: only the selection's focus column went.
     let cell = |r: u32, c: u32, off: usize| json!({"story": "body", "path": [0, r, c, 0], "off": off});
@@ -4190,6 +4559,26 @@ fn note_options_per_section_and_convert_notes() {
     assert_eq!(kinds(&s), vec![NoteKind::Footnote, NoteKind::Footnote]);
     assert_eq!(s.doc.parts[&b].kind, PartKind::Footnote);
     assert!(s.run("references.convertNotes", &json!({"to": "sideways"})).is_err());
+}
+
+#[test]
+fn next_footnote_skips_endnotes() {
+    let mut s = s();
+    run(&mut s, "text.insert", json!({"text": "A"}));
+    run(&mut s, "references.footnote", json!({"text": "Fn1"}));
+    s.sel = crate::Selection::caret(s.doc.end_of(StoryRef::Body));
+    run(&mut s, "text.insert", json!({"text": "B"}));
+    run(&mut s, "references.endnote", json!({"text": "En1"}));
+    s.sel = crate::Selection::caret(s.doc.end_of(StoryRef::Body));
+    run(&mut s, "text.insert", json!({"text": "C"}));
+    run(&mut s, "references.footnote", json!({"text": "Fn2"}));
+
+    s.sel = crate::Selection::caret(Pos::body(0, 0));
+    run(&mut s, "references.nextFootnote", json!({}));
+    assert_eq!(s.sel.focus.off, 1);
+
+    run(&mut s, "references.nextFootnote", json!({}));
+    assert_eq!(s.sel.focus.off, 9);
 }
 
 /// A tiny synthetic Polish Hunspell dictionary (written for these tests). Real dictionaries are

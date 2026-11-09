@@ -611,6 +611,9 @@ pub fn font_matches(query: &str, items: &[String]) -> Vec<usize> {
     exact
 }
 
+/// Width of a combo arrow's border, the field's own (the theme's input border is 1 pt).
+const ARROW_BORDER: f32 = 1.0;
+
 /// A searching combo's state between frames.
 #[derive(Clone, Default)]
 struct ComboSearch {
@@ -647,6 +650,14 @@ fn combo_impl(
     let t = Tokens::get(ui.ctx());
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing = vec2(0.0, 0.0);
+        // The field and its arrow share one outline: rounded on the outside, square where they
+        // meet. The field's frame takes the widget visuals' radius in every state.
+        let r = ui.visuals().widgets.inactive.corner_radius;
+        let w = &mut ui.visuals_mut().widgets;
+        for v in [&mut w.noninteractive, &mut w.inactive, &mut w.hovered, &mut w.active, &mut w.open] {
+            v.corner_radius.ne = 0;
+            v.corner_radius.se = 0;
+        }
         // Up/Down move the list's highlight: take them before the text field moves its cursor.
         let mut step = 0i32;
         if s.open && ui.memory(|m| m.has_focus(te_id)) {
@@ -660,6 +671,8 @@ fn combo_impl(
             });
         }
         let te = egui::TextEdit::singleline(&mut text).id(te_id).desired_width(width - 16.0).font(regular(12.0)).margin(vec2(4.0, 3.0));
+        // The arrow's box is painted here, under the field, once its size is known.
+        let arrow_bg = ui.painter().add(egui::Shape::Noop);
         let resp = ui.add(te);
         keytip_badge(ui, resp.rect, "combo", id);
         focused = resp.has_focus();
@@ -706,7 +719,13 @@ fn combo_impl(
             out = Some(text.clone());
         }
         let (ar, aresp) = ui.allocate_exact_size(vec2(16.0, resp.rect.height()), Sense::click());
-        ui.painter().rect(ar, 0.0, if aresp.hovered() { t.hover } else { t.input }, Stroke::new(1.0, t.input_border), egui::StrokeKind::Inside);
+        // It reaches one border width under the field, so the field's right border is the only line
+        // between them: two borders side by side read as a double-width divider.
+        let ar_radius = CornerRadius { nw: 0, sw: 0, ne: r.ne, se: r.se };
+        let under = Rect::from_min_max(pos2(ar.min.x - ARROW_BORDER, ar.min.y), ar.max);
+        let fill = if aresp.hovered() { t.hover } else { t.input };
+        let arrow_box = egui::epaint::RectShape::new(under, ar_radius, fill, Stroke::new(ARROW_BORDER, t.input_border), egui::StrokeKind::Inside);
+        ui.painter().set(arrow_bg, arrow_box);
         icons::paint(ui.painter(), Rect::from_center_size(ar.center(), vec2(DROPDOWN, DROPDOWN)), "dropdown", t.icon, t.accent);
         // The list drops from the box's left edge, as in Word, not from the arrow (#535).
         egui::Popup::menu(&aresp).anchor(resp.rect.union(ar)).show(|ui| {
@@ -788,7 +807,9 @@ fn list_rows<'a>(
 ) -> (Option<String>, f32, f32) {
     let mut out = None;
     let row_h = if preview.is_some() { COMBO_PREVIEW_ROW_H } else { ui.spacing().interact_size.y };
-    let mut area = egui::ScrollArea::vertical().max_height(420.0);
+    let desired_h = (n as f32 * (row_h + ui.spacing().item_spacing.y)).min(420.0);
+    ui.set_min_height(desired_h);
+    let mut area = egui::ScrollArea::vertical().max_height(desired_h);
     if let (Some(h), Some((offset, view_h))) = (highlight, scroll) {
         let top = h as f32 * (row_h + ui.spacing().item_spacing.y);
         let bottom = top + row_h;
@@ -917,6 +938,30 @@ fn icon_text_button_with(ui: &mut Ui, icon: &str, text: &str, font: egui::FontId
     if marker {
         let c = pos2(text_x + text_w + 4.0 + DROPDOWN / 2.0, r.center().y);
         icons::paint(ui.painter(), Rect::from_center_size(c, vec2(DROPDOWN, DROPDOWN)), "dropdown", st.text, st.text);
+    }
+    resp
+}
+
+/// A drop-down menu item with `icon` before `text`, at least `min_w` wide.
+pub fn icon_menu_item(ui: &mut Ui, icon: &str, text: &str, shortcut: &str, min_w: f32) -> Response {
+    let t = Tokens::get(ui.ctx());
+    let font = egui::TextStyle::Button.resolve(ui.style());
+    let galley = ui.painter().layout_no_wrap(text.to_string(), font.clone(), Color32::PLACEHOLDER);
+    let sc = (!shortcut.is_empty()).then(|| ui.painter().layout_no_wrap(shortcut.to_string(), font, Color32::PLACEHOLDER));
+    let pad = ui.spacing().button_padding;
+    let icon_w = 16.0;
+    let sc_w = sc.as_ref().map_or(0.0, |g| g.size().x + 3.0 * pad.x);
+    let w = (pad.x + icon_w + 6.0 + galley.size().x + sc_w + pad.x).max(min_w).max(ui.available_width());
+    let (r, resp) = ui.allocate_exact_size(vec2(w, galley.size().y.max(icon_w) + 2.0 * pad.y), Sense::click());
+    resp.widget_info(|| egui::WidgetInfo::labeled(egui::WidgetType::Button, ui.is_enabled(), text));
+    let st = drawn_state(ui, &resp, false);
+    ui.painter().rect_filled(r, ui.visuals().widgets.inactive.corner_radius, st.fill);
+    let (line, accent) = if ui.is_enabled() { (t.icon, t.accent) } else { (t.text_disabled, t.text_disabled) };
+    let text_c = if ui.is_enabled() { st.text } else { t.text_disabled };
+    icons::paint(ui.painter(), Rect::from_center_size(pos2(r.min.x + pad.x + icon_w / 2.0, r.center().y), vec2(icon_w, icon_w)), icon, line, accent);
+    ui.painter().galley(pos2(r.min.x + pad.x + icon_w + 6.0, r.center().y - galley.size().y / 2.0), galley, text_c);
+    if let Some(g) = sc {
+        ui.painter().galley(pos2(r.max.x - pad.x - g.size().x, r.center().y - g.size().y / 2.0), g, t.text_disabled);
     }
     resp
 }
@@ -1055,6 +1100,58 @@ mod tests {
         assert_eq!(type_into_combo(true, &fonts, "arial", &[Escape]), None);
         let sizes: Vec<String> = ["10", "11", "12"].map(String::from).to_vec();
         assert_eq!(type_into_combo(false, &sizes, "1", &[Enter]).as_deref(), Some("1"));
+    }
+
+    /// The field was rounded on all four corners and the arrow on none, so the two looked apart,
+    /// and their borders stood side by side as a double-width divider. The field is rounded only
+    /// on the left, the arrow only on the right, and the arrow's box lies under the field by one
+    /// border width, so a single line divides them; focused or not.
+    #[test]
+    fn combo_field_and_arrow_share_one_outline() {
+        let sizes: Vec<String> = ["10", "11", "12"].map(String::from).to_vec();
+        let ctx = egui::Context::default();
+        let cases = [crate::theme::Appearance::Light, crate::theme::Appearance::Dark].into_iter().flat_map(|a| [(a, false), (a, true)]);
+        for (appearance, focused) in cases {
+            crate::theme::apply(&ctx, appearance);
+            let mut out = ctx.run_ui(egui::RawInput::default(), |ui| {
+                if focused {
+                    ui.memory_mut(|m| m.request_focus(ui.id().with(("combo_edit", "f"))));
+                }
+                combo(ui, "f", 150.0, "12", &sizes, None);
+            });
+            // Painted boxes in paint order: (order, rect, corners, border width).
+            let boxes: Vec<(usize, Rect, CornerRadius, f32)> = std::mem::take(&mut out.shapes)
+                .into_iter()
+                .filter_map(|c| match c.shape {
+                    egui::Shape::Rect(r) => Some((r.rect, r.corner_radius, r.stroke.width)),
+                    _ => None,
+                })
+                .enumerate()
+                .map(|(i, (rect, c, w))| (i, rect, c, w))
+                .collect();
+            out.drop_without_applying_deltas();
+            let corners: Vec<CornerRadius> = boxes.iter().map(|b| b.2).collect();
+            let field = boxes.iter().find(|b| b.2.nw > 0 && b.2.sw == b.2.nw && b.2.ne == 0 && b.2.se == 0);
+            let field = field.unwrap_or_else(|| panic!("focused {focused}: no field rounded on the left only in {corners:?}"));
+            let arrow_corners = CornerRadius { nw: 0, sw: 0, ne: field.2.nw, se: field.2.sw };
+            let arrow = boxes.iter().find(|b| b.2 == arrow_corners);
+            let arrow = arrow.unwrap_or_else(|| panic!("focused {focused}: no arrow rounded on the right only in {corners:?}"));
+            assert!(!corners.iter().any(|c| c.nw > 0 && c.ne > 0), "focused {focused}: a part is still rounded all round: {corners:?}");
+            // One divider as wide as the other borders: the arrow's left border lies exactly under
+            // the field's right border, and the field is painted over it.
+            assert!(field.3 > 0.0 && arrow.3 == field.3, "focused {focused}: borders {} and {} differ", field.3, arrow.3);
+            assert!(
+                (arrow.1.min.x - (field.1.max.x - field.3)).abs() < 0.01,
+                "focused {focused}: arrow {:?} and field {:?} borders stand apart",
+                arrow.1,
+                field.1
+            );
+            assert!(arrow.0 < field.0, "focused {focused}: the arrow's box must be painted under the field");
+            assert!(
+                (arrow.1.min.y - field.1.min.y).abs() < 0.01 && (arrow.1.max.y - field.1.max.y).abs() < 0.01,
+                "focused {focused}: the outlines' tops and bottoms differ"
+            );
+        }
     }
 
     #[test]

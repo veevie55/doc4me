@@ -18,8 +18,9 @@ impl Rgb {
     }
     /// Parse `RRGGBB` or `#RRGGBB`.
     pub fn parse(s: &str) -> Option<Rgb> {
-        let s = s.trim().trim_start_matches('#');
-        if s.len() != 6 || !s.is_ascii() {
+        let s = s.trim();
+        let s = s.strip_prefix('#').unwrap_or(s);
+        if s.len() != 6 || !s.bytes().all(|b| b.is_ascii_hexdigit()) {
             return None;
         }
         let p = |i: usize| s.get(i..i + 2).and_then(|h| u8::from_str_radix(h, 16).ok());
@@ -31,11 +32,40 @@ impl Rgb {
 }
 
 /// A text colour: automatic (black on light backgrounds, white on dark) or a fixed colour.
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Default)]
 pub enum TextColor {
     #[default]
     Auto,
     Rgb(Rgb),
+}
+
+impl TextColor {
+    /// `auto` or `automatic` (any case), or a colour [`Rgb::parse`] reads.
+    pub fn parse(s: &str) -> Option<TextColor> {
+        if s.eq_ignore_ascii_case("auto") || s.eq_ignore_ascii_case("automatic") { Some(TextColor::Auto) } else { Rgb::parse(s).map(TextColor::Rgb) }
+    }
+}
+
+impl<'de> Deserialize<'de> for TextColor {
+    /// Reads what it writes (`"Auto"`, `{"Rgb": [r, g, b]}`) and also a string [`TextColor::parse`]
+    /// reads, so `styles.modify` and `format.set` take the colours `format.color` takes.
+    fn deserialize<D: serde::Deserializer<'de>>(d: D) -> Result<Self, D::Error> {
+        use serde::de::{Error, Unexpected};
+        #[derive(Deserialize)]
+        enum Written {
+            Auto,
+            Rgb(Rgb),
+        }
+        match serde_json::Value::deserialize(d)? {
+            serde_json::Value::String(s) => {
+                TextColor::parse(&s).ok_or_else(|| D::Error::invalid_value(Unexpected::Str(&s), &"`auto`, `RRGGBB` or `#RRGGBB`"))
+            }
+            v => Ok(match serde_json::from_value(v).map_err(D::Error::custom)? {
+                Written::Auto => TextColor::Auto,
+                Written::Rgb(c) => TextColor::Rgb(c),
+            }),
+        }
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
@@ -1315,6 +1345,16 @@ mod tests {
     }
 
     #[test]
+    fn rgb_parse_rejects_non_hex() {
+        assert_eq!(Rgb::parse("+1+2+3"), None);
+        assert_eq!(Rgb::parse("-1-2-3"), None);
+        assert_eq!(Rgb::parse("##ff0000"), None);
+        assert_eq!(Rgb::parse("ff00 0"), None);
+        assert_eq!(Rgb::parse("#ff0000"), Some(Rgb(255, 0, 0)));
+        assert_eq!(Rgb::parse("ff0000"), Some(Rgb(255, 0, 0)));
+    }
+
+    #[test]
     fn overlay_keeps_unset() {
         let base = CharProps { bold: Some(true), size: Some(12.0), ..Default::default() };
         let patch = CharProps { size: Some(14.0), italic: Some(true), ..Default::default() };
@@ -1365,6 +1405,27 @@ mod tests {
         assert_eq!(TextDirection::from_ooxml("tb"), TextDirection::Horizontal);
         assert_eq!(TextDirection::from_ooxml("lrTbV"), TextDirection::Horizontal);
         assert_eq!(TextDirection::from_ooxml("é?"), TextDirection::Horizontal);
+    }
+
+    /// #865: a colour reads as `format.color` takes it (`RRGGBB`, `#RRGGBB`, `auto`), while what
+    /// documents and settings already hold reads and writes exactly as before.
+    #[test]
+    fn text_color_reads_hex_and_keeps_its_serialized_forms() {
+        let read = |j: &str| serde_json::from_str::<TextColor>(j);
+        let ink = TextColor::Rgb(Rgb(0x1B, 0x16, 0x11));
+        assert_eq!(read(r#""1B1611""#).unwrap(), ink);
+        assert_eq!(read(r##""#1b1611""##).unwrap(), ink);
+        assert_eq!(read(r#""auto""#).unwrap(), TextColor::Auto);
+        assert_eq!(read(r#""Automatic""#).unwrap(), TextColor::Auto);
+        for (c, j) in [(TextColor::Auto, r#""Auto""#), (ink, r#"{"Rgb":[27,22,17]}"#)] {
+            assert_eq!(serde_json::to_string(&c).unwrap(), j, "written as before");
+            assert_eq!(read(j).unwrap(), c);
+        }
+        for bad in [r#""1B161""#, r#""zzzzzz""#, r#""""#, r#"{"Rgb":"1B1611"}"#, r#"{"Hex":[1,2,3]}"#, "7", "[27,22,17]"] {
+            assert!(read(bad).is_err(), "{bad}");
+        }
+        let p: CharProps = serde_json::from_value(serde_json::json!({"color": "#1B1611", "bold": true})).unwrap();
+        assert_eq!((p.color, p.bold), (Some(ink), Some(true)));
     }
 
     #[test]

@@ -29,7 +29,14 @@ const MAX_STACK: usize = 256;
 /// Decode an entity body (`amp`, `#38`, `#x26`) to its text.
 pub fn decode_entity(name: &str) -> Option<String> {
     if let Some(num) = name.strip_prefix('#') {
-        let v = if let Some(h) = num.strip_prefix(['x', 'X']) { u32::from_str_radix(h, 16).ok()? } else { num.parse::<u32>().ok()? };
+        let (digits, radix) = match num.strip_prefix(['x', 'X']) {
+            Some(h) => (h, 16),
+            None => (num, 10),
+        };
+        if !digits.chars().all(|c| c.is_digit(radix)) {
+            return None;
+        }
+        let v = u32::from_str_radix(digits, radix).ok()?;
         let c = match v {
             0 => '\u{FFFD}',
             0x80..=0x9F => crate::txt::cp1252(v as u8),
@@ -234,21 +241,27 @@ impl Lexer<'_> {
             return Some(Tok::Text(String::new()));
         }
         if rest.starts_with("</") {
-            let name: String =
-                rest.strip_prefix("</").unwrap_or("").chars().take_while(|c| c.is_ascii_alphanumeric() || *c == ':' || *c == '-').collect();
+            let name: String = rest
+                .strip_prefix("</")
+                .unwrap_or("")
+                .chars()
+                .take_while(|c| c.is_ascii_alphanumeric() || *c == ':' || *c == '-')
+                .map(|c| c.to_ascii_lowercase())
+                .collect();
             if name.is_empty() {
                 self.pos += 2;
                 return Some(Tok::Text("</".into()));
             }
             self.skip_past(">");
-            return Some(Tok::End(name.to_ascii_lowercase()));
+            return Some(Tok::End(name));
         }
         if !b.get(1).is_some_and(|c| c.is_ascii_alphabetic()) {
             self.pos += 1;
             return Some(Tok::Text("<".into()));
         }
         // Start tag.
-        let name: String = rest[1..].chars().take_while(|c| c.is_ascii_alphanumeric() || *c == ':' || *c == '-').collect();
+        let name: String =
+            rest[1..].chars().take_while(|c| c.is_ascii_alphanumeric() || *c == ':' || *c == '-').map(|c| c.to_ascii_lowercase()).collect();
         let mut i = 1 + name.len();
         let mut attrs = Vec::new();
         let mut self_close = false;
@@ -312,7 +325,7 @@ impl Lexer<'_> {
             }
         }
         self.pos += i.min(rest.len());
-        Some(Tok::Start { name: name.to_ascii_lowercase(), attrs, self_close })
+        Some(Tok::Start { name, attrs, self_close })
     }
 }
 
@@ -492,11 +505,12 @@ fn css_len_pt(v: &str) -> Option<f32> {
         match v.as_str() {
             "xx-small" => Some(7.0),
             "x-small" => Some(7.5),
-            "small" => Some(10.0),
+            "small" | "smaller" => Some(10.0),
             "medium" => Some(12.0),
-            "large" => Some(13.5),
+            "large" | "larger" => Some(13.5),
             "x-large" => Some(18.0),
             "xx-large" => Some(24.0),
+            "xxx-large" => Some(36.0),
             _ => num(&v).map(|p| p * 0.75),
         }
     }
@@ -1030,6 +1044,8 @@ impl<'r> Builder<'r> {
             "code" | "kbd" | "tt" | "samp" => fmt.code = true,
             "sup" => fmt.sup = true,
             "sub" => fmt.sub = true,
+            "small" => fmt.size = Some(fmt.size.map_or(10.0, |s| (s * 0.833).max(1.0))),
+            "big" => fmt.size = Some(fmt.size.map_or(14.0, |s| (s * 1.2).min(1638.0))),
             "mark" => fmt.background = Some(doc4me_doc::Rgb(255, 255, 0)),
             "font" => {
                 if let Some(c) = attr(attrs, "color").and_then(parse_color) {
@@ -1570,6 +1586,13 @@ pub fn export_flow(flow: &Flow, lang: &str) -> String {
 mod tests {
     use super::*;
 
+    #[test]
+    fn numeric_entity_rejects_sign() {
+        assert_eq!(unescape("a&#+65;b"), "a&#+65;b");
+        assert_eq!(unescape("a&#x+41;b"), "a&#x+41;b");
+        assert_eq!(unescape("a&#65;&#x41;b"), "aAAb");
+    }
+
     fn texts(f: &Flow) -> Vec<String> {
         f.blocks
             .iter()
@@ -1716,5 +1739,21 @@ mod tests {
     #[test]
     fn entities() {
         assert_eq!(unescape("a &lt;b&gt; &#65;&#x42; &bogus; &"), "a <b> AB &bogus; &");
+    }
+
+    #[test]
+    fn small_big_and_css_font_sizes() {
+        let f = parse(
+            "<p><small>small</small> <big>big</big> <span style=\"font-size: xxx-large\">huge</span> <span style=\"font-size: smaller\">tiny</span></p>",
+        );
+        let FBlock::Para(p) = &f.blocks[0] else { panic!() };
+        let sz = |i: usize| match &p.inlines[i] {
+            Inline::Text(_, f) => f.size,
+            _ => None,
+        };
+        assert_eq!(sz(0), Some(10.0));
+        assert_eq!(sz(2), Some(14.0));
+        assert_eq!(sz(4), Some(36.0));
+        assert_eq!(sz(6), Some(10.0));
     }
 }

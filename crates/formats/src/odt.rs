@@ -37,6 +37,7 @@ fn x(s: &str) -> String {
             '>' => o.push_str("&gt;"),
             '"' => o.push_str("&quot;"),
             '\'' => o.push_str("&apos;"),
+            '\u{FFFE}' | '\u{FFFF}' => {}
             c if c.is_control() && !matches!(c, '\t' | '\n') => {}
             _ => o.push(c),
         }
@@ -644,7 +645,7 @@ struct StyleInfo {
 
 /// Length → points.
 fn length(v: &str) -> Option<f32> {
-    let v = v.trim();
+    let v = v.trim().to_ascii_lowercase();
     let num = |s: &str| s.trim().parse::<f32>().ok().filter(|x| x.is_finite());
     if let Some(n) = v.strip_suffix("pt") {
         num(n)
@@ -654,12 +655,12 @@ fn length(v: &str) -> Option<f32> {
         num(n).map(|x| x * 72.0 / 2.54)
     } else if let Some(n) = v.strip_suffix("mm") {
         num(n).map(|x| x * 72.0 / 25.4)
-    } else if let Some(n) = v.strip_suffix("pc") {
+    } else if let Some(n) = v.strip_suffix("pc").or_else(|| v.strip_suffix("pi")) {
         num(n).map(|x| x * 12.0)
     } else if let Some(n) = v.strip_suffix("px") {
         num(n).map(|x| x * 0.75)
     } else {
-        num(v)
+        num(&v)
     }
 }
 
@@ -1423,10 +1424,22 @@ mod tests {
     use super::*;
 
     #[test]
+    fn escaper_drops_noncharacters() {
+        assert_eq!(x("a\u{FFFF}b\u{FFFE}c\u{1}d\te"), "abcd\te");
+    }
+
+    #[test]
     fn lengths() {
         assert_eq!(length("1in"), Some(72.0));
         assert_eq!(length("12pt"), Some(12.0));
         assert!((length("2.54cm").unwrap() - 72.0).abs() < 0.01);
+        assert_eq!(length("1IN"), Some(72.0));
+        assert_eq!(length("12PT"), Some(12.0));
+        assert!((length("2.54CM").unwrap() - 72.0).abs() < 0.01);
+        assert!((length("25.4MM").unwrap() - 72.0).abs() < 0.01);
+        assert_eq!(length("1pc"), Some(12.0));
+        assert_eq!(length("1PI"), Some(12.0));
+        assert_eq!(length("10PX"), Some(7.5));
         assert_eq!(length("x"), None);
     }
 

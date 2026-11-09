@@ -89,6 +89,74 @@ fn enter_on_an_empty_nested_item_moves_it_up_a_level_first() {
     assert_eq!(paras(&s), vec![para("A", Some(0)), para("B", Some(1)), para("text", None)]);
 }
 
+/// #2143: in a Word file whose list comes from the paragraph styles (List Number, List Number 2
+/// with `w:numPr` in styles.xml, none on the paragraphs), Enter on an empty nested item moves it
+/// up a level and then ends the list, as with direct numbering.
+#[test]
+fn enter_on_an_empty_item_numbered_by_its_style_moves_it_up_a_level() {
+    use std::io::Write;
+    let w = r#"xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main""#;
+    let style = |id: &str, name: &str, ilvl: u8| {
+        format!(
+            r#"<w:style w:type="paragraph" w:styleId="{id}"><w:name w:val="{name}"/><w:pPr><w:numPr><w:ilvl w:val="{ilvl}"/><w:numId w:val="1"/></w:numPr></w:pPr></w:style>"#
+        )
+    };
+    let styles = format!(
+        r#"<w:styles {w}><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style>{}{}</w:styles>"#,
+        style("ListNumber", "List Number", 0),
+        style("ListNumber2", "List Number 2", 1)
+    );
+    let numbering = format!(
+        r#"<w:numbering {w}><w:abstractNum w:abstractNumId="0"><w:lvl w:ilvl="0"><w:start w:val="1"/><w:numFmt w:val="decimal"/><w:lvlText w:val="%1."/><w:pPr><w:ind w:left="720" w:hanging="360"/></w:pPr></w:lvl><w:lvl w:ilvl="1"><w:start w:val="1"/><w:numFmt w:val="lowerLetter"/><w:lvlText w:val="%2."/><w:pPr><w:ind w:left="1440" w:hanging="360"/></w:pPr></w:lvl></w:abstractNum><w:num w:numId="1"><w:abstractNumId w:val="0"/></w:num></w:numbering>"#
+    );
+    let p = |st: &str, text: &str| format!(r#"<w:p><w:pPr><w:pStyle w:val="{st}"/></w:pPr><w:r><w:t>{text}</w:t></w:r></w:p>"#);
+    let body: String =
+        [p("ListNumber", "Lorem"), p("ListNumber", "Ipsum"), p("ListNumber2", "Latin"), p("ListNumber2", "Nonsense"), p("ListNumber2", "")].concat();
+    let document = format!(r#"<w:document {w}><w:body>{body}</w:body></w:document>"#);
+    let rel = |id: &str, kind: &str, target: &str| {
+        format!(r#"<Relationship Id="{id}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/{kind}" Target="{target}"/>"#)
+    };
+    let rels_ns = r#"xmlns="http://schemas.openxmlformats.org/package/2006/relationships""#;
+    let main = format!("<Relationships {rels_ns}>{}</Relationships>", rel("rId1", "officeDocument", "word/document.xml"));
+    let doc_rels =
+        format!("<Relationships {rels_ns}>{}{}</Relationships>", rel("rId1", "styles", "styles.xml"), rel("rId2", "numbering", "numbering.xml"));
+    let ct = r#"<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/></Types>"#;
+    let mut z = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+    let o = zip::write::SimpleFileOptions::default();
+    for (name, data) in [
+        ("[Content_Types].xml", ct),
+        ("_rels/.rels", main.as_str()),
+        ("word/_rels/document.xml.rels", doc_rels.as_str()),
+        ("word/document.xml", document.as_str()),
+        ("word/styles.xml", styles.as_str()),
+        ("word/numbering.xml", numbering.as_str()),
+    ] {
+        z.start_file(name, o).unwrap();
+        z.write_all(data.as_bytes()).unwrap();
+    }
+    let doc = crate::io::open_bytes("t.docx", &z.finish().unwrap().into_inner()).unwrap();
+    let mut s = Session::new(doc);
+    // The list level each paragraph shows, wherever its numbering comes from.
+    let levels = |s: &Session| -> Vec<Option<u8>> {
+        s.doc
+            .body
+            .iter()
+            .filter_map(|b| b.as_para())
+            .map(|p| s.doc.styles.resolve_para(&p.props).numbering.filter(|n| n.num != 0).map(|n| n.level))
+            .collect()
+    };
+    assert_eq!(levels(&s), [Some(0), Some(0), Some(1), Some(1), Some(1)]);
+    s.sel = crate::Selection::caret(Pos::body(4, 0));
+    typ(&mut s, "\n");
+    assert_eq!(levels(&s), [Some(0), Some(0), Some(1), Some(1), Some(0)]);
+    assert_eq!(s.sel.focus, Pos::body(4, 0));
+    typ(&mut s, "\n");
+    assert_eq!(levels(&s), [Some(0), Some(0), Some(1), Some(1), None]);
+    run(&mut s, "edit.undo", json!({}));
+    run(&mut s, "edit.undo", json!({}));
+    assert_eq!(levels(&s), [Some(0), Some(0), Some(1), Some(1), Some(1)]);
+}
+
 #[test]
 fn shift_tab_and_tab_change_list_levels() {
     let mut s = typed("1. One\nTwo\n\tSub a\nSub b\n");
@@ -234,8 +302,8 @@ fn web_addresses_become_links() {
 
 #[test]
 fn dashes() {
-    let s = typed("a -- b and c - d and e--f ");
-    assert_eq!(s.doc.plain_text(StoryRef::Body), "A – b and c – d and e—f ");
+    let s = typed("a -- b and c - d and e--f and café--g ");
+    assert_eq!(s.doc.plain_text(StoryRef::Body), "A – b and c – d and e—f and café—g ");
 }
 
 #[test]
@@ -740,4 +808,31 @@ fn typing_rtl_letters_into_an_empty_paragraph_makes_it_rtl() {
     }
     let x = doc.layout().caret(&doc.sel.focus).map(|c| c.x).unwrap_or(f32::MAX);
     assert!(x < 300.0, "left-to-right paragraph: caret at {x}");
+}
+
+/// #898: a click just after a citation at the end of a paragraph puts the caret before the
+/// citation's hidden field end; what is typed there goes after the citation, as in Word, instead
+/// of into its result (Zotero then reports the citation as edited by hand).
+#[test]
+fn typing_after_a_citation_goes_outside_its_field() {
+    use doc4me_doc::props::CharProps;
+    use doc4me_doc::{InlineObject, Path};
+    let mut doc = doc4me_doc::Document::from_text("Cats purr ");
+    let c = CharProps::default();
+    let p = doc.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    let start = p.len();
+    p.insert_object(start, InlineObject::FieldStart { instr: "ADDIN ZOTERO_ITEM CSL_CITATION {}".into(), locked: false }, &c).unwrap();
+    let n = p.insert_text(p.len(), "(Smith 2020)", &c).unwrap();
+    p.insert_object(start + 3 + n, InlineObject::FieldEnd, &c).unwrap();
+    let mut s = Session::new(doc);
+    let end = Pos::body(0, s.doc.para(StoryRef::Body, &Path::top(0)).unwrap().len());
+    let at = s.layout().caret(&end).unwrap();
+    let hit = s.layout().hit(at.page, at.x + 20.0, at.top + at.height / 2.0, StoryRef::Body).unwrap();
+    s.sel = crate::Selection::caret(hit);
+    typ(&mut s, ". Dogs bark.");
+    assert_eq!(s.doc.plain_text(StoryRef::Body), "Cats purr (Smith 2020). Dogs bark.");
+    let f = s.doc.field_ranges(StoryRef::Body);
+    assert_eq!(f.len(), 1);
+    let inside = Pos { off: f[0].start.off + doc4me_doc::para::OBJ.len_utf8(), ..f[0].start.clone() };
+    assert_eq!(s.doc.copy_range(&inside, &f[0].end).plain_text(), "(Smith 2020)");
 }

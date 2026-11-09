@@ -438,6 +438,44 @@ pub fn render_region(doc: &Document, page: &Page, w: u32, h: u32, view: Affine, 
     Rendered { width: w16 as u32, height: h16 as u32, pixels }
 }
 
+/// One line of `text` in `face` at `size` points, black on white, in a `w`×`h` point raster at
+/// `scale` pixels per point, starting `margin` points in with the baseline `margin` + the face's
+/// ascent down: a font list entry. Outlines come straight from the face, not the shared outline
+/// cache, so a face read just for the preview leaves nothing behind once dropped (#848).
+pub fn render_text_line(face: &doc4me_fonts::FontFace, text: &str, size: f32, w: f32, h: f32, margin: f32, scale: f32) -> Rendered {
+    let fin = |v: f32, d: f32| if v.is_finite() && v >= 0.0 { v } else { d };
+    let (size, w, h, margin) = (fin(size, 12.0).min(1000.0) as f64, fin(w, 1.0), fin(h, 1.0), fin(margin, 0.0).min(1000.0) as f64);
+    let scale = if scale.is_finite() && scale > 0.0 { scale.min(16.0) } else { 1.0 };
+    let (w16, h16) = (((w * scale).ceil() as u32).clamp(1, MAX_SIDE) as u16, ((h * scale).ceil() as u32).clamp(1, MAX_SIDE) as u16);
+    let mut ctx = RenderContext::new_with(w16, h16, vello_cpu::RenderSettings { num_threads: 0, ..Default::default() });
+    ctx.set_transform(Affine::IDENTITY);
+    ctx.set_paint(color(Rgb(255, 255, 255), 1.0));
+    ctx.fill_rect(&kurbo::Rect::new(0.0, 0.0, w16 as f64, h16 as f64));
+    ctx.set_paint(color(Rgb(0, 0, 0), 1.0));
+    let upem = if face.upem.is_finite() && face.upem > 0.0 { face.upem } else { 1000.0 };
+    let k = size / upem;
+    let view = Affine::scale(scale as f64);
+    let ascent = if face.ascent.is_finite() { face.ascent.clamp(0.0, upem * 4.0) } else { upem * 0.8 };
+    let baseline = margin + ascent * k;
+    let mut x = margin;
+    for g in doc4me_fonts::shape(face, text, &[], |c| c) {
+        let o = face.glyph_outline(g.gid);
+        ctx.set_transform(view * Affine::translate((x + g.x_offset as f64 * k, baseline - g.y_offset as f64 * k)) * Affine::scale(k));
+        ctx.fill_path(&o);
+        x += g.x_advance as f64 * k;
+        if x > w as f64 {
+            break;
+        }
+    }
+    ctx.flush();
+    let mut pixels = vec![0u8; w16 as usize * h16 as usize * 4];
+    let mut res = Resources::new();
+    if let Some(pm) = vello_cpu::PixmapMut::new(w16, h16, &mut pixels) {
+        ctx.render(pm, &mut res);
+    }
+    Rendered { width: w16 as u32, height: h16 as u32, pixels }
+}
+
 fn draw_watermark(ctx: &mut RenderContext, view: Affine, page: &Page, wm: &doc4me_doc::Watermark, opts: &RenderOptions) {
     let r = doc4me_fonts::word::resolve(&wm.font, false, false);
     let face = r.face;
@@ -642,9 +680,7 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                 return;
             };
             let (pw, ph) = (pm.width().max(1) as f64, pm.height().max(1) as f64);
-            let [cl, ct, cr, cb] = crop.map(|v| if v.is_finite() { v.clamp(0.0, 0.95) as f64 } else { 0.0 });
-            let vis_w = (1.0 - cl - cr).max(0.05);
-            let vis_h = (1.0 - ct - cb).max(0.05);
+            let [cl, ct, vis_w, vis_h] = doc4me_metafile::crop_window(*crop);
             let sx = r.width() / (pw * vis_w);
             let sy = r.height() / (ph * vis_h);
             ctx.set_transform(view);
@@ -1183,6 +1219,51 @@ mod tests {
         let left = img.pixel((rect.x + rect.w * 0.25) as u32, y);
         assert!(right[0] > 200 && right[1] < 60 && right[2] < 60, "right half should be red: {right:?}");
         assert!(left[..3].iter().all(|c| *c > 200), "left half should be paper, not the grey box: {left:?}");
+    }
+
+    /// #1899: a crop that keeps a sliver of the picture (3% here; a header's bar can be 2.7% of a
+    /// page-sized metafile) stretches that sliver over the frame, as the file says, for vector and
+    /// bitmap pictures alike. Both pictures are paper on the left half and red on the right.
+    #[test]
+    fn a_crop_keeping_a_sliver_fills_the_frame_with_it() {
+        let mut png = Vec::new();
+        image::RgbaImage::from_fn(100, 100, |x, _| image::Rgba(if x >= 50 { [255, 0, 0, 255] } else { [255; 4] }))
+            .write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png)
+            .unwrap();
+        for (bytes, ext) in [(red_right_half_emf(), "emf"), (png, "png")] {
+            // (crop, where in the frame, red?): 47–50% of the source is all paper; 50–53% all red.
+            for (crop, at, red) in [([0.47, 0.47, 0.5, 0.5], 0.7, false), ([0.5, 0.47, 0.47, 0.5], 0.3, true)] {
+                let mut d = Document::new();
+                let media = d.add_media(bytes.clone(), ext);
+                let mut p = doc4me_doc::Paragraph::new();
+                let obj = doc4me_doc::para::InlineObject::Image {
+                    media,
+                    w: 70.0,
+                    h: 70.0,
+                    alt: String::new(),
+                    float: Default::default(),
+                    crop,
+                    ole: None,
+                    video: None,
+                };
+                p.insert_object(0, obj, &Default::default()).unwrap();
+                d.body = vec![doc4me_doc::para_block(p)];
+                let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+                let opts = RenderOptions::default();
+                let rect = page_display(&d, &l.pages[0], &opts.display)
+                    .iter()
+                    .find_map(|i| match i {
+                        Draw::Image { rect, .. } => Some(*rect),
+                        _ => None,
+                    })
+                    .expect("a picture on the page");
+                let img = render_page(&d, &l.pages[0], 1.0, &opts);
+                let px = img.pixel((rect.x + rect.w * at) as u32, (rect.y + rect.h * at) as u32);
+                let is_red = px[0] > 200 && px[1] < 60 && px[2] < 60;
+                let is_paper = px[..3].iter().all(|c| *c > 200);
+                assert!(if red { is_red } else { is_paper }, "{ext} crop {crop:?} at {at}: {px:?}");
+            }
+        }
     }
 
     #[test]

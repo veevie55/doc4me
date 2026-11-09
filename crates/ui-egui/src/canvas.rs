@@ -517,8 +517,8 @@ pub fn geometry(app: &WordApp, l: &DocLayout, avail: egui::Vec2) -> Geometry {
         scale = PX_PER_PT;
     }
     // Pages flow side by side in Print Layout whenever more than one fits across; One Page and
-    // Page Width show one per row, Web Layout has no pages. Reading Mode is handled above.
-    let (min_cols, auto) = if web || v.fit == "onePage" || v.fit == "pageWidth" {
+    // Page Width show one per row (and so does a zoom after One Page, #768), Web Layout has no pages. Reading Mode is handled above.
+    let (min_cols, auto) = if web || v.fit == "onePage" || v.fit == "pageWidth" || v.single_column {
         (1, false)
     } else if v.multi_page {
         (2, true)
@@ -697,6 +697,15 @@ fn drawing_grid(body: doc4me_geom::Rect, step: (f32, f32)) -> (Vec<f32>, Vec<f32
         (0..DRAWING_GRID_MAX_LINES).map(|k| start + k as f32 * step).take_while(|p| *p <= end).collect()
     };
     (axis(body.x, body.w, step.0), axis(body.y, body.h, step.1))
+}
+
+/// The cells Table Layout › View Gridlines outlines on a page: the body's tables and the
+/// header's and footer's (#1628), skipping cells covered by a merge.
+fn gridline_cells(page: &Page) -> impl Iterator<Item = doc4me_geom::Rect> + '_ {
+    page.items.iter().chain(&page.header).chain(&page.footer).filter_map(|it| match it {
+        Placed::Cell { rect, covered: false, .. } => Some(*rect),
+        _ => None,
+    })
 }
 
 /// The drawing grid's spacing in points at a screen scale: the document's spacing (`w:drawingGrid*Spacing`;
@@ -1088,14 +1097,12 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             }
             // Table Layout › View Gridlines: table cell outlines (on screen only).
             if app.session.view.table_gridlines {
-                for it in &page.items {
-                    if let Placed::Cell { rect, covered: false, .. } = it {
-                        let r = Rect::from_min_size(
-                            pos2(visual_sr.min.x + rect.x * page_scale, visual_sr.min.y + rect.y * page_scale),
-                            vec2(rect.w * page_scale, rect.h * page_scale),
-                        );
-                        painter.rect_stroke(r, 0.0, Stroke::new(0.5, t.blue.linear_multiply(0.6)), egui::StrokeKind::Middle);
-                    }
+                for rect in gridline_cells(page) {
+                    let r = Rect::from_min_size(
+                        pos2(visual_sr.min.x + rect.x * page_scale, visual_sr.min.y + rect.y * page_scale),
+                        vec2(rect.w * page_scale, rect.h * page_scale),
+                    );
+                    painter.rect_stroke(r, 0.0, Stroke::new(0.5, t.blue.linear_multiply(0.6)), egui::StrokeKind::Middle);
                 }
             }
         }
@@ -3138,6 +3145,26 @@ mod tests {
 
     /// 0.5 cm in points.
     const HALF_CM: f32 = 72.0 * 0.5 / 2.54;
+
+    #[test]
+    fn table_gridlines_include_header_and_footer_tables() {
+        let cell = |y: f32, covered: bool, story: StoryRef| Placed::Cell {
+            rect: doc4me_geom::Rect::new(0.0, y, 10.0, 10.0),
+            covered,
+            table: Default::default(),
+            row: 0,
+            cell: 0,
+            story,
+        };
+        let page = Page {
+            items: vec![cell(100.0, false, StoryRef::Body), cell(110.0, true, StoryRef::Body)],
+            header: vec![cell(10.0, false, StoryRef::Part(1))],
+            footer: vec![cell(200.0, false, StoryRef::Part(2))],
+            ..Default::default()
+        };
+        let ys: Vec<f32> = gridline_cells(&page).map(|r| r.y).collect();
+        assert_eq!(ys, [100.0, 10.0, 200.0]);
+    }
 
     #[test]
     fn drawing_grid_starts_at_the_margins_and_stays_inside_them() {

@@ -24,12 +24,45 @@ pub struct ControlRequest {
     pub method: String,
     pub params: Value,
     pub reply: Sender<Value>,
+    /// Shared with the waiter: whichever of "start" and "give up" happens first wins.
+    state: std::sync::Arc<std::sync::atomic::AtomicU8>,
+}
+
+const QUEUED: u8 = 0;
+const STARTED: u8 = 1;
+const CANCELLED: u8 = 2;
+
+/// The waiter's side of a [`ControlRequest`]: it gives up on a request that has not started.
+#[derive(Clone)]
+pub struct ControlWaiter(std::sync::Arc<std::sync::atomic::AtomicU8>);
+
+impl ControlWaiter {
+    /// Cancel the request. True when it had not started: it will never run. False when the UI
+    /// already started it: its outcome is unknown to the waiter.
+    pub fn cancel(&self) -> bool {
+        use std::sync::atomic::Ordering::SeqCst;
+        self.0.compare_exchange(QUEUED, CANCELLED, SeqCst, SeqCst).is_ok()
+    }
 }
 
 impl ControlRequest {
     pub fn new(method: impl Into<String>, params: Value) -> (Self, std::sync::mpsc::Receiver<Value>) {
+        let (req, rx, _) = Self::with_waiter(method, params);
+        (req, rx)
+    }
+
+    /// Like [`ControlRequest::new`], plus the handle the waiter uses to cancel a queued request.
+    pub fn with_waiter(method: impl Into<String>, params: Value) -> (Self, std::sync::mpsc::Receiver<Value>, ControlWaiter) {
         let (tx, rx) = std::sync::mpsc::channel();
-        (Self { method: method.into(), params, reply: tx }, rx)
+        let state = std::sync::Arc::new(std::sync::atomic::AtomicU8::new(QUEUED));
+        (Self { method: method.into(), params, reply: tx, state: state.clone() }, rx, ControlWaiter(state))
+    }
+
+    /// The UI is about to run the request. False when the waiter already gave up on it: it
+    /// must not run.
+    pub fn start(&self) -> bool {
+        use std::sync::atomic::Ordering::SeqCst;
+        self.state.compare_exchange(QUEUED, STARTED, SeqCst, SeqCst).is_ok()
     }
 }
 
@@ -322,9 +355,61 @@ pub fn save_screenshot(image: &egui::ColorImage, path: Option<&str>) -> Value {
     let _ = (&png, path);
     #[cfg(not(target_arch = "wasm32"))]
     {
-        if let Err(e) = std::fs::write(path, &png) {
-            return json!({"ok": false, "error": format!("{path}: {e}")});
+        if !path.to_ascii_lowercase().ends_with(".png") {
+            return json!({"ok": false, "error": format!("{path}: a screenshot path must end in .png")});
+        }
+        if let Err(e) = doc4me_engine::io::write_file(path, &png) {
+            return json!({"ok": false, "error": e});
         }
     }
     json!({"ok": true, "result": {"path": path, "width": w, "height": h}})
+}
+
+#[cfg(test)]
+mod screenshot_tests {
+    use super::save_screenshot;
+
+    struct Cleanup(std::path::PathBuf);
+
+    impl Drop for Cleanup {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.0);
+        }
+    }
+
+    #[test]
+    fn screenshot_path_must_be_png_and_does_not_follow_symlinks() {
+        let dir = std::env::temp_dir().join(format!("wc-shot-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let _cleanup = Cleanup(dir.clone());
+        let img = egui::ColorImage::filled([2, 2], egui::Color32::RED);
+
+        let txt = dir.join("shot.txt");
+        let r = save_screenshot(&img, txt.to_str());
+        assert_eq!(r["ok"], false);
+        assert!(!txt.exists());
+
+        let png = dir.join("shot.png");
+        let r = save_screenshot(&img, png.to_str());
+        assert_eq!(r["ok"], true);
+        assert!(std::fs::read(&png).unwrap().starts_with(b"\x89PNG"));
+
+        #[cfg(unix)]
+        {
+            let victim = dir.join("victim.txt");
+            std::fs::write(&victim, "keep").unwrap();
+            let link = dir.join("link.png");
+            std::os::unix::fs::symlink(&victim, &link).unwrap();
+            let _ = save_screenshot(&img, link.to_str());
+            assert_eq!(std::fs::read_to_string(&victim).unwrap(), "keep");
+        }
+
+        let other = dir.join("other");
+        std::fs::create_dir_all(&other).unwrap();
+        let roots = doc4me_engine::file_access::AutomationRoots::new(None, Some(&other)).unwrap();
+        let outside = dir.join("outside.png");
+        let r = doc4me_engine::file_access::confine(roots.as_ref(), || save_screenshot(&img, outside.to_str()));
+        assert_eq!(r["ok"], false);
+        assert!(!outside.exists());
+    }
 }

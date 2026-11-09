@@ -429,6 +429,17 @@ fn shapes_have_paths() {
     ] {
         assert!(shape_path(k, &r).is_some(), "{k:?}");
     }
+    // A line or connector may be flat (horizontal or vertical); a closed shape may not.
+    for k in [ShapeKind::Line, ShapeKind::StraightConnector] {
+        assert!(shape_path(k, &Rect::new(0.0, 5.0, 10.0, 0.0)).is_some(), "{k:?} horizontal");
+        assert!(shape_path(k, &Rect::new(5.0, 0.0, 0.0, 10.0)).is_some(), "{k:?} vertical");
+        assert!(shape_path(k, &Rect::new(5.0, 5.0, 0.0, 0.0)).is_none(), "{k:?} without length");
+        // Hostile sizes reach `shape_path` unclamped through the public fields.
+        for (w, h) in [(f32::NAN, 0.0), (f32::INFINITY, 0.0), (10.0, f32::NEG_INFINITY), (-10.0, 0.0), (0.0, -10.0), (10.0, -1.0)] {
+            assert!(shape_path(k, &Rect { x: 0.0, y: 0.0, w, h }).is_none(), "{k:?} {w} x {h}");
+        }
+    }
+    assert!(shape_path(ShapeKind::Rectangle, &Rect::new(0.0, 5.0, 10.0, 0.0)).is_none());
     assert!(shape_path(ShapeKind::Ellipse, &Rect::new(0.0, 0.0, f32::NAN, 1.0)).is_none());
     assert_eq!(parse_iso("2024-02-03T04:05:06Z"), Some((2024, 2, 3, 4, 5, 6)));
     assert_eq!(parse_iso("garbage"), None);
@@ -555,6 +566,43 @@ fn unsubsettable_font_is_drawn_as_outlines() {
     let (glyphs, paths) = count_glyphs_and_paths(&bytes);
     assert_eq!(glyphs, 0, "no text in the font krilla can't subset");
     assert!(paths > 0, "its glyphs are drawn as outlines");
+}
+
+#[test]
+fn flat_lines_in_a_group_are_drawn() {
+    // A horizontal divider inside a group has no height (`a:ext cy="0"`): it used to be left out
+    // of the PDF, though the screen drew it. A floating line on its own gets a 1 pt frame.
+    use doc4me_doc::para::{Anchor, Float, GroupChild, ShapeKind, Wrap};
+    let line = |w: f32, h: f32| InlineObject::Shape {
+        kind: ShapeKind::Line,
+        w,
+        h,
+        fill: None,
+        stroke: Some(doc4me_doc::props::Rgb(192, 0, 0)),
+        stroke_width: 1.5,
+        float: Float::default(),
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    let doc = |children: Vec<GroupChild>| {
+        let float = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 72.0, y: 200.0, ..Default::default() };
+        let group = InlineObject::Group { w: 300.0, h: 100.0, float, ch_w: 300.0, ch_h: 100.0, children, canvas: None };
+        let mut p = Paragraph::with_text("Anchor", CharProps::default());
+        p.insert_object(0, group, &CharProps::default()).unwrap();
+        let mut d = Document::new();
+        d.body = vec![para_block(p)];
+        d
+    };
+    let paths = |d: &Document| count_glyphs_and_paths(&export(d, &PdfOptions { tagged: false, ..Default::default() }).unwrap()).1;
+    let empty = paths(&doc(Vec::new()));
+    let flat = paths(&doc(vec![
+        GroupChild { x: 10.0, y: 50.0, obj: line(280.0, 0.0) },
+        GroupChild { x: 150.0, y: 0.0, obj: line(0.0, 100.0) },
+        GroupChild { x: 20.0, y: 20.0, obj: line(0.0, 0.0) },
+    ]));
+    assert_eq!(flat, empty + 2, "the horizontal and the vertical line, not the one without length");
 }
 
 #[test]
@@ -823,6 +871,7 @@ fn bookmark_destination_is_the_page_of_its_start() {
         tags: Vec::new(),
         tag_index: HashMap::new(),
         links: Vec::new(),
+        bookmarks: std::cell::OnceCell::new(),
     };
     let (page, x, y) = ex.bookmark("target").unwrap();
     assert_eq!(page, 1, "the bookmark is on the second page");
@@ -865,4 +914,41 @@ fn comments_print_in_balloons_beside_scaled_pages() {
         let bytes = export(&d2, &PdfOptions { tagged, comments: true, ..Default::default() }).unwrap();
         assert!(squash(&extract_text(&bytes).concat()).contains("On the heading"));
     }
+}
+
+/// A long document whose every paragraph links to a bookmark (a linked table of contents, cross
+/// references) exports in time proportional to its length: each link looked its bookmark up by
+/// walking the whole document, so NIH's 67-page protocol template took 10.6 s (0.9 s now).
+#[test]
+fn internal_links_export_in_linear_time() {
+    let doc = |n: usize| {
+        let mut d = Document::new();
+        d.body = (0..n)
+            .map(|i| {
+                // Eight links a paragraph, like a dense table of contents or cross-references.
+                let mut p = doc4me_doc::Paragraph::new();
+                for k in 0..8 {
+                    let link = CharProps { link: Some(format!("#mark{}", (i * 7 + k) % n)), ..CharProps::default() };
+                    p.insert_text(p.len(), &format!("see {k} "), &link).unwrap();
+                }
+                p.insert_object(0, InlineObject::BookmarkStart { name: format!("mark{i}") }, &CharProps::default()).unwrap();
+                para_block(p)
+            })
+            .collect();
+        d
+    };
+    let fastest = |d: &Document| {
+        (0..3)
+            .map(|_| {
+                let t = std::time::Instant::now();
+                let bytes = export(d, &PdfOptions::default()).unwrap();
+                assert!(!bytes.is_empty());
+                t.elapsed().as_secs_f64()
+            })
+            .fold(f64::INFINITY, f64::min)
+    };
+    let (small, big) = (doc(100), doc(400));
+    let _ = export(&small, &PdfOptions::default());
+    let ratio = fastest(&big) / fastest(&small).max(1e-9);
+    assert!(ratio < 9.0, "4x the paragraphs and links took {ratio:.1}x as long (quadratic would be ~16x)");
 }

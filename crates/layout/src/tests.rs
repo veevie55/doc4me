@@ -283,7 +283,7 @@ fn hidden_text_adds_no_line_break_opportunity_when_not_shown() {
 
 /// How much bigger the second document is in the linear-time tests. At 8x a linear layout costs
 /// about 8x as much and a quadratic one about 64x, so a limit of 24x stays far from both.
-const SCALE: usize = 8;
+pub(crate) const SCALE: usize = 8;
 
 /// The CPU time `f` takes on this thread, in seconds. On Linux it is the scheduler's count of the
 /// time the thread actually ran, so the time it waits while other work on a busy machine has the
@@ -306,7 +306,7 @@ fn cpu_cost(f: &mut impl FnMut()) -> f64 {
 /// cheapest of several runs after a warm-up, the runs alternating so a busy spell slows both sizes
 /// alike; `small` is timed `scale` times over per run, so both timings are long against the clock's
 /// resolution.
-fn cost_ratio(scale: usize, mut small: impl FnMut(), mut big: impl FnMut()) -> (f64, f64, f64) {
+pub(crate) fn cost_ratio(scale: usize, mut small: impl FnMut(), mut big: impl FnMut()) -> (f64, f64, f64) {
     small();
     big();
     let mut small_scaled = || (0..scale).for_each(|_| small());
@@ -525,6 +525,25 @@ fn tabs_land_on_default_stops() {
     let l = lay(&d);
     let xb = l.caret(&Pos::body(0, 2)).unwrap().x;
     assert!((xb - (72.0 + 36.0)).abs() < 0.5, "{xb}");
+}
+
+/// Left of the margin Word's next default tab stop is the first multiple of the interval at or
+/// after the position (its arithmetic truncates toward zero), so a tab already on a stop stays
+/// put. Measured on Word: "a\t\tX" at -60 pt puts X at -36 pt (not 0), "\tX" starting at -72 pt
+/// leaves X at -72, at -60 moves it to -36; right of the margin the stops are as usual.
+/// Letterheads that line up a footer with tabs under a negative indent rely on it.
+#[test]
+fn tabs_left_of_the_margin_stay_on_a_default_stop() {
+    let x_of = |text: &str, indent: f32, off: usize| {
+        let mut d = Document::from_text(text);
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_left = Some(indent)).unwrap();
+        lay(&d).caret(&Pos::body(0, off)).unwrap().x - 72.0
+    };
+    assert!((x_of("a\t\tX", -60.0, 3) - -36.0).abs() < 0.5, "second tab from a stop left of the margin: {}", x_of("a\t\tX", -60.0, 3));
+    assert!((x_of("\tX", -72.0, 1) - -72.0).abs() < 0.5, "leading tab on a stop: {}", x_of("\tX", -72.0, 1));
+    assert!((x_of("\tX", -60.0, 1) - -36.0).abs() < 0.5, "leading tab between stops: {}", x_of("\tX", -60.0, 1));
+    assert!((x_of("\t \tX", -60.0, 3) - 0.0).abs() < 0.5, "a space between the tabs: {}", x_of("\t \tX", -60.0, 3));
+    assert!((x_of("a\t\tX", 0.0, 3) - 72.0).abs() < 0.5, "right of the margin: {}", x_of("a\t\tX", 0.0, 3));
 }
 
 #[test]
@@ -865,6 +884,39 @@ fn headers_and_page_fields() {
     let c = l.caret_on(&Pos { story: StoryRef::Part(id), path: Path::top(0), off: 0 }, 1).unwrap();
     assert_eq!(c.page, 1);
     assert!(c.top > 700.0);
+}
+
+/// Spaces typed at the end of a line hang past the right margin (they don't wrap), but the caret
+/// after them stays at the margin, as in Word, instead of running off the page (#2146). A letter
+/// typed after them wraps to the next line. Same in the body and in a header.
+#[test]
+fn caret_after_hanging_spaces_stays_at_the_margin() {
+    let spaces = format!("a{}", " ".repeat(200));
+    for header in [false, true] {
+        for text in [spaces.clone(), format!("{spaces}b")] {
+            let mut d = Document::new();
+            let p = doc4me_doc::Paragraph::with_text(&text, Default::default());
+            let pos = if header {
+                let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(p)]);
+                d.last_section.headers.default = Some(id);
+                Pos { story: StoryRef::Part(id), path: Path::top(0), off: text.len() }
+            } else {
+                d.body = vec![doc4me_doc::para_block(p)];
+                Pos::body(0, text.len())
+            };
+            let right = d.last_section.page_w - d.last_section.margin_right;
+            let l = lay(&d);
+            let items = if header { &l.pages[0].header } else { &l.pages[0].items };
+            let lines = items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.lines.len()) } else { None }).unwrap();
+            let c = l.caret(&pos).unwrap();
+            let typed = text.ends_with('b');
+            assert_eq!(lines, if typed { 2 } else { 1 }, "header {header}, letter typed {typed}");
+            assert!(c.x <= right + 0.5, "header {header}, letter typed {typed}: caret at {} past the margin at {right}", c.x);
+            if !typed {
+                assert!(c.x >= right - 0.5, "header {header}: the caret sits at the margin, after the spaces ({})", c.x);
+            }
+        }
+    }
 }
 
 #[test]
@@ -1996,6 +2048,60 @@ fn square_wrap_flows_text_on_both_sides() {
     assert!(para.lines.iter().all(|ln| !ln.beside && ink_end(para, ln) <= (r2.x - x).max(ln.right) + 0.01));
 }
 
+/// #1376: a word too long for the strip beside a square-wrapped object moves on whole (to the
+/// row's next strip, or the next row) instead of being split across the strip; words that fit
+/// still use it, and a word wider than the whole line still breaks where it is.
+#[test]
+fn a_word_too_wide_for_the_strip_beside_a_float_moves_on_whole() {
+    use doc4me_doc::para::{Anchor, Float, ShapeKind, Wrap};
+    // A `w` x 150pt square at `x` in the 468pt column, leaving a 32pt strip on its right. Each
+    // line: (top, left, beside the object's far side, ends inside a word, where its text ends).
+    let lines = |text: &str, x: f32, w: f32| {
+        let mut d = Document::from_text(&text.repeat(6));
+        let float = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x, ..Default::default() };
+        let shape = InlineObject::Shape {
+            kind: ShapeKind::Rectangle,
+            w,
+            h: 150.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            effects: Default::default(),
+            freeform: None,
+            extra: Default::default(),
+        };
+        d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { story: StoryRef::Body, .. })) else {
+            panic!()
+        };
+        let split = |ln: &para::Line| ln.end == para::LineEnd::Wrap && ln.c1 > ln.c0 && !para.clusters[ln.c1 - 1].break_after;
+        para.lines.iter().map(|ln| (ln.top, ln.left, ln.beside, split(ln), ink_end(para, ln))).collect::<Vec<_>>()
+    };
+    let long = "La presente procedura descrive le modalità della documentazione sanitaria del reparto e delle responsabilità degli operatori. ";
+    // The strip right of the object, after the text on its left.
+    let right = lines(long, 468.0 - 150.0 - 32.0, 150.0);
+    assert!(right.iter().all(|l| !l.3 && l.4 <= 468.01), "{right:?}");
+    let short = lines("It is so, as it is to be, if we go on. ", 468.0 - 150.0 - 32.0, 150.0);
+    assert!(short.iter().any(|l| l.2) && short.iter().all(|l| !l.3), "{short:?}");
+    // The strip is the row's only span: long words go below the object.
+    let only = lines(long, 0.0, 468.0 - 32.0);
+    assert!(only.iter().all(|l| !l.3 && (l.0 >= 150.0 - 0.01 || l.1 >= 468.0 - 32.0 - 0.01)), "{only:?}");
+    assert!(only.iter().any(|l| l.0 >= 150.0 - 0.01 && l.1 < 1.0), "{only:?}");
+    // A word wider than the whole line breaks where it is, beside the object.
+    let huge = lines(&format!("{} ", "x".repeat(120)), 468.0 - 150.0 - 32.0, 150.0);
+    assert!(huge[0].0 < 1.0 && huge.iter().any(|l| l.3), "{huge:?}");
+    // The strip left of the object: a skipped strip leaves the row's other span its first line.
+    let left = lines(long, 32.0, 150.0);
+    assert!(left.iter().all(|l| !l.3) && left.iter().any(|l| l.0 < 150.0 && l.1 >= 182.0 - 0.01 && !l.2), "{left:?}");
+    // Rows go down the page, and a line beside the object shares its row with the line before it.
+    for ls in [&right, &short, &only, &huge, &left] {
+        assert!(ls.windows(2).all(|w| if w[1].2 { w[1].0 == w[0].0 } else { w[1].0 > w[0].0 }), "{ls:?}");
+    }
+}
+
 /// Where a line's text ends (its last non-space cluster's right edge; trailing spaces may hang
 /// past the margin), relative to the column.
 fn ink_end(pl: &ParaLayout, ln: &para::Line) -> f32 {
@@ -2494,6 +2600,21 @@ fn float_follows_its_paragraph_to_the_next_page() {
     assert!((r.y - 72.0).abs() < 0.5, "at the top of page two: {r:?}");
     let Placed::Lines { para, .. } = l.pages[1].items.iter().find(|i| matches!(i, Placed::Lines { .. })).unwrap() else { panic!() };
     assert!(para.lines[0].left >= 144.0, "text wraps beside it: {}", para.lines[0].left);
+}
+
+/// A floating object belongs to its paragraph, not to the line holding its anchor: Word draws
+/// it on the page the paragraph starts on. A Word cover page is one paragraph holding a page
+/// break and then the page-anchored text box with the title; the box stays on the cover.
+#[test]
+fn a_float_anchored_after_a_page_break_stays_on_its_paragraph_s_first_page() {
+    let mut d = Document::from_text(&format!("{}\nAfter the cover", doc4me_doc::para::PAGE_BREAK));
+    d.insert_object(&Pos::body(0, 1), rect_shape(200.0, 100.0, page_float(100.0, 300.0)), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let on_cover = shapes(&l.pages[0].items);
+    assert_eq!(on_cover.len(), 1, "the shape is drawn on the cover: {on_cover:?}");
+    assert!((on_cover[0].y - 300.0).abs() < 0.5, "{:?}", on_cover[0]);
+    assert!(shapes(&l.pages[1].items).is_empty(), "and not again on page two");
 }
 
 #[test]
