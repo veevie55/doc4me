@@ -255,7 +255,9 @@ pub static LANGUAGES: [LangInfo; 72] = [
     // AI-generated draft from English source meanings; native-speaker review is still required.
     LangInfo { code: "hy", name: "Հայերեն", source: include_str!("hy.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
     // AI-generated draft from English source meanings; native-speaker review is still required.
-    LangInfo { code: "ka", name: "ქართული", source: include_str!("ka.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "ka", name: "ქართული", source: include_str!("ka.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
     // AI-generated draft from English source meanings; native-speaker review is still required.
     LangInfo { code: "ko", name: "한국어", source: include_str!("ko.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
 ];
