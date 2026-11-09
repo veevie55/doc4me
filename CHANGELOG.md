@@ -411,6 +411,13 @@
   - ตรวจสอบ: run 42274814600 สำเร็จบน Windows ครบ 222 เอกสาร; ได้ 91.3% รวม/93.2% โดยไม่รวม 22 deferred และ workflow สร้าง `docs/readiness.md` ที่ report commit `29e6672` (ดู `handoff.md`, `ROADMAP.md` และ maintained parity docs)
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
+### เปลี่ยนแปลง
+
+- **handoff: สรุป readiness ณ 2026-11-09** (`handoff.md` หัวข้อ "สรุป readiness") ตามคำสั่งผู้ใช้ให้สรุปก่อนทำงานค้างต่อ
+  - เนื้อหา: 91.3% รวม / 93.2% ไม่นับ 22 deferred จาก Windows run 42334133340 (source `1868cb4`), แยกช่องว่างถึง 100% ตามมิติ (pagination 5.9, deferred 1.9, localization 1.0 จุด) และระบุว่ายังไม่ได้วัดหลังงาน port/ความปลอดภัยรอบ 3
+  - ผู้ใช้: แก้เฉพาะเอกสาร ไม่กระทบโปรแกรม ไฟล์ .docx เดิม การติดตั้งทับ หรือภาษาไทย
+  - ตรวจสอบ: คำนวณผลรวมถ่วงน้ำหนักจากตารางใน `docs/readiness.md` ซ้ำได้ 91.27% / 93.15% ตรงกับรายงาน; ไม่ได้รัน readiness ใหม่
+
 ### แก้ไข
 
 - **ยืนยัน readiness บน Windows หลังแก้ IME/file-filter**: run [42334133340](https://github.com/veevie55/doc4me/actions/runs/42334133340) วัด source `1868cb4` ครบ 222 เอกสาร และ bot บันทึกรายงานใน `ed787f9`: 91.3% รวม / 93.2% ไม่นับ 22 deferred, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 และ shortcuts 276/280 เท่าเดิม. Diagnostic แสดงคำต้น/ท้ายของหน้าที่ไม่ตรงแล้ว; ไม่อ้างว่า software regression tests พิสูจน์ physical Windows IME/hardware.

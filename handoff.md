@@ -4,6 +4,12 @@
 
 ## สถานะปัจจุบัน
 
+### สรุป readiness (บันทึก 2026-11-09 ก่อนทำงานค้างต่อ; ยังไม่ได้วัดใหม่)
+
+- **91.3% รวม / 93.2% เมื่อไม่นับ 22 แถว deferred** — ผลอย่างเป็นทางการล่าสุดจาก Windows run [42334133340](https://github.com/veevie55/doc4me/actions/runs/42334133340) (วัด source `1868cb4`, 222 เอกสาร, 2026-11-07) ตาม `docs/readiness.md`; คำนวณถ่วงน้ำหนักซ้ำจากตารางได้ 91.27% และ 93.15% ตรงกับรายงาน
+- ห่าง 100% อยู่ 8.7 จุด: pagination 5.9 จุด (page counts 174/222, boundaries 96/222 → 60.8%), deferred 22 แถว 1.9 จุด (dialogs 12, shortcuts IME/Alt 4, Mendeley 1, hardware 5), localization 1.0 จุด (72/95 → 75.8%); มิติอื่น (file formats, stability, performance, platforms, ribbon 500/500) อยู่ที่ 100%
+- ตัวเลขนี้**ยังไม่สะท้อน** commit หลัง `1868cb4`: port จาก WordCraft (141 + 25 fixes) และงานความปลอดภัยรอบ 3 ชุด 1–8 ซึ่งชุด 8 ยังไม่ผ่าน clippy/test/wasm ครบ และ owner เขียนทับ `main` (`f154ab5`, history ใน clone ตื้นจึงหา `1868cb4` ไม่พบ) — ต้องรัน `readiness-windows.yml` ใหม่หลังตรวจชุด 8 ผ่าน จึงจะยืนยันได้ว่าคะแนนไม่ถดถอย
+
 ### งานค้าง: port งานความปลอดภัยจาก WordCraft (บันทึก 2026-11-09, หยุดเพราะถึงลิมิต)
 
 - ทำแล้ว: รอบที่ 3 ชุดที่ 1–8 อยู่บน `main` (ดู CHANGELOG `[Unreleased]` › ความปลอดภัย). ชุดที่ 8 commit ก่อนตรวจครบ — **ต้องรันก่อนทำต่อ**: `cargo clippy --workspace --all-targets -- -D warnings`, `cargo test --workspace --exclude doc4me-web --no-fail-fast`, `cargo xtask wasm` (env: `CARGO_INCREMENTAL=0 CARGO_PROFILE_DEV_DEBUG=0 CARGO_PROFILE_TEST_DEBUG=0`, ดิสก์มีจำกัด).
