@@ -114,6 +114,12 @@ fn piece_bytes(p: &Piece) -> Vec<u8> {
 
 /// A document whose main text is the given pieces (extra subdocument text may follow).
 fn text_doc(main: &[Piece], extra: &[Piece], ccp_hdd: u32) -> Vec<u8> {
+    text_doc_with(main, extra, FibSpec { ccp_hdd, ..Default::default() }, &[])
+}
+
+/// [`text_doc`] with the FIB knobs given (`ccp_text` is filled in from `main`; `pairs` must be empty) and extra
+/// Table-stream data placed after the piece table: `(pair index, bytes)` for each.
+fn text_doc_with(main: &[Piece], extra: &[Piece], spec: FibSpec, table_data: &[(usize, &[u8])]) -> Vec<u8> {
     let all: Vec<Piece> = main.iter().chain(extra.iter()).cloned().collect();
     let ccp_text: u32 = main.iter().map(|p| p.text.chars().count() as u32).sum();
     let mut word = vec![0u8; TEXT_FC as usize];
@@ -126,7 +132,13 @@ fn text_doc(main: &[Piece], extra: &[Piece], ccp_hdd: u32) -> Vec<u8> {
     clx.extend_from_slice(&plc);
     let mut table = vec![0u8; CLX_AT as usize];
     table.extend_from_slice(&clx);
-    let spec = FibSpec { ccp_text, ccp_hdd, pairs: vec![(33, CLX_AT, clx.len() as u32)], ..Default::default() };
+    let mut pairs = vec![(33, CLX_AT, clx.len() as u32)];
+    for (pair, bytes) in table_data {
+        pairs.push((*pair, table.len() as u32, bytes.len() as u32));
+        table.extend_from_slice(bytes);
+    }
+    debug_assert!(spec.pairs.is_empty(), "text_doc_with sets the pairs itself");
+    let spec = FibSpec { ccp_text, pairs, ..spec };
     word[..fib_bytes(&spec).len()].copy_from_slice(&fib_bytes(&spec));
     cfb_file(&[("WordDocument", &word), ("0Table", &table)])
 }
@@ -243,6 +255,77 @@ fn empty_paragraphs_kept() {
     let f = text_doc(&[Piece { compressed: false, text: "a\r\rb\r".into() }], &[], 0);
     let doc = read(&f).expect("opens");
     assert_eq!(body_texts(&doc), ["a", "", "b"]);
+}
+
+/// A document of `n` copies of `mark` as one compressed piece.
+fn marks_doc(mark: char, n: usize) -> Vec<u8> {
+    text_doc(&[Piece { compressed: true, text: mark.to_string().repeat(n) }], &[], 0)
+}
+
+/// Paragraph marks are one byte each in the file but about 1 KB each in memory, so they have
+/// their own cap ([`super::MAX_PARAGRAPHS`]); a file past it is refused instead of growing
+/// until the machine runs out. A document exactly at the cap still opens.
+#[test]
+fn a_flood_of_paragraph_marks_is_refused() {
+    let at_cap = super::read_limited(&marks_doc('\r', 1000), 1000).expect("opens");
+    assert_eq!(at_cap.body.len(), 1000);
+    let over = super::read_limited(&marks_doc('\r', 1001), 1000);
+    assert!(matches!(over, Err(crate::DocbinError::Limit(_))), "{over:?}");
+}
+
+/// The paragraph cap is one budget for the whole document, not one per story: marks in the
+/// body and in a footnote add up. (A walk that got its own budget would open both over-cap files.)
+#[test]
+fn the_paragraph_cap_is_shared_by_the_body_and_a_footnote() {
+    // One footnote at CP 0 whose text is `note` marks, stored right after the body in the stream.
+    let doc_of = |body: usize, note: usize| {
+        let cps = |v: &[u32]| v.iter().flat_map(|c| c.to_le_bytes()).collect::<Vec<u8>>();
+        let mut refs = cps(&[0, 1]);
+        refs.extend_from_slice(&[0, 0]); // the one reference's data
+        let txt = cps(&[0, note as u32, note as u32]); // story 0..note, then the limit
+        let spec = FibSpec { ccp_ftn: note as u32, ..Default::default() };
+        text_doc_with(
+            &[Piece { compressed: true, text: "\r".repeat(body) }],
+            &[Piece { compressed: true, text: "\r".repeat(note) }],
+            spec,
+            &[(2, &refs), (3, &txt)],
+        )
+    };
+    let at_cap = super::read_limited(&doc_of(600, 400), 1000).expect("opens");
+    assert_eq!(at_cap.body.len(), 600);
+    assert_eq!(at_cap.parts.len(), 1);
+    let over = super::read_limited(&doc_of(600, 401), 1000);
+    assert!(matches!(over, Err(crate::DocbinError::Limit(_))), "{over:?}");
+    let over = super::read_limited(&doc_of(601, 400), 1000);
+    assert!(matches!(over, Err(crate::DocbinError::Limit(_))), "{over:?}");
+}
+
+/// Cell marks are paragraph marks too: a never-closed row of them is refused the same way.
+#[test]
+fn a_flood_of_cell_marks_is_refused() {
+    let over = super::read_limited(&marks_doc('\u{7}', 5000), 1000);
+    assert!(matches!(over, Err(crate::DocbinError::Limit(_))), "{over:?}");
+}
+
+/// The budget counts down across spends and notes the overrun (`walk` receives one shared by
+/// every story of the document).
+#[test]
+fn the_paragraph_budget_counts_down_and_notes_the_overrun() {
+    let budget = super::ParaBudget { left: std::cell::Cell::new(2), exceeded: std::cell::Cell::new(false) };
+    assert!(budget.spend() && budget.spend());
+    assert!(!budget.exceeded.get());
+    assert!(!budget.spend());
+    assert!(budget.exceeded.get());
+}
+
+/// The cap is far above any real document (10,000 pages of 50 paragraphs is 500,000), and a
+/// paragraph outside a table no longer carries a table context (a `ParaOut` was 1,224 bytes).
+#[test]
+fn the_paragraph_cap_leaves_room_and_a_paragraph_stays_small() {
+    const { assert!(super::MAX_PARAGRAPHS >= 1_000_000) };
+    assert!(std::mem::size_of::<crate::table::ParaOut>() < 1000, "{}", std::mem::size_of::<crate::table::ParaOut>());
+    let doc = read(&marks_doc('\r', 10)).expect("opens");
+    assert_eq!(doc.body.len(), 10);
 }
 
 #[test]
@@ -1761,9 +1844,9 @@ fn picture_bytes_are_capped_per_document() {
     let data: Vec<u8> = [a.clone(), b].concat();
     let mut pics = crate::media::Pictures::default();
     pics.limit = 1000;
-    let first = pics.get(&data, 0).expect("first fits");
+    let first = pics.get(&data, 0).cloned().expect("first fits");
     // Same location again: no new bytes.
-    assert_eq!(pics.get(&data, 0).map(|p| p.key), Some(first.key.clone()));
+    assert_eq!(pics.get(&data, 0).map(|p| p.key.clone()), Some(first.key.clone()));
     // A second distinct picture would exceed the cap.
     assert!(pics.get(&data, a.len() as u32).is_none());
     assert_eq!(pics.media.len(), 1);
@@ -1783,8 +1866,8 @@ fn rejected_inline_pictures_are_not_read_again() {
     assert!(pics.get(&small, 0).is_none());
     // The rejected picture took nothing off the cap, and anchors sharing a picture share it.
     let at = big.len() as u32;
-    let fits = pics.get(&data, at).expect("fits");
-    assert_eq!(pics.get(&data, at).map(|p| p.key), Some(fits.key));
+    let fits = pics.get(&data, at).cloned().expect("fits");
+    assert_eq!(pics.get(&data, at).map(|p| p.key.clone()), Some(fits.key));
     assert_eq!(pics.media.len(), 1);
     // Filling the cap exactly works; after that, a place never tried before isn't read.
     let rest = picf_with_png(700);
@@ -2083,4 +2166,162 @@ fn a_difat_repeating_one_fat_sector_is_refused_before_cfb_builds_the_fat() {
         let f = comp.into_inner().into_inner();
         assert_eq!(doc4me_doc::cfb_guard::check(&f), Ok(()), "{version:?}");
     }
+}
+
+/// A compound file `cfb` writes in `version`: `streams` at its root, then `extra` streams under
+/// an `ObjectPool` storage (where Word keeps embedded objects).
+fn cfb_file_in(version: cfb::Version, streams: &[(&str, &[u8])], extra: &[(&str, &[u8])]) -> Vec<u8> {
+    let mut comp = cfb::CompoundFile::create_with_version(version, std::io::Cursor::new(Vec::new())).expect("cfb create");
+    for (name, data) in streams {
+        comp.create_stream(format!("/{name}")).expect("cfb stream").write_all(data).expect("cfb write");
+    }
+    comp.create_storage("/ObjectPool").expect("cfb storage");
+    for (name, data) in extra {
+        comp.create_stream(format!("/ObjectPool/{name}")).expect("cfb stream").write_all(data).expect("cfb write");
+    }
+    comp.into_inner().into_inner()
+}
+
+/// #3642 review: valid compound files pass the guard and open, so it refuses only the hostile
+/// ones. The repository keeps no files Word made, so these are written by the `cfb` crate in
+/// the shape of Word 97–2003 files: the WordDocument and table streams of a .doc these tests
+/// build, with the summary, Data and embedded-object streams Word adds, in 512-byte sectors
+/// (version 3, Word's own) and 4096-byte ones (version 4); and one with a Data stream of 8 MB,
+/// past what the header's 109 FAT sector slots map in 512-byte sectors (109 × 128 sectors,
+/// about 7 MB), so its FAT sectors are listed in a DIFAT chain too, which the guard walks.
+#[test]
+fn valid_doc_shaped_compound_files_pass_the_guard_and_open() {
+    let doc = struct_doc(&structured_spec("Hello world\r", 12));
+    let mut comp = cfb::CompoundFile::open(std::io::Cursor::new(doc.as_slice())).expect("cfb open");
+    // The table stream is 1Table or 0Table, as the FIB's fWhichTblStm says: kept under its name.
+    let table_name = if comp.is_stream("/1Table") { "1Table" } else { "0Table" };
+    let mut stream = |name: &str| {
+        let mut v = Vec::new();
+        std::io::Read::read_to_end(&mut comp.open_stream(name).expect("stream"), &mut v).expect("read");
+        v
+    };
+    let (word, table) = (stream("/WordDocument"), stream(&format!("/{table_name}")));
+    let summary = vec![0xFEu8; 4096];
+    let data = |n: usize| (0..n).map(|i| (i % 251) as u8).collect::<Vec<u8>>();
+    let small = data(200_000);
+    let big = data(8 << 20);
+    let ole = data(70_000);
+    let files = [
+        ("as built", doc.clone()),
+        (
+            "version 3",
+            cfb_file_in(
+                cfb::Version::V3,
+                &[("WordDocument", &word), (table_name, &table), ("Data", &small), ("\u{5}SummaryInformation", &summary)],
+                &[("_1234567890", &ole)],
+            ),
+        ),
+        ("version 4", cfb_file_in(cfb::Version::V4, &[("WordDocument", &word), (table_name, &table), ("Data", &small)], &[("_1", &ole)])),
+        ("with a DIFAT chain", cfb_file_in(cfb::Version::V3, &[("WordDocument", &word), (table_name, &table), ("Data", &big)], &[])),
+    ];
+    let difat_sectors = |f: &[u8]| f.get(0x48..0x4C).map_or(0, |b| u32::from_le_bytes([b[0], b[1], b[2], b[3]]));
+    assert!(difat_sectors(&files[3].1) > 0, "the 8 MB file lists FAT sectors past the header's");
+    for (what, f) in &files {
+        assert_eq!(doc4me_doc::cfb_guard::check(f), Ok(()), "{what}");
+        let doc = read(f).unwrap_or_else(|e| panic!("{what}: {e}"));
+        assert_eq!(body_texts(&doc).first().map(String::as_str), Some("Hello world"), "{what}");
+    }
+}
+
+/// #3708: a long HYPERLINK target over a long result was copied (and compared) once per result
+/// character. It is now copied once per run.
+#[test]
+fn a_long_hyperlink_over_a_long_result_is_one_linked_run() {
+    let n = 250_000;
+    let target = "x".repeat(n);
+    let text: &'static str = Box::leak(format!("\u{13}HYPERLINK \"http://{target}\"\u{14}{}\u{15}\r", "y".repeat(n)).into_boxed_str());
+    let spec = structured_spec(text, text.chars().count() as u32);
+    let t = std::time::Instant::now();
+    let doc = read(&struct_doc(&spec)).expect("opens");
+    // Copying the target per character took ~2.5 s here; once per run takes milliseconds.
+    assert!(t.elapsed().as_millis() < 1000, "opened in {:?}", t.elapsed());
+    let p0 = doc.body.first().and_then(|b| b.as_para()).expect("para");
+    let linked: Vec<_> = p0.runs.iter().filter(|r| r.props.link.is_some()).collect();
+    assert_eq!(linked.len(), 1);
+    assert_eq!(linked.first().map(|r| r.len), Some(n));
+}
+
+/// #3708: a result whose formatting changes every character pays for a target copy per run
+/// out of the work budget; past it the text stays, unlinked.
+#[test]
+fn hyperlink_target_copies_are_charged_to_the_work_budget() {
+    use doc4me_doc::props::CharProps;
+    let bold = CharProps { bold: Some(true), ..Default::default() };
+    let result: Vec<(char, CharProps)> = (0..1000).map(|i| ('a', if i % 2 == 0 { bold.clone() } else { CharProps::default() })).collect();
+    let f = super::FieldBuild { depth: 1, instr: format!("HYPERLINK \"{}\"", "u".repeat(100)), sep: Some(result) };
+    let mut pb = super::ParaBuild::default();
+    let budget = super::Work::new(10_000);
+    super::finish_field(&mut pb, f, &budget);
+    assert_eq!(pb.text.len(), 1000, "all text kept");
+    let linked: usize = pb.runs.iter().filter_map(|r| r.props.link.as_ref()).map(|l| l.len()).sum();
+    assert!(linked <= 10_000, "linked bytes {linked}");
+    assert_eq!(pb.runs.iter().filter(|r| r.props.link.is_some()).count(), 100);
+    assert_eq!(budget.left.get(), 0);
+    assert_eq!(budget.dropped(), [super::Cost::LinkTarget], "the unlinked text is noted, to be logged");
+}
+
+/// #3871 review: what the work budget leaves out is noted once per kind, in a fixed order, and
+/// logged once per kind when the document has been read; nothing is noted while it lasts.
+#[test]
+fn the_work_budget_notes_each_kind_it_leaves_out_once() {
+    use super::Cost::*;
+    let work = super::Work::new(10);
+    assert!(work.charge(10, AltText));
+    assert!(work.dropped().is_empty(), "spent to the last byte, nothing left out");
+    assert!(work.charge(0, LinkTarget), "a free copy is never refused");
+    for _ in 0..3 {
+        assert!(!work.charge(1, FloatingObject));
+    }
+    assert!(!work.charge(1, AltText));
+    assert_eq!(work.dropped(), [AltText, FloatingObject]);
+    work.log();
+    assert_eq!(super::LAST_DROPPED.with(|d| d.borrow().clone()), [AltText, FloatingObject]);
+    // A document within the budget leaves nothing out.
+    read(&struct_doc(&structured_spec("Hello\r", 6))).expect("opens");
+    assert!(super::LAST_DROPPED.with(|d| d.borrow().is_empty()));
+}
+
+/// #3692: a piece's Prm grpprl (a Prc of up to 64 KB) was re-interpreted for every character.
+/// It is now resolved once per formatting change.
+#[test]
+fn a_large_prc_is_interpreted_once_per_formatting_change() {
+    let prc = grpprl(&vec![(0x0835u16, &[0x01u8][..]); 21_000]);
+    let text: &'static str = Box::leak(format!("{}\r", "a".repeat(100_000)).into_boxed_str());
+    let spec = RichSpec {
+        text,
+        styles: vec![(1, 0x0FFF, "Normal", Vec::new(), Vec::new())],
+        fonts: vec!["Times New Roman"],
+        chpx_runs: vec![(0, Vec::new())],
+        papx_entries: vec![(0, 0, Vec::new())],
+    };
+    let bytes = rich_doc_with(&spec, &RichExtra { prcs: vec![prc], prm: 0x0001, ..Default::default() });
+    let t = std::time::Instant::now();
+    let doc = read(&bytes).expect("opens");
+    assert!(t.elapsed().as_millis() < 1000, "opened in {:?}", t.elapsed());
+    let p = para0(&doc);
+    assert_eq!(p.runs.len(), 1);
+    assert_eq!(p.runs.first().and_then(|r| r.props.bold), Some(true));
+}
+
+/// #3692: Prm grpprls are charged to a document-wide work budget; once it is spent the Prm
+/// is skipped (the text keeps its CHPX formatting).
+#[test]
+fn prm_grpprls_past_the_work_budget_are_skipped() {
+    use doc4me_doc::props::CharProps;
+    let g = grpprl(&[(0x0835, &[0x01])]);
+    let work = super::Work::new(g.len() as u64 + 1);
+    let base = CharProps::default();
+    let mut first = CharProps::default();
+    super::apply_prm(&mut first, crate::piece::PrmRef::Grpprl(Some(&g)), &[], &base, &work);
+    assert_eq!(first.bold, Some(true));
+    let mut second = CharProps::default();
+    super::apply_prm(&mut second, crate::piece::PrmRef::Grpprl(Some(&g)), &[], &base, &work);
+    assert_eq!(second.bold, None);
+    assert_eq!(work.left.get(), 1);
+    assert_eq!(work.dropped(), [super::Cost::Formatting]);
 }
