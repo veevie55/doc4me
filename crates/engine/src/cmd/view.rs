@@ -4,6 +4,7 @@ use doc4me_layout::{NumeralMode, ViewMode};
 use serde_json::{Value, json};
 
 use super::sel_result;
+use crate::session::{ReadLayout, ReadPageColor};
 use crate::{CmdError, CmdResult, CommandSpec, Session, p};
 
 fn toggle(s: &mut Session, v: &Value, f: fn(&mut crate::ViewState) -> &mut bool) -> CmdResult {
@@ -36,6 +37,10 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("view.readLineSpacing", "Reading Line Spacing", "Reading › Layout", read_line_spacing)
             .params(r#"{"value": "document" | 1.0 | 1.25 | 1.5 | 2.0}"#)
             .pure(),
+        CommandSpec::new("view.readPageColor", "Page Color", "Reading › Layout", read_page_color)
+            .params(r#"{"value": "none" | "sepia" | "inverse"}"#)
+            .pure(),
+        CommandSpec::new("view.readLayout", "Layout", "Reading › Layout", read_layout).params(r#"{"value": "columns" | "onePage"}"#).pure(),
         // Print Layout: hide the white space (margins, headers, footers) between pages. Screen only.
         CommandSpec::new("view.hideWhiteSpace", "Hide White Space", "View › Show", |s, v| toggle(s, v, |x| &mut x.hide_white_space))
             .params(r#"{"value"?: bool}"#)
@@ -158,6 +163,8 @@ fn mode(s: &mut Session, m: ViewMode, read: bool) -> CmdResult {
         s.view.read_column_width = None;
         s.view.read_zoom = 1.0;
         s.view.read_line_spacing = None;
+        s.view.read_page_color = ReadPageColor::None;
+        s.view.read_layout = ReadLayout::Columns;
     }
     s.view.mode = m;
     s.view.read_mode = read;
@@ -176,6 +183,27 @@ fn read_column_width(s: &mut Session, v: &Value) -> CmdResult {
     };
     s.view.read_column_width = width;
     Ok(json!({"width": width}))
+}
+
+fn read_page_color(s: &mut Session, v: &Value) -> CmdResult {
+    let color = match v.get("value").and_then(Value::as_str) {
+        Some("none") => ReadPageColor::None,
+        Some("sepia") => ReadPageColor::Sepia,
+        Some("inverse") => ReadPageColor::Inverse,
+        _ => return Err(CmdError::Params("page color must be none, sepia, or inverse".into())),
+    };
+    s.view.read_page_color = color;
+    Ok(json!({"pageColor": color}))
+}
+
+fn read_layout(s: &mut Session, v: &Value) -> CmdResult {
+    let layout = match v.get("value").and_then(Value::as_str) {
+        Some("columns") => ReadLayout::Columns,
+        Some("onePage") => ReadLayout::OnePage,
+        _ => return Err(CmdError::Params("reading layout must be columns or onePage".into())),
+    };
+    s.view.read_layout = layout;
+    Ok(json!({"layout": layout}))
 }
 
 fn read_text_size(s: &mut Session, v: &Value) -> CmdResult {

@@ -53,6 +53,25 @@ pub struct ColumnBlock {
     pub segments: Vec<(Pos, Pos)>,
 }
 
+/// Read Mode › Page Color: the paper behind the pages. Session-only (never saved).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ReadPageColor {
+    #[default]
+    None,
+    Sepia,
+    Inverse,
+}
+
+/// Read Mode › Layout: whole pages side by side, or one page fitted to the window's height.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ReadLayout {
+    #[default]
+    Columns,
+    OnePage,
+}
+
 /// View state that commands can change (ribbon View tab, status bar).
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -106,6 +125,10 @@ pub struct ViewState {
     pub read_zoom: f32,
     #[serde(skip)]
     pub read_line_spacing: Option<f32>,
+    #[serde(skip)]
+    pub read_page_color: ReadPageColor,
+    #[serde(skip)]
+    pub read_layout: ReadLayout,
     pub dark_mode: bool,
     pub show_markup: bool,
     pub track_changes_pane: bool,
@@ -184,6 +207,8 @@ impl Default for ViewState {
             read_column_width: None,
             read_zoom: default_read_zoom(),
             read_line_spacing: None,
+            read_page_color: ReadPageColor::None,
+            read_layout: ReadLayout::Columns,
             dark_mode: false,
             show_markup: true,
             track_changes_pane: false,

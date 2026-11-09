@@ -875,7 +875,12 @@ impl Reader<'_> {
         // A `HYPERLINK` field is a link, as a `w:hyperlink` is: its result stays ordinary content
         // carrying the link, so a tab in it reaches its tab stop and the `PAGEREF` in a table of
         // contents entry (Word for the web writes them this way) stays a field of its own (#2174).
-        if !nested_in_instr && let Some(target) = hyperlink_target(&f.instr) {
+        // With no result at all there is no text to carry the link, so the field stays as it is and
+        // is saved again (Word keeps an empty link field).
+        if !nested_in_instr
+            && !f.buf.is_empty()
+            && let Some(target) = hyperlink_target(&f.instr)
+        {
             for (it, mut p) in f.buf {
                 p.link.get_or_insert_with(|| target.clone());
                 match it {

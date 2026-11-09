@@ -3138,8 +3138,16 @@ fn reading_mode_reflows_per_viewport_without_changing_document_or_export() {
     assert!(s.run("view.readTextSize", &json!({"value": -10})).is_err());
     assert!(s.run("view.readLineSpacing", &json!({"value": 0.01})).is_err());
     assert!(s.run("view.readColumnWidth", &json!({"value": "giant"})).is_err());
+    // Page Color and Layout are reader-only: they change what Read Mode shows, never the layout's
+    // pages, and they reset on each entry to Read Mode.
+    run(&mut s, "view.readPageColor", json!({"value": "sepia"}));
+    assert_eq!(s.view.read_page_color, crate::ReadPageColor::Sepia);
+    run(&mut s, "view.readLayout", json!({"value": "onePage"}));
+    assert_eq!(s.view.read_layout, crate::ReadLayout::OnePage);
+    assert!(s.run("view.readPageColor", &json!({"value": "pink"})).is_err());
+    assert!(s.run("view.readLayout", &json!({"value": "grid"})).is_err());
     let serialized = serde_json::to_value(&s.view).unwrap();
-    for key in ["readColumnWidth", "readZoom", "readLineSpacing"] {
+    for key in ["readColumnWidth", "readZoom", "readLineSpacing", "readPageColor", "readLayout"] {
         assert!(serialized.get(key).is_none());
     }
     run(&mut s, "view.printLayout", json!({}));

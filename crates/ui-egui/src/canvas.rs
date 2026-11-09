@@ -498,6 +498,10 @@ pub fn geometry(app: &WordApp, l: &DocLayout, avail: egui::Vec2) -> Geometry {
     let mut scale = v.zoom.clamp(0.1, 5.0) * PX_PER_PT;
     if v.read_mode {
         scale = v.read_zoom.clamp(0.75, 1.5) * PX_PER_PT;
+        if v.read_layout == doc4me_engine::ReadLayout::OnePage {
+            // One page at a time: never taller than the window (the text size still applies below that).
+            scale = scale.min(((avail.y - 2.0 * GAP) / maxh).clamp(0.05, 6.0));
+        }
         let sizes: Vec<(f32, f32)> = l.pages.iter().map(|p| (p.w, p.h)).collect();
         let (rects, size) = place_read_pages(&sizes, scale, avail);
         // Reading columns show whole pages (Hide White Space doesn't apply).
@@ -782,7 +786,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         app.canvas.scroll_request = Some(vec2(page as f32 * step, 0.0));
     }
     // View › Switch Modes: dark paper, inverted document colours, a white caret.
-    let dark_page = app.session.view.dark_mode;
+    let reading = app.session.view.read_mode;
+    let reading_color = app.session.view.read_page_color;
+    let dark_page = app.session.view.dark_mode || (reading && reading_color == doc4me_engine::ReadPageColor::Inverse);
     let caret_color = if dark_page { Color32::WHITE } else { t.caret };
     let dark_paper = doc4me_render::DARK_PAPER;
     let show_ruler = app.session.view.ruler && app.session.view.mode == doc4me_layout::ViewMode::Print && !app.session.view.read_mode;
@@ -1048,7 +1054,14 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             };
             // Shadow and paper.
             painter.rect_filled(visual_sr.translate(vec2(0.0, 2.0)).expand(1.5), 1.0, t.page_shadow);
-            painter.rect_filled(visual_sr, 0.0, if dark_page { Color32::from_gray(dark_paper) } else { Color32::WHITE });
+            let paper = if dark_page {
+                Color32::from_gray(dark_paper)
+            } else if reading && reading_color == doc4me_engine::ReadPageColor::Sepia {
+                Color32::from_rgb(0xF4, 0xEC, 0xD8)
+            } else {
+                Color32::WHITE
+            };
+            painter.rect_filled(visual_sr, 0.0, paper);
             if let Some((_, tex)) = app.canvas.textures.get(&i) {
                 painter.image(tex.id(), visual_sr, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
             }

@@ -32,7 +32,9 @@ pub use doc4me_render as render;
 pub use io::Password;
 pub use keymap::KeyMap;
 pub use ribbon::RibbonLayout;
-pub use session::{ColumnBlock, EditSnapshot, FindState, MathEdit, PasteMode, Prefs, Selection, Session, ViewState, set_system_locale};
+pub use session::{
+    ColumnBlock, EditSnapshot, FindState, MathEdit, PasteMode, Prefs, ReadLayout, ReadPageColor, Selection, Session, ViewState, set_system_locale,
+};
 
 #[derive(Debug, thiserror::Error, Clone, PartialEq)]
 pub enum CmdError {

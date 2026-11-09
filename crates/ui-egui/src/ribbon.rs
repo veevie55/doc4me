@@ -59,6 +59,32 @@ fn reading_toolbar(app: &mut WordApp, ui: &mut Ui, t: Tokens) {
                     }
                 });
                 ui.separator();
+                let color = app.session.view.read_page_color;
+                let color_name = match color {
+                    doc4me_engine::ReadPageColor::None => "No Color",
+                    doc4me_engine::ReadPageColor::Sepia => "Sepia",
+                    doc4me_engine::ReadPageColor::Inverse => "Inverse",
+                };
+                ui.menu_button(format!("{}: {}", tl!("Page Color"), tl!(color_name)), |ui| {
+                    for (name, value) in [("No Color", "none"), ("Sepia", "sepia"), ("Inverse", "inverse")] {
+                        if ui.selectable_label(color_name == name, tl!(name)).clicked() {
+                            let _ = app.run("view.readPageColor", json!({"value": value}));
+                            ui.close();
+                        }
+                    }
+                });
+                ui.separator();
+                let layout = app.session.view.read_layout;
+                let layout_name = if layout == doc4me_engine::ReadLayout::OnePage { "One Page" } else { "Columns" };
+                ui.menu_button(format!("{}: {}", tl!("Layout"), tl!(layout_name)), |ui| {
+                    for (name, value) in [("Columns", "columns"), ("One Page", "onePage")] {
+                        if ui.selectable_label(layout_name == name, tl!(name)).clicked() {
+                            let _ = app.run("view.readLayout", json!({"value": value}));
+                            ui.close();
+                        }
+                    }
+                });
+                ui.separator();
                 let spacing = app.session.view.read_line_spacing;
                 let label = spacing.map_or_else(|| tl!("Document").to_owned(), |v| format!("{v}×"));
                 ui.menu_button(format!("{}: {}", tl!("Line spacing"), label), |ui| {

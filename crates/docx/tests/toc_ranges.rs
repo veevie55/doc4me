@@ -218,6 +218,23 @@ fn hyperlink_field_entries_read_as_linked_text_with_their_page_field() {
     }
 }
 
+/// A `HYPERLINK` field with no result (a table of contents entry whose text Word left empty)
+/// stays a field through a save: the field is not dropped, so the file keeps what it had.
+#[test]
+fn empty_hyperlink_field_survives_a_save() {
+    let body = format!(r#"<w:p>{}{END}<w:r><w:t>After.</w:t></w:r></w:p>"#, start(r#"HYPERLINK  \l  "_Toc9" "#));
+    let doc = doc4me_docx::read(&package(&body)).unwrap();
+    let saved = doc4me_docx::read(&doc4me_docx::write(&doc).unwrap()).unwrap();
+    for d in [&doc, &saved] {
+        let p = d.body[0].as_para().unwrap();
+        assert_eq!(p.plain_text(), "After.");
+        assert!(
+            p.objects.iter().any(|o| matches!(o, InlineObject::Field { instr, result, .. } if instr.starts_with("HYPERLINK") && result.is_empty())),
+            "the empty link field is kept"
+        );
+    }
+}
+
 /// A `HYPERLINK` field's target, whatever the field's spelling: a web address with a bookmark,
 /// quoted words with spaces, a tooltip or target frame before it, and a simple field. One with
 /// no target stays a field.
