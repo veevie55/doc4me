@@ -13,6 +13,8 @@
 
 ### ความปลอดภัย
 
+- **ตรวจยืนยันชุดความปลอดภัยรอบ 3 ชุดที่ 8 (2026-11-09)** — ชุด 8 เคย commit ก่อนตรวจครบ; ตรวจบน Linux ที่ commit `43fe290` โดยไม่แก้โค้ด (เปลี่ยนเฉพาะเอกสารนี้และ `handoff.md`) ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ. ผลตรวจ: `cargo clippy --workspace --all-targets -- -D warnings` ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่านทุกชุด (58 ชุดผลลัพธ์ ไม่มีเทสต์ล้ม); `cargo xtask wasm` ผ่านทุก crate (ต้องติดตั้ง `libasound2-dev` และ target `wasm32-unknown-unknown` บนเครื่องตรวจก่อน ซึ่งเป็นข้อกำหนดของเครื่อง ไม่ใช่ของ repo). ยังไม่ได้รัน `readiness-windows.yml` ใหม่เพื่อยืนยันว่าคะแนนไม่ถดถอย.
+
 - **งานแบบกำลังสองใน balloon, PDF และ metafile; การเข้ารหัสภาพที่ใหญ่เกินไป** (รอบที่ 3 ชุดที่ 8; WordCraft `ee96c4c9`, `05ee2e01`, `c98efffc`, `0d5a1490`, ส่วน cluster ends ของ `f4c9c89c`)
   - balloon ของ revision/comment: จัดอันดับผู้เขียนผ่าน memo (`author_rank` ใน `crates/layout/src/display.rs`, ใช้ใน `balloons.rs`) แทนการสแกนรายชื่อผู้เขียนทุกครั้ง; เพิ่ม 3 เทสต์ใน `crates/layout/src/tests_linear.rs` (เกณฑ์ `ratio < 32.0` ด้วยเหตุผลเดียวกับชุดที่ 7)
   - PDF: หาจุดสิ้นสุด cluster ของ glyph ด้วย `cluster_ends` (monotonic stack ย้อนหลังครั้งเดียว) แทนการค้นหาไปข้างหน้าต่อ glyph ซึ่งเป็นกำลังสองกับบรรทัดยาว (`crates/pdf/src/lib.rs`); เทสต์ `cluster_ends_match_the_forward_search`
