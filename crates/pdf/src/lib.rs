@@ -51,6 +51,14 @@ use krilla::surface::Surface;
 use krilla::tagging::{Artifact, ArtifactType, ContentTag, Identifier, Node, SpanTag, Tag, TagGroup, TagKind, TagTree};
 use krilla::text::{Font, GlyphId, KrillaGlyph};
 
+/// A shaped glyph id as krilla takes it. Shaping gives 32-bit ids (a format-12 cmap can map to
+/// any), but krilla's font subsetting takes 16-bit ones and panics on a larger id: one that
+/// doesn't fit is written as .notdef (glyph 0), keeping its place. Its own character doesn't
+/// extract, since krilla maps no text to .notdef.
+fn glyph_id(g: u32) -> GlyphId {
+    GlyphId::new(u16::try_from(g).map_or(0, u32::from))
+}
+
 /// Largest page side we write (200", the PDF limit).
 const MAX_SIDE: f32 = 14_400.0;
 /// Largest picture side we embed (pixels).
@@ -1160,7 +1168,7 @@ impl Exporter<'_> {
                     Some((_, nx, _)) => (nx - x) / size,
                     None => face.advance(*g) as f32 / upem,
                 };
-                KrillaGlyph::new(GlyphId::new(*g), adv, 0.0, (y0 - y) / size, 0.0, r, None)
+                KrillaGlyph::new(glyph_id(*g), adv, 0.0, (y0 - y) / size, 0.0, r, None)
             })
             .collect();
         let pushed = italic;
@@ -1364,7 +1372,7 @@ impl Exporter<'_> {
                 let end = ends.get(i).copied().unwrap_or(text.len());
                 let start = g.cluster.min(end);
                 KrillaGlyph::new(
-                    GlyphId::new(g.gid),
+                    glyph_id(g.gid),
                     g.x_advance as f32 / upem,
                     g.x_offset as f32 / upem,
                     g.y_offset as f32 / upem,

@@ -154,6 +154,7 @@ pub fn decode_font_file(bytes: &[u8]) -> Result<Vec<u8>, UserFontError> {
             unwrap_web_font(|| wuff::decompress_woff1(bytes))?
         }
         FontFormat::Woff2 => {
+            check_woff2_collection(bytes)?;
             let mut too_many_points = false;
             let unwrapped = unwrap_web_font(|| {
                 wuff::decompress_woff2_with_custom_brotli(bytes, &mut |data, size| {
@@ -221,8 +222,29 @@ fn woff2_points_fit(file: &[u8], stream: &[u8]) -> bool {
 /// The transformed `glyf` tables in `stream`, found from the WOFF2 table directory in `file`
 /// (tables follow each other in directory order).
 fn woff2_transformed_glyf<'a>(file: &[u8], stream: &'a [u8]) -> Option<Vec<&'a [u8]>> {
+    let (tables, _) = woff2_directory(file)?;
+    let (mut offset, mut glyf) = (0usize, Vec::new());
+    for t in tables {
+        let end = offset.checked_add(t.len)?;
+        if t.transformed_glyf {
+            glyf.push(stream.get(offset..end)?);
+        }
+        offset = end;
+    }
+    Some(glyf)
+}
+
+/// A WOFF2 table directory entry: whether it is a transformed `glyf` table, and its length in
+/// the decompressed stream.
+struct Woff2Table {
+    transformed_glyf: bool,
+    len: usize,
+}
+
+/// The WOFF2 table directory in `file`, and where it ends (the collection directory follows).
+fn woff2_directory(file: &[u8]) -> Option<(Vec<Woff2Table>, usize)> {
     let tables = u16::from_be_bytes(file.get(12..14)?.try_into().ok()?);
-    let (mut at, mut offset, mut glyf) = (48usize, 0usize, Vec::new());
+    let (mut at, mut out) = (48usize, Vec::with_capacity(usize::from(tables)));
     for _ in 0..tables {
         let flags = *file.get(at)?;
         at += 1;
@@ -238,13 +260,81 @@ fn woff2_transformed_glyf<'a>(file: &[u8], stream: &'a [u8]) -> Option<Vec<&'a [
         // glyf and loca are transformed at version 0, other tables at any other version.
         let transformed = if is_glyf || is_loca { flags >> 6 == 0 } else { flags >> 6 != 0 };
         let len = if transformed { base128(file, &mut at)? } else { orig };
-        let end = offset.checked_add(len)?;
-        if is_glyf && transformed {
-            glyf.push(stream.get(offset..end)?);
-        }
-        offset = end;
+        out.push(Woff2Table { transformed_glyf: is_glyf && transformed, len });
     }
-    Some(glyf)
+    Some((out, at))
+}
+
+/// Largest table directories a WOFF2 collection may rebuild, in bytes. Each font's directory is
+/// 16 bytes per table it lists, while the file spends as little as one byte per listed table, so
+/// a collection listing the same tables over and over rebuilt hundreds of megabytes of
+/// directories (twice: built, then copied into the font) before the decoder's output cap was
+/// checked. Real collections need kilobytes.
+const MAX_WOFF2_COLLECTION_HEADER: usize = 16 << 20;
+
+/// Why a WOFF2 collection whose directories are too large, or list a table twice, is refused.
+const BAD_COLLECTION: &str = "the collection's font directories are too large or list a table twice";
+
+/// WOFF2 collections: the table directories the decoder rebuilds for its fonts must fit
+/// [`MAX_WOFF2_COLLECTION_HEADER`], and no font may list a table twice (OpenType allows one
+/// table per tag in a font). Checked before decoding, since the decoder builds them before it
+/// checks its output size. A directory that doesn't parse is left to the decoder to report.
+fn check_woff2_collection(file: &[u8]) -> Result<(), UserFontError> {
+    if file.get(4..8) != Some(b"ttcf".as_slice()) {
+        return Ok(());
+    }
+    match woff2_collection_fits(file) {
+        Some(false) => Err(UserFontError::BadWebFont(BAD_COLLECTION.into())),
+        _ => Ok(()),
+    }
+}
+
+/// Do the collection's rebuilt table directories fit, with no table listed twice in one font?
+/// None when the directories don't parse.
+fn woff2_collection_fits(file: &[u8]) -> Option<bool> {
+    let (tables, mut at) = woff2_directory(file)?;
+    let version = u32::from_be_bytes(file.get(at..at.checked_add(4)?)?.try_into().ok()?);
+    at += 4;
+    let fonts = read_255_u16(file, &mut at)?;
+    // TTC header (with the DSIG fields of version 2) and one offset per font.
+    let dsig = if version == 0x0002_0000 { 12 } else { 0 };
+    let mut size = 12 + dsig + 4 * fonts;
+    let mut indices: Vec<usize> = Vec::new();
+    for _ in 0..fonts {
+        let n = read_255_u16(file, &mut at)?;
+        size = size.saturating_add(12 + 16 * n);
+        if size > MAX_WOFF2_COLLECTION_HEADER {
+            return Some(false);
+        }
+        at = at.checked_add(4)?; // flavor
+        indices.clear();
+        for _ in 0..n {
+            let i = read_255_u16(file, &mut at)?;
+            if i >= tables.len() {
+                return None;
+            }
+            indices.push(i);
+        }
+        indices.sort_unstable();
+        if indices.windows(2).any(|w| w[0] == w[1]) {
+            return Some(false);
+        }
+    }
+    Some(true)
+}
+
+/// WOFF2's 255UInt16.
+fn read_255_u16(b: &[u8], at: &mut usize) -> Option<usize> {
+    let mut byte = || {
+        *at += 1;
+        b.get(*at - 1).copied().map(usize::from)
+    };
+    Some(match byte()? {
+        253 => byte()? << 8 | byte()?,
+        254 => byte()? + 253 * 2,
+        255 => byte()? + 253,
+        v => v,
+    })
 }
 
 /// WOFF2's UIntBase128.
@@ -997,5 +1087,51 @@ pub(crate) mod tests {
             assert_eq!(std::fs::read(p).unwrap(), vec![*i; 64], "{}", p.display());
         }
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    fn woff2_collection(tables: usize, fonts: &[Vec<u16>]) -> Vec<u8> {
+        fn u255(v: u16, out: &mut Vec<u8>) {
+            match v {
+                0..=252 => out.push(v as u8),
+                _ => {
+                    out.push(253);
+                    out.extend_from_slice(&v.to_be_bytes());
+                }
+            }
+        }
+        let mut dir = Vec::new();
+        for i in 0..tables {
+            dir.push(63);
+            dir.extend_from_slice(&(i as u32).to_be_bytes()); // a made-up tag per table
+            base128(4, &mut dir);
+        }
+        dir.extend_from_slice(&0x0001_0000u32.to_be_bytes());
+        u255(fonts.len() as u16, &mut dir);
+        for font in fonts {
+            u255(font.len() as u16, &mut dir);
+            dir.extend_from_slice(&[0, 1, 0, 0]);
+            for &i in font {
+                u255(i, &mut dir);
+            }
+        }
+        woff2_file(b"ttcf", tables, &dir, &vec![0; 4 * tables], 4 * tables + 1024)
+    }
+
+    #[test]
+    fn a_woff2_collection_rebuilding_huge_directories_is_refused_before_decoding() {
+        // Each font's rebuilt directory takes 16 bytes per table it lists, the file about two: 600
+        // fonts listing 2,000 tables each come to 19 MB of directories from a 2.4 MB file.
+        let all: Vec<u16> = (0..2_000).collect();
+        let file = woff2_collection(2_000, &vec![all; 600]);
+        assert_eq!(decode_font_file(&file), Err(UserFontError::BadWebFont(BAD_COLLECTION.into())));
+    }
+
+    #[test]
+    fn a_woff2_collection_font_listing_a_table_twice_is_refused() {
+        let file = woff2_collection(3, &[vec![0, 1, 2], vec![0, 1, 1]]);
+        assert_eq!(decode_font_file(&file), Err(UserFontError::BadWebFont(BAD_COLLECTION.into())));
+        // Fonts sharing tables are what collections are for: passed on to the decoder.
+        let file = woff2_collection(3, &[vec![0, 1, 2], vec![0, 1, 2]]);
+        assert_ne!(decode_font_file(&file), Err(UserFontError::BadWebFont(BAD_COLLECTION.into())));
     }
 }
