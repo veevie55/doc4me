@@ -454,6 +454,31 @@ struct Key {
     hide_deleted: bool,
 }
 
+/// Pictures' outlines by media key, bytes (address and length) and crop: see
+/// [`LayoutCache`]'s `outlines`.
+type Outlines = HashMap<(String, usize, usize, [u32; 4]), (std::sync::Weak<Vec<u8>>, Option<Arc<Vec<(f32, f32)>>>)>;
+
+/// The outline of picture `bytes` within `crop`, kept in `outlines` under `key`. A picture
+/// refused for this layout's decoding budget wraps as its rectangle, but isn't remembered as
+/// having no outline: a later layout has a budget of its own.
+fn cached_outline(
+    outlines: &mut Outlines,
+    alphas: &mut contour::Alphas,
+    key: (String, usize, usize, [u32; 4]),
+    bytes: &Arc<Vec<u8>>,
+    crop: [f32; 4],
+) -> Option<Arc<Vec<(f32, f32)>>> {
+    if let Some((_, o)) = outlines.get(&key) {
+        return o.clone();
+    }
+    let outline = alphas.outline(bytes, crop).ok()?.map(Arc::new);
+    if outlines.len() >= 256 {
+        outlines.clear();
+    }
+    outlines.insert(key, (Arc::downgrade(bytes), outline.clone()));
+    outline
+}
+
 /// Memoised paragraph layouts.
 #[derive(Default)]
 pub struct LayoutCache {
@@ -461,8 +486,11 @@ pub struct LayoutCache {
     /// Paragraphs' resolved formatting, by revision ([`Ctx::resolved`]).
     resolved: foldhash::HashMap<u64, Arc<doc4me_doc::resolve::ResolvedPara>>,
     /// Outlines of pictures' opaque pixels (Tight and Through wrapping), by media key, the
-    /// media's bytes (address and length) and crop.
-    outlines: HashMap<(String, usize, usize, [u32; 4]), Option<Arc<Vec<(f32, f32)>>>>,
+    /// media's bytes (address and length) and crop. The cache outlives the documents its
+    /// outlines were made for, so each entry holds a weak reference to the bytes: their
+    /// allocation can't be freed, and the address reused by another picture of the same length,
+    /// while the entry is kept.
+    outlines: Outlines,
     env: u64,
     used: foldhash::HashSet<Key>,
     pub hits: u64,
@@ -593,6 +621,8 @@ struct Ctx<'a> {
     boxes: doc4me_doc::BoxBudget,
     /// Linked text boxes (Create Link).
     chains: textbox::Chains,
+    /// Pictures' transparency decoded in this layout pass, within its budget.
+    alphas: contour::Alphas,
     /// The current section's document grid (body text only: none for headers and footers).
     grid: para::Grid,
     /// Whether tracked deletions are left out in the story being laid out
@@ -609,19 +639,11 @@ impl Ctx<'_> {
     /// The outline Tight and Through wrapping follow around `o` (see [`contour::wrap_outline`]);
     /// pictures' are worked out once per picture and crop.
     fn wrap_outline(&mut self, o: &InlineObject) -> Option<Arc<Vec<(f32, f32)>>> {
-        let (doc, cache) = (self.doc, &mut *self.cache);
+        let (doc, cache, alphas) = (self.doc, &mut *self.cache, &mut self.alphas);
         contour::wrap_outline(o, |media, crop| {
             let bytes = doc.media.get(media)?;
             let key = (media.to_string(), Arc::as_ptr(bytes) as usize, bytes.len(), crop.map(f32::to_bits));
-            if let Some(o) = cache.outlines.get(&key) {
-                return o.clone();
-            }
-            if cache.outlines.len() >= 256 {
-                cache.outlines.clear();
-            }
-            let outline = contour::picture_outline(bytes, crop).map(Arc::new);
-            cache.outlines.insert(key, outline.clone());
-            outline
+            cached_outline(&mut cache.outlines, alphas, key, bytes, crop)
         })
     }
 
@@ -1984,6 +2006,7 @@ fn layout_pass(
         eq_count: 0,
         boxes: doc4me_doc::BoxBudget::default(),
         chains: Default::default(),
+        alphas: Default::default(),
         grid: para::Grid::default(),
         uses_totals: false,
         track_totals: true,
@@ -3830,6 +3853,8 @@ pub fn now_ms() -> f64 {
 mod tests;
 #[cfg(test)]
 mod tests_bidi;
+#[cfg(test)]
+mod tests_budget;
 #[cfg(test)]
 mod tests_complex;
 #[cfg(test)]

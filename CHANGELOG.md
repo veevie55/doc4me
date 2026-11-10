@@ -13,6 +13,14 @@
 
 ### ความปลอดภัย
 
+- **จำกัดงานจัดวางของกล่องข้อความที่เชื่อมกัน และการถอดรหัสภาพเพื่อหาขอบโปร่งใส** (รอบที่ 3 ชุดที่ 11; WordCraft `8efba59b`, `b578be04`, `0f9b9264`, `1ae38ec2`, `32e4900b`, `3cffe22c`)
+  - `crates/layout/src/textbox.rs`: เรื่องในกล่องข้อความที่เชื่อมกันเคยถูกจัดวางใหม่ทั้งเรื่องทุกความกว้างกล่องที่ต่างกัน ตอนนี้จัดวางได้ไม่เกิน `MAX_FLOW_WIDTHS` (16) แบบ; กล่องที่เกินใช้ layout ที่ใกล้ที่สุดในทิศทางข้อความเดียวกัน (กว้างที่สุดที่พอดี ไม่เช่นนั้นแคบที่สุด) จึงยังแสดงข้อความ; ความกว้างแยกกันที่ระดับ twip (`flow_key`) และข้อความแนวตั้งแบบเรียงซ้อน (stacked) ใช้ `STACK_WIDTH` เสมอ จึงใช้ layout เดียวกัน
+  - `crates/layout/src/contour.rs`: เพิ่ม `Alphas` ที่เก็บความโปร่งใสของภาพต่อรอบการจัดวาง ภาพเดียวกันที่ถูก crop หลายแบบถอดรหัสครั้งเดียว และคิดพิกเซลที่ถอดรหัสกับงบ `MAX_DECODED_PIXELS` (2^28) ต่อรอบ เกินแล้วภาพตัดข้อความตามสี่เหลี่ยม; ภาพที่ header บอกว่าไม่โปร่งใสไม่ถูกถอดรหัสและไม่กินงบ
+  - `crates/layout/src/lib.rs`: แคชเส้นขอบใน `LayoutCache` ไม่จำการปฏิเสธเพราะงบหมด (รอบถัดไปมีงบของตัวเอง) และแต่ละรายการถือ `Weak` ของไบต์ภาพไว้ เพื่อไม่ให้ address ถูกนำไปใช้กับภาพอื่นที่ยาวเท่ากันขณะที่รายการยังอยู่ (`cached_outline`)
+  - ปรับจาก WordCraft: คงวิธีคำนวณขอบเขต crop เดิมของ Doc4Me ไว้ (ไม่ได้นำ `crop_window` ของ WordCraft มา) ผลการตัดข้อความรอบภาพในเอกสารปกติจึงไม่เปลี่ยน; ไม่ได้นำ `4963e30e` (จำกัด `gridAfter`) มาเพราะ Doc4Me จำกัด `grid_before`/`grid_after` ด้วย `MAX_COLS` ทุกจุดอยู่แล้ว
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารปกติจัดหน้าเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เพิ่ม `crates/layout/src/tests_budget.rs` 10 เทสต์ (เช่น `a_linked_chain_lays_its_story_out_at_a_bounded_number_of_widths`, `a_picture_cropped_many_ways_is_decoded_once`, `decoding_pictures_stops_at_the_layouts_budget`, `a_kept_outline_holds_on_to_its_pictures_allocation`) ผ่าน; `cargo test -p doc4me-layout` 293 passed; `cargo clippy -p doc4me-layout --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **ตัวนำเข้าทิ้งชื่อฟอนต์และลิงก์ที่ยาวเกิน, span ใช้สำเนาร่วมกัน และจำกัดสำเนาที่ run ได้รับ** (รอบที่ 3 ชุดที่ 10; WordCraft `79e3610c`, `41de4739`, `582f4118`)
   - `crates/formats/src/model.rs`: `Fmt::link` และ `Fmt::font` เปลี่ยนจาก `String` เป็น `Arc<str>` เพื่อให้ span ของลิงก์/ฟอนต์เดียวกันใช้สำเนาเดียว; เพิ่ม `MAX_FONT_NAME` (256 ไบต์), `MAX_LINK` (8 KiB), `kept_font`/`kept_link` และงบ `MAX_RUN_STRINGS` (64 MiB) ใน `Builder::budget` ซึ่งเกินแล้ว run ยังเก็บข้อความแต่ไม่มีลิงก์/ฟอนต์ เดิมชื่อยาวหนึ่งชื่อคูณจำนวน span ทำให้ไฟล์เล็กขยายเป็นหลายกิกะไบต์
   - ตัวนำเข้า RTF, HTML, Markdown, ODT และ LaTeX ทิ้งชื่อฟอนต์/ลิงก์ที่ยาวเกิน (ข้อความยังอยู่); HTML ที่ชื่อฟอนต์ยาวเกินใช้ฟอนต์ที่สืบทอดมาต่อ
