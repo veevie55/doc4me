@@ -30,7 +30,7 @@ lang-028	German	de-DE	de
 lang-029	Greek	el-GR	el
 lang-030	Gujarati	gu-IN	gu
 lang-031	Hausa	ha-Latn-NG	ha
-lang-032	Hebrew	he-IL	-
+lang-032	Hebrew	he-IL	he
 lang-033	Hindi	hi-IN	hi
 lang-034	Hungarian	hu-HU	hu
 lang-035	Icelandic	is-IS	is
@@ -53,7 +53,7 @@ lang-051	Lithuanian	lt-LT	lt
 lang-052	Luxembourgish	lb-LU	lb
 lang-053	Macedonian (North Macedonia)	mk-MK	mk
 lang-054	Malay (Latin)	ms-MY	ms
-lang-055	Malayalam	ml-IN	-
+lang-055	Malayalam	ml-IN	ml
 lang-056	Maltese	mt-MT	mt
 lang-057	Maori	mi-NZ	mi
 lang-058	Marathi	mr-IN	mr
@@ -76,7 +76,7 @@ lang-074	Serbian (Latin, Serbia)	sr-latn-RS	sr-latn
 lang-075	Serbian (Cyrillic, Bosnia & Herzegovina)	sr-cyrl-BA	sr
 lang-076	Sesotho sa Leboa	nso-ZA	nso
 lang-077	Setswana	tn-ZA	tn
-lang-078	Sinhala	si-LK	-
+lang-078	Sinhala	si-LK	si
 lang-079	Slovak	sk-SK	sk
 lang-080	Slovenian	sl-SI	sl
 lang-081	Spanish	es-ES	es

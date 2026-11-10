@@ -57,7 +57,7 @@ pub struct LangInfo {
 }
 
 /// The registry. English first: it is the fallback and the source language.
-pub static LANGUAGES: [LangInfo; 84] = [
+pub static LANGUAGES: [LangInfo; 87] = [
     LangInfo { code: "en", name: "English", source: "", prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
     // British English (colour, centre, customise); `en-GB` and `en_GB.UTF-8` resolve here, other
     // English regions keep the built-in US English. New documents stay in Doc4Me's default
@@ -314,6 +314,16 @@ pub static LANGUAGES: [LangInfo; 84] = [
     LangInfo {
         code: "kn", name: "ಕನ್ನಡ", source: include_str!("kn.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
     },
+    // AI-generated draft; the Malayalam script is drawn imperfectly (no shaping yet).
+    LangInfo {
+        code: "ml", name: "മലയാളം", source: include_str!("ml.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Malayalam.
+    LangInfo {
+        code: "si", name: "සිංහල", source: include_str!("si.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; right-to-left, which the interface does not lay out yet.
+    LangInfo { code: "he", name: "עברית", source: include_str!("he.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
 ];
 
 impl LangInfo {

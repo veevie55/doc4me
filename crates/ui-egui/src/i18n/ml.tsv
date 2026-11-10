@@ -1,0 +1,3046 @@
+# Malayalam (ml) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	അടുത്ത വാക്കിന് മുമ്പ് "a" അല്ലെങ്കിൽ "an"; പോളിഷ് "w"/"we", "z"/"ze".
+	% of all commits	എല്ലാ കമ്മിറ്റുകളുടെയും %
+	(All)	(എല്ലാം)
+	(Custom)	(ഇഷ്ടാനുസൃതം)
+	(no style)	(ശൈലി ഇല്ല)
+	(no suggestions)	(നിർദ്ദേശങ്ങളില്ല)
+	(none)	(ഒന്നുമില്ല)
+	(normal text)	(സാധാരണ ടെക്സ്റ്റ്)
+	(not matched)	(പൊരുത്തപ്പെട്ടില്ല)
+	(picture or object)	(ചിത്രം അല്ലെങ്കിൽ ഒബ്ജക്റ്റ്)
+	*Bold* and _italic_ with real formatting	യഥാർത്ഥ ഫോർമാറ്റിംഗോടെ *ബോൾഡ്*, _ഇറ്റാലിക്_
+	0 or More Characters	0 അല്ലെങ്കിൽ കൂടുതൽ പ്രതീകങ്ങൾ
+	1. Formatting restrictions	1. ഫോർമാറ്റിംഗ് നിയന്ത്രണങ്ങൾ
+	1. Main document	1. പ്രധാന പ്രമാണം
+	1.5 Line Spacing	1.5 വരി അകലം
+	1/4 Em Space	1/4 Em സ്പേസ്
+	1×2 Empty Matrix	1×2 ശൂന്യ മാട്രിക്സ്
+	1×3 Empty Matrix	1×3 ശൂന്യ മാട്രിക്സ്
+	2. Data source	2. ഡാറ്റ ഉറവിടം
+	2. Editing restrictions	2. എഡിറ്റിംഗ് നിയന്ത്രണങ്ങൾ
+	2×1 Empty Matrix	2×1 ശൂന്യ മാട്രിക്സ്
+	2×2 Determinant	2×2 ഡിറ്റർമിനന്റ്
+	2×2 Empty Matrix	2×2 ശൂന്യ മാട്രിക്സ്
+	2×2 Identity Matrix	2×2 ഐഡന്റിറ്റി മാട്രിക്സ്
+	2×2 Identity Matrix (sparse)	2×2 ഐഡന്റിറ്റി മാട്രിക്സ് (വിരളം)
+	2×2 Matrix in Brackets	ബ്രാക്കറ്റുകളിൽ 2×2 മാട്രിക്സ്
+	2×2 Matrix in Double Bars	ഇരട്ട വരകളിൽ 2×2 മാട്രിക്സ്
+	2×2 Matrix in Parentheses	വലയങ്ങളിൽ 2×2 മാട്രിക്സ്
+	2×3 Empty Matrix	2×3 ശൂന്യ മാട്രിക്സ്
+	3-D	3-D
+	3. Merge the data with the document	3. ഡാറ്റ പ്രമാണവുമായി ലയിപ്പിക്കുക
+	3. Start enforcement	3. നടപ്പാക്കൽ ആരംഭിക്കുക
+	3D Models	3D മോഡലുകൾ
+	3×1 Empty Matrix	3×1 ശൂന്യ മാട്രിക്സ്
+	3×2 Empty Matrix	3×2 ശൂന്യ മാട്രിക്സ്
+	3×3 Empty Matrix	3×3 ശൂന്യ മാട്രിക്സ്
+	3×3 Identity Matrix	3×3 ഐഡന്റിറ്റി മാട്രിക്സ്
+	3×3 Identity Matrix (sparse)	3×3 ഐഡന്റിറ്റി മാട്രിക്സ് (വിരളം)
+	5,000 characters a day; give an email address for 50,000.	ദിവസം 5,000 പ്രതീകങ്ങൾ; 50,000-ന് ഒരു ഇമെയിൽ വിലാസം നൽകുക.
+	<< Less	<< കുറവ്
+	<< Remove	<< നീക്കം ചെയ്യുക
+	A file dialog is already open.	ഒരു ഫയൽ ഡയലോഗ് ഇതിനകം തുറന്നിട്ടുണ്ട്.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Rust-ൽ ആദ്യം മുതൽ എഴുതിയ സൗജന്യ, ഓപ്പൺ സോഴ്സ് വേഡ് പ്രോസസർ.\nArtCraft ടീമിന്റെ WordCraft അടിസ്ഥാനമാക്കിയത്.
+	A header source holds the field names for a data source without a header row.	ഹെഡർ വരിയില്ലാത്ത ഡാറ്റ ഉറവിടത്തിന്റെ ഫീൽഡ് പേരുകൾ ഹെഡർ ഉറവിടത്തിൽ ഉണ്ടാകും.
+	A mail merge field	ഒരു മെയിൽ മെർജ് ഫീൽഡ്
+	A new document lists the commands with their shortcuts.	പുതിയ പ്രമാണം കമാൻഡുകളെ അവയുടെ കുറുക്കുവഴികളോടെ പട്ടികപ്പെടുത്തുന്നു.
+	A numbered sequence (figures, tables…)	ഒരു അക്കമിട്ട ക്രമം (ചിത്രങ്ങൾ, പട്ടികകൾ…)
+	A password is required to open this document.	ഈ പ്രമാണം തുറക്കാൻ പാസ്‌വേഡ് ആവശ്യമാണ്.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	ചിഹ്നനത്തിന് മുമ്പ് സ്പേസ്, ഇരട്ടിച്ച ചിഹ്നങ്ങൾ, സംയോജകങ്ങൾക്ക് മുമ്പ് പോളിഷ് കോമകൾ.
+	A table of contents	ഒരു ഉള്ളടക്ക പട്ടിക
+	A table's rows keep the same columns here.	ഒരു പട്ടികയുടെ വരികൾ ഇവിടെ ഒരേ നിരകൾ നിലനിർത്തുന്നു.
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	അആഇഈ AaBb
+	AaBbYyZz	അആഹള AaZz
+	About	വിവരം
+	About Doc4Me	Doc4Me-നെക്കുറിച്ച്
+	Above Chart	ചാർട്ടിന് മുകളിൽ
+	Above the item	ഇനത്തിന് മുകളിൽ
+	Absolute position	സമ്പൂർണ്ണ സ്ഥാനം
+	Absolute value cases	കേവലമൂല്യ കേസുകൾ
+	Accent	ആക്സന്റ്
+	Accent Gradient	ആക്സന്റ് ഗ്രേഡിയന്റ്
+	Accent with Reflection	പ്രതിഫലനത്തോടെ ആക്സന്റ്
+	Accent {n}	ആക്സന്റ് {n}
+	Accents	ആക്സന്റുകൾ
+	Accept	സ്വീകരിക്കുക
+	Accept All	എല്ലാം സ്വീകരിക്കുക
+	Accept All Changes	എല്ലാ മാറ്റങ്ങളും സ്വീകരിക്കുക
+	Accept or Reject Changes	മാറ്റങ്ങൾ സ്വീകരിക്കുക അല്ലെങ്കിൽ നിരസിക്കുക
+	Accept This Change	ഈ മാറ്റം സ്വീകരിക്കുക
+	Accessed on	ആക്സസ് ചെയ്ത തീയതി
+	Accessibility	പ്രവേശനക്ഷമത
+	Accessibility Pane	പ്രവേശനക്ഷമത പാളി
+	Acute	അക്യൂട്ട്
+	Add	ചേർക്കുക
+	Add >>	ചേർക്കുക >>
+	Add a comment	ഒരു അഭിപ്രായം ചേർക്കുക
+	Add a Table	ഒരു പട്ടിക ചേർക്കുക
+	Add at least one field.	കുറഞ്ഞത് ഒരു ഫീൽഡെങ്കിലും ചേർക്കുക.
+	Add caption when inserting:	തിരുകുമ്പോൾ അടിക്കുറിപ്പ് ചേർക്കുക:
+	Add Chart Element	ചാർട്ട് ഘടകം ചേർക്കുക
+	Add Field	ഫീൽഡ് ചേർക്കുക
+	Add Field Name	ഫീൽഡ് പേര് ചേർക്കുക
+	Add Font…	ഫോണ്ട് ചേർക്കുക…
+	Add line numbering	വരി നമ്പറിംഗ് ചേർക്കുക
+	Add New Placeholder	പുതിയ പ്ലേസ്ഹോൾഡർ ചേർക്കുക
+	Add New Placeholder…	പുതിയ പ്ലേസ്ഹോൾഡർ ചേർക്കുക…
+	Add New Source…	പുതിയ ഉറവിടം ചേർക്കുക…
+	Add Object to Selection	തിരഞ്ഞെടുപ്പിലേക്ക് ഒബ്ജക്റ്റ് ചേർക്കുക
+	Add Pen	പേന ചേർക്കുക
+	Add Row	വരി ചേർക്കുക
+	Add Series	ശ്രേണി ചേർക്കുക
+	Add Shape	ആകൃതി ചേർക്കുക
+	Add Space Before Paragraph	ഖണ്ഡികയ്ക്ക് മുമ്പ് സ്പേസ് ചേർക്കുക
+	Add space between Asian and Latin text	ഏഷ്യൻ, ലാറ്റിൻ ടെക്സ്റ്റിനിടയിൽ സ്പേസ് ചേർക്കുക
+	Add space between Asian text and numbers	ഏഷ്യൻ ടെക്സ്റ്റിനും അക്കങ്ങൾക്കുമിടയിൽ സ്പേസ് ചേർക്കുക
+	Add tab stop at:	ഇവിടെ ടാബ് സ്റ്റോപ്പ് ചേർക്കുക:
+	Add Text	ടെക്സ്റ്റ് ചേർക്കുക
+	Add the chapter number	അധ്യായ നമ്പർ ചേർക്കുക
+	Add to Dictionary	നിഘണ്ടുവിൽ ചേർക്കുക
+	Add to Document	പ്രമാണത്തിലേക്ക് ചേർക്കുക
+	Add to Quick Access Toolbar	ദ്രുത പ്രവേശന ടൂൾബാറിൽ ചേർക്കുക
+	Add to Style Gallery	ശൈലി ഗാലറിയിൽ ചേർക്കുക
+	Add-ins	ആഡ്-ഇന്നുകൾ
+	Add/Edit\nBibliography	ഗ്രന്ഥസൂചി\nചേർക്കുക/എഡിറ്റ് ചെയ്യുക
+	Add/Edit\nCitation	ഉദ്ധരണി\nചേർക്കുക/എഡിറ്റ് ചെയ്യുക
+	Add\nNote	കുറിപ്പ്\nചേർക്കുക
+	Add\nPen	പേന\nചേർക്കുക
+	Add\nShape	ആകൃതി\nചേർക്കുക
+	Added	ചേർത്തു
+	Added Fonts	ചേർത്ത ഫോണ്ടുകൾ
+	Address	വിലാസം
+	Address Block	വിലാസ ബ്ലോക്ക്
+	Address labels	വിലാസ ലേബലുകൾ
+	Address:	വിലാസം:
+	Address\nBlock	വിലാസ\nബ്ലോക്ക്
+	Adjust	ക്രമീകരിക്കുക
+	Advanced	വിപുലമായത്
+	Advanced Find	വിപുലമായ തിരയൽ
+	Advanced Find…	വിപുലമായ തിരയൽ…
+	After:	ശേഷം:
+	Agents	ഏജന്റുകൾ
+	Align	വിന്യസിക്കുക
+	Align Bottom Center	താഴെ മധ്യത്തിൽ വിന്യസിക്കുക
+	Align Bottom Left	താഴെ ഇടത്ത് വിന്യസിക്കുക
+	Align Bottom Right	താഴെ വലത്ത് വിന്യസിക്കുക
+	Align Center	മധ്യത്തിൽ വിന്യസിക്കുക
+	Align Center Left	മധ്യ ഇടത്ത് വിന്യസിക്കുക
+	Align Center Right	മധ്യ വലത്ത് വിന്യസിക്കുക
+	Align Left	ഇടത്ത് വിന്യസിക്കുക
+	Align Right	വലത്ത് വിന്യസിക്കുക
+	Align Text	ടെക്സ്റ്റ് വിന്യസിക്കുക
+	Align Top Center	മുകളിൽ മധ്യത്തിൽ വിന്യസിക്കുക
+	Align Top Left	മുകളിൽ ഇടത്ത് വിന്യസിക്കുക
+	Align Top Right	മുകളിൽ വലത്ത് വിന്യസിക്കുക
+	Aligned at:	ഇവിടെ വിന്യസിച്ചു:
+	Alignment	വിന്യാസം
+	Alignment:	വിന്യാസം:
+	All	എല്ലാം
+	All - Linear	എല്ലാം - രേഖീയം
+	All - Professional	എല്ലാം - പ്രൊഫഷണൽ
+	All Borders	എല്ലാ അതിരുകളും
+	All Caps	എല്ലാം വലിയക്ഷരം
+	All caps	എല്ലാം വലിയക്ഷരത്തിൽ
+	All Commands	എല്ലാ കമാൻഡുകളും
+	All files	എല്ലാ ഫയലുകളും
+	All Levels	എല്ലാ ലെവലുകളും
+	All Markup	എല്ലാ മാർക്കപ്പും
+	All pages	എല്ലാ പേജുകളും
+	All pages in the range	ശ്രേണിയിലെ എല്ലാ പേജുകളും
+	All records	എല്ലാ റെക്കോർഡുകളും
+	All symbol sets	എല്ലാ ചിഹ്ന ഗണങ്ങളും
+	Allow Doc4Me to use online services	ഓൺലൈൻ സേവനങ്ങൾ ഉപയോഗിക്കാൻ Doc4Me-നെ അനുവദിക്കുക
+	Allow hanging punctuation	തൂങ്ങുന്ന ചിഹ്നനം അനുവദിക്കുക
+	Allow Latin text to wrap in the middle of a word	ലാറ്റിൻ ടെക്സ്റ്റ് വാക്കിന്റെ നടുവിൽ പൊതിയാൻ അനുവദിക്കുക
+	Allow line breaks	വരി ഇടവേളകൾ അനുവദിക്കുക
+	Allow overlap	ഓവർലാപ്പ് അനുവദിക്കുക
+	Allow row to break across pages	വരി പേജുകൾക്കിടയിൽ മുറിയാൻ അനുവദിക്കുക
+	Alphabetical	അക്ഷരമാലാക്രമം
+	Alt Text	ഇതര ടെക്സ്റ്റ്
+	Alt text	ഇതര വാചകം
+	Alt Text Pane	ഇതര ടെക്സ്റ്റ് പാളി
+	Alt:	Alt:
+	Alt\nText	ഇതര\nടെക്സ്റ്റ്
+	And	ഒപ്പം
+	Angle Brackets	കോൺ ബ്രാക്കറ്റുകൾ
+	Angle Brackets with Separator	വിഭജകത്തോടെ കോൺ ബ്രാക്കറ്റുകൾ
+	Angle Brackets with Two Separators	രണ്ട് വിഭജകങ്ങളോടെ കോൺ ബ്രാക്കറ്റുകൾ
+	Animate the caret (it glides and fades)	കഴ്സർ ആനിമേറ്റ് ചെയ്യുക (തെന്നി മങ്ങുന്നു)
+	Animation	ആനിമേഷൻ
+	Animation effects:	ആനിമേഷൻ ഇഫക്റ്റുകൾ:
+	Annotation Reference	വ്യാഖ്യാന റഫറൻസ്
+	Annotation Subject	വ്യാഖ്യാന വിഷയം
+	Annotation Text	വ്യാഖ്യാന ടെക്സ്റ്റ്
+	Another file	മറ്റൊരു ഫയൽ
+	Any Character	ഏതെങ്കിലും പ്രതീകം
+	Any Digit	ഏതെങ്കിലും അക്കം
+	Any Letter	ഏതെങ്കിലും അക്ഷരം
+	Anyone can open this document. Encrypt it with a password to keep it private.	ആർക്കും ഈ പ്രമാണം തുറക്കാം. സ്വകാര്യമായി സൂക്ഷിക്കാൻ പാസ്‌വേഡ് ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുക.
+	Anyone who opens the document will need this password.	പ്രമാണം തുറക്കുന്ന ആർക്കും ഈ പാസ്‌വേഡ് ആവശ്യമാണ്.
+	APA	APA
+	API key (if the server needs one)	API കീ (സെർവറിന് ആവശ്യമെങ്കിൽ)
+	Apply	പ്രയോഗിക്കുക
+	Apply as you type	ടൈപ്പ് ചെയ്യുമ്പോൾ പ്രയോഗിക്കുക
+	Apply Asian line-breaking rules (kinsoku)	ഏഷ്യൻ വരി മുറിക്കൽ നിയമങ്ങൾ പ്രയോഗിക്കുക (kinsoku)
+	Apply Character Style	പ്രതീക ശൈലി പ്രയോഗിക്കുക
+	Apply formatting to:	ഫോർമാറ്റിംഗ് ഇതിൽ പ്രയോഗിക്കുക:
+	Apply special formats to	പ്രത്യേക ഫോർമാറ്റുകൾ ഇതിൽ പ്രയോഗിക്കുക
+	Apply Style	ശൈലി പ്രയോഗിക്കുക
+	Apply Styles	ശൈലികൾ പ്രയോഗിക്കുക
+	Apply to:	ഇതിൽ പ്രയോഗിക്കുക:
+	Arabic	അറബിക്
+	Arch Down	താഴോട്ട് വളവ്
+	Arch Up	മുകളിലോട്ട് വളവ്
+	Area	ഏരിയ
+	Around	ചുറ്റും
+	Arrange	ക്രമീകരിക്കുക
+	Arrange All	എല്ലാം ക്രമീകരിക്കുക
+	Arrange\nAll	എല്ലാം\nക്രമീകരിക്കുക
+	Arrow	അമ്പടയാളം
+	Arrows	അമ്പടയാളങ്ങൾ
+	Artistic Effects	കലാപരമായ ഇഫക്റ്റുകൾ
+	As Recommended	ശുപാർശ ചെയ്തതുപോലെ
+	As you type	ടൈപ്പ് ചെയ്യുമ്പോൾ
+	ASAP	എത്രയും വേഗം
+	Ascending	ആരോഹണം
+	Asian text font:	ഏഷ്യൻ ടെക്സ്റ്റ് ഫോണ്ട്:
+	Asian Typography	ഏഷ്യൻ ടൈപ്പോഗ്രാഫി
+	Assign	നിയോഗിക്കുക
+	At least	കുറഞ്ഞത്
+	At least {n}	കുറഞ്ഞത് {n}
+	Atelier	ആറ്റലിയർ
+	Atmosphere	അന്തരീക്ഷം
+	Attach Template	ടെംപ്ലേറ്റ് അറ്റാച്ച് ചെയ്യുക
+	Attach…	അറ്റാച്ച് ചെയ്യുക…
+	Author	രചയിതാവ്
+	Auto	യാന്ത്രികം
+	AutoCaption	യാന്ത്രിക അടിക്കുറിപ്പ്
+	AutoCaption…	യാന്ത്രിക അടിക്കുറിപ്പ്…
+	AutoComplete	യാന്ത്രിക പൂർത്തീകരണം
+	AutoCorrect	യാന്ത്രിക തിരുത്തൽ
+	AutoCorrect Options	യാന്ത്രിക തിരുത്തൽ ഓപ്ഷനുകൾ
+	AutoFit	യാന്ത്രിക ഫിറ്റ്
+	AutoFit Contents	ഉള്ളടക്കത്തിന് യാന്ത്രിക ഫിറ്റ്
+	AutoFit Window	വിൻഡോയ്ക്ക് യാന്ത്രിക ഫിറ്റ്
+	AutoFormat	യാന്ത്രിക ഫോർമാറ്റ്
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	യാന്ത്രിക ഫോർമാറ്റ് (Ctrl+Alt+K) തിരഞ്ഞെടുത്ത ഖണ്ഡികകളോ മുഴുവൻ പ്രമാണമോ ഫോർമാറ്റ് ചെയ്യുന്നു.
+	AutoFormat and Review Changes…	യാന്ത്രിക ഫോർമാറ്റ് ചെയ്ത് മാറ്റങ്ങൾ അവലോകനം ചെയ്യുക…
+	AutoFormat As You Type	ടൈപ്പ് ചെയ്യുമ്പോൾ യാന്ത്രിക ഫോർമാറ്റ്
+	AutoFormat changed {count} paragraphs	യാന്ത്രിക ഫോർമാറ്റ് {count} ഖണ്ഡികകൾ മാറ്റി
+	AutoFormat Now	ഇപ്പോൾ യാന്ത്രിക ഫോർമാറ്റ് ചെയ്യുക
+	Automatic	യാന്ത്രികമായി
+	Automatic ({language})	യാന്ത്രികമായി ({language})
+	Automatic bulleted lists	യാന്ത്രിക ബുള്ളറ്റ് പട്ടികകൾ
+	Automatic follows your system's language. Menus and commands change; your documents don't.	യാന്ത്രികം നിങ്ങളുടെ സിസ്റ്റത്തിന്റെ ഭാഷ പിന്തുടരുന്നു. മെനുകളും കമാൻഡുകളും മാറും; നിങ്ങളുടെ പ്രമാണങ്ങൾ മാറില്ല.
+	Automatic numbered lists	യാന്ത്രിക അക്കമിട്ട പട്ടികകൾ
+	Automatic Table 1 (3 levels)	യാന്ത്രിക പട്ടിക 1 (3 ലെവലുകൾ)
+	Automatic Table 2 (2 levels)	യാന്ത്രിക പട്ടിക 2 (2 ലെവലുകൾ)
+	Automatically hyphenate document	പ്രമാണം യാന്ത്രികമായി ഹൈഫനേറ്റ് ചെയ്യുക
+	Automatically Update Document Styles	പ്രമാണ ശൈലികൾ യാന്ത്രികമായി അപ്ഡേറ്റ് ചെയ്യുക
+	Automatically update document styles	പ്രമാണ ശൈലികൾ സ്വയം അപ്ഡേറ്റ് ചെയ്യുക
+	AutoSave	യാന്ത്രിക സേവ്
+	AutoSave documents you have saved in Doc4Me	Doc4Me-ൽ നിങ്ങൾ സേവ് ചെയ്ത പ്രമാണങ്ങൾ യാന്ത്രികമായി സേവ് ചെയ്യുക
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	യാന്ത്രിക സേവ് പരാജയപ്പെട്ടു: {error}. യാന്ത്രിക സേവ് വീണ്ടും ഓണാക്കാൻ പ്രമാണം സേവ് ചെയ്യുക.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	ബ്രൗസറിൽ യാന്ത്രിക സേവ് ലഭ്യമല്ല: ഇതിന് നിങ്ങളുടെ ഫയലുകളിൽ എഴുതാൻ കഴിയില്ല. സേവ് ഒരു പകർപ്പ് ഡൗൺലോഡ് ചെയ്യുന്നു.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	യാന്ത്രിക സേവ് .docx, .odt, .rtf ഫയലുകൾ മാത്രം സൂക്ഷിക്കുന്നു; {name}-ന് എല്ലാ ഫോർമാറ്റിംഗും സൂക്ഷിക്കാൻ കഴിയില്ല. യാന്ത്രിക സേവ് ഓണാക്കാൻ .docx ആയി സേവ് ചെയ്യുക.
+	AutoSave saves every change to the file (needs a saved document)	യാന്ത്രിക സേവ് ഓരോ മാറ്റവും ഫയലിൽ സേവ് ചെയ്യുന്നു (സേവ് ചെയ്ത പ്രമാണം ആവശ്യമാണ്)
+	AutoSave writes your changes to the file a moment after you stop typing.	ടൈപ്പിംഗ് നിർത്തി അൽപ്പസമയത്തിനുള്ളിൽ യാന്ത്രിക സേവ് മാറ്റങ്ങൾ ഫയലിൽ എഴുതുന്നു.
+	AutoText	യാന്ത്രിക ടെക്സ്റ്റ്
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	പിന്നോട്ട്
+	Backspace	Backspace
+	Balloons	ബലൂണുകൾ
+	Banded Columns	ബാൻഡഡ് നിരകൾ
+	Banded Rows	ബാൻഡഡ് വരികൾ
+	Bar	ബാർ
+	Base text:	അടിസ്ഥാന ടെക്സ്റ്റ്:
+	Based on: {style}	അടിസ്ഥാനം: {style}
+	Baseline Dots	അടിസ്ഥാനരേഖ ബിന്ദുക്കൾ
+	Basic Cycle	അടിസ്ഥാന ചക്രം
+	Basic List	അടിസ്ഥാന പട്ടിക
+	Basic Math	അടിസ്ഥാന ഗണിതം
+	Basic Matrix	അടിസ്ഥാന മാട്രിക്സ്
+	Basic Process	അടിസ്ഥാന പ്രക്രിയ
+	Basic Pyramid	അടിസ്ഥാന പിരമിഡ്
+	Basic Radial	അടിസ്ഥാന റേഡിയൽ
+	Basic Venn	അടിസ്ഥാന വെൻ
+	Bayes' rule	ബെയ്സ് നിയമം
+	Before:	മുമ്പ്:
+	Beginning of Word	വാക്കിന്റെ തുടക്കം
+	Behind Text	ടെക്സ്റ്റിന് പിന്നിൽ
+	Below text	ടെക്സ്റ്റിന് താഴെ
+	Below the item	ഇനത്തിന് താഴെ
+	Between	ഇടയിൽ
+	Bibliography	ഗ്രന്ഥസൂചി
+	Binary assets added	ചേർത്ത ബൈനറി അസറ്റുകൾ
+	Binary assets removed	നീക്കം ചെയ്ത ബൈനറി അസറ്റുകൾ
+	Binomial Coefficient	ദ്വിപദ ഗുണകം
+	Binomial Coefficient (angle)	ദ്വിപദ ഗുണകം (കോൺ)
+	Binomial Coefficient with Angle Brackets	കോൺ ബ്രാക്കറ്റുകളോടെ ദ്വിപദ ഗുണകം
+	Binomial expansion of (x+a)ⁿ	(x+a)ⁿ-ന്റെ ദ്വിപദ വികാസം
+	Blank	ശൂന്യം
+	Blank (Three Columns)	ശൂന്യം (മൂന്ന് നിരകൾ)
+	Blank document	ശൂന്യ പ്രമാണം
+	Blank Page	ശൂന്യ പേജ്
+	Block\nAuthors	രചയിതാക്കളെ\nതടയുക
+	Blue:	നീല:
+	Body Text	പ്രധാന ടെക്സ്റ്റ്
+	Body text in a short paragraph to show spacing.	അകലം കാണിക്കാൻ ഒരു ചെറിയ ഖണ്ഡികയിലെ പ്രധാന ടെക്സ്റ്റ്.
+	Bold	ബോൾഡ്
+	Book	പുസ്തകം
+	Book Title	പുസ്തക ശീർഷകം
+	Book title	പുസ്തകത്തിന്റെ ശീർഷകം
+	Bookmark	ബുക്ക്മാർക്ക്
+	Bookmark name:	ബുക്ക്മാർക്ക് പേര്:
+	Border lines	അതിർ വരകൾ
+	Border Painter	അതിർ പെയിന്റർ
+	Border\nPainter	അതിർ\nപെയിന്റർ
+	Borders	അതിരുകൾ
+	Borders and Shading	അതിരുകളും ഷേഡിംഗും
+	Borders and Shading…	അതിരുകളും ഷേഡിംഗും…
+	Border…	അതിർ…
+	Both Sides	ഇരുവശവും
+	Both sides	രണ്ട് വശങ്ങളും
+	Bottom	താഴെ
+	Bottom Border	താഴത്തെ അതിർ
+	Bottom Margin	താഴത്തെ മാർജിൻ
+	Bottom of Page	പേജിന്റെ താഴെ
+	Bottom of the Window	വിൻഡോയുടെ താഴെ
+	Bottom:	താഴെ:
+	Box	പെട്ടി
+	Boxed Formula	പെട്ടിയിലാക്കിയ സൂത്രവാക്യം
+	Boxed Formula (example)	പെട്ടിയിലാക്കിയ സൂത്രവാക്യം (ഉദാഹരണം)
+	Boxed Formulas	പെട്ടിയിലാക്കിയ സൂത്രവാക്യങ്ങൾ
+	Braces	ബ്രേസുകൾ
+	Braces with Separator	വിഭജകത്തോടെ ബ്രേസുകൾ
+	Bracket	ബ്രാക്കറ്റ്
+	Brackets	ബ്രാക്കറ്റുകൾ
+	Brackets with Separators	വിഭജകങ്ങളോടെ ബ്രാക്കറ്റുകൾ
+	Break Link	ലിങ്ക് മുറിക്കുക
+	Breaks	ഇടവേളകൾ
+	Breve	ബ്രീവ്
+	Brightness, contrast and transparency change the picture from how it looks now.	തെളിച്ചം, കോൺട്രാസ്റ്റ്, സുതാര്യത എന്നിവ ചിത്രത്തെ ഇപ്പോഴത്തെ രൂപത്തിൽ നിന്ന് മാറ്റുന്നു.
+	Brightness:	തെളിച്ചം:
+	Bring Forward	മുന്നോട്ട് കൊണ്ടുവരിക
+	Browse in Doc4Me…	Doc4Me-ൽ ബ്രൗസ് ചെയ്യുക…
+	Browse…	ബ്രൗസ് ചെയ്യുക…
+	Build table of figures from:	ചിത്രങ്ങളുടെ പട്ടിക ഇതിൽ നിന്ന് നിർമ്മിക്കുക:
+	Building Block Gallery Content Control	ബിൽഡിംഗ് ബ്ലോക്ക് ഗാലറി ഉള്ളടക്ക നിയന്ത്രണം
+	Built from the style or table entry fields chosen in Options.	ഓപ്ഷനുകളിൽ തിരഞ്ഞെടുത്ത ശൈലിയിൽ നിന്നോ പട്ടിക എൻട്രി ഫീൽഡുകളിൽ നിന്നോ നിർമ്മിച്ചത്.
+	Built-In	അന്തർനിർമ്മിതം
+	Built-in Heading styles	അന്തർനിർമ്മിത തലക്കെട്ട് ശൈലികൾ
+	Built-in style	അന്തർനിർമ്മിത ശൈലി
+	Built-in styles can't be deleted.	അന്തർനിർമ്മിത ശൈലികൾ ഇല്ലാതാക്കാൻ കഴിയില്ല.
+	Bullet	ബുള്ളറ്റ്
+	Bullet Library	ബുള്ളറ്റ് ലൈബ്രറി
+	Bullets	ബുള്ളറ്റുകൾ
+	By author	രചയിതാവ് പ്രകാരം
+	By:	മുഖേന:
+	Calendar	കലണ്ടർ
+	Can't be deleted	ഇല്ലാതാക്കാൻ കഴിയില്ല
+	Cancel	റദ്ദാക്കുക
+	Canvas Member	ക്യാൻവാസ് അംഗം
+	Capitalization	വലിയക്ഷരമാക്കൽ
+	Capitalize Each Word	ഓരോ വാക്കും വലിയക്ഷരത്തിൽ തുടങ്ങുക
+	Capitalize first letter of sentences	വാക്യങ്ങളുടെ ആദ്യാക്ഷരം വലിയക്ഷരമാക്കുക
+	Capitalize first letter of table cells	പട്ടിക സെല്ലുകളുടെ ആദ്യാക്ഷരം വലിയക്ഷരമാക്കുക
+	Capitalize names of days	ദിവസങ്ങളുടെ പേരുകൾ വലിയക്ഷരത്തിൽ തുടങ്ങുക
+	Capitalize the first word of a sentence	വാക്യത്തിലെ ആദ്യ വാക്ക് വലിയക്ഷരത്തിൽ തുടങ്ങുക
+	Caption	അടിക്കുറിപ്പ്
+	Caption label:	അടിക്കുറിപ്പ് ലേബൽ:
+	Caption Numbering	അടിക്കുറിപ്പ് നമ്പറിംഗ്
+	Caption text	അടിക്കുറിപ്പ് ടെക്സ്റ്റ്
+	Caption:	അടിക്കുറിപ്പ്:
+	Captions	അടിക്കുറിപ്പുകൾ
+	Caret Character	^ പ്രതീകം
+	Case changes	കേസ് മാറ്റങ്ങൾ
+	Cases	കേസുകൾ
+	Cases (Three Conditions)	കേസുകൾ (മൂന്ന് നിബന്ധനകൾ)
+	Cases (Two Conditions)	കേസുകൾ (രണ്ട് നിബന്ധനകൾ)
+	Cases and Stacks	കേസുകളും സ്റ്റാക്കുകളും
+	Catalog	കാറ്റലോഗ്
+	Categories	വിഭാഗങ്ങൾ
+	Categories:	വിഭാഗങ്ങൾ:
+	Category	വിഭാഗം
+	Category {n}	വിഭാഗം {n}
+	Category:	വിഭാഗം:
+	Category…	വിഭാഗം…
+	Ceiling	സീലിംഗ്
+	Cell	സെൽ
+	Cell Margins	സെൽ മാർജിനുകൾ
+	Cell margins	സെല്ലിന്റെ മാർജിനുകൾ
+	Cell Options	സെൽ ഓപ്ഷനുകൾ
+	Cell Size	സെൽ വലുപ്പം
+	Cell\nMargins	സെൽ\nമാർജിനുകൾ
+	Center	മധ്യം
+	Centered	മധ്യത്തിലാക്കി
+	Centered as Group	ഗ്രൂപ്പായി മധ്യത്തിലാക്കി
+	Centimeters	സെന്റിമീറ്ററുകൾ
+	Change	മാറ്റുക
+	Change Case	കേസ് മാറ്റുക
+	Change Chart Type	ചാർട്ട് തരം മാറ്റുക
+	Change Colors	നിറങ്ങൾ മാറ്റുക
+	Change in y over change in x	x-ലെ മാറ്റത്തിന്മേൽ y-ലെ മാറ്റം
+	Change Layout	ലേഔട്ട് മാറ്റുക
+	Change List Level	പട്ടിക ലെവൽ മാറ്റുക
+	Change Password…	പാസ്‌വേഡ് മാറ്റുക…
+	Change Picture	ചിത്രം മാറ്റുക
+	Change Picture…	ചിത്രം മാറ്റുക…
+	Change Shape	ആകൃതി മാറ്റുക
+	Change Structure	ഘടന മാറ്റുക
+	Change to Display	ഡിസ്പ്ലേയിലേക്ക് മാറ്റുക
+	Change to Inline	ഇൻലൈനിലേക്ക് മാറ്റുക
+	Change to Level 1	ലെവൽ 1-ലേക്ക് മാറ്റുക
+	Change to Level 2	ലെവൽ 2-ലേക്ക് മാറ്റുക
+	Change to Level 3	ലെവൽ 3-ലേക്ക് മാറ്റുക
+	Change to Level 4	ലെവൽ 4-ലേക്ക് മാറ്റുക
+	Change to Level 5	ലെവൽ 5-ലേക്ക് മാറ്റുക
+	Change to Level 6	ലെവൽ 6-ലേക്ക് മാറ്റുക
+	Change to Level 7	ലെവൽ 7-ലേക്ക് മാറ്റുക
+	Change to Level 8	ലെവൽ 8-ലേക്ക് മാറ്റുക
+	Change to Level 9	ലെവൽ 9-ലേക്ക് മാറ്റുക
+	Change\nChart Type	ചാർട്ട് തരം\nമാറ്റുക
+	Change\nColors	നിറങ്ങൾ\nമാറ്റുക
+	Changed	മാറ്റി
+	Changed lines:	മാറ്റിയ വരികൾ:
+	Changes	മാറ്റങ്ങൾ
+	Changes with highlighting	ഹൈലൈറ്റോടെ മാറ്റങ്ങൾ
+	Changes without highlighting	ഹൈലൈറ്റില്ലാതെ മാറ്റങ്ങൾ
+	Chapter in a book	ഒരു പുസ്തകത്തിലെ അധ്യായം
+	Chapters begin at:	അധ്യായങ്ങൾ ഇവിടെ ആരംഭിക്കുന്നു:
+	Character	പ്രതീകം
+	Character Border	പ്രതീക അതിർ
+	Character code:	പ്രതീക കോഡ്:
+	Character in Range	ശ്രേണിയിലെ പ്രതീകം
+	Character level	പ്രതീക തലം
+	Character Position	പ്രതീക സ്ഥാനം
+	Character Scale	പ്രതീക സ്കെയിൽ
+	Character Shading	പ്രതീക ഷേഡിംഗ്
+	Character Spacing	പ്രതീക അകലം
+	Character spacing	പ്രതീകങ്ങളുടെ അകലം
+	Character style	പ്രതീക ശൈലി
+	Characters	പ്രതീകങ്ങൾ
+	Characters (no spaces)	പ്രതീകങ്ങൾ (സ്പേസ് ഇല്ലാതെ)
+	Characters (with spaces)	പ്രതീകങ്ങൾ (സ്പേസോടെ)
+	Characters per line:	ഓരോ വരിയിലും പ്രതീകങ്ങൾ:
+	Chart	ചാർട്ട്
+	Chart Design	ചാർട്ട് ഡിസൈൻ
+	Chart Layouts	ചാർട്ട് ലേഔട്ടുകൾ
+	Chart Title	ചാർട്ട് ശീർഷകം
+	Check	പരിശോധിക്കുക
+	Check Accessibility	പ്രവേശനക്ഷമത പരിശോധിക്കുക
+	Check Box Content Control	ചെക്ക് ബോക്സ് ഉള്ളടക്ക നിയന്ത്രണം
+	Check Compatibility	അനുയോജ്യത പരിശോധിക്കുക
+	Check Errors…	പിശകുകൾ പരിശോധിക്കുക…
+	Check for Errors	പിശകുകൾക്കായി പരിശോധിക്കുക
+	Check Spelling as You Type	ടൈപ്പ് ചെയ്യുമ്പോൾ അക്ഷരത്തെറ്റ് പരിശോധിക്കുക
+	Check spelling as you type	ടൈപ്പ് ചെയ്യുമ്പോൾ അക്ഷരവിന്യാസം പരിശോധിക്കുക
+	Check\nAccessibility	പ്രവേശനക്ഷമത\nപരിശോധിക്കുക
+	Checked styles are allowed:	ചെക്ക് ചെയ്ത ശൈലികൾ അനുവദനീയമാണ്:
+	Checked symbol	ചെക്ക് ചെയ്ത ചിഹ്നം
+	Chevron Down	താഴോട്ട് ഷെവ്‌റോൺ
+	Chevron Up	മുകളിലോട്ട് ഷെവ്‌റോൺ
+	Chicago	Chicago
+	Chinese (Simplified)	ചൈനീസ് (ലളിതമാക്കിയത്)
+	Chinese (Traditional)	ചൈനീസ് (പരമ്പരാഗതം)
+	Choose a command	ഒരു കമാൻഡ് തിരഞ്ഞെടുക്കുക
+	Choose a shortcut	ഒരു കുറുക്കുവഴി തിരഞ്ഞെടുക്കുക
+	Choose List Item	പട്ടിക ഇനം തിരഞ്ഞെടുക്കുക
+	Choose the sheet that holds the recipients.	സ്വീകർത്താക്കൾ ഉള്ള ഷീറ്റ് തിരഞ്ഞെടുക്കുക.
+	Circle	വൃത്തം
+	Circle area from its radius	ആരത്തിൽ നിന്ന് വൃത്തത്തിന്റെ വിസ്തീർണ്ണം
+	Circled Dot	വൃത്തത്തിലെ ബിന്ദു
+	Circled Plus	വൃത്തത്തിലെ പ്ലസ്
+	Circled Times	വൃത്തത്തിലെ ഗുണനം
+	Citation marked.	ഉദ്ധരണി അടയാളപ്പെടുത്തി.
+	Citation Style	ഉദ്ധരണി ശൈലി
+	Citations	ഉദ്ധരണികൾ
+	Citations & Bibliography	ഉദ്ധരണികളും ഗ്രന്ഥസൂചിയും
+	City	നഗരം
+	Clear	മായ്ക്കുക
+	Clear All	എല്ലാം മായ്ക്കുക
+	Clear All Formatting	എല്ലാ ഫോർമാറ്റിംഗും മായ്ക്കുക
+	Clear Character Formatting	പ്രതീക ഫോർമാറ്റിംഗ് മായ്ക്കുക
+	Clear Character Style	പ്രതീക ശൈലി മായ്ക്കുക
+	Clear Formatting Level	ഫോർമാറ്റിംഗ് ലെവൽ മായ്ക്കുക
+	Clear Paragraph Formatting	ഖണ്ഡിക ഫോർമാറ്റിംഗ് മായ്ക്കുക
+	Click a border between two cells to merge them. Esc stops.	രണ്ട് സെല്ലുകൾ ലയിപ്പിക്കാൻ അവയ്ക്കിടയിലെ അതിരിൽ ക്ലിക്ക് ചെയ്യുക. Esc നിർത്തുന്നു.
+	Click an item to paste it.	ഒട്ടിക്കാൻ ഒരു ഇനത്തിൽ ക്ലിക്ക് ചെയ്യുക.
+	Click level to modify:	മാറ്റാൻ ലെവലിൽ ക്ലിക്ക് ചെയ്യുക:
+	Click the empty text box the text should continue in (Esc cancels)	ടെക്സ്റ്റ് തുടരേണ്ട ശൂന്യ ടെക്സ്റ്റ് ബോക്സിൽ ക്ലിക്ക് ചെയ്യുക (Esc റദ്ദാക്കുന്നു)
+	Click to switch back to inserting	തിരുകലിലേക്ക് മടങ്ങാൻ ക്ലിക്ക് ചെയ്യുക
+	Clipboard	ക്ലിപ്പ്ബോർഡ്
+	Clipboard Contents	ക്ലിപ്പ്ബോർഡ് ഉള്ളടക്കം
+	Clipboard Items	ക്ലിപ്പ്ബോർഡ് ഇനങ്ങൾ
+	Clipboard Pane	ക്ലിപ്പ്ബോർഡ് പാളി
+	Close	അടയ്ക്കുക
+	Close Equation	സമവാക്യം അടയ്ക്കുക
+	Close Header and Footer	ഹെഡറും ഫൂട്ടറും അടയ്ക്കുക
+	Close Outline View	ഔട്ട്ലൈൻ കാഴ്ച അടയ്ക്കുക
+	Close Outline\nView	ഔട്ട്ലൈൻ\nകാഴ്ച അടയ്ക്കുക
+	Close Reviewing Pane	അവലോകന പാളി അടയ്ക്കുക
+	Clustered Bar	ക്ലസ്റ്റർ ബാർ
+	Clustered Column	ക്ലസ്റ്റർ നിര
+	Col #:	നിര #:
+	Collapse	ചുരുക്കുക
+	Collapse Selection	തിരഞ്ഞെടുപ്പ് ചുരുക്കുക
+	Collapse the Ribbon	റിബൺ ചുരുക്കുക
+	Collate copies	പകർപ്പുകൾ അടുക്കുക
+	Collect entries from:	എൻട്രികൾ ഇതിൽ നിന്ന് ശേഖരിക്കുക:
+	Colon Equal	കോളൻ തുല്യം
+	Color	നിറം
+	Color model:	നിറ മോഡൽ:
+	Color only	നിറം മാത്രം
+	Color:	നിറം:
+	Color: {color}	നിറം: {color}
+	Colorful	വർണ്ണാഭമായ
+	Colors	നിറങ്ങൾ
+	Colors:	നിറങ്ങൾ:
+	Column	നിര
+	Column Break	നിര ഇടവേള
+	Column Selection	നിര തിരഞ്ഞെടുപ്പ്
+	Column selection: the arrow keys extend the block, Esc ends it	നിര തിരഞ്ഞെടുപ്പ്: അമ്പടയാള കീകൾ ബ്ലോക്ക് വികസിപ്പിക്കുന്നു, Esc അവസാനിപ്പിക്കുന്നു
+	Column width	നിര വീതി
+	Column:	നിര:
+	Columns	നിരകൾ
+	Columns:	നിരകൾ:
+	Combine	സംയോജിപ്പിക്കുക
+	Combine Documents	പ്രമാണങ്ങൾ സംയോജിപ്പിക്കുക
+	Combo Box Content Control	കോംബോ ബോക്സ് ഉള്ളടക്ക നിയന്ത്രണം
+	Commands	കമാൻഡുകൾ
+	Commands:	കമാൻഡുകൾ:
+	Comment	അഭിപ്രായം
+	Comments	അഭിപ്രായങ്ങൾ
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	PDF-കൾ, പ്രിന്റുകൾ, ചിത്രങ്ങൾ എന്നിവയിൽ ഓരോ പേജിനരികിലും അഭിപ്രായങ്ങളും ട്രാക്ക് ചെയ്ത മാറ്റങ്ങളും; വെബ് പേജുകൾ, Markdown, ടെക്സ്റ്റ് എന്നിവയുടെ അവസാനം അഭിപ്രായ പട്ടിക.
+	Comments on version	പതിപ്പിനെക്കുറിച്ചുള്ള അഭിപ്രായങ്ങൾ
+	Comments Pane	അഭിപ്രായ പാളി
+	Commits	കമ്മിറ്റുകൾ
+	Common Accent Objects	പൊതുവായ ആക്സന്റ് ഒബ്ജക്റ്റുകൾ
+	Common Brackets	പൊതുവായ ബ്രാക്കറ്റുകൾ
+	Common Fractions	പൊതുവായ ഭിന്നസംഖ്യകൾ
+	Common Functions	പൊതുവായ ഫംഗ്ഷനുകൾ
+	Common Large Operators	പൊതുവായ വലിയ ഓപ്പറേറ്ററുകൾ
+	Common Operator Structures	പൊതുവായ ഓപ്പറേറ്റർ ഘടനകൾ
+	Common Operators	പൊതുവായ ഓപ്പറേറ്ററുകൾ
+	Common Radicals	പൊതുവായ മൂലങ്ങൾ
+	Common Subscripts and Superscripts	പൊതുവായ സബ്സ്ക്രിപ്റ്റുകളും സൂപ്പർസ്ക്രിപ്റ്റുകളും
+	Communication	ആശയവിനിമയം
+	Compact	ചുരുങ്ങിയ
+	Company	കമ്പനി
+	Compare	താരതമ്യം ചെയ്യുക
+	Compare Documents	പ്രമാണങ്ങൾ താരതമ്യം ചെയ്യുക
+	Compare to	ഇതുമായി താരതമ്യം ചെയ്യുക
+	Compared: {changes} changes	താരതമ്യം ചെയ്തു: {changes} മാറ്റങ്ങൾ
+	Comparing with another file needs the desktop app.	മറ്റൊരു ഫയലുമായി താരതമ്യം ചെയ്യാൻ ഡെസ്ക്ടോപ്പ് ആപ്പ് ആവശ്യമാണ്.
+	Comparison	താരതമ്യം
+	Comparison settings	താരതമ്യ ക്രമീകരണങ്ങൾ
+	Compatibility mode: {version}	അനുയോജ്യതാ മോഡ്: {version}
+	Compatibility Options	അനുയോജ്യതാ ഓപ്ഷനുകൾ
+	Compatibility Options…	അനുയോജ്യതാ ഓപ്ഷനുകൾ…
+	Compress Pictures	ചിത്രങ്ങൾ കംപ്രസ് ചെയ്യുക
+	Compress punctuation at the start of a line	വരിയുടെ തുടക്കത്തിലെ ചിഹ്നനം കംപ്രസ് ചെയ്യുക
+	Condensed	ഞെരുക്കിയ
+	Conference	സമ്മേളനം
+	Conference paper	സമ്മേളന പ്രബന്ധം
+	CONFIDENTIAL	രഹസ്യം
+	Confirm password:	പാസ്‌വേഡ് സ്ഥിരീകരിക്കുക:
+	Connect Shapes	ആകൃതികൾ ബന്ധിപ്പിക്കുക
+	Constitutional Provisions	ഭരണഘടനാ വ്യവസ്ഥകൾ
+	Container Title	കണ്ടെയ്‌നർ ശീർഷകം
+	Contains	ഉൾക്കൊള്ളുന്നു
+	Content Control at Selection	തിരഞ്ഞെടുപ്പിലെ ഉള്ളടക്ക നിയന്ത്രണം
+	Content Control Properties	ഉള്ളടക്ക നിയന്ത്രണ ഗുണങ്ങൾ
+	Contents can't be edited	ഉള്ളടക്കം എഡിറ്റ് ചെയ്യാൻ കഴിയില്ല
+	Context	സന്ദർഭം
+	Contextual	സന്ദർഭോചിതം
+	Continuous	തുടർച്ചയായ
+	Continuous numbering	തുടർച്ചയായ നമ്പറിംഗ്
+	Contour Integral	കോണ്ടൂർ ഇന്റഗ്രൽ
+	Contour Integral with Limits	പരിധികളോടെ കോണ്ടൂർ ഇന്റഗ്രൽ
+	Contour Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ കോണ്ടൂർ ഇന്റഗ്രൽ
+	Contour Integrals	കോണ്ടൂർ ഇന്റഗ്രലുകൾ
+	Contrast:	കോൺട്രാസ്റ്റ്:
+	Contributors	സംഭാവകർ
+	Controls	നിയന്ത്രണങ്ങൾ
+	Conversions	പരിവർത്തനങ്ങൾ
+	Convert	പരിവർത്തനം ചെയ്യുക
+	Convert between built-up and linear form	നിർമ്മിതവും രേഖീയവുമായ രൂപങ്ങൾക്കിടയിൽ പരിവർത്തനം ചെയ്യുക
+	Convert Notes	കുറിപ്പുകൾ പരിവർത്തനം ചെയ്യുക
+	Convert Permanently	സ്ഥിരമായി പരിവർത്തനം ചെയ്യുക
+	Convert Text to Table	ടെക്സ്റ്റ് പട്ടികയാക്കുക
+	Convert Text to Table…	ടെക്സ്റ്റ് പട്ടികയാക്കുക…
+	Convert to Arabic Digits	അറബിക് അക്കങ്ങളാക്കുക
+	Convert to Shapes	ആകൃതികളാക്കുക
+	Convert to Text	ടെക്സ്റ്റാക്കുക
+	Convert to Thai Digits	തായ് അക്കങ്ങളാക്കുക
+	Copies	പകർപ്പുകൾ
+	Coproduct	കോപ്രൊഡക്റ്റ്
+	Coproduct with Limits	പരിധികളോടെ കോപ്രൊഡക്റ്റ്
+	Coproduct with Lower Limit	താഴ്ന്ന പരിധിയോടെ കോപ്രൊഡക്റ്റ്
+	Coproduct with Subscript-Superscript Limits	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ് പരിധികളോടെ കോപ്രൊഡക്റ്റ്
+	Copy	പകർത്തുക
+	Copy Formatting	ഫോർമാറ്റിംഗ് പകർത്തുക
+	Copy of the text a bookmark marks	ബുക്ക്മാർക്ക് അടയാളപ്പെടുത്തിയ ടെക്സ്റ്റിന്റെ പകർപ്പ്
+	Copy Styles	ശൈലികൾ പകർത്തുക
+	Copy Text	ടെക്സ്റ്റ് പകർത്തുക
+	Copy to where?	എവിടേക്ക് പകർത്തണം?
+	Copyright	പകർപ്പവകാശം
+	Copyright Sign	പകർപ്പവകാശ ചിഹ്നം
+	Corrections	തിരുത്തലുകൾ
+	Cosecant Function	കോസെക്കന്റ് ഫംഗ്ഷൻ
+	Cosine 2x	കോസൈൻ 2x
+	Cosine Function	കോസൈൻ ഫംഗ്ഷൻ
+	Cotangent Function	കോടാൻജന്റ് ഫംഗ്ഷൻ
+	Couldn't add {name}: {reason}	{name} ചേർക്കാൻ കഴിഞ്ഞില്ല: {reason}
+	Couldn't download the picture: {reason}	ചിത്രം ഡൗൺലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല: {reason}
+	Couldn't download {name}: {error}	{name} ഡൗൺലോഡ് ചെയ്യാൻ കഴിഞ്ഞില്ല: {error}
+	Couldn't get the add-in list: {reason}	ആഡ്-ഇൻ പട്ടിക ലഭിച്ചില്ല: {reason}
+	Couldn't make Doc4Me the default: {error}	Doc4Me-നെ സ്ഥിരസ്ഥിതിയാക്കാൻ കഴിഞ്ഞില്ല: {error}
+	Couldn't open {path}: {error}	{path} തുറക്കാൻ കഴിഞ്ഞില്ല: {error}
+	Couldn't search: {reason}	തിരയാൻ കഴിഞ്ഞില്ല: {reason}
+	Couldn't translate: {reason}	വിവർത്തനം ചെയ്യാൻ കഴിഞ്ഞില്ല: {reason}
+	Count by:	ഇതനുസരിച്ച് എണ്ണുക:
+	Count words in text boxes and notes	ടെക്സ്റ്റ് ബോക്സുകളിലെയും കുറിപ്പുകളിലെയും വാക്കുകൾ എണ്ണുക
+	Country	രാജ്യം
+	Courtesy Title	ബഹുമാന സൂചക സ്ഥാനപ്പേര്
+	Cover Page	കവർ പേജ്
+	Craft	കരകൗശലം
+	Create	സൃഷ്ടിക്കുക
+	Create a Style	ശൈലി സൃഷ്ടിക്കുക
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	നിങ്ങളുടെ പ്രമാണത്തിന്റെ ഇന്ററാക്ടീവ് ഔട്ട്ലൈൻ സൃഷ്ടിക്കുക.\n\nനിങ്ങൾ എവിടെയാണെന്ന് അറിയാനോ ഉള്ളടക്കം വേഗത്തിൽ നീക്കാനോ ഇത് മികച്ച മാർഗമാണ്.\n\nആരംഭിക്കാൻ, ഹോം ടാബിൽ പോയി നിങ്ങളുടെ പ്രമാണത്തിലെ തലക്കെട്ടുകൾക്ക് തലക്കെട്ട് ശൈലികൾ പ്രയോഗിക്കുക.
+	Create Data Source…	ഡാറ്റ ഉറവിടം സൃഷ്ടിക്കുക…
+	Create Graphic	ഗ്രാഫിക് സൃഷ്ടിക്കുക
+	Create Header Source	ഹെഡർ ഉറവിടം സൃഷ്ടിക്കുക
+	Create Link	ലിങ്ക് സൃഷ്ടിക്കുക
+	Create New Style	പുതിയ ശൈലി സൃഷ്ടിക്കുക
+	Create Source	ഉറവിടം സൃഷ്ടിക്കുക
+	Create…	സൃഷ്ടിക്കുക…
+	Crop	ക്രോപ്പ് ചെയ്യുക
+	Cross-reference	ക്രോസ്-റഫറൻസ്
+	Cross-reference:	ക്രോസ്-റഫറൻസ്:
+	Cube Root	ഘനമൂലം
+	Current	നിലവിലെ
+	Current - Linear	നിലവിലെ - രേഖീയം
+	Current - Professional	നിലവിലെ - പ്രൊഫഷണൽ
+	Current keyboard settings	നിലവിലെ കീബോർഡ് ക്രമീകരണങ്ങൾ
+	Current page	നിലവിലെ പേജ്
+	Current Position	നിലവിലെ സ്ഥാനം
+	Current record	നിലവിലെ റെക്കോർഡ്
+	Current style: {style}	നിലവിലെ ശൈലി: {style}
+	Curved Arrow Connector	വളഞ്ഞ അമ്പടയാള കണക്ടർ
+	Curved Connector	വളഞ്ഞ കണക്ടർ
+	Custom	ഇഷ്ടാനുസൃതം
+	Custom dictionary	ഇഷ്ടാനുസൃത നിഘണ്ടു
+	Custom Margins…	ഇഷ്ടാനുസൃത മാർജിനുകൾ…
+	Custom mark:	ഇഷ്ടാനുസൃത അടയാളം:
+	Custom range	ഇഷ്ടാനുസൃത ശ്രേണി
+	Custom Table of Contents	ഇഷ്ടാനുസൃത ഉള്ളടക്ക പട്ടിക
+	Custom Table of Contents…	ഇഷ്ടാനുസൃത ഉള്ളടക്ക പട്ടിക…
+	Custom Watermark	ഇഷ്ടാനുസൃത വാട്ടർമാർക്ക്
+	Custom Watermark…	ഇഷ്ടാനുസൃത വാട്ടർമാർക്ക്…
+	Customize	ഇഷ്ടാനുസൃതമാക്കുക
+	Customize Keyboard	കീബോർഡ് ഇഷ്ടാനുസൃതമാക്കുക
+	Customize Quick Access Toolbar	ദ്രുത പ്രവേശന ടൂൾബാർ ഇഷ്ടാനുസൃതമാക്കുക
+	Customize Quick Access Toolbar…	ദ്രുത പ്രവേശന ടൂൾബാർ ഇഷ്ടാനുസൃതമാക്കുക…
+	Customize Ribbon	റിബൺ ഇഷ്ടാനുസൃതമാക്കുക
+	Customize the Ribbon…	റിബൺ ഇഷ്ടാനുസൃതമാക്കുക…
+	Customize…	ഇഷ്ടാനുസൃതമാക്കുക…
+	Cut	മുറിക്കുക
+	Cut, copy, and paste	മുറിക്കുക, പകർത്തുക, ഒട്ടിക്കുക
+	Cycle	ചക്രം
+	Czech	ചെക്ക്
+	Danish	ഡാനിഷ്
+	Dark	ഇരുണ്ട
+	Dark Mode	ഡാർക്ക് മോഡ്
+	Dark page (white text on black)	ഇരുണ്ട പേജ് (കറുപ്പിൽ വെളുത്ത ടെക്സ്റ്റ്)
+	Dark with Shadow	നിഴലോടെ ഇരുണ്ട
+	Darkroom	ഡാർക്ക്റൂം
+	Dashed	ഡാഷുള്ള
+	Data	ഡാറ്റ
+	Data Labels	ഡാറ്റ ലേബലുകൾ
+	Data source:	ഡാറ്റ ഉറവിടം:
+	Date	തീയതി
+	Date & Time	തീയതിയും സമയവും
+	Date and Time	തീയതിയും സമയവും (പൂർണ്ണം)
+	Date format	തീയതി ഫോർമാറ്റ്
+	Date formats:	തീയതി ഫോർമാറ്റുകൾ:
+	Date Picker Content Control	തീയതി പിക്കർ ഉള്ളടക്ക നിയന്ത്രണം
+	Day	ദിവസം
+	Decimal	ദശാംശം
+	Decorative objects only add visual interest: screen readers skip them.	അലങ്കാര ഒബ്ജക്റ്റുകൾ ദൃശ്യഭംഗി മാത്രം കൂട്ടുന്നു: സ്ക്രീൻ റീഡറുകൾ അവയെ ഒഴിവാക്കുന്നു.
+	Decrease Font Size	ഫോണ്ട് വലുപ്പം കുറയ്ക്കുക
+	Decrease Indent	ഇൻഡന്റ് കുറയ്ക്കുക
+	Default	സ്ഥിരസ്ഥിതി
+	Default Paragraph Font	സ്ഥിരസ്ഥിതി ഖണ്ഡിക ഫോണ്ട്
+	Default tab stops:	സ്ഥിരസ്ഥിതി ടാബ് സ്റ്റോപ്പുകൾ:
+	Define New Bullet	പുതിയ ബുള്ളറ്റ് നിർവചിക്കുക
+	Define New Multilevel List	പുതിയ മൾട്ടിലെവൽ പട്ടിക നിർവചിക്കുക
+	Define New Multilevel List…	പുതിയ മൾട്ടിലെവൽ പട്ടിക നിർവചിക്കുക…
+	Define New Number Format	പുതിയ നമ്പർ ഫോർമാറ്റ് നിർവചിക്കുക
+	Deflate	ചുരുക്കുക (വായു)
+	Delete	ഇല്ലാതാക്കുക
+	Delete Back in Equation	സമവാക്യത്തിൽ പിന്നോട്ട് ഇല്ലാതാക്കുക
+	Delete Cells	സെല്ലുകൾ ഇല്ലാതാക്കുക
+	Delete Clipboard Item	ക്ലിപ്പ്ബോർഡ് ഇനം ഇല്ലാതാക്കുക
+	Delete Columns	നിരകൾ ഇല്ലാതാക്കുക
+	Delete Comment	അഭിപ്രായം ഇല്ലാതാക്കുക
+	Delete in Equation	സമവാക്യത്തിൽ ഇല്ലാതാക്കുക
+	Delete Label	ലേബൽ ഇല്ലാതാക്കുക
+	Delete Next Word	അടുത്ത വാക്ക് ഇല്ലാതാക്കുക
+	Delete Previous Word	മുമ്പത്തെ വാക്ക് ഇല്ലാതാക്കുക
+	Delete Rows	വരികൾ ഇല്ലാതാക്കുക
+	Delete Selected Ink	തിരഞ്ഞെടുത്ത മഷി ഇല്ലാതാക്കുക
+	Delete Style	ശൈലി ഇല്ലാതാക്കുക
+	Delete Table	പട്ടിക ഇല്ലാതാക്കുക
+	Delete Table Style	പട്ടിക ശൈലി ഇല്ലാതാക്കുക
+	Deleted	ഇല്ലാതാക്കി
+	Deletions:	ഇല്ലാതാക്കലുകൾ:
+	Delivery address:	ഡെലിവറി വിലാസം:
+	Delta Equal To	ഡെൽറ്റ തുല്യം
+	Delta over arrow	അമ്പടയാളത്തിന് മുകളിൽ ഡെൽറ്റ
+	Demote	തരം താഴ്ത്തുക
+	Demote to Body Text	പ്രധാന ടെക്സ്റ്റിലേക്ക് താഴ്ത്തുക
+	Derivative as a limit	പരിധിയായി ഡെറിവേറ്റീവ്
+	Descending	അവരോഹണം
+	Describe what this object shows, for people who can't see it.	ഈ ഒബ്ജക്റ്റ് എന്താണ് കാണിക്കുന്നതെന്ന് കാണാൻ കഴിയാത്തവർക്കായി വിവരിക്കുക.
+	Describe what this table shows, for people who can't see it.	ഈ പട്ടിക എന്താണ് കാണിക്കുന്നതെന്ന് കാണാൻ കഴിയാത്തവർക്കായി വിവരിക്കുക.
+	Description:	വിവരണം:
+	Design	ഡിസൈൻ
+	Design Mode	ഡിസൈൻ മോഡ്
+	Detach Template	ടെംപ്ലേറ്റ് വേർപെടുത്തുക
+	Detect language automatically	ഭാഷ യാന്ത്രികമായി കണ്ടെത്തുക
+	Developer	ഡെവലപ്പർ
+	development build	ഡെവലപ്മെന്റ് ബിൽഡ്
+	Diagonal	കർണ്ണം
+	Diagonal Dots	കർണ്ണ ബിന്ദുക്കൾ
+	Diamond	വജ്രം
+	Dictate	പറഞ്ഞെഴുതുക
+	Dictation isn't available here.	ഇവിടെ പറഞ്ഞെഴുത്ത് ലഭ്യമല്ല.
+	Dictation stopped.	പറഞ്ഞെഴുത്ത് നിർത്തി.
+	Dictation stopped: {reason}	പറഞ്ഞെഴുത്ത് നിർത്തി: {reason}
+	Different First Page	വ്യത്യസ്ത ആദ്യ പേജ്
+	Different Odd & Even Pages	വ്യത്യസ്ത ഒറ്റ, ഇരട്ട പേജുകൾ
+	Differential	ഡിഫറൻഷ്യൽ
+	Differential theta	ഡിഫറൻഷ്യൽ തീറ്റ
+	Differential x	ഡിഫറൻഷ്യൽ x
+	Differential y	ഡിഫറൻഷ്യൽ y
+	Differentials	ഡിഫറൻഷ്യലുകൾ
+	Direct formatting	നേരിട്ടുള്ള ഫോർമാറ്റിംഗ്
+	Direction:	ദിശ:
+	Directory	ഡയറക്ടറി
+	Display	പ്രദർശനം
+	Display for Review	അവലോകനത്തിനായി പ്രദർശിപ്പിക്കുക
+	Display gridlines on screen	സ്ക്രീനിൽ ഗ്രിഡ്‌ലൈനുകൾ പ്രദർശിപ്പിക്കുക
+	Display name	പ്രദർശന നാമം
+	Display text	പ്രദർശന ടെക്സ്റ്റ്
+	Distance from surrounding text	ചുറ്റുമുള്ള ടെക്സ്റ്റിൽ നിന്നുള്ള ദൂരം
+	Distribute Columns	നിരകൾ തുല്യമായി വിതരണം ചെയ്യുക
+	Distribute letters	അക്ഷരങ്ങൾ വിതരണം ചെയ്യുക
+	Distribute Rows	വരികൾ തുല്യമായി വിതരണം ചെയ്യുക
+	Distribute spacing	അകലം വിതരണം ചെയ്യുക
+	Distributed	വിതരണം ചെയ്തത്
+	Do Not Check Spelling or Grammar	അക്ഷരവിന്യാസമോ വ്യാകരണമോ പരിശോധിക്കരുത്
+	Do not check spelling or grammar	അക്ഷരവിന്യാസവും വ്യാകരണവും പരിശോധിക്കരുത്
+	DO NOT COPY	പകർത്തരുത്
+	Do Not Show in TOC	ഉള്ളടക്ക പട്ടികയിൽ കാണിക്കരുത്
+	Do you want to save changes to {name}?	{name}-ലെ മാറ്റങ്ങൾ സേവ് ചെയ്യണോ?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me ആഡ്-ഇന്നുകൾ Doc4Me-ന്റെ ആഡ്-ഇൻ കാറ്റലോഗിൽ നിന്നുള്ള സൗജന്യ മാക്രോ പായ്ക്കുകളാണ്. അവയ്ക്ക് പ്രമാണം മാത്രമേ എഡിറ്റ് ചെയ്യാൻ കഴിയൂ.
+	Doc4Me is now the default app for Word documents.	Doc4Me ഇപ്പോൾ Word പ്രമാണങ്ങൾക്കുള്ള സ്ഥിരസ്ഥിതി ആപ്പാണ്.
+	Document	പ്രമാണം
+	Document End	പ്രമാണത്തിന്റെ അവസാനം
+	Document Formatting	പ്രമാണ ഫോർമാറ്റിംഗ്
+	Document Grid	പ്രമാണ ഗ്രിഡ്
+	Document Information	പ്രമാണ വിവരം
+	Document Property	പ്രമാണ ഗുണം
+	Document Start	പ്രമാണത്തിന്റെ തുടക്കം
+	Document template:	പ്രമാണ ടെംപ്ലേറ്റ്:
+	Document Text	പ്രമാണ ടെക്സ്റ്റ്
+	Document Title	പ്രമാണ ശീർഷകം
+	Document1	പ്രമാണം1
+	Document\nPreferences	പ്രമാണ\nമുൻഗണനകൾ
+	Documents	പ്രമാണങ്ങൾ
+	Documents you open will show up here.	നിങ്ങൾ തുറക്കുന്ന പ്രമാണങ്ങൾ ഇവിടെ കാണിക്കും.
+	Does not contain	ഉൾക്കൊള്ളുന്നില്ല
+	DOI	DOI
+	Don't add space between paragraphs of the same style	ഒരേ ശൈലിയിലുള്ള ഖണ്ഡികകൾക്കിടയിൽ സ്പേസ് ചേർക്കരുത്
+	Don't capitalize after:	ഇതിന് ശേഷം വലിയക്ഷരമാക്കരുത്:
+	Don't hyphenate	ഹൈഫനേറ്റ് ചെയ്യരുത്
+	Don't print blank lines when data fields are empty	ഡാറ്റ ഫീൽഡുകൾ ശൂന്യമായിരിക്കുമ്പോൾ ശൂന്യ വരികൾ പ്രിന്റ് ചെയ്യരുത്
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Zotero, Mendeley അല്ലെങ്കിൽ EndNote ഉദ്ധരണികളും ഗ്രന്ഥസൂചികളും വായിക്കരുത്
+	Don't Save	സേവ് ചെയ്യരുത്
+	Don't use HTML paragraph auto spacing	HTML ഖണ്ഡിക യാന്ത്രിക അകലം ഉപയോഗിക്കരുത്
+	Dot	ബിന്ദു
+	Dot dash	ബിന്ദു ഡാഷ്
+	Dot-dash	ബിന്ദു-ഡാഷ്
+	Dots	ബിന്ദുക്കൾ
+	Dotted	ബിന്ദുക്കളുള്ള
+	Double	ഇരട്ട
+	Double Bar	ഇരട്ട ബാർ
+	Double Closing Quote	ഇരട്ട അടയ്ക്കൽ ഉദ്ധരണി
+	Double Dot	ഇരട്ട ബിന്ദു
+	Double Integral	ഇരട്ട ഇന്റഗ്രൽ
+	Double Integral with Limits	പരിധികളോടെ ഇരട്ട ഇന്റഗ്രൽ
+	Double Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ ഇരട്ട ഇന്റഗ്രൽ
+	Double Left Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ ഇരട്ട ഇടത് അമ്പടയാളം
+	Double Left Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ ഇരട്ട ഇടത് അമ്പടയാളം
+	Double Left Right Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ ഇരട്ട ഇടത്-വലത് അമ്പടയാളം
+	Double Left Right Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ ഇരട്ട ഇടത്-വലത് അമ്പടയാളം
+	Double Opening Quote	ഇരട്ട തുറക്കൽ ഉദ്ധരണി
+	Double Right Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ ഇരട്ട വലത് അമ്പടയാളം
+	Double Right Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ ഇരട്ട വലത് അമ്പടയാളം
+	Double Spacing	ഇരട്ട അകലം
+	Double Square Brackets	ഇരട്ട ചതുര ബ്രാക്കറ്റുകൾ
+	Double Strikethrough	ഇരട്ട വെട്ടൽ
+	Double strikethrough	ഇരട്ട വെട്ടൽ വര
+	Double summation	ഇരട്ട സംഗ്രഹം
+	Double Underline	ഇരട്ട അടിവര
+	Double Vertical Bars	ഇരട്ട ലംബ വരകൾ
+	Doughnut	ഡോനട്ട്
+	Down	താഴേക്ക്
+	Downloading the speech model ({mb} MB, once)…	സംഭാഷണ മോഡൽ ഡൗൺലോഡ് ചെയ്യുന്നു ({mb} MB, ഒരിക്കൽ)…
+	Downloading…	ഡൗൺലോഡ് ചെയ്യുന്നു…
+	DRAFT	കരട്
+	Draft	കരട് (പ്രമാണം)
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	പട്ടിക വരയ്ക്കാൻ ഒരു ദീർഘചതുരം വലിക്കുക, അല്ലെങ്കിൽ സെല്ലുകൾ വിഭജിക്കാൻ അവയ്ക്ക് കുറുകെ ഒരു വര വലിക്കുക. Esc നിർത്തുന്നു.
+	Draw	വരയ്ക്കുക
+	Draw Ink	മഷി കൊണ്ട് വരയ്ക്കുക
+	Draw Table	പട്ടിക വരയ്ക്കുക
+	Draw\nTable	പട്ടിക\nവരയ്ക്കുക
+	Drawing Canvas	ഡ്രോയിംഗ് ക്യാൻവാസ്
+	Drawing Grid	ഡ്രോയിംഗ് ഗ്രിഡ്
+	Drawing Tools	ഡ്രോയിംഗ് ടൂളുകൾ
+	Drawing\nCanvas	ഡ്രോയിംഗ്\nക്യാൻവാസ്
+	Drop Cap	ഡ്രോപ്പ് ക്യാപ്
+	Drop cap	ഡ്രോപ്പ് ക്യാപ് അക്ഷരം
+	Drop-Down List Content Control	ഡ്രോപ്പ്-ഡൗൺ പട്ടിക ഉള്ളടക്ക നിയന്ത്രണം
+	Drops all formatting and pastes plain text.	എല്ലാ ഫോർമാറ്റിംഗും നീക്കി സാധാരണ ടെക്സ്റ്റ് ഒട്ടിക്കുന്നു.
+	Dutch	ഡച്ച്
+	E-mail Messages	ഇ-മെയിൽ സന്ദേശങ്ങൾ
+	Edit Category	വിഭാഗം എഡിറ്റ് ചെയ്യുക
+	Edit Comment	അഭിപ്രായം എഡിറ്റ് ചെയ്യുക
+	Edit Data	ഡാറ്റ എഡിറ്റ് ചെയ്യുക
+	Edit Document	പ്രമാണം എഡിറ്റ് ചെയ്യുക
+	Edit Equation	സമവാക്യം എഡിറ്റ് ചെയ്യുക
+	Edit Field Code	ഫീൽഡ് കോഡ് എഡിറ്റ് ചെയ്യുക
+	Edit Field…	ഫീൽഡ് എഡിറ്റ് ചെയ്യുക…
+	Edit Footer	ഫൂട്ടർ എഡിറ്റ് ചെയ്യുക
+	Edit Header	ഹെഡർ എഡിറ്റ് ചെയ്യുക
+	Edit Individual Documents…	വ്യക്തിഗത പ്രമാണങ്ങൾ എഡിറ്റ് ചെയ്യുക…
+	Edit Items	ഇനങ്ങൾ എഡിറ്റ് ചെയ്യുക
+	Edit Recipient List	സ്വീകർത്താക്കളുടെ പട്ടിക എഡിറ്റ് ചെയ്യുക
+	Edit Source	ഉറവിടം എഡിറ്റ് ചെയ്യുക
+	Edit\nData	ഡാറ്റ\nഎഡിറ്റ് ചെയ്യുക
+	Edit\nRecipient List	സ്വീകർത്താക്കളുടെ പട്ടിക\nഎഡിറ്റ് ചെയ്യുക
+	Edited	എഡിറ്റ് ചെയ്തു
+	Editing	എഡിറ്റിംഗ്
+	Editing header/footer	ഹെഡർ/ഫൂട്ടർ എഡിറ്റിംഗ്
+	Editing in this document is restricted.	ഈ പ്രമാണത്തിൽ എഡിറ്റിംഗ് നിയന്ത്രിച്ചിരിക്കുന്നു.
+	Editing — edit the document directly	എഡിറ്റിംഗ് — പ്രമാണം നേരിട്ട് എഡിറ്റ് ചെയ്യുക
+	Edition	പതിപ്പ്
+	Editor	എഡിറ്റർ
+	Edit…	എഡിറ്റ് ചെയ്യുക…
+	Effects	ഇഫക്റ്റുകൾ
+	Elbow Arrow Connector	എൽബോ അമ്പടയാള കണക്ടർ
+	Elbow Connector	എൽബോ കണക്ടർ
+	Ellipsis	എലിപ്സിസ്
+	Em Dash	എം ഡാഷ്
+	Em Space	എം സ്പേസ്
+	Email address (optional)	ഇമെയിൽ വിലാസം (ഓപ്ഷണൽ)
+	Emboss	എംബോസ്
+	Emphasis	ഊന്നൽ
+	Empty Matrices	ശൂന്യ മാട്രിക്സുകൾ
+	En Dash	എൻ ഡാഷ്
+	En Space	എൻ സ്പേസ്
+	Enclose Characters	പ്രതീകങ്ങൾ വലയം ചെയ്യുക
+	Enclosure	വലയം
+	Encrypt with Password	പാസ്‌വേഡ് ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുക
+	Encrypt with Password…	പാസ്‌വേഡ് ഉപയോഗിച്ച് എൻക്രിപ്റ്റ് ചെയ്യുക…
+	End of document	പ്രമാണത്തിന്റെ അവസാനത്തിൽ
+	End of section	വിഭാഗത്തിന്റെ അവസാനം
+	End of Word	വാക്കിന്റെ അവസാനം
+	Endnote Reference	എൻഡ്‌നോട്ട് റഫറൻസ്
+	Endnote Text	എൻഡ്‌നോട്ട് ടെക്സ്റ്റ്
+	Endnotes	എൻഡ്‌നോട്ടുകൾ
+	Endnotes to footnotes	എൻഡ്‌നോട്ടുകൾ അടിക്കുറിപ്പുകളിലേക്ക്
+	English	ഇംഗ്ലീഷ്
+	English (United Kingdom)	ഇംഗ്ലീഷ് (യുണൈറ്റഡ് കിംഗ്ഡം)
+	English (United States)	ഇംഗ്ലീഷ് (യുണൈറ്റഡ് സ്റ്റേറ്റ്സ്)
+	Engrave	കൊത്തുപണി
+	Enlarge symbol	ചിഹ്നം വലുതാക്കുക
+	Enter formatting for number:	നമ്പറിനുള്ള ഫോർമാറ്റിംഗ് നൽകുക:
+	Enter in Equation	സമവാക്യത്തിൽ Enter
+	Enter page number:	പേജ് നമ്പർ നൽകുക:
+	Enter the web address or embed code of an online video:	ഓൺലൈൻ വീഡിയോയുടെ വെബ് വിലാസമോ എംബെഡ് കോഡോ നൽകുക:
+	Entry marked.	എൻട്രി അടയാളപ്പെടുത്തി.
+	Entry:	എൻട്രി:
+	Envelope #10   4.12" × 9.50"	കവർ #10   4.12" × 9.50"
+	Envelope Address	കവർ വിലാസം
+	Envelope DL   4.33" × 8.66"	കവർ DL   4.33" × 8.66"
+	Envelope Return	കവർ മടക്ക വിലാസം
+	Envelope size:	കവർ വലുപ്പം:
+	Envelopes	കവറുകൾ
+	Equal by Definition	നിർവചന പ്രകാരം തുല്യം
+	Equal column width	തുല്യ നിര വീതി
+	Equal Equal	തുല്യം തുല്യം
+	Equal to	തുല്യം
+	Equals:	തുല്യം:
+	Equation	സമവാക്യം
+	Equation Gallery	സമവാക്യ ഗാലറി
+	Equation Info	സമവാക്യ വിവരം
+	Equation Number	സമവാക്യ നമ്പർ
+	Equation Options	സമവാക്യ ഓപ്ഷനുകൾ
+	Erase Ink	മഷി മായ്ക്കുക
+	Eraser	ഇറേസർ
+	Errors ({n})	പിശകുകൾ ({n})
+	Estonian	എസ്റ്റോണിയൻ
+	Euler's identity	ഓയ്ലറുടെ സർവസമവാക്യം
+	Even Page	ഇരട്ട പേജ്
+	Even pages only	ഇരട്ട പേജുകൾ മാത്രം
+	Every change is recorded as a tracked change.	ഓരോ മാറ്റവും ട്രാക്ക് ചെയ്ത മാറ്റമായി രേഖപ്പെടുത്തുന്നു.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	ഓരോ കമാൻഡും സ്ക്രിപ്റ്റുകൾക്കും AI ഏജന്റുകൾക്കും ലഭ്യമാണ്: MCP സെർവറിനായി `doc4me-cli mcp` പ്രവർത്തിപ്പിക്കുക, അല്ലെങ്കിൽ JSON നിയന്ത്രണ ചാനലിനായി ആപ്പ് `--control <port>` ഉപയോഗിച്ച് ആരംഭിക്കുക.
+	Every field needs a name.	ഓരോ ഫീൽഡിനും ഒരു പേര് ആവശ്യമാണ്.
+	Every font this document uses is installed.	ഈ പ്രമാണം ഉപയോഗിക്കുന്ന ഓരോ ഫോണ്ടും ഇൻസ്റ്റാൾ ചെയ്തിട്ടുണ്ട്.
+	Everyone	എല്ലാവരും
+	Exactly	കൃത്യമായി
+	Exactly {n}	കൃത്യമായി {n}
+	Example: {sample}	ഉദാഹരണം: {sample}
+	Exceptions (optional)	ഒഴിവാക്കലുകൾ (ഓപ്ഷണൽ)
+	Exceptions…	ഒഴിവാക്കലുകൾ…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	പുറത്തുകടക്കുക
+	Expand	വികസിപ്പിക്കുക
+	Expand or Collapse Heading	തലക്കെട്ട് വികസിപ്പിക്കുക അല്ലെങ്കിൽ ചുരുക്കുക
+	Expanded	വികസിപ്പിച്ചത്
+	Exponential	എക്സ്പോണൻഷ്യൽ
+	Exponential series	എക്സ്പോണൻഷ്യൽ ശ്രേണി
+	Export	എക്സ്പോർട്ട് ചെയ്യുക
+	Export a copy to share (PDF, Word document)	പങ്കിടാൻ ഒരു പകർപ്പ് എക്സ്പോർട്ട് ചെയ്യുക (PDF, Word പ്രമാണം)
+	Export Page as JPEG	പേജ് JPEG ആയി എക്സ്പോർട്ട് ചെയ്യുക
+	Export Page as PNG	പേജ് PNG ആയി എക്സ്പോർട്ട് ചെയ്യുക
+	Export PDF	PDF എക്സ്പോർട്ട് ചെയ്യുക
+	Exported {path}	{path} എക്സ്പോർട്ട് ചെയ്തു
+	Expression	എക്സ്പ്രഷൻ
+	Extend Selection	തിരഞ്ഞെടുപ്പ് വികസിപ്പിക്കുക
+	Extend Selection by Units	യൂണിറ്റുകളായി തിരഞ്ഞെടുപ്പ് വികസിപ്പിക്കുക
+	Extra space	അധിക സ്പേസ്
+	Extra spaces between words.	വാക്കുകൾക്കിടയിൽ അധിക സ്പേസുകൾ.
+	Field	ഫീൽഡ്
+	Field Click	ഫീൽഡ് ക്ലിക്ക്
+	Field code:	ഫീൽഡ് കോഡ്:
+	Field Codes	ഫീൽഡ് കോഡുകൾ
+	Field codes:	ഫീൽഡ് കോഡുകൾ:
+	Field name	ഫീൽഡ് പേര്
+	Field name:	ഫീൽഡ് പേര്:
+	Field names must be different.	ഫീൽഡ് പേരുകൾ വ്യത്യസ്തമായിരിക്കണം.
+	Field names:	ഫീൽഡ് പേരുകൾ:
+	Field properties	ഫീൽഡ് ഗുണങ്ങൾ
+	Field:	ഫീൽഡ്:
+	Fields	ഫീൽഡുകൾ
+	Fields to insert:	തിരുകേണ്ട ഫീൽഡുകൾ:
+	Fields:	ഫീൽഡുകൾ:
+	Field…	ഫീൽഡ്…
+	Figure	ചിത്രം
+	File	ഫയൽ
+	File name:	ഫയൽ പേര്:
+	Fill	നിറയ്ക്കുക
+	Fill & Line	നിറയ്ക്കലും വരയും
+	Fill color:	നിറയ്ക്കൽ നിറം:
+	Fill:	നിറയ്ക്കൽ:
+	Filling in forms	ഫോമുകൾ പൂരിപ്പിക്കൽ
+	Film	ഫിലിം
+	Filter and Sort	ഫിൽട്ടർ ചെയ്ത് അടുക്കുക
+	Filter and Sort…	ഫിൽട്ടർ ചെയ്ത് അടുക്കുക…
+	Filter Records	റെക്കോർഡുകൾ ഫിൽട്ടർ ചെയ്യുക
+	Find	കണ്ടെത്തുക
+	Find and Replace	കണ്ടെത്തി മാറ്റിസ്ഥാപിക്കുക
+	Find Next	അടുത്തത് കണ്ടെത്തുക
+	Find Next Editable Region	അടുത്ത എഡിറ്റ് ചെയ്യാവുന്ന മേഖല കണ്ടെത്തുക
+	Find Previous	മുമ്പത്തേത് കണ്ടെത്തുക
+	Find Recipient	സ്വീകർത്താവിനെ കണ്ടെത്തുക
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	കണ്ടെത്തുക അടുത്ത മാറ്റിയ ഖണ്ഡിക തിരഞ്ഞെടുക്കുന്നു; നിരസിക്കുക തിരഞ്ഞെടുത്തതിനെ പഴയതുപോലെയാക്കുന്നു.
+	Find What Expression	കണ്ടെത്തേണ്ട എക്സ്പ്രഷൻ
+	Find What Text	കണ്ടെത്തേണ്ട ടെക്സ്റ്റ്
+	Find what:	എന്ത് കണ്ടെത്തണം:
+	Find →	കണ്ടെത്തുക →
+	Find:	കണ്ടെത്തുക:
+	Finish	പൂർത്തിയാക്കുക
+	Finish & Merge	പൂർത്തിയാക്കി ലയിപ്പിക്കുക
+	Finish &\nMerge	പൂർത്തിയാക്കി\nലയിപ്പിക്കുക
+	Finished	പൂർത്തിയായി
+	Finnish	ഫിന്നിഷ്
+	First	ആദ്യം
+	First Cell in Column	നിരയിലെ ആദ്യ സെൽ
+	First Cell in Row	വരിയിലെ ആദ്യ സെൽ
+	First Column	ആദ്യ നിര
+	First commit	ആദ്യ കമ്മിറ്റ്
+	First line	ആദ്യ വരി
+	First line:	ആദ്യ വരി:
+	First Name	പേരിന്റെ ആദ്യഭാഗം
+	First row of data contains column headers	ഡാറ്റയുടെ ആദ്യ വരിയിൽ നിര തലക്കെട്ടുകൾ ഉണ്ട്
+	Fit	ഫിറ്റ് ചെയ്യുക
+	Fit text	ടെക്സ്റ്റ് ഫിറ്റ് ചെയ്യുക
+	Fix Position on Page	പേജിൽ സ്ഥാനം ഉറപ്പിക്കുക
+	Fixed Column Width	നിശ്ചിത നിര വീതി
+	Flip Horizontal	തിരശ്ചീനമായി മറിക്കുക
+	Flip Vertical	ലംബമായി മറിക്കുക
+	Floor	ഫ്ലോർ
+	Focus	ഫോക്കസ്
+	Follow number with:	നമ്പറിന് ശേഷം:
+	Font	ഫോണ്ട്
+	Font Color	ഫോണ്ട് നിറം
+	Font color	ഫോണ്ടിന്റെ നിറം
+	Font color:	ഫോണ്ട് നിറം:
+	Font Dialog	ഫോണ്ട് ഡയലോഗ്
+	Font not installed	ഫോണ്ട് ഇൻസ്റ്റാൾ ചെയ്തിട്ടില്ല
+	Font Size	ഫോണ്ട് വലുപ്പം
+	Font Substitution	ഫോണ്ട് പകരംവയ്ക്കൽ
+	Font Substitution…	ഫോണ്ട് പകരംവയ്ക്കൽ…
+	Font:	ഫോണ്ട്:
+	Font: {font}	ഫോണ്ട്: {font}
+	Fonts	ഫോണ്ടുകൾ
+	Font…	ഫോണ്ട്…
+	Footer	ഫൂട്ടർ
+	Footnote and Endnote	അടിക്കുറിപ്പും എൻഡ്‌നോട്ടും
+	Footnote Reference	അടിക്കുറിപ്പ് റഫറൻസ്
+	Footnote Text	അടിക്കുറിപ്പ് ടെക്സ്റ്റ്
+	Footnotes	അടിക്കുറിപ്പുകൾ
+	Footnotes and endnotes	അടിക്കുറിപ്പുകളും എൻഡ്‌നോട്ടുകളും
+	Footnotes to endnotes	അടിക്കുറിപ്പുകൾ എൻഡ്‌നോട്ടുകളിലേക്ക്
+	Form Letters	ഫോം കത്തുകൾ
+	Format	ഫോർമാറ്റ്
+	Format Page Numbers	പേജ് നമ്പറുകൾ ഫോർമാറ്റ് ചെയ്യുക
+	Format Page Numbers…	പേജ് നമ്പറുകൾ ഫോർമാറ്റ് ചെയ്യുക…
+	Format Painter	ഫോർമാറ്റ് പെയിന്റർ
+	Format Picture	ചിത്രം ഫോർമാറ്റ് ചെയ്യുക
+	Format Shape	ആകൃതി ഫോർമാറ്റ് ചെയ്യുക
+	Format:	ഫോർമാറ്റ്:
+	Formatted	ഫോർമാറ്റ് ചെയ്തു
+	Formatted Text	ഫോർമാറ്റ് ചെയ്ത ടെക്സ്റ്റ്
+	Formatting	ഫോർമാറ്റിംഗ്
+	Formatting at Selection	തിരഞ്ഞെടുപ്പിലെ ഫോർമാറ്റിംഗ്
+	Formatting completed. You can now:	ഫോർമാറ്റിംഗ് പൂർത്തിയായി. ഇപ്പോൾ നിങ്ങൾക്ക്:
+	Formatting exceptions	ഫോർമാറ്റിംഗ് ഒഴിവാക്കലുകൾ
+	Formatting marks	ഫോർമാറ്റിംഗ് അടയാളങ്ങൾ
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	ഫോർമാറ്റിംഗ്, കേസ് മാറ്റങ്ങൾ, വൈറ്റ് സ്പേസ്, പട്ടികകൾ എന്നിവ താരതമ്യം ചെയ്യുന്നു; മറ്റ് ക്രമീകരണങ്ങൾ പിന്നീടത്തേക്ക് സൂക്ഷിച്ചിരിക്കുന്നു.
+	Formula	സൂത്രവാക്യം
+	Forward	മുന്നോട്ട്
+	Fraction	ഭിന്നസംഖ്യ
+	Fractions (1/2) as fraction characters (½)	ഭിന്നസംഖ്യകൾ (1/2) ഭിന്നസംഖ്യ പ്രതീകങ്ങളായി (½)
+	French	ഫ്രഞ്ച്
+	French (France)	ഫ്രഞ്ച് (ഫ്രാൻസ്)
+	From	നിന്ന്
+	From text:	ടെക്സ്റ്റിൽ നിന്ന്:
+	from Unicode (hex)	യൂണികോഡിൽ നിന്ന് (hex)
+	From:	അയച്ചയാൾ:
+	Full page of the same label	ഒരേ ലേബലിന്റെ മുഴുവൻ പേജ്
+	Function	ഫംഗ്ഷൻ
+	Functions	ഫംഗ്ഷനുകൾ
+	Gallery	ഗാലറി
+	GB/T 7714	GB/T 7714
+	General	പൊതുവായ
+	Geometry	ജ്യാമിതി
+	German	ജർമ്മൻ
+	German (Germany)	ജർമ്മൻ (ജർമ്മനി)
+	Get Add-ins	ആഡ്-ഇന്നുകൾ നേടുക
+	Get Data	ഡാറ്റ നേടുക
+	Get Data…	ഡാറ്റ നേടുക…
+	Getting ready…	തയ്യാറെടുക്കുന്നു…
+	Glow	തിളക്കം
+	Glow Colors	തിളക്ക നിറങ്ങൾ
+	Go Back	തിരികെ പോകുക
+	Go To	ഇതിലേക്ക് പോകുക
+	Go to	ഇവിടേക്ക് പോകുക
+	Go To…	ഇതിലേക്ക് പോകുക…
+	Good afternoon	ശുഭ ഉച്ചതിരിഞ്ഞ്
+	Good evening	ശുഭ സായാഹ്നം
+	Good morning	സുപ്രഭാതം
+	GOST (name sort)	GOST (പേര് ക്രമം)
+	GOST (title sort)	GOST (ശീർഷക ക്രമം)
+	Grab bag	സമ്മിശ്രം
+	Grammar	വ്യാകരണം
+	Grammar Settings	വ്യാകരണ ക്രമീകരണങ്ങൾ
+	Graphic	ഗ്രാഫിക്
+	Grave	ഗ്രേവ്
+	Greater than	വലുത്
+	Greater than or equal	വലുത് അല്ലെങ്കിൽ തുല്യം
+	Greek	ഗ്രീക്ക്
+	Greek Letters	ഗ്രീക്ക് അക്ഷരങ്ങൾ
+	Green:	പച്ച:
+	Greeting Line	അഭിവാദന വരി
+	Greeting\nLine	അഭിവാദന\nവരി
+	Grid Settings	ഗ്രിഡ് ക്രമീകരണങ്ങൾ
+	Grid Table 1 Light	ഗ്രിഡ് പട്ടിക 1 ലൈറ്റ്
+	Grid Table 4 – Blue	ഗ്രിഡ് പട്ടിക 4 – നീല
+	Grid Table 4 – Green	ഗ്രിഡ് പട്ടിക 4 – പച്ച
+	Grid Table 4 – Orange	ഗ്രിഡ് പട്ടിക 4 – ഓറഞ്ച്
+	Grid Table 4 – Purple	ഗ്രിഡ് പട്ടിക 4 – പർപ്പിൾ
+	Gridlines	ഗ്രിഡ്‌ലൈനുകൾ
+	Group	ഗ്രൂപ്പ്
+	Grouping Character Above	മുകളിൽ ഗ്രൂപ്പിംഗ് പ്രതീകം
+	Grouping Character Below	താഴെ ഗ്രൂപ്പിംഗ് പ്രതീകം
+	Grow Font 1 Point	ഫോണ്ട് 1 പോയിന്റ് വലുതാക്കുക
+	H:	ഉ:
+	Hanging Indent	തൂങ്ങുന്ന ഇൻഡന്റ്
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	തൊപ്പി
+	Header	ഹെഡർ
+	Header & Footer	ഹെഡറും ഫൂട്ടറും
+	Header Options	ഹെഡർ ഓപ്ഷനുകൾ
+	Header Options:	ഹെഡർ ഓപ്ഷനുകൾ:
+	Header Row	ഹെഡർ വരി
+	Header source: {file} (the next data source opened here takes its field names)	ഹെഡർ ഉറവിടം: {file} (ഇവിടെ തുറക്കുന്ന അടുത്ത ഡാറ്റ ഉറവിടം ഇതിന്റെ ഫീൽഡ് പേരുകൾ എടുക്കും)
+	Header/Footer Position	ഹെഡർ/ഫൂട്ടർ സ്ഥാനം
+	Headers and footers	ഹെഡറുകളും ഫൂട്ടറുകളും
+	Heading 1	തലക്കെട്ട് 1
+	Heading 2	തലക്കെട്ട് 2
+	Heading 3	തലക്കെട്ട് 3
+	Heading styles (levels 1–{n})	തലക്കെട്ട് ശൈലികൾ (ലെവലുകൾ 1–{n})
+	Heading {n}	തലക്കെട്ട് {n}
+	Headings	തലക്കെട്ടുകൾ
+	Heart	ഹൃദയം
+	Hebrew	ഹീബ്രു
+	Height:	ഉയരം:
+	Help	സഹായം
+	Hex:	Hex:
+	Hidden	മറച്ചത്
+	Hidden text	മറച്ച ടെക്സ്റ്റ്
+	Hide Codes	കോഡുകൾ മറയ്ക്കുക
+	Hide from style lists	ശൈലി പട്ടികകളിൽ നിന്ന് മറയ്ക്കുക
+	Hide Ink	മഷി മറയ്ക്കുക
+	Hide White Space	വൈറ്റ് സ്പേസ് മറയ്ക്കുക
+	Hide\nInk	മഷി\nമറയ്ക്കുക
+	Hierarchy	ശ്രേണീക്രമം
+	Highlight	ഹൈലൈറ്റ്
+	Highlight Changes	മാറ്റങ്ങൾ ഹൈലൈറ്റ് ചെയ്യുക
+	Highlight changes in printed document	പ്രിന്റ് ചെയ്ത പ്രമാണത്തിൽ മാറ്റങ്ങൾ ഹൈലൈറ്റ് ചെയ്യുക
+	Highlight changes on screen	സ്ക്രീനിൽ മാറ്റങ്ങൾ ഹൈലൈറ്റ് ചെയ്യുക
+	Highlight Merge Fields	മെർജ് ഫീൽഡുകൾ ഹൈലൈറ്റ് ചെയ്യുക
+	Highlight\nMerge Fields	മെർജ് ഫീൽഡുകൾ\nഹൈലൈറ്റ് ചെയ്യുക
+	Highlighter	ഹൈലൈറ്റർ
+	Hindi	ഹിന്ദി
+	Historical and Discretional	ചരിത്രപരവും ഐച്ഛികവും
+	Hollow	പൊള്ളയായ
+	Home	ഹോം
+	Home folder	ഹോം ഫോൾഡർ
+	Horizontal	തിരശ്ചീനം
+	Horizontal Line	തിരശ്ചീന വര
+	Horizontal spacing:	തിരശ്ചീന അകലം:
+	How many pages the whole document has	മുഴുവൻ പ്രമാണത്തിൽ എത്ര പേജുകൾ
+	How many pages this section has	ഈ വിഭാഗത്തിൽ എത്ര പേജുകൾ
+	How many words the document holds	പ്രമാണത്തിൽ എത്ര വാക്കുകൾ
+	HTML Format	HTML ഫോർമാറ്റ്
+	Hue:	വർണ്ണഭേദം:
+	Hungarian	ഹംഗേറിയൻ
+	Hyperbolic Cosecant Function	ഹൈപ്പർബോളിക് കോസെക്കന്റ് ഫംഗ്ഷൻ
+	Hyperbolic Cosine Function	ഹൈപ്പർബോളിക് കോസൈൻ ഫംഗ്ഷൻ
+	Hyperbolic Cotangent Function	ഹൈപ്പർബോളിക് കോടാൻജന്റ് ഫംഗ്ഷൻ
+	Hyperbolic Functions	ഹൈപ്പർബോളിക് ഫംഗ്ഷനുകൾ
+	Hyperbolic Secant Function	ഹൈപ്പർബോളിക് സെക്കന്റ് ഫംഗ്ഷൻ
+	Hyperbolic Sine Function	ഹൈപ്പർബോളിക് സൈൻ ഫംഗ്ഷൻ
+	Hyperbolic Tangent Function	ഹൈപ്പർബോളിക് ടാൻജന്റ് ഫംഗ്ഷൻ
+	Hyperlink	ഹൈപ്പർലിങ്ക്
+	Hyphenate at:	ഇവിടെ ഹൈഫനേറ്റ് ചെയ്യുക:
+	Hyphenate words in CAPS	വലിയക്ഷര വാക്കുകൾ ഹൈഫനേറ്റ് ചെയ്യുക
+	Hyphenation	ഹൈഫനേഷൻ
+	Hyphenation Options…	ഹൈഫനേഷൻ ഓപ്ഷനുകൾ…
+	Hyphenation zone:	ഹൈഫനേഷൻ മേഖല:
+	Hyphens (--) as dashes (—)	ഹൈഫനുകൾ (--) ഡാഷുകളായി (—)
+	Hypotenuse	കർണ്ണം (ത്രികോണം)
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	i, ii, iii, …
+	Icon Color	ഐക്കൺ നിറം
+	Icons	ഐക്കണുകൾ
+	Identity Matrices	ഐഡന്റിറ്റി മാട്രിക്സുകൾ
+	IEEE	IEEE
+	If…Then…Else	If…Then…Else
+	If…Then…Else…	If…Then…Else…
+	Ignore All	എല്ലാം അവഗണിക്കുക
+	Ignore punctuation characters	ചിഹ്നന പ്രതീകങ്ങൾ അവഗണിക്കുക
+	Ignore web and file addresses	വെബ്, ഫയൽ വിലാസങ്ങൾ അവഗണിക്കുക
+	Ignore white-space characters	വൈറ്റ് സ്പേസ് പ്രതീകങ്ങൾ അവഗണിക്കുക
+	Ignore words in capitals	വലിയക്ഷര വാക്കുകൾ അവഗണിക്കുക
+	Ignore words with numbers	അക്കങ്ങളുള്ള വാക്കുകൾ അവഗണിക്കുക
+	Illustrations	ചിത്രീകരണങ്ങൾ
+	Immersive	ഇമ്മേഴ്സീവ്
+	Immersive Reader	ഇമ്മേഴ്സീവ് റീഡർ
+	Immersive\nReader	ഇമ്മേഴ്സീവ്\nറീഡർ
+	In Default apps, choose Doc4Me for the document types you want it to open.	സ്ഥിരസ്ഥിതി ആപ്പുകളിൽ, Doc4Me തുറക്കേണ്ട പ്രമാണ തരങ്ങൾക്കായി Doc4Me തിരഞ്ഞെടുക്കുക.
+	In equations, typing a name after a backslash replaces it with its symbol.	സമവാക്യങ്ങളിൽ, ബാക്ക്സ്ലാഷിന് ശേഷം ഒരു പേര് ടൈപ്പ് ചെയ്താൽ അത് അതിന്റെ ചിഹ്നമായി മാറുന്നു.
+	In Front of Text	ടെക്സ്റ്റിന് മുന്നിൽ
+	In Line with Text	ടെക്സ്റ്റിനൊപ്പം വരിയിൽ
+	Inches	ഇഞ്ചുകൾ
+	Include label and number	ലേബലും നമ്പറും ഉൾപ്പെടുത്തുക
+	Include level number from:	ഇതിൽ നിന്ന് ലെവൽ നമ്പർ ഉൾപ്പെടുത്തുക:
+	Include page numbers	പേജ് നമ്പറുകൾ ഉൾപ്പെടുത്തുക
+	Increase Font Size	ഫോണ്ട് വലുപ്പം കൂട്ടുക
+	Increase Indent	ഇൻഡന്റ് കൂട്ടുക
+	Indent	ഇൻഡന്റ്
+	Indent from left:	ഇടത്തുനിന്ന് ഇൻഡന്റ്:
+	Indentation	ഇൻഡന്റേഷൻ
+	Indented	ഇൻഡന്റ് ചെയ്തത്
+	Indents	ഇൻഡന്റുകൾ
+	Indents and Spacing	ഇൻഡന്റുകളും അകലവും
+	Index	സൂചിക
+	Index and Tables	സൂചികയും പട്ടികകളും
+	Index Heading	സൂചിക തലക്കെട്ട്
+	Index {n}	സൂചിക {n}
+	Indonesian	ഇന്തോനേഷ്യൻ
+	Inflate	വീർപ്പിക്കുക
+	Info	വിവരം
+	Initials:	ആദ്യാക്ഷരങ്ങൾ:
+	Ink	മഷി
+	Ink Equation	മഷി സമവാക്യം
+	Ink Replay	മഷി റീപ്ലേ
+	Ink to Math	മഷിയിൽ നിന്ന് ഗണിതം
+	Ink to Shape	മഷിയിൽ നിന്ന് ആകൃതി
+	Ink to\nMath	മഷിയിൽ നിന്ന്\nഗണിതം
+	Ink to\nShape	മഷിയിൽ നിന്ന്\nആകൃതി
+	Ink\nReplay	മഷി\nറീപ്ലേ
+	Inline	ഇൻലൈൻ
+	Input Format	ഇൻപുട്ട് ഫോർമാറ്റ്
+	Insert	തിരുകുക
+	Insert a 3D model from a file (.glb, .stl, .obj)	ഫയലിൽ നിന്ന് 3D മോഡൽ തിരുകുക (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	പുതിയ സമവാക്യം തിരുകുക (Alt+=)
+	Insert Above	മുകളിൽ തിരുകുക
+	Insert Below	താഴെ തിരുകുക
+	Insert Caption	അടിക്കുറിപ്പ് തിരുകുക
+	Insert Cells	സെല്ലുകൾ തിരുകുക
+	Insert Chart	ചാർട്ട് തിരുകുക
+	Insert Citation	ഉദ്ധരണി തിരുകുക
+	Insert Columns to the Left	ഇടത്തേക്ക് നിരകൾ തിരുകുക
+	Insert Columns to the Right	വലത്തേക്ക് നിരകൾ തിരുകുക
+	Insert Data	ഡാറ്റ തിരുകുക
+	Insert Database	ഡാറ്റാബേസ് തിരുകുക
+	Insert Database…	ഡാറ്റാബേസ് തിരുകുക…
+	Insert Date Field	തീയതി ഫീൽഡ് തിരുകുക
+	Insert Endnote	എൻഡ്‌നോട്ട് തിരുകുക
+	Insert entire column	മുഴുവൻ നിര തിരുകുക
+	Insert entire row	മുഴുവൻ വരി തിരുകുക
+	Insert Footnote	അടിക്കുറിപ്പ് (ഫുട്നോട്ട്) തിരുകുക
+	Insert Hyperlink	ഹൈപ്പർലിങ്ക് തിരുകുക
+	Insert Index	സൂചിക തിരുകുക
+	Insert Left	ഇടത്ത് തിരുകുക
+	Insert LISTNUM Field	LISTNUM ഫീൽഡ് തിരുകുക
+	Insert Merge Field	മെർജ് ഫീൽഡ് തിരുകുക
+	Insert Merge\nField	മെർജ്\nഫീൽഡ് തിരുകുക
+	Insert New Equation	പുതിയ സമവാക്യം തിരുകുക
+	Insert one text or another, depending on a field's value.	ഒരു ഫീൽഡിന്റെ മൂല്യം അനുസരിച്ച് ഒരു ടെക്സ്റ്റോ മറ്റൊന്നോ തിരുകുക.
+	Insert Page Field	പേജ് ഫീൽഡ് തിരുകുക
+	Insert Right	വലത്ത് തിരുകുക
+	Insert Rows	വരികൾ തിരുകുക
+	Insert Rows Above	മുകളിൽ വരികൾ തിരുകുക
+	Insert Rows Below	താഴെ വരികൾ തിരുകുക
+	Insert Shapes	ആകൃതികൾ തിരുകുക
+	Insert SmartArt	SmartArt തിരുകുക
+	Insert Structure	ഘടന തിരുകുക
+	Insert Symbol	ചിഹ്നം തിരുകുക
+	Insert Table	പട്ടിക തിരുകുക
+	Insert Table of Authorities	അധികാരികളുടെ പട്ടിക തിരുകുക
+	Insert Table of Figures	ചിത്രങ്ങളുടെ പട്ടിക തിരുകുക
+	Insert Table…	പട്ടിക തിരുകുക…
+	Insert Time Field	സമയ ഫീൽഡ് തിരുകുക
+	Insert Video	വീഡിയോ തിരുകുക
+	Insert\nAbove	മുകളിൽ\nതിരുകുക
+	Insert\nCaption	അടിക്കുറിപ്പ്\nതിരുകുക
+	Insert\nCitation	ഉദ്ധരണി\nതിരുകുക
+	Insert\nFootnote	അടിക്കുറിപ്പ്\nതിരുകുക (ഫുട്നോട്ട്)
+	Inserted	തിരുകി
+	Insertions and Deletions	തിരുകലുകളും ഇല്ലാതാക്കലുകളും
+	Insertions:	തിരുകലുകൾ:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	തിരുകലുകൾ: {ins}, ഇല്ലാതാക്കലുകൾ: {del}, നീക്കങ്ങൾ: {moves}, ഫോർമാറ്റിംഗ്: {fmt}, അഭിപ്രായങ്ങൾ: {comments}
+	Inside	ഉള്ളിൽ
+	Inside Borders	ഉൾ അതിരുകൾ
+	Inside Margin	ഉൾ മാർജിൻ
+	Inside:	ഉള്ളിൽ:
+	Inspect Document	പ്രമാണം പരിശോധിക്കുക
+	Inspect Styles at Selection	തിരഞ്ഞെടുപ്പിലെ ശൈലികൾ പരിശോധിക്കുക
+	Institution	സ്ഥാപനം
+	Integral	ഇന്റഗ്രൽ
+	Integral of e^(−x²)	e^(−x²)-ന്റെ ഇന്റഗ്രൽ
+	Integral with Limits	പരിധികളോടെ ഇന്റഗ്രൽ
+	Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ ഇന്റഗ്രൽ
+	Integrals	ഇന്റഗ്രലുകൾ
+	Intense Emphasis	തീവ്ര ഊന്നൽ
+	Intense Quote	തീവ്ര ഉദ്ധരണി
+	Intense Reference	തീവ്ര റഫറൻസ്
+	Interface	ഇന്റർഫേസ്
+	Interface language	ഇന്റർഫേസ് ഭാഷ
+	Interface language:	ഇന്റർഫേസ് ഭാഷ:
+	Interface size:	ഇന്റർഫേസ് വലുപ്പം:
+	Interface Theme	ഇന്റർഫേസ് തീം
+	Interface theme:	ഇന്റർഫേസ് തീം:
+	Interface\nTheme	ഇന്റർഫേസ്\nതീം
+	Internet addresses as links	ഇന്റർനെറ്റ് വിലാസങ്ങൾ ലിങ്കുകളായി
+	Intersection	ഛേദം
+	Intersection with Limits	പരിധികളോടെ ഛേദം
+	Intersection with Lower Limit	താഴ്ന്ന പരിധിയോടെ ഛേദം
+	Intersection with Subscript-Superscript Limits	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ് പരിധികളോടെ ഛേദം
+	Inverse Cosecant Function	വിപരീത കോസെക്കന്റ് ഫംഗ്ഷൻ
+	Inverse Cosine Function	വിപരീത കോസൈൻ ഫംഗ്ഷൻ
+	Inverse Cotangent Function	വിപരീത കോടാൻജന്റ് ഫംഗ്ഷൻ
+	Inverse Functions	വിപരീത ഫംഗ്ഷനുകൾ
+	Inverse Hyperbolic Cosecant Function	വിപരീത ഹൈപ്പർബോളിക് കോസെക്കന്റ് ഫംഗ്ഷൻ
+	Inverse Hyperbolic Cosine Function	വിപരീത ഹൈപ്പർബോളിക് കോസൈൻ ഫംഗ്ഷൻ
+	Inverse Hyperbolic Cotangent Function	വിപരീത ഹൈപ്പർബോളിക് കോടാൻജന്റ് ഫംഗ്ഷൻ
+	Inverse Hyperbolic Functions	വിപരീത ഹൈപ്പർബോളിക് ഫംഗ്ഷനുകൾ
+	Inverse Hyperbolic Secant Function	വിപരീത ഹൈപ്പർബോളിക് സെക്കന്റ് ഫംഗ്ഷൻ
+	Inverse Hyperbolic Sine Function	വിപരീത ഹൈപ്പർബോളിക് സൈൻ ഫംഗ്ഷൻ
+	Inverse Hyperbolic Tangent Function	വിപരീത ഹൈപ്പർബോളിക് ടാൻജന്റ് ഫംഗ്ഷൻ
+	Inverse Secant Function	വിപരീത സെക്കന്റ് ഫംഗ്ഷൻ
+	Inverse Sine Function	വിപരീത സൈൻ ഫംഗ്ഷൻ
+	Inverse Tangent Function	വിപരീത ടാൻജന്റ് ഫംഗ്ഷൻ
+	Ionosphere	അയണോസ്ഫിയർ
+	Is blank	ശൂന്യമാണ്
+	Is not blank	ശൂന്യമല്ല
+	ISO 690 (author-date)	ISO 690 (രചയിതാവ്-തീയതി)
+	ISO 690 (numerical)	ISO 690 (സംഖ്യാപരം)
+	Issue	ലക്കം
+	it isn't a picture Doc4Me can read	ഇത് Doc4Me-ന് വായിക്കാൻ കഴിയുന്ന ചിത്രമല്ല
+	Italian	ഇറ്റാലിയൻ
+	Italic	ഇറ്റാലിക്
+	Japanese	ജാപ്പനീസ്
+	Journal	ജേണൽ
+	Justification	ന്യായീകരണം
+	Justification of a display equation	പ്രദർശന സമവാക്യത്തിന്റെ ന്യായീകരണം
+	Justified	ഇരുവശവും വിന്യസിച്ചത്
+	Justify	ഇരുവശവും വിന്യസിക്കുക
+	Keep Lines Together	വരികൾ ഒരുമിച്ച് നിലനിർത്തുക
+	Keep lines together	വരികൾ ഒന്നിച്ച് സൂക്ഷിക്കുക
+	Keep Source Formatting	ഉറവിട ഫോർമാറ്റിംഗ് നിലനിർത്തുക
+	Keep Text Only	ടെക്സ്റ്റ് മാത്രം നിലനിർത്തുക
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	പാസ്‌വേഡ് സുരക്ഷിതമായി സൂക്ഷിക്കുക: അതില്ലാതെ Doc4Me ഉൾപ്പെടെ ആർക്കും പ്രമാണം തുറക്കാൻ കഴിയില്ല. പാസ്‌വേഡ് നീക്കാൻ രണ്ട് ബോക്സുകളും ശൂന്യമാക്കുക.
+	Keep with Next	അടുത്തതിനൊപ്പം നിലനിർത്തുക
+	Keep with next	അടുത്തതുമായി ചേർത്ത് സൂക്ഷിക്കുക
+	Keeps the fonts and formatting of the copied text.	പകർത്തിയ ടെക്സ്റ്റിന്റെ ഫോണ്ടുകളും ഫോർമാറ്റിംഗും നിലനിർത്തുന്നു.
+	Kerning for fonts:	ഫോണ്ടുകൾക്ക് കേർണിംഗ്:
+	Keyboard shortcuts:	കീബോർഡ് കുറുക്കുവഴികൾ:
+	Keys for this command:	ഈ കമാൻഡിനുള്ള കീകൾ:
+	Keywords	കീവേഡുകൾ
+	Korean	കൊറിയൻ
+	Label changes with:	ലേബൽ ഇതിനൊപ്പം മാറുന്നു:
+	Label:	ലേബൽ:
+	Labels	ലേബലുകൾ
+	Landscape	ലാൻഡ്സ്കേപ്പ്
+	Language	ഭാഷ
+	Language Preferences…	ഭാഷാ മുൻഗണനകൾ…
+	Language…	ഭാഷ…
+	Large\nOperator	വലിയ\nഓപ്പറേറ്റർ
+	Largest Only	ഏറ്റവും വലുത് മാത്രം
+	Largest only	ഏറ്റവും വലുതിനെ മാത്രം
+	Lasso	ലാസോ
+	Lasso Select	ലാസോ തിരഞ്ഞെടുപ്പ്
+	Last	അവസാനം
+	Last Cell in Column	നിരയിലെ അവസാന സെൽ
+	Last Cell in Row	വരിയിലെ അവസാന സെൽ
+	Last Column	അവസാന നിര
+	Last commit	അവസാന കമ്മിറ്റ്
+	Last Name	കുടുംബപ്പേര്
+	Last, First; Last, First	കുടുംബപ്പേര്, പേര്; കുടുംബപ്പേര്, പേര്
+	Latin text font:	ലാറ്റിൻ ടെക്സ്റ്റ് ഫോണ്ട്:
+	Layout	ലേഔട്ട്
+	Layout options for this document	ഈ പ്രമാണത്തിനുള്ള ലേഔട്ട് ഓപ്ഷനുകൾ
+	Layout Summary	ലേഔട്ട് സംഗ്രഹം
+	Layouts	ലേഔട്ടുകൾ
+	Leader	ലീഡർ
+	Leave a recipient out of the merge when a field has this value.	ഒരു ഫീൽഡിന് ഈ മൂല്യം ഉള്ളപ്പോൾ സ്വീകർത്താവിനെ മെർജിൽ നിന്ന് ഒഴിവാക്കുക.
+	Leave Equation	സമവാക്യത്തിൽ നിന്ന് പുറത്തുകടക്കുക
+	Leave the equation (Esc)	സമവാക്യത്തിൽ നിന്ന് പുറത്തുകടക്കുക (Esc)
+	Leave the label out of the caption	അടിക്കുറിപ്പിൽ നിന്ന് ലേബൽ ഒഴിവാക്കുക
+	Left	ഇടത്
+	Left Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ ഇടത് അമ്പടയാളം
+	Left Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ ഇടത് അമ്പടയാളം
+	Left Border	ഇടത് അതിർ
+	Left border	ഇടത്തെ അതിർ
+	Left Bracket Twice	രണ്ടുതവണ ഇടത് ബ്രാക്കറ്റ്
+	Left indent	ഇടത് ഇൻഡന്റ്
+	Left Margin	ഇടത് മാർജിൻ
+	Left Only	ഇടത് മാത്രം
+	Left only	ഇടതുവശം മാത്രം
+	Left Right Arrow Above	മുകളിൽ ഇടത്-വലത് അമ്പടയാളം
+	Left Right Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ ഇടത്-വലത് അമ്പടയാളം
+	Left Right Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ ഇടത്-വലത് അമ്പടയാളം
+	Left Subscript-Superscript	ഇടത് സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ്
+	Left-to-right	ഇടത്തുനിന്ന് വലത്തോട്ട്
+	Left-to-Right Text Direction	ഇടത്തുനിന്ന് വലത്തോട്ടുള്ള ടെക്സ്റ്റ് ദിശ
+	Left:	ഇടത്:
+	Leftwards Arrow Above	മുകളിൽ ഇടത്തോട്ട് അമ്പടയാളം
+	Leftwards Harpoon Above	മുകളിൽ ഇടത്തോട്ട് ഹാർപൂൺ
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	നിയമ ശൈലി നമ്പറിംഗ്
+	Legend	ലെജൻഡ്
+	Less than	ചെറുത്
+	Less than or equal	ചെറുത് അല്ലെങ്കിൽ തുല്യം
+	Letter	കത്ത്
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	അക്ഷര തലക്കെട്ടുകൾ
+	Letter-Like Symbols	അക്ഷരം പോലുള്ള ചിഹ്നങ്ങൾ
+	Letters	കത്തുകൾ
+	Level 1	ലെവൽ 1
+	Level 2	ലെവൽ 2
+	Level 3	ലെവൽ 3
+	Level 4	ലെവൽ 4
+	Level 5	ലെവൽ 5
+	Level 6	ലെവൽ 6
+	Level 7	ലെവൽ 7
+	Level 8	ലെവൽ 8
+	Level 9	ലെവൽ 9
+	Level {n}	ലെവൽ {n}
+	Level:	ലെവൽ:
+	Levels:	ലെവലുകൾ:
+	LibreTranslate server (open source)	LibreTranslate സെർവർ (ഓപ്പൺ സോഴ്സ്)
+	Ligatures:	ലിഗേച്ചറുകൾ:
+	Light	ലൈറ്റ്
+	Light with Outline	ഔട്ട്ലൈനോടെ ലൈറ്റ്
+	Limit	പരിധി
+	Limit and\nLog	പരിധിയും\nലോഗും
+	Limit consecutive hyphens to:	തുടർച്ചയായ ഹൈഫനുകൾ ഇതിലേക്ക് പരിമിതപ്പെടുത്തുക:
+	Limit Example	പരിധി ഉദാഹരണം
+	Limit formatting to a selection of styles	ഫോർമാറ്റിംഗ് തിരഞ്ഞെടുത്ത ശൈലികളിലേക്ക് പരിമിതപ്പെടുത്തുക
+	Line	വര
+	Line and Page Breaks	വരി, പേജ് ഇടവേളകൾ
+	Line and Paragraph Spacing	വരി, ഖണ്ഡിക അകലം
+	Line between	ഇടയിൽ വര
+	Line Break	വരി ഇടവേള
+	Line breaking	വരി മുറിക്കൽ
+	Line delta	വരി ഡെൽറ്റ
+	Line End	വരിയുടെ അവസാനം
+	Line Number	വരി നമ്പർ
+	Line Numbering Options…	വരി നമ്പറിംഗ് ഓപ്ഷനുകൾ…
+	Line Numbers	വരി നമ്പറുകൾ
+	Line Spacing	വരി അകലം
+	Line spacing	വരികളുടെ അകലം
+	Line Spacing Options…	വരി അകല ഓപ്ഷനുകൾ…
+	Line spacing:	വരി അകലം:
+	Line Start	വരിയുടെ തുടക്കം
+	Line width:	വര വീതി:
+	Line:	വര:
+	Linear	രേഖീയം
+	Linear Fraction	രേഖീയ ഭിന്നസംഖ്യ
+	Lines	വരികൾ
+	Lines +/−	വരികൾ +/−
+	Lines added	ചേർത്ത വരികൾ
+	Lines and characters	വരികളും പ്രതീകങ്ങളും
+	Lines deleted	ഇല്ലാതാക്കിയ വരികൾ
+	Lines only	വരികൾ മാത്രം
+	Lines per page:	ഓരോ പേജിലും വരികൾ:
+	Link	ലിങ്ക്
+	Link entries to their headings	എൻട്രികളെ അവയുടെ തലക്കെട്ടുകളുമായി ലിങ്ക് ചെയ്യുക
+	Link level to style:	ലെവലിനെ ശൈലിയുമായി ലിങ്ക് ചെയ്യുക:
+	Link to Previous	മുമ്പത്തേതുമായി ലിങ്ക് ചെയ്യുക
+	Linked style (paragraph and character)	ലിങ്ക് ചെയ്ത ശൈലി (ഖണ്ഡികയും പ്രതീകവും)
+	Links	ലിങ്കുകൾ
+	Links and References	ലിങ്കുകളും റഫറൻസുകളും
+	Link…	ലിങ്ക്…
+	List	പട്ടിക (ലിസ്റ്റ്)
+	List Commands	കമാൻഡുകൾ പട്ടികപ്പെടുത്തുക
+	List Definition	പട്ടിക നിർവചനം
+	List entries	പട്ടിക എൻട്രികൾ
+	List Paragraph	പട്ടിക ഖണ്ഡിക
+	List styles	പട്ടിക ശൈലികൾ
+	List Table 3 – Blue	പട്ടിക 3 – നീല
+	List Table 3 – Green	പട്ടിക 3 – പച്ച
+	List Table 3 – Orange	പട്ടിക 3 – ഓറഞ്ച്
+	List Table 3 – Purple	പട്ടിക 3 – പർപ്പിൾ
+	Listening… speak now	കേൾക്കുന്നു… ഇപ്പോൾ സംസാരിക്കുക
+	Location	സ്ഥാനം
+	Location: {path}	സ്ഥാനം: {path}
+	Lock aspect ratio	വീക്ഷണാനുപാതം ലോക്ക് ചെയ്യുക
+	Lock Fields	ഫീൽഡുകൾ ലോക്ക് ചെയ്യുക
+	Logarithm	ലോഗരിതം
+	Logarithm with Base	ആധാരത്തോടെ ലോഗരിതം
+	Logical AND	ലോജിക്കൽ AND
+	Logical AND with Limits	പരിധികളോടെ ലോജിക്കൽ AND
+	Logical OR	ലോജിക്കൽ OR
+	Logical OR with Limits	പരിധികളോടെ ലോജിക്കൽ OR
+	Long citation:	ദീർഘ ഉദ്ധരണി:
+	lowercase	ചെറിയക്ഷരം
+	Lum:	ദീപ്തി:
+	Macros	മാക്രോകൾ
+	Made from the author and year when empty	ശൂന്യമാകുമ്പോൾ രചയിതാവിൽ നിന്നും വർഷത്തിൽ നിന്നും നിർമ്മിക്കുന്നു
+	Magazine or newspaper article	മാസിക അല്ലെങ്കിൽ പത്ര ലേഖനം
+	Mail Merge	മെയിൽ മെർജ്
+	Mail Merge Helper	മെയിൽ മെർജ് സഹായി
+	Mail Merge Helper…	മെയിൽ മെർജ് സഹായി…
+	Mailing Labels	മെയിലിംഗ് ലേബലുകൾ
+	Mailings	മെയിലിംഗുകൾ
+	Main entry:	പ്രധാന എൻട്രി:
+	Make Doc4Me the default for Word documents…	Word പ്രമാണങ്ങൾക്ക് Doc4Me സ്ഥിരസ്ഥിതിയാക്കുക…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	നിങ്ങളുടെ സിസ്റ്റത്തിന്റെ ഡിസ്പ്ലേ സ്കെയിലിംഗിന് മുകളിൽ റിബൺ, മെനുകൾ, ഡയലോഗുകൾ എന്നിവ വലുതോ ചെറുതോ ആക്കുന്നു. പ്രമാണ സൂം വേറെയാണ്.
+	Malay	മലയ്
+	Manage Sources	ഉറവിടങ്ങൾ കൈകാര്യം ചെയ്യുക
+	Manage Styles	ശൈലികൾ കൈകാര്യം ചെയ്യുക
+	Manage Styles…	ശൈലികൾ കൈകാര്യം ചെയ്യുക…
+	Manual Hyphenation	സ്വമേധയാ ഹൈഫനേഷൻ
+	Manual hyphenation is complete.	സ്വമേധയാ ഹൈഫനേഷൻ പൂർത്തിയായി.
+	Manual Line Break	സ്വമേധയാ വരി ഇടവേള
+	Manual Page Break	സ്വമേധയാ പേജ് ഇടവേള
+	Manual…	സ്വമേധയാ…
+	Many pages	നിരവധി പേജുകൾ
+	Margin	മാർജിൻ
+	Margins	മാർജിനുകൾ
+	Mark	അടയാളപ്പെടുത്തുക
+	Mark All	എല്ലാം അടയാളപ്പെടുത്തുക
+	Mark as decorative	അലങ്കാരമായി അടയാളപ്പെടുത്തുക
+	Mark Citation	ഉദ്ധരണി അടയാളപ്പെടുത്തുക
+	Mark Citation…	ഉദ്ധരണി അടയാളപ്പെടുത്തുക…
+	Mark Entry	എൻട്രി അടയാളപ്പെടുത്തുക
+	Mark Entry…	എൻട്രി അടയാളപ്പെടുത്തുക…
+	Mark grammar errors as you type	ടൈപ്പ് ചെയ്യുമ്പോൾ വ്യാകരണ പിശകുകൾ അടയാളപ്പെടുത്തുക
+	Mark Index Entry	സൂചിക എൻട്രി അടയാളപ്പെടുത്തുക
+	Mark selected text as:	തിരഞ്ഞെടുത്ത ടെക്സ്റ്റ് ഇങ്ങനെ അടയാളപ്പെടുത്തുക:
+	Mark Table of Contents Entry	ഉള്ളടക്ക പട്ടിക എൻട്രി അടയാളപ്പെടുത്തുക
+	Mark\nCitation	ഉദ്ധരണി\nഅടയാളപ്പെടുത്തുക
+	Mark\nEntry	എൻട്രി\nഅടയാളപ്പെടുത്തുക
+	Markdown (*.md)	Markdown (*.md)
+	Match case	കേസ് പൊരുത്തപ്പെടുത്തുക
+	Match Fields	ഫീൽഡുകൾ പൊരുത്തപ്പെടുത്തുക
+	Match prefix	ഉപസർഗ്ഗം പൊരുത്തപ്പെടുത്തുക
+	Match suffix	പ്രത്യയം പൊരുത്തപ്പെടുത്തുക
+	Math AutoCorrect	ഗണിത യാന്ത്രിക തിരുത്തൽ
+	Math Input Control	ഗണിത ഇൻപുട്ട് നിയന്ത്രണം
+	Matrices with Brackets	ബ്രാക്കറ്റുകളോടെ മാട്രിക്സുകൾ
+	Matrix	മാട്രിക്സ്
+	Maximize	പരമാവധിയാക്കുക
+	Maximum	പരമാവധി
+	Maximum Example	പരമാവധി ഉദാഹരണം
+	Measured By	ഇതുപയോഗിച്ച് അളന്നത്
+	Measurement units:	അളവ് യൂണിറ്റുകൾ:
+	Media	മീഡിയ
+	Merge	ലയിപ്പിക്കുക
+	Merge Cells	സെല്ലുകൾ ലയിപ്പിക്കുക
+	Merge Formatting	ഫോർമാറ്റിംഗ് ലയിപ്പിക്കുക
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	ഫോർമാറ്റിംഗ് ലയിപ്പിക്കുക, ടെക്സ്റ്റ് എത്തുന്നിടത്തെ ഫോർമാറ്റിംഗിൽ ഒട്ടിക്കുന്നു, ടെക്സ്റ്റ് മാത്രം നിലനിർത്തുക പോലെ.
+	Merge Record #	മെർജ് റെക്കോർഡ് #
+	Merge records	റെക്കോർഡുകൾ ലയിപ്പിക്കുക
+	Merge to New Document	പുതിയ പ്രമാണത്തിലേക്ക് ലയിപ്പിക്കുക
+	Merge to Printer	പ്രിന്ററിലേക്ക് ലയിപ്പിക്കുക
+	Merge to:	ഇതിലേക്ക് ലയിപ്പിക്കുക:
+	Merge type: {type}	മെർജ് തരം: {type}
+	Merged PRs	ലയിപ്പിച്ച PR-കൾ
+	Merge…	ലയിപ്പിക്കുക…
+	Mesosphere	മീസോസ്ഫിയർ
+	Middle	മധ്യം (ലംബം)
+	Midline Dots	മധ്യരേഖ ബിന്ദുക്കൾ
+	Millimeters	മില്ലിമീറ്ററുകൾ
+	Minimum	കുറഞ്ഞത് (മൂല്യം)
+	Minus Equal	മൈനസ് തുല്യം
+	Mirror indents	കണ്ണാടി ഇൻഡന്റുകൾ
+	Mirrored	കണ്ണാടി പ്രതിബിംബം
+	Missing document font	പ്രമാണ ഫോണ്ട് ലഭ്യമല്ല
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	മോഡൽ
+	Models	മോഡലുകൾ
+	Moderate	മിതമായ
+	Modify Style	ശൈലി പരിഷ്കരിക്കുക
+	Modify Table Style	പട്ടിക ശൈലി പരിഷ്കരിക്കുക
+	Modify Table Style…	പട്ടിക ശൈലി പരിഷ്കരിക്കുക…
+	Modify…	പരിഷ്കരിക്കുക…
+	Mon	തിങ്കൾ
+	Month	മാസം
+	More >>	കൂടുതൽ >>
+	More Colors…	കൂടുതൽ നിറങ്ങൾ…
+	More Columns…	കൂടുതൽ നിരകൾ…
+	More Commands…	കൂടുതൽ കമാൻഡുകൾ…
+	More Symbols…	കൂടുതൽ ചിഹ്നങ്ങൾ…
+	More templates →	കൂടുതൽ ടെംപ്ലേറ്റുകൾ →
+	Move Down	താഴേക്ക് നീക്കുക
+	Move in Equation	സമവാക്യത്തിൽ നീങ്ങുക
+	Move object with text	ഒബ്ജക്റ്റ് ടെക്സ്റ്റിനൊപ്പം നീക്കുക
+	Move or Resize	നീക്കുക അല്ലെങ്കിൽ വലുപ്പം മാറ്റുക
+	Move Paragraph Down	ഖണ്ഡിക താഴേക്ക് നീക്കുക
+	Move Paragraph Up	ഖണ്ഡിക മുകളിലേക്ക് നീക്കുക
+	Move Past Citation	ഉദ്ധരണിക്ക് അപ്പുറം നീങ്ങുക
+	Move Past\nCitation	ഉദ്ധരണിക്ക്\nഅപ്പുറം നീങ്ങുക
+	Move Selected Ink	തിരഞ്ഞെടുത്ത മഷി നീക്കുക
+	Move Text	ടെക്സ്റ്റ് നീക്കുക
+	Move to where?	എവിടേക്ക് നീക്കണം?
+	Move Up	മുകളിലേക്ക് നീക്കുക
+	Move with Text	ടെക്സ്റ്റിനൊപ്പം നീങ്ങുക
+	Move with text	ടെക്സ്റ്റിനോടൊപ്പം നീങ്ങുന്നു
+	Moved from	ഇവിടെ നിന്ന് നീക്കി
+	Moved to	ഇവിടേക്ക് നീക്കി
+	Moves	നീക്കങ്ങൾ
+	Multilevel List	മൾട്ടിലെവൽ പട്ടിക
+	Multiple Pages	ഒന്നിലധികം പേജുകൾ
+	My Add-ins	എന്റെ ആഡ്-ഇന്നുകൾ
+	MyMemory (free, no account)	MyMemory (സൗജന്യം, അക്കൗണ്ട് വേണ്ട)
+	Name	പേര്
+	Name (A–Z)	പേര് (A–Z)
+	Name of the file this document is saved as	ഈ പ്രമാണം സേവ് ചെയ്തിരിക്കുന്ന ഫയലിന്റെ പേര്
+	Name:	പേര്:
+	Narrow  0.5" all	ഇടുങ്ങിയത്  എല്ലാം 0.5"
+	Natural Logarithm	സ്വാഭാവിക ലോഗരിതം
+	Nature	പ്രകൃതി
+	Navigation	നാവിഗേഷൻ
+	Navigation Pane	നാവിഗേഷൻ പാളി
+	Negated Relations	നിഷേധിച്ച ബന്ധങ്ങൾ
+	New	പുതിയത്
+	New Comment	പുതിയ അഭിപ്രായം
+	New comments and tracked changes are recorded under this name and these initials.	പുതിയ അഭിപ്രായങ്ങളും ട്രാക്ക് ചെയ്ത മാറ്റങ്ങളും ഈ പേരിലും ആദ്യാക്ഷരങ്ങളിലും രേഖപ്പെടുത്തുന്നു.
+	New Document	പുതിയ പ്രമാണം
+	New document	ഒരു പുതിയ പ്രമാണം
+	New Drawing Canvas	പുതിയ ഡ്രോയിംഗ് ക്യാൻവാസ്
+	New Entry	പുതിയ എൻട്രി
+	New Folder	പുതിയ ഫോൾഡർ
+	New from Template	ടെംപ്ലേറ്റിൽ നിന്ന് പുതിയത്
+	New Group	പുതിയ ഗ്രൂപ്പ്
+	New Label	പുതിയ ലേബൽ
+	New Label…	പുതിയ ലേബൽ…
+	New Paragraph	പുതിയ ഖണ്ഡിക
+	New shortcut:	പുതിയ കുറുക്കുവഴി:
+	New Style…	പുതിയ ശൈലി…
+	New Tab	പുതിയ ടാബ്
+	New Table Style	പുതിയ പട്ടിക ശൈലി
+	New Table Style…	പുതിയ പട്ടിക ശൈലി…
+	New Window	പുതിയ വിൻഡോ
+	New word	പുതിയ വാക്ക്
+	New\nComment	പുതിയ\nഅഭിപ്രായം
+	New\nWindow	പുതിയ\nവിൻഡോ
+	New…	പുതിയത്…
+	Next	അടുത്തത്
+	Next Change	അടുത്ത മാറ്റം
+	Next Comment	അടുത്ത അഭിപ്രായം
+	Next Field	അടുത്ത ഫീൽഡ്
+	Next Footnote	അടുത്ത അടിക്കുറിപ്പ്
+	Next Page	അടുത്ത പേജ്
+	Next Record	അടുത്ത റെക്കോർഡ്
+	Next Section	അടുത്ത വിഭാഗം
+	Next Sentence	അടുത്ത വാക്യം
+	Next sentence	അടുത്ത വാക്യത്തിലേക്ക്
+	Next Window	അടുത്ത വിൻഡോ
+	No	ഇല്ല
+	No accessibility issues found.	പ്രവേശനക്ഷമത പ്രശ്നങ്ങളൊന്നും കണ്ടെത്തിയില്ല.
+	No add-ins are listed yet.	ഇതുവരെ ആഡ്-ഇന്നുകൾ പട്ടികപ്പെടുത്തിയിട്ടില്ല.
+	No add-ins yet. Add one from the Store.	ഇതുവരെ ആഡ്-ഇന്നുകളില്ല. സ്റ്റോറിൽ നിന്ന് ഒന്ന് ചേർക്കുക.
+	No Border	അതിർ ഇല്ല
+	No changes (read only)	മാറ്റങ്ങളില്ല (വായിക്കാൻ മാത്രം)
+	No Color	നിറമില്ല
+	No contributor data was built into this copy.	ഈ പകർപ്പിൽ സംഭാവക ഡാറ്റ ഉൾപ്പെടുത്തിയിട്ടില്ല.
+	No data source yet.	ഇതുവരെ ഡാറ്റ ഉറവിടമില്ല.
+	No errors found: every merge field is in the recipient list.	പിശകുകളൊന്നുമില്ല: എല്ലാ മെർജ് ഫീൽഡുകളും സ്വീകർത്താക്കളുടെ പട്ടികയിലുണ്ട്.
+	No Fill	നിറയ്ക്കൽ ഇല്ല
+	No Glow	തിളക്കമില്ല
+	No grid	ഗ്രിഡ് ഇല്ല
+	No icons match your search.	നിങ്ങളുടെ തിരയലുമായി ഐക്കണുകളൊന്നും പൊരുത്തപ്പെടുന്നില്ല.
+	No limit	പരിധിയില്ല
+	No Line	വരയില്ല
+	No Markup	മാർക്കപ്പ് ഇല്ല
+	No model credits were built into this copy.	ഈ പകർപ്പിൽ മോഡൽ ക്രെഡിറ്റുകൾ ഉൾപ്പെടുത്തിയിട്ടില്ല.
+	No Outline	ഔട്ട്ലൈൻ ഇല്ല
+	No Paragraph Space	ഖണ്ഡിക സ്പേസ് ഇല്ല
+	No pictures found.	ചിത്രങ്ങളൊന്നും കണ്ടെത്തിയില്ല.
+	No Reflection	പ്രതിഫലനമില്ല
+	No revisions	പുനരവലോകനങ്ങളില്ല
+	No Shadow	നിഴലില്ല
+	No Soft Edges	മൃദു അരികുകളില്ല
+	No sources yet.	ഇതുവരെ ഉറവിടങ്ങളില്ല.
+	No Spacing	അകലമില്ല
+	no speech program on this system	ഈ സിസ്റ്റത്തിൽ സംഭാഷണ പ്രോഗ്രാം ഇല്ല
+	No templates match your search.	നിങ്ങളുടെ തിരയലുമായി ടെംപ്ലേറ്റുകളൊന്നും പൊരുത്തപ്പെടുന്നില്ല.
+	No Transform	രൂപാന്തരമില്ല
+	No words yet. Add to Dictionary on a misspelled word puts it here.	ഇതുവരെ വാക്കുകളില്ല. അക്ഷരത്തെറ്റുള്ള വാക്കിൽ നിഘണ്ടുവിൽ ചേർക്കുക അത് ഇവിടെ വയ്ക്കുന്നു.
+	No-Width Non Break	പൂജ്യ-വീതി അഭഞ്ജക
+	No-Width Optional Break	പൂജ്യ-വീതി ഓപ്ഷണൽ ഇടവേള
+	Nonbreaking Hyphen	അഭഞ്ജക ഹൈഫൻ
+	Nonbreaking Space	അഭഞ്ജക സ്പേസ്
+	None	ഒന്നും ഇല്ല
+	Normal	സാധാരണം
+	Normal  1" all	സാധാരണം  എല്ലാം 1"
+	Normal Indent	സാധാരണ ഇൻഡന്റ്
+	Normal probability density	സാധാരണ സംഭാവ്യതാ സാന്ദ്രത
+	Normal speed	സാധാരണ വേഗത
+	Normal Style	സാധാരണ ശൈലി
+	Normal Table	സാധാരണ പട്ടിക
+	Normal Text	സാധാരണ ടെക്സ്റ്റ്
+	Normal Word Document	സാധാരണ Word പ്രമാണം
+	North	വടക്ക്
+	Norwegian (Bokmål)	നോർവീജിയൻ (ബൊക്മോൾ)
+	Not	അല്ല
+	Not available right now	ഇപ്പോൾ ലഭ്യമല്ല
+	Not equal to	തുല്യമല്ല
+	Not linked: click a text box	ലിങ്ക് ചെയ്തിട്ടില്ല: ഒരു ടെക്സ്റ്റ് ബോക്സിൽ ക്ലിക്ക് ചെയ്യുക
+	Not saved	സേവ് ചെയ്തിട്ടില്ല
+	Not saved yet	ഇതുവരെ സേവ് ചെയ്തിട്ടില്ല
+	Not used by any command	ഒരു കമാൻഡും ഉപയോഗിക്കുന്നില്ല
+	Not {name}	{name} അല്ല
+	Nothing	ഒന്നുമില്ല (ശൂന്യം)
+	Nothing collected yet. Items you copy or cut appear here.	ഇതുവരെ ഒന്നും ശേഖരിച്ചിട്ടില്ല. നിങ്ങൾ പകർത്തുന്നതോ മുറിക്കുന്നതോ ആയ ഇനങ്ങൾ ഇവിടെ കാണിക്കും.
+	Now used by {command}	ഇപ്പോൾ {command} ഉപയോഗിക്കുന്നു
+	Nudge	ചെറുതായി നീക്കുക
+	Num Occurrences	സംഭവങ്ങളുടെ എണ്ണം
+	Number	നമ്പർ
+	Number alignment:	നമ്പർ വിന്യാസം:
+	Number format	നമ്പർ ഫോർമാറ്റ്
+	Number of columns:	നിരകളുടെ എണ്ണം:
+	Number of rows:	വരികളുടെ എണ്ണം:
+	Number of the page the field sits on	ഫീൽഡ് ഉള്ള പേജിന്റെ നമ്പർ
+	Number of the section the field sits in	ഫീൽഡ് ഉള്ള വിഭാഗത്തിന്റെ നമ്പർ
+	Number style for this level:	ഈ ലെവലിനുള്ള നമ്പർ ശൈലി:
+	Number the equation; the number sits at the right margin (or type # then the number)	സമവാക്യത്തിന് നമ്പർ നൽകുക; നമ്പർ വലത് മാർജിനിൽ ഇരിക്കും (അല്ലെങ്കിൽ # ടൈപ്പ് ചെയ്ത് നമ്പർ നൽകുക)
+	Number type:	നമ്പർ തരം:
+	Number:	നമ്പർ:
+	Numbering	നമ്പറിംഗ്
+	Numbering:	നമ്പറിംഗ്:
+	Numbering…	നമ്പറിംഗ്…
+	Numerals	അക്കങ്ങൾ
+	Numerals:	അക്കങ്ങൾ:
+	n×n Identity Matrix	n×n ഐഡന്റിറ്റി മാട്രിക്സ്
+	n×n Matrix	n×n മാട്രിക്സ്
+	Object	ഒബ്ജക്റ്റ്
+	Odd Page	ഒറ്റ പേജ്
+	Odd pages only	ഒറ്റ പേജുകൾ മാത്രം
+	Off	ഓഫ്
+	Office	Office
+	Office 2003 Default	Office 2003 സ്ഥിരസ്ഥിതി
+	Offset (pt):	ഓഫ്സെറ്റ് (pt):
+	Offset: Bottom	ഓഫ്സെറ്റ്: താഴെ
+	Offset: Bottom Left	ഓഫ്സെറ്റ്: താഴെ ഇടത്
+	Offset: Bottom Right	ഓഫ്സെറ്റ്: താഴെ വലത്
+	Offset: Center	ഓഫ്സെറ്റ്: മധ്യം
+	Offset: Left	ഓഫ്സെറ്റ്: ഇടത്
+	Offset: Right	ഓഫ്സെറ്റ്: വലത്
+	Offset: Top	ഓഫ്സെറ്റ്: മുകളിൽ
+	Offset: Top Left	ഓഫ്സെറ്റ്: മുകളിൽ ഇടത്
+	Offset: Top Right	ഓഫ്സെറ്റ്: മുകളിൽ വലത്
+	OK	ശരി
+	Omit	ഒഴിവാക്കുക
+	On	ഓൺ
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	ഓൺ: നിങ്ങൾ ടൈപ്പ് ചെയ്യുമ്പോഴോ അമ്പടയാള കീകൾ ഉപയോഗിക്കുമ്പോഴോ കഴ്സർ പുതിയ സ്ഥാനത്തേക്ക് തെന്നിനീങ്ങുന്നു, അതിന്റെ മിന്നൽ മങ്ങുന്നു. ഓഫ്: അത് ചാടുകയും മിന്നിക്കൊണ്ടിരിക്കുകയും ചെയ്യുന്നു.
+	One	ഒന്ന്
+	One half	പകുതി
+	One label per recipient	ഓരോ സ്വീകർത്താവിനും ഒരു ലേബൽ
+	One line per item. Enter adds an item.	ഓരോ ഇനത്തിനും ഒരു വരി. Enter ഒരു ഇനം ചേർക്കുന്നു.
+	One Page	ഒരു പേജ്
+	Online Pictures	ഓൺലൈൻ ചിത്രങ്ങൾ
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	ഓൺലൈൻ ചിത്രങ്ങൾ (Openverse), വിവർത്തനം (MyMemory അല്ലെങ്കിൽ നിങ്ങളുടെ LibreTranslate സെർവർ), ആഡ്-ഇന്നുകൾ നേടുക, പറഞ്ഞെഴുത്തിന്റെ സംഭാഷണ മോഡൽ ഡൗൺലോഡ് എന്നിവ നിങ്ങൾ ഉപയോഗിക്കുമ്പോൾ മാത്രം ഇന്റർനെറ്റിലേക്ക് ബന്ധിപ്പിക്കുന്നു. ഓഫാക്കിയാൽ Doc4Me സ്വന്തമായി ഒരു കണക്ഷനും ഉണ്ടാക്കില്ല.
+	Online Pictures…	ഓൺലൈൻ ചിത്രങ്ങൾ…
+	Online services are turned off (File › Options › Trust Center).	ഓൺലൈൻ സേവനങ്ങൾ ഓഫാണ് (ഫയൽ › ഓപ്ഷനുകൾ › ട്രസ്റ്റ് സെന്റർ).
+	Online Video	ഓൺലൈൻ വീഡിയോ
+	Only allow this kind of editing:	ഈ തരത്തിലുള്ള എഡിറ്റിംഗ് മാത്രം അനുവദിക്കുക:
+	Only comments can be added, except in regions marked editable.	എഡിറ്റ് ചെയ്യാവുന്നതായി അടയാളപ്പെടുത്തിയ മേഖലകൾ ഒഴികെ അഭിപ്രായങ്ങൾ മാത്രമേ ചേർക്കാൻ കഴിയൂ.
+	Only form fields can be filled in.	ഫോം ഫീൽഡുകൾ മാത്രമേ പൂരിപ്പിക്കാൻ കഴിയൂ.
+	only https addresses can be used	https വിലാസങ്ങൾ മാത്രമേ ഉപയോഗിക്കാൻ കഴിയൂ
+	Only pictures I may use commercially	എനിക്ക് വാണിജ്യപരമായി ഉപയോഗിക്കാവുന്ന ചിത്രങ്ങൾ മാത്രം
+	Only the allowed styles can be applied.	അനുവദനീയമായ ശൈലികൾ മാത്രമേ പ്രയോഗിക്കാൻ കഴിയൂ.
+	Only web (http, https) and email (mailto) links can be followed	വെബ് (http, https), ഇമെയിൽ (mailto) ലിങ്കുകൾ മാത്രമേ പിന്തുടരാൻ കഴിയൂ
+	Open	തുറക്കുക
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	സിസ്റ്റം ഫയൽ ഡയലോഗ് കാണാത്തപ്പോൾ Doc4Me-ന്റെ സ്വന്തം ബ്രൗസർ ഉപയോഗിച്ച് ഫയൽ തുറക്കുക.
+	Open Data Source…	ഡാറ്റ ഉറവിടം തുറക്കുക…
+	Open Hyperlink	ഹൈപ്പർലിങ്ക് തുറക്കുക
+	OpenDocument Text (*.odt)	OpenDocument ടെക്സ്റ്റ് (*.odt)
+	Opening print dialog…	പ്രിന്റ് ഡയലോഗ് തുറക്കുന്നു…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	ഇനി മുതൽ .docx, .doc, .rtf, .odt ഫയലുകളും Word ടെംപ്ലേറ്റുകളും Doc4Me ഉപയോഗിച്ച് തുറക്കുന്നു.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	ക്രമീകരണങ്ങൾ › സ്ഥിരസ്ഥിതി ആപ്പുകൾ തുറക്കുന്നു, അവിടെ .docx-നും മറ്റ് പ്രമാണ തരങ്ങൾക്കുമായി Doc4Me തിരഞ്ഞെടുക്കാം.
+	Open…	തുറക്കുക…
+	Operator	ഓപ്പറേറ്റർ
+	Operator Structures	ഓപ്പറേറ്റർ ഘടനകൾ
+	Operators	ഓപ്പറേറ്ററുകൾ
+	Optional Hyphen	ഓപ്ഷണൽ ഹൈഫൻ
+	Options	ഓപ്ഷനുകൾ
+	Options…	ഓപ്ഷനുകൾ…
+	Or	അല്ലെങ്കിൽ
+	Or save a copy in another format:	അല്ലെങ്കിൽ മറ്റൊരു ഫോർമാറ്റിൽ പകർപ്പ് സേവ് ചെയ്യുക:
+	Ordinals (1st) as superscript	ക്രമസൂചകങ്ങൾ (1st) സൂപ്പർസ്ക്രിപ്റ്റായി
+	Organizer	ഓർഗനൈസർ
+	Organizer…	ഓർഗനൈസർ…
+	Orientation	ഓറിയന്റേഷൻ
+	Original document	യഥാർത്ഥ പ്രമാണം
+	Other	മറ്റുള്ളവ
+	Other Authorities	മറ്റ് അധികാരികൾ
+	Other Large Operators	മറ്റ് വലിയ ഓപ്പറേറ്ററുകൾ
+	Other paragraph styles	മറ്റ് ഖണ്ഡിക ശൈലികൾ
+	Other styles and their TOC level:	മറ്റ് ശൈലികളും അവയുടെ ഉള്ളടക്ക പട്ടിക ലെവലും:
+	Otherwise insert:	അല്ലെങ്കിൽ തിരുകുക:
+	Outline	ഔട്ട്ലൈൻ
+	Outline Level	ഔട്ട്ലൈൻ ലെവൽ
+	Outline level	ഔട്ട്ലൈനിന്റെ ലെവൽ
+	Outline levels	ഔട്ട്ലൈൻ ലെവലുകൾ
+	Outline State	ഔട്ട്ലൈൻ നില
+	Outline Tools	ഔട്ട്ലൈൻ ടൂളുകൾ
+	Outlining	ഔട്ട്ലൈനിംഗ്
+	Outside	പുറത്ത്
+	Outside border	പുറം അതിർ
+	Outside Borders	പുറം അതിരുകൾ
+	Outside Margin	പുറം മാർജിൻ
+	Outside:	പുറത്ത്:
+	Outward Brackets	പുറത്തേക്കുള്ള ബ്രാക്കറ്റുകൾ
+	Oval	ദീർഘവൃത്തം
+	Overbar	മേൽവര
+	Overbars and Underbars	മേൽവരകളും അടിവരകളും
+	Overbrace	മേൽ ബ്രേസ്
+	Overtype	ഓവർടൈപ്പ്
+	Overtype (typing replaces the characters after the caret)	ഓവർടൈപ്പ് (ടൈപ്പിംഗ് കഴ്സറിന് ശേഷമുള്ള പ്രതീകങ്ങളെ മാറ്റിസ്ഥാപിക്കുന്നു)
+	Page	പേജ്
+	Page Background	പേജ് പശ്ചാത്തലം
+	Page Border	പേജ് അതിർ
+	Page Borders	പേജ് അതിരുകൾ
+	Page Break	പേജ് ഇടവേള
+	Page Break Before	മുമ്പ് പേജ് ഇടവേള
+	Page break before	മുമ്പായി പേജ് ഇടവേള
+	Page Breaks	പേജ് ഇടവേളകൾ
+	Page Color	പേജ് നിറം
+	Page display	പേജ് പ്രദർശനം
+	Page Down	പേജ് താഴേക്ക്
+	Page image (*.jpg, *.jpeg)	പേജ് ചിത്രം (*.jpg, *.jpeg)
+	Page image (*.png)	പേജ് ചിത്രം (*.png)
+	Page Movement	പേജ് ചലനം
+	Page Number	പേജ് നമ്പർ
+	Page number style	പേജ് നമ്പർ ശൈലി
+	Page numbers at the right margin	വലത് മാർജിനിൽ പേജ് നമ്പറുകൾ
+	Page on which a bookmarked passage falls	ബുക്ക്മാർക്ക് ചെയ്ത ഭാഗം വരുന്ന പേജ്
+	Page Setup	പേജ് സജ്ജീകരണം
+	Page title	പേജ് ശീർഷകം
+	Page Up	പേജ് മുകളിലേക്ക്
+	Page Width	പേജ് വീതി
+	Page width	പേജിന്റെ വീതി
+	Page X of Y	പേജ് X / Y
+	Page {page}	പേജ് {page}
+	Page {page} of {pages}	പേജ് {page} / {pages}
+	Page\nBorders	പേജ്\nഅതിരുകൾ
+	Page\nColor	പേജ്\nനിറം
+	Page\nNumber	പേജ്\nനമ്പർ
+	Pages	പേജുകൾ
+	Pages like 1-3, 5	1-3, 5 പോലുള്ള പേജുകൾ
+	Pages of bookmark:	ബുക്ക്മാർക്കിന്റെ പേജുകൾ:
+	Paragraph	ഖണ്ഡിക
+	Paragraph Character	ഖണ്ഡിക പ്രതീകം
+	Paragraph Details	ഖണ്ഡിക വിശദാംശങ്ങൾ
+	Paragraph Down	ഖണ്ഡിക താഴേക്ക്
+	Paragraph Mark	ഖണ്ഡിക അടയാളം
+	Paragraph marks	ഖണ്ഡിക അടയാളങ്ങൾ
+	Paragraph Settings	ഖണ്ഡിക ക്രമീകരണങ്ങൾ
+	Paragraph Spacing	ഖണ്ഡിക അകലം
+	Paragraph style	ഖണ്ഡിക ശൈലി
+	Paragraph Up	ഖണ്ഡിക മുകളിലേക്ക്
+	Paragraphs	ഖണ്ഡികകൾ
+	Paragraph…	ഖണ്ഡിക…
+	Parentheses	വലയങ്ങൾ
+	Parentheses with Separator	വിഭജകത്തോടെ വലയങ്ങൾ
+	Partial Differential	ഭാഗിക ഡിഫറൻഷ്യൽ
+	Password	പാസ്‌വേഡ്
+	Password:	പാസ്‌വേഡ്:
+	Paste	ഒട്ടിക്കുക
+	Paste All	എല്ലാം ഒട്ടിക്കുക
+	Paste as:	ഇങ്ങനെ ഒട്ടിക്കുക:
+	Paste Clipboard Item	ക്ലിപ്പ്ബോർഡ് ഇനം ഒട്ടിക്കുക
+	Paste Formatting	ഫോർമാറ്റിംഗ് ഒട്ടിക്കുക
+	Paste Special	പ്രത്യേക ഒട്ടിക്കൽ
+	Paste Special…	പ്രത്യേക ഒട്ടിക്കൽ…
+	Paste Spike	സ്പൈക്ക് ഒട്ടിക്കുക
+	Paste: Keep Text Only	ഒട്ടിക്കുക: ടെക്സ്റ്റ് മാത്രം നിലനിർത്തുക
+	Paste: Merge Formatting	ഒട്ടിക്കുക: ഫോർമാറ്റിംഗ് ലയിപ്പിക്കുക
+	Pasting between documents:	പ്രമാണങ്ങൾക്കിടയിൽ ഒട്ടിക്കുമ്പോൾ:
+	Pasting from other programs:	മറ്റ് പ്രോഗ്രാമുകളിൽ നിന്ന് ഒട്ടിക്കുമ്പോൾ:
+	Pasting within the same document:	ഒരേ പ്രമാണത്തിനുള്ളിൽ ഒട്ടിക്കുമ്പോൾ:
+	Pause	താൽക്കാലികമായി നിർത്തുക
+	Paused	താൽക്കാലികമായി നിർത്തി
+	PDF document (*.pdf)	PDF പ്രമാണം (*.pdf)
+	Pen	പേന
+	Pencil	പെൻസിൽ
+	Pens	പേനകൾ
+	People	ആളുകൾ
+	Periodical	ആനുകാലികം
+	Personalize	വ്യക്തിപരമാക്കുക
+	Phonetic Guide	ഉച്ചാരണ സഹായി
+	Pi Over 2	പൈ ഹരണം 2
+	Picas	പൈക്കകൾ
+	Pick a custom group (New Group makes one)	ഒരു ഇഷ്ടാനുസൃത ഗ്രൂപ്പ് തിരഞ്ഞെടുക്കുക (പുതിയ ഗ്രൂപ്പ് ഒന്ന് സൃഷ്ടിക്കുന്നു)
+	Pick a field from the list	പട്ടികയിൽ നിന്ന് ഒരു ഫീൽഡ് തിരഞ്ഞെടുക്കുക
+	Picture	ചിത്രം (പിക്ചർ)
+	Picture Border	ചിത്ര അതിർ
+	Picture Content Control	ചിത്ര ഉള്ളടക്ക നിയന്ത്രണം
+	Picture Format	ചിത്ര ഫോർമാറ്റ്
+	Picture Styles	ചിത്ര ശൈലികൾ
+	Pictures	ചിത്രങ്ങൾ
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Openverse-ൽ നിന്നുള്ള ചിത്രങ്ങൾ. ഓരോ ചിത്രത്തിന്റെയും ലൈസൻസ് മാനിക്കുക: Doc4Me അതിന് താഴെ ഒരു ക്രെഡിറ്റ് വരി ചേർക്കുന്നു.
+	Pie	പൈ ചാർട്ട്
+	Placeholder Name	പ്ലേസ്ഹോൾഡർ പേര്
+	Placeholder text	പ്ലേസ്ഹോൾഡർ ടെക്സ്റ്റ്
+	Plain Table 1	ലളിത പട്ടിക 1
+	Plain text (*.txt)	സാധാരണ ടെക്സ്റ്റ് (*.txt)
+	Plain Text Content Control	സാധാരണ ടെക്സ്റ്റ് ഉള്ളടക്ക നിയന്ത്രണം
+	Play	പ്ലേ ചെയ്യുക
+	Play Video	വീഡിയോ പ്ലേ ചെയ്യുക
+	Play/Pause	പ്ലേ/താൽക്കാലികമായി നിർത്തുക
+	Plus Equal	പ്ലസ് തുല്യം
+	Points	പോയിന്റുകൾ
+	points and above	പോയിന്റുകളും അതിൽ കൂടുതലും
+	Polish	പോളിഷ്
+	Portrait	പോർട്രെയ്റ്റ്
+	Portuguese (Brazil)	പോർച്ചുഗീസ് (ബ്രസീൽ)
+	Portuguese (Portugal)	പോർച്ചുഗീസ് (പോർച്ചുഗൽ)
+	Position	സ്ഥാനം (പൊസിഷൻ)
+	Position:	സ്ഥാനം:
+	Positioning…	സ്ഥാനനിർണ്ണയം…
+	Possible spelling mistake	സാധ്യമായ അക്ഷരത്തെറ്റ്
+	Postal Code	പിൻ കോഡ്
+	Power series of (1+x)ⁿ	(1+x)ⁿ-ന്റെ ഘാത ശ്രേണി
+	Preferred width:	ഇഷ്ടപ്പെട്ട വീതി:
+	Preserve	സംരക്ഷിക്കുക
+	Preserve formatting during updates	അപ്ഡേറ്റുകൾക്കിടയിൽ ഫോർമാറ്റിംഗ് സംരക്ഷിക്കുക
+	Presets	പ്രീസെറ്റുകൾ
+	Press a key combination	ഒരു കീ കോമ്പിനേഷൻ അമർത്തുക
+	Preview	പ്രിവ്യൂ
+	Preview Results	ഫലങ്ങൾ പ്രിവ്യൂ ചെയ്യുക
+	Preview\nResults	ഫലങ്ങൾ\nപ്രിവ്യൂ ചെയ്യുക
+	Previous	മുമ്പത്തെ
+	Previous 1 or More	മുമ്പത്തെ 1 അല്ലെങ്കിൽ കൂടുതൽ
+	Previous Change	മുമ്പത്തെ മാറ്റം
+	Previous Comment	മുമ്പത്തെ അഭിപ്രായം
+	Previous Field	മുമ്പത്തെ ഫീൽഡ്
+	Previous Footnote	മുമ്പത്തെ അടിക്കുറിപ്പ്
+	Previous Page	മുമ്പത്തെ പേജ്
+	Previous Record	മുമ്പത്തെ റെക്കോർഡ്
+	Previous Section	മുമ്പത്തെ വിഭാഗം
+	Previous Sentence	മുമ്പത്തെ വാക്യം
+	Previous sentence	മുമ്പത്തെ വാക്യത്തിലേക്ക്
+	Previous Window	മുമ്പത്തെ വിൻഡോ
+	Print	പ്രിന്റ് ചെയ്യുക
+	Print blank lines when data fields are empty	ഡാറ്റ ഫീൽഡുകൾ ശൂന്യമായിരിക്കുമ്പോൾ ശൂന്യ വരികൾ പ്രിന്റ് ചെയ്യുക
+	Print Documents	പ്രമാണങ്ങൾ പ്രിന്റ് ചെയ്യുക
+	Print Documents…	പ്രമാണങ്ങൾ പ്രിന്റ് ചെയ്യുക…
+	Print failed: {error}	പ്രിന്റ് പരാജയപ്പെട്ടു: {error}
+	Print Layout	പ്രിന്റ് ലേഔട്ട്
+	Print Markup	മാർക്കപ്പ് പ്രിന്റ് ചെയ്യുക
+	Print the page color	പേജ് നിറം പ്രിന്റ് ചെയ്യുക
+	Print to PDF	PDF-ലേക്ക് പ്രിന്റ് ചെയ്യുക
+	Print\nLayout	പ്രിന്റ്\nലേഔട്ട്
+	Printer	പ്രിന്റർ
+	Printing	പ്രിന്റിംഗ്
+	Process	പ്രക്രിയ
+	Product	ഗുണനഫലം
+	Product of A	A-യുടെ ഗുണനഫലം
+	Product with Limits	പരിധികളോടെ ഗുണനഫലം
+	Product with Lower Limit	താഴ്ന്ന പരിധിയോടെ ഗുണനഫലം
+	Product with Subscript-Superscript Limits	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ് പരിധികളോടെ ഗുണനഫലം
+	Products and Coproducts	ഗുണനഫലങ്ങളും കോപ്രൊഡക്റ്റുകളും
+	Professional	പ്രൊഫഷണൽ
+	Promote	തരം ഉയർത്തുക
+	Promote to Heading 1	തലക്കെട്ട് 1-ലേക്ക് ഉയർത്തുക
+	Proofing	പ്രൂഫിംഗ്
+	Proofing Issues	പ്രൂഫിംഗ് പ്രശ്നങ്ങൾ
+	Proofing language	പ്രൂഫിംഗ് ഭാഷ
+	Properties	ഗുണങ്ങൾ
+	Protect	പരിരക്ഷിക്കുക
+	Protect Document	പ്രമാണം പരിരക്ഷിക്കുക
+	PRs	PR-കൾ
+	pt	pt
+	Publisher	പ്രസാധകൻ
+	Punctuation	ചിഹ്നനം
+	Put the caret in a content control first.	ആദ്യം കഴ്സർ ഒരു ഉള്ളടക്ക നിയന്ത്രണത്തിൽ വയ്ക്കുക.
+	Put the default commands back on the Quick Access Toolbar?	സ്ഥിരസ്ഥിതി കമാൻഡുകൾ ദ്രുത പ്രവേശന ടൂൾബാറിൽ തിരികെ വയ്ക്കണോ?
+	Pyramid	പിരമിഡ്
+	Quadratic Root	ദ്വിഘാത മൂലം
+	Query Options…	ക്വറി ഓപ്ഷനുകൾ…
+	Quick Access Toolbar	ദ്രുത പ്രവേശന ടൂൾബാർ
+	Quick Parts	ദ്രുത ഭാഗങ്ങൾ
+	Quick Tables	ദ്രുത പട്ടികകൾ
+	Quote	ഉദ്ധരണം
+	Radical	മൂലചിഹ്നം
+	Radical with Degree	ഘാതത്തോടെ മൂലചിഹ്നം
+	Radicals	മൂലചിഹ്നങ്ങൾ
+	Raised/lowered	ഉയർത്തിയ/താഴ്ത്തിയ
+	Read Aloud	ഉറക്കെ വായിക്കുക
+	Read Aloud couldn't start the speech program: {reason}	ഉറക്കെ വായിക്കുക സംഭാഷണ പ്രോഗ്രാം ആരംഭിക്കാൻ കഴിഞ്ഞില്ല: {reason}
+	Read Aloud couldn't start: {reason}	ഉറക്കെ വായിക്കുക ആരംഭിക്കാൻ കഴിഞ്ഞില്ല: {reason}
+	Read Aloud isn't available in the browser	ബ്രൗസറിൽ ഉറക്കെ വായിക്കുക ലഭ്യമല്ല
+	Read Aloud Status	ഉറക്കെ വായിക്കുക നില
+	Read Aloud stopped: {reason}	ഉറക്കെ വായിക്കുക നിർത്തി: {reason}
+	Read Mode	വായനാ മോഡ്
+	Read\nAloud	ഉറക്കെ\nവായിക്കുക
+	Read\nMode	വായനാ\nമോഡ്
+	Reading	വായന
+	Reading Column Width	വായനാ നിര വീതി
+	Reading Highlight	വായനാ ഹൈലൈറ്റ്
+	Reading Line Spacing	വായനാ വരി അകലം
+	Reading Mode	വായനാ രീതി
+	Sepia	സെപിയ
+	Inverse	വിപരീതം
+	Reading Speed	വായനാ വേഗത
+	Reading Text Size	വായനാ ടെക്സ്റ്റ് വലുപ്പം
+	Reads the clipboard's rich text and keeps its formatting.	ക്ലിപ്പ്ബോർഡിലെ റിച്ച് ടെക്സ്റ്റ് വായിച്ച് അതിന്റെ ഫോർമാറ്റിംഗ് നിലനിർത്തുന്നു.
+	Reads the clipboard's web content and keeps its formatting.	ക്ലിപ്പ്ബോർഡിലെ വെബ് ഉള്ളടക്കം വായിച്ച് അതിന്റെ ഫോർമാറ്റിംഗ് നിലനിർത്തുന്നു.
+	Real name	യഥാർത്ഥ പേര്
+	Recent	സമീപകാലം
+	Recent Colors	സമീപകാല നിറങ്ങൾ
+	Recent documents to show:	കാണിക്കേണ്ട സമീപകാല പ്രമാണങ്ങൾ:
+	Recently used symbols:	അടുത്തിടെ ഉപയോഗിച്ച ചിഹ്നങ്ങൾ:
+	Recipient List	സ്വീകർത്താക്കളുടെ പട്ടിക
+	Recipient lists	സ്വീകർത്താക്കളുടെ പട്ടികകൾ
+	Recipients: {count}	സ്വീകർത്താക്കൾ: {count}
+	Recognized (you can correct it):	തിരിച്ചറിഞ്ഞു (നിങ്ങൾക്ക് തിരുത്താം):
+	Recognized Functions	തിരിച്ചറിഞ്ഞ ഫംഗ്ഷനുകൾ
+	Recognized Functions…	തിരിച്ചറിഞ്ഞ ഫംഗ്ഷനുകൾ…
+	Recolor a one-color picture, such as an icon	ഐക്കൺ പോലുള്ള ഒറ്റനിറ ചിത്രത്തിന് വീണ്ടും നിറം നൽകുക
+	Recolor Selected Ink	തിരഞ്ഞെടുത്ത മഷിക്ക് വീണ്ടും നിറം നൽകുക
+	Record Macro	മാക്രോ റെക്കോർഡ് ചെയ്യുക
+	Recover Unsaved Documents	സേവ് ചെയ്യാത്ത പ്രമാണങ്ങൾ വീണ്ടെടുക്കുക
+	Rectangle	ദീർഘചതുരം
+	Red:	ചുവപ്പ്:
+	Redo	വീണ്ടും ചെയ്യുക
+	Reduce Hanging Indent	തൂങ്ങുന്ന ഇൻഡന്റ് കുറയ്ക്കുക
+	References	റഫറൻസുകൾ
+	Reflection	പ്രതിഫലനം
+	Refresh	പുതുക്കുക
+	Registered	രജിസ്റ്റർ ചെയ്തത്
+	Registered Sign	രജിസ്റ്റർ ചിഹ്നം
+	Regular expressions	റെഗുലർ എക്സ്പ്രഷനുകൾ
+	Regulations	ചട്ടങ്ങൾ
+	Reject	നിരസിക്കുക
+	Reject All	എല്ലാം നിരസിക്കുക
+	Reject All Changes	എല്ലാ മാറ്റങ്ങളും നിരസിക്കുക
+	Reject Change	മാറ്റം നിരസിക്കുക
+	Relationship	ബന്ധം
+	relative to	ആപേക്ഷികമായി
+	Relative to:	ആപേക്ഷികമായി:
+	Relaxed	അയഞ്ഞ
+	Remove	നീക്കം ചെയ്യുക
+	Remove Added Font	ചേർത്ത ഫോണ്ട് നീക്കം ചെയ്യുക
+	Remove Background	പശ്ചാത്തലം നീക്കം ചെയ്യുക
+	Remove Content Control	ഉള്ളടക്ക നിയന്ത്രണം നീക്കം ചെയ്യുക
+	Remove every custom shortcut and restore the built-in keys?	എല്ലാ ഇഷ്ടാനുസൃത കുറുക്കുവഴികളും നീക്കി അന്തർനിർമ്മിത കീകൾ പുനഃസ്ഥാപിക്കണോ?
+	Remove every custom tab and group and show all tabs again?	എല്ലാ ഇഷ്ടാനുസൃത ടാബുകളും ഗ്രൂപ്പുകളും നീക്കി എല്ലാ ടാബുകളും വീണ്ടും കാണിക്കണോ?
+	Remove field	ഫീൽഡ് നീക്കം ചെയ്യുക
+	Remove Field Name	ഫീൽഡ് പേര് നീക്കം ചെയ്യുക
+	Remove Footer	ഫൂട്ടർ നീക്കം ചെയ്യുക
+	Remove from Quick Access Toolbar	ദ്രുത പ്രവേശന ടൂൾബാറിൽ നിന്ന് നീക്കം ചെയ്യുക
+	Remove Header	ഹെഡർ നീക്കം ചെയ്യുക
+	Remove Hyperlink	ഹൈപ്പർലിങ്ക് നീക്കം ചെയ്യുക
+	Remove Password	പാസ്‌വേഡ് നീക്കം ചെയ്യുക
+	Remove Pen	പേന നീക്കം ചെയ്യുക
+	Remove Positioning	സ്ഥാനനിർണ്ണയം നീക്കം ചെയ്യുക
+	Remove recipient	സ്വീകർത്താവിനെ നീക്കം ചെയ്യുക
+	Remove row	വരി നീക്കം ചെയ്യുക
+	Remove series	ശ്രേണി നീക്കം ചെയ്യുക
+	Remove Space After Paragraph	ഖണ്ഡികയ്ക്ക് ശേഷമുള്ള സ്പേസ് നീക്കം ചെയ്യുക
+	Remove Table of Contents	ഉള്ളടക്ക പട്ടിക നീക്കം ചെയ്യുക
+	Remove the control once edited	എഡിറ്റ് ചെയ്താൽ നിയന്ത്രണം നീക്കം ചെയ്യുക
+	Remove the space before the punctuation	ചിഹ്നനത്തിന് മുമ്പുള്ള സ്പേസ് നീക്കം ചെയ്യുക
+	Remove Watermark	വാട്ടർമാർക്ക് നീക്കം ചെയ്യുക
+	Rename Style	ശൈലിയുടെ പേര് മാറ്റുക
+	Rename…	പേര് മാറ്റുക…
+	Reopen	വീണ്ടും തുറക്കുക
+	Repeat	ആവർത്തിക്കുക
+	Repeat as header row on each page	ഓരോ പേജിലും ഹെഡർ വരിയായി ആവർത്തിക്കുക
+	Repeat Header Rows	ഹെഡർ വരികൾ ആവർത്തിക്കുക
+	Repeated words	ആവർത്തിച്ച വാക്കുകൾ
+	Repeating Section Content Control	ആവർത്തിക്കുന്ന വിഭാഗ ഉള്ളടക്ക നിയന്ത്രണം
+	Replace	മാറ്റിസ്ഥാപിക്കുക
+	Replace All	എല്ലാം മാറ്റിസ്ഥാപിക്കുക
+	Replace as you type	ടൈപ്പ് ചെയ്യുമ്പോൾ മാറ്റിസ്ഥാപിക്കുക
+	Replace Document Text	പ്രമാണ ടെക്സ്റ്റ് മാറ്റിസ്ഥാപിക്കുക
+	Replace text as you type	ടൈപ്പ് ചെയ്യുമ്പോൾ ടെക്സ്റ്റ് മാറ്റിസ്ഥാപിക്കുക
+	Replace with:	ഇതുപയോഗിച്ച് മാറ്റിസ്ഥാപിക്കുക:
+	Replace:	മാറ്റിസ്ഥാപിക്കുക:
+	Replay	റീപ്ലേ
+	Reply	മറുപടി
+	Report	റിപ്പോർട്ട്
+	Research	ഗവേഷണം
+	Researcher	ഗവേഷകൻ
+	Researcher needs an online service; Doc4Me keeps your documents offline.	ഗവേഷകന് ഓൺലൈൻ സേവനം ആവശ്യമാണ്; Doc4Me നിങ്ങളുടെ പ്രമാണങ്ങൾ ഓഫ്‌ലൈനിൽ സൂക്ഷിക്കുന്നു.
+	Reset	പുനഃസജ്ജമാക്കുക
+	Reset All	എല്ലാം പുനഃസജ്ജമാക്കുക
+	Reset All…	എല്ലാം പുനഃസജ്ജമാക്കുക…
+	Reset Character Formatting	പ്രതീക ഫോർമാറ്റിംഗ് പുനഃസജ്ജമാക്കുക
+	Reset Crop	ക്രോപ്പ് പുനഃസജ്ജമാക്കുക
+	Reset Graphic	ഗ്രാഫിക് പുനഃസജ്ജമാക്കുക
+	Reset Paragraph Formatting	ഖണ്ഡിക ഫോർമാറ്റിംഗ് പുനഃസജ്ജമാക്കുക
+	Reset Picture	ചിത്രം പുനഃസജ്ജമാക്കുക
+	Reset to Normal	സാധാരണത്തിലേക്ക് പുനഃസജ്ജമാക്കുക
+	Reset\nGraphic	ഗ്രാഫിക്\nപുനഃസജ്ജമാക്കുക
+	Reset…	പുനഃസജ്ജമാക്കുക…
+	Resize Table by Dragging	വലിച്ച് പട്ടികയുടെ വലുപ്പം മാറ്റുക
+	Resolve	പരിഹരിക്കുക
+	Resolved	പരിഹരിച്ചു
+	Restart at 1	1-ൽ നിന്ന് പുനരാരംഭിക്കുക
+	Restart Each Page	ഓരോ പേജിലും പുനരാരംഭിക്കുക
+	Restart Each Section	ഓരോ വിഭാഗത്തിലും പുനരാരംഭിക്കുക
+	Restart list after:	ഇതിന് ശേഷം പട്ടിക പുനരാരംഭിക്കുക:
+	Restore	പുനഃസ്ഥാപിക്കുക
+	Restore Defaults	സ്ഥിരസ്ഥിതികൾ പുനഃസ്ഥാപിക്കുക
+	Restore Down	ചെറുതാക്കി പുനഃസ്ഥാപിക്കുക
+	Restore to Normal Word Document	സാധാരണ Word പ്രമാണത്തിലേക്ക് പുനഃസ്ഥാപിക്കുക
+	Restrict Editing	എഡിറ്റിംഗ് നിയന്ത്രിക്കുക
+	Restrict\nEditing	എഡിറ്റിംഗ്\nനിയന്ത്രിക്കുക
+	Result	ഫലം
+	Results	ഫലങ്ങൾ
+	Return address labels	മടക്ക വിലാസ ലേബലുകൾ
+	Return address:	മടക്ക വിലാസം:
+	Reverse the order	ക്രമം വിപരീതമാക്കുക
+	Review	അവലോകനം
+	Review AutoFormat Changes	യാന്ത്രിക ഫോർമാറ്റ് മാറ്റങ്ങൾ അവലോകനം ചെയ്യുക
+	Review Changes…	മാറ്റങ്ങൾ അവലോകനം ചെയ്യുക…
+	Reviewing	അവലോകനം ചെയ്യുന്നു
+	Reviewing Pane	അവലോകന പാളി
+	Reviewing — edits become suggestions	അവലോകനം — എഡിറ്റുകൾ നിർദ്ദേശങ്ങളാകുന്നു
+	Revised document	പരിഷ്കരിച്ച പ്രമാണം
+	Revisions	പുനരവലോകനങ്ങൾ
+	Rewind	പിന്നോട്ട് ചുറ്റുക
+	Ribbon	റിബൺ
+	Ribbon and Quick Access Toolbar:	റിബണും ദ്രുത പ്രവേശന ടൂൾബാറും:
+	Ribbon tabs	റിബൺ ടാബുകൾ
+	Rich Text Content Control	റിച്ച് ടെക്സ്റ്റ് ഉള്ളടക്ക നിയന്ത്രണം
+	Rich Text Format (*.rtf)	റിച്ച് ടെക്സ്റ്റ് ഫോർമാറ്റ് (*.rtf)
+	Rich Text Format (RTF)	റിച്ച് ടെക്സ്റ്റ് ഫോർമാറ്റ് (RTF)
+	Right	വലത്
+	Right (vertical)	വലത് (ലംബം)
+	Right align page numbers	പേജ് നമ്പറുകൾ വലത്ത് വിന്യസിക്കുക
+	Right Arrow with Text Above	മുകളിൽ ടെക്സ്റ്റോടെ വലത് അമ്പടയാളം
+	Right Arrow with Text Below	താഴെ ടെക്സ്റ്റോടെ വലത് അമ്പടയാളം
+	Right Border	വലത് അതിർ
+	Right border	വലത്തെ അതിർ
+	Right Bracket Twice	രണ്ടുതവണ വലത് ബ്രാക്കറ്റ്
+	Right indent	വലത് ഇൻഡന്റ്
+	Right Margin	വലത് മാർജിൻ
+	Right Only	വലത് മാത്രം
+	Right only	വലതുവശം മാത്രം
+	Right-to-left	വലത്തുനിന്ന് ഇടത്തോട്ട്
+	Right-to-Left Section	വലത്തുനിന്ന് ഇടത്തോട്ടുള്ള വിഭാഗം
+	Right-to-Left Table	വലത്തുനിന്ന് ഇടത്തോട്ടുള്ള പട്ടിക
+	Right-to-Left Text Direction	വലത്തുനിന്ന് ഇടത്തോട്ടുള്ള ടെക്സ്റ്റ് ദിശ
+	Right:	വലത്:
+	Rightwards Arrow Above	മുകളിൽ വലത്തോട്ട് അമ്പടയാളം
+	Rightwards Harpoon Above	മുകളിൽ വലത്തോട്ട് ഹാർപൂൺ
+	Roots of ax²+bx+c	ax²+bx+c-ന്റെ മൂലങ്ങൾ
+	Rotate	തിരിക്കുക
+	Rotate all text 270°	എല്ലാ ടെക്സ്റ്റും 270° തിരിക്കുക
+	Rotate all text 90°	എല്ലാ ടെക്സ്റ്റും 90° തിരിക്കുക
+	Rotate Left 90°	ഇടത്തേക്ക് 90° തിരിക്കുക
+	Rotate Right 90°	വലത്തേക്ക് 90° തിരിക്കുക
+	Rotation	ഭ്രമണം
+	Rotation:	ഭ്രമണം:
+	Rounded Rectangle	വൃത്താകൃതിയിലുള്ള കോണുകളുള്ള ദീർഘചതുരം
+	Row	വരി
+	Row:	വരി:
+	Rows & Columns	വരികളും നിരകളും
+	Ruby text:	റൂബി ടെക്സ്റ്റ്:
+	Ruler	റൂളർ
+	Rules	നിയമങ്ങൾ
+	Run	പ്രവർത്തിപ്പിക്കുക
+	Run-in	റൺ-ഇൻ
+	Russian	റഷ്യൻ
+	Résumé	ബയോഡാറ്റ
+	Same as the whole table	മുഴുവൻ പട്ടികയും പോലെ
+	SAMPLE	മാതൃക
+	Sat:	സാന്ദ്രത:
+	Save	സേവ് ചെയ്യുക
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	മറ്റൊരു ഫോർമാറ്റിൽ പകർപ്പ് സേവ് ചെയ്യുക. ഏത് വ്യൂവറിൽ നിന്നും പ്രിന്റ് ചെയ്യാവുന്ന PDF വഴിയാണ് പ്രിന്റിംഗ്.
+	Save As	ഇങ്ങനെ സേവ് ചെയ്യുക
+	Save as Template	ടെംപ്ലേറ്റായി സേവ് ചെയ്യുക
+	Save documents	പ്രമാണങ്ങൾ സേവ് ചെയ്യുക
+	Save the document to turn on AutoSave	യാന്ത്രിക സേവ് ഓണാക്കാൻ പ്രമാണം സേവ് ചെയ്യുക
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	യാന്ത്രിക സേവ് ഓണാക്കാൻ പ്രമാണം സേവ് ചെയ്യുക (നിങ്ങൾ തുറന്നത് മാത്രമായ ഫയൽ സേവ് ചെയ്യുന്നതുവരെ വീണ്ടും എഴുതില്ല)
+	Save these pages as PDF…	ഈ പേജുകൾ PDF ആയി സേവ് ചെയ്യുക…
+	Save Version	പതിപ്പ് സേവ് ചെയ്യുക
+	Saved	സേവ് ചെയ്തു
+	Scale	സ്കെയിൽ
+	Scale Drawing	ഡ്രോയിംഗ് സ്കെയിൽ ചെയ്യുക
+	Scatter	സ്കാറ്റർ
+	Screen Clipping	സ്ക്രീൻ ക്ലിപ്പിംഗ്
+	Screen clipping didn't work: {reason}	സ്ക്രീൻ ക്ലിപ്പിംഗ് പ്രവർത്തിച്ചില്ല: {reason}
+	Screen clipping ended without a picture.	സ്ക്രീൻ ക്ലിപ്പിംഗ് ചിത്രമില്ലാതെ അവസാനിച്ചു.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	ഇവിടെ സ്ക്രീൻ ക്ലിപ്പിംഗ് ലഭ്യമല്ല. സ്ക്രീനിന്റെ ചിത്രം പകർത്തി ഒട്ടിക്കുക.
+	Screenshot	സ്ക്രീൻഷോട്ട്
+	Script	ലിപി
+	Scripts	ലിപികൾ
+	Scroll ribbon left	റിബൺ ഇടത്തേക്ക് സ്ക്രോൾ ചെയ്യുക
+	Scroll ribbon right	റിബൺ വലത്തേക്ക് സ്ക്രോൾ ചെയ്യുക
+	Search	തിരയുക
+	Search Commands	കമാൻഡുകൾ തിരയുക
+	Search commands and help	കമാൻഡുകളും സഹായവും തിരയുക
+	Search document	പ്രമാണം തിരയുക
+	Search for templates	ടെംപ്ലേറ്റുകൾക്കായി തിരയുക
+	Search icons	ഐക്കണുകൾ തിരയുക
+	Search Openverse (Creative Commons pictures)	Openverse തിരയുക (Creative Commons ചിത്രങ്ങൾ)
+	Search Options	തിരയൽ ഓപ്ഷനുകൾ
+	Searching…	തിരയുന്നു…
+	Secant Function	സെക്കന്റ് ഫംഗ്ഷൻ
+	Section Break	വിഭാഗ ഇടവേള
+	Section Breaks	വിഭാഗ ഇടവേളകൾ
+	Section Character	വിഭാഗ പ്രതീകം
+	Section direction:	വിഭാഗ ദിശ:
+	Section Mark	വിഭാഗ അടയാളം
+	Section Properties	വിഭാഗ ഗുണങ്ങൾ
+	Sections	വിഭാഗങ്ങൾ
+	See	കാണുക
+	Select	തിരഞ്ഞെടുക്കുക
+	Select a picture, shape, chart or table to describe it.	വിവരിക്കാൻ ഒരു ചിത്രം, ആകൃതി, ചാർട്ട് അല്ലെങ്കിൽ പട്ടിക തിരഞ്ഞെടുക്കുക.
+	Select All	എല്ലാം തിരഞ്ഞെടുക്കുക
+	Select Cell	സെൽ തിരഞ്ഞെടുക്കുക
+	Select Floating Shapes	ഫ്ലോട്ടിംഗ് ആകൃതികൾ തിരഞ്ഞെടുക്കുക
+	Select Heading and Content	തലക്കെട്ടും ഉള്ളടക്കവും തിരഞ്ഞെടുക്കുക
+	Select Line	വരി തിരഞ്ഞെടുക്കുക (ലൈൻ)
+	Select Objects	ഒബ്ജക്റ്റുകൾ തിരഞ്ഞെടുക്കുക
+	Select Paragraph	ഖണ്ഡിക തിരഞ്ഞെടുക്കുക
+	Select Range	ശ്രേണി തിരഞ്ഞെടുക്കുക
+	Select Recipients	സ്വീകർത്താക്കളെ തിരഞ്ഞെടുക്കുക
+	Select recipients first to choose from their fields.	അവരുടെ ഫീൽഡുകളിൽ നിന്ന് തിരഞ്ഞെടുക്കാൻ ആദ്യം സ്വീകർത്താക്കളെ തിരഞ്ഞെടുക്കുക.
+	Select recipients first to match their fields.	അവരുടെ ഫീൽഡുകൾ പൊരുത്തപ്പെടുത്താൻ ആദ്യം സ്വീകർത്താക്കളെ തിരഞ്ഞെടുക്കുക.
+	Select Row	വരി തിരഞ്ഞെടുക്കുക
+	Select Sentence	വാക്യം തിരഞ്ഞെടുക്കുക
+	Select Table	പട്ടിക തിരഞ്ഞെടുക്കുക
+	Select Text	ടെക്സ്റ്റ് തിരഞ്ഞെടുക്കുക
+	Select text in the document to translate it.	വിവർത്തനം ചെയ്യാൻ പ്രമാണത്തിലെ ടെക്സ്റ്റ് തിരഞ്ഞെടുക്കുക.
+	Select Text with Similar Formatting	സമാന ഫോർമാറ്റിംഗുള്ള ടെക്സ്റ്റ് തിരഞ്ഞെടുക്കുക
+	Select text, then tick who can still edit it.	ടെക്സ്റ്റ് തിരഞ്ഞെടുത്ത്, ഇപ്പോഴും ആർക്കൊക്കെ എഡിറ്റ് ചെയ്യാമെന്ന് ടിക്ക് ചെയ്യുക.
+	Select the part of the screen to insert.	തിരുകേണ്ട സ്ക്രീനിന്റെ ഭാഗം തിരഞ്ഞെടുക്കുക.
+	Select Word	വാക്ക് തിരഞ്ഞെടുക്കുക
+	Select\nRecipients	സ്വീകർത്താക്കളെ\nതിരഞ്ഞെടുക്കുക
+	Selected Fields	തിരഞ്ഞെടുത്ത ഫീൽഡുകൾ
+	Selected pages	തിരഞ്ഞെടുത്ത പേജുകൾ
+	Selection	തിരഞ്ഞെടുപ്പ്
+	Selection Pane	തിരഞ്ഞെടുപ്പ് പാളി
+	Send Backward	പിന്നിലേക്ക് അയയ്ക്കുക
+	Send the document straight to the system print dialog, or save a copy in another format below.	പ്രമാണം നേരിട്ട് സിസ്റ്റം പ്രിന്റ് ഡയലോഗിലേക്ക് അയയ്ക്കുക, അല്ലെങ്കിൽ താഴെ മറ്റൊരു ഫോർമാറ്റിൽ പകർപ്പ് സേവ് ചെയ്യുക.
+	Sentence	വാക്യം
+	Sentence case.	വാക്യ കേസ്.
+	Separator:	വിഭജകം:
+	Sequence name:	ക്രമത്തിന്റെ പേര്:
+	Serbian	സെർബിയൻ
+	Serbian (Cyrillic)	സെർബിയൻ (സിറിലിക്)
+	Serbian (Latin)	സെർബിയൻ (ലാറ്റിൻ)
+	Series name	ശ്രേണിയുടെ പേര്
+	Series {n}	ശ്രേണി {n}
+	Server address (https://…)	സെർവർ വിലാസം (https://…)
+	Set	സജ്ജമാക്കുക
+	Set As Default	സ്ഥിരസ്ഥിതിയായി സജ്ജമാക്കുക
+	Set as Default	സ്ഥിരസ്ഥിതിയായി സജ്ജീകരിക്കുക
+	Set Caret	കഴ്സർ സജ്ജമാക്കുക
+	Set Character Formatting	പ്രതീക ഫോർമാറ്റിംഗ് സജ്ജമാക്കുക
+	Set Date	തീയതി സജ്ജമാക്കുക
+	Set Equation	സമവാക്യം സജ്ജമാക്കുക
+	Set Numbering Value	നമ്പറിംഗ് മൂല്യം സജ്ജമാക്കുക
+	Set Paragraph Formatting	ഖണ്ഡിക ഫോർമാറ്റിംഗ് സജ്ജമാക്കുക
+	Set Proofing Language…	പ്രൂഫിംഗ് ഭാഷ സജ്ജമാക്കുക…
+	Setting:	ക്രമീകരണം:
+	Settings…	ക്രമീകരണങ്ങൾ…
+	Shading	ഷേഡിംഗ്
+	Shadow	നിഴൽ
+	Shadow, glow and soft edges	നിഴൽ, തിളക്കം, മൃദു അരികുകൾ
+	Shape Effects	ആകൃതി ഇഫക്റ്റുകൾ
+	Shape Fill	ആകൃതി നിറയ്ക്കൽ
+	Shape Format	ആകൃതി ഫോർമാറ്റ്
+	Shape Outline	ആകൃതി ഔട്ട്ലൈൻ
+	Shape Styles	ആകൃതി ശൈലികൾ
+	Shapes	ആകൃതികൾ
+	Share	പങ്കിടുക
+	Sheet:	ഷീറ്റ്:
+	Shift cells down	സെല്ലുകൾ താഴേക്ക് നീക്കുക
+	Shift cells right	സെല്ലുകൾ വലത്തേക്ക് നീക്കുക
+	Shift+Tab	Shift+Tab
+	Shipping labels	ഷിപ്പിംഗ് ലേബലുകൾ
+	Short citation:	ഹ്രസ്വ ഉദ്ധരണി:
+	Shortcut key:	കുറുക്കുവഴി കീ:
+	Show	കാണിക്കുക
+	Show all formatting marks	എല്ലാ ഫോർമാറ്റിംഗ് അടയാളങ്ങളും കാണിക്കുക
+	Show All Levels	എല്ലാ ലെവലുകളും കാണിക്കുക
+	Show all revisions inline	എല്ലാ പുനരവലോകനങ്ങളും ഇൻലൈനിൽ കാണിക്കുക
+	Show changes at:	മാറ്റങ്ങൾ ഇവിടെ കാണിക്കുക:
+	Show changes in:	മാറ്റങ്ങൾ ഇതിൽ കാണിക്കുക:
+	Show Comments	അഭിപ്രായങ്ങൾ കാണിക്കുക
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	പ്രമാണങ്ങൾ അവയുടെ നിറങ്ങൾ വിപരീതമാക്കി കാണിക്കുക, കാഴ്ച › മോഡുകൾ മാറ്റുക പോലെ. സേവ്, പ്രിന്റ്, PDF എന്നിവ മാറില്ല.
+	Show every bibliography field	എല്ലാ ഗ്രന്ഥസൂചി ഫീൽഡുകളും കാണിക്കുക
+	Show First Line Only	ആദ്യ വരി മാത്രം കാണിക്കുക
+	Show in the Styles gallery	ശൈലി ഗാലറിയിൽ കാണിക്കുക
+	Show KeyTips (Alt or F10)	കീടിപ്പുകൾ കാണിക്കുക (Alt അല്ലെങ്കിൽ F10)
+	Show Level	ലെവൽ കാണിക്കുക
+	Show Level 1	ലെവൽ 1 കാണിക്കുക
+	Show Level 2	ലെവൽ 2 കാണിക്കുക
+	Show Level 3	ലെവൽ 3 കാണിക്കുക
+	Show Level 4	ലെവൽ 4 കാണിക്കുക
+	Show Level 5	ലെവൽ 5 കാണിക്കുക
+	Show Level 6	ലെവൽ 6 കാണിക്കുക
+	Show Level 7	ലെവൽ 7 കാണിക്കുക
+	Show Level 8	ലെവൽ 8 കാണിക്കുക
+	Show Level 9	ലെവൽ 9 കാണിക്കുക
+	Show Markup	മാർക്കപ്പ് കാണിക്കുക
+	Show Notes	കുറിപ്പുകൾ കാണിക്കുക
+	Show only comments and formatting in balloons	ബലൂണുകളിൽ അഭിപ്രായങ്ങളും ഫോർമാറ്റിംഗും മാത്രം കാണിക്കുക
+	Show or Hide Style	ശൈലി കാണിക്കുക അല്ലെങ്കിൽ മറയ്ക്കുക
+	Show page numbers	പേജ് നമ്പറുകൾ കാണിക്കുക
+	Show revisions in balloons	പുനരവലോകനങ്ങൾ ബലൂണുകളിൽ കാണിക്കുക
+	Show rulers	റൂളറുകൾ കാണിക്കുക
+	Show Text Formatting	ടെക്സ്റ്റ് ഫോർമാറ്റിംഗ് കാണിക്കുക
+	Show the equation in the line of text	സമവാക്യം ടെക്സ്റ്റ് വരിയിൽ കാണിക്കുക
+	Show the equation on a line of its own	സമവാക്യം സ്വന്തം വരിയിൽ കാണിക്കുക
+	Show the mini toolbar when text is selected	ടെക്സ്റ്റ് തിരഞ്ഞെടുക്കുമ്പോൾ മിനി ടൂൾബാർ കാണിക്കുക
+	Show/Hide ¶	കാണിക്കുക/മറയ്ക്കുക ¶
+	Show\nComments	അഭിപ്രായങ്ങൾ\nകാണിക്കുക
+	Showing the first {count} items.	ആദ്യ {count} ഇനങ്ങൾ കാണിക്കുന്നു.
+	Shows a tree: each item below the item it belongs to.	ഒരു വൃക്ഷം കാണിക്കുന്നു: ഓരോ ഇനവും അത് ഉൾപ്പെടുന്ന ഇനത്തിന് താഴെ.
+	Shows items around a central idea: the first item is the centre.	ഒരു കേന്ദ്ര ആശയത്തിന് ചുറ്റും ഇനങ്ങൾ കാണിക്കുന്നു: ആദ്യ ഇനം കേന്ദ്രമാണ്.
+	Shows items of equal weight as blocks in rows.	തുല്യ പ്രാധാന്യമുള്ള ഇനങ്ങളെ വരികളിൽ ബ്ലോക്കുകളായി കാണിക്കുന്നു.
+	Shows overlapping ideas as overlapping circles.	ഓവർലാപ്പ് ചെയ്യുന്ന ആശയങ്ങളെ ഓവർലാപ്പ് ചെയ്യുന്ന വൃത്തങ്ങളായി കാണിക്കുന്നു.
+	Shows parts of a whole as quadrants.	മൊത്തത്തിന്റെ ഭാഗങ്ങളെ ചതുർഥാംശങ്ങളായി കാണിക്കുന്നു.
+	Shows parts that build on each other, largest at the bottom.	ഒന്നിനുമേൽ ഒന്നായി പണിയുന്ന ഭാഗങ്ങൾ കാണിക്കുന്നു, ഏറ്റവും വലുത് താഴെ.
+	Shows steps in order, left to right, with arrows between them.	ഘട്ടങ്ങൾ ക്രമത്തിൽ, ഇടത്തുനിന്ന് വലത്തോട്ട്, ഇടയിൽ അമ്പടയാളങ്ങളോടെ കാണിക്കുന്നു.
+	Shows steps that repeat, around a circle.	ആവർത്തിക്കുന്ന ഘട്ടങ്ങൾ ഒരു വൃത്തത്തിന് ചുറ്റും കാണിക്കുന്നു.
+	Shrink Font 1 Point	ഫോണ്ട് 1 പോയിന്റ് ചെറുതാക്കുക
+	Shrink Selection	തിരഞ്ഞെടുപ്പ് ചെറുതാക്കുക
+	Shrink text	ടെക്സ്റ്റ് ചുരുക്കുക
+	Side to Side	വശങ്ങളോടുവശം
+	Side\nto Side	വശങ്ങളോടു\nവശം
+	Sides of a right triangle	ലംബകോണ ത്രികോണത്തിന്റെ വശങ്ങൾ
+	Signature Line	ഒപ്പ് വരി
+	Sine and cosine series of f(x)	f(x)-ന്റെ സൈൻ, കോസൈൻ ശ്രേണി
+	Sine Function	സൈൻ ഫംഗ്ഷൻ
+	Sine theta	സൈൻ തീറ്റ
+	Single	ഒറ്റ
+	Single Brackets	ഒറ്റ ബ്രാക്കറ്റുകൾ
+	Single Closing Quote	ഒറ്റ അടയ്ക്കൽ ഉദ്ധരണി
+	Single label	ഒറ്റ ലേബൽ
+	Single Left Angle	ഒറ്റ ഇടത് കോൺ
+	Single Left Bar	ഒറ്റ ഇടത് ബാർ
+	Single Left Brace	ഒറ്റ ഇടത് ബ്രേസ്
+	Single Left Bracket	ഒറ്റ ഇടത് ബ്രാക്കറ്റ്
+	Single Left Parenthesis	ഒറ്റ ഇടത് വലയം
+	Single Opening Quote	ഒറ്റ തുറക്കൽ ഉദ്ധരണി
+	Single Right Brace	ഒറ്റ വലത് ബ്രേസ്
+	Single Right Bracket	ഒറ്റ വലത് ബ്രാക്കറ്റ്
+	Single Right Parenthesis	ഒറ്റ വലത് വലയം
+	Single Spacing	ഒറ്റ അകലം
+	SIST02	SIST02
+	Site name	സൈറ്റിന്റെ പേര്
+	Size	വലുപ്പം
+	Size (pt):	വലുപ്പം (pt):
+	Size and Crop…	വലുപ്പവും ക്രോപ്പും…
+	Size:	വലുപ്പം:
+	Sketchbook	സ്കെച്ച്ബുക്ക്
+	Skewed Fraction	ചരിഞ്ഞ ഭിന്നസംഖ്യ
+	Skip citations & bibliography	ഉദ്ധരണികളും ഗ്രന്ഥസൂചിയും ഒഴിവാക്കുക
+	Skip Citations and Bibliography	ഉദ്ധരണികളും ഗ്രന്ഥസൂചിയും ഒഴിവാക്കുക (പൂർണ്ണം)
+	Skip Record If	ഇങ്ങനെയെങ്കിൽ റെക്കോർഡ് ഒഴിവാക്കുക
+	Skip Record If…	ഇങ്ങനെയെങ്കിൽ റെക്കോർഡ് ഒഴിവാക്കുക…
+	Slant Down	താഴേക്ക് ചരിവ്
+	Slant Up	മുകളിലേക്ക് ചരിവ്
+	Small Caps	ചെറിയ വലിയക്ഷരങ്ങൾ
+	Small caps	ചെറിയ വലിയക്ഷരത്തിൽ
+	Small change	ചെറിയ മാറ്റം
+	Smart quotes instead of straight quotes	നേർ ഉദ്ധരണികൾക്ക് പകരം സ്മാർട്ട് ഉദ്ധരണികൾ
+	SmartArt	SmartArt
+	SmartArt Design	SmartArt ഡിസൈൻ
+	SmartArt Styles	SmartArt ശൈലികൾ
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	സുഗമമായ സ്ക്രോളിംഗും സൂമിംഗും, പതുക്കെ പ്രത്യക്ഷപ്പെടുന്ന മെനുകളും ബട്ടണുകളും. ഓഫാക്കിയാൽ ഓരോ മാറ്റവും ഉടനടി കാണിക്കും.
+	Soft Edges	മൃദു അരികുകൾ
+	Soft Glow	മൃദു തിളക്കം
+	Solid Accent	ഖര ആക്സന്റ്
+	Sort	അടുക്കുക
+	Sort by	ഇതനുസരിച്ച് അടുക്കുക
+	Sort order:	അടുക്കൽ ക്രമം:
+	Sort Records	റെക്കോർഡുകൾ അടുക്കുക
+	Source code: github.com/chatraweechai/doc4me	സോഴ്സ് കോഡ്: github.com/chatraweechai/doc4me
+	Source Manager	ഉറവിട മാനേജർ
+	Source type:	ഉറവിട തരം:
+	Sources in this document:	ഈ പ്രമാണത്തിലെ ഉറവിടങ്ങൾ:
+	South	തെക്ക്
+	Space	സ്പേസ്
+	Space after	ശേഷം സ്പേസ്
+	Space after: {pt} pt	ശേഷം സ്പേസ്: {pt} pt
+	Space before	മുമ്പ് സ്പേസ്
+	Space before/after:	മുമ്പ്/ശേഷം സ്പേസ്:
+	Space before: {pt} pt	മുമ്പ് സ്പേസ്: {pt} pt
+	Spaces	സ്പേസുകൾ
+	Spacing	അകലം
+	Spacing (pt):	അകലം (pt):
+	Spacing:	അകലം:
+	Spanish	സ്പാനിഷ്
+	Spanish (Mexico)	സ്പാനിഷ് (മെക്സിക്കോ)
+	Spanish (Spain)	സ്പാനിഷ് (സ്പെയിൻ)
+	Sparse Matrices	വിരള മാട്രിക്സുകൾ
+	Special	പ്രത്യേകം
+	Special Characters	പ്രത്യേക പ്രതീകങ്ങൾ
+	Specify height:	ഉയരം വ്യക്തമാക്കുക:
+	Speech	സംഭാഷണം
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	സംഭാഷണം ഈ കമ്പ്യൂട്ടറിൽ തിരിച്ചറിയുന്നു (whisper.cpp); ഒന്നും ഓൺലൈനായി അയയ്ക്കുന്നില്ല.
+	Speed	വേഗത
+	Spelling	അക്ഷരവിന്യാസം
+	Spelling & Grammar	അക്ഷരവിന്യാസവും വ്യാകരണവും
+	Spelling &\nGrammar	അക്ഷരവിന്യാസവും\nവ്യാകരണവും
+	Spelling and grammar are checked in English (United States).	അക്ഷരവിന്യാസവും വ്യാകരണവും ഇംഗ്ലീഷിൽ (യുണൈറ്റഡ് സ്റ്റേറ്റ്സ്) പരിശോധിക്കുന്നു.
+	Spelling Suggestions	അക്ഷരവിന്യാസ നിർദ്ദേശങ്ങൾ
+	Spike	സ്പൈക്ക്
+	Split	വിഭജിക്കുക
+	Split apart page break and paragraph mark	പേജ് ഇടവേളയും ഖണ്ഡിക അടയാളവും വേർപെടുത്തുക
+	Split Cells	സെല്ലുകൾ വിഭജിക്കുക
+	Split Table	പട്ടിക വിഭജിക്കുക
+	Spreadsheet Table	സ്പ്രെഡ്ഷീറ്റ് പട്ടിക
+	Square	ചതുരം
+	Square Root	വർഗ്ഗമൂലം
+	Square Root with Degree	ഘാതത്തോടെ വർഗ്ഗമൂലം
+	Square Union	ചതുര യോഗം
+	Stack Object	സ്റ്റാക്ക് ഒബ്ജക്റ്റ്
+	Stack Object (Three)	സ്റ്റാക്ക് ഒബ്ജക്റ്റ് (മൂന്ന്)
+	Stacked	അടുക്കിയ
+	Stacked Bar	അടുക്കിയ ബാർ
+	Stacked Column	അടുക്കിയ നിര
+	Stacked Fraction	അടുക്കിയ ഭിന്നസംഖ്യ
+	Stacked, no bar	അടുക്കിയത്, വരയില്ലാതെ
+	Standard	സ്റ്റാൻഡേർഡ്
+	Standard and Contextual	സ്റ്റാൻഡേർഡും സന്ദർഭോചിതവും
+	Standard Colors	സ്റ്റാൻഡേർഡ് നിറങ്ങൾ
+	Standard Only	സ്റ്റാൻഡേർഡ് മാത്രം
+	Star	നക്ഷത്രം
+	Start at:	ഇവിടെ ആരംഭിക്കുക:
+	Start Enforcing Protection	പരിരക്ഷ നടപ്പാക്കാൻ ആരംഭിക്കുക
+	Start Mail Merge	മെയിൽ മെർജ് ആരംഭിക്കുക
+	Start Mail\nMerge	മെയിൽ മെർജ്\nആരംഭിക്കുക
+	State	സംസ്ഥാനം
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	സ്ഥിതിവിവരക്കണക്കുകൾ
+	Status Bar	സ്റ്റാറ്റസ് ബാർ
+	Statutes	ചട്ടങ്ങൾ (നിയമം)
+	Stop	നിർത്തുക
+	Stop Protection	പരിരക്ഷ നിർത്തുക
+	Stop Reading	വായന നിർത്തുക
+	Stopped	നിർത്തി
+	Store	സ്റ്റോർ
+	Straight Arrow Connector	നേർ അമ്പടയാള കണക്ടർ
+	Straight Connector	നേർ കണക്ടർ
+	Strikethrough	വെട്ടിമാറ്റൽ
+	Stroke {n} of {total}	സ്ട്രോക്ക് {n} / {total}
+	Strong	ശക്തമായ
+	Structure Actions	ഘടന പ്രവർത്തനങ്ങൾ
+	Structures	ഘടനകൾ
+	Studio	സ്റ്റുഡിയോ
+	Studio cover	സ്റ്റുഡിയോ കവർ
+	Studio handbook (sample)	സ്റ്റുഡിയോ കൈപ്പുസ്തകം (മാതൃക)
+	Style	ശൈലി
+	Style based on:	അടിസ്ഥാനമാക്കിയ ശൈലി:
+	Style Inspector	ശൈലി പരിശോധകൻ
+	Style Set	ശൈലി ഗണം
+	Style:	ശൈലി:
+	Style: APA	ശൈലി: APA
+	Style: {style}	ശൈലി: {style}
+	Styles	ശൈലികൾ
+	Styles Pane	ശൈലി പാളി
+	Styles:	ശൈലികൾ:
+	Subentry:	ഉപ എൻട്രി:
+	Subject	വിഷയം
+	Subscript	സബ്സ്ക്രിപ്റ്റ്
+	Subscript-Superscript	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ്
+	Subscripts and Superscripts	സബ്സ്ക്രിപ്റ്റുകളും സൂപ്പർസ്ക്രിപ്റ്റുകളും
+	Subset:	ഉപഗണം:
+	Substituted font	പകരം വച്ച ഫോണ്ട്
+	Subtitle	ഉപശീർഷകം
+	Subtle Emphasis	സൂക്ഷ്മ ഊന്നൽ
+	Subtle Reference	സൂക്ഷ്മ റഫറൻസ്
+	Sum	ആകെത്തുക
+	Sum of cosines	കോസൈനുകളുടെ ആകെത്തുക
+	Sum or difference of sines	സൈനുകളുടെ ആകെത്തുക അല്ലെങ്കിൽ വ്യത്യാസം
+	Summation	സംഗ്രഹം (Σ)
+	Summation from 0 to n	0 മുതൽ n വരെ സംഗ്രഹം
+	Summation over binomials	ദ്വിപദങ്ങളിലൂടെ സംഗ്രഹം
+	Summation with Limits	പരിധികളോടെ സംഗ്രഹം
+	Summation with Lower Limit	താഴ്ന്ന പരിധിയോടെ സംഗ്രഹം
+	Summation with Subscript Limit	സബ്സ്ക്രിപ്റ്റ് പരിധിയോടെ സംഗ്രഹം
+	Summation with Subscript-Superscript Limits	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ് പരിധികളോടെ സംഗ്രഹം
+	Summations	സംഗ്രഹങ്ങൾ
+	Superscript	സൂപ്പർസ്ക്രിപ്റ്റ്
+	Suppress line numbers	വരി നമ്പറുകൾ അടിച്ചമർത്തുക
+	Surface Integral	ഉപരിതല ഇന്റഗ്രൽ
+	Surface Integral with Limits	പരിധികളോടെ ഉപരിതല ഇന്റഗ്രൽ
+	Surface Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ ഉപരിതല ഇന്റഗ്രൽ
+	Swap footnotes and endnotes	അടിക്കുറിപ്പുകളും എൻഡ്‌നോട്ടുകളും പരസ്പരം മാറ്റുക
+	Swedish	സ്വീഡിഷ്
+	Switch Modes	മോഡുകൾ മാറുക
+	Switch Windows	വിൻഡോകൾ മാറുക
+	Switch\nModes	മോഡുകൾ\nമാറുക
+	Symbol	ചിഹ്നം
+	Symbol Font	ചിഹ്ന ഫോണ്ട്
+	Symbols	ചിഹ്നങ്ങൾ
+	Synchronous Scrolling	സമന്വയിപ്പിച്ച സ്ക്രോളിംഗ്
+	Synonyms	പര്യായങ്ങൾ
+	System	സിസ്റ്റം
+	Tab	ടാബ്
+	Tab Character	ടാബ് പ്രതീകം
+	Tab character	ടാബിന്റെ പ്രതീകം
+	Tab characters	ടാബ് പ്രതീകങ്ങൾ
+	Tab leader:	ടാബ് ലീഡർ:
+	Tab stop position:	ടാബ് സ്റ്റോപ്പ് സ്ഥാനം:
+	Tab stops to be cleared:	മായ്ക്കേണ്ട ടാബ് സ്റ്റോപ്പുകൾ:
+	Table	പട്ടിക (ടേബിൾ)
+	Table AutoFormat	പട്ടിക യാന്ത്രിക ഫോർമാറ്റ്
+	Table AutoFormat…	പട്ടിക യാന്ത്രിക ഫോർമാറ്റ്…
+	Table Column Width	പട്ടിക നിര വീതി
+	Table Design	പട്ടിക ഡിസൈൻ
+	Table direction:	പട്ടിക ദിശ:
+	Table entry fields	പട്ടിക എൻട്രി ഫീൽഡുകൾ
+	Table Grid	പട്ടിക ഗ്രിഡ്
+	Table identifier:	പട്ടിക ഐഡന്റിഫയർ:
+	Table Layout	പട്ടിക ലേഔട്ട്
+	Table of Authorities	അധികാരികളുടെ പട്ടിക
+	Table of Contents	ഉള്ളടക്ക പട്ടിക
+	Table of Contents Options	ഉള്ളടക്ക പട്ടിക ഓപ്ഷനുകൾ
+	Table of Contents Styles	ഉള്ളടക്ക പട്ടിക ശൈലികൾ
+	Table of Figures	ചിത്രങ്ങളുടെ പട്ടിക
+	Table of Figures Options	ചിത്രങ്ങളുടെ പട്ടിക ഓപ്ഷനുകൾ
+	Table of\nContents	ഉള്ളടക്ക\nപട്ടിക
+	Table Positioning	പട്ടിക സ്ഥാനനിർണ്ണയം
+	Table Properties	പട്ടിക ഗുണങ്ങൾ
+	Table Row Height	പട്ടിക വരി ഉയരം
+	Table style	പട്ടിക ശൈലി
+	Table Style Options	പട്ടിക ശൈലി ഓപ്ഷനുകൾ
+	Table Styles	പട്ടിക ശൈലികൾ
+	Table styles:	പട്ടിക ശൈലികൾ:
+	Tables	പട്ടികകൾ
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	ടാബുകൾ
+	Tabs…	ടാബുകൾ…
+	Tabular List	പട്ടിക രൂപത്തിലുള്ള ലിസ്റ്റ്
+	Tag	ടാഗ്
+	Tangent formula	ടാൻജന്റ് സൂത്രവാക്യം
+	Tangent Function	ടാൻജന്റ് ഫംഗ്ഷൻ
+	TC entry fields	TC എൻട്രി ഫീൽഡുകൾ
+	Technology	സാങ്കേതികവിദ്യ
+	Templates	ടെംപ്ലേറ്റുകൾ
+	Templates and Add-ins	ടെംപ്ലേറ്റുകളും ആഡ്-ഇന്നുകളും
+	Text	ടെക്സ്റ്റ്
+	Text Box	ടെക്സ്റ്റ് ബോക്സ്
+	Text boxes	ടെക്സ്റ്റ് ബോക്സുകൾ
+	Text Direction	ടെക്സ്റ്റ് ദിശ
+	Text Effects	ടെക്സ്റ്റ് ഇഫക്റ്റുകൾ
+	Text Effects and Typography	ടെക്സ്റ്റ് ഇഫക്റ്റുകളും ടൈപ്പോഗ്രാഫിയും
+	Text Fill	ടെക്സ്റ്റ് നിറയ്ക്കൽ
+	Text from File	ഫയലിൽ നിന്നുള്ള ടെക്സ്റ്റ്
+	Text Highlight Color	ടെക്സ്റ്റ് ഹൈലൈറ്റ് നിറം
+	Text indent at:	ടെക്സ്റ്റ് ഇൻഡന്റ് ഇവിടെ:
+	Text isn't squeezed to fit its cell yet.	ടെക്സ്റ്റ് ഇതുവരെ അതിന്റെ സെല്ലിൽ ഒതുങ്ങാൻ ചുരുക്കുന്നില്ല.
+	Text Outline	ടെക്സ്റ്റ് ഔട്ട്ലൈൻ
+	Text over Colon Equal	കോളൻ തുല്യത്തിന് മുകളിൽ ടെക്സ്റ്റ്
+	Text over Equal	തുല്യത്തിന് മുകളിൽ ടെക്സ്റ്റ്
+	Text Pane	ടെക്സ്റ്റ് പാളി
+	Text size	ടെക്സ്റ്റ് വലുപ്പം
+	Text snaps to characters	ടെക്സ്റ്റ് പ്രതീകങ്ങളിലേക്ക് ഒട്ടുന്നു
+	Text to display:	പ്രദർശിപ്പിക്കേണ്ട ടെക്സ്റ്റ്:
+	Text Wrapping	ടെക്സ്റ്റ് പൊതിയൽ
+	Text wrapping:	ടെക്സ്റ്റ് പൊതിയൽ:
+	Text:	ടെക്സ്റ്റ്:
+	Text\nBox	ടെക്സ്റ്റ്\nബോക്സ്
+	Text\nDirection	ടെക്സ്റ്റ്\nദിശ
+	Thai	തായ്
+	Thai Distributed	തായ് വിതരണം
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	ആ ഫോർമാറ്റ് എല്ലാം നിലനിർത്തുന്നില്ല, അതിനാൽ പ്രമാണം ഇപ്പോഴും തുറന്നിരിക്കുന്നു. തുടരാൻ Word പ്രമാണമായി (.docx) സേവ് ചെയ്യുക.
+	That isn't the web address or embed code of an online video.	അത് ഓൺലൈൻ വീഡിയോയുടെ വെബ് വിലാസമോ എംബെഡ് കോഡോ അല്ല.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	ആ പാസ്‌വേഡ് ശരിയല്ല. അത് പരിശോധിച്ച് (പാസ്‌വേഡുകൾ കേസ്-സെൻസിറ്റീവാണ്) വീണ്ടും ശ്രമിക്കുക.
+	The clipboard is empty.	ക്ലിപ്പ്ബോർഡ് ശൂന്യമാണ്.
+	The date it is today	ഇന്നത്തെ തീയതി
+	The document contains no tracked changes.	പ്രമാണത്തിൽ ട്രാക്ക് ചെയ്ത മാറ്റങ്ങളൊന്നുമില്ല.
+	The document has no bookmarks yet.	പ്രമാണത്തിൽ ഇതുവരെ ബുക്ക്മാർക്കുകളില്ല.
+	The document is read only, except for regions marked editable.	എഡിറ്റ് ചെയ്യാവുന്നതായി അടയാളപ്പെടുത്തിയ മേഖലകൾ ഒഴികെ പ്രമാണം വായിക്കാൻ മാത്രമാണ്.
+	The document will be saved with a password. Save it to protect it.	പ്രമാണം പാസ്‌വേഡോടെ സേവ് ചെയ്യും. പരിരക്ഷിക്കാൻ സേവ് ചെയ്യുക.
+	The first word of a sentence starts with a capital.	ഒരു വാക്യത്തിലെ ആദ്യ വാക്ക് വലിയക്ഷരത്തിൽ തുടങ്ങുന്നു.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	സൗജന്യ ദൈനംദിന പരിധി ഉപയോഗിച്ചുകഴിഞ്ഞു (നാളെ വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ ഒരു ഇമെയിൽ വിലാസം നൽകുക)
+	the LibreTranslate server	LibreTranslate സെർവർ
+	The Mail Merge Helper sets up a merge in three steps.	മെയിൽ മെർജ് സഹായി മൂന്ന് ഘട്ടങ്ങളിൽ ഒരു മെർജ് സജ്ജീകരിക്കുന്നു.
+	The new style takes the formatting of the current paragraph.	പുതിയ ശൈലി നിലവിലെ ഖണ്ഡികയുടെ ഫോർമാറ്റിംഗ് എടുക്കുന്നു.
+	The password is optional; without it anyone can stop the protection.	പാസ്‌വേഡ് ഓപ്ഷണലാണ്; അതില്ലാതെ ആർക്കും പരിരക്ഷ നിർത്താം.
+	The password is removed. Save the document to keep the change.	പാസ്‌വേഡ് നീക്കം ചെയ്തു. മാറ്റം നിലനിർത്താൻ പ്രമാണം സേവ് ചെയ്യുക.
+	The passwords don't match.	പാസ്‌വേഡുകൾ പൊരുത്തപ്പെടുന്നില്ല.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	പ്രിന്റർ, ഇരുവശ പ്രിന്റിംഗ്, ഷീറ്റിലെ പേജുകൾ എന്നിവ ആ ഡയലോഗിൽ തിരഞ്ഞെടുക്കുന്നു.
+	The recipient-list field that fills each part of an address block and greeting line.	ഒരു വിലാസ ബ്ലോക്കിന്റെയും അഭിവാദന വരിയുടെയും ഓരോ ഭാഗവും നിറയ്ക്കുന്ന സ്വീകർത്താക്കളുടെ പട്ടിക ഫീൽഡ്.
+	The same word twice in a row.	ഒരേ വാക്ക് തുടർച്ചയായി രണ്ടുതവണ.
+	The spelling and grammar check is complete.	അക്ഷരവിന്യാസ, വ്യാകരണ പരിശോധന പൂർത്തിയായി.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	സിസ്റ്റം ഫയൽ ഡയലോഗ് ലഭ്യമല്ല, അതിനാൽ Doc4Me സ്വന്തമായത് കാണിക്കുന്നു. സിസ്റ്റം ഡയലോഗ് ലഭിക്കാൻ, ഒരു ഫയൽ ചൂസർ പോർട്ടൽ (xdg-desktop-portal-gtk പോലുള്ളവ) അല്ലെങ്കിൽ zenity ഇൻസ്റ്റാൾ ചെയ്യുക.
+	The text is sent to {service} to be translated.	ടെക്സ്റ്റ് വിവർത്തനത്തിനായി {service}-ലേക്ക് അയയ്ക്കുന്നു.
+	The time right now	ഇപ്പോഴത്തെ സമയം
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	വീഡിയോ പ്രമാണത്തിൽ ചിത്രമായി കാണിക്കുന്നു. നിങ്ങളുടെ ബ്രൗസറിൽ കാണാൻ അതിൽ ഇരട്ട-ക്ലിക്ക് ചെയ്യുക.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	മുഴുവൻ പ്രമാണവും ഒരു പുതിയ പ്രമാണത്തിലേക്ക് വിവർത്തനം ചെയ്യുന്നു, അത് ഇതിനെ മാറ്റിസ്ഥാപിക്കുന്നു. ആദ്യം നിങ്ങളുടെ ജോലി സേവ് ചെയ്യുക.
+	Theme Colors	തീം നിറങ്ങൾ
+	Theme Fonts	തീം ഫോണ്ടുകൾ
+	Theme List	തീം പട്ടിക
+	Themes	തീമുകൾ
+	Then by	തുടർന്ന് ഇതനുസരിച്ച്
+	Then insert:	തുടർന്ന് തിരുകുക:
+	There's no text to translate.	വിവർത്തനം ചെയ്യാൻ ടെക്സ്റ്റില്ല.
+	Thesaurus	പര്യായ നിഘണ്ടു
+	These marks show even when Show/Hide ¶ is off.	കാണിക്കുക/മറയ്ക്കുക ¶ ഓഫായിരിക്കുമ്പോഴും ഈ അടയാളങ്ങൾ കാണിക്കും.
+	These merge fields aren't in the recipient list:	ഈ മെർജ് ഫീൽഡുകൾ സ്വീകർത്താക്കളുടെ പട്ടികയിലില്ല:
+	These settings will be used for new documents.	ഈ ക്രമീകരണങ്ങൾ പുതിയ പ്രമാണങ്ങൾക്ക് ഉപയോഗിക്കും.
+	Thick	കട്ടിയുള്ള
+	Thickness	കനം
+	This Device…	ഈ ഉപകരണം…
+	This document	ഈ പ്രമാണം
+	This field has no options.	ഈ ഫീൽഡിന് ഓപ്ഷനുകളില്ല.
+	This folder can't be read: {error}	ഈ ഫോൾഡർ വായിക്കാൻ കഴിയില്ല: {error}
+	This font has no characters to show.	ഈ ഫോണ്ടിൽ കാണിക്കാൻ പ്രതീകങ്ങളില്ല.
+	This page	ഈ പേജ്
+	This password type isn't supported.	ഈ പാസ്‌വേഡ് തരം പിന്തുണയ്ക്കുന്നില്ല.
+	This point forward	ഈ പോയിന്റ് മുതൽ മുന്നോട്ട്
+	This section	ഈ വിഭാഗം
+	Three	മൂന്ന്
+	Through	മുഖേന കടന്ന്
+	Tight	ഇറുകിയ
+	Tilde	ടിൽഡ്
+	Tips ({n})	നുറുങ്ങുകൾ ({n})
+	Title	ശീർഷകം
+	Title from the document properties	പ്രമാണ ഗുണങ്ങളിൽ നിന്നുള്ള ശീർഷകം
+	Title:	ശീർഷകം:
+	To	വരെ
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Word പ്രമാണങ്ങൾ സ്ഥിരസ്ഥിതിയായി Doc4Me ഉപയോഗിച്ച് തുറക്കാൻ: Finder-ൽ ഒന്ന് തിരഞ്ഞെടുത്ത്, File › Get Info തിരഞ്ഞെടുക്കുക, Open with-ന് കീഴിൽ Doc4Me തിരഞ്ഞെടുത്ത്, Change All ക്ലിക്ക് ചെയ്യുക.
+	To:	സ്വീകർത്താവ്:
+	TOA Heading	TOA തലക്കെട്ട്
+	TOC Heading	TOC തലക്കെട്ട്
+	TOC {n}	TOC {n}
+	Today	ഇന്ന്
+	tOGGLE cASE	കേസ് വിപരീതമാക്കുക
+	Toggle Check Box	ചെക്ക് ബോക്സ് ടോഗിൾ ചെയ്യുക
+	Toggle Field Codes	ഫീൽഡ് കോഡുകൾ ടോഗിൾ ചെയ്യുക
+	Toggle Unicode Character	യൂണികോഡ് പ്രതീകം ടോഗിൾ ചെയ്യുക
+	Tools	ടൂളുകൾ
+	Top	മുകളിൽ
+	Top and Bottom	മുകളിലും താഴെയും
+	Top Border	മുകളിലെ അതിർ
+	Top Margin	മുകളിലെ മാർജിൻ
+	Top of Next Page	അടുത്ത പേജിന്റെ മുകളിൽ
+	Top of Page	പേജിന്റെ മുകളിൽ
+	Top of Previous Page	മുമ്പത്തെ പേജിന്റെ മുകളിൽ
+	Top of the Window	വിൻഡോയുടെ മുകളിൽ
+	Top:	മുകളിൽ:
+	Total	ആകെ
+	Total Row	ആകെ വരി
+	Track Changes	മാറ്റങ്ങൾ ട്രാക്ക് ചെയ്യുക
+	Track Changes Options	മാറ്റങ്ങൾ ട്രാക്ക് ചെയ്യൽ ഓപ്ഷനുകൾ
+	Track changes while editing	എഡിറ്റ് ചെയ്യുമ്പോൾ മാറ്റങ്ങൾ ട്രാക്ക് ചെയ്യുക
+	Track Changes: On	മാറ്റങ്ങൾ ട്രാക്ക് ചെയ്യുക: ഓൺ
+	Track formatting	ഫോർമാറ്റിംഗ് ട്രാക്ക് ചെയ്യുക
+	Track\nChanges	മാറ്റങ്ങൾ\nട്രാക്ക് ചെയ്യുക
+	Track\nChanges ✓	മാറ്റങ്ങൾ\nട്രാക്ക് ചെയ്യുക ✓
+	Tracked changes	ട്രാക്ക് ചെയ്ത മാറ്റങ്ങൾ
+	Tracking	ട്രാക്കിംഗ്
+	Trademark	വ്യാപാരമുദ്ര
+	Trademark Sign	വ്യാപാരമുദ്ര ചിഹ്നം
+	Transform	രൂപാന്തരം
+	Translate	വിവർത്തനം ചെയ്യുക
+	Translate Document	പ്രമാണം വിവർത്തനം ചെയ്യുക
+	Translating {done} of {total}	{total}-ൽ {done} വിവർത്തനം ചെയ്യുന്നു
+	Translation service	വിവർത്തന സേവനം
+	Translator	വിവർത്തകൻ
+	Transparency	സുതാര്യത
+	Transparency:	സുതാര്യത:
+	Transport	ഗതാഗതം
+	Treatises	പ്രബന്ധങ്ങൾ
+	Triangle	ത്രികോണം
+	Triangle Down	താഴോട്ട് ത്രികോണം
+	Triangle Up	മുകളിലോട്ട് ത്രികോണം
+	Trigonometric Functions	ത്രികോണമിതി ഫംഗ്ഷനുകൾ
+	Triple	മൂന്നിരട്ടി
+	Triple Dot	മൂന്ന് ബിന്ദു
+	Triple Integral	ത്രിമാന ഇന്റഗ്രൽ
+	Triple Integral with Limits	പരിധികളോടെ ത്രിമാന ഇന്റഗ്രൽ
+	Triple Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ ത്രിമാന ഇന്റഗ്രൽ
+	Trust Center	ട്രസ്റ്റ് സെന്റർ
+	Tue	ചൊവ്വ
+	Turabian	Turabian
+	Turkish	ടർക്കിഷ്
+	Two	രണ്ട്
+	Type	തരം
+	Type a command, e.g. "insert table"	ഒരു കമാൻഡ് ടൈപ്പ് ചെയ്യുക, ഉദാ. "insert table"
+	Type a New List	പുതിയ പട്ടിക ടൈപ്പ് ചെയ്യുക
+	Type a New List…	പുതിയ പട്ടിക ടൈപ്പ് ചെയ്യുക…
+	Type at least one recipient.	കുറഞ്ഞത് ഒരു സ്വീകർത്താവിനെയെങ്കിലും ടൈപ്പ് ചെയ്യുക.
+	Type equations in LaTeX	സമവാക്യങ്ങൾ LaTeX-ൽ ടൈപ്പ് ചെയ്യുക
+	Type equations in the linear format (UnicodeMath)	സമവാക്യങ്ങൾ രേഖീയ ഫോർമാറ്റിൽ (UnicodeMath) ടൈപ്പ് ചെയ്യുക
+	Type in Equation	സമവാക്യത്തിൽ ടൈപ്പ് ചെയ്യുക
+	Type normal (non-math) text in the equation	സമവാക്യത്തിൽ സാധാരണ (ഗണിതേതര) ടെക്സ്റ്റ് ടൈപ്പ് ചെയ്യുക
+	Type Text	ടെക്സ്റ്റ് ടൈപ്പ് ചെയ്യുക
+	Type the categories down the side and a column of values per series.	വശത്ത് താഴേക്ക് വിഭാഗങ്ങളും ഓരോ ശ്രേണിക്കും മൂല്യങ്ങളുടെ ഒരു നിരയും ടൈപ്പ് ചെയ്യുക.
+	Type the field's name and its switches, for example PAGE \\* roman.	ഫീൽഡിന്റെ പേരും അതിന്റെ സ്വിച്ചുകളും ടൈപ്പ് ചെയ്യുക, ഉദാഹരണത്തിന് PAGE \\* roman.
+	Type the password to stop the protection.	പരിരക്ഷ നിർത്താൻ പാസ്‌വേഡ് ടൈപ്പ് ചെയ്യുക.
+	Type the recipients, or load them from a file.	സ്വീകർത്താക്കളെ ടൈപ്പ് ചെയ്യുക, അല്ലെങ്കിൽ ഒരു ഫയലിൽ നിന്ന് ലോഡ് ചെയ്യുക.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	ഉറവിടത്തിന്റെ ടാഗ് പേര് ടൈപ്പ് ചെയ്യുക. പിന്നീട് ഉറവിടം എഡിറ്റ് ചെയ്ത് കൂടുതൽ വിവരങ്ങൾ ചേർക്കാം.
+	Type:	തരം:
+	Typing	ടൈപ്പിംഗ്
+	Typing replaces selected text	ടൈപ്പിംഗ് തിരഞ്ഞെടുത്ത ടെക്സ്റ്റ് മാറ്റിസ്ഥാപിക്കുന്നു
+	Ukrainian	ഉക്രേനിയൻ
+	Unchecked symbol	ചെക്ക് ചെയ്യാത്ത ചിഹ്നം
+	Underbar	അടിവര (ബാർ)
+	Underbrace	അടി ബ്രേസ്
+	Underline	അടിവര
+	Underline color	അടിവര നിറം
+	Underline Words Only	വാക്കുകൾക്ക് മാത്രം അടിവര
+	Undo	പഴയപടിയാക്കുക
+	Undo Stroke	സ്ട്രോക്ക് പഴയപടിയാക്കുക
+	Undo {action}	{action} പഴയപടിയാക്കുക
+	Unformatted Text	ഫോർമാറ്റ് ചെയ്യാത്ത ടെക്സ്റ്റ്
+	Ungroup	ഗ്രൂപ്പ് പിരിക്കുക
+	Union	യോഗം
+	Union of intersections	ഛേദങ്ങളുടെ യോഗം
+	Union with Limits	പരിധികളോടെ യോഗം
+	Union with Lower Limit	താഴ്ന്ന പരിധിയോടെ യോഗം
+	Union with Plus	പ്ലസോടെ യോഗം
+	Union with Subscript-Superscript Limits	സബ്സ്ക്രിപ്റ്റ്-സൂപ്പർസ്ക്രിപ്റ്റ് പരിധികളോടെ യോഗം
+	Unions and Intersections	യോഗങ്ങളും ഛേദങ്ങളും
+	Unlink Fields	ഫീൽഡുകൾ അൺലിങ്ക് ചെയ്യുക
+	Unlink\nCitations	ഉദ്ധരണികൾ\nഅൺലിങ്ക് ചെയ്യുക
+	Unlock Fields	ഫീൽഡുകൾ അൺലോക്ക് ചെയ്യുക
+	Up	മുകളിലേക്ക്
+	Up Diagonal Dots	മുകളിലോട്ട് കർണ്ണ ബിന്ദുക്കൾ
+	Up one level	ഒരു ലെവൽ മുകളിലേക്ക്
+	Update Field	ഫീൽഡ് അപ്ഡേറ്റ് ചെയ്യുക
+	Update fields before printing	പ്രിന്റ് ചെയ്യുന്നതിന് മുമ്പ് ഫീൽഡുകൾ അപ്ഡേറ്റ് ചെയ്യുക
+	Update Index	സൂചിക അപ്ഡേറ്റ് ചെയ്യുക
+	Update Style to Match Selection	തിരഞ്ഞെടുപ്പുമായി പൊരുത്തപ്പെടാൻ ശൈലി അപ്ഡേറ്റ് ചെയ്യുക
+	Update Styles from Template	ടെംപ്ലേറ്റിൽ നിന്ന് ശൈലികൾ അപ്ഡേറ്റ് ചെയ്യുക
+	Update Table	പട്ടിക അപ്ഡേറ്റ് ചെയ്യുക
+	Update Table of Figures	ചിത്രങ്ങളുടെ പട്ടിക അപ്ഡേറ്റ് ചെയ്യുക
+	Update to Match	പൊരുത്തപ്പെടാൻ അപ്ഡേറ്റ് ചെയ്യുക
+	Update to Match Selection	തിരഞ്ഞെടുപ്പുമായി പൊരുത്തപ്പെടാൻ അപ്ഡേറ്റ് ചെയ്യുക
+	UPPERCASE	വലിയക്ഷരം
+	URGENT	അടിയന്തരം
+	URL	URL
+	Use "a" before a consonant sound	വ്യഞ്ജന ശബ്ദത്തിന് മുമ്പ് "a" ഉപയോഗിക്കുക
+	Use "an" before a vowel sound	സ്വര ശബ്ദത്തിന് മുമ്പ് "an" ഉപയോഗിക്കുക
+	Use an Existing List…	നിലവിലുള്ള പട്ടിക ഉപയോഗിക്കുക…
+	Use passim (five or more pages)	passim ഉപയോഗിക്കുക (അഞ്ചോ അതിലധികമോ പേജുകൾ)
+	Use system setting	സിസ്റ്റം ക്രമീകരണം ഉപയോഗിക്കുക
+	Use the Insert key to switch overtype on and off	ഓവർടൈപ്പ് ഓൺ/ഓഫ് ചെയ്യാൻ Insert കീ ഉപയോഗിക്കുക
+	Use wildcards	വൈൽഡ്കാർഡുകൾ ഉപയോഗിക്കുക
+	User Name	ഉപയോക്തൃനാമം
+	User name:	ഉപയോക്തൃനാമം:
+	Username	യൂസർനെയിം
+	Value	മൂല്യം
+	Vector A	വെക്റ്റർ A
+	Vector AB	വെക്റ്റർ AB
+	Version	പതിപ്പ് (വേർഷൻ)
+	Version History	പതിപ്പ് ചരിത്രം
+	Version {version} ({build})	പതിപ്പ് {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	പ്രമാണം തുറന്നിരിക്കുന്നിടത്തോളം പതിപ്പുകൾ സൂക്ഷിക്കുന്നു (.docx ഫയലിന് പതിപ്പുകളില്ല).
+	Vertical	ലംബം
+	Vertical Alignment	ലംബ വിന്യാസം
+	Vertical alignment:	ലംബ വിന്യാസം:
+	Vertical Bars	ലംബ വരകൾ
+	Vertical Dots	ലംബ ബിന്ദുക്കൾ
+	Vertical spacing:	ലംബ അകലം:
+	Vietnamese	വിയറ്റ്നാമീസ്
+	View	കാഴ്ച
+	View Alt Text…	ഇതര ടെക്സ്റ്റ് കാണുക…
+	View Gridlines	ഗ്രിഡ്‌ലൈനുകൾ കാണുക
+	View Side by Side	വശങ്ങളോടുവശം കാണുക
+	View State	കാഴ്ച നില
+	Views	കാഴ്ചകൾ
+	Visual effects	ദൃശ്യ ഇഫക്റ്റുകൾ
+	Voice	ശബ്ദം
+	Volume	വാല്യം
+	Volume Integral	വ്യാപ്ത ഇന്റഗ്രൽ
+	Volume Integral with Limits	പരിധികളോടെ വ്യാപ്ത ഇന്റഗ്രൽ
+	Volume Integral with Stacked Limits	അടുക്കിയ പരിധികളോടെ വ്യാപ്ത ഇന്റഗ്രൽ
+	W:	വീ:
+	Waiting for Zotero…	Zotero-നായി കാത്തിരിക്കുന്നു…
+	Warm Gradient with Outline	ഔട്ട്ലൈനോടെ ഊഷ്മള ഗ്രേഡിയന്റ്
+	Warnings ({n})	മുന്നറിയിപ്പുകൾ ({n})
+	Watermark	വാട്ടർമാർക്ക്
+	Wave	തരംഗം
+	Weather	കാലാവസ്ഥ
+	web access isn't available here	ഇവിടെ വെബ് ആക്സസ് ലഭ്യമല്ല
+	Web Layout	വെബ് ലേഔട്ട്
+	Web page (*.html)	വെബ് പേജ് (*.html)
+	Web\nLayout	വെബ്\nലേഔട്ട്
+	Website	വെബ്സൈറ്റ്
+	Wed	ബുധൻ
+	Weight	ഭാരം
+	West	പടിഞ്ഞാറ്
+	When merging records	റെക്കോർഡുകൾ ലയിപ്പിക്കുമ്പോൾ
+	When this document was first created	ഈ പ്രമാണം ആദ്യമായി സൃഷ്ടിച്ചപ്പോൾ
+	When this document was most recently printed	ഈ പ്രമാണം അവസാനമായി പ്രിന്റ് ചെയ്തപ്പോൾ
+	When this document was most recently saved	ഈ പ്രമാണം അവസാനമായി സേവ് ചെയ്തപ്പോൾ
+	White Space	വൈറ്റ് സ്പേസ്
+	White space	ശൂന്യ സ്ഥലം
+	Who the document properties name as author	പ്രമാണ ഗുണങ്ങൾ രചയിതാവായി പേര് നൽകുന്ന ആൾ
+	Whole document	മുഴുവൻ പ്രമാണം
+	Whole page	മുഴുവൻ പേജ്
+	Whole Table	മുഴുവൻ പട്ടിക
+	Whole words	മുഴുവൻ വാക്കുകൾ
+	Wide	വീതിയുള്ള
+	Widow/Orphan Control	വിഡോ/ഓർഫൻ നിയന്ത്രണം
+	Widow/Orphan control	വിഡോ/ഓർഫൻ വരി നിയന്ത്രണം
+	Width and spacing	വീതിയും അകലവും
+	Width:	വീതി:
+	Wildcards (regex)	വൈൽഡ്കാർഡുകൾ (regex)
+	Window	വിൻഡോ
+	With:	ഇതിനൊപ്പം:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013-ഉം പിന്നീടുള്ളവയും
+	Word 97–2003	Word 97–2003
+	Word Count	വാക്കുകളുടെ എണ്ണം
+	Word document	Word പ്രമാണം
+	Word document (*.docx)	Word പ്രമാണം (*.docx)
+	Word forms	Word ഫോമുകൾ
+	Word Left	വാക്ക് ഇടത്
+	Word level	വാക്ക് ലെവൽ
+	Word Right	വാക്ക് വലത്
+	Word XML Document (*.xml)	Word XML പ്രമാണം (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt ശൈലികൾ
+	Words	വാക്കുകൾ
+	Words only	വാക്കുകൾ മാത്രം
+	Wrap Text	ടെക്സ്റ്റ് പൊതിയുക
+	Wrap text	ടെക്സ്റ്റ് പൊതിയുക (ക്രമീകരണം)
+	Wrap Text Sides	ടെക്സ്റ്റ് പൊതിയൽ വശങ്ങൾ
+	Wrap\nText	ടെക്സ്റ്റ്\nപൊതിയുക
+	Write & Insert Fields	എഴുതുക & ഫീൽഡുകൾ തിരുകുക
+	Write a reply	ഒരു മറുപടി എഴുതുക
+	Write math here with the mouse or a pen.	മൗസ് അല്ലെങ്കിൽ പേന ഉപയോഗിച്ച് ഇവിടെ ഗണിതം എഴുതുക.
+	Writing Style: Grammar	എഴുത്ത് ശൈലി: വ്യാകരണം
+	x bar	x ബാർ
+	Year	വർഷം
+	Yes	അതെ
+	Yields	ലഭിക്കുന്നു
+	Your changes will be lost if you don't save them.	സേവ് ചെയ്തില്ലെങ്കിൽ നിങ്ങളുടെ മാറ്റങ്ങൾ നഷ്ടപ്പെടും.
+	Your system doesn't report an animation setting, so animation effects stay on.	നിങ്ങളുടെ സിസ്റ്റം ഒരു ആനിമേഷൻ ക്രമീകരണം റിപ്പോർട്ട് ചെയ്യുന്നില്ല, അതിനാൽ ആനിമേഷൻ ഇഫക്റ്റുകൾ ഓണായി തുടരുന്നു.
+	Your system has animation effects turned off.	നിങ്ങളുടെ സിസ്റ്റത്തിൽ ആനിമേഷൻ ഇഫക്റ്റുകൾ ഓഫാണ്.
+	Your system has animation effects turned on.	നിങ്ങളുടെ സിസ്റ്റത്തിൽ ആനിമേഷൻ ഇഫക്റ്റുകൾ ഓണാണ്.
+	Zoom	സൂം
+	Zoom In	സൂം ഇൻ
+	Zoom Out	സൂം ഔട്ട്
+	Zoom to Page	പേജിലേക്ക് സൂം ചെയ്യുക
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: റദ്ദാക്കി
+	Zotero: done	Zotero: പൂർത്തിയായി
+	{cols}×{rows} Table	{cols}×{rows} പട്ടിക
+	{contributors} contributors · {commits} commits	{contributors} സംഭാവകർ · {commits} കമ്മിറ്റുകൾ
+	{count} items highlighted	{count} ഇനങ്ങൾ ഹൈലൈറ്റ് ചെയ്തു
+	{count} of {total} pages will print	{total}-ൽ {count} പേജുകൾ പ്രിന്റ് ചെയ്യും
+	{count} paragraphs were changed.	{count} ഖണ്ഡികകൾ മാറ്റി.
+	{count} records; fields: {fields}	{count} റെക്കോർഡുകൾ; ഫീൽഡുകൾ: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ഈ കമ്പ്യൂട്ടറിൽ ഇൻസ്റ്റാൾ ചെയ്തിട്ടില്ല, അതിനാൽ ഈ പ്രമാണം {with} ഉപയോഗിച്ച് കാണിക്കുന്നു. വരികളും പേജുകളും യഥാർത്ഥ ഫോണ്ടിനേക്കാൾ വ്യത്യസ്തമായി മുറിഞ്ഞേക്കാം.
+	{group} settings	{group} ക്രമീകരണങ്ങൾ
+	{key}+Click to follow link	ലിങ്ക് പിന്തുടരാൻ {key}+ക്ലിക്ക്
+	{language} is now the document's default language.	{language} ഇപ്പോൾ പ്രമാണത്തിന്റെ സ്ഥിരസ്ഥിതി ഭാഷയാണ്.
+	{name} (Press ENTER to Insert)	{name} (തിരുകാൻ ENTER അമർത്തുക)
+	{name} already exists. Choose Save again to replace it.	{name} ഇതിനകം നിലവിലുണ്ട്. അത് മാറ്റിസ്ഥാപിക്കാൻ വീണ്ടും സേവ് തിരഞ്ഞെടുക്കുക.
+	{name} can't be a folder's name.	{name} ഒരു ഫോൾഡറിന്റെ പേരാകാൻ കഴിയില്ല.
+	{name} is protected with a password.	{name} പാസ്‌വേഡ് ഉപയോഗിച്ച് പരിരക്ഷിച്ചിരിക്കുന്നു.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} ചേർത്തു. അതിന്റെ മാക്രോകൾ എന്റെ ആഡ്-ഇന്നുകൾ, കാഴ്ച › മാക്രോകൾ എന്നിവയ്ക്ക് കീഴിലാണ്.
+	{name} wasn't found.	{name} കണ്ടെത്തിയില്ല.
+	{n} entries marked.	{n} എൻട്രികൾ അടയാളപ്പെടുത്തി.
+	{n} lines	{n} വരികൾ
+	{n} of {of} recipients	{of}-ൽ {n} സ്വീകർത്താക്കൾ
+	{n} pt	{n} pt
+	{n} records	{n} റെക്കോർഡുകൾ
+	{n} revisions	{n} പുനരവലോകനങ്ങൾ
+	{selected} of {words} words	{words}-ൽ {selected} വാക്കുകൾ
+	{size} pt	{size} pt
+	{words} words	{words} വാക്കുകൾ
+	{w} × {h} in	{w} × {h} in
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) ഒരു സംഖ്യയല്ല.
+	← Find	← കണ്ടെത്തുക
+	✓ None	✓ ഒന്നുമില്ല
+	➕ New comment	➕ പുതിയ അഭിപ്രായം
+	📂  Browse…	📂  ബ്രൗസ് ചെയ്യുക…
+	Add Help Text…	സഹായ ടെക്സ്റ്റ് ചേർക്കുക…
+	AutoText entry:	യാന്ത്രിക ടെക്സ്റ്റ് എൻട്രി:
+	Calculate on exit	പുറത്തുകടക്കുമ്പോൾ കണക്കാക്കുക
+	Calculation	കണക്കുകൂട്ടൽ
+	Check Box Form Field	ചെക്ക് ബോക്സ് ഫോം ഫീൽഡ്
+	Check Box Form Field Options	ചെക്ക് ബോക്സ് ഫോം ഫീൽഡ് ഓപ്ഷനുകൾ
+	Check box	ചെക്ക് ബോക്സ്
+	Check box enabled	ചെക്ക് ബോക്സ് പ്രവർത്തനക്ഷമം
+	Check box size:	ചെക്ക് ബോക്സ് വലുപ്പം:
+	Checked	ചെക്ക് ചെയ്തു
+	Current date	നിലവിലെ തീയതി
+	Current time	നിലവിലെ സമയം
+	Default value:	സ്ഥിരസ്ഥിതി മൂല്യം:
+	Drop-Down Form Field	ഡ്രോപ്പ്-ഡൗൺ ഫോം ഫീൽഡ്
+	Drop-Down Form Field Options	ഡ്രോപ്പ്-ഡൗൺ ഫോം ഫീൽഡ് ഓപ്ഷനുകൾ
+	Drop-down	ഡ്രോപ്പ്-ഡൗൺ
+	Drop-down enabled	ഡ്രോപ്പ്-ഡൗൺ പ്രവർത്തനക്ഷമം
+	Drop-down item:	ഡ്രോപ്പ്-ഡൗൺ ഇനം:
+	Fill In Form Field	പൂരിപ്പിക്കൽ ഫോം ഫീൽഡ്
+	Fill-in enabled	പൂരിപ്പിക്കൽ പ്രവർത്തനക്ഷമം
+	Form Field	ഫോം ഫീൽഡ്
+	Form Field Help Text	ഫോം ഫീൽഡ് സഹായ ടെക്സ്റ്റ്
+	Form Field Options	ഫോം ഫീൽഡ് ഓപ്ഷനുകൾ
+	Form Field Shading	ഫോം ഫീൽഡ് ഷേഡിംഗ്
+	Form Field at Selection	തിരഞ്ഞെടുപ്പിലെ ഫോം ഫീൽഡ്
+	Help Key (F1)	സഹായ കീ (F1)
+	Insert Form Field	ഫോം ഫീൽഡ് തിരുകുക
+	Items in drop-down list:	ഡ്രോപ്പ്-ഡൗൺ പട്ടികയിലെ ഇനങ്ങൾ:
+	Legacy Tools	പഴയ ടൂളുകൾ
+	Maximum length:	പരമാവധി നീളം:
+	Next Form Field	അടുത്ത ഫോം ഫീൽഡ്
+	Not checked	ചെക്ക് ചെയ്തിട്ടില്ല
+	Put the caret on a form field first.	ആദ്യം കഴ്സർ ഒരു ഫോം ഫീൽഡിൽ വയ്ക്കുക.
+	Regular text	പതിവ് ടെക്സ്റ്റ്
+	Reset Form Fields	ഫോം ഫീൽഡുകൾ പുനഃസജ്ജമാക്കുക
+	Text Form Field	ടെക്സ്റ്റ് ഫോം ഫീൽഡ്
+	Text Form Field Options	ടെക്സ്റ്റ് ഫോം ഫീൽഡ് ഓപ്ഷനുകൾ
+	Type your own:	നിങ്ങളുടേത് ടൈപ്പ് ചെയ്യുക:
+	Unlimited	പരിധിയില്ലാത്ത
+	Protected sections:	പരിരക്ഷിത വിഭാഗങ്ങൾ:
+	Section Protection	വിഭാഗ പരിരക്ഷ
+	Section {n}	വിഭാഗം {n}
+	Select sections…	വിഭാഗങ്ങൾ തിരഞ്ഞെടുക്കുക…
+	AutoSummarize	യാന്ത്രിക സംഗ്രഹം
+	Create a new document and put the summary there	ഒരു പുതിയ പ്രമാണം സൃഷ്ടിച്ച് സംഗ്രഹം അവിടെ വയ്ക്കുക
+	Highlight key points	പ്രധാന പോയിന്റുകൾ ഹൈലൈറ്റ് ചെയ്യുക
+	Insert an executive summary or abstract at the top of the document	പ്രമാണത്തിന്റെ മുകളിൽ ഒരു എക്സിക്യൂട്ടീവ് സംഗ്രഹമോ സംക്ഷിപ്തമോ തിരുകുക
+	Length of summary	സംഗ്രഹത്തിന്റെ നീളം
+	Percent of original:	യഥാർത്ഥത്തിന്റെ ശതമാനം:
+	Summary: {words} of {of} words	സംഗ്രഹം: {of}-ൽ {words} വാക്കുകൾ
+	Type of summary	സംഗ്രഹത്തിന്റെ തരം
+	Update document statistics	പ്രമാണ സ്ഥിതിവിവരക്കണക്കുകൾ അപ്ഡേറ്റ് ചെയ്യുക
+	{n} sentences	{n} വാക്യങ്ങൾ
+	{n} words or less	{n} വാക്കുകളോ അതിൽ കുറവോ
+	At:	ഇവിടെ:
+	Distance from text:	ടെക്സ്റ്റിൽ നിന്നുള്ള ദൂരം:
+	Format Frame	ഫ്രെയിം ഫോർമാറ്റ് ചെയ്യുക
+	Format Frame…	ഫ്രെയിം ഫോർമാറ്റ് ചെയ്യുക…
+	Frame	ഫ്രെയിം
+	Frame…	ഫ്രെയിം…
+	Insert Frame	ഫ്രെയിം തിരുകുക
+	Lock anchor	ആങ്കർ ലോക്ക് ചെയ്യുക
+	Remove Frame	ഫ്രെയിം നീക്കം ചെയ്യുക
+	Text wrapping	ടെക്സ്റ്റ് പൊതിയൽ രീതി
+	Chinese Conversion	ചൈനീസ് പരിവർത്തനം
+	Chinese Conversion…	ചൈനീസ് പരിവർത്തനം…
+	Converted {n} characters	{n} പ്രതീകങ്ങൾ പരിവർത്തനം ചെയ്തു
+	Simplified Chinese to Traditional Chinese	ലളിതമാക്കിയ ചൈനീസിൽ നിന്ന് പരമ്പരാഗത ചൈനീസിലേക്ക്
+	Simplified to Traditional	ലളിതമാക്കിയതിൽ നിന്ന് പരമ്പരാഗതത്തിലേക്ക്
+	Traditional Chinese to Simplified Chinese	പരമ്പരാഗത ചൈനീസിൽ നിന്ന് ലളിതമാക്കിയ ചൈനീസിലേക്ക്
+	Traditional to Simplified	പരമ്പരാഗതത്തിൽ നിന്ന് ലളിതമാക്കിയതിലേക്ക്
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	തായ്‌വാൻ, ഹോങ്കോംഗ് SAR, മക്കാവോ SAR പ്രതീക വകഭേദങ്ങൾ ഉപയോഗിക്കുക
+	Asian Layout	ഏഷ്യൻ ലേഔട്ട്
+	Fit Text	ടെക്സ്റ്റ് ഒതുക്കുക
+	Fit Text…	ടെക്സ്റ്റ് ഒതുക്കുക…
+	Two Lines in One	ഒന്നിൽ രണ്ട് വരികൾ
+	Two Lines in One…	ഒന്നിൽ രണ്ട് വരികൾ…
+	New text width (pt):	പുതിയ ടെക്സ്റ്റ് വീതി (pt):
+	Enclose in brackets	ബ്രാക്കറ്റുകളിൽ ഉൾപ്പെടുത്തുക
+	Bracket pair:	ബ്രാക്കറ്റ് ജോഡി:
+	Typography	ടൈപ്പോഗ്രാഫി
+	Character spacing control	പ്രതീക അകല നിയന്ത്രണം
+	Don't compress	കംപ്രസ് ചെയ്യരുത്
+	Compress punctuation only	ചിഹ്നനം മാത്രം കംപ്രസ് ചെയ്യുക
+	Compress punctuation and Japanese kana	ചിഹ്നനവും ജാപ്പനീസ് കാനയും കംപ്രസ് ചെയ്യുക
+	First and last characters	ആദ്യ, അവസാന പ്രതീകങ്ങൾ
+	Strict	കർശനം
+	Cannot start a line:	വരി ആരംഭിക്കാൻ കഴിയാത്തവ:
+	Cannot end a line:	വരി അവസാനിപ്പിക്കാൻ കഴിയാത്തവ:
+	Japanese Find Options	ജാപ്പനീസ് തിരയൽ ഓപ്ഷനുകൾ
+	Sounds like (Japanese)	ഇതുപോലെ കേൾക്കുന്നു (ജാപ്പനീസ്)
+	Match full/half width	പൂർണ്ണ/പകുതി വീതി പൊരുത്തപ്പെടുത്തുക
+	Match hiragana/katakana	ഹിരഗാന/കതകാന പൊരുത്തപ്പെടുത്തുക
+	Match small kana	ചെറിയ കാന പൊരുത്തപ്പെടുത്തുക
+	Match prolonged sound marks and dashes	ദീർഘ ശബ്ദ ചിഹ്നങ്ങളും ഡാഷുകളും പൊരുത്തപ്പെടുത്തുക
+	Japanese Consistency Checker	ജാപ്പനീസ് സ്ഥിരത പരിശോധകൻ
+	Japanese Consistency Checker…	ജാപ്പനീസ് സ്ഥിരത പരിശോധകൻ…
+	No inconsistent spellings were found.	പൊരുത്തക്കേടുള്ള അക്ഷരവിന്യാസങ്ങളൊന്നും കണ്ടെത്തിയില്ല.
+	Pick the spelling to keep in each group.	ഓരോ ഗ്രൂപ്പിലും നിലനിർത്തേണ്ട അക്ഷരവിന്യാസം തിരഞ്ഞെടുക്കുക.
+	Bidirectional text	ദ്വിദിശ ടെക്സ്റ്റ്
+	Bidirectional Text	ദ്വിദിശ ടെക്സ്റ്റ് ക്രമീകരണം
+	Default direction:	സ്ഥിരസ്ഥിതി ദിശ:
+	Cursor movement:	കഴ്സർ ചലനം:
+	Logical	ലോജിക്കൽ
+	Visual	ദൃശ്യം
+	Manage Fields	ഫീൽഡുകൾ കൈകാര്യം ചെയ്യുക
+	File locations	ഫയൽ സ്ഥാനങ്ങൾ
+	File Locations	ഫയൽ സ്ഥാന ക്രമീകരണം
+	Documents:	പ്രമാണങ്ങൾ:
+	Pictures:	ചിത്രങ്ങൾ:
+	The system's choice	സിസ്റ്റത്തിന്റെ തിരഞ്ഞെടുപ്പ്
+	Show Repairs	അറ്റകുറ്റപ്പണികൾ കാണിക്കുക
+	No repairs were needed.	അറ്റകുറ്റപ്പണികളൊന്നും ആവശ്യമില്ലായിരുന്നു.
+	These problems were found and repaired when the document was opened:	പ്രമാണം തുറന്നപ്പോൾ ഈ പ്രശ്നങ്ങൾ കണ്ടെത്തി പരിഹരിച്ചു:
+	An unreadable entry in the file was skipped: {what}	ഫയലിലെ വായിക്കാനാകാത്ത ഒരു എൻട്രി ഒഴിവാക്കി: {what}
+	An unreadable part was left out: {what}	വായിക്കാനാകാത്ത ഒരു ഭാഗം ഒഴിവാക്കി: {what}
+	Unreadable relationships were ignored: {what}	വായിക്കാനാകാത്ത ബന്ധങ്ങൾ അവഗണിച്ചു: {what}
+	A missing part of an embedded object was left out: {what}	എംബെഡ് ചെയ്ത ഒബ്ജക്റ്റിന്റെ ഒരു ഭാഗം നഷ്ടമായതിനാൽ ഒഴിവാക്കി: {what}
+	Copy File	ഫയൽ പകർത്തുക
+	Find Files	ഫയലുകൾ കണ്ടെത്തുക
+	Letter Wizard	കത്ത് വിസാർഡ്
+	Recipient's name:	സ്വീകർത്താവിന്റെ പേര്:
+	Salutation:	അഭിസംബോധന:
+	Subject:	വിഷയം:
+	Complimentary closing:	സമാപന വാക്കുകൾ:
+	Sender's name:	അയച്ചയാളുടെ പേര്:
+	Job title:	ജോലി ശീർഷകം:
+	Company:	കമ്പനി:
+	Enclosures:	അനുബന്ധങ്ങൾ:
+	Cc:	Cc:
+	Edit Links to Files	ഫയലുകളിലേക്കുള്ള ലിങ്കുകൾ എഡിറ്റ് ചെയ്യുക
+	Source file	ഉറവിട ഫയൽ
+	Locked	ലോക്ക് ചെയ്തു
+	Change Source	ഉറവിടം മാറ്റുക
+	This document has no links to files.	ഈ പ്രമാണത്തിൽ ഫയലുകളിലേക്കുള്ള ലിങ്കുകളില്ല.
+	Web options	വെബ് ഓപ്ഷനുകൾ
+	Web Options	വെബ് ഓപ്ഷൻ ക്രമീകരണം
+	Allow PNG as a graphics format	ഗ്രാഫിക്സ് ഫോർമാറ്റായി PNG അനുവദിക്കുക
+	Rely on CSS for font formatting	ഫോണ്ട് ഫോർമാറ്റിംഗിന് CSS-നെ ആശ്രയിക്കുക
+	Rely on VML for displaying graphics in browsers	ബ്രൗസറുകളിൽ ഗ്രാഫിക്സ് പ്രദർശിപ്പിക്കാൻ VML-നെ ആശ്രയിക്കുക
+	Organize supporting files in a folder	പിന്തുണ ഫയലുകൾ ഒരു ഫോൾഡറിൽ ക്രമീകരിക്കുക
+	Use long file names whenever possible	സാധ്യമാകുമ്പോഴെല്ലാം ദൈർഘ്യമേറിയ ഫയൽ പേരുകൾ ഉപയോഗിക്കുക
+	Screen size:	സ്ക്രീൻ വലുപ്പം:
+	Pixels per inch:	ഒരു ഇഞ്ചിലെ പിക്സലുകൾ:
+	Hangul Hanja Conversion	ഹാംഗുൽ ഹാൻജ പരിവർത്തനം
+	Hangul Hanja Conversion…	ഹാംഗുൽ ഹാൻജ പരിവർത്തനം…
+	Hangul to Hanja	ഹാംഗുലിൽ നിന്ന് ഹാൻജയിലേക്ക്
+	Hanja to Hangul	ഹാൻജയിൽ നിന്ന് ഹാംഗുലിലേക്ക്
+	Put the caret in Korean text to choose its Hanja.	അതിന്റെ ഹാൻജ തിരഞ്ഞെടുക്കാൻ കഴ്സർ കൊറിയൻ ടെക്സ്റ്റിൽ വയ്ക്കുക.
+	The selection, or the whole document when nothing is selected.	തിരഞ്ഞെടുപ്പ്, അല്ലെങ്കിൽ ഒന്നും തിരഞ്ഞെടുക്കാത്തപ്പോൾ മുഴുവൻ പ്രമാണം.
+	Add frame	ഫ്രെയിം ചേർക്കുക
+	Attributes:	ഗുണവിശേഷങ്ങൾ:
+	Border color:	അതിർ നിറം:
+	Border width:	അതിർ വീതി:
+	Choose how the custom XML editor displays names and removes schema references.	ഇഷ്ടാനുസൃത XML എഡിറ്റർ പേരുകൾ എങ്ങനെ പ്രദർശിപ്പിക്കുന്നുവെന്നും സ്കീമ റഫറൻസുകൾ എങ്ങനെ നീക്കം ചെയ്യുന്നുവെന്നും തിരഞ്ഞെടുക്കുക.
+	Confirm before removing a schema reference	സ്കീമ റഫറൻസ് നീക്കം ചെയ്യുന്നതിന് മുമ്പ് സ്ഥിരീകരിക്കുക
+	Elements:	ഘടകങ്ങൾ:
+	Enter an absolute HTTP(S) or URN schema URI.	ഒരു സമ്പൂർണ്ണ HTTP(S) അല്ലെങ്കിൽ URN സ്കീമ URI നൽകുക.
+	Frame URL	ഫ്രെയിം URL
+	Frame borders:	ഫ്രെയിം അതിരുകൾ:
+	Frame spacing:	ഫ്രെയിം അകലം:
+	Frames:	ഫ്രെയിമുകൾ:
+	Frameset Properties	ഫ്രെയിംസെറ്റ് ഗുണങ്ങൾ
+	Hide	മറയ്ക്കുക
+	Margin height:	മാർജിൻ ഉയരം:
+	Margin width:	മാർജിൻ വീതി:
+	No resize	വലുപ്പം മാറ്റരുത്
+	No schema references	സ്കീമ റഫറൻസുകളില്ല
+	Optional	ഓപ്ഷണൽ
+	Optional, 0–1000	ഓപ്ഷണൽ, 0–1000
+	Pixels (0–100)	പിക്സലുകൾ (0–100)
+	Remove Attribute	ഗുണവിശേഷം നീക്കം ചെയ്യുക
+	Remove schema reference {schema}?	സ്കീമ റഫറൻസ് {schema} നീക്കം ചെയ്യണോ?
+	Rows:	വരികൾ:
+	Schema Library	സ്കീമ ലൈബ്രറി
+	Schema URI:	സ്കീമ URI:
+	Schemas:	സ്കീമകൾ:
+	Scrolling:	സ്ക്രോളിംഗ്:
+	Select a custom XML store with editable datastore properties first.	ആദ്യം എഡിറ്റ് ചെയ്യാവുന്ന ഡാറ്റാസ്റ്റോർ ഗുണങ്ങളുള്ള ഒരു ഇഷ്ടാനുസൃത XML സ്റ്റോർ തിരഞ്ഞെടുക്കുക.
+	Select an XML element to add, change, or remove one of its attributes.	ഒരു ഗുണവിശേഷം ചേർക്കാനോ മാറ്റാനോ നീക്കം ചെയ്യാനോ ഒരു XML ഘടകം തിരഞ്ഞെടുക്കുക.
+	Selected element: {name}	തിരഞ്ഞെടുത്ത ഘടകം: {name}
+	Set Attribute	ഗുണവിശേഷം സജ്ജമാക്കുക
+	Show namespace URIs beside XML names	XML പേരുകൾക്കരികിൽ നെയിംസ്പേസ് URI-കൾ കാണിക്കുക
+	Store: {store}	സ്റ്റോർ: {store}
+	This XML store is preserved but cannot be edited here.	ഈ XML സ്റ്റോർ സംരക്ഷിച്ചിരിക്കുന്നു, പക്ഷേ ഇവിടെ എഡിറ്റ് ചെയ്യാൻ കഴിയില്ല.
+	This document has no custom XML stores.	ഈ പ്രമാണത്തിൽ ഇഷ്ടാനുസൃത XML സ്റ്റോറുകളില്ല.
+	This store has no datastore properties part for schema references.	ഈ സ്റ്റോറിൽ സ്കീമ റഫറൻസുകൾക്കുള്ള ഡാറ്റാസ്റ്റോർ ഗുണ ഭാഗമില്ല.
+	This store has no elements available for editing.	ഈ സ്റ്റോറിൽ എഡിറ്റ് ചെയ്യാൻ ഘടകങ്ങളൊന്നും ലഭ്യമല്ല.
+	Value:	മൂല്യം:
+	View and manage schema references associated with custom XML stores.	ഇഷ്ടാനുസൃത XML സ്റ്റോറുകളുമായി ബന്ധപ്പെട്ട സ്കീമ റഫറൻസുകൾ കാണുകയും കൈകാര്യം ചെയ്യുകയും ചെയ്യുക.
+	XML Element Attributes	XML ഘടക ഗുണവിശേഷങ്ങൾ
+	XML Options	XML ഓപ്ഷനുകൾ
+	e.g. 25%,*	ഉദാ. 25%,*
+	e.g. 30%,*	ഉദാ. 30%,*
+	Web	വെബ്
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	ഇന്റർഫേസിന് ഇതുവരെ {language} ശരിയായി വരയ്ക്കാൻ കഴിയില്ല: ചേരുന്നതോ ക്രമം മാറുന്നതോ ആയ അക്ഷരങ്ങളും വലത്തുനിന്ന് ഇടത്തോട്ടുള്ള ടെക്സ്റ്റും തെറ്റായി കാണപ്പെട്ടേക്കാം. എങ്കിലും ഉപയോഗിക്കണോ?
