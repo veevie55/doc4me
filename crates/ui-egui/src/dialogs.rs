@@ -2204,34 +2204,38 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             ui.label(egui::RichText::new(tl!("Margins")).font(semibold(12.5)));
             egui::Grid::new("ps").num_columns(4).show(ui, |ui| {
                 ui.label(tl!("Top:"));
-                ui.add(
+                ui.add(bounded_field(
+                    80.0,
                     egui::DragValue::new(top)
                         .speed(3.6 / crate::options::unit().pt_per_unit())
                         .suffix(crate::options::unit().suffix())
                         .max_decimals(2),
-                );
+                ));
                 ui.label(tl!("Bottom:"));
-                ui.add(
+                ui.add(bounded_field(
+                    80.0,
                     egui::DragValue::new(bottom)
                         .speed(3.6 / crate::options::unit().pt_per_unit())
                         .suffix(crate::options::unit().suffix())
                         .max_decimals(2),
-                );
+                ));
                 ui.end_row();
                 ui.label(tl!("Left:"));
-                ui.add(
+                ui.add(bounded_field(
+                    80.0,
                     egui::DragValue::new(left)
                         .speed(3.6 / crate::options::unit().pt_per_unit())
                         .suffix(crate::options::unit().suffix())
                         .max_decimals(2),
-                );
+                ));
                 ui.label(tl!("Right:"));
-                ui.add(
+                ui.add(bounded_field(
+                    80.0,
                     egui::DragValue::new(right)
                         .speed(3.6 / crate::options::unit().pt_per_unit())
                         .suffix(crate::options::unit().suffix())
                         .max_decimals(2),
-                );
+                ));
                 ui.end_row();
             });
             ui.label(egui::RichText::new(tl!("Orientation")).font(semibold(12.5)));
@@ -2248,9 +2252,9 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             });
             egui::Grid::new("ps_grid").num_columns(4).show(ui, |ui| {
                 ui.add_enabled(grid.0 >= 2, egui::Label::new(tl!("Characters per line:")));
-                ui.add_enabled(grid.0 >= 2, egui::DragValue::new(&mut grid.2).range(1..=1000).clamp_existing_to_range(false));
+                ui.add_enabled(grid.0 >= 2, bounded_field(60.0, egui::DragValue::new(&mut grid.2).range(1..=1000).clamp_existing_to_range(false)));
                 ui.add_enabled(grid.0 >= 1, egui::Label::new(tl!("Lines per page:")));
-                ui.add_enabled(grid.0 >= 1, egui::DragValue::new(&mut grid.1).range(1..=1000).clamp_existing_to_range(false));
+                ui.add_enabled(grid.0 >= 1, bounded_field(60.0, egui::DragValue::new(&mut grid.1).range(1..=1000).clamp_existing_to_range(false)));
                 ui.end_row();
             });
             ui.horizontal(|ui| {
@@ -3622,6 +3626,17 @@ fn enclose_preview(ui: &mut Ui, style: &str, text: &str, shape: &str) {
     p.text(c + vec2(0.0, dy), egui::Align2::CENTER_CENTER, text, egui::FontId::proportional(px), ink);
 }
 
+/// `widget` in a field `width` points wide that it can't grow past: a DragValue's button widens
+/// to fit its value, so a long paste would push the dialog's other fields aside.
+fn bounded_field<'a>(width: f32, widget: impl egui::Widget + 'a) -> impl egui::Widget + 'a {
+    move |ui: &mut egui::Ui| {
+        let (_, rect) = ui.allocate_space(egui::vec2(width, ui.spacing().interact_size.y));
+        let mut field = ui.new_child(egui::UiBuilder::new().max_rect(rect).layout(egui::Layout::left_to_right(egui::Align::Center)));
+        field.shrink_clip_rect(rect);
+        field.add(widget)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -4180,5 +4195,25 @@ mod tests {
         assert_eq!((*bold, extra_chr.get("bold")), (want, Some(&json!(want))));
         assert!(h.state().style_scratch.is_none());
         assert_eq!(h.state().session.doc, doc, "nothing changes before Modify Style's OK");
+    }
+
+    #[test]
+    fn a_bounded_field_keeps_a_long_value_inside_its_width() {
+        // A pasted value thousands of digits long widened the DragValue's button past the
+        // dialog; the field it sits in keeps its width, and the dialog's layout with it.
+        let ctx = egui::Context::default();
+        let mut value = 10f64.powi(300);
+        let mut used = egui::Rect::NOTHING;
+        let screen = egui::Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(800.0, 600.0));
+        let input = egui::RawInput { screen_rect: Some(screen), max_texture_side: Some(8192), ..Default::default() };
+        let mut out = ctx.run_ui(input, |ui| {
+            let before = ui.cursor().min.x;
+            ui.horizontal(|ui| {
+                ui.add(bounded_field(80.0, egui::DragValue::new(&mut value).max_decimals(2)));
+                used = egui::Rect::from_x_y_ranges(before..=ui.cursor().min.x, 0.0..=1.0);
+            });
+        });
+        out.textures_delta.clear();
+        assert!(used.width() <= 80.0 + 2.0 * ctx.global_style().spacing.item_spacing.x, "{}", used.width());
     }
 }

@@ -13,6 +13,14 @@
 
 ### ความปลอดภัย
 
+- **Print Preview ไม่สร้าง texture เกินขีดจำกัดของ GPU; ช่องใน Page Setup ไม่ขยายเกินความกว้างเมื่อวางค่ายาว** (รอบที่ 3 ชุดที่ 19; ปรับจาก WordCraft `b3da7a4d`, `fa59ed0e`)
+  - `crates/ui-egui/src/print_page.rs`: ภาพตัวอย่างหน้าเรนเดอร์ได้ถึง 4 เท่าของความกว้างหน้า ซึ่งเกิน `max_texture_side` ของ GPU บางรุ่นได้ และ texture ที่เกินทำให้ wgpu panic นอก `Session::run`; ตอนนี้ลดสเกลให้ทั้งกว้างและสูงไม่เกินขีดจำกัด (และ `doc4me_render::MAX_SIDE`) และถ้ายังเกินจะไม่แสดง texture แทนการล่ม
+  - ปรับจาก WordCraft: `b3da7a4d` แก้ภาพตัวอย่างตอนลากวัตถุ แต่ Doc4Me ใช้ texture ของหน้าที่แคชไว้ (ซึ่งจำกัดขนาดอยู่แล้ว) จึงนำหลักการเดียวกันมาใช้กับ Print Preview ที่ยังไม่จำกัด
+  - `crates/ui-egui/src/dialogs.rs`: ช่องระยะขอบสี่ช่องและจำนวนอักษรต่อบรรทัด/บรรทัดต่อหน้าของ Page Setup อยู่ใน `bounded_field` ที่กว้างคงที่และตัดส่วนเกิน เดิมปุ่มของ DragValue ขยายตามค่าที่วางยาว ๆ จนดันช่องอื่นของกล่องโต้ตอบออกไป
+  - ปรับจาก WordCraft: egui 0.36 ของ Doc4Me ไม่มี `DragValue::clip_text` (WordCraft ใช้ egui ที่แพตช์ไว้) จึงใช้ child UI ที่ `shrink_clip_rect` แทน
+  - ผลต่อผู้ใช้และความเข้ากันได้: หน้าตา Print Preview และ Page Setup ปกติเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `a_bounded_field_keeps_a_long_value_inside_its_width` ผ่าน; `cargo test -p doc4me-ui-egui --lib` 468 passed; `cargo clippy -p doc4me-ui-egui --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **เทสต์ fuzz คำสั่งที่เข้าถึงไฟล์ด้วยพารามิเตอร์ปนเปื้อน** (รอบที่ 3 ชุดที่ 18; WordCraft `e7668ae5`)
   - `crates/engine/src/tests.rs`: `hostile_params_never_panic` ข้ามคำสั่ง `file.*`, `insert.picture` และ `insert.textFromFile`; เพิ่ม `hostile_file_params_never_panic` ที่รันคำสั่งเหล่านั้นด้วยพารามิเตอร์ขยะชุดเดียวกัน และ path ไปยังไฟล์ว่าง โฟลเดอร์ ชื่อที่ไม่มี และไบต์สุ่มของทุกนามสกุลที่เปิด/บันทึกได้ โดยจำกัดด้วย automation root ให้อ่านเฉพาะ `in` เขียนเฉพาะ `out`; ตรวจว่าไม่มีไฟล์นอก root และใน working directory ถูกแตะ และไฟล์ที่ใช้ได้ยังทำงานผ่าน root เดียวกัน
   - เพิ่มพารามิเตอร์ขยะเป็น 8 ชุด (`hostile_junk`) และตรวจ `caught_panic` (panic ที่ตัวป้องกันใน `Session::run` แปลงเป็น error ยังถือว่าเป็นเส้นทาง crash)

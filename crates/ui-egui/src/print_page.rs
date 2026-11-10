@@ -101,8 +101,14 @@ fn page_texture(app: &WordApp, ctx: &egui::Context, lay: &DocLayout, page: usize
         return Some(t);
     }
     let pg = lay.pages.get(page)?;
-    let scale = (width / pg.w.max(1.0) * ctx.pixels_per_point()).clamp(0.05, 4.0);
+    // A texture over the device limit panics wgpu outside `Session::run`: the scale is lowered so
+    // neither side passes it (the texture is painted into the page's rect, only stretched).
+    let max_tex = ctx.input(|i| i.max_texture_side).min(doc4me_render::MAX_SIDE as usize).max(2) as f32 - 1.0;
+    let scale = (width / pg.w.max(1.0) * ctx.pixels_per_point()).clamp(0.05, 4.0).min(max_tex / pg.w.max(1.0)).min(max_tex / pg.h.max(1.0));
     let img = doc4me_render::render_page(&app.session.doc, pg, scale, &Default::default());
+    if img.width as f32 > max_tex + 1.0 || img.height as f32 > max_tex + 1.0 {
+        return None;
+    }
     let color = egui::ColorImage::from_rgba_unmultiplied([img.width as usize, img.height as usize], &img.to_straight());
     let tex = ctx.load_texture("print_page_preview", color, egui::TextureOptions::LINEAR);
     ctx.data_mut(|d| d.insert_temp(id, (key, tex.clone())));
