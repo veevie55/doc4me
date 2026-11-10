@@ -13,6 +13,17 @@
 
 ### ความปลอดภัย
 
+- **งานแบบกำลังสอง/เกินงบในตัวนำเข้า, Flat OPC, ที่เก็บฟอนต์ และ automation** (รอบที่ 3 ชุดที่ 9; WordCraft `42c254c8`, `89a64d1e`, `f6398e29`, `bcce02ab`, `57e9e0f2`, `722afa42`)
+  - `crates/formats/src/model.rs`, `html.rs`: `Para::trim` ลบ span ว่างนำหน้าด้วย `drain` ครั้งเดียว แทน `Vec::remove(0)` ทีละตัว (กำลังสองกับย่อหน้าที่มี span ว่างหลายแสนตัว); เทสต์ `trim_drops_a_long_run_of_blank_spans_in_linear_time`
+  - `crates/formats/src/sheet.rs`: ตั้งชื่อหัวคอลัมน์ซ้ำ (`Name 2`, `Name 3` …) ด้วย set และตัวนับต่อชื่อ แทนการไล่เทียบทุกชื่อ (กำลังสาม); `office:string-value` ของ ODS ถูกตัดตามเพดานต่อเซลล์เหมือนข้อความ `<text:p>` และแถวที่ข้อความเกินงบที่เหลือถูกปฏิเสธก่อนคัดลอกเซลล์ซ้ำ
+  - `crates/formats/src/markdown.rs`: ตัวนำเข้า Markdown จำตำแหน่งข้อความก่อนตัวคั่นแต่ละตัว แทนการค้นย้อนหลังทุกครั้ง
+  - `crates/engine/src/cmd/font.rs`: automation ที่ถูกจำกัด write root เพิ่ม/ลบฟอนต์ได้เฉพาะเมื่อโฟลเดอร์ฟอนต์ของผู้ใช้อยู่ใน root นั้น; เทสต์ `confined_automation_changes_only_a_font_store_inside_its_write_root`
+  - `crates/fonts/src/fontdb/user.rs`: การเพิ่มฟอนต์ลงที่เก็บทำทีละรายการ การเพิ่มพร้อมกันจึงไม่ใช้ไฟล์ชั่วคราวร่วมกัน
+  - `crates/docx/src/flat.rs`: XML ที่เก็บไว้ถูกฝังใน Flat OPC เฉพาะเมื่อเป็น element เดียวที่ well-formed มิฉะนั้นเก็บแบบ binary part
+  - ผลต่อผู้ใช้และความเข้ากันได้: ไฟล์ปกติให้ผลเหมือนเดิม (ชื่อหัวคอลัมน์ซ้ำได้ชื่อเดิม); ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ไม่นำมา: `1225f561` เพราะ Doc4Me ไม่วาดข้อความใน metafile (ไม่มี `draw_vector_text`) และไม่มีจุดปฏิเสธภาพแบบ `decode_peak_fits` ที่ commit นั้นเพิ่ม log
+  - ตรวจสอบ: 3-way merge รายไฟล์ (มี conflict 1 จุดในเทสต์ของ `model.rs` ซึ่งเก็บทั้งเทสต์เดิมและเทสต์ใหม่); `cargo test -p doc4me-formats` 111 passed; `cargo test -p doc4me-fonts -p doc4me-docx -p doc4me-engine` ทุกชุดผ่าน (engine lib 556 passed); `cargo clippy -p doc4me-formats -p doc4me-fonts -p doc4me-docx -p doc4me-engine --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **ตรวจยืนยันชุดความปลอดภัยรอบ 3 ชุดที่ 8 (2026-11-09)** — ชุด 8 เคย commit ก่อนตรวจครบ; ตรวจบน Linux ที่ commit `43fe290` โดยไม่แก้โค้ด (เปลี่ยนเฉพาะเอกสารนี้และ `handoff.md`) ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ. ผลตรวจ: `cargo clippy --workspace --all-targets -- -D warnings` ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่านทุกชุด (58 ชุดผลลัพธ์ ไม่มีเทสต์ล้ม); `cargo xtask wasm` ผ่านทุก crate (ต้องติดตั้ง `libasound2-dev` และ target `wasm32-unknown-unknown` บนเครื่องตรวจก่อน ซึ่งเป็นข้อกำหนดของเครื่อง ไม่ใช่ของ repo). ยังไม่ได้รัน `readiness-windows.yml` ใหม่เพื่อยืนยันว่าคะแนนไม่ถดถอย.
 
 - **งานแบบกำลังสองใน balloon, PDF และ metafile; การเข้ารหัสภาพที่ใหญ่เกินไป** (รอบที่ 3 ชุดที่ 8; WordCraft `ee96c4c9`, `05ee2e01`, `c98efffc`, `0d5a1490`, ส่วน cluster ends ของ `f4c9c89c`)
