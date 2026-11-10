@@ -16,12 +16,12 @@
 ### ความปลอดภัย (port จาก WordCraft)
 - รอบ 3 ชุด 1–25 อยู่ใน 1.1.3 (ดู CHANGELOG `[1.1.3]` › ความปลอดภัย); ตรวจ `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่านหลังชุด 25
 - ยังเหลือ: `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก), ส่วนตาราง ODT ของ `560565cd`
-- ข้อค้นพบที่ยังไม่แก้: Doc4Me ไม่จำกัดความลึกตารางซ้อนจาก `insert.table`/วาง (WordCraft ใช้ 18 ชั้นเพื่อกัน stack overflow และให้ `.json` อ่านกลับได้)
+- แก้แล้ว (หลัง 1.1.3, ยังไม่ออกรุ่น): จำกัดความลึกตารางซ้อนที่ 18 ชั้นเมื่อแทรก/วาง (`MAX_TABLE_DEPTH` ใน `crates/doc/src/table.rs`)
 - วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
 
 ### งานถัดไป
 1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred) — วิเคราะห์บน Windows เพราะ Linux ไม่มีฟอนต์ Windows หลายตัว
-2. เพดานความลึกตารางซ้อน และ port WordCraft ที่เหลือ
+2. port WordCraft ที่เหลือ (เพดานตารางซ้อนทำแล้ว)
 3. ให้เจ้าของภาษาตรวจทาน 26 แค็ตตาล็อกฉบับร่าง AI; รองรับ shaping/RTL ใน UI
 
 ## บันทึกก่อนออก 1.1.3 (ข้อมูลเก่า; ตัวเลขล่าสุดอยู่ด้านบน)
