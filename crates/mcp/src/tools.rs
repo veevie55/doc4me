@@ -84,15 +84,21 @@ pub fn tool_definitions() -> Value {
         tool(
             "new_document",
             "New document",
-            "Start a document: blank, sample, letter, resume or report.",
-            obj(json!({"template": s("blank|sample|letter|resume|report")}), &[]),
+            "Start a document: blank, sample, letter, resume or report. A document with unsaved changes is kept: save it first, or give `force: true` to discard the changes.",
+            obj(
+                json!({"template": s("blank|sample|letter|resume|report"), "force": {"type": "boolean", "description": "Discard unsaved changes"}}),
+                &[]
+            ),
             false
         ),
         tool(
             "open_document",
             "Open",
-            "Open a .docx, .doc, .odt, .rtf, .md, .tex, .html, .txt or .json file, or any other text file (.m3u, .log, .ini…) as plain text. Give `password` for a protected file; without it the call fails asking for one.",
-            obj(json!({"path": s("File path"), "password": s("Password, if the file is protected")}), &["path"]),
+            "Open a .docx, .doc, .odt, .rtf, .md, .tex, .html, .txt or .json file, or any other text file (.m3u, .log, .ini…) as plain text. Give `password` for a protected file; without it the call fails asking for one. A document with unsaved changes is kept: save it first, or give `force: true` to discard the changes.",
+            obj(
+                json!({"path": s("File path"), "password": s("Password, if the file is protected"), "force": {"type": "boolean", "description": "Discard unsaved changes"}}),
+                &["path"]
+            ),
             false
         ),
         tool(
@@ -211,8 +217,16 @@ pub fn call_tool(b: &mut dyn Backend, name: &str, a: &Value) -> ToolResult {
             }
             ToolResult::json(&Value::Array(out))
         }
-        "new_document" => wrap(exec(b, "file.new", json!({"template": st("template").unwrap_or("blank")}))),
-        "open_document" => wrap(exec(b, "file.open", json!({"path": st("path").unwrap_or(""), "password": st("password")}))),
+        "new_document" => wrap(exec(
+            b,
+            "file.new",
+            json!({"template": st("template").unwrap_or("blank"), "force": a.get("force").and_then(Value::as_bool) == Some(true)}),
+        )),
+        "open_document" => wrap(exec(
+            b,
+            "file.open",
+            json!({"path": st("path").unwrap_or(""), "password": st("password"), "force": a.get("force").and_then(Value::as_bool) == Some(true)}),
+        )),
         "save_document" => {
             let p = st("path");
             let ext = p.and_then(|x| x.rsplit('.').next()).unwrap_or("").to_ascii_lowercase();

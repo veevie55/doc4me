@@ -69,4 +69,6 @@ and set `DOC4ME_CONTROL_KEY` to that app's key.
 
 Any other method name is treated as a command id: `{"method": "format.bold"}` works.
 
+**Unsaved work.** A control call never opens the Save Changes prompt, so a command that would replace or close the document while it has unsaved changes (`file.new`, `file.open` with a `path`, `file.close`, the mailings that replace the document…) and `app.quit` are refused with an error that says so. Save first, or pass `"force": true` (only a real boolean `true` counts; for `engine.execute` put it in `params`) to discard the changes. A clean document needs no `force`.
+
 Positions are `{"story": "body" | {"part": n}, "path": [block, row, cell, block, …], "off": byteOffset}`.
