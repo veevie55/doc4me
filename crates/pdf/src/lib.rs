@@ -1279,7 +1279,10 @@ impl Exporter<'_> {
                 }
             } else {
                 let url = target.trim();
-                if url.is_empty() {
+                // Only web and mail links become URI actions: a script, `file:`, `data:` or UNC
+                // target stays plain text, as in the HTML, Markdown and RTF exporters (a reader
+                // that follows a UNC link sends the user's credentials to that host).
+                if !doc4me_doc::link::is_web_or_mail_link(url) {
                     continue;
                 }
                 Target::Action(Action::Link(LinkAction::new(url.to_string())))

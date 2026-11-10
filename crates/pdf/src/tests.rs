@@ -1030,3 +1030,32 @@ fn glyph_id_above_u16_exports() {
     let (glyphs, _) = count_glyphs_and_paths(&bytes);
     assert_eq!(glyphs, want, "every glyph is still drawn, the wide one as .notdef");
 }
+
+#[test]
+fn only_web_and_mail_links_become_uri_actions() {
+    // A script, file, data or UNC target exports as plain text, as in the other exporters (#3717).
+    let links = [
+        ("web", "https://example.com/ok"),
+        ("mail", "mailto:a@example.com"),
+        ("script", "javascript:alert(1)"),
+        ("file", "file:///etc/passwd"),
+        ("data", "data:text/html,x"),
+        ("unc", r"\\host\share"),
+    ];
+    let mut p = Paragraph::with_text("Links:", CharProps::default());
+    for (text, link) in links {
+        let n = p.len();
+        p.insert_text(n, &format!(" {text}"), &CharProps { link: Some(link.into()), ..Default::default() }).unwrap();
+    }
+    let mut d = Document::new();
+    d.body = vec![para_block(p)];
+    let raw = String::from_utf8_lossy(&export(&d, &PdfOptions { compress: false, ..Default::default() }).unwrap()).into_owned();
+    // `/URI (target)` per link (an action also says `/S /URI`).
+    assert_eq!(raw.matches("/URI (").count() + raw.matches("/URI(").count(), 2);
+    assert!(raw.contains("example.com/ok") && raw.contains("a@example.com"));
+    for bad in ["javascript", "passwd", "text/html", "share"] {
+        assert!(!raw.contains(bad), "{bad}");
+    }
+    let all = squash(&extract_text(&export(&d, &PdfOptions::default()).unwrap()).concat());
+    assert!(all.contains("Links: web mail script file data unc"), "{all:?}");
+}

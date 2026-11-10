@@ -29,6 +29,12 @@ const MAX_PICT: usize = 64 << 20;
 // Export
 
 /// RTF-escape text (non-ASCII as `\uN?`).
+/// [`esc`] for a `\fonttbl` name: `;` would end the entry, so it is written `\'3b`, and control
+/// characters, which `esc` writes as `\line` or `\tab`, are dropped.
+fn esc_font(name: &str) -> String {
+    esc(&name.replace(char::is_control, "")).replace(';', "\\'3b")
+}
+
 pub fn esc(s: &str) -> String {
     let mut o = String::with_capacity(s.len() + 8);
     for c in s.chars() {
@@ -416,7 +422,7 @@ fn export_with(m: &Meta, w: &Writer, body: &str, sec: &doc4me_doc::SectionProps)
     let mut out = String::from("{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033\\uc1\n{\\fonttbl");
     for (i, f) in w.t.fonts.iter().enumerate() {
         let fam = if model::is_mono(f) { "\\fmodern" } else { "\\fswiss" };
-        out.push_str(&format!("{{\\f{i}{fam}\\fcharset0 {};}}", esc(f)));
+        out.push_str(&format!("{{\\f{i}{fam}\\fcharset0 {};}}", esc_font(f)));
     }
     out.push_str("}\n{\\colortbl;");
     for c in &w.t.colors {
@@ -642,7 +648,7 @@ impl Reader {
     }
 
     fn commit_font(&mut self) {
-        let name = std::mem::take(&mut self.font_name).trim().trim_end_matches(';').trim().to_string();
+        let name = std::mem::take(&mut self.font_name).trim().to_string();
         if !name.is_empty() && self.fonts.len() < 4096 {
             self.fonts.insert(self.font_cur, name);
         }
@@ -687,7 +693,9 @@ impl Reader {
                 for c in s.chars() {
                     if c == ';' {
                         self.commit_font();
-                    } else {
+                    } else if self.font_name.len() <= model::MAX_FONT_NAME {
+                        // One character past the limit is kept, so the name is dropped as too
+                        // long (`kept_font`) rather than cut to a different name.
                         self.font_name.push(c);
                     }
                 }
@@ -752,6 +760,14 @@ impl Reader {
     fn ch(&mut self, c: char) {
         if self.skip_chars > 0 {
             self.skip_chars -= 1;
+            return;
+        }
+        // Only a literal `;` ends a font name: an escaped one (`\'3b`, `\u59?`) belongs to it.
+        if c == ';' && self.st.dest == Dest::FontTbl {
+            // Held to the limit as other characters are (see `text`).
+            if self.font_name.len() <= model::MAX_FONT_NAME {
+                self.font_name.push(c);
+            }
             return;
         }
         let mut buf = [0u8; 4];
@@ -974,7 +990,11 @@ impl Reader {
                     self.font_cur = pv;
                     self.font_name.clear();
                 }
-                return;
+                // A Unicode character in a font name (`\uN` and its fallback count) is read as in
+                // text; every other word only sets up the entry.
+                if !matches!(w, "u" | "uc") {
+                    return;
+                }
             }
             Dest::ColorTbl => {
                 let v = pv.clamp(0, 255) as u8;
@@ -1355,13 +1375,22 @@ pub fn parse(bytes: &[u8]) -> Result<Flow, String> {
                     j += 1;
                 }
                 let chunk = bytes.get(i..j).unwrap_or(b"");
-                if r.skip_chars == 0 && chunk.is_ascii() {
+                // The fallback bytes after `\uN` are skipped; the rest of the run is text like any
+                // other (a literal `;` still ends a font name).
+                let skip = r.skip_chars.min(chunk.len());
+                r.skip_chars -= skip;
+                let chunk = chunk.get(skip..).unwrap_or_default();
+                if chunk.is_ascii() {
                     if let Ok(s) = std::str::from_utf8(chunk) {
                         r.text(s);
                     }
                 } else {
                     for b in chunk {
-                        r.ch(cp1252(*b));
+                        if *b == b';' && r.st.dest == Dest::FontTbl {
+                            r.text(";");
+                        } else {
+                            r.ch(cp1252(*b));
+                        }
                     }
                 }
                 i = j;

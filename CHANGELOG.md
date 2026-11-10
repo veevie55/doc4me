@@ -13,6 +13,15 @@
 
 ### ความปลอดภัย
 
+- **ลิงก์ใน PDF, ชื่อฟอนต์ใน CSS และใน RTF ไม่ใช้แทรกโค้ดหรือข้อมูลอื่นได้** (รอบที่ 3 ชุดที่ 22; ส่วนหนึ่งของ WordCraft `560565cd`)
+  - `crates/pdf/src/lib.rs`: เดิมทุกลิงก์กลายเป็น URI action ใน PDF รวมถึง `javascript:`, `file:`, `data:` และ UNC (`\\host\share`, reader ที่ตามลิงก์จะส่ง credential ของผู้ใช้ไปยังเครื่องนั้น); ตอนนี้เฉพาะ `http`, `https`, `mailto` (`is_web_or_mail_link`) ที่เป็น action ส่วนอื่นเป็นข้อความธรรมดาเหมือน exporter อื่น
+  - `crates/formats/src/html.rs`: ชื่อฟอนต์ถูกเขียนเป็น CSS string ที่ escape (`css_font_name`: เครื่องหมายคำพูด `\` `;` `,` และอักขระควบคุมเป็น hex escape) เดิมชื่อที่มี `\` หรือขึ้นบรรทัดใหม่ปิด string แล้วเพิ่ม CSS ของตัวเองได้; ตัวนำเข้าอ่าน CSS escape กลับ (`css_unescape`, รองรับ CR LF/CR/LF/form feed)
+  - `crates/formats/src/rtf.rs`: `;` ในชื่อฟอนต์ถูกเขียนเป็น `\'3b` และอักขระควบคุมถูกตัด (`esc_font`) เดิม `;` ปิดรายการ `\fonttbl` กลางชื่อ; ตัวอ่านถือ `;` ที่ escape (`\'3b`, `\u59`) เป็นส่วนของชื่อ และ `;` ตัวอักษรจริงเท่านั้นที่ปิดรายการ; ชื่อฟอนต์ถูกจำกัดความยาวระหว่างอ่าน (เกินแล้วถูกทิ้งเป็นชื่อที่ยาวเกิน)
+  - ปรับจาก WordCraft: (1) ไบต์ fallback หลัง `\uN` ถูกข้ามแล้วส่วนที่เหลือของข้อความเป็นข้อความปกติ เดิม Doc4Me ส่งทั้งช่วงผ่าน `ch()` ทำให้ `;` จริงถูกตีความผิด (2) ตารางฟอนต์ของ Doc4Me ไม่อ่าน `\u`/`\uc` เลย (อักขระ Unicode ในชื่อฟอนต์หายและได้ `?` แทน) จึงให้คำสั่งทั้งสองผ่านไปยังการอ่าน Unicode ปกติ
+  - ส่วนที่เหลือของ `560565cd` (ขีดจำกัดตาราง Markdown/ODT, ความลึกตาราง, `text:s`, Mark Entry, ขนาดภาพ, mail merge rule) ยังไม่ได้ port (ดู `handoff.md`)
+  - ผลต่อผู้ใช้และความเข้ากันได้: ลิงก์เว็บ/อีเมลใน PDF และฟอนต์ปกติเหมือนเดิม; ชื่อฟอนต์ที่มี `;` หรือ Unicode ใน RTF อ่านได้ถูกต้องขึ้น; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `only_web_and_mail_links_become_uri_actions` (pdf), `css_escapes_read_every_kind_of_newline`, `font_names_are_written_as_css_strings` (html) และ `a_semicolon_in_an_rtf_font_name_round_trips` ผ่าน; `cargo test -p doc4me-formats` 119 passed; `cargo test -p doc4me-pdf` 30 passed; `cargo clippy -p doc4me-formats -p doc4me-pdf --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **หาหมึกบนหน้าโดยไม่นับวัตถุในย่อหน้าซ้ำ** (รอบที่ 3 ชุดที่ 21; WordCraft `96286f0e`)
   - เพิ่ม `crates/engine/src/cmd/draw/page_objects.rs` (`PageObjects`): หาวัตถุตามตำแหน่งที่ layout วางไว้ โดยสแกนแต่ละย่อหน้าเพียงถึงวัตถุที่ไกลที่สุดที่ถูกขอและสแกนครั้งเดียว แม้จะขอไม่เรียงตามลำดับข้อความ
   - `crates/engine/src/cmd/draw.rs`: `ink_on` (หาหมึกบนหน้า) และการเลือกด้วย lasso ใช้ `PageObjects` แทน `object_at` ต่อวัตถุ ซึ่งนับ marker ก่อนหน้าใหม่ทุกครั้ง (กำลังสองกับย่อหน้าที่มีหมึกหรือวัตถุจำนวนมาก)

@@ -847,3 +847,29 @@ fn run_link_and_font_copies_are_budgeted() {
     let kept: usize = runs.iter().filter_map(|r| r.props.link.as_ref()).map(String::len).sum();
     assert!(kept > 0 && kept <= 64 << 20, "{kept}");
 }
+
+#[test]
+fn a_semicolon_in_an_rtf_font_name_round_trips() {
+    // `;` ends a `\fonttbl` entry, so it is written `\'3b` and read back as part of the name
+    // (WordCraft #3740); control characters, which would be written as `\line`, are dropped.
+    let fonts = [("one", "Semi;Colon"), ("two", "Semi;Other"), ("three", "Tail;"), ("four", "Line\nBreak")];
+    let mut p = model::Para::default();
+    for (t, font) in fonts {
+        p.push_text(t, &model::Fmt { font: Some(font.into()), ..Default::default() });
+    }
+    let doc = model::to_doc(&model::Flow { blocks: vec![FBlock::Para(p)], ..Default::default() });
+    let rtf = String::from_utf8(export("rtf", &doc).unwrap().unwrap()).unwrap();
+    assert!(rtf.contains(r"Semi\'3bColon;") && !rtf.contains(r"Line\line"), "{rtf}");
+    let sp = spans(&crate::rtf::parse(rtf.as_bytes()).unwrap());
+    for (t, font) in fonts {
+        let f = sp.iter().find(|(s, _)| s.contains(t)).map(|(_, f)| f.font.as_deref().map(str::to_string));
+        assert_eq!(f, Some(Some(font.replace('\n', ""))), "{t}: {rtf}");
+    }
+    // A Unicode escape is part of the name too; a literal `;` ends it.
+    let sp = spans(&crate::rtf::parse(br"{\rtf1\ansi{\fonttbl{\f0 A\u59?B;}{\f1 C\'3bD;}}\f0 x {\f1 y}\par}").unwrap());
+    let font = |t: &str| sp.iter().find(|(s, _)| s.contains(t)).and_then(|(_, f)| f.font.as_deref().map(str::to_string));
+    assert_eq!((font("x").as_deref(), font("y").as_deref()), (Some("A;B"), Some("C;D")));
+    // Escaped semicolons stop at the name limit like other characters, and the name is dropped.
+    let long = format!(r"{{\rtf1{{\fonttbl{{\f0 {};}}}}\f0 x\par}}", r"\'3b".repeat(model::MAX_FONT_NAME + 1));
+    assert_eq!(spans(&crate::rtf::parse(long.as_bytes()).unwrap())[0].1.font, None);
+}
