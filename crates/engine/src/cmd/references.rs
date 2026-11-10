@@ -172,6 +172,25 @@ impl FieldCode {
     }
 }
 
+/// `s` as a quoted field-code argument: `"` and `\` escaped, as [`FieldCode::parse`] reads them.
+pub fn quoted(s: &str) -> String {
+    let mut o = String::with_capacity(s.len() + 2);
+    o.push('"');
+    for c in s.chars() {
+        if matches!(c, '"' | '\\') {
+            o.push('\\');
+        }
+        o.push(c);
+    }
+    o.push('"');
+    o
+}
+
+/// `s` as one field-code argument: as it is when it's a single plain word, else [`quoted`].
+pub fn field_arg(s: &str) -> String {
+    if s.is_empty() || s.contains(|c: char| c.is_whitespace() || matches!(c, '"' | '\\')) { quoted(s) } else { s.to_string() }
+}
+
 /// A level range such as `1-3` (or one level, `2`), clamped to 1–9.
 pub fn level_range(s: &str) -> Option<(u8, u8)> {
     let mut it = s.split('-').map(|x| x.trim().parse::<u8>().ok());

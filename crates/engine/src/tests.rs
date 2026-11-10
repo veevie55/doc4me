@@ -6275,3 +6275,18 @@ fn export_png_rejects_a_page_number_that_does_not_fit() {
     assert!(!target.exists(), "no file is written for an invalid page");
     let _ = std::fs::remove_dir_all(&dir);
 }
+
+/// A huge finite width can't make a tall picture's height infinite, which a `.json` save writes
+/// as `null` and can't read back (WordCraft #3619).
+#[test]
+fn a_huge_picture_width_keeps_the_size_finite() {
+    let img = image::RgbaImage::from_pixel(2, 400, image::Rgba([10, 20, 30, 255]));
+    let mut png = Vec::new();
+    image::DynamicImage::ImageRgba8(img).write_to(&mut std::io::Cursor::new(&mut png), image::ImageFormat::Png).unwrap();
+    let mut s = Session::new(doc4me_doc::Document::new());
+    let r = s.run("insert.picture", &json!({"data": crate::cmd::insert::base64_encode(&png), "width": 3e38})).unwrap();
+    let (w, h) = (r["width"].as_f64().unwrap(), r["height"].as_f64().unwrap());
+    assert!(w.is_finite() && h.is_finite(), "{w} x {h}");
+    let saved = crate::io::save_bytes("a.json", &s.doc).unwrap();
+    assert!(crate::io::open_bytes("a.json", &saved).is_ok());
+}

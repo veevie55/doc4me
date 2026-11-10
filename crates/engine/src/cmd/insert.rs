@@ -390,7 +390,8 @@ fn place(s: &mut Session, bytes: Vec<u8>, width: Option<f32>, alt: &str, video: 
     let max_w = s.doc.sections().first().map(|(_, sp)| sp.text_width()).unwrap_or(468.0);
     let (mut w, mut h) = (pw as f32 * 0.75, ph as f32 * 0.75);
     if let Some(want) = width {
-        let k = want.max(4.0) / w.max(1.0);
+        // At most 22 inches: a huge width made the height of a tall picture infinite.
+        let k = want.clamp(4.0, 1584.0) / w.max(1.0);
         w *= k;
         h *= k;
     }
