@@ -13,6 +13,11 @@
 
 ### ความปลอดภัย
 
+- **บันทึกข้อจำกัดที่ยังไม่แก้: ความลึกตารางซ้อนจากการแทรก/วาง** (`handoff.md` เท่านั้น ไม่เปลี่ยนโค้ด)
+  - ระหว่าง port WordCraft `560565cd` พบว่า Doc4Me ไม่จำกัดความลึกของตารางซ้อนที่สร้างด้วย `insert.table` หรือการวาง (DOCX reader จำกัดที่ 24 ชั้นอยู่แล้ว) ตารางที่ซ้อนลึกมากอาจทำให้ stack overflow ตอนบันทึก/คัดลอก และไฟล์ `.json` ที่ลึกเกิน 127 ชั้นของ serde_json อ่านกลับไม่ได้; บันทึกแนวทางแก้ (เพดาน 18 ชั้นแบบ WordCraft) ไว้ใน `handoff.md`
+  - บันทึก Windows readiness run 42836913553 ที่สั่งวัดหลังชุด 23 และรายการ commit WordCraft ที่เหลือ (`b2734c28`, `1350f62b`, `ef35d79c`, ส่วนตาราง ODT/ความลึกตารางของ `560565cd`)
+  - ตรวจสอบ: `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่านหลังชุด 9–25 ทั้งหมด
+
 - **กฎ Mail Merge เก็บเครื่องหมายคำพูดและ `\` ในข้อความและชื่อฟิลด์** (รอบที่ 3 ชุดที่ 25; ส่วนหนึ่งของ WordCraft `560565cd`)
   - `crates/engine/src/cmd/mailings.rs`: `mailings.rules` (IF/SKIPIF/NEXTIF) และ `mailings.insertField` เขียนชื่อฟิลด์ด้วย `field_arg` และค่า/ข้อความด้วย `quoted` เดิมเขียนค่าดิบในเครื่องหมายคำพูด ค่าที่มี `"` จึงปิด string แล้วเพิ่มข้อความหรือ switch ของตัวเองได้ และชื่อฟิลด์ที่มี `"` อ่านกลับผิด; ตอนรวมจดหมาย `mergefield_name` และ `condition` อ่านคำด้วย `field_words` (escape แบบเดียวกับ field code) แทนการแยกด้วย `"`
   - `crates/engine/src/cmd/references.rs`: แยกตัวตัดคำของ `FieldCode::parse` ออกเป็น `field_words` เพื่อใช้ร่วม (พฤติกรรม `FieldCode::parse` เหมือนเดิม)
