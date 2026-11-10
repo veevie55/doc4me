@@ -23,8 +23,11 @@ use serde::{Deserialize, Deserializer, Serialize};
 use serde_json::{Value, json};
 
 use super::ink_shape::{InkShape, recognise};
+
+mod page_objects;
 use super::pos_json;
 use crate::{CmdError, CmdResult, CommandSpec, Session, p};
+use page_objects::PageObjects;
 
 /// What dragging on the page does (Draw tab).
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
@@ -325,12 +328,14 @@ impl PlacedInk {
 /// turn and geometry on the page.
 pub fn ink_on(s: &Session, layout: &DocLayout, page: usize) -> Vec<PlacedInk> {
     let Some(pg) = layout.pages.get(page) else { return Vec::new() };
+    // Each paragraph's objects are found in one pass, not counted again for every object.
+    let mut objects = PageObjects::new(&s.doc);
     pg.items
         .iter()
         .filter_map(|it| match it {
             Placed::Object { rect, spin, story, path, off, .. } => {
                 let pos = Pos { story: *story, path: path.clone(), off: *off };
-                match s.doc.para_at(&pos).and_then(|p| p.object_at(*off)) {
+                match objects.get(&pos) {
                     Some(InlineObject::Shape { freeform: Some(f), stroke_width, stroke, .. }) if f.is_ink() => {
                         Some(PlacedInk { pos, rect: *rect, spin: *spin, freeform: f.clone(), color: *stroke, width: *stroke_width })
                     }
@@ -550,10 +555,11 @@ fn lasso(s: &mut Session, v: &Value) -> CmdResult {
         return Err(CmdError::Params("a lasso loop needs at least three points".into()));
     }
     let mut items = Vec::new();
+    let mut objects = PageObjects::new(&s.doc);
     for it in &pg.items {
         let Placed::Object { rect, spin, story, path, off, .. } = it else { continue };
         let pos = Pos { story: *story, path: path.clone(), off: *off };
-        let Some(obj) = s.doc.para_at(&pos).and_then(|p| p.object_at(*off)) else { continue };
+        let Some(obj) = objects.get(&pos) else { continue };
         let picked = match obj.ink() {
             Some(_) if s.view.hide_ink => false,
             Some(f) => {
