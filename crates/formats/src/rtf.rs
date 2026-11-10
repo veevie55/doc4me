@@ -1135,7 +1135,7 @@ impl Reader {
                     }
                     Some(n) => {
                         self.st.fmt.code = false;
-                        self.st.fmt.font = Some(n);
+                        self.st.fmt.font = model::kept_font(&n);
                     }
                     None => {}
                 }
@@ -1176,7 +1176,7 @@ impl Reader {
             "fldrslt" => {
                 let link = self.st.field.and_then(|i| self.fields.get(i)).and_then(|s| hyperlink(s));
                 if link.is_some() {
-                    self.st.fmt.link = link;
+                    self.st.fmt.link = link.as_deref().and_then(model::kept_link);
                 }
             }
             _ => {}

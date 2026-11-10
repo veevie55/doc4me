@@ -841,7 +841,7 @@ fn tokenize(s: &str, base: &Fmt, depth: usize) -> Vec<Node> {
                     Some((inner, dest, end)) if base.link.is_none() => {
                         flush!();
                         let mut f = base.clone();
-                        f.link = Some(dest);
+                        f.link = model::kept_link(&dest);
                         for x in parse_inlines(&inner, &f, depth + 1) {
                             nodes.push(Node::Inl(x));
                         }
@@ -862,7 +862,8 @@ fn tokenize(s: &str, base: &Fmt, depth: usize) -> Vec<Node> {
                 if is_auto {
                     flush!();
                     let mut f = base.clone();
-                    f.link = Some(if inner.contains('@') && !inner.contains(':') { format!("mailto:{inner}") } else { inner.to_string() });
+                    f.link =
+                        model::kept_link(&if inner.contains('@') && !inner.contains(':') { format!("mailto:{inner}") } else { inner.to_string() });
                     push_text(&mut nodes, inner, &f);
                     i += inner.len() + 2;
                     text_start = i;
@@ -1172,7 +1173,7 @@ fn inlines_md_impl(inlines: &[Inline], in_table: bool) -> String {
     }
     let mut out = String::new();
     let mut stack: Vec<Mark> = Vec::new();
-    let mut link: Option<String> = None;
+    let mut link: Option<std::sync::Arc<str>> = None;
     let close_all = |out: &mut String, stack: &mut Vec<Mark>| {
         while let Some(m) = stack.pop() {
             out.push_str(marker(m));
@@ -1249,7 +1250,7 @@ fn link_target(l: &str) -> String {
         }
         out.push(c);
     }
-    if l.contains([' ', '(', ')', '<', '>']) { format!("<{out}>") } else { out }
+    if l.contains(|c: char| c.is_whitespace() || matches!(c, '(' | ')' | '<' | '>')) { format!("<{out}>") } else { out }
 }
 
 /// Whether `rest` (the text after a `&`) starts like an entity reference (`amp;`, `#106;`,
@@ -1462,7 +1463,7 @@ mod tests {
             .collect();
         assert_eq!(link[0], ("the ".into(), "http://x.org".into(), false));
         assert_eq!(link[1], ("site".into(), "http://x.org".into(), true));
-        assert!(link.iter().any(|l| l.1 == "https://y.com"));
+        assert!(link.iter().any(|l| &*l.1 == "https://y.com"));
         assert!(s.iter().any(|i| matches!(i, Inline::Text(t, f) if t == "a*b*" && f.code)));
         let text: String = s.iter().filter_map(|i| if let Inline::Text(t, _) = i { Some(t.as_str()) } else { None }).collect();
         assert!(text.contains("*lit* & "), "{text}");
@@ -1719,7 +1720,8 @@ mod tests {
         ] {
             let out = md(l);
             let back = inl(&out);
-            let got: Vec<_> = back.iter().filter_map(|i| if let Inline::Text(_, f) = i { f.link.clone() } else { None }).collect();
+            let got: Vec<_> =
+                back.iter().filter_map(|i| if let Inline::Text(_, f) = i { f.link.as_deref().map(str::to_string) } else { None }).collect();
             assert_eq!(got, [l.to_string()], "{l:?} → {out:?}");
         }
         // Ordinary destinations are written as before.

@@ -2326,19 +2326,19 @@ impl<'a> Parser<'a> {
             }
             "href" => {
                 let url = self.arg_raw();
-                self.with_arg(move |f| f.link = Some(url));
+                self.with_arg(move |f| f.link = model::kept_link(&url));
             }
             "url" | "nolinkurl" => {
                 let url = self.arg_raw();
                 let mut f = self.fmt();
                 if name == "url" {
-                    f.link = Some(url.clone());
+                    f.link = model::kept_link(&url);
                 }
                 self.para.push_text(&url, &f);
             }
             "hyperlink" => {
                 let target = self.arg_raw();
-                self.with_arg(move |f| f.link = Some(format!("#{target}")));
+                self.with_arg(move |f| f.link = model::kept_link(&format!("#{target}")));
             }
             "hypertarget" => {
                 let target = self.arg_raw();
@@ -2352,7 +2352,7 @@ impl<'a> Parser<'a> {
             "ref" | "eqref" | "pageref" | "autoref" | "cref" | "Cref" | "nameref" => {
                 let l = self.arg_raw();
                 let mut f = self.fmt();
-                f.link = Some(format!("#{l}"));
+                f.link = model::kept_link(&format!("#{l}"));
                 self.para.push_text(&l, &f);
             }
             "cite" | "citep" | "citet" | "parencite" | "textcite" | "autocite" => {

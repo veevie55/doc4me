@@ -17,6 +17,26 @@ pub const MONO_FONT: &str = "Courier New";
 pub const CODE_STYLE: &str = "Code";
 /// Nesting limit for tables in tables (hostile input).
 pub const MAX_DEPTH: usize = 8;
+/// Longest font name the importers keep, in bytes (as the .docx reader); a longer one (no real
+/// font has one) is dropped.
+pub const MAX_FONT_NAME: usize = 256;
+/// Longest hyperlink target the importers keep, in bytes; a longer link is dropped and its text
+/// kept.
+pub const MAX_LINK: usize = 8 << 10;
+/// Link and font bytes the document's runs may carry between them. A flow's spans share one
+/// copy of a name ([`Fmt`]), but every run of a document owns its own: past this budget, runs
+/// lose their link and font rather than multiply a small file into gigabytes.
+const MAX_RUN_STRINGS: usize = 64 << 20;
+
+/// `name` as a span's font, unless it is longer than [`MAX_FONT_NAME`].
+pub fn kept_font(name: &str) -> Option<Arc<str>> {
+    (name.len() <= MAX_FONT_NAME).then(|| name.into())
+}
+
+/// `target` as a span's link, unless it is longer than [`MAX_LINK`].
+pub fn kept_link(target: &str) -> Option<Arc<str>> {
+    (target.len() <= MAX_LINK).then(|| target.into())
+}
 
 /// Character formatting the text formats can express.
 #[derive(Clone, Debug, Default, PartialEq)]
@@ -28,11 +48,13 @@ pub struct Fmt {
     pub code: bool,
     pub sup: bool,
     pub sub: bool,
-    pub link: Option<String>,
+    /// Shared: every span of a link holds the same target.
+    pub link: Option<Arc<str>>,
     pub color: Option<Rgb>,
     /// Points.
     pub size: Option<f32>,
-    pub font: Option<String>,
+    /// Shared, as `link`.
+    pub font: Option<Arc<str>>,
     /// Background (highlight / shading).
     pub background: Option<Rgb>,
     /// Pair kerning from this size up, points (`w:kern`, RTF `\kerning`, `.doc` sprmCHpsKern);
@@ -313,10 +335,10 @@ pub fn char_props(f: &Fmt) -> CharProps {
         } else {
             None
         },
-        link: f.link.clone().filter(|l| !l.is_empty()),
+        link: f.link.as_deref().filter(|l| !l.is_empty()).map(str::to_string),
         color: f.color.map(TextColor::Rgb),
         size: f.size.filter(|s| s.is_finite() && *s >= 1.0 && *s <= 1638.0),
-        font: if f.code { Some(MONO_FONT.to_string()) } else { f.font.clone().filter(|s| !s.is_empty()) },
+        font: if f.code { Some(MONO_FONT.to_string()) } else { f.font.as_deref().filter(|s| !s.is_empty()).map(str::to_string) },
         shading: f.background,
         kern: f.kern.filter(|k| k.is_finite() && (0.0..=1638.0).contains(k)),
         ..Default::default()
@@ -362,9 +384,22 @@ fn append(p: &mut Paragraph, text: &str, props: &CharProps, obj: Option<InlineOb
 
 struct Builder<'a> {
     doc: &'a mut Document,
+    /// Link and font bytes given to runs so far ([`MAX_RUN_STRINGS`]).
+    run_strings: usize,
 }
 
 impl Builder<'_> {
+    /// `cp` as a run may keep it: without its link and font once the runs' copies of them are
+    /// over budget.
+    fn budget(&mut self, mut cp: CharProps) -> CharProps {
+        let n = cp.link.as_ref().map_or(0, String::len).saturating_add(cp.font.as_ref().map_or(0, String::len));
+        match self.run_strings.checked_add(n).filter(|&t| t <= MAX_RUN_STRINGS) {
+            Some(t) => self.run_strings = t,
+            None => (cp.link, cp.font) = (None, None),
+        }
+        cp
+    }
+
     fn para(&mut self, p: &Para, list_num: Option<u32>) -> Paragraph {
         let mut out = Paragraph::new();
         let style = match p.kind {
@@ -394,7 +429,7 @@ impl Builder<'_> {
             match i {
                 Inline::Text(t, f) => {
                     let t = clean_text(t);
-                    let mut cp = char_props(f);
+                    let mut cp = self.budget(char_props(f));
                     if p.kind == Kind::Code && cp.font.as_deref() == Some(MONO_FONT) {
                         cp.font = None;
                     }
@@ -578,7 +613,7 @@ pub fn to_doc(flow: &Flow) -> Document {
     if uses_code {
         doc.styles.upsert(code_style());
     }
-    let body = Builder { doc: &mut doc }.blocks(&flow.blocks, 0);
+    let body = Builder { doc: &mut doc, run_strings: 0 }.blocks(&flow.blocks, 0);
     doc.body = body;
     doc.settings.html_frameset = flow.frameset.clone().map(|mut fs| {
         fs.sanitize();
@@ -648,13 +683,13 @@ fn fmt_of(doc: &Document, cp: &CharProps, in_code: bool) -> Fmt {
         code,
         sup: e.vert_align == Some(VertAlign::Superscript),
         sub: e.vert_align == Some(VertAlign::Subscript),
-        link: e.link.clone(),
+        link: e.link.as_deref().map(Arc::from),
         color: match e.color {
             Some(TextColor::Rgb(c)) => Some(c),
             _ => None,
         },
         size: e.size,
-        font: if code || in_code { None } else { e.font.clone() },
+        font: if code || in_code { None } else { e.font.as_deref().map(Arc::from) },
         background: e.highlight.and_then(|h| h.rgb()).or(e.shading),
         kern: e.kern,
     }

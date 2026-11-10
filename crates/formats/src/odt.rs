@@ -623,7 +623,7 @@ impl FmtDelta {
             f.size = self.size;
         }
         if let Some(fam) = &self.font {
-            f.font = Some(fam.clone());
+            f.font = model::kept_font(fam);
         }
         if self.kern.is_some() {
             f.kern = self.kern;
@@ -1126,7 +1126,7 @@ impl Body<'_> {
             "a" => {
                 let mut f = self.cur_fmt();
                 if let Some(h) = get(a, "xlink:href").filter(|h| !h.is_empty()) {
-                    f.link = Some(h.to_string());
+                    f.link = model::kept_link(h);
                 }
                 if let Some(s) = get(a, "text:style-name") {
                     f = self.styles.text_fmt(s, &f);

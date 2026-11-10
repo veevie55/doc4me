@@ -13,6 +13,15 @@
 
 ### ความปลอดภัย
 
+- **ตัวนำเข้าทิ้งชื่อฟอนต์และลิงก์ที่ยาวเกิน, span ใช้สำเนาร่วมกัน และจำกัดสำเนาที่ run ได้รับ** (รอบที่ 3 ชุดที่ 10; WordCraft `79e3610c`, `41de4739`, `582f4118`)
+  - `crates/formats/src/model.rs`: `Fmt::link` และ `Fmt::font` เปลี่ยนจาก `String` เป็น `Arc<str>` เพื่อให้ span ของลิงก์/ฟอนต์เดียวกันใช้สำเนาเดียว; เพิ่ม `MAX_FONT_NAME` (256 ไบต์), `MAX_LINK` (8 KiB), `kept_font`/`kept_link` และงบ `MAX_RUN_STRINGS` (64 MiB) ใน `Builder::budget` ซึ่งเกินแล้ว run ยังเก็บข้อความแต่ไม่มีลิงก์/ฟอนต์ เดิมชื่อยาวหนึ่งชื่อคูณจำนวน span ทำให้ไฟล์เล็กขยายเป็นหลายกิกะไบต์
+  - ตัวนำเข้า RTF, HTML, Markdown, ODT และ LaTeX ทิ้งชื่อฟอนต์/ลิงก์ที่ยาวเกิน (ข้อความยังอยู่); HTML ที่ชื่อฟอนต์ยาวเกินใช้ฟอนต์ที่สืบทอดมาต่อ
+  - ปรับจาก WordCraft: Doc4Me ไม่มีลิงก์แบบอ้างอิง (reference-style) ใน Markdown จึงไม่ได้นำส่วนแชร์ปลายทางของ reference มา และไม่มี revision ใน RTF exporter จึงไม่ได้นำ `char_diff`/`fmt_change` มา
+  - `crates/formats/src/sheet.rs` (`41de4739`): เซลล์ซ้ำของ ODS คิดงบเฉพาะสำเนาที่กริดยังรับได้
+  - `crates/formats/src/markdown.rs` (`582f4118`): Markdown export ครอบปลายทางลิงก์ที่มีช่องว่าง Unicode ใด ๆ (เช่น no-break, ideographic) ด้วย `<…>` จึงอ่านกลับได้ครบ
+  - ผลต่อผู้ใช้และความเข้ากันได้: ไฟล์ปกติให้ผลเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ; API `doc4me_formats::model::Fmt` ภายใน workspace เปลี่ยนชนิดฟิลด์ (ไม่มี crate อื่นใช้ฟิลด์เหล่านี้)
+  - ตรวจสอบ: เทสต์ใหม่ `overlong_font_names_and_links_are_dropped`, `spans_share_their_link_target`, `run_link_and_font_copies_are_budgeted`, `markdown_link_targets_with_unicode_spaces_read_back` ผ่าน; `cargo test -p doc4me-formats` 116 passed; `cargo clippy -p doc4me-formats --all-targets -- -D warnings` ผ่าน; `cargo check --workspace --all-targets --exclude doc4me-web` ผ่าน; `cargo fmt --all` แล้ว
+
 - **งานแบบกำลังสอง/เกินงบในตัวนำเข้า, Flat OPC, ที่เก็บฟอนต์ และ automation** (รอบที่ 3 ชุดที่ 9; WordCraft `42c254c8`, `89a64d1e`, `f6398e29`, `bcce02ab`, `57e9e0f2`, `722afa42`)
   - `crates/formats/src/model.rs`, `html.rs`: `Para::trim` ลบ span ว่างนำหน้าด้วย `drain` ครั้งเดียว แทน `Vec::remove(0)` ทีละตัว (กำลังสองกับย่อหน้าที่มี span ว่างหลายแสนตัว); เทสต์ `trim_drops_a_long_run_of_blank_spans_in_linear_time`
   - `crates/formats/src/sheet.rs`: ตั้งชื่อหัวคอลัมน์ซ้ำ (`Name 2`, `Name 3` …) ด้วย set และตัวนับต่อชื่อ แทนการไล่เทียบทุกชื่อ (กำลังสาม); `office:string-value` ของ ODS ถูกตัดตามเพดานต่อเซลล์เหมือนข้อความ `<text:p>` และแถวที่ข้อความเกินงบที่เหลือถูกปฏิเสธก่อนคัดลอกเซลล์ซ้ำ
