@@ -1,8 +1,30 @@
-# Handoff: Doc4Me 1.1.3 · latest completed official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42823797611](https://github.com/veevie55/doc4me/actions/runs/42823797611), measured source `89bb1a8`, report commit `9e93e8d`, 2026-11-10) · ห้ามออก Release, อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
+# Handoff: Doc4Me 1.1.3 (released 2026-11-10) · latest official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42836913553](https://github.com/veevie55/doc4me/actions/runs/42836913553), measured source `1352238`, report commit `8fc9173`) · ห้ามออก Release ถัดไป อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
 
-อัปเดต: 2026-11-10 · fork `veevie55/doc4me` · branch `main`; Windows run 42823797611 วัด source `89bb1a8` ครบ 222 เอกสาร และ workflow บันทึก generated report ใน commit `9e93e8d` บน `main`. `manual.tsv` มี 22 deferred. ไม่มีการ publish environment, release หรือ upload package.
+อัปเดต: 2026-11-10 · fork `veevie55/doc4me` · branch `main`; ผู้ใช้สั่ง "ตรวจ readiness อีกครั้ง แล้วแก้ไขไฟล์ทุกไฟล์ให้มีสถานะ/เนื้อหาตรงตามโค้ดปัจจุบัน แล้วออกเวอร์ชั่น 1.1.3" — v1.1.3 เป็น Release เดียวใน fork (Release/tag v1.0.0–v1.1.2 เดิมไม่มีแล้ว)
 
-## สถานะปัจจุบัน
+## สถานะปัจจุบัน (2026-11-10, ออก v1.1.3)
+
+### Readiness
+- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42836913553](https://github.com/veevie55/doc4me/actions/runs/42836913553) (วัด source `1352238` หลังชุดความปลอดภัย 23, 222 เอกสาร, report commit `8fc9173`); เท่ากับ run 42823797611 ก่อนหน้า จึงไม่ถดถอยจากงาน port ชุด 10–23 (ชุด 24–25 แก้เฉพาะ engine/mail merge ไม่กระทบ corpus)
+- มิติ: features 97.4% (ribbon 503/503, dialogs 216/228, 12 deferred), file formats 100% (222/222), pagination 60.6% (pages 174/222, boundaries 95/222), UI/UX 98.6% (276/280, 4 deferred), stability 100%, performance 100%, localization 100% (95/95), platforms 100% (5/5), ecosystem 83.3% (1 deferred), hardware 37.5% (5 deferred)
+- ส่วนที่ไม่ deferred และยังไม่ 100% มีเพียง pagination (ห่าง 5.9 จุดของคะแนนรวม); deferred 22 แถวยังนับไม่ผ่านจนมีหลักฐานจากอุปกรณ์/บริการจริง
+
+### ภาษา
+- 91 ตัวเลือกใน `LANGUAGES`: English source + 90 แค็ตตาล็อก (en-gb + 89 ภาษา) ทุกแค็ตตาล็อกมี 3,034 คีย์; ครอบคลุม 95/95 แถวใน `docs/readiness/languages.tsv`
+- 26 แค็ตตาล็อกเป็นฉบับร่าง AI ที่ต้องให้เจ้าของภาษาตรวจทาน (ig, tn, wo, yo และ 22 ภาษาที่เพิ่ม 2026-11: as, bn, gu, hi, kn, kok, ml, mr, ne, or, pa, si, ta, te, he, ar, fa, ur, ps, ko, hy, ka); 19 ภาษา RTL/อินดิกอยู่ใน `IMPERFECT_RENDERING` แสดงคำเตือน OK/Cancel ก่อนใช้ และ Automatic ไม่เลือกให้
+
+### ความปลอดภัย (port จาก WordCraft)
+- รอบ 3 ชุด 1–25 อยู่ใน 1.1.3 (ดู CHANGELOG `[1.1.3]` › ความปลอดภัย); ตรวจ `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่านหลังชุด 25
+- ยังเหลือ: `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก), ส่วนตาราง ODT ของ `560565cd`
+- ข้อค้นพบที่ยังไม่แก้: Doc4Me ไม่จำกัดความลึกตารางซ้อนจาก `insert.table`/วาง (WordCraft ใช้ 18 ชั้นเพื่อกัน stack overflow และให้ `.json` อ่านกลับได้)
+- วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
+
+### งานถัดไป
+1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred) — วิเคราะห์บน Windows เพราะ Linux ไม่มีฟอนต์ Windows หลายตัว
+2. เพดานความลึกตารางซ้อน และ port WordCraft ที่เหลือ
+3. ให้เจ้าของภาษาตรวจทาน 26 แค็ตตาล็อกฉบับร่าง AI; รองรับ shaping/RTL ใน UI
+
+## บันทึกก่อนออก 1.1.3 (ข้อมูลเก่า; ตัวเลขล่าสุดอยู่ด้านบน)
 
 ### ผลการสำรวจ port WordCraft และเกณฑ์ใหม่ (2026-11-09)
 

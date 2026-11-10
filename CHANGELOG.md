@@ -11,6 +11,8 @@
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-11-10
+
 ### ความปลอดภัย
 
 - **บันทึกข้อจำกัดที่ยังไม่แก้: ความลึกตารางซ้อนจากการแทรก/วาง** (`handoff.md` เท่านั้น ไม่เปลี่ยนโค้ด)
@@ -603,6 +605,10 @@
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
 ### เปลี่ยนแปลง
+- **ออกเวอร์ชัน 1.1.3 และปรับเอกสารให้ตรงกับโค้ดปัจจุบัน**: ตรวจ readiness ซ้ำบน Windows (run 42836913553 วัด `1352238`: 92.2% รวม / 94.1% ไม่นับ 22 แถว deferred ภาษา 95/95 หน้า 174/222 ตำแหน่งตัดหน้า 95/222 เท่ากับ run ก่อนหน้า) แล้วแก้ข้อความสถานะใน `ROADMAP.md`, `docs/roadmap.md`, `docs/target-app-parity.md`, `docs/localization-parity.md`, `docs/gaps.md`, `docs/file-format-parity.md`, `docs/layout-parity.md`, `docs/ui-parity.md`, `docs/readiness/README.md`, `docs/readiness/deferred-plan.md`, `README.md`, `README.en.md`, `ATTRIBUTION.md` และ `handoff.md` (ตัวเลข readiness, จำนวนภาษา 91 ตัวเลือก/90 แค็ตตาล็อก/3,034 คีย์, ตารางภาษาหลัก, รายการ "รุ่นถัดไป" เป็น "ตั้งแต่ 1.1.3", Release v1.1.3 เป็นรุ่นเดียวใน fork) โดยไม่แก้ประวัติในตาราง revision/progress log
+  - เวอร์ชันใน `Cargo.toml` เป็น 1.1.3 อยู่แล้ว จึงไม่ต้อง bump; Release สร้างจาก workflow `windows-x64-installer.yml` (`release: true`) ซึ่งสร้าง tag `v1.1.3` เอง
+  - ผลต่อผู้ใช้และความเข้ากันได้: ตัวติดตั้ง MSI ติดตั้งทับรุ่นก่อนได้ (UpgradeCode เดิม); ไฟล์ .docx เดิมและภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm); `cargo audit` ไม่พบช่องโหว่ (มีคำเตือน crate ที่เลิกดูแลหรือถูก yank 6 รายการตามที่อนุญาตไว้); `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65; `cargo xtask parity` ได้ 503/503 (`docs/parity-checklist.md` เพิ่มแถว Read Mode); `cargo xtask stats` ได้เทสต์ 2,471 รายการ โค้ด Rust 232,788 บรรทัด; `doc4me-cli commands --json` มี 729 คำสั่ง; readiness บน Windows (run 42836913553) ได้ 92.2% / 94.1%
 
 - **บันทึกขอบเขตการ port WordCraft และเกณฑ์ readiness (2026-11-09)** — เอกสารล้วน ไม่แก้โค้ด. การสำรวจ `storytold/wordcraft` พบว่า doc4me แยกจาก WordCraft ที่ `00ed5051`; หลังจุดนั้นถึง `1225f561` มี 1,596 commit (1,480 commit แตะ `crates`/`apps`/`xtask`). ชุด 56 commit ที่ค้างต้องการ dependency ที่ไม่อยู่ใน doc4me เช่น reference-style links ของ Markdown (`62533d21`, #3238) ซึ่ง `79e3610c` เรียกใช้. การ port ตามลำดับ dependency จึงหมายถึงการ replay ทั้งช่วง ไม่ใช่แค่ 56 commit. เจ้าของยืนยันเกณฑ์ใหม่: ใช้ readiness โดยไม่นับ 22 แถว deferred เป็นเกณฑ์ปฏิบัติ แทน 100% รวม โดยยังรายงานตัวเลขรวมและไม่นับ deferred แยกกันเหมือนเดิม. ตรวจ: ไม่มีการรันเทสต์ใหม่ (ไม่มีโค้ดเปลี่ยน). ไฟล์ที่เกี่ยวข้อง: `handoff.md`.
 
@@ -1879,7 +1885,8 @@ Doc4Me รุ่นแรก พัฒนาต่อจาก WordCraft 0.6.0 �
   - ตัวตรวจตัวสะกดภาษาไทย
   - เลขลำดับแบบคำอ่านไทย (`thaiCounting`)
 
-[Unreleased]: https://github.com/chatraweechai/doc4me/compare/v1.1.2...HEAD
+[Unreleased]: https://github.com/chatraweechai/doc4me/compare/v1.1.3...HEAD
+[1.1.3]: https://github.com/chatraweechai/doc4me/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/chatraweechai/doc4me/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/chatraweechai/doc4me/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/chatraweechai/doc4me/releases/tag/v1.1.0

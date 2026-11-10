@@ -25,10 +25,10 @@ web build are in [`packaging/`](packaging/).
   PDF and page images (PNG, JPG/JPEG).
 - A Word-style ribbon, styles, lists, tables, equations, SmartArt, charts, comments and tracked
   changes, references and citations (with Zotero), mail merge and Reading Mode.
-- Interface in English, Thai, Russian, Hungarian, Turkish, Italian and other languages. Thai comes
+- Interface in 91 languages, English, Thai, Russian, Hungarian, Turkish and Italian among them (some are AI-drafted and await native-speaker review; right-to-left and Indic languages warn before use, as the interface doesn't shape them correctly yet). Thai comes
   with dictionary word breaks, a Thai spelling checker, Thai list numbers and line spacing measured
   as Word for Windows measures it; see the [Thai page](README.th.md).
-- Coming in the next release: Dictate recognises speech, Thai included, on the computer
+- Since 1.1.3: Dictate recognises speech, Thai included, on the computer
   (whisper.cpp; the free speech model is downloaded once); Translate (MyMemory or your own
   LibreTranslate server), Online Pictures (Creative Commons pictures from Openverse, credited),
   Ink Equation and Get Add-ins.

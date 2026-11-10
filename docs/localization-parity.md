@@ -1,26 +1,25 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42334133340 reports 72/95 culture rows with catalog key coverage; this does not measure translation accuracy; candidate drafts outside the registered catalogs remain unreviewed; Hindi, Arabic and Korean lack reviewed registered catalogs among the twelve key languages; bundled Noto fallbacks cover their glyph scripts but RTL/bidi layout remains unsupported) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-10 · **Last updated:** 2026-11-10 · **Change:** minor (Windows run 42836913553 on `1352238`, report commit `8fc9173`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
-Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered.
+Every culture row of the readiness catalog now has a registered interface catalog: 22 catalogs
+were added in November 2026 as AI-generated drafts (among them Hindi, Arabic, Korean, Persian, Urdu,
+Pashto, Hebrew and the Indic languages), and the official Windows run 42836913553 reports 95/95.
+They still need native-speaker review.
 
 Interface languages, script support and proofing per language. How translation works (catalog
 format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
-**Dimension: ~27% (estimated), 75–120 h to full for the twelve key languages**, plus work for the
-other languages Word ships and native-speaker review (human). This estimate is separate from the
-readiness check: Windows run 42334133340 on source `1868cb4` (report commit `ed787f9`) records
-72/95 culture rows passing the catalog key-row coverage rule. The check does not distinguish
-translated values from English-identical values and does not assess meaning or native-speaker
-quality. Bundled OFL Noto fallbacks now cover the missing scripts (including a Hangul subset);
-candidate drafts in `docs/l10n-candidates/` are not registered and do not contribute to this result.
-Validation found that the six untracked candidates (ar, bn, fa, he, ps, ur) each have 3,031
-keys and no blank values, but they are unsafe to register: bn mistranslates examples such as “Save”
-and “Bold”; RTL drafts damage shortcut/file-extension tokens or insert Tab into translations of
-“Table”. Arabic and Hebrew also lack the RTL UI support needed for an interface-readiness claim. These
-drafts remain outside the source registry and do not affect the 72/95 score.
-epaint's lack of bidi and RTL layout
-still prevents claiming Arabic or Hebrew interface readiness.
+**Dimension: ~45% (estimated), 60–100 h to full for the twelve key languages**, mostly
+native-speaker review (human) and right-to-left/shaped interface rendering. This estimate is
+separate from the readiness check: Windows run 42836913553 on source `1352238` (report commit
+`8fc9173`) records 95/95 culture rows passing the catalog key-row coverage rule. The check does not
+distinguish translated values from English-identical values and does not assess meaning or
+native-speaker quality. Bundled OFL Noto fallbacks cover every registered script (including a Hangul
+subset). The 19 right-to-left and Indic languages (ar, as, bn, fa, gu, he, hi, kn, kok, ml, mr, ne,
+or, pa, ps, si, ta, te, ur) are listed in `IMPERFECT_RENDERING`: epaint doesn't yet shape joined
+scripts or lay out right-to-left text, so choosing one shows a warning with OK/Cancel and Automatic
+never picks one. That still prevents claiming interface readiness for them.
 
 ## What Word ships (measured by listing the bundle)
 
@@ -32,14 +31,14 @@ still prevents claiming Arabic or Hebrew interface readiness.
 
 ## What Doc4Me ships (measured)
 
-- **69 interface choices** are registered in `crates/ui-egui/src/i18n/mod.rs`: English source plus
-  68 TSV catalogs. One TSV is the English UK catalog (`en-gb`); the other 67 are non-English
-  language catalogs, including Spanish, French, Indonesian, Vietnamese, European Portuguese,
-  Norwegian Bokmål and Nynorsk. Four registered drafts (Igbo, Setswana, Wolof and Yoruba) are
-  AI-generated and require native-speaker review; key presence counts them without measuring their
-  quality. The 95-row readiness catalog maps cultures to these files: Windows run 42334133340
-  reports 72/95 passing rows. Drafts outside the registry do not affect the score. `LANGUAGES` is authoritative for
-  choices and locale matching; `languages.tsv` is the separate readiness denominator.
+- **91 interface choices** are registered in `crates/ui-egui/src/i18n/mod.rs`: English source plus
+  90 TSV catalogs. One TSV is the English UK catalog (`en-gb`); the other 89 are non-English
+  language catalogs, each with the 3,034 interface keys. 26 registered catalogs are AI-generated
+  drafts that require native-speaker review (Igbo, Setswana, Wolof, Yoruba and the 22 added in
+  November 2026); key presence counts them without measuring their quality. The 95-row readiness
+  catalog maps cultures to these files: Windows run 42836913553 reports 95/95 passing rows.
+  `LANGUAGES` is authoritative for choices and locale matching; `languages.tsv` is the separate
+  readiness denominator.
 - `cargo xtask readiness` parses unique catalog keys and compares key sets, not non-English
   values. These key counts cannot be described as the share of strings
   translated. Some values remain English, and the readiness result is not a translation-quality
@@ -63,29 +62,29 @@ estimates, excluding the shared items below.
 
 | Language | Code | Parsed unique keys / values exactly equal to English source | Dialogs / tooltips / help | Script support | Native review | Status | Hours to full |
 |---|---|---|---|---|---|---|---|
-| English | en | English source (3,031 keys) | ✅ | Latin ✅ | yes | **full** | 0 |
-| Simplified Chinese (Mandarin) | zh-hans | 3,031 keys; 76 values exactly equal English source | most; newer panes English | CJK ✅, IME ✅; Windows UI font fixed (#248); interface font chain covers every catalog character, installed CJK font after the embedded ones when it doesn't, PingFang found on macOS 12 (#486); font list by Chinese names (宋体, 微软雅黑, #505); no vertical text | no | partial | 3–5 |
-| Spanish | es | 3,031 keys; 105 values exactly equal English source | most | Latin ✅ | no | partial | 1–2 |
-| Hindi | hi | no catalog | ❌ | Devanagari shaping via HarfRust, untested; no hyphenation | no | none | 4–6 |
-| Arabic | ar | no catalog | ❌ | shaping, joining, lam-alef, bidi ✅ (#207); no kashida; **no mirrored UI** | no | none | 6–8 |
-| French | fr | 3,031 keys; 158 values exactly equal English source | most; newer dialogs partly English | Latin ✅ | no | partial | 1–2 |
-| Portuguese | pt-br / pt-pt | 3,031 keys each; 113 / 110 values exactly equal English source | most | Latin ✅ | no | partial | 2–4 (terminology and review) |
-| Indonesian | id | 3,031 keys; 149 values exactly equal English source | ❌ | Latin ✅ | no | partial | 3–4 (terminology and review) |
-| Japanese | ja | 3,031 keys; 77 values exactly equal English source | most | CJK ✅, IME ✅; no vertical text, ruby or document grid | no | partial | 3–5 |
-| German | de | 3,031 keys; 148 values exactly equal English source | most | Latin ✅ | no | partial | 1–2 |
-| Korean | ko | no catalog | ❌ | Hangul ✅; macOS Korean IME fixes pending (#163, #164) | no | none | 3–5 |
-| Vietnamese | vi | 3,031 keys; 101 values exactly equal English source | ❌ | Latin with stacked diacritics, untested | no | partial | 3–4 (script/UI verification and review) |
+| English | en | English source (3,034 keys) | ✅ | Latin ✅ | yes | **full** | 0 |
+| Simplified Chinese (Mandarin) | zh-hans | 3,034 keys; 76 values exactly equal English source | most; newer panes English | CJK ✅, IME ✅; Windows UI font fixed (#248); interface font chain covers every catalog character, installed CJK font after the embedded ones when it doesn't, PingFang found on macOS 12 (#486); font list by Chinese names (宋体, 微软雅黑, #505); no vertical text | no | partial | 3–5 |
+| Spanish | es | 3,034 keys; 106 values exactly equal English source | most | Latin ✅ | no | partial | 1–2 |
+| Hindi | hi | 3,034 keys; 45 values exactly equal English source (AI draft) | most | Devanagari shaping in documents via HarfRust, untested; interface text unshaped (warns before use); no hyphenation | no | partial | 3–5 |
+| Arabic | ar | 3,034 keys; 34 values exactly equal English source (AI draft) | most | documents: shaping, joining, lam-alef, bidi ✅ (#207); no kashida; interface text unshaped and **no mirrored UI** (warns before use) | no | partial | 5–7 |
+| French | fr | 3,034 keys; 158 values exactly equal English source | most; newer dialogs partly English | Latin ✅ | no | partial | 1–2 |
+| Portuguese | pt-br / pt-pt | 3,034 keys each; 113 / 110 values exactly equal English source | most | Latin ✅ | no | partial | 2–4 (terminology and review) |
+| Indonesian | id | 3,034 keys; 150 values exactly equal English source | ❌ | Latin ✅ | no | partial | 3–4 (terminology and review) |
+| Japanese | ja | 3,034 keys; 77 values exactly equal English source | most | CJK ✅, IME ✅; no vertical text, ruby or document grid | no | partial | 3–5 |
+| German | de | 3,034 keys; 149 values exactly equal English source | most | Latin ✅ | no | partial | 1–2 |
+| Korean | ko | 3,034 keys; 37 values exactly equal English source (AI draft) | most | Hangul ✅; macOS Korean IME fixes pending (#163, #164) | no | partial | 2–3 |
+| Vietnamese | vi | 3,034 keys; 102 values exactly equal English source | ❌ | Latin with stacked diacritics, untested | no | partial | 3–4 (script/UI verification and review) |
 
-Outside those key-language rows, the registry has **59 catalog files**; this includes the English UK catalog. The eight non-English key-language rows that have catalogs use nine files because Portuguese has both `pt-br` and `pt-pt`. Registry membership and catalog key coverage do not guarantee translation quality; details should be checked against the source catalogs and human review.
+Outside those key-language rows, the registry has **78 catalog files**; this includes the English UK catalog. The eleven non-English key-language rows use twelve files because Portuguese has both `pt-br` and `pt-pt`. Registry membership and catalog key coverage do not guarantee translation quality; details should be checked against the source catalogs and human review.
 Estonian uses the existing fonts, follows `et-EE` system locales, and is available in Options or
-through `ui.language` with `{"value":"et"}`. The readiness parser sees 3,031 unique keys; translation accuracy
+through `ui.language` with `{"value":"et"}`. The readiness parser sees 3,034 unique keys; translation accuracy
 is not measured by readiness.
 Estonian spelling, grammar, dates and document templates are not added by the interface catalog.
-Turkish works the same way (`tr-TR` and `tr-CY` system locales, `{"value":"tr"}`) with 3,031
+Turkish works the same way (`tr-TR` and `tr-CY` system locales, `{"value":"tr"}`) with 3,034
 unique parsed keys, the same key set as the Russian catalog. Command search folds the Turkish dotted and dotless I (`italik` finds İtalik, `YAZI TİPİ`
 finds Yazı Tipi) while English labels and ASCII command ids keep their usual matching. Turkish
 proofing is not included; terminology and checks: [`localization-tr.md`](localization-tr.md).
-Hungarian follows `hu-HU` system locales and `{"value":"hu"}`, with 3,031 unique parsed keys matching
+Hungarian follows `hu-HU` system locales and `{"value":"hu"}`, with 3,034 unique parsed keys matching
 the Russian catalog, including built-in style and citation style names. Hungarian proofing is not
 included; translation accuracy is not measured by readiness. Terminology and conventions:
 [`localization-hu.md`](localization-hu.md).
@@ -93,7 +92,7 @@ included; translation accuracy is not measured by readiness. Terminology and con
 Polish and Thai are the only ones besides English with proofing tools (Thai: spelling only), and a
 Polish interface writes new documents in Polish (`pl-PL`).
 
-**Thai (`th`)**: an interface catalog (`th.tsv`, 3,031 unique keys as parsed by readiness across ribbon, dialogs, messages, built-in style names and equation gallery), chosen by `th`, `th-TH` and `th_TH.UTF-8` system locales or in File › Options; written from a 903-term glossary and a style guide (commands are verbs, labels nouns, Royal Society loanword spelling, ฟอนต์ for Font, one space between Thai and Latin or digits, Arabic digits in fields). New documents keep US English as their editing language, since Thai text is proofed whatever its language. Not yet reviewed by a native-speaking professional translator. Home › Font has Convert to Thai Digits and Convert to Arabic Digits (0–9 ↔ ๐–๙ in the selection; with Track Changes on, a revision). Thai documents: Sarabun (OFL, bundled) is the default
+**Thai (`th`)**: an interface catalog (`th.tsv`, 3,034 unique keys as parsed by readiness across ribbon, dialogs, messages, built-in style names and equation gallery), chosen by `th`, `th-TH` and `th_TH.UTF-8` system locales or in File › Options; written from a 903-term glossary and a style guide (commands are verbs, labels nouns, Royal Society loanword spelling, ฟอนต์ for Font, one space between Thai and Latin or digits, Arabic digits in fields). New documents keep US English as their editing language, since Thai text is proofed whatever its language. Not yet reviewed by a native-speaking professional translator. Home › Font has Convert to Thai Digits and Convert to Arabic Digits (0–9 ↔ ๐–๙ in the selection; with Track Changes on, a revision). Thai documents: Sarabun (OFL, bundled) is the default
 document and interface font, so Thai draws the same everywhere, shaped through HarfRust with its
 mark stacking (`layout::tests_complex::thai_is_drawn_with_the_bundled_sarabun_by_default`). Thai,
 Lao and Khmer lines wrap between dictionary words (ICU4X, `doc::cluster::dictionary_breaks`), and
@@ -148,6 +147,7 @@ allows); all other text is written from the meaning of the English. No Italian p
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Corrected 13 file-filter translations and validated literal glob patterns; language coverage remains72/95. |
 | 2026-11-07 | minor | Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered. |

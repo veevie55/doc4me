@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (Windows run 42334133340 confirms all 222 documents preserve measured structure through round-trip; pagination is 174/222 page counts and 96/222 page boundaries, unchanged from the previous official report) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-10 · **Last updated:** 2026-11-10 · **Change:** minor (Windows run 42836913553 on `1352238`, report commit `8fc9173`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -9,10 +9,10 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (latest official Windows run 42334133340 on source
-`1868cb4`, report commit `ed787f9`): all 222 documents open and remain stable and preserve measured
+with Word on real-world files. What is checked (latest official Windows run 42836913553 on source
+`1352238`, report commit `8fc9173`): all 222 documents open and remain stable and preserve measured
 structure through save and reopen, 174 match Word's page count, and the separate page-boundary check
-passes 96/222. These totals are unchanged from the previous official report; the aggregate
+passes 95/222 (96/222 in the previous official report); the aggregate
 measures page counts and endpoints rather than pixel-perfect formatting. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
@@ -170,6 +170,7 @@ raise readiness estimates. No Word-derived files are fixtures.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600: DOCX open, round-trip and stability remain 222/222; page counts are 174/222 and boundaries 96/222, each one below the preceding report. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189: DOCX open, round-trip and stability were 222/222; page counts were 175/222 and page boundaries 97/222. DOCX `w:altName` font fallback passed all six CI steps before the next corpus run. |
