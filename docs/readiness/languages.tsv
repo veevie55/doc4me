@@ -1,7 +1,7 @@
 id	language	culture	catalog
 lang-001	Afrikaans	af-ZA	af
 lang-002	Albanian	sq-AL	sq
-lang-003	Arabic	ar-SA	-
+lang-003	Arabic	ar-SA	ar
 lang-004	Armenian	hy-AM	hy
 lang-005	Assamese	as-IN	as
 lang-006	Azerbaijani (Latin)	az-Latn-AZ	az
@@ -61,8 +61,8 @@ lang-059	Nepali	ne-NP	ne
 lang-060	Norwegian Bokmål	nb-NO	nb
 lang-061	Norwegian Nynorsk	nn-NO	nn
 lang-062	Odia	or-IN	or
-lang-063	Pashto	ps-AF	-
-lang-064	Persian	fa-IR	-
+lang-063	Pashto	ps-AF	ps
+lang-064	Persian	fa-IR	fa
 lang-065	Polish	pl-PL	pl
 lang-066	Portuguese (Portugal)	pt-PT	pt-pt
 lang-067	Portuguese (Brazil)	pt-BR	pt-br
@@ -88,7 +88,7 @@ lang-086	Telugu	te-IN	te
 lang-087	Thai	th-TH	th
 lang-088	Turkish	tr-TR	tr
 lang-089	Ukrainian	uk-UA	uk
-lang-090	Urdu	ur-PK	-
+lang-090	Urdu	ur-PK	ur
 lang-091	Uzbek (Latin)	uz-Latn-UZ	uz
 lang-092	Vietnamese	vi-VN	vi
 lang-093	Welsh	cy-GB	cy

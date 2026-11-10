@@ -1,0 +1,3046 @@
+# Persian (fa) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	"a" یا "an" پیش از واژهٔ بعدی؛ در لهستانی "w"/"we" و "z"/"ze".
+	% of all commits	% از همهٔ کامیت‌ها
+	(All)	(همه)
+	(Custom)	(سفارشی)
+	(no style)	(بدون سبک)
+	(no suggestions)	(پیشنهادی نیست)
+	(none)	(هیچ)
+	(normal text)	(متن عادی)
+	(not matched)	(مطابقت ندارد)
+	(picture or object)	(تصویر یا شیء)
+	*Bold* and _italic_ with real formatting	*پررنگ* و _مورب_ با قالب‌بندی واقعی
+	0 or More Characters	0 نویسه یا بیشتر
+	1. Formatting restrictions	1. محدودیت‌های قالب‌بندی
+	1. Main document	1. سند اصلی
+	1.5 Line Spacing	فاصلهٔ خطوط 1.5
+	1/4 Em Space	فاصلهٔ 1/4 Em
+	1×2 Empty Matrix	ماتریس خالی 1×2
+	1×3 Empty Matrix	ماتریس خالی 1×3
+	2. Data source	2. منبع داده
+	2. Editing restrictions	2. محدودیت‌های ویرایش
+	2×1 Empty Matrix	ماتریس خالی 2×1
+	2×2 Determinant	دترمینان 2×2
+	2×2 Empty Matrix	ماتریس خالی 2×2
+	2×2 Identity Matrix	ماتریس همانی 2×2
+	2×2 Identity Matrix (sparse)	ماتریس همانی 2×2 (خلوت)
+	2×2 Matrix in Brackets	ماتریس 2×2 در کروشه
+	2×2 Matrix in Double Bars	ماتریس 2×2 در خطوط دوتایی
+	2×2 Matrix in Parentheses	ماتریس 2×2 در پرانتز
+	2×3 Empty Matrix	ماتریس خالی 2×3
+	3-D	سه‌بعدی
+	3. Merge the data with the document	3. ادغام داده با سند
+	3. Start enforcement	3. شروع اعمال
+	3D Models	مدل‌های سه‌بعدی
+	3×1 Empty Matrix	ماتریس خالی 3×1
+	3×2 Empty Matrix	ماتریس خالی 3×2
+	3×3 Empty Matrix	ماتریس خالی 3×3
+	3×3 Identity Matrix	ماتریس همانی 3×3
+	3×3 Identity Matrix (sparse)	ماتریس همانی 3×3 (خلوت)
+	5,000 characters a day; give an email address for 50,000.	روزانه 5,000 نویسه؛ برای 50,000 یک نشانی ایمیل وارد کنید.
+	<< Less	<< کمتر
+	<< Remove	<< حذف
+	A file dialog is already open.	یک پنجرهٔ گفتگوی پرونده از قبل باز است.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	واژه‌پرداز رایگان و متن‌باز که از صفر با Rust نوشته شده است.\nبر پایهٔ WordCraft از تیم ArtCraft.
+	A header source holds the field names for a data source without a header row.	منبع سرصفحه نام فیلدهای منبع داده‌ای را که ردیف سرصفحه ندارد نگه می‌دارد.
+	A mail merge field	یک فیلد ادغام پستی
+	A new document lists the commands with their shortcuts.	یک سند جدید فرمان‌ها را با میان‌برهایشان فهرست می‌کند.
+	A numbered sequence (figures, tables…)	دنبالهٔ شماره‌دار (شکل‌ها، جدول‌ها…)
+	A password is required to open this document.	برای باز کردن این سند گذرواژه لازم است.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	فاصله پیش از نشانهٔ نگارشی، نشانه‌های تکراری، ویرگول لهستانی پیش از حروف ربط.
+	A table of contents	فهرست مطالب
+	A table's rows keep the same columns here.	ردیف‌های جدول در اینجا همان ستون‌ها را نگه می‌دارند.
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	ابپت AaBb
+	AaBbYyZz	ابوی AaZz
+	About	درباره
+	About Doc4Me	دربارهٔ Doc4Me
+	Above Chart	بالای نمودار
+	Above the item	بالای مورد
+	Absolute position	موقعیت مطلق
+	Absolute value cases	حالت‌های قدر مطلق
+	Accent	تأکیدی
+	Accent Gradient	گرادیان تأکیدی
+	Accent with Reflection	تأکیدی با بازتاب
+	Accent {n}	تأکیدی {n}
+	Accents	علامت‌های آوایی
+	Accept	پذیرفتن
+	Accept All	پذیرفتن همه
+	Accept All Changes	پذیرفتن همهٔ تغییرات
+	Accept or Reject Changes	پذیرفتن یا رد تغییرات
+	Accept This Change	پذیرفتن این تغییر
+	Accessed on	تاریخ دسترسی
+	Accessibility	دسترس‌پذیری
+	Accessibility Pane	پنل دسترس‌پذیری
+	Acute	اکیوت
+	Add	افزودن
+	Add >>	افزودن >>
+	Add a comment	افزودن نظر
+	Add a Table	افزودن جدول
+	Add at least one field.	دست‌کم یک فیلد اضافه کنید.
+	Add caption when inserting:	افزودن عنوان هنگام درج:
+	Add Chart Element	افزودن عنصر نمودار
+	Add Field	افزودن فیلد
+	Add Field Name	افزودن نام فیلد
+	Add Font…	افزودن قلم…
+	Add line numbering	افزودن شماره‌گذاری خطوط
+	Add New Placeholder	افزودن جای‌نگهدار جدید
+	Add New Placeholder…	افزودن جای‌نگهدار جدید…
+	Add New Source…	افزودن منبع جدید…
+	Add Object to Selection	افزودن شیء به انتخاب
+	Add Pen	افزودن قلم‌نویس
+	Add Row	افزودن ردیف
+	Add Series	افزودن سری
+	Add Shape	افزودن شکل
+	Add Space Before Paragraph	افزودن فاصله پیش از بند
+	Add space between Asian and Latin text	افزودن فاصله بین متن آسیایی و لاتین
+	Add space between Asian text and numbers	افزودن فاصله بین متن آسیایی و اعداد
+	Add tab stop at:	افزودن ایست جدول‌بندی در:
+	Add Text	افزودن متن
+	Add the chapter number	افزودن شمارهٔ فصل
+	Add to Dictionary	افزودن به واژه‌نامه
+	Add to Document	افزودن به سند
+	Add to Quick Access Toolbar	افزودن به نوار ابزار دسترسی سریع
+	Add to Style Gallery	افزودن به گالری سبک‌ها
+	Add-ins	افزونه‌ها
+	Add/Edit\nBibliography	افزودن/ویرایش\nکتاب‌نامه
+	Add/Edit\nCitation	افزودن/ویرایش\nارجاع
+	Add\nNote	افزودن\nیادداشت
+	Add\nPen	افزودن\nقلم‌نویس
+	Add\nShape	افزودن\nشکل
+	Added	افزوده شد
+	Added Fonts	قلم‌های افزوده
+	Address	نشانی
+	Address Block	بلوک نشانی
+	Address labels	برچسب‌های نشانی
+	Address:	نشانی:
+	Address\nBlock	بلوک\nنشانی
+	Adjust	تنظیم
+	Advanced	پیشرفته
+	Advanced Find	جستجوی پیشرفته
+	Advanced Find…	جستجوی پیشرفته…
+	After:	پس از:
+	Agents	عامل‌ها
+	Align	ترازبندی
+	Align Bottom Center	تراز پایین وسط
+	Align Bottom Left	تراز پایین چپ
+	Align Bottom Right	تراز پایین راست
+	Align Center	تراز وسط
+	Align Center Left	تراز وسط چپ
+	Align Center Right	تراز وسط راست
+	Align Left	تراز چپ
+	Align Right	تراز راست
+	Align Text	ترازبندی متن
+	Align Top Center	تراز بالا وسط
+	Align Top Left	تراز بالا چپ
+	Align Top Right	تراز بالا راست
+	Aligned at:	ترازشده در:
+	Alignment	ترازبندی
+	Alignment:	ترازبندی:
+	All	همه
+	All - Linear	همه - خطی
+	All - Professional	همه - حرفه‌ای
+	All Borders	همهٔ حاشیه‌ها
+	All Caps	همه حروف بزرگ
+	All caps	همه با حروف بزرگ
+	All Commands	همهٔ فرمان‌ها
+	All files	همهٔ پرونده‌ها
+	All Levels	همهٔ سطوح
+	All Markup	همهٔ نشانه‌گذاری‌ها
+	All pages	همهٔ صفحه‌ها
+	All pages in the range	همهٔ صفحه‌های بازه
+	All records	همهٔ رکوردها
+	All symbol sets	همهٔ مجموعه‌های نماد
+	Allow Doc4Me to use online services	اجازه به Doc4Me برای استفاده از خدمات برخط
+	Allow hanging punctuation	اجازهٔ نشانه‌گذاری آویزان
+	Allow Latin text to wrap in the middle of a word	اجازهٔ شکستن متن لاتین در میانهٔ واژه
+	Allow line breaks	اجازهٔ شکست خط
+	Allow overlap	اجازهٔ هم‌پوشانی
+	Allow row to break across pages	اجازهٔ شکستن ردیف بین صفحه‌ها
+	Alphabetical	الفبایی
+	Alt Text	متن جایگزین
+	Alt text	متن جایگزین (alt)
+	Alt Text Pane	پنل متن جایگزین
+	Alt:	Alt:
+	Alt\nText	متن\nجایگزین
+	And	و
+	Angle Brackets	کروشه‌های زاویه‌دار
+	Angle Brackets with Separator	کروشه‌های زاویه‌دار با جداکننده
+	Angle Brackets with Two Separators	کروشه‌های زاویه‌دار با دو جداکننده
+	Animate the caret (it glides and fades)	متحرک‌سازی مکان‌نما (می‌لغزد و محو می‌شود)
+	Animation	پویانمایی
+	Animation effects:	جلوه‌های پویانمایی:
+	Annotation Reference	مرجع حاشیه‌نویسی
+	Annotation Subject	موضوع حاشیه‌نویسی
+	Annotation Text	متن حاشیه‌نویسی
+	Another file	پروندهٔ دیگر
+	Any Character	هر نویسه
+	Any Digit	هر رقم
+	Any Letter	هر حرف الفبا
+	Anyone can open this document. Encrypt it with a password to keep it private.	هر کسی می‌تواند این سند را باز کند. برای خصوصی نگه داشتن، آن را با گذرواژه رمزنگاری کنید.
+	Anyone who opens the document will need this password.	هر کس سند را باز کند به این گذرواژه نیاز دارد.
+	APA	APA
+	API key (if the server needs one)	کلید API (اگر سرور نیاز دارد)
+	Apply	اعمال
+	Apply as you type	اعمال هنگام تایپ
+	Apply Asian line-breaking rules (kinsoku)	اعمال قواعد شکست خط آسیایی (kinsoku)
+	Apply Character Style	اعمال سبک نویسه
+	Apply formatting to:	اعمال قالب‌بندی بر:
+	Apply special formats to	اعمال قالب‌های ویژه بر
+	Apply Style	اعمال سبک
+	Apply Styles	اعمال سبک‌ها
+	Apply to:	اعمال بر:
+	Arabic	عربی
+	Arch Down	کمان رو به پایین
+	Arch Up	کمان رو به بالا
+	Area	ناحیه‌ای
+	Around	پیرامون
+	Arrange	مرتب‌سازی
+	Arrange All	مرتب‌سازی همه
+	Arrange\nAll	مرتب‌سازی\nهمه
+	Arrow	پیکان
+	Arrows	پیکان‌ها
+	Artistic Effects	جلوه‌های هنری
+	As Recommended	طبق توصیه
+	As you type	هنگام تایپ
+	ASAP	هرچه زودتر
+	Ascending	صعودی
+	Asian text font:	قلم متن آسیایی:
+	Asian Typography	تایپوگرافی آسیایی
+	Assign	اختصاص
+	At least	دست‌کم
+	At least {n}	دست‌کم {n}
+	Atelier	کارگاه
+	Atmosphere	جو
+	Attach Template	پیوست الگو
+	Attach…	پیوست…
+	Author	نویسنده
+	Auto	خودکار
+	AutoCaption	عنوان خودکار
+	AutoCaption…	عنوان خودکار…
+	AutoComplete	تکمیل خودکار
+	AutoCorrect	تصحیح خودکار
+	AutoCorrect Options	گزینه‌های تصحیح خودکار
+	AutoFit	تناسب خودکار
+	AutoFit Contents	تناسب خودکار با محتوا
+	AutoFit Window	تناسب خودکار با پنجره
+	AutoFormat	قالب‌بندی خودکار
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	قالب‌بندی خودکار (Ctrl+Alt+K) بندهای انتخاب‌شده یا کل سند را قالب‌بندی می‌کند.
+	AutoFormat and Review Changes…	قالب‌بندی خودکار و بازبینی تغییرات…
+	AutoFormat As You Type	قالب‌بندی خودکار هنگام تایپ
+	AutoFormat changed {count} paragraphs	قالب‌بندی خودکار {count} بند را تغییر داد
+	AutoFormat Now	اکنون قالب‌بندی خودکار
+	Automatic	خودکار (زبان)
+	Automatic ({language})	خودکار ({language})
+	Automatic bulleted lists	فهرست‌های گلوله‌ای خودکار
+	Automatic follows your system's language. Menus and commands change; your documents don't.	حالت خودکار از زبان سیستم پیروی می‌کند. منوها و فرمان‌ها تغییر می‌کنند؛ سندهای شما نه.
+	Automatic numbered lists	فهرست‌های شماره‌دار خودکار
+	Automatic Table 1 (3 levels)	جدول خودکار 1 (3 سطح)
+	Automatic Table 2 (2 levels)	جدول خودکار 2 (2 سطح)
+	Automatically hyphenate document	خط‌تیره‌گذاری خودکار سند
+	Automatically Update Document Styles	به‌روزرسانی خودکار سبک‌های سند
+	Automatically update document styles	سبک‌های سند خودکار به‌روز شوند
+	AutoSave	ذخیرهٔ خودکار
+	AutoSave documents you have saved in Doc4Me	ذخیرهٔ خودکار سندهایی که در Doc4Me ذخیره کرده‌اید
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	ذخیرهٔ خودکار ناموفق بود: {error}. برای روشن کردن دوبارهٔ آن، سند را ذخیره کنید.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	ذخیرهٔ خودکار در مرورگر در دسترس نیست: نمی‌تواند در پرونده‌هایتان بنویسد. «ذخیره» یک نسخه بارگیری می‌کند.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	ذخیرهٔ خودکار فقط پرونده‌های .docx، .odt و .rtf را نگه می‌دارد؛ {name} نمی‌تواند همهٔ قالب‌بندی را نگه دارد. برای روشن کردن آن به‌صورت .docx ذخیره کنید.
+	AutoSave saves every change to the file (needs a saved document)	ذخیرهٔ خودکار هر تغییر را در پرونده ذخیره می‌کند (نیاز به سند ذخیره‌شده)
+	AutoSave writes your changes to the file a moment after you stop typing.	ذخیرهٔ خودکار لحظه‌ای پس از توقف تایپ، تغییرات را در پرونده می‌نویسد.
+	AutoText	متن خودکار
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	بازگشت
+	Backspace	Backspace
+	Balloons	بادکنک‌ها
+	Banded Columns	ستون‌های نواری
+	Banded Rows	ردیف‌های نواری
+	Bar	میله‌ای
+	Base text:	متن پایه:
+	Based on: {style}	بر پایهٔ: {style}
+	Baseline Dots	نقطه‌های خط پایه
+	Basic Cycle	چرخهٔ پایه
+	Basic List	فهرست پایه
+	Basic Math	ریاضی پایه
+	Basic Matrix	ماتریس پایه
+	Basic Process	فرایند پایه
+	Basic Pyramid	هرم پایه
+	Basic Radial	شعاعی پایه
+	Basic Venn	ون پایه
+	Bayes' rule	قاعدهٔ بیز
+	Before:	پیش از:
+	Beginning of Word	آغاز واژه
+	Behind Text	پشت متن
+	Below text	زیر متن
+	Below the item	زیر مورد
+	Between	بین
+	Bibliography	کتاب‌نامه
+	Binary assets added	دارایی‌های دودویی افزوده
+	Binary assets removed	دارایی‌های دودویی حذف‌شده
+	Binomial Coefficient	ضریب دوجمله‌ای
+	Binomial Coefficient (angle)	ضریب دوجمله‌ای (زاویه‌ای)
+	Binomial Coefficient with Angle Brackets	ضریب دوجمله‌ای با کروشهٔ زاویه‌دار
+	Binomial expansion of (x+a)ⁿ	بسط دوجمله‌ای (x+a)ⁿ
+	Blank	خالی
+	Blank (Three Columns)	خالی (سه ستون)
+	Blank document	سند خالی
+	Blank Page	صفحهٔ خالی
+	Block\nAuthors	مسدود کردن\nنویسندگان
+	Blue:	آبی:
+	Body Text	متن بدنه
+	Body text in a short paragraph to show spacing.	متن بدنه در یک بند کوتاه برای نشان دادن فاصله‌گذاری.
+	Bold	پررنگ
+	Book	کتاب
+	Book Title	عنوان کتاب
+	Book title	عنوانِ کتاب
+	Bookmark	نشانک
+	Bookmark name:	نام نشانک:
+	Border lines	خطوط حاشیه
+	Border Painter	نقاش حاشیه
+	Border\nPainter	نقاش\nحاشیه
+	Borders	حاشیه‌ها
+	Borders and Shading	حاشیه‌ها و سایه‌زنی
+	Borders and Shading…	حاشیه‌ها و سایه‌زنی…
+	Border…	حاشیه…
+	Both Sides	هر دو طرف
+	Both sides	دو طرف
+	Bottom	پایین
+	Bottom Border	حاشیهٔ پایین
+	Bottom Margin	حاشیهٔ پایینی صفحه
+	Bottom of Page	پایین صفحه
+	Bottom of the Window	پایین پنجره
+	Bottom:	پایین:
+	Box	کادر
+	Boxed Formula	فرمول در کادر
+	Boxed Formula (example)	فرمول در کادر (نمونه)
+	Boxed Formulas	فرمول‌های در کادر
+	Braces	آکولادها
+	Braces with Separator	آکولاد با جداکننده
+	Bracket	کروشه
+	Brackets	کروشه‌ها
+	Brackets with Separators	کروشه‌ها با جداکننده
+	Break Link	قطع پیوند
+	Breaks	شکست‌ها
+	Breve	بریو
+	Brightness, contrast and transparency change the picture from how it looks now.	روشنایی، کنتراست و شفافیت تصویر را نسبت به ظاهر کنونی‌اش تغییر می‌دهند.
+	Brightness:	روشنایی:
+	Bring Forward	آوردن به جلو
+	Browse in Doc4Me…	مرور در Doc4Me…
+	Browse…	مرور…
+	Build table of figures from:	ساخت فهرست شکل‌ها از:
+	Building Block Gallery Content Control	کنترل محتوای گالری بلوک‌های ساختمانی
+	Built from the style or table entry fields chosen in Options.	ساخته‌شده از سبک یا فیلدهای ورودی جدول انتخاب‌شده در گزینه‌ها.
+	Built-In	داخلی
+	Built-in Heading styles	سبک‌های عنوان داخلی
+	Built-in style	سبک داخلی
+	Built-in styles can't be deleted.	سبک‌های داخلی را نمی‌توان حذف کرد.
+	Bullet	گلوله
+	Bullet Library	کتابخانهٔ گلوله
+	Bullets	گلوله‌ها
+	By author	بر اساس نویسنده
+	By:	توسط:
+	Calendar	تقویم
+	Can't be deleted	قابل حذف نیست
+	Cancel	لغو
+	Canvas Member	عضو بوم
+	Capitalization	حروف بزرگ
+	Capitalize Each Word	بزرگ کردن حرف اول هر واژه
+	Capitalize first letter of sentences	بزرگ کردن حرف اول جمله‌ها
+	Capitalize first letter of table cells	بزرگ کردن حرف اول خانه‌های جدول
+	Capitalize names of days	بزرگ کردن نام روزها
+	Capitalize the first word of a sentence	بزرگ کردن نخستین واژهٔ جمله
+	Caption	عنوان (زیرنویس)
+	Caption label:	برچسب عنوان:
+	Caption Numbering	شماره‌گذاری عنوان‌ها
+	Caption text	متن عنوان
+	Caption:	عنوان:
+	Captions	عنوان‌ها
+	Caret Character	نویسهٔ ^
+	Case changes	تغییرات حالت حروف
+	Cases	حالت‌ها
+	Cases (Three Conditions)	حالت‌ها (سه شرط)
+	Cases (Two Conditions)	حالت‌ها (دو شرط)
+	Cases and Stacks	حالت‌ها و پشته‌ها
+	Catalog	کاتالوگ
+	Categories	دسته‌ها
+	Categories:	دسته‌ها:
+	Category	دسته
+	Category {n}	دستهٔ {n}
+	Category:	دسته:
+	Category…	دسته…
+	Ceiling	سقف
+	Cell	خانه
+	Cell Margins	حاشیه‌های خانه
+	Cell margins	حاشیه‌های داخلی خانه
+	Cell Options	گزینه‌های خانه
+	Cell Size	اندازهٔ خانه
+	Cell\nMargins	حاشیه‌های\nخانه
+	Center	وسط
+	Centered	وسط‌چین
+	Centered as Group	وسط‌چین گروهی
+	Centimeters	سانتی‌متر
+	Change	تغییر
+	Change Case	تغییر حالت حروف
+	Change Chart Type	تغییر نوع نمودار
+	Change Colors	تغییر رنگ‌ها
+	Change in y over change in x	تغییر y بر تغییر x
+	Change Layout	تغییر چیدمان
+	Change List Level	تغییر سطح فهرست
+	Change Password…	تغییر گذرواژه…
+	Change Picture	تغییر تصویر
+	Change Picture…	تغییر تصویر…
+	Change Shape	تغییر شکل
+	Change Structure	تغییر ساختار
+	Change to Display	تغییر به نمایشی
+	Change to Inline	تغییر به درون‌خطی
+	Change to Level 1	تغییر به سطح 1
+	Change to Level 2	تغییر به سطح 2
+	Change to Level 3	تغییر به سطح 3
+	Change to Level 4	تغییر به سطح 4
+	Change to Level 5	تغییر به سطح 5
+	Change to Level 6	تغییر به سطح 6
+	Change to Level 7	تغییر به سطح 7
+	Change to Level 8	تغییر به سطح 8
+	Change to Level 9	تغییر به سطح 9
+	Change\nChart Type	تغییر\nنوع نمودار
+	Change\nColors	تغییر\nرنگ‌ها
+	Changed	تغییر کرد
+	Changed lines:	خطوط تغییریافته:
+	Changes	تغییرات
+	Changes with highlighting	تغییرات با برجسته‌سازی
+	Changes without highlighting	تغییرات بدون برجسته‌سازی
+	Chapter in a book	فصلی از کتاب
+	Chapters begin at:	فصل‌ها با این آغاز می‌شوند:
+	Character	نویسه
+	Character Border	حاشیهٔ نویسه
+	Character code:	کد نویسه:
+	Character in Range	نویسه در بازه
+	Character level	سطح نویسه
+	Character Position	موقعیت نویسه
+	Character Scale	مقیاس نویسه
+	Character Shading	سایه‌زنی نویسه
+	Character Spacing	فاصلهٔ نویسه‌ها
+	Character spacing	فاصلهٔ بین نویسه‌ها
+	Character style	سبک نویسه
+	Characters	نویسه‌ها
+	Characters (no spaces)	نویسه‌ها (بدون فاصله)
+	Characters (with spaces)	نویسه‌ها (با فاصله)
+	Characters per line:	نویسه در هر خط:
+	Chart	نمودار
+	Chart Design	طراحی نمودار
+	Chart Layouts	چیدمان‌های نمودار
+	Chart Title	عنوان نمودار
+	Check	بررسی
+	Check Accessibility	بررسی دسترس‌پذیری
+	Check Box Content Control	کنترل محتوای کادر انتخاب
+	Check Compatibility	بررسی سازگاری
+	Check Errors…	بررسی خطاها…
+	Check for Errors	جستجوی خطاها
+	Check Spelling as You Type	بررسی املا هنگام تایپ
+	Check spelling as you type	بررسی املایی هنگام تایپ
+	Check\nAccessibility	بررسی\nدسترس‌پذیری
+	Checked styles are allowed:	سبک‌های علامت‌خورده مجازند:
+	Checked symbol	نماد علامت‌خورده
+	Chevron Down	شورون رو به پایین
+	Chevron Up	شورون رو به بالا
+	Chicago	Chicago
+	Chinese (Simplified)	چینی (ساده‌شده)
+	Chinese (Traditional)	چینی (سنتی)
+	Choose a command	یک فرمان انتخاب کنید
+	Choose a shortcut	یک میان‌بر انتخاب کنید
+	Choose List Item	انتخاب مورد فهرست
+	Choose the sheet that holds the recipients.	برگه‌ای را که گیرندگان در آن هستند انتخاب کنید.
+	Circle	دایره
+	Circle area from its radius	مساحت دایره از شعاع
+	Circled Dot	نقطه در دایره
+	Circled Plus	بعلاوه در دایره
+	Circled Times	ضرب در دایره
+	Citation marked.	ارجاع علامت‌گذاری شد.
+	Citation Style	سبک ارجاع
+	Citations	ارجاع‌ها
+	Citations & Bibliography	ارجاع‌ها و کتاب‌نامه
+	City	شهر
+	Clear	پاک کردن
+	Clear All	پاک کردن همه
+	Clear All Formatting	پاک کردن همهٔ قالب‌بندی
+	Clear Character Formatting	پاک کردن قالب نویسه
+	Clear Character Style	پاک کردن سبک نویسه
+	Clear Formatting Level	پاک کردن سطح قالب‌بندی
+	Clear Paragraph Formatting	پاک کردن قالب بند
+	Click a border between two cells to merge them. Esc stops.	برای ادغام دو خانه روی حاشیهٔ بین آن‌ها کلیک کنید. Esc متوقف می‌کند.
+	Click an item to paste it.	برای چسباندن روی یک مورد کلیک کنید.
+	Click level to modify:	برای ویرایش روی سطح کلیک کنید:
+	Click the empty text box the text should continue in (Esc cancels)	روی کادر متنی خالی که متن باید در آن ادامه یابد کلیک کنید (Esc لغو می‌کند)
+	Click to switch back to inserting	برای بازگشت به درج کلیک کنید
+	Clipboard	بریده‌دان
+	Clipboard Contents	محتوای بریده‌دان
+	Clipboard Items	موارد بریده‌دان
+	Clipboard Pane	پنل بریده‌دان
+	Close	بستن
+	Close Equation	بستن معادله
+	Close Header and Footer	بستن سرصفحه و پاصفحه
+	Close Outline View	بستن نمای طرح کلی
+	Close Outline\nView	بستن نمای\nطرح کلی
+	Close Reviewing Pane	بستن پنل بازبینی
+	Clustered Bar	میله‌ای خوشه‌ای
+	Clustered Column	ستونی خوشه‌ای
+	Col #:	ستون #:
+	Collapse	جمع کردن
+	Collapse Selection	جمع کردن انتخاب
+	Collapse the Ribbon	جمع کردن نوار
+	Collate copies	مرتب‌سازی نسخه‌ها
+	Collect entries from:	گردآوری ورودی‌ها از:
+	Colon Equal	دونقطه مساوی
+	Color	رنگ
+	Color model:	مدل رنگ:
+	Color only	فقط رنگ
+	Color:	رنگ:
+	Color: {color}	رنگ: {color}
+	Colorful	رنگارنگ
+	Colors	رنگ‌ها
+	Colors:	رنگ‌ها:
+	Column	ستون
+	Column Break	شکست ستون
+	Column Selection	انتخاب ستون
+	Column selection: the arrow keys extend the block, Esc ends it	انتخاب ستونی: کلیدهای جهت‌نما بلوک را گسترش می‌دهند، Esc پایان می‌دهد
+	Column width	پهنای ستون
+	Column:	ستون:
+	Columns	ستون‌ها
+	Columns:	ستون‌ها:
+	Combine	ترکیب
+	Combine Documents	ترکیب سندها
+	Combo Box Content Control	کنترل محتوای جعبهٔ ترکیبی
+	Commands	فرمان‌ها
+	Commands:	فرمان‌ها:
+	Comment	نظر
+	Comments	نظرها
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	نظرها کنار هر صفحه و تغییرات ردیابی‌شده در PDF، چاپ و تصویر؛ فهرست نظرها در پایان صفحه‌های وب، Markdown و متن.
+	Comments on version	نظرها دربارهٔ نسخه
+	Comments Pane	پنل نظرها
+	Commits	کامیت‌ها
+	Common Accent Objects	اشیای آوایی رایج
+	Common Brackets	کروشه‌های رایج
+	Common Fractions	کسرهای رایج
+	Common Functions	تابع‌های رایج
+	Common Large Operators	عملگرهای بزرگ رایج
+	Common Operator Structures	ساختارهای عملگر رایج
+	Common Operators	عملگرهای رایج
+	Common Radicals	رادیکال‌های رایج
+	Common Subscripts and Superscripts	زیرنویس‌ها و بالانویس‌های رایج
+	Communication	ارتباطات
+	Compact	فشرده
+	Company	شرکت
+	Compare	مقایسه
+	Compare Documents	مقایسهٔ سندها
+	Compare to	مقایسه با
+	Compared: {changes} changes	مقایسه شد: {changes} تغییر
+	Comparing with another file needs the desktop app.	مقایسه با پروندهٔ دیگر به برنامهٔ رومیزی نیاز دارد.
+	Comparison	مقایسه‌ای
+	Comparison settings	تنظیمات مقایسه
+	Compatibility mode: {version}	حالت سازگاری: {version}
+	Compatibility Options	گزینه‌های سازگاری
+	Compatibility Options…	گزینه‌های سازگاری…
+	Compress Pictures	فشرده‌سازی تصاویر
+	Compress punctuation at the start of a line	فشرده‌سازی نشانه‌های نگارشی در آغاز خط
+	Condensed	فشرده (فاصله)
+	Conference	همایش
+	Conference paper	مقالهٔ همایش
+	CONFIDENTIAL	محرمانه
+	Confirm password:	تأیید گذرواژه:
+	Connect Shapes	اتصال شکل‌ها
+	Constitutional Provisions	مفاد قانون اساسی
+	Container Title	عنوان ظرف
+	Contains	شامل است
+	Content Control at Selection	کنترل محتوا در انتخاب
+	Content Control Properties	ویژگی‌های کنترل محتوا
+	Contents can't be edited	محتوا قابل ویرایش نیست
+	Context	زمینه
+	Contextual	بافتاری
+	Continuous	پیوسته
+	Continuous numbering	شماره‌گذاری پیوسته
+	Contour Integral	انتگرال مسیری
+	Contour Integral with Limits	انتگرال مسیری با حدود
+	Contour Integral with Stacked Limits	انتگرال مسیری با حدود انباشته
+	Contour Integrals	انتگرال‌های مسیری
+	Contrast:	کنتراست:
+	Contributors	مشارکت‌کنندگان
+	Controls	کنترل‌ها
+	Conversions	تبدیل‌ها
+	Convert	تبدیل
+	Convert between built-up and linear form	تبدیل بین شکل ساخت‌یافته و خطی
+	Convert Notes	تبدیل یادداشت‌ها
+	Convert Permanently	تبدیل دائمی
+	Convert Text to Table	تبدیل متن به جدول
+	Convert Text to Table…	تبدیل متن به جدول…
+	Convert to Arabic Digits	تبدیل به ارقام عربی
+	Convert to Shapes	تبدیل به شکل‌ها
+	Convert to Text	تبدیل به متن
+	Convert to Thai Digits	تبدیل به ارقام تایلندی
+	Copies	نسخه‌ها
+	Coproduct	هم‌ضرب
+	Coproduct with Limits	هم‌ضرب با حدود
+	Coproduct with Lower Limit	هم‌ضرب با حد پایین
+	Coproduct with Subscript-Superscript Limits	هم‌ضرب با حدود زیرنویس-بالانویس
+	Copy	رونوشت
+	Copy Formatting	رونوشت قالب‌بندی
+	Copy of the text a bookmark marks	رونوشت متنی که نشانک مشخص می‌کند
+	Copy Styles	رونوشت سبک‌ها
+	Copy Text	رونوشت متن
+	Copy to where?	رونوشت به کجا؟
+	Copyright	حق نشر
+	Copyright Sign	نشان حق نشر
+	Corrections	تصحیح‌ها
+	Cosecant Function	تابع کسکانت
+	Cosine 2x	کسینوس 2x
+	Cosine Function	تابع کسینوس
+	Cotangent Function	تابع کتانژانت
+	Couldn't add {name}: {reason}	افزودن {name} ممکن نشد: {reason}
+	Couldn't download the picture: {reason}	بارگیری تصویر ممکن نشد: {reason}
+	Couldn't download {name}: {error}	بارگیری {name} ممکن نشد: {error}
+	Couldn't get the add-in list: {reason}	دریافت فهرست افزونه‌ها ممکن نشد: {reason}
+	Couldn't make Doc4Me the default: {error}	پیش‌فرض کردن Doc4Me ممکن نشد: {error}
+	Couldn't open {path}: {error}	باز کردن {path} ممکن نشد: {error}
+	Couldn't search: {reason}	جستجو ممکن نشد: {reason}
+	Couldn't translate: {reason}	ترجمه ممکن نشد: {reason}
+	Count by:	شمارش بر اساس:
+	Count words in text boxes and notes	شمارش واژه‌های کادرهای متن و یادداشت‌ها
+	Country	کشور
+	Courtesy Title	عنوان احترام
+	Cover Page	صفحهٔ جلد
+	Craft	هنر دستی
+	Create	ایجاد
+	Create a Style	ایجاد سبک
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	یک طرح کلی تعاملی از سندتان بسازید.\n\nراه خوبی است برای دانستن اینکه کجا هستید یا جابه‌جایی سریع محتوا.\n\nبرای شروع، به زبانهٔ «خانه» بروید و سبک‌های عنوان را روی عنوان‌های سند اعمال کنید.
+	Create Data Source…	ایجاد منبع داده…
+	Create Graphic	ایجاد گرافیک
+	Create Header Source	ایجاد منبع سرصفحه
+	Create Link	ایجاد پیوند
+	Create New Style	ایجاد سبک جدید
+	Create Source	ایجاد منبع
+	Create…	ایجاد…
+	Crop	برش
+	Cross-reference	ارجاع متقابل
+	Cross-reference:	ارجاع متقابل:
+	Cube Root	ریشهٔ سوم
+	Current	فعلی
+	Current - Linear	فعلی - خطی
+	Current - Professional	فعلی - حرفه‌ای
+	Current keyboard settings	تنظیمات صفحه‌کلید فعلی
+	Current page	صفحهٔ فعلی
+	Current Position	موقعیت فعلی
+	Current record	رکورد فعلی
+	Current style: {style}	سبک فعلی: {style}
+	Curved Arrow Connector	رابط پیکان منحنی
+	Curved Connector	رابط منحنی
+	Custom	سفارشی
+	Custom dictionary	واژه‌نامهٔ سفارشی
+	Custom Margins…	حاشیه‌های سفارشی…
+	Custom mark:	نشان سفارشی:
+	Custom range	بازهٔ سفارشی
+	Custom Table of Contents	فهرست مطالب سفارشی
+	Custom Table of Contents…	فهرست مطالب سفارشی…
+	Custom Watermark	واترمارک سفارشی
+	Custom Watermark…	واترمارک سفارشی…
+	Customize	سفارشی‌سازی
+	Customize Keyboard	سفارشی‌سازی صفحه‌کلید
+	Customize Quick Access Toolbar	سفارشی‌سازی نوار ابزار دسترسی سریع
+	Customize Quick Access Toolbar…	سفارشی‌سازی نوار ابزار دسترسی سریع…
+	Customize Ribbon	سفارشی‌سازی نوار
+	Customize the Ribbon…	سفارشی‌سازی نوار…
+	Customize…	سفارشی‌سازی…
+	Cut	برش (بریدن)
+	Cut, copy, and paste	برش، رونوشت و چسباندن
+	Cycle	چرخه
+	Czech	چکی
+	Danish	دانمارکی
+	Dark	تیره
+	Dark Mode	حالت تیره
+	Dark page (white text on black)	صفحهٔ تیره (متن سفید روی سیاه)
+	Dark with Shadow	تیره با سایه
+	Darkroom	تاریکخانه
+	Dashed	خط‌چین
+	Data	داده‌ها
+	Data Labels	برچسب‌های داده
+	Data source:	منبع داده:
+	Date	تاریخ
+	Date & Time	تاریخ و زمان
+	Date and Time	تاریخ و ساعت
+	Date format	قالب تاریخ
+	Date formats:	قالب‌های تاریخ:
+	Date Picker Content Control	کنترل محتوای انتخابگر تاریخ
+	Day	روز
+	Decimal	اعشاری
+	Decorative objects only add visual interest: screen readers skip them.	اشیای تزئینی فقط جلوهٔ بصری می‌افزایند: صفحه‌خوان‌ها از آن‌ها رد می‌شوند.
+	Decrease Font Size	کاهش اندازهٔ قلم
+	Decrease Indent	کاهش تورفتگی
+	Default	پیش‌فرض
+	Default Paragraph Font	قلم پیش‌فرض بند
+	Default tab stops:	ایست‌های جدول‌بندی پیش‌فرض:
+	Define New Bullet	تعریف گلولهٔ جدید
+	Define New Multilevel List	تعریف فهرست چندسطحی جدید
+	Define New Multilevel List…	تعریف فهرست چندسطحی جدید…
+	Define New Number Format	تعریف قالب عدد جدید
+	Deflate	بادخالی
+	Delete	حذف
+	Delete Back in Equation	حذف رو به عقب در معادله
+	Delete Cells	حذف خانه‌ها
+	Delete Clipboard Item	حذف مورد بریده‌دان
+	Delete Columns	حذف ستون‌ها
+	Delete Comment	حذف نظر
+	Delete in Equation	حذف در معادله
+	Delete Label	حذف برچسب
+	Delete Next Word	حذف واژهٔ بعدی
+	Delete Previous Word	حذف واژهٔ قبلی
+	Delete Rows	حذف ردیف‌ها
+	Delete Selected Ink	حذف جوهر انتخاب‌شده
+	Delete Style	حذف سبک
+	Delete Table	حذف جدول
+	Delete Table Style	حذف سبک جدول
+	Deleted	حذف‌شده
+	Deletions:	حذف‌ها:
+	Delivery address:	نشانی تحویل:
+	Delta Equal To	دلتا مساوی
+	Delta over arrow	دلتا روی پیکان
+	Demote	تنزل سطح
+	Demote to Body Text	تنزل به متن بدنه
+	Derivative as a limit	مشتق به‌صورت حد
+	Descending	نزولی
+	Describe what this object shows, for people who can't see it.	توضیح دهید این شیء چه نشان می‌دهد، برای کسانی که آن را نمی‌بینند.
+	Describe what this table shows, for people who can't see it.	توضیح دهید این جدول چه نشان می‌دهد، برای کسانی که آن را نمی‌بینند.
+	Description:	توضیح:
+	Design	طراحی
+	Design Mode	حالت طراحی
+	Detach Template	جدا کردن الگو
+	Detect language automatically	تشخیص خودکار زبان
+	Developer	توسعه‌دهنده
+	development build	نسخهٔ توسعه
+	Diagonal	مورب (قطری)
+	Diagonal Dots	نقطه‌های قطری
+	Diamond	لوزی
+	Dictate	دیکته
+	Dictation isn't available here.	دیکته در اینجا در دسترس نیست.
+	Dictation stopped.	دیکته متوقف شد.
+	Dictation stopped: {reason}	دیکته متوقف شد: {reason}
+	Different First Page	صفحهٔ اول متفاوت
+	Different Odd & Even Pages	صفحه‌های فرد و زوج متفاوت
+	Differential	دیفرانسیل
+	Differential theta	دیفرانسیل تتا
+	Differential x	دیفرانسیل x
+	Differential y	دیفرانسیل y
+	Differentials	دیفرانسیل‌ها
+	Direct formatting	قالب‌بندی مستقیم
+	Direction:	جهت:
+	Directory	فهرست راهنما
+	Display	نمایش
+	Display for Review	نمایش برای بازبینی
+	Display gridlines on screen	نمایش خطوط شبکه روی صفحه
+	Display name	نام نمایشی
+	Display text	متن نمایشی
+	Distance from surrounding text	فاصله از متن پیرامون
+	Distribute Columns	توزیع ستون‌ها
+	Distribute letters	توزیع حروف
+	Distribute Rows	توزیع ردیف‌ها
+	Distribute spacing	توزیع فاصله
+	Distributed	توزیع‌شده
+	Do Not Check Spelling or Grammar	املا یا دستور زبان بررسی نشود
+	Do not check spelling or grammar	بررسی املا و دستور انجام نشود
+	DO NOT COPY	رونوشت نکنید
+	Do Not Show in TOC	در فهرست مطالب نشان نده
+	Do you want to save changes to {name}?	آیا می‌خواهید تغییرات {name} را ذخیره کنید؟
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	افزونه‌های Doc4Me بسته‌های ماکروی رایگان از کاتالوگ افزونه‌های Doc4Me هستند. آن‌ها فقط می‌توانند سند را ویرایش کنند.
+	Doc4Me is now the default app for Word documents.	Doc4Me اکنون برنامهٔ پیش‌فرض برای سندهای Word است.
+	Document	سند
+	Document End	پایان سند
+	Document Formatting	قالب‌بندی سند
+	Document Grid	شبکهٔ سند
+	Document Information	اطلاعات سند
+	Document Property	ویژگی سند
+	Document Start	آغاز سند
+	Document template:	الگوی سند:
+	Document Text	متن سند
+	Document Title	عنوان سند
+	Document1	سند1
+	Document\nPreferences	ترجیحات\nسند
+	Documents	سندها
+	Documents you open will show up here.	سندهایی که باز می‌کنید اینجا نمایش داده می‌شوند.
+	Does not contain	شامل نیست
+	DOI	DOI
+	Don't add space between paragraphs of the same style	بین بندهای هم‌سبک فاصله نیفزا
+	Don't capitalize after:	پس از این‌ها حرف بزرگ نشود:
+	Don't hyphenate	بدون خط‌تیره
+	Don't print blank lines when data fields are empty	هنگام خالی بودن فیلدهای داده خطوط خالی چاپ نشود
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	ارجاع‌ها و کتاب‌نامه‌های Zotero، Mendeley یا EndNote خوانده نشوند
+	Don't Save	ذخیره نکن
+	Don't use HTML paragraph auto spacing	از فاصله‌گذاری خودکار بند HTML استفاده نشود
+	Dot	نقطه
+	Dot dash	نقطه خط
+	Dot-dash	نقطه-خط
+	Dots	نقطه‌ها
+	Dotted	نقطه‌چین
+	Double	دوتایی
+	Double Bar	میلهٔ دوتایی
+	Double Closing Quote	گیومهٔ دوتایی بسته
+	Double Dot	نقطهٔ دوتایی
+	Double Integral	انتگرال دوگانه
+	Double Integral with Limits	انتگرال دوگانه با حدود
+	Double Integral with Stacked Limits	انتگرال دوگانه با حدود انباشته
+	Double Left Arrow with Text Above	پیکان چپ دوتایی با متن بالا
+	Double Left Arrow with Text Below	پیکان چپ دوتایی با متن پایین
+	Double Left Right Arrow with Text Above	پیکان دوطرفهٔ دوتایی با متن بالا
+	Double Left Right Arrow with Text Below	پیکان دوطرفهٔ دوتایی با متن پایین
+	Double Opening Quote	گیومهٔ دوتایی باز
+	Double Right Arrow with Text Above	پیکان راست دوتایی با متن بالا
+	Double Right Arrow with Text Below	پیکان راست دوتایی با متن پایین
+	Double Spacing	فاصلهٔ دوتایی
+	Double Square Brackets	کروشهٔ دوتایی
+	Double Strikethrough	خط‌خوردگی دوتایی
+	Double strikethrough	خط‌خوردهٔ دوتایی
+	Double summation	جمع دوگانه
+	Double Underline	زیرخط دوتایی
+	Double Vertical Bars	میله‌های عمودی دوتایی
+	Doughnut	دونات
+	Down	پایین (جهت)
+	Downloading the speech model ({mb} MB, once)…	در حال بارگیری مدل گفتار ({mb} مگابایت، یک‌بار)…
+	Downloading…	در حال بارگیری…
+	DRAFT	پیش‌نویس
+	Draft	پیش‌نویس (نما)
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	برای رسم جدول یک مستطیل بکشید، یا برای تقسیم خانه‌ها خطی از روی آن‌ها بکشید. Esc متوقف می‌کند.
+	Draw	ترسیم
+	Draw Ink	ترسیم با جوهر
+	Draw Table	ترسیم جدول
+	Draw\nTable	ترسیم\nجدول
+	Drawing Canvas	بوم طراحی
+	Drawing Grid	شبکهٔ ترسیم
+	Drawing Tools	ابزارهای ترسیم
+	Drawing\nCanvas	بوم\nطراحی
+	Drop Cap	حرف بزرگ آغازین
+	Drop cap	حرف آغازین درشت
+	Drop-Down List Content Control	کنترل محتوای فهرست بازشو
+	Drops all formatting and pastes plain text.	همهٔ قالب‌بندی را حذف کرده و متن ساده می‌چسباند.
+	Dutch	هلندی
+	E-mail Messages	پیام‌های ایمیل
+	Edit Category	ویرایش دسته
+	Edit Comment	ویرایش نظر
+	Edit Data	ویرایش داده‌ها
+	Edit Document	ویرایش سند
+	Edit Equation	ویرایش معادله
+	Edit Field Code	ویرایش کد فیلد
+	Edit Field…	ویرایش فیلد…
+	Edit Footer	ویرایش پاصفحه
+	Edit Header	ویرایش سرصفحه
+	Edit Individual Documents…	ویرایش سندهای جداگانه…
+	Edit Items	ویرایش موارد
+	Edit Recipient List	ویرایش فهرست گیرندگان
+	Edit Source	ویرایش منبع
+	Edit\nData	ویرایش\nداده‌ها
+	Edit\nRecipient List	ویرایش\nفهرست گیرندگان
+	Edited	ویرایش شد
+	Editing	ویرایش
+	Editing header/footer	ویرایش سرصفحه/پاصفحه
+	Editing in this document is restricted.	ویرایش در این سند محدود است.
+	Editing — edit the document directly	ویرایش — ویرایش مستقیم سند
+	Edition	ویراست
+	Editor	ویراستار
+	Edit…	ویرایش…
+	Effects	جلوه‌ها
+	Elbow Arrow Connector	رابط پیکان آرنجی
+	Elbow Connector	رابط آرنجی
+	Ellipsis	سه‌نقطه
+	Em Dash	خط تیرهٔ بلند
+	Em Space	فاصلهٔ Em
+	Email address (optional)	نشانی ایمیل (اختیاری)
+	Emboss	برجسته
+	Emphasis	تأکید
+	Empty Matrices	ماتریس‌های خالی
+	En Dash	خط تیرهٔ کوتاه
+	En Space	فاصلهٔ En
+	Enclose Characters	محصور کردن نویسه‌ها
+	Enclosure	محصورسازی
+	Encrypt with Password	رمزگذاری با گذرواژه
+	Encrypt with Password…	رمزگذاری با گذرواژه…
+	End of document	انتهای سند
+	End of section	پایان بخش
+	End of Word	پایان واژه
+	Endnote Reference	مرجع یادداشت پایانی
+	Endnote Text	متن یادداشت پایانی
+	Endnotes	یادداشت‌های پایانی
+	Endnotes to footnotes	یادداشت‌های پایانی به پانویس
+	English	انگلیسی
+	English (United Kingdom)	انگلیسی (بریتانیا)
+	English (United States)	انگلیسی (ایالات متحده)
+	Engrave	حکاکی
+	Enlarge symbol	بزرگ‌کردن نماد
+	Enter formatting for number:	قالب‌بندی عدد را وارد کنید:
+	Enter in Equation	Enter در معادله
+	Enter page number:	شمارهٔ صفحه را وارد کنید:
+	Enter the web address or embed code of an online video:	نشانی وب یا کد جاسازی ویدیوی برخط را وارد کنید:
+	Entry marked.	ورودی علامت‌گذاری شد.
+	Entry:	ورودی:
+	Envelope #10   4.12" × 9.50"	پاکت #10   4.12" × 9.50"
+	Envelope Address	نشانی پاکت
+	Envelope DL   4.33" × 8.66"	پاکت DL   4.33" × 8.66"
+	Envelope Return	نشانی فرستنده روی پاکت
+	Envelope size:	اندازهٔ پاکت:
+	Envelopes	پاکت‌ها
+	Equal by Definition	مساوی طبق تعریف
+	Equal column width	پهنای ستون برابر
+	Equal Equal	مساوی مساوی
+	Equal to	مساوی
+	Equals:	مساوی:
+	Equation	معادله
+	Equation Gallery	گالری معادله
+	Equation Info	اطلاعات معادله
+	Equation Number	شمارهٔ معادله
+	Equation Options	گزینه‌های معادله
+	Erase Ink	پاک کردن جوهر
+	Eraser	پاک‌کن
+	Errors ({n})	خطاها ({n})
+	Estonian	استونیایی
+	Euler's identity	اتحاد اویلر
+	Even Page	صفحهٔ زوج
+	Even pages only	فقط صفحه‌های زوج
+	Every change is recorded as a tracked change.	هر تغییر به‌عنوان تغییر ردیابی‌شده ثبت می‌شود.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	هر فرمان برای اسکریپت‌ها و عامل‌های هوش مصنوعی در دسترس است: برای سرور MCP، `doc4me-cli mcp` را اجرا کنید، یا برای کانال کنترل JSON، برنامه را با `--control <port>` آغاز کنید.
+	Every field needs a name.	هر فیلد به یک نام نیاز دارد.
+	Every font this document uses is installed.	همهٔ قلم‌هایی که این سند استفاده می‌کند نصب شده‌اند.
+	Everyone	همه (افراد)
+	Exactly	دقیقاً
+	Exactly {n}	دقیقاً {n}
+	Example: {sample}	نمونه: {sample}
+	Exceptions (optional)	استثناها (اختیاری)
+	Exceptions…	استثناها…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	خروج
+	Expand	گسترش
+	Expand or Collapse Heading	گسترش یا جمع کردن عنوان
+	Expanded	گسترده
+	Exponential	نمایی
+	Exponential series	سری نمایی
+	Export	صادرات
+	Export a copy to share (PDF, Word document)	صدور یک نسخه برای اشتراک (PDF، سند Word)
+	Export Page as JPEG	صدور صفحه به‌صورت JPEG
+	Export Page as PNG	صدور صفحه به‌صورت PNG
+	Export PDF	صدور PDF
+	Exported {path}	{path} صادر شد
+	Expression	عبارت
+	Extend Selection	گسترش انتخاب
+	Extend Selection by Units	گسترش انتخاب بر اساس واحد
+	Extra space	فاصلهٔ اضافی
+	Extra spaces between words.	فاصله‌های اضافی بین واژه‌ها.
+	Field	فیلد
+	Field Click	کلیک فیلد
+	Field code:	کد فیلد:
+	Field Codes	کدهای فیلد
+	Field codes:	کدهای فیلد:
+	Field name	نام فیلد
+	Field name:	نام فیلد:
+	Field names must be different.	نام فیلدها باید متفاوت باشند.
+	Field names:	نام فیلدها:
+	Field properties	ویژگی‌های فیلد
+	Field:	فیلد:
+	Fields	فیلدها
+	Fields to insert:	فیلدهای قابل درج:
+	Fields:	فیلدها:
+	Field…	فیلد…
+	Figure	شکل (تصویر)
+	File	پرونده
+	File name:	نام پرونده:
+	Fill	پرکردن
+	Fill & Line	پرکردن و خط
+	Fill color:	رنگ پرکردن:
+	Fill:	پرکردن:
+	Filling in forms	پر کردن فرم‌ها
+	Film	فیلم
+	Filter and Sort	پالایش و مرتب‌سازی
+	Filter and Sort…	پالایش و مرتب‌سازی…
+	Filter Records	پالایش رکوردها
+	Find	یافتن
+	Find and Replace	یافتن و جایگزینی
+	Find Next	یافتن بعدی
+	Find Next Editable Region	یافتن ناحیهٔ قابل ویرایش بعدی
+	Find Previous	یافتن قبلی
+	Find Recipient	یافتن گیرنده
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	«یافتن» بند تغییریافتهٔ بعدی را انتخاب می‌کند؛ «رد» بند انتخاب‌شده را به حالت قبل برمی‌گرداند.
+	Find What Expression	عبارت جستجو
+	Find What Text	متن جستجو
+	Find what:	یافتن چه:
+	Find →	یافتن →
+	Find:	یافتن:
+	Finish	پایان
+	Finish & Merge	پایان و ادغام
+	Finish &\nMerge	پایان و\nادغام
+	Finished	پایان یافت
+	Finnish	فنلاندی
+	First	اول
+	First Cell in Column	نخستین خانهٔ ستون
+	First Cell in Row	نخستین خانهٔ ردیف
+	First Column	ستون اول
+	First commit	نخستین کامیت
+	First line	خط اول
+	First line:	خط اول:
+	First Name	نام
+	First row of data contains column headers	ردیف اول داده‌ها سرستون‌ها را دارد
+	Fit	تطبیق
+	Fit text	تطبیق متن
+	Fix Position on Page	ثابت کردن موقعیت در صفحه
+	Fixed Column Width	پهنای ستون ثابت
+	Flip Horizontal	برگرداندن افقی
+	Flip Vertical	برگرداندن عمودی
+	Floor	کف
+	Focus	تمرکز
+	Follow number with:	پس از عدد:
+	Font	قلم
+	Font Color	رنگ قلم
+	Font color	رنگِ قلم
+	Font color:	رنگ قلم:
+	Font Dialog	پنجرهٔ گفتگوی قلم
+	Font not installed	قلم نصب نیست
+	Font Size	اندازهٔ قلم
+	Font Substitution	جایگزینی قلم
+	Font Substitution…	جایگزینی قلم…
+	Font:	قلم:
+	Font: {font}	قلم: {font}
+	Fonts	قلم‌ها
+	Font…	قلم…
+	Footer	پاصفحه
+	Footnote and Endnote	پانویس و یادداشت پایانی
+	Footnote Reference	مرجع پانویس
+	Footnote Text	متن پانویس
+	Footnotes	پانویس‌ها
+	Footnotes and endnotes	پانویس‌ها و یادداشت‌های پایانی
+	Footnotes to endnotes	پانویس‌ها به یادداشت پایانی
+	Form Letters	نامه‌های فرمی
+	Format	قالب
+	Format Page Numbers	قالب‌بندی شمارهٔ صفحات
+	Format Page Numbers…	قالب‌بندی شمارهٔ صفحات…
+	Format Painter	کپی قالب
+	Format Picture	قالب‌بندی تصویر
+	Format Shape	قالب‌بندی شکل
+	Format:	قالب:
+	Formatted	قالب‌بندی‌شده
+	Formatted Text	متن قالب‌بندی‌شده
+	Formatting	قالب‌بندی
+	Formatting at Selection	قالب‌بندی در انتخاب
+	Formatting completed. You can now:	قالب‌بندی کامل شد. اکنون می‌توانید:
+	Formatting exceptions	استثناهای قالب‌بندی
+	Formatting marks	نشانه‌های قالب‌بندی
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	قالب‌بندی، تغییر حالت حروف، فضای خالی و جدول‌ها مقایسه می‌شوند؛ تنظیمات دیگر برای بعد نگه داشته شده‌اند.
+	Formula	فرمول
+	Forward	به جلو
+	Fraction	کسر
+	Fractions (1/2) as fraction characters (½)	کسرها (1/2) به‌صورت نویسهٔ کسری (½)
+	French	فرانسوی
+	French (France)	فرانسوی (فرانسه)
+	From	از
+	From text:	از متن:
+	from Unicode (hex)	از یونیکد (hex)
+	From:	فرستنده:
+	Full page of the same label	صفحهٔ کامل از یک برچسب
+	Function	تابع
+	Functions	تابع‌ها
+	Gallery	گالری
+	GB/T 7714	GB/T 7714
+	General	عمومی
+	Geometry	هندسه
+	German	آلمانی
+	German (Germany)	آلمانی (آلمان)
+	Get Add-ins	دریافت افزونه‌ها
+	Get Data	دریافت داده‌ها
+	Get Data…	دریافت داده‌ها…
+	Getting ready…	در حال آماده‌سازی…
+	Glow	درخشش
+	Glow Colors	رنگ‌های درخشش
+	Go Back	بازگشت
+	Go To	برو به
+	Go to	برو به
+	Go To…	برو به…
+	Good afternoon	عصر بخیر
+	Good evening	شب بخیر
+	Good morning	صبح بخیر
+	GOST (name sort)	GOST (مرتب‌سازی بر اساس نام)
+	GOST (title sort)	GOST (مرتب‌سازی بر اساس عنوان)
+	Grab bag	گوناگون
+	Grammar	دستور زبان
+	Grammar Settings	تنظیمات دستور زبان
+	Graphic	گرافیک
+	Grave	تکیه بم
+	Greater than	بزرگ‌تر از
+	Greater than or equal	بزرگ‌تر یا مساوی
+	Greek	یونانی
+	Greek Letters	حروف یونانی
+	Green:	سبز:
+	Greeting Line	خط خوشامدگویی
+	Greeting\nLine	خط\nخوشامدگویی
+	Grid Settings	تنظیمات شبکه
+	Grid Table 1 Light	جدول شبکه‌ای ۱ روشن
+	Grid Table 4 – Blue	جدول شبکه‌ای ۴ – آبی
+	Grid Table 4 – Green	جدول شبکه‌ای ۴ – سبز
+	Grid Table 4 – Orange	جدول شبکه‌ای ۴ – نارنجی
+	Grid Table 4 – Purple	جدول شبکه‌ای ۴ – بنفش
+	Gridlines	خطوط شبکه
+	Group	گروه‌بندی
+	Grouping Character Above	نویسهٔ گروه‌بندی بالا
+	Grouping Character Below	نویسهٔ گروه‌بندی پایین
+	Grow Font 1 Point	بزرگ کردن قلم به اندازهٔ ۱ پوینت
+	H:	ا:
+	Hanging Indent	تورفتگی آویزان
+	Harvard (Anglia)	هاروارد (انگلیا)
+	Hat	کلاهک
+	Header	سرصفحه
+	Header & Footer	سرصفحه و پاصفحه
+	Header Options	گزینه‌های سرصفحه
+	Header Options:	گزینه‌های سرصفحه:
+	Header Row	ردیف سرستون
+	Header source: {file} (the next data source opened here takes its field names)	منبع سرستون: {file} (منبع دادهٔ بعدی که اینجا باز شود نام فیلدهایش را از آن می‌گیرد)
+	Header/Footer Position	موقعیت سرصفحه/پاصفحه
+	Headers and footers	سرصفحه‌ها و پاصفحه‌ها
+	Heading 1	عنوان ۱
+	Heading 2	عنوان ۲
+	Heading 3	عنوان ۳
+	Heading styles (levels 1–{n})	سبک‌های عنوان (سطوح ۱–{n})
+	Heading {n}	عنوان {n}
+	Headings	عنوان‌ها
+	Heart	قلب
+	Hebrew	عبری
+	Height:	ارتفاع:
+	Help	راهنما
+	Hex:	هگز:
+	Hidden	پنهان
+	Hidden text	متن پنهان
+	Hide Codes	پنهان کردن کدها
+	Hide from style lists	پنهان کردن از فهرست‌های سبک
+	Hide Ink	پنهان کردن جوهر
+	Hide White Space	پنهان کردن فضای خالی
+	Hide\nInk	پنهان کردن\nجوهر
+	Hierarchy	سلسله‌مراتب
+	Highlight	برجسته‌سازی
+	Highlight Changes	برجسته‌سازی تغییرات
+	Highlight changes in printed document	برجسته‌سازی تغییرات در سند چاپی
+	Highlight changes on screen	برجسته‌سازی تغییرات روی صفحه‌نمایش
+	Highlight Merge Fields	برجسته‌سازی فیلدهای ادغام
+	Highlight\nMerge Fields	برجسته‌سازی\nفیلدهای ادغام
+	Highlighter	ماژیک
+	Hindi	هندی
+	Historical and Discretional	تاریخی و اختیاری
+	Hollow	توخالی
+	Home	خانه
+	Home folder	پوشهٔ خانگی
+	Horizontal	افقی
+	Horizontal Line	خط افقی
+	Horizontal spacing:	فاصلهٔ افقی:
+	How many pages the whole document has	تعداد صفحه‌های کل سند
+	How many pages this section has	تعداد صفحه‌های این بخش
+	How many words the document holds	تعداد واژه‌های سند
+	HTML Format	قالب HTML
+	Hue:	فام:
+	Hungarian	مجاری
+	Hyperbolic Cosecant Function	تابع کسکانت هذلولوی
+	Hyperbolic Cosine Function	تابع کسینوس هذلولوی
+	Hyperbolic Cotangent Function	تابع کتانژانت هذلولوی
+	Hyperbolic Functions	توابع هذلولوی
+	Hyperbolic Secant Function	تابع سکانت هذلولوی
+	Hyperbolic Sine Function	تابع سینوس هذلولوی
+	Hyperbolic Tangent Function	تابع تانژانت هذلولوی
+	Hyperlink	پیوند
+	Hyphenate at:	خط تیره در:
+	Hyphenate words in CAPS	خط تیره‌گذاری واژه‌های با حروف بزرگ
+	Hyphenation	خط تیره‌گذاری
+	Hyphenation Options…	گزینه‌های خط تیره‌گذاری…
+	Hyphenation zone:	ناحیهٔ خط تیره‌گذاری:
+	Hyphens (--) as dashes (—)	خط تیره‌ها (--) با خط فاصله (—)
+	Hypotenuse	وتر
+	I, II, III, …	I، II، III، …
+	i, ii, iii, …	i، ii، iii، …
+	Icon Color	رنگ نماد
+	Icons	نمادها
+	Identity Matrices	ماتریس‌های همانی
+	IEEE	IEEE
+	If…Then…Else	اگر…آنگاه…وگرنه
+	If…Then…Else…	اگر…آنگاه…وگرنه…
+	Ignore All	نادیده گرفتن همه
+	Ignore punctuation characters	نادیده گرفتن نویسه‌های نشانه‌گذاری
+	Ignore web and file addresses	نادیده گرفتن نشانی‌های وب و فایل
+	Ignore white-space characters	نادیده گرفتن نویسه‌های فاصله
+	Ignore words in capitals	نادیده گرفتن واژه‌های با حروف بزرگ
+	Ignore words with numbers	نادیده گرفتن واژه‌های دارای عدد
+	Illustrations	تصاویر
+	Immersive	غوطه‌ور
+	Immersive Reader	خوانندهٔ غوطه‌ور
+	Immersive\nReader	خوانندهٔ\nغوطه‌ور
+	In Default apps, choose Doc4Me for the document types you want it to open.	در «برنامه‌های پیش‌فرض»، Doc4Me را برای انواع سندهایی که می‌خواهید باز کند انتخاب کنید.
+	In equations, typing a name after a backslash replaces it with its symbol.	در معادله‌ها، تایپ نام پس از بک‌اسلش آن را با نمادش جایگزین می‌کند.
+	In Front of Text	جلوی متن
+	In Line with Text	هم‌خط با متن
+	Inches	اینچ
+	Include label and number	شامل برچسب و شماره
+	Include level number from:	شامل شمارهٔ سطح از:
+	Include page numbers	شامل شماره‌های صفحه
+	Increase Font Size	افزایش اندازهٔ قلم
+	Increase Indent	افزایش تورفتگی
+	Indent	تورفتگی
+	Indent from left:	تورفتگی از چپ:
+	Indentation	تورفتگی
+	Indented	تورفته
+	Indents	تورفتگی‌ها
+	Indents and Spacing	تورفتگی و فاصله‌گذاری
+	Index	نمایه
+	Index and Tables	نمایه و جدول‌ها
+	Index Heading	عنوان نمایه
+	Index {n}	نمایه {n}
+	Indonesian	اندونزیایی
+	Inflate	باد کردن
+	Info	اطلاعات
+	Initials:	حروف اول نام:
+	Ink	جوهر
+	Ink Equation	معادلهٔ جوهری
+	Ink Replay	بازپخش جوهر
+	Ink to Math	جوهر به ریاضی
+	Ink to Shape	جوهر به شکل
+	Ink to\nMath	جوهر به\nریاضی
+	Ink to\nShape	جوهر به\nشکل
+	Ink\nReplay	بازپخش\nجوهر
+	Inline	درون‌خطی
+	Input Format	قالب ورودی
+	Insert	درج
+	Insert a 3D model from a file (.glb, .stl, .obj)	درج مدل سه‌بعدی از فایل (.glb، .stl، .obj)
+	Insert a new equation (Alt+=)	درج معادلهٔ جدید (Alt+=)
+	Insert Above	درج در بالا
+	Insert Below	درج در پایین
+	Insert Caption	درج عنوان
+	Insert Cells	درج سلول‌ها
+	Insert Chart	درج نمودار
+	Insert Citation	درج استناد
+	Insert Columns to the Left	درج ستون‌ها در چپ
+	Insert Columns to the Right	درج ستون‌ها در راست
+	Insert Data	درج داده‌ها
+	Insert Database	درج پایگاه داده
+	Insert Database…	درج پایگاه داده…
+	Insert Date Field	درج فیلد تاریخ
+	Insert Endnote	درج یادداشت پایانی
+	Insert entire column	درج کل ستون
+	Insert entire row	درج کل ردیف
+	Insert Footnote	درج پانویس
+	Insert Hyperlink	درج پیوند
+	Insert Index	درج نمایه
+	Insert Left	درج در چپ
+	Insert LISTNUM Field	درج فیلد LISTNUM
+	Insert Merge Field	درج فیلد ادغام
+	Insert Merge\nField	درج فیلد\nادغام
+	Insert New Equation	درج معادلهٔ جدید
+	Insert one text or another, depending on a field's value.	درج یک متن یا متنی دیگر، بسته به مقدار یک فیلد.
+	Insert Page Field	درج فیلد صفحه
+	Insert Right	درج در راست
+	Insert Rows	درج ردیف‌ها
+	Insert Rows Above	درج ردیف‌ها در بالا
+	Insert Rows Below	درج ردیف‌ها در پایین
+	Insert Shapes	درج شکل‌ها
+	Insert SmartArt	درج SmartArt
+	Insert Structure	درج ساختار
+	Insert Symbol	درج نماد
+	Insert Table	درج جدول
+	Insert Table of Authorities	درج جدول مراجع حقوقی
+	Insert Table of Figures	درج فهرست تصاویر
+	Insert Table…	درج جدول…
+	Insert Time Field	درج فیلد زمان
+	Insert Video	درج ویدئو
+	Insert\nAbove	درج در\nبالا
+	Insert\nCaption	درج\nعنوان
+	Insert\nCitation	درج\nاستناد
+	Insert\nFootnote	درج\nپانویس
+	Inserted	درج‌شده
+	Insertions and Deletions	درج‌ها و حذف‌ها
+	Insertions:	درج‌ها:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	درج‌ها: {ins}، حذف‌ها: {del}، جابه‌جایی‌ها: {moves}، قالب‌بندی: {fmt}، نظرها: {comments}
+	Inside	داخل
+	Inside Borders	حاشیه‌های داخلی
+	Inside Margin	حاشیهٔ داخلی
+	Inside:	داخل:
+	Inspect Document	بازرسی سند
+	Inspect Styles at Selection	بازرسی سبک‌ها در انتخاب
+	Institution	مؤسسه
+	Integral	انتگرال
+	Integral of e^(−x²)	انتگرال e^(−x²)
+	Integral with Limits	انتگرال با حدود
+	Integral with Stacked Limits	انتگرال با حدود انباشته
+	Integrals	انتگرال‌ها
+	Intense Emphasis	تأکید شدید
+	Intense Quote	نقل‌قول شدید
+	Intense Reference	ارجاع شدید
+	Interface	رابط کاربری
+	Interface language	زبان رابط کاربری
+	Interface language:	زبان رابط کاربری:
+	Interface size:	اندازهٔ رابط کاربری:
+	Interface Theme	پوستهٔ رابط کاربری
+	Interface theme:	پوستهٔ رابط کاربری:
+	Interface\nTheme	پوستهٔ\nرابط کاربری
+	Internet addresses as links	نشانی‌های اینترنتی به‌صورت پیوند
+	Intersection	اشتراک
+	Intersection with Limits	اشتراک با حدود
+	Intersection with Lower Limit	اشتراک با حد پایین
+	Intersection with Subscript-Superscript Limits	اشتراک با حدود زیرنویس-بالانویس
+	Inverse Cosecant Function	تابع کسکانت معکوس
+	Inverse Cosine Function	تابع کسینوس معکوس
+	Inverse Cotangent Function	تابع کتانژانت معکوس
+	Inverse Functions	توابع معکوس
+	Inverse Hyperbolic Cosecant Function	تابع کسکانت هذلولوی معکوس
+	Inverse Hyperbolic Cosine Function	تابع کسینوس هذلولوی معکوس
+	Inverse Hyperbolic Cotangent Function	تابع کتانژانت هذلولوی معکوس
+	Inverse Hyperbolic Functions	توابع هذلولوی معکوس
+	Inverse Hyperbolic Secant Function	تابع سکانت هذلولوی معکوس
+	Inverse Hyperbolic Sine Function	تابع سینوس هذلولوی معکوس
+	Inverse Hyperbolic Tangent Function	تابع تانژانت هذلولوی معکوس
+	Inverse Secant Function	تابع سکانت معکوس
+	Inverse Sine Function	تابع سینوس معکوس
+	Inverse Tangent Function	تابع تانژانت معکوس
+	Ionosphere	یون‌سپهر
+	Is blank	خالی است
+	Is not blank	خالی نیست
+	ISO 690 (author-date)	ISO 690 (نویسنده-تاریخ)
+	ISO 690 (numerical)	ISO 690 (عددی)
+	Issue	شماره
+	it isn't a picture Doc4Me can read	تصویری نیست که Doc4Me بتواند بخواند
+	Italian	ایتالیایی
+	Italic	مورب
+	Japanese	ژاپنی
+	Journal	نشریه
+	Justification	تراز
+	Justification of a display equation	تراز معادلهٔ نمایشی
+	Justified	تراز دوطرفه
+	Justify	تراز دوطرفه
+	Keep Lines Together	نگه داشتن خطوط با هم
+	Keep lines together	نگه داشتن خطوط با هم
+	Keep Source Formatting	حفظ قالب‌بندی منبع
+	Keep Text Only	فقط حفظ متن
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	گذرواژه را جای امنی نگه دارید: بدون آن هیچ‌کس، از جمله Doc4Me، نمی‌تواند سند را باز کند. برای حذف گذرواژه هر دو کادر را خالی بگذارید.
+	Keep with Next	نگه داشتن با بعدی
+	Keep with next	نگه داشتن با بعدی
+	Keeps the fonts and formatting of the copied text.	قلم‌ها و قالب‌بندی متن کپی‌شده را حفظ می‌کند.
+	Kerning for fonts:	هم‌نشینی حروف برای قلم‌ها:
+	Keyboard shortcuts:	میان‌برهای صفحه‌کلید:
+	Keys for this command:	کلیدهای این فرمان:
+	Keywords	کلیدواژه‌ها
+	Korean	کره‌ای
+	Label changes with:	برچسب‌گذاری تغییرات با:
+	Label:	برچسب:
+	Labels	برچسب‌ها
+	Landscape	افقی
+	Language	زبان
+	Language Preferences…	ترجیحات زبان…
+	Language…	زبان…
+	Large\nOperator	عملگر\nبزرگ
+	Largest Only	فقط بزرگ‌ترین
+	Largest only	فقط بزرگ‌ترین
+	Lasso	کمند
+	Lasso Select	انتخاب کمندی
+	Last	آخرین
+	Last Cell in Column	آخرین سلول ستون
+	Last Cell in Row	آخرین سلول ردیف
+	Last Column	آخرین ستون
+	Last commit	آخرین کامیت
+	Last Name	نام خانوادگی
+	Last, First; Last, First	نام خانوادگی، نام؛ نام خانوادگی، نام
+	Latin text font:	قلم متن لاتین:
+	Layout	طرح‌بندی
+	Layout options for this document	گزینه‌های طرح‌بندی این سند
+	Layout Summary	خلاصهٔ طرح‌بندی
+	Layouts	طرح‌بندی‌ها
+	Leader	نقطه‌چین راهنما
+	Leave a recipient out of the merge when a field has this value.	هنگامی که فیلدی این مقدار را دارد، گیرنده را از ادغام کنار بگذارید.
+	Leave Equation	خروج از معادله
+	Leave the equation (Esc)	خروج از معادله (Esc)
+	Leave the label out of the caption	حذف برچسب از عنوان
+	Left	چپ
+	Left Arrow with Text Above	پیکان چپ با متن در بالا
+	Left Arrow with Text Below	پیکان چپ با متن در پایین
+	Left Border	حاشیهٔ چپ
+	Left border	حاشیهٔ چپ
+	Left Bracket Twice	کروشهٔ چپ دوبار
+	Left indent	تورفتگی چپ
+	Left Margin	حاشیهٔ چپ
+	Left Only	فقط چپ
+	Left only	فقط چپ
+	Left Right Arrow Above	پیکان چپ-راست در بالا
+	Left Right Arrow with Text Above	پیکان چپ-راست با متن در بالا
+	Left Right Arrow with Text Below	پیکان چپ-راست با متن در پایین
+	Left Subscript-Superscript	زیرنویس-بالانویس چپ
+	Left-to-right	چپ به راست
+	Left-to-Right Text Direction	جهت متن چپ به راست
+	Left:	چپ:
+	Leftwards Arrow Above	پیکان رو به چپ در بالا
+	Leftwards Harpoon Above	زوبین رو به چپ در بالا
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	شماره‌گذاری به سبک حقوقی
+	Legend	راهنما
+	Less than	کوچک‌تر از
+	Less than or equal	کوچک‌تر یا مساوی
+	Letter	نامه
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	عنوان‌های حرفی
+	Letter-Like Symbols	نمادهای حرف‌مانند
+	Letters	حروف
+	Level 1	سطح ۱
+	Level 2	سطح ۲
+	Level 3	سطح ۳
+	Level 4	سطح ۴
+	Level 5	سطح ۵
+	Level 6	سطح ۶
+	Level 7	سطح ۷
+	Level 8	سطح ۸
+	Level 9	سطح ۹
+	Level {n}	سطح {n}
+	Level:	سطح:
+	Levels:	سطوح:
+	LibreTranslate server (open source)	سرور LibreTranslate (متن‌باز)
+	Ligatures:	پیوندها:
+	Light	روشن
+	Light with Outline	روشن با خط دور
+	Limit	حد
+	Limit and\nLog	حد و\nلگاریتم
+	Limit consecutive hyphens to:	محدود کردن خط تیره‌های پیاپی به:
+	Limit Example	مثال حد
+	Limit formatting to a selection of styles	محدود کردن قالب‌بندی به گزیده‌ای از سبک‌ها
+	Line	خط
+	Line and Page Breaks	شکست خط و صفحه
+	Line and Paragraph Spacing	فاصلهٔ خطوط و پاراگراف‌ها
+	Line between	خط بین
+	Line Break	شکست خط
+	Line breaking	شکستن خط
+	Line delta	تفاضل خطوط
+	Line End	انتهای خط
+	Line Number	شمارهٔ خط
+	Line Numbering Options…	گزینه‌های شماره‌گذاری خطوط…
+	Line Numbers	شماره‌های خط
+	Line Spacing	فاصلهٔ خطوط
+	Line spacing	فاصلهٔ خطوط
+	Line Spacing Options…	گزینه‌های فاصلهٔ خطوط…
+	Line spacing:	فاصلهٔ خطوط:
+	Line Start	ابتدای خط
+	Line width:	ضخامت خط:
+	Line:	خط:
+	Linear	خطی
+	Linear Fraction	کسر خطی
+	Lines	خطوط
+	Lines +/−	خطوط +/−
+	Lines added	خطوط افزوده
+	Lines and characters	خطوط و نویسه‌ها
+	Lines deleted	خطوط حذف‌شده
+	Lines only	فقط خطوط
+	Lines per page:	خط در هر صفحه:
+	Link	پیوند
+	Link entries to their headings	پیوند دادن مدخل‌ها به عنوان‌هایشان
+	Link level to style:	پیوند سطح به سبک:
+	Link to Previous	پیوند به قبلی
+	Linked style (paragraph and character)	سبک پیوندی (پاراگراف و نویسه)
+	Links	پیوندها
+	Links and References	پیوندها و ارجاعات
+	Link…	پیوند…
+	List	فهرست
+	List Commands	فهرست فرمان‌ها
+	List Definition	تعریف فهرست
+	List entries	مدخل‌های فهرست
+	List Paragraph	پاراگراف فهرست
+	List styles	سبک‌های فهرست
+	List Table 3 – Blue	جدول فهرستی ۳ – آبی
+	List Table 3 – Green	جدول فهرستی ۳ – سبز
+	List Table 3 – Orange	جدول فهرستی ۳ – نارنجی
+	List Table 3 – Purple	جدول فهرستی ۳ – بنفش
+	Listening… speak now	در حال گوش دادن… اکنون صحبت کنید
+	Location	مکان
+	Location: {path}	مکان: {path}
+	Lock aspect ratio	قفل نسبت ابعاد
+	Lock Fields	قفل فیلدها
+	Logarithm	لگاریتم
+	Logarithm with Base	لگاریتم با پایه
+	Logical AND	AND منطقی
+	Logical AND with Limits	AND منطقی با حدود
+	Logical OR	OR منطقی
+	Logical OR with Limits	OR منطقی با حدود
+	Long citation:	استناد بلند:
+	lowercase	حروف کوچک
+	Lum:	روشنایی:
+	Macros	ماکروها
+	Made from the author and year when empty	در صورت خالی بودن از نویسنده و سال ساخته می‌شود
+	Magazine or newspaper article	مقالهٔ مجله یا روزنامه
+	Mail Merge	ادغام نامه
+	Mail Merge Helper	راهنمای ادغام نامه
+	Mail Merge Helper…	راهنمای ادغام نامه…
+	Mailing Labels	برچسب‌های پستی
+	Mailings	مکاتبات
+	Main entry:	مدخل اصلی:
+	Make Doc4Me the default for Word documents…	Doc4Me را پیش‌فرض اسناد Word کنید…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	نوار ابزار، منوها و کادرهای گفتگو را، علاوه بر مقیاس نمایش سیستم شما، بزرگ‌تر یا کوچک‌تر می‌کند. بزرگ‌نمایی سند جداگانه است.
+	Malay	مالایی
+	Manage Sources	مدیریت منابع
+	Manage Styles	مدیریت سبک‌ها
+	Manage Styles…	مدیریت سبک‌ها…
+	Manual Hyphenation	خط تیره‌گذاری دستی
+	Manual hyphenation is complete.	خط تیره‌گذاری دستی کامل شد.
+	Manual Line Break	شکست خط دستی
+	Manual Page Break	شکست صفحهٔ دستی
+	Manual…	دستی…
+	Many pages	چند صفحه
+	Margin	حاشیه
+	Margins	حاشیه‌ها
+	Mark	علامت‌گذاری
+	Mark All	علامت‌گذاری همه
+	Mark as decorative	علامت‌گذاری به‌عنوان تزئینی
+	Mark Citation	علامت‌گذاری استناد
+	Mark Citation…	علامت‌گذاری استناد…
+	Mark Entry	علامت‌گذاری مدخل
+	Mark Entry…	علامت‌گذاری مدخل…
+	Mark grammar errors as you type	علامت‌گذاری خطاهای دستوری هنگام تایپ
+	Mark Index Entry	علامت‌گذاری مدخل نمایه
+	Mark selected text as:	علامت‌گذاری متن انتخاب‌شده به‌عنوان:
+	Mark Table of Contents Entry	علامت‌گذاری مدخل فهرست مطالب
+	Mark\nCitation	علامت‌گذاری\nاستناد
+	Mark\nEntry	علامت‌گذاری\nمدخل
+	Markdown (*.md)	Markdown (*.md)
+	Match case	تطبیق بزرگی و کوچکی حروف
+	Match Fields	تطبیق فیلدها
+	Match prefix	تطبیق پیشوند
+	Match suffix	تطبیق پسوند
+	Math AutoCorrect	تصحیح خودکار ریاضی
+	Math Input Control	کنترل ورودی ریاضی
+	Matrices with Brackets	ماتریس‌ها با کروشه
+	Matrix	ماتریس
+	Maximize	بیشینه کردن
+	Maximum	بیشینه
+	Maximum Example	مثال بیشینه
+	Measured By	اندازه‌گیری بر حسب
+	Measurement units:	واحدهای اندازه‌گیری:
+	Media	رسانه
+	Merge	ادغام
+	Merge Cells	ادغام سلول‌ها
+	Merge Formatting	ادغام قالب‌بندی
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	«ادغام قالب‌بندی» متن را با قالب‌بندی محل قرارگیری می‌چسباند، همان‌طور که «فقط حفظ متن» می‌کند.
+	Merge Record #	شمارهٔ رکورد ادغام #
+	Merge records	رکوردهای ادغام
+	Merge to New Document	ادغام در سند جدید
+	Merge to Printer	ادغام به چاپگر
+	Merge to:	ادغام به:
+	Merge type: {type}	نوع ادغام: {type}
+	Merged PRs	PRهای ادغام‌شده
+	Merge…	ادغام…
+	Mesosphere	میان‌سپهر
+	Middle	وسط
+	Midline Dots	نقطه‌های میانهٔ خط
+	Millimeters	میلی‌متر
+	Minimum	کمینه
+	Minus Equal	منها مساوی
+	Mirror indents	تورفتگی‌های قرینه
+	Mirrored	قرینه
+	Missing document font	قلم سند موجود نیست
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	مدل
+	Models	مدل‌ها
+	Moderate	متوسط
+	Modify Style	اصلاح سبک
+	Modify Table Style	اصلاح سبک جدول
+	Modify Table Style…	اصلاح سبک جدول…
+	Modify…	اصلاح…
+	Mon	دوشنبه
+	Month	ماه
+	More >>	بیشتر >>
+	More Colors…	رنگ‌های بیشتر…
+	More Columns…	ستون‌های بیشتر…
+	More Commands…	فرمان‌های بیشتر…
+	More Symbols…	نمادهای بیشتر…
+	More templates →	الگوهای بیشتر →
+	Move Down	انتقال به پایین
+	Move in Equation	حرکت در معادله
+	Move object with text	جابه‌جایی شیء با متن
+	Move or Resize	جابه‌جایی یا تغییر اندازه
+	Move Paragraph Down	انتقال پاراگراف به پایین
+	Move Paragraph Up	انتقال پاراگراف به بالا
+	Move Past Citation	عبور از استناد
+	Move Past\nCitation	عبور از\nاستناد
+	Move Selected Ink	جابه‌جایی جوهر انتخاب‌شده
+	Move Text	جابه‌جایی متن
+	Move to where?	انتقال به کجا؟
+	Move Up	انتقال به بالا
+	Move with Text	حرکت با متن
+	Move with text	حرکت با متن
+	Moved from	منتقل‌شده از
+	Moved to	منتقل‌شده به
+	Moves	جابه‌جایی‌ها
+	Multilevel List	فهرست چندسطحی
+	Multiple Pages	چند صفحه
+	My Add-ins	افزونه‌های من
+	MyMemory (free, no account)	MyMemory (رایگان، بدون حساب)
+	Name	نام
+	Name (A–Z)	نام (الف–ی)
+	Name of the file this document is saved as	نام فایلی که این سند با آن ذخیره شده است
+	Name:	نام:
+	Narrow  0.5" all	باریک  همه 0.5"
+	Natural Logarithm	لگاریتم طبیعی
+	Nature	Nature
+	Navigation	پیمایش
+	Navigation Pane	پنل پیمایش
+	Negated Relations	روابط نفی‌شده
+	New	جدید
+	New Comment	نظر جدید
+	New comments and tracked changes are recorded under this name and these initials.	نظرها و تغییرات ردیابی‌شدهٔ جدید با این نام و این حروف اول ثبت می‌شوند.
+	New Document	سند جدید
+	New document	سند جدید
+	New Drawing Canvas	بوم نقاشی جدید
+	New Entry	مدخل جدید
+	New Folder	پوشهٔ جدید
+	New from Template	جدید از الگو
+	New Group	گروه جدید
+	New Label	برچسب جدید
+	New Label…	برچسب جدید…
+	New Paragraph	پاراگراف جدید
+	New shortcut:	میان‌بر جدید:
+	New Style…	سبک جدید…
+	New Tab	زبانهٔ جدید
+	New Table Style	سبک جدول جدید
+	New Table Style…	سبک جدول جدید…
+	New Window	پنجرهٔ جدید
+	New word	واژهٔ جدید
+	New\nComment	نظر\nجدید
+	New\nWindow	پنجرهٔ\nجدید
+	New…	جدید…
+	Next	بعدی
+	Next Change	تغییر بعدی
+	Next Comment	نظر بعدی
+	Next Field	فیلد بعدی
+	Next Footnote	پانویس بعدی
+	Next Page	صفحهٔ بعد
+	Next Record	رکورد بعدی
+	Next Section	بخش بعدی
+	Next Sentence	جملهٔ بعدی
+	Next sentence	جملهٔ بعدی
+	Next Window	پنجرهٔ بعدی
+	No	خیر
+	No accessibility issues found.	هیچ مشکل دسترس‌پذیری یافت نشد.
+	No add-ins are listed yet.	هنوز هیچ افزونه‌ای فهرست نشده است.
+	No add-ins yet. Add one from the Store.	هنوز افزونه‌ای وجود ندارد. یکی را از فروشگاه اضافه کنید.
+	No Border	بدون حاشیه
+	No changes (read only)	بدون تغییر (فقط خواندنی)
+	No Color	بدون رنگ
+	No contributor data was built into this copy.	داده‌های مشارکت‌کنندگان در این نسخه گنجانده نشده است.
+	No data source yet.	هنوز منبع داده‌ای وجود ندارد.
+	No errors found: every merge field is in the recipient list.	خطایی یافت نشد: همهٔ فیلدهای ادغام در فهرست گیرندگان هستند.
+	No Fill	بدون پرشدگی
+	No Glow	بدون درخشش
+	No grid	بدون شبکه
+	No icons match your search.	هیچ نمادی با جستجوی شما مطابقت ندارد.
+	No limit	بدون محدودیت
+	No Line	بدون خط
+	No Markup	بدون نشانه‌گذاری
+	No model credits were built into this copy.	اعتبارات مدل‌ها در این نسخه گنجانده نشده است.
+	No Outline	بدون خط دور
+	No Paragraph Space	بدون فاصلهٔ پاراگراف
+	No pictures found.	هیچ تصویری یافت نشد.
+	No Reflection	بدون بازتاب
+	No revisions	بدون بازبینی
+	No Shadow	بدون سایه
+	No Soft Edges	بدون لبه‌های نرم
+	No sources yet.	هنوز منبعی وجود ندارد.
+	No Spacing	بدون فاصله
+	no speech program on this system	هیچ برنامهٔ گفتاری روی این سیستم نیست
+	No templates match your search.	هیچ الگویی با جستجوی شما مطابقت ندارد.
+	No Transform	بدون تبدیل
+	No words yet. Add to Dictionary on a misspelled word puts it here.	هنوز واژه‌ای نیست. «افزودن به واژه‌نامه» روی واژهٔ غلط املایی آن را اینجا قرار می‌دهد.
+	No-Width Non Break	بدون‌عرض غیرشکستنی
+	No-Width Optional Break	شکست اختیاری بدون‌عرض
+	Nonbreaking Hyphen	خط تیرهٔ غیرشکستنی
+	Nonbreaking Space	فاصلهٔ غیرشکستنی
+	None	هیچ
+	Normal	عادی
+	Normal  1" all	عادی  همه 1"
+	Normal Indent	تورفتگی عادی
+	Normal probability density	چگالی احتمال نرمال
+	Normal speed	سرعت عادی
+	Normal Style	سبک عادی
+	Normal Table	جدول عادی
+	Normal Text	متن عادی
+	Normal Word Document	سند Word عادی
+	North	شمال
+	Norwegian (Bokmål)	نروژی (بوکمل)
+	Not	نقیض
+	Not available right now	اکنون در دسترس نیست
+	Not equal to	نامساوی با
+	Not linked: click a text box	پیوند نشده: روی یک کادر متن کلیک کنید
+	Not saved	ذخیره نشده
+	Not saved yet	هنوز ذخیره نشده
+	Not used by any command	در هیچ فرمانی استفاده نشده
+	Not {name}	نه {name}
+	Nothing	هیچ
+	Nothing collected yet. Items you copy or cut appear here.	هنوز چیزی جمع نشده است. مواردی که کپی یا برش می‌دهید اینجا نمایش داده می‌شوند.
+	Now used by {command}	اکنون توسط {command} استفاده می‌شود
+	Nudge	تکان جزئی
+	Num Occurrences	تعداد تکرارها
+	Number	شماره
+	Number alignment:	تراز شماره:
+	Number format	قالب شماره
+	Number of columns:	تعداد ستون‌ها:
+	Number of rows:	تعداد ردیف‌ها:
+	Number of the page the field sits on	شمارهٔ صفحه‌ای که فیلد در آن قرار دارد
+	Number of the section the field sits in	شمارهٔ بخشی که فیلد در آن قرار دارد
+	Number style for this level:	سبک شماره برای این سطح:
+	Number the equation; the number sits at the right margin (or type # then the number)	شماره‌گذاری معادله؛ شماره در حاشیهٔ راست قرار می‌گیرد (یا # و سپس شماره را تایپ کنید)
+	Number type:	نوع شماره:
+	Number:	شماره:
+	Numbering	شماره‌گذاری
+	Numbering:	شماره‌گذاری:
+	Numbering…	شماره‌گذاری…
+	Numerals	ارقام
+	Numerals:	ارقام:
+	n×n Identity Matrix	ماتریس همانی n×n
+	n×n Matrix	ماتریس n×n
+	Object	شیء
+	Odd Page	صفحهٔ فرد
+	Odd pages only	فقط صفحه‌های فرد
+	Off	خاموش
+	Office	Office
+	Office 2003 Default	پیش‌فرض Office 2003
+	Offset (pt):	جابه‌جایی (pt):
+	Offset: Bottom	جابه‌جایی: پایین
+	Offset: Bottom Left	جابه‌جایی: پایین چپ
+	Offset: Bottom Right	جابه‌جایی: پایین راست
+	Offset: Center	جابه‌جایی: مرکز
+	Offset: Left	جابه‌جایی: چپ
+	Offset: Right	جابه‌جایی: راست
+	Offset: Top	جابه‌جایی: بالا
+	Offset: Top Left	جابه‌جایی: بالا چپ
+	Offset: Top Right	جابه‌جایی: بالا راست
+	OK	تأیید
+	Omit	حذف
+	On	روشن
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	روشن: نشانگر هنگام تایپ یا استفاده از کلیدهای جهت‌نما به جای جدیدش می‌لغزد و چشمک آن محو می‌شود. خاموش: می‌پرد و چشمک می‌زند.
+	One	یک
+	One half	یک دوم
+	One label per recipient	یک برچسب برای هر گیرنده
+	One line per item. Enter adds an item.	هر مورد یک خط. Enter یک مورد اضافه می‌کند.
+	One Page	یک صفحه
+	Online Pictures	تصاویر آنلاین
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	تصاویر آنلاین (Openverse)، ترجمه (MyMemory یا سرور LibreTranslate شما)، دریافت افزونه‌ها و بارگیری مدل گفتار دیکته به اینترنت وصل می‌شوند، و فقط هنگامی که از آن‌ها استفاده کنید. با خاموش کردن، Doc4Me هیچ اتصالی از جانب خود برقرار نمی‌کند.
+	Online Pictures…	تصاویر آنلاین…
+	Online services are turned off (File › Options › Trust Center).	خدمات آنلاین خاموش هستند (فایل › گزینه‌ها › مرکز اعتماد).
+	Online Video	ویدئوی آنلاین
+	Only allow this kind of editing:	فقط این نوع ویرایش مجاز باشد:
+	Only comments can be added, except in regions marked editable.	فقط نظر می‌توان افزود، جز در ناحیه‌هایی که ویرایش‌پذیر علامت خورده‌اند.
+	Only form fields can be filled in.	فقط فیلدهای فرم را می‌توان پر کرد.
+	only https addresses can be used	فقط نشانی‌های https قابل استفاده‌اند
+	Only pictures I may use commercially	فقط تصاویری که می‌توانم تجاری استفاده کنم
+	Only the allowed styles can be applied.	فقط سبک‌های مجاز قابل اعمال‌اند.
+	Only web (http, https) and email (mailto) links can be followed	فقط پیوندهای وب (http، https) و ایمیل (mailto) را می‌توان دنبال کرد
+	Open	باز کردن
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	هنگامی که کادر گفتگوی فایل سیستم ظاهر نمی‌شود، فایل را با مرورگر خود Doc4Me باز کنید.
+	Open Data Source…	باز کردن منبع داده…
+	Open Hyperlink	باز کردن پیوند
+	OpenDocument Text (*.odt)	متن OpenDocument (*.odt)
+	Opening print dialog…	در حال باز کردن کادر گفتگوی چاپ…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	از این پس فایل‌های .docx، .doc، .rtf و .odt و الگوهای Word را با Doc4Me باز می‌کند.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	تنظیمات › برنامه‌های پیش‌فرض را باز می‌کند، جایی که Doc4Me را برای .docx و دیگر انواع سند انتخاب می‌کنید.
+	Open…	باز کردن…
+	Operator	عملگر
+	Operator Structures	ساختارهای عملگر
+	Operators	عملگرها
+	Optional Hyphen	خط تیرهٔ اختیاری
+	Options	گزینه‌ها
+	Options…	گزینه‌ها…
+	Or	یا
+	Or save a copy in another format:	یا یک نسخه در قالب دیگری ذخیره کنید:
+	Ordinals (1st) as superscript	اعداد ترتیبی (1st) به‌صورت بالانویس
+	Organizer	سازمان‌دهنده
+	Organizer…	سازمان‌دهنده…
+	Orientation	جهت
+	Original document	سند اصلی
+	Other	سایر
+	Other Authorities	سایر مراجع
+	Other Large Operators	سایر عملگرهای بزرگ
+	Other paragraph styles	سایر سبک‌های پاراگراف
+	Other styles and their TOC level:	سایر سبک‌ها و سطح فهرست مطالب آن‌ها:
+	Otherwise insert:	وگرنه درج کن:
+	Outline	طرح کلی
+	Outline Level	سطح طرح کلی
+	Outline level	سطح طرح کلی
+	Outline levels	سطوح طرح کلی
+	Outline State	وضعیت طرح کلی
+	Outline Tools	ابزارهای طرح کلی
+	Outlining	طرح‌نویسی
+	Outside	بیرون
+	Outside border	حاشیهٔ بیرونی
+	Outside Borders	حاشیه‌های بیرونی
+	Outside Margin	حاشیهٔ بیرونی
+	Outside:	بیرون:
+	Outward Brackets	کروشه‌های رو به بیرون
+	Oval	بیضی
+	Overbar	خط بالا
+	Overbars and Underbars	خطوط بالا و پایین
+	Overbrace	آکولاد بالا
+	Overtype	بازنویسی
+	Overtype (typing replaces the characters after the caret)	بازنویسی (تایپ، نویسه‌های پس از نشانگر را جایگزین می‌کند)
+	Page	صفحه
+	Page Background	پس‌زمینهٔ صفحه
+	Page Border	حاشیهٔ صفحه
+	Page Borders	حاشیه‌های صفحه
+	Page Break	شکست صفحه
+	Page Break Before	شکست صفحه پیش از
+	Page break before	شکست صفحه پیش از
+	Page Breaks	شکست‌های صفحه
+	Page Color	رنگ صفحه
+	Page display	نمایش صفحه
+	Page Down	صفحه به پایین
+	Page image (*.jpg, *.jpeg)	تصویر صفحه (*.jpg، *.jpeg)
+	Page image (*.png)	تصویر صفحه (*.png)
+	Page Movement	حرکت صفحه
+	Page Number	شمارهٔ صفحه
+	Page number style	سبک شمارهٔ صفحه
+	Page numbers at the right margin	شماره‌های صفحه در حاشیهٔ راست
+	Page on which a bookmarked passage falls	صفحه‌ای که بخش نشانک‌دار در آن قرار دارد
+	Page Setup	تنظیم صفحه
+	Page title	عنوان صفحه
+	Page Up	صفحه به بالا
+	Page Width	عرض صفحه
+	Page width	عرض صفحه
+	Page X of Y	صفحهٔ X از Y
+	Page {page}	صفحهٔ {page}
+	Page {page} of {pages}	صفحهٔ {page} از {pages}
+	Page\nBorders	حاشیه‌های\nصفحه
+	Page\nColor	رنگ\nصفحه
+	Page\nNumber	شمارهٔ\nصفحه
+	Pages	صفحه‌ها
+	Pages like 1-3, 5	صفحه‌هایی مانند 1-3، 5
+	Pages of bookmark:	صفحه‌های نشانک:
+	Paragraph	پاراگراف
+	Paragraph Character	نویسهٔ پاراگراف
+	Paragraph Details	جزئیات پاراگراف
+	Paragraph Down	پاراگراف به پایین
+	Paragraph Mark	علامت پاراگراف
+	Paragraph marks	علامت‌های پاراگراف
+	Paragraph Settings	تنظیمات پاراگراف
+	Paragraph Spacing	فاصلهٔ پاراگراف
+	Paragraph style	سبک پاراگراف
+	Paragraph Up	پاراگراف به بالا
+	Paragraphs	پاراگراف‌ها
+	Paragraph…	پاراگراف…
+	Parentheses	پرانتزها
+	Parentheses with Separator	پرانتزها با جداکننده
+	Partial Differential	دیفرانسیل جزئی
+	Password	گذرواژه
+	Password:	گذرواژه:
+	Paste	چسباندن
+	Paste All	چسباندن همه
+	Paste as:	چسباندن به‌صورت:
+	Paste Clipboard Item	چسباندن مورد کلیپ‌بورد
+	Paste Formatting	چسباندن قالب‌بندی
+	Paste Special	چسباندن ویژه
+	Paste Special…	چسباندن ویژه…
+	Paste Spike	چسباندن انباشته
+	Paste: Keep Text Only	چسباندن: فقط حفظ متن
+	Paste: Merge Formatting	چسباندن: ادغام قالب‌بندی
+	Pasting between documents:	چسباندن بین سندها:
+	Pasting from other programs:	چسباندن از برنامه‌های دیگر:
+	Pasting within the same document:	چسباندن در همان سند:
+	Pause	مکث
+	Paused	مکث‌شده
+	PDF document (*.pdf)	سند PDF (*.pdf)
+	Pen	قلم
+	Pencil	مداد
+	Pens	قلم‌ها
+	People	افراد
+	Periodical	نشریهٔ ادواری
+	Personalize	شخصی‌سازی
+	Phonetic Guide	راهنمای آوایی
+	Pi Over 2	پی بر ۲
+	Picas	پایکا
+	Pick a custom group (New Group makes one)	یک گروه سفارشی انتخاب کنید («گروه جدید» یکی می‌سازد)
+	Pick a field from the list	یک فیلد از فهرست انتخاب کنید
+	Picture	تصویر
+	Picture Border	حاشیهٔ تصویر
+	Picture Content Control	کنترل محتوای تصویر
+	Picture Format	قالب تصویر
+	Picture Styles	سبک‌های تصویر
+	Pictures	تصاویر
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	تصاویر از Openverse. به مجوز هر تصویر احترام بگذارید: Doc4Me زیر آن یک خط اعتبار اضافه می‌کند.
+	Pie	دایره‌ای
+	Placeholder Name	نام جانگهدار
+	Placeholder text	متن جانگهدار
+	Plain Table 1	جدول ساده ۱
+	Plain text (*.txt)	متن ساده (*.txt)
+	Plain Text Content Control	کنترل محتوای متن ساده
+	Play	پخش
+	Play Video	پخش ویدئو
+	Play/Pause	پخش/مکث
+	Plus Equal	به‌علاوه مساوی
+	Points	پوینت
+	points and above	پوینت و بیشتر
+	Polish	لهستانی
+	Portrait	عمودی
+	Portuguese (Brazil)	پرتغالی (برزیل)
+	Portuguese (Portugal)	پرتغالی (پرتغال)
+	Position	موقعیت
+	Position:	موقعیت:
+	Positioning…	موقعیت‌یابی…
+	Possible spelling mistake	احتمال غلط املایی
+	Postal Code	کد پستی
+	Power series of (1+x)ⁿ	سری توانی (1+x)ⁿ
+	Preferred width:	عرض ترجیحی:
+	Preserve	حفظ
+	Preserve formatting during updates	حفظ قالب‌بندی هنگام به‌روزرسانی
+	Presets	پیش‌تنظیم‌ها
+	Press a key combination	یک ترکیب کلید را فشار دهید
+	Preview	پیش‌نمایش
+	Preview Results	پیش‌نمایش نتایج
+	Preview\nResults	پیش‌نمایش\nنتایج
+	Previous	قبلی
+	Previous 1 or More	۱ یا بیشتر قبلی
+	Previous Change	تغییر قبلی
+	Previous Comment	نظر قبلی
+	Previous Field	فیلد قبلی
+	Previous Footnote	پانویس قبلی
+	Previous Page	صفحهٔ قبل
+	Previous Record	رکورد قبلی
+	Previous Section	بخش قبلی
+	Previous Sentence	جملهٔ قبلی
+	Previous sentence	جملهٔ قبلی
+	Previous Window	پنجرهٔ قبلی
+	Print	چاپ
+	Print blank lines when data fields are empty	چاپ خطوط خالی هنگامی که فیلدهای داده خالی‌اند
+	Print Documents	چاپ سندها
+	Print Documents…	چاپ سندها…
+	Print failed: {error}	چاپ ناموفق بود: {error}
+	Print Layout	طرح‌بندی چاپ
+	Print Markup	چاپ نشانه‌گذاری
+	Print the page color	چاپ رنگ صفحه
+	Print to PDF	چاپ در PDF
+	Print\nLayout	طرح‌بندی\nچاپ
+	Printer	چاپگر
+	Printing	چاپ کردن
+	Process	فرایند
+	Product	محصول
+	Product of A	ضرب A
+	Product with Limits	ضرب با حدود
+	Product with Lower Limit	ضرب با حد پایین
+	Product with Subscript-Superscript Limits	ضرب با حدود زیرنویس-بالانویس
+	Products and Coproducts	ضرب‌ها و هم‌ضرب‌ها
+	Professional	حرفه‌ای
+	Promote	ارتقا
+	Promote to Heading 1	ارتقا به عنوان ۱
+	Proofing	تصحیح
+	Proofing Issues	مشکلات تصحیح
+	Proofing language	زبان تصحیح
+	Properties	ویژگی‌ها
+	Protect	محافظت
+	Protect Document	محافظت از سند
+	PRs	PRها
+	pt	pt
+	Publisher	ناشر
+	Punctuation	نشانه‌گذاری
+	Put the caret in a content control first.	ابتدا نشانگر را در یک کنترل محتوا قرار دهید.
+	Put the default commands back on the Quick Access Toolbar?	فرمان‌های پیش‌فرض به نوار ابزار دسترسی سریع بازگردانده شوند؟
+	Pyramid	هرم
+	Quadratic Root	ریشهٔ معادلهٔ درجه دوم
+	Query Options…	گزینه‌های پرس‌وجو…
+	Quick Access Toolbar	نوار ابزار دسترسی سریع
+	Quick Parts	بخش‌های سریع
+	Quick Tables	جدول‌های سریع
+	Quote	نقل‌قول
+	Radical	رادیکال
+	Radical with Degree	رادیکال با فرجه
+	Radicals	رادیکال‌ها
+	Raised/lowered	بالا/پایین برده
+	Read Aloud	بلندخوانی
+	Read Aloud couldn't start the speech program: {reason}	بلندخوانی نتوانست برنامهٔ گفتار را آغاز کند: {reason}
+	Read Aloud couldn't start: {reason}	بلندخوانی آغاز نشد: {reason}
+	Read Aloud isn't available in the browser	بلندخوانی در مرورگر در دسترس نیست
+	Read Aloud Status	وضعیت بلندخوانی
+	Read Aloud stopped: {reason}	بلندخوانی متوقف شد: {reason}
+	Read Mode	حالت خواندن
+	Read\nAloud	بلند\nخوانی
+	Read\nMode	حالت\nخواندن
+	Reading	خواندن
+	Reading Column Width	عرض ستون خواندن
+	Reading Highlight	برجسته‌سازی خواندن
+	Reading Line Spacing	فاصلهٔ خطوط خواندن
+	Reading Mode	حالت خواندن
+	Sepia	قهوه‌ای کهنه
+	Inverse	معکوس
+	Reading Speed	سرعت خواندن
+	Reading Text Size	اندازهٔ متن خواندن
+	Reads the clipboard's rich text and keeps its formatting.	متن غنی کلیپ‌بورد را می‌خواند و قالب‌بندی آن را حفظ می‌کند.
+	Reads the clipboard's web content and keeps its formatting.	محتوای وب کلیپ‌بورد را می‌خواند و قالب‌بندی آن را حفظ می‌کند.
+	Real name	نام واقعی
+	Recent	اخیر
+	Recent Colors	رنگ‌های اخیر
+	Recent documents to show:	سندهای اخیر برای نمایش:
+	Recently used symbols:	نمادهای اخیراً استفاده‌شده:
+	Recipient List	فهرست گیرندگان
+	Recipient lists	فهرست‌های گیرندگان
+	Recipients: {count}	گیرندگان: {count}
+	Recognized (you can correct it):	تشخیص داده شد (می‌توانید آن را اصلاح کنید):
+	Recognized Functions	توابع شناخته‌شده
+	Recognized Functions…	توابع شناخته‌شده…
+	Recolor a one-color picture, such as an icon	رنگ‌آمیزی دوبارهٔ تصویر تک‌رنگ، مانند یک نماد
+	Recolor Selected Ink	رنگ‌آمیزی دوبارهٔ جوهر انتخاب‌شده
+	Record Macro	ضبط ماکرو
+	Recover Unsaved Documents	بازیابی سندهای ذخیره‌نشده
+	Rectangle	مستطیل
+	Red:	قرمز:
+	Redo	انجام مجدد
+	Reduce Hanging Indent	کاهش تورفتگی آویزان
+	References	ارجاعات
+	Reflection	بازتاب
+	Refresh	بازآوری
+	Registered	ثبت‌شده
+	Registered Sign	نشان ثبت
+	Regular expressions	عبارات باقاعده
+	Regulations	مقررات
+	Reject	رد کردن
+	Reject All	رد کردن همه
+	Reject All Changes	رد کردن همهٔ تغییرات
+	Reject Change	رد کردن تغییر
+	Relationship	رابطه
+	relative to	نسبت به
+	Relative to:	نسبت به:
+	Relaxed	آسوده
+	Remove	حذف
+	Remove Added Font	حذف قلم افزوده
+	Remove Background	حذف پس‌زمینه
+	Remove Content Control	حذف کنترل محتوا
+	Remove every custom shortcut and restore the built-in keys?	همهٔ میان‌برهای سفارشی حذف و کلیدهای داخلی بازگردانده شوند؟
+	Remove every custom tab and group and show all tabs again?	همهٔ زبانه‌ها و گروه‌های سفارشی حذف و همهٔ زبانه‌ها دوباره نمایش داده شوند؟
+	Remove field	حذف فیلد
+	Remove Field Name	حذف نام فیلد
+	Remove Footer	حذف پاصفحه
+	Remove from Quick Access Toolbar	حذف از نوار ابزار دسترسی سریع
+	Remove Header	حذف سرصفحه
+	Remove Hyperlink	حذف پیوند
+	Remove Password	حذف گذرواژه
+	Remove Pen	حذف قلم
+	Remove Positioning	حذف موقعیت‌دهی
+	Remove recipient	حذف گیرنده
+	Remove row	حذف ردیف
+	Remove series	حذف سری
+	Remove Space After Paragraph	حذف فاصله پس از پاراگراف
+	Remove Table of Contents	حذف فهرست مطالب
+	Remove the control once edited	حذف کنترل پس از ویرایش
+	Remove the space before the punctuation	حذف فاصله پیش از نشانه‌گذاری
+	Remove Watermark	حذف واترمارک
+	Rename Style	تغییر نام سبک
+	Rename…	تغییر نام…
+	Reopen	بازگشایی مجدد
+	Repeat	تکرار
+	Repeat as header row on each page	تکرار به‌عنوان ردیف سرستون در هر صفحه
+	Repeat Header Rows	تکرار ردیف‌های سرستون
+	Repeated words	واژه‌های تکراری
+	Repeating Section Content Control	کنترل محتوای بخش تکرارشونده
+	Replace	جایگزینی
+	Replace All	جایگزینی همه
+	Replace as you type	جایگزینی هنگام تایپ
+	Replace Document Text	جایگزینی متن سند
+	Replace text as you type	جایگزینی متن هنگام تایپ
+	Replace with:	جایگزینی با:
+	Replace:	جایگزینی:
+	Replay	بازپخش
+	Reply	پاسخ
+	Report	گزارش
+	Research	پژوهش
+	Researcher	پژوهشگر
+	Researcher needs an online service; Doc4Me keeps your documents offline.	پژوهشگر به یک سرویس آنلاین نیاز دارد؛ Doc4Me سندهای شما را آفلاین نگه می‌دارد.
+	Reset	بازنشانی
+	Reset All	بازنشانی همه
+	Reset All…	بازنشانی همه…
+	Reset Character Formatting	بازنشانی قالب‌بندی نویسه
+	Reset Crop	بازنشانی برش
+	Reset Graphic	بازنشانی گرافیک
+	Reset Paragraph Formatting	بازنشانی قالب‌بندی پاراگراف
+	Reset Picture	بازنشانی تصویر
+	Reset to Normal	بازنشانی به عادی
+	Reset\nGraphic	بازنشانی\nگرافیک
+	Reset…	بازنشانی…
+	Resize Table by Dragging	تغییر اندازهٔ جدول با کشیدن
+	Resolve	حل کردن
+	Resolved	حل‌شده
+	Restart at 1	شروع دوباره از ۱
+	Restart Each Page	شروع دوباره در هر صفحه
+	Restart Each Section	شروع دوباره در هر بخش
+	Restart list after:	شروع دوبارهٔ فهرست پس از:
+	Restore	بازیابی
+	Restore Defaults	بازیابی پیش‌فرض‌ها
+	Restore Down	بازگردانی به پایین
+	Restore to Normal Word Document	بازگردانی به سند Word عادی
+	Restrict Editing	محدود کردن ویرایش
+	Restrict\nEditing	محدود کردن\nویرایش
+	Result	نتیجه
+	Results	نتایج
+	Return address labels	برچسب‌های نشانی فرستنده
+	Return address:	نشانی فرستنده:
+	Reverse the order	معکوس کردن ترتیب
+	Review	بازبینی
+	Review AutoFormat Changes	بازبینی تغییرات قالب‌بندی خودکار
+	Review Changes…	بازبینی تغییرات…
+	Reviewing	بازبینی
+	Reviewing Pane	پنل بازبینی
+	Reviewing — edits become suggestions	بازبینی — ویرایش‌ها به پیشنهاد تبدیل می‌شوند
+	Revised document	سند بازبینی‌شده
+	Revisions	بازبینی‌ها
+	Rewind	عقب بردن
+	Ribbon	نوار
+	Ribbon and Quick Access Toolbar:	نوار و نوار ابزار دسترسی سریع:
+	Ribbon tabs	زبانه‌های نوار
+	Rich Text Content Control	کنترل محتوای متن غنی
+	Rich Text Format (*.rtf)	قالب متن غنی (*.rtf)
+	Rich Text Format (RTF)	قالب متن غنی (RTF)
+	Right	راست
+	Right (vertical)	راست (عمودی)
+	Right align page numbers	تراز راست شماره‌های صفحه
+	Right Arrow with Text Above	پیکان راست با متن در بالا
+	Right Arrow with Text Below	پیکان راست با متن در پایین
+	Right Border	حاشیهٔ راست
+	Right border	حاشیهٔ راست
+	Right Bracket Twice	کروشهٔ راست دوبار
+	Right indent	تورفتگی راست
+	Right Margin	حاشیهٔ راست
+	Right Only	فقط راست
+	Right only	فقط راست
+	Right-to-left	راست به چپ
+	Right-to-Left Section	بخش راست به چپ
+	Right-to-Left Table	جدول راست به چپ
+	Right-to-Left Text Direction	جهت متن راست به چپ
+	Right:	راست:
+	Rightwards Arrow Above	پیکان رو به راست در بالا
+	Rightwards Harpoon Above	زوبین رو به راست در بالا
+	Roots of ax²+bx+c	ریشه‌های ax²+bx+c
+	Rotate	چرخش
+	Rotate all text 270°	چرخش همهٔ متن 270°
+	Rotate all text 90°	چرخش همهٔ متن 90°
+	Rotate Left 90°	چرخش به چپ 90°
+	Rotate Right 90°	چرخش به راست 90°
+	Rotation	چرخش
+	Rotation:	چرخش:
+	Rounded Rectangle	مستطیل گوشه‌گرد
+	Row	ردیف
+	Row:	ردیف:
+	Rows & Columns	ردیف‌ها و ستون‌ها
+	Ruby text:	متن روبی:
+	Ruler	خط‌کش
+	Rules	قواعد
+	Run	اجرا
+	Run-in	پیوسته
+	Russian	روسی
+	Résumé	رزومه
+	Same as the whole table	همانند کل جدول
+	SAMPLE	نمونه
+	Sat:	اشباع:
+	Save	ذخیره
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	یک نسخه در قالب دیگری ذخیره کنید. چاپ از طریق یک PDF انجام می‌شود که می‌توانید از هر نمایشگری چاپ کنید.
+	Save As	ذخیره به‌عنوان
+	Save as Template	ذخیره به‌عنوان الگو
+	Save documents	ذخیرهٔ سندها
+	Save the document to turn on AutoSave	برای روشن کردن ذخیرهٔ خودکار، سند را ذخیره کنید
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	برای روشن کردن ذخیرهٔ خودکار، سند را ذخیره کنید (فایلی که فقط باز کرده‌اید تا زمانی که ذخیره‌اش نکنید بازنویسی نمی‌شود)
+	Save these pages as PDF…	ذخیرهٔ این صفحه‌ها به‌صورت PDF…
+	Save Version	ذخیرهٔ نسخه
+	Saved	ذخیره شد
+	Scale	مقیاس
+	Scale Drawing	تغییر مقیاس نقاشی
+	Scatter	پراکنده
+	Screen Clipping	برش صفحه‌نمایش
+	Screen clipping didn't work: {reason}	برش صفحه‌نمایش کار نکرد: {reason}
+	Screen clipping ended without a picture.	برش صفحه‌نمایش بدون تصویر پایان یافت.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	برش صفحه‌نمایش اینجا در دسترس نیست. تصویری از صفحه کپی کنید، سپس آن را بچسبانید.
+	Screenshot	نماگرفت
+	Script	خط نوشتاری
+	Scripts	خط‌های نوشتاری
+	Scroll ribbon left	پیمایش نوار به چپ
+	Scroll ribbon right	پیمایش نوار به راست
+	Search	جستجو
+	Search Commands	جستجوی فرمان‌ها
+	Search commands and help	جستجوی فرمان‌ها و راهنما
+	Search document	جستجو در سند
+	Search for templates	جستجوی الگوها
+	Search icons	جستجوی نمادها
+	Search Openverse (Creative Commons pictures)	جستجو در Openverse (تصاویر کریتیو کامنز)
+	Search Options	گزینه‌های جستجو
+	Searching…	در حال جستجو…
+	Secant Function	تابع سکانت
+	Section Break	شکست بخش
+	Section Breaks	شکست‌های بخش
+	Section Character	نویسهٔ بخش
+	Section direction:	جهت بخش:
+	Section Mark	علامت بخش
+	Section Properties	ویژگی‌های بخش
+	Sections	بخش‌ها
+	See	ببینید
+	Select	انتخاب
+	Select a picture, shape, chart or table to describe it.	برای توصیف، یک تصویر، شکل، نمودار یا جدول انتخاب کنید.
+	Select All	انتخاب همه
+	Select Cell	انتخاب سلول
+	Select Floating Shapes	انتخاب شکل‌های شناور
+	Select Heading and Content	انتخاب عنوان و محتوا
+	Select Line	انتخاب خط
+	Select Objects	انتخاب اشیا
+	Select Paragraph	انتخاب پاراگراف
+	Select Range	انتخاب محدوده
+	Select Recipients	انتخاب گیرندگان
+	Select recipients first to choose from their fields.	ابتدا گیرندگان را انتخاب کنید تا از فیلدهایشان برگزینید.
+	Select recipients first to match their fields.	ابتدا گیرندگان را انتخاب کنید تا فیلدهایشان را تطبیق دهید.
+	Select Row	انتخاب ردیف
+	Select Sentence	انتخاب جمله
+	Select Table	انتخاب جدول
+	Select Text	انتخاب متن
+	Select text in the document to translate it.	برای ترجمه، متنی را در سند انتخاب کنید.
+	Select Text with Similar Formatting	انتخاب متن با قالب‌بندی مشابه
+	Select text, then tick who can still edit it.	متنی را انتخاب کنید، سپس تیک بزنید چه کسی همچنان می‌تواند آن را ویرایش کند.
+	Select the part of the screen to insert.	بخشی از صفحه را که می‌خواهید درج کنید انتخاب کنید.
+	Select Word	انتخاب واژه
+	Select\nRecipients	انتخاب\nگیرندگان
+	Selected Fields	فیلدهای انتخاب‌شده
+	Selected pages	صفحه‌های انتخاب‌شده
+	Selection	انتخاب
+	Selection Pane	پنل انتخاب
+	Send Backward	فرستادن به عقب
+	Send the document straight to the system print dialog, or save a copy in another format below.	سند را مستقیماً به کادر گفتگوی چاپ سیستم بفرستید، یا در زیر یک نسخه در قالب دیگری ذخیره کنید.
+	Sentence	جمله
+	Sentence case.	حالت جمله.
+	Separator:	جداکننده:
+	Sequence name:	نام دنباله:
+	Serbian	صربی
+	Serbian (Cyrillic)	صربی (سیریلیک)
+	Serbian (Latin)	صربی (لاتین)
+	Series name	نام سری
+	Series {n}	سری {n}
+	Server address (https://…)	نشانی سرور (https://…)
+	Set	تنظیم
+	Set As Default	تنظیم به‌عنوان پیش‌فرض
+	Set as Default	تنظیم به‌عنوان پیش‌فرض
+	Set Caret	تنظیم نشانگر
+	Set Character Formatting	تنظیم قالب‌بندی نویسه
+	Set Date	تنظیم تاریخ
+	Set Equation	تنظیم معادله
+	Set Numbering Value	تنظیم مقدار شماره‌گذاری
+	Set Paragraph Formatting	تنظیم قالب‌بندی پاراگراف
+	Set Proofing Language…	تنظیم زبان تصحیح…
+	Setting:	تنظیم:
+	Settings…	تنظیمات…
+	Shading	سایه‌زنی
+	Shadow	سایه
+	Shadow, glow and soft edges	سایه، درخشش و لبه‌های نرم
+	Shape Effects	جلوه‌های شکل
+	Shape Fill	پرشدگی شکل
+	Shape Format	قالب شکل
+	Shape Outline	خط دور شکل
+	Shape Styles	سبک‌های شکل
+	Shapes	شکل‌ها
+	Share	اشتراک‌گذاری
+	Sheet:	برگه:
+	Shift cells down	جابه‌جایی سلول‌ها به پایین
+	Shift cells right	جابه‌جایی سلول‌ها به راست
+	Shift+Tab	Shift+Tab
+	Shipping labels	برچسب‌های حمل
+	Short citation:	استناد کوتاه:
+	Shortcut key:	کلید میان‌بر:
+	Show	نمایش
+	Show all formatting marks	نمایش همهٔ علامت‌های قالب‌بندی
+	Show All Levels	نمایش همهٔ سطوح
+	Show all revisions inline	نمایش همهٔ بازبینی‌ها درون‌خطی
+	Show changes at:	نمایش تغییرات در:
+	Show changes in:	نمایش تغییرات در:
+	Show Comments	نمایش نظرها
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	نمایش سندها با رنگ‌های معکوس، مانند نما › تغییر حالت‌ها. ذخیره، چاپ و PDFها تغییر نمی‌کنند.
+	Show every bibliography field	نمایش همهٔ فیلدهای کتاب‌نامه
+	Show First Line Only	نمایش فقط خط اول
+	Show in the Styles gallery	نمایش در گالری سبک‌ها
+	Show KeyTips (Alt or F10)	نمایش راهنمای کلیدها (Alt یا F10)
+	Show Level	نمایش سطح
+	Show Level 1	نمایش سطح ۱
+	Show Level 2	نمایش سطح ۲
+	Show Level 3	نمایش سطح ۳
+	Show Level 4	نمایش سطح ۴
+	Show Level 5	نمایش سطح ۵
+	Show Level 6	نمایش سطح ۶
+	Show Level 7	نمایش سطح ۷
+	Show Level 8	نمایش سطح ۸
+	Show Level 9	نمایش سطح ۹
+	Show Markup	نمایش نشانه‌گذاری
+	Show Notes	نمایش یادداشت‌ها
+	Show only comments and formatting in balloons	نمایش فقط نظرها و قالب‌بندی در بالن‌ها
+	Show or Hide Style	نمایش یا پنهان کردن سبک
+	Show page numbers	نمایش شماره‌های صفحه
+	Show revisions in balloons	نمایش بازبینی‌ها در بالن‌ها
+	Show rulers	نمایش خط‌کش‌ها
+	Show Text Formatting	نمایش قالب‌بندی متن
+	Show the equation in the line of text	نمایش معادله در خط متن
+	Show the equation on a line of its own	نمایش معادله در خطی جداگانه
+	Show the mini toolbar when text is selected	نمایش نوار ابزار کوچک هنگام انتخاب متن
+	Show/Hide ¶	نمایش/پنهان کردن ¶
+	Show\nComments	نمایش\nنظرها
+	Showing the first {count} items.	نمایش {count} مورد نخست.
+	Shows a tree: each item below the item it belongs to.	یک درخت نمایش می‌دهد: هر مورد زیر موردی که به آن تعلق دارد.
+	Shows items around a central idea: the first item is the centre.	موارد را پیرامون یک ایدهٔ مرکزی نمایش می‌دهد: مورد نخست مرکز است.
+	Shows items of equal weight as blocks in rows.	موارد هم‌وزن را به‌صورت بلوک‌هایی در ردیف‌ها نمایش می‌دهد.
+	Shows overlapping ideas as overlapping circles.	ایده‌های هم‌پوشان را به‌صورت دایره‌های هم‌پوشان نمایش می‌دهد.
+	Shows parts of a whole as quadrants.	بخش‌های یک کل را به‌صورت چهارک‌ها نمایش می‌دهد.
+	Shows parts that build on each other, largest at the bottom.	بخش‌هایی را که روی هم بنا می‌شوند نمایش می‌دهد، بزرگ‌ترین در پایین.
+	Shows steps in order, left to right, with arrows between them.	مراحل را به ترتیب، از چپ به راست، با پیکان‌هایی میان آن‌ها نمایش می‌دهد.
+	Shows steps that repeat, around a circle.	مراحل تکرارشونده را دور یک دایره نمایش می‌دهد.
+	Shrink Font 1 Point	کوچک کردن قلم به اندازهٔ ۱ پوینت
+	Shrink Selection	کوچک کردن انتخاب
+	Shrink text	کوچک کردن متن
+	Side to Side	کنار هم
+	Side\nto Side	کنار\nهم
+	Sides of a right triangle	اضلاع مثلث قائم‌الزاویه
+	Signature Line	خط امضا
+	Sine and cosine series of f(x)	سری سینوس و کسینوس f(x)
+	Sine Function	تابع سینوس
+	Sine theta	سینوس تتا
+	Single	تکی
+	Single Brackets	کروشه‌های تکی
+	Single Closing Quote	نقل‌قول تکی بسته
+	Single label	برچسب تکی
+	Single Left Angle	زاویهٔ چپ تکی
+	Single Left Bar	میلهٔ چپ تکی
+	Single Left Brace	آکولاد چپ تکی
+	Single Left Bracket	کروشهٔ چپ تکی
+	Single Left Parenthesis	پرانتز چپ تکی
+	Single Opening Quote	نقل‌قول تکی باز
+	Single Right Brace	آکولاد راست تکی
+	Single Right Bracket	کروشهٔ راست تکی
+	Single Right Parenthesis	پرانتز راست تکی
+	Single Spacing	فاصلهٔ تکی
+	SIST02	SIST02
+	Site name	نام سایت
+	Size	اندازه
+	Size (pt):	اندازه (pt):
+	Size and Crop…	اندازه و برش…
+	Size:	اندازه:
+	Sketchbook	دفتر طراحی
+	Skewed Fraction	کسر مورب
+	Skip citations & bibliography	رد شدن از استنادها و کتاب‌نامه
+	Skip Citations and Bibliography	رد شدن از استنادها و کتاب‌نامه
+	Skip Record If	رد شدن از رکورد اگر
+	Skip Record If…	رد شدن از رکورد اگر…
+	Slant Down	شیب به پایین
+	Slant Up	شیب به بالا
+	Small Caps	حروف بزرگ کوچک
+	Small caps	حروف بزرگ کوچک
+	Small change	تغییر کوچک
+	Smart quotes instead of straight quotes	نقل‌قول‌های هوشمند به‌جای نقل‌قول‌های صاف
+	SmartArt	SmartArt
+	SmartArt Design	طراحی SmartArt
+	SmartArt Styles	سبک‌های SmartArt
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	پیمایش و بزرگ‌نمایی نرم، و منوها و دکمه‌هایی که به‌تدریج ظاهر می‌شوند. خاموش، هر تغییر را یک‌باره نشان می‌دهد.
+	Soft Edges	لبه‌های نرم
+	Soft Glow	درخشش نرم
+	Solid Accent	تأکید یکدست
+	Sort	مرتب‌سازی
+	Sort by	مرتب‌سازی بر اساس
+	Sort order:	ترتیب مرتب‌سازی:
+	Sort Records	مرتب‌سازی رکوردها
+	Source code: github.com/chatraweechai/doc4me	کد منبع: github.com/chatraweechai/doc4me
+	Source Manager	مدیر منابع
+	Source type:	نوع منبع:
+	Sources in this document:	منابع این سند:
+	South	جنوب
+	Space	فاصله
+	Space after	فاصله پس از
+	Space after: {pt} pt	فاصله پس از: {pt} pt
+	Space before	فاصله پیش از
+	Space before/after:	فاصله پیش/پس از:
+	Space before: {pt} pt	فاصله پیش از: {pt} pt
+	Spaces	فاصله‌ها
+	Spacing	فاصله‌گذاری
+	Spacing (pt):	فاصله‌گذاری (pt):
+	Spacing:	فاصله‌گذاری:
+	Spanish	اسپانیایی
+	Spanish (Mexico)	اسپانیایی (مکزیک)
+	Spanish (Spain)	اسپانیایی (اسپانیا)
+	Sparse Matrices	ماتریس‌های خلوت
+	Special	ویژه
+	Special Characters	نویسه‌های ویژه
+	Specify height:	تعیین ارتفاع:
+	Speech	گفتار
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	گفتار روی همین رایانه تشخیص داده می‌شود (whisper.cpp)؛ چیزی آنلاین فرستاده نمی‌شود.
+	Speed	سرعت
+	Spelling	املا
+	Spelling & Grammar	املا و دستور زبان
+	Spelling &\nGrammar	املا و\nدستور زبان
+	Spelling and grammar are checked in English (United States).	املا و دستور زبان به انگلیسی (ایالات متحده) بررسی می‌شوند.
+	Spelling Suggestions	پیشنهادهای املایی
+	Spike	انباشته
+	Split	تقسیم
+	Split apart page break and paragraph mark	جدا کردن شکست صفحه و علامت پاراگراف
+	Split Cells	تقسیم سلول‌ها
+	Split Table	تقسیم جدول
+	Spreadsheet Table	جدول صفحه‌گسترده
+	Square	مربع
+	Square Root	ریشهٔ دوم
+	Square Root with Degree	ریشهٔ دوم با فرجه
+	Square Union	اجتماع مربعی
+	Stack Object	شیء انباشته
+	Stack Object (Three)	شیء انباشته (سه‌تایی)
+	Stacked	انباشته
+	Stacked Bar	میله‌ای انباشته
+	Stacked Column	ستونی انباشته
+	Stacked Fraction	کسر انباشته
+	Stacked, no bar	انباشته، بدون خط کسری
+	Standard	استاندارد
+	Standard and Contextual	استاندارد و بافتاری
+	Standard Colors	رنگ‌های استاندارد
+	Standard Only	فقط استاندارد
+	Star	ستاره
+	Start at:	شروع از:
+	Start Enforcing Protection	آغاز اعمال محافظت
+	Start Mail Merge	آغاز ادغام نامه
+	Start Mail\nMerge	آغاز ادغام\nنامه
+	State	استان
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	آمار
+	Status Bar	نوار وضعیت
+	Statutes	قوانین
+	Stop	توقف
+	Stop Protection	توقف محافظت
+	Stop Reading	توقف خواندن
+	Stopped	متوقف شد
+	Store	فروشگاه
+	Straight Arrow Connector	اتصال‌دهندهٔ پیکان صاف
+	Straight Connector	اتصال‌دهندهٔ صاف
+	Strikethrough	خط‌خورده
+	Stroke {n} of {total}	ضربهٔ {n} از {total}
+	Strong	قوی
+	Structure Actions	کنش‌های ساختار
+	Structures	ساختارها
+	Studio	استودیو
+	Studio cover	جلد استودیو
+	Studio handbook (sample)	راهنمای استودیو (نمونه)
+	Style	سبک
+	Style based on:	سبک بر پایهٔ:
+	Style Inspector	بازرس سبک
+	Style Set	مجموعهٔ سبک
+	Style:	سبک:
+	Style: APA	سبک: APA
+	Style: {style}	سبک: {style}
+	Styles	سبک‌ها
+	Styles Pane	پنل سبک‌ها
+	Styles:	سبک‌ها:
+	Subentry:	زیرمدخل:
+	Subject	موضوع
+	Subscript	زیرنویس
+	Subscript-Superscript	زیرنویس-بالانویس
+	Subscripts and Superscripts	زیرنویس‌ها و بالانویس‌ها
+	Subset:	زیرمجموعه:
+	Substituted font	قلم جایگزین
+	Subtitle	زیرعنوان
+	Subtle Emphasis	تأکید ملایم
+	Subtle Reference	ارجاع ملایم
+	Sum	جمع
+	Sum of cosines	جمع کسینوس‌ها
+	Sum or difference of sines	جمع یا تفاضل سینوس‌ها
+	Summation	مجموع‌یابی
+	Summation from 0 to n	مجموع‌یابی از 0 تا n
+	Summation over binomials	مجموع‌یابی روی دوجمله‌ای‌ها
+	Summation with Limits	مجموع‌یابی با حدود
+	Summation with Lower Limit	مجموع‌یابی با حد پایین
+	Summation with Subscript Limit	مجموع‌یابی با حد زیرنویس
+	Summation with Subscript-Superscript Limits	مجموع‌یابی با حدود زیرنویس-بالانویس
+	Summations	مجموع‌یابی‌ها
+	Superscript	بالانویس
+	Suppress line numbers	حذف شماره‌های خط
+	Surface Integral	انتگرال سطحی
+	Surface Integral with Limits	انتگرال سطحی با حدود
+	Surface Integral with Stacked Limits	انتگرال سطحی با حدود انباشته
+	Swap footnotes and endnotes	جابه‌جایی پانویس‌ها و یادداشت‌های پایانی
+	Swedish	سوئدی
+	Switch Modes	تغییر حالت‌ها
+	Switch Windows	جابه‌جایی پنجره‌ها
+	Switch\nModes	تغییر\nحالت‌ها
+	Symbol	نماد
+	Symbol Font	قلم نماد
+	Symbols	نمادها
+	Synchronous Scrolling	پیمایش همزمان
+	Synonyms	مترادف‌ها
+	System	سیستم
+	Tab	تب
+	Tab Character	نویسهٔ تب
+	Tab character	نویسهٔ تب
+	Tab characters	نویسه‌های تب
+	Tab leader:	نقطه‌چین تب:
+	Tab stop position:	موقعیت توقف تب:
+	Tab stops to be cleared:	توقف‌های تب برای پاک شدن:
+	Table	جدول
+	Table AutoFormat	قالب‌بندی خودکار جدول
+	Table AutoFormat…	قالب‌بندی خودکار جدول…
+	Table Column Width	عرض ستون جدول
+	Table Design	طراحی جدول
+	Table direction:	جهت جدول:
+	Table entry fields	فیلدهای مدخل جدول
+	Table Grid	شبکهٔ جدول
+	Table identifier:	شناسهٔ جدول:
+	Table Layout	طرح‌بندی جدول
+	Table of Authorities	جدول مراجع حقوقی
+	Table of Contents	فهرست مطالب
+	Table of Contents Options	گزینه‌های فهرست مطالب
+	Table of Contents Styles	سبک‌های فهرست مطالب
+	Table of Figures	فهرست تصاویر
+	Table of Figures Options	گزینه‌های فهرست تصاویر
+	Table of\nContents	فهرست\nمطالب
+	Table Positioning	موقعیت‌دهی جدول
+	Table Properties	ویژگی‌های جدول
+	Table Row Height	ارتفاع ردیف جدول
+	Table style	سبک جدول
+	Table Style Options	گزینه‌های سبک جدول
+	Table Styles	سبک‌های جدول
+	Table styles:	سبک‌های جدول:
+	Tables	جدول‌ها
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	تب‌ها
+	Tabs…	تب‌ها…
+	Tabular List	فهرست جدولی
+	Tag	برچسب
+	Tangent formula	فرمول تانژانت
+	Tangent Function	تابع تانژانت
+	TC entry fields	فیلدهای مدخل TC
+	Technology	فناوری
+	Templates	الگوها
+	Templates and Add-ins	الگوها و افزونه‌ها
+	Text	متن
+	Text Box	کادر متن
+	Text boxes	کادرهای متن
+	Text Direction	جهت متن
+	Text Effects	جلوه‌های متن
+	Text Effects and Typography	جلوه‌های متن و تایپوگرافی
+	Text Fill	پرشدگی متن
+	Text from File	متن از فایل
+	Text Highlight Color	رنگ برجسته‌سازی متن
+	Text indent at:	تورفتگی متن در:
+	Text isn't squeezed to fit its cell yet.	متن هنوز برای جا شدن در سلولش فشرده نمی‌شود.
+	Text Outline	خط دور متن
+	Text over Colon Equal	متن روی دونقطه مساوی
+	Text over Equal	متن روی مساوی
+	Text Pane	پنل متن
+	Text size	اندازهٔ متن
+	Text snaps to characters	متن به نویسه‌ها می‌چسبد
+	Text to display:	متن برای نمایش:
+	Text Wrapping	پیچش متن
+	Text wrapping:	پیچش متن:
+	Text:	متن:
+	Text\nBox	کادر\nمتن
+	Text\nDirection	جهت\nمتن
+	Thai	تایلندی
+	Thai Distributed	توزیع تایلندی
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	این قالب همه‌چیز را نگه نمی‌دارد، بنابراین سند همچنان باز است. برای ادامه آن را به‌صورت سند Word (.docx) ذخیره کنید.
+	That isn't the web address or embed code of an online video.	این نشانی وب یا کد جاسازی یک ویدئوی آنلاین نیست.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	این گذرواژه درست نیست. آن را بررسی کنید (گذرواژه‌ها به بزرگی و کوچکی حروف حساس‌اند) و دوباره تلاش کنید.
+	The clipboard is empty.	کلیپ‌بورد خالی است.
+	The date it is today	تاریخ امروز
+	The document contains no tracked changes.	سند هیچ تغییر ردیابی‌شده‌ای ندارد.
+	The document has no bookmarks yet.	سند هنوز هیچ نشانکی ندارد.
+	The document is read only, except for regions marked editable.	سند فقط خواندنی است، جز ناحیه‌هایی که ویرایش‌پذیر علامت خورده‌اند.
+	The document will be saved with a password. Save it to protect it.	سند با گذرواژه ذخیره خواهد شد. برای محافظت، آن را ذخیره کنید.
+	The first word of a sentence starts with a capital.	نخستین واژهٔ جمله با حرف بزرگ آغاز می‌شود.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	سهمیهٔ رایگان روزانه تمام شده است (فردا دوباره تلاش کنید، یا یک نشانی ایمیل بدهید)
+	the LibreTranslate server	سرور LibreTranslate
+	The Mail Merge Helper sets up a merge in three steps.	راهنمای ادغام نامه، ادغام را در سه مرحله راه‌اندازی می‌کند.
+	The new style takes the formatting of the current paragraph.	سبک جدید قالب‌بندی پاراگراف فعلی را می‌گیرد.
+	The password is optional; without it anyone can stop the protection.	گذرواژه اختیاری است؛ بدون آن هر کسی می‌تواند محافظت را متوقف کند.
+	The password is removed. Save the document to keep the change.	گذرواژه حذف شد. برای حفظ تغییر، سند را ذخیره کنید.
+	The passwords don't match.	گذرواژه‌ها مطابقت ندارند.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	چاپگر، چاپ دورو و تعداد صفحه در هر برگ در آن کادر گفتگو انتخاب می‌شوند.
+	The recipient-list field that fills each part of an address block and greeting line.	فیلد فهرست گیرندگان که هر بخش از بلوک نشانی و خط خوشامدگویی را پر می‌کند.
+	The same word twice in a row.	یک واژه دو بار پشت سر هم.
+	The spelling and grammar check is complete.	بررسی املا و دستور زبان کامل شد.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	کادر گفتگوی فایل سیستم در دسترس نیست، بنابراین Doc4Me کادر خودش را نشان می‌دهد. برای داشتن کادر سیستم، یک درگاه انتخاب فایل (مانند xdg-desktop-portal-gtk) یا zenity نصب کنید.
+	The text is sent to {service} to be translated.	متن برای ترجمه به {service} فرستاده می‌شود.
+	The time right now	زمان کنونی
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	ویدئو به‌صورت تصویر در سند نمایش داده می‌شود. برای تماشا در مرورگر روی آن دوبار کلیک کنید.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	کل سند به یک سند جدید ترجمه می‌شود که جایگزین این سند می‌شود. ابتدا کار خود را ذخیره کنید.
+	Theme Colors	رنگ‌های پوسته
+	Theme Fonts	قلم‌های پوسته
+	Theme List	فهرست پوسته‌ها
+	Themes	پوسته‌ها
+	Then by	سپس بر اساس
+	Then insert:	سپس درج کن:
+	There's no text to translate.	متنی برای ترجمه وجود ندارد.
+	Thesaurus	واژه‌نامهٔ مترادف
+	These marks show even when Show/Hide ¶ is off.	این علامت‌ها حتی وقتی نمایش/پنهان کردن ¶ خاموش است نمایش داده می‌شوند.
+	These merge fields aren't in the recipient list:	این فیلدهای ادغام در فهرست گیرندگان نیستند:
+	These settings will be used for new documents.	این تنظیمات برای سندهای جدید استفاده خواهند شد.
+	Thick	ضخیم
+	Thickness	ضخامت
+	This Device…	این دستگاه…
+	This document	این سند
+	This field has no options.	این فیلد گزینه‌ای ندارد.
+	This folder can't be read: {error}	این پوشه خوانده نمی‌شود: {error}
+	This font has no characters to show.	این قلم نویسه‌ای برای نمایش ندارد.
+	This page	این صفحه
+	This password type isn't supported.	این نوع گذرواژه پشتیبانی نمی‌شود.
+	This point forward	از این نقطه به بعد
+	This section	این بخش
+	Three	سه
+	Through	سراسری
+	Tight	فشرده
+	Tilde	مدک
+	Tips ({n})	نکته‌ها ({n})
+	Title	عنوان
+	Title from the document properties	عنوان از ویژگی‌های سند
+	Title:	عنوان:
+	To	به
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	برای باز کردن پیش‌فرض اسناد Word با Doc4Me: یکی را در Finder انتخاب کنید، File › Get Info را برگزینید، Doc4Me را زیر Open with انتخاب کنید، سپس روی Change All کلیک کنید.
+	To:	به:
+	TOA Heading	عنوان جدول مراجع حقوقی
+	TOC Heading	عنوان فهرست مطالب
+	TOC {n}	فهرست مطالب {n}
+	Today	امروز
+	tOGGLE cASE	وارونه کردن بزرگی و کوچکی
+	Toggle Check Box	تغییر وضعیت کادر انتخاب
+	Toggle Field Codes	تغییر نمایش کدهای فیلد
+	Toggle Unicode Character	تبدیل نویسهٔ Unicode
+	Tools	ابزارها
+	Top	بالا
+	Top and Bottom	بالا و پایین
+	Top Border	حاشیهٔ بالا
+	Top Margin	حاشیهٔ بالا
+	Top of Next Page	بالای صفحهٔ بعد
+	Top of Page	بالای صفحه
+	Top of Previous Page	بالای صفحهٔ قبل
+	Top of the Window	بالای پنجره
+	Top:	بالا:
+	Total	مجموع
+	Total Row	ردیف مجموع
+	Track Changes	ردیابی تغییرات
+	Track Changes Options	گزینه‌های ردیابی تغییرات
+	Track changes while editing	ردیابی تغییرات هنگام ویرایش
+	Track Changes: On	ردیابی تغییرات: روشن
+	Track formatting	ردیابی قالب‌بندی
+	Track\nChanges	ردیابی\nتغییرات
+	Track\nChanges ✓	ردیابی\nتغییرات ✓
+	Tracked changes	تغییرات ردیابی‌شده
+	Tracking	فاصله‌گذاری نویسه‌ها
+	Trademark	علامت تجاری
+	Trademark Sign	نشان علامت تجاری
+	Transform	تبدیل
+	Translate	ترجمه
+	Translate Document	ترجمهٔ سند
+	Translating {done} of {total}	در حال ترجمهٔ {done} از {total}
+	Translation service	سرویس ترجمه
+	Translator	مترجم
+	Transparency	شفافیت
+	Transparency:	شفافیت:
+	Transport	حمل‌ونقل
+	Treatises	رساله‌ها
+	Triangle	مثلث
+	Triangle Down	مثلث رو به پایین
+	Triangle Up	مثلث رو به بالا
+	Trigonometric Functions	توابع مثلثاتی
+	Triple	سه‌تایی
+	Triple Dot	سه نقطه
+	Triple Integral	انتگرال سه‌گانه
+	Triple Integral with Limits	انتگرال سه‌گانه با حدود
+	Triple Integral with Stacked Limits	انتگرال سه‌گانه با حدود انباشته
+	Trust Center	مرکز اعتماد
+	Tue	سه‌شنبه
+	Turabian	Turabian
+	Turkish	ترکی
+	Two	دو
+	Type	نوع
+	Type a command, e.g. "insert table"	یک فرمان تایپ کنید، مثلاً "insert table"
+	Type a New List	تایپ فهرست جدید
+	Type a New List…	تایپ فهرست جدید…
+	Type at least one recipient.	دست‌کم یک گیرنده تایپ کنید.
+	Type equations in LaTeX	تایپ معادله‌ها با LaTeX
+	Type equations in the linear format (UnicodeMath)	تایپ معادله‌ها در قالب خطی (UnicodeMath)
+	Type in Equation	تایپ در معادله
+	Type normal (non-math) text in the equation	تایپ متن عادی (غیرریاضی) در معادله
+	Type Text	تایپ متن
+	Type the categories down the side and a column of values per series.	دسته‌ها را در کنار و یک ستون مقادیر برای هر سری تایپ کنید.
+	Type the field's name and its switches, for example PAGE \\* roman.	نام فیلد و سوئیچ‌های آن را تایپ کنید، برای مثال PAGE \\* roman.
+	Type the password to stop the protection.	برای توقف محافظت، گذرواژه را تایپ کنید.
+	Type the recipients, or load them from a file.	گیرندگان را تایپ کنید، یا آن‌ها را از یک فایل بارگذاری کنید.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	نام برچسب منبع را تایپ کنید. بعداً می‌توانید با ویرایش منبع اطلاعات بیشتری به آن بیفزایید.
+	Type:	نوع:
+	Typing	تایپ
+	Typing replaces selected text	تایپ، متن انتخاب‌شده را جایگزین می‌کند
+	Ukrainian	اوکراینی
+	Unchecked symbol	نماد علامت‌نخورده
+	Underbar	خط پایین
+	Underbrace	آکولاد پایین
+	Underline	زیرخط
+	Underline color	رنگ زیرخط
+	Underline Words Only	زیرخط فقط برای واژه‌ها
+	Undo	واگرد
+	Undo Stroke	واگرد ضربه
+	Undo {action}	واگرد {action}
+	Unformatted Text	متن بدون قالب
+	Ungroup	لغو گروه‌بندی
+	Union	اجتماع
+	Union of intersections	اجتماع اشتراک‌ها
+	Union with Limits	اجتماع با حدود
+	Union with Lower Limit	اجتماع با حد پایین
+	Union with Plus	اجتماع با به‌علاوه
+	Union with Subscript-Superscript Limits	اجتماع با حدود زیرنویس-بالانویس
+	Unions and Intersections	اجتماع‌ها و اشتراک‌ها
+	Unlink Fields	لغو پیوند فیلدها
+	Unlink\nCitations	لغو پیوند\nاستنادها
+	Unlock Fields	باز کردن قفل فیلدها
+	Up	بالا
+	Up Diagonal Dots	نقطه‌های مورب رو به بالا
+	Up one level	یک سطح بالاتر
+	Update Field	به‌روزرسانی فیلد
+	Update fields before printing	به‌روزرسانی فیلدها پیش از چاپ
+	Update Index	به‌روزرسانی نمایه
+	Update Style to Match Selection	به‌روزرسانی سبک برای تطبیق با انتخاب
+	Update Styles from Template	به‌روزرسانی سبک‌ها از الگو
+	Update Table	به‌روزرسانی جدول
+	Update Table of Figures	به‌روزرسانی فهرست تصاویر
+	Update to Match	به‌روزرسانی برای تطبیق
+	Update to Match Selection	به‌روزرسانی برای تطبیق با انتخاب
+	UPPERCASE	حروف بزرگ
+	URGENT	فوری
+	URL	URL
+	Use "a" before a consonant sound	استفاده از "a" پیش از صدای بی‌صدا
+	Use "an" before a vowel sound	استفاده از "an" پیش از صدای واکه
+	Use an Existing List…	استفاده از فهرست موجود…
+	Use passim (five or more pages)	استفاده از passim (پنج صفحه یا بیشتر)
+	Use system setting	استفاده از تنظیم سیستم
+	Use the Insert key to switch overtype on and off	استفاده از کلید Insert برای روشن و خاموش کردن بازنویسی
+	Use wildcards	استفاده از نویسه‌های عام
+	User Name	نام کاربری
+	User name:	نام کاربری:
+	Username	نام کاربری
+	Value	مقدار
+	Vector A	بردار A
+	Vector AB	بردار AB
+	Version	نسخه
+	Version History	تاریخچهٔ نسخه‌ها
+	Version {version} ({build})	نسخهٔ {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	نسخه‌ها تا زمانی که سند باز است نگه داشته می‌شوند (فایل .docx نسخه ندارد).
+	Vertical	عمودی
+	Vertical Alignment	تراز عمودی
+	Vertical alignment:	تراز عمودی:
+	Vertical Bars	میله‌های عمودی
+	Vertical Dots	نقطه‌های عمودی
+	Vertical spacing:	فاصلهٔ عمودی:
+	Vietnamese	ویتنامی
+	View	نما
+	View Alt Text…	مشاهدهٔ متن جایگزین…
+	View Gridlines	نمایش خطوط شبکه
+	View Side by Side	نمایش کنار هم
+	View State	وضعیت نما
+	Views	نماها
+	Visual effects	جلوه‌های بصری
+	Voice	صدا
+	Volume	جلد
+	Volume Integral	انتگرال حجمی
+	Volume Integral with Limits	انتگرال حجمی با حدود
+	Volume Integral with Stacked Limits	انتگرال حجمی با حدود انباشته
+	W:	ع:
+	Waiting for Zotero…	در انتظار Zotero…
+	Warm Gradient with Outline	گرادیان گرم با خط دور
+	Warnings ({n})	هشدارها ({n})
+	Watermark	واترمارک
+	Wave	موج
+	Weather	آب‌وهوا
+	web access isn't available here	دسترسی به وب اینجا در دسترس نیست
+	Web Layout	طرح‌بندی وب
+	Web page (*.html)	صفحهٔ وب (*.html)
+	Web\nLayout	طرح‌بندی\nوب
+	Website	وب‌سایت
+	Wed	چهارشنبه
+	Weight	وزن
+	West	غرب
+	When merging records	هنگام ادغام رکوردها
+	When this document was first created	زمانی که این سند نخستین بار ساخته شد
+	When this document was most recently printed	زمانی که این سند آخرین بار چاپ شد
+	When this document was most recently saved	زمانی که این سند آخرین بار ذخیره شد
+	White Space	فضای خالی
+	White space	فضای خالی
+	Who the document properties name as author	کسی که ویژگی‌های سند به‌عنوان نویسنده نام می‌برند
+	Whole document	کل سند
+	Whole page	کل صفحه
+	Whole Table	کل جدول
+	Whole words	واژه‌های کامل
+	Wide	پهن
+	Widow/Orphan Control	کنترل خط بیوه/یتیم
+	Widow/Orphan control	کنترل خط بیوه/یتیم
+	Width and spacing	عرض و فاصله‌گذاری
+	Width:	عرض:
+	Wildcards (regex)	نویسه‌های عام (regex)
+	Window	پنجره
+	With:	با:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 و جدیدتر
+	Word 97–2003	Word 97–2003
+	Word Count	شمارش واژه‌ها
+	Word document	سند Word
+	Word document (*.docx)	سند Word (*.docx)
+	Word forms	صورت‌های واژه
+	Word Left	واژه به چپ
+	Word level	سطح واژه
+	Word Right	واژه به راست
+	Word XML Document (*.xml)	سند Word XML (*.xml)
+	WordArt	WordArt
+	WordArt Styles	سبک‌های WordArt
+	Words	واژه‌ها
+	Words only	فقط واژه‌ها
+	Wrap Text	پیچش متن
+	Wrap text	پیچش متن
+	Wrap Text Sides	طرفین پیچش متن
+	Wrap\nText	پیچش\nمتن
+	Write & Insert Fields	نوشتن و درج فیلدها
+	Write a reply	یک پاسخ بنویسید
+	Write math here with the mouse or a pen.	ریاضی را اینجا با ماوس یا قلم بنویسید.
+	Writing Style: Grammar	سبک نوشتن: دستور زبان
+	x bar	x بار
+	Year	سال
+	Yes	بله
+	Yields	نتیجه می‌دهد
+	Your changes will be lost if you don't save them.	اگر تغییرات خود را ذخیره نکنید از دست می‌روند.
+	Your system doesn't report an animation setting, so animation effects stay on.	سیستم شما تنظیمی برای پویانمایی گزارش نمی‌دهد، بنابراین جلوه‌های پویانمایی روشن می‌مانند.
+	Your system has animation effects turned off.	سیستم شما جلوه‌های پویانمایی را خاموش کرده است.
+	Your system has animation effects turned on.	سیستم شما جلوه‌های پویانمایی را روشن کرده است.
+	Zoom	بزرگ‌نمایی
+	Zoom In	بزرگ‌نمایی بیشتر
+	Zoom Out	کوچک‌نمایی
+	Zoom to Page	بزرگ‌نمایی تا صفحه
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: لغو شد
+	Zotero: done	Zotero: انجام شد
+	{cols}×{rows} Table	جدول {cols}×{rows}
+	{contributors} contributors · {commits} commits	{contributors} مشارکت‌کننده · {commits} کامیت
+	{count} items highlighted	{count} مورد برجسته شد
+	{count} of {total} pages will print	{count} از {total} صفحه چاپ خواهد شد
+	{count} paragraphs were changed.	{count} پاراگراف تغییر کرد.
+	{count} records; fields: {fields}	{count} رکورد؛ فیلدها: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} روی این رایانه نصب نیست، بنابراین این سند با {with} نمایش داده می‌شود. ممکن است خطوط و صفحه‌ها متفاوت از قلم اصلی بشکنند.
+	{group} settings	تنظیمات {group}
+	{key}+Click to follow link	{key}+کلیک برای دنبال کردن پیوند
+	{language} is now the document's default language.	{language} اکنون زبان پیش‌فرض سند است.
+	{name} (Press ENTER to Insert)	{name} (برای درج ENTER را فشار دهید)
+	{name} already exists. Choose Save again to replace it.	{name} از قبل وجود دارد. برای جایگزینی دوباره «ذخیره» را انتخاب کنید.
+	{name} can't be a folder's name.	{name} نمی‌تواند نام پوشه باشد.
+	{name} is protected with a password.	{name} با گذرواژه محافظت شده است.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} افزوده شد. ماکروهای آن زیر افزونه‌های من و نما › ماکروها هستند.
+	{name} wasn't found.	{name} یافت نشد.
+	{n} entries marked.	{n} مدخل علامت‌گذاری شد.
+	{n} lines	{n} خط
+	{n} of {of} recipients	{n} از {of} گیرنده
+	{n} pt	{n} pt
+	{n} records	{n} رکورد
+	{n} revisions	{n} بازبینی
+	{selected} of {words} words	{selected} از {words} واژه
+	{size} pt	{size} pt
+	{words} words	{words} واژه
+	{w} × {h} in	{w} × {h} اینچ
+	{w} × {h} mm	{w} × {h} میلی‌متر
+	“{text}” ({row}, {series}) isn't a number.	«{text}» ({row}، {series}) عدد نیست.
+	← Find	← جستجو
+	✓ None	✓ هیچ
+	➕ New comment	➕ نظر جدید
+	📂  Browse…	📂  مرور…
+	Add Help Text…	افزودن متن راهنما…
+	AutoText entry:	مدخل متن خودکار:
+	Calculate on exit	محاسبه هنگام خروج
+	Calculation	محاسبه
+	Check Box Form Field	فیلد فرم کادر انتخاب
+	Check Box Form Field Options	گزینه‌های فیلد فرم کادر انتخاب
+	Check box	کادر انتخاب
+	Check box enabled	کادر انتخاب فعال
+	Check box size:	اندازهٔ کادر انتخاب:
+	Checked	علامت‌خورده
+	Current date	تاریخ کنونی
+	Current time	زمان کنونی
+	Default value:	مقدار پیش‌فرض:
+	Drop-Down Form Field	فیلد فرم فهرست کشویی
+	Drop-Down Form Field Options	گزینه‌های فیلد فرم فهرست کشویی
+	Drop-down	فهرست کشویی
+	Drop-down enabled	فهرست کشویی فعال
+	Drop-down item:	مورد فهرست کشویی:
+	Fill In Form Field	فیلد فرم پرکردنی
+	Fill-in enabled	پرکردن فعال
+	Form Field	فیلد فرم
+	Form Field Help Text	متن راهنمای فیلد فرم
+	Form Field Options	گزینه‌های فیلد فرم
+	Form Field Shading	سایه‌زنی فیلد فرم
+	Form Field at Selection	فیلد فرم در انتخاب
+	Help Key (F1)	کلید راهنما (F1)
+	Insert Form Field	درج فیلد فرم
+	Items in drop-down list:	موارد فهرست کشویی:
+	Legacy Tools	ابزارهای قدیمی
+	Maximum length:	بیشینهٔ طول:
+	Next Form Field	فیلد فرم بعدی
+	Not checked	علامت‌نخورده
+	Put the caret on a form field first.	ابتدا نشانگر را روی یک فیلد فرم قرار دهید.
+	Regular text	متن عادی
+	Reset Form Fields	بازنشانی فیلدهای فرم
+	Text Form Field	فیلد فرم متنی
+	Text Form Field Options	گزینه‌های فیلد فرم متنی
+	Type your own:	مورد خود را تایپ کنید:
+	Unlimited	نامحدود
+	Protected sections:	بخش‌های محافظت‌شده:
+	Section Protection	محافظت بخش
+	Section {n}	بخش {n}
+	Select sections…	انتخاب بخش‌ها…
+	AutoSummarize	خلاصه‌سازی خودکار
+	Create a new document and put the summary there	ساخت سند جدید و قرار دادن خلاصه در آن
+	Highlight key points	برجسته‌سازی نکات کلیدی
+	Insert an executive summary or abstract at the top of the document	درج خلاصهٔ اجرایی یا چکیده در بالای سند
+	Length of summary	طول خلاصه
+	Percent of original:	درصد از متن اصلی:
+	Summary: {words} of {of} words	خلاصه: {words} از {of} واژه
+	Type of summary	نوع خلاصه
+	Update document statistics	به‌روزرسانی آمار سند
+	{n} sentences	{n} جمله
+	{n} words or less	{n} واژه یا کمتر
+	At:	در:
+	Distance from text:	فاصله از متن:
+	Format Frame	قالب‌بندی قاب
+	Format Frame…	قالب‌بندی قاب…
+	Frame	قاب
+	Frame…	قاب…
+	Insert Frame	درج قاب
+	Lock anchor	قفل لنگر
+	Remove Frame	حذف قاب
+	Text wrapping	پیچش متن
+	Chinese Conversion	تبدیل چینی
+	Chinese Conversion…	تبدیل چینی…
+	Converted {n} characters	{n} نویسه تبدیل شد
+	Simplified Chinese to Traditional Chinese	چینی ساده‌شده به چینی سنتی
+	Simplified to Traditional	ساده‌شده به سنتی
+	Traditional Chinese to Simplified Chinese	چینی سنتی به چینی ساده‌شده
+	Traditional to Simplified	سنتی به ساده‌شده
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	استفاده از گونه‌های نویسه‌ای تایوان، هنگ‌کنگ و ماکائو
+	Asian Layout	طرح‌بندی آسیایی
+	Fit Text	جا دادن متن
+	Fit Text…	جا دادن متن…
+	Two Lines in One	دو خط در یک خط
+	Two Lines in One…	دو خط در یک خط…
+	New text width (pt):	عرض جدید متن (pt):
+	Enclose in brackets	قرار دادن در کروشه
+	Bracket pair:	جفت کروشه:
+	Typography	تایپوگرافی
+	Character spacing control	کنترل فاصلهٔ نویسه‌ها
+	Don't compress	فشرده نکن
+	Compress punctuation only	فقط فشرده‌سازی نشانه‌گذاری
+	Compress punctuation and Japanese kana	فشرده‌سازی نشانه‌گذاری و کانای ژاپنی
+	First and last characters	نویسه‌های اول و آخر
+	Strict	سخت‌گیرانه
+	Cannot start a line:	نمی‌تواند خط را آغاز کند:
+	Cannot end a line:	نمی‌تواند خط را پایان دهد:
+	Japanese Find Options	گزینه‌های جستجوی ژاپنی
+	Sounds like (Japanese)	هم‌آوا (ژاپنی)
+	Match full/half width	تطبیق تمام‌عرض/نیم‌عرض
+	Match hiragana/katakana	تطبیق هیراگانا/کاتاکانا
+	Match small kana	تطبیق کانای کوچک
+	Match prolonged sound marks and dashes	تطبیق علامت‌های صدای کشیده و خط تیره‌ها
+	Japanese Consistency Checker	بررسی‌کنندهٔ یکدستی ژاپنی
+	Japanese Consistency Checker…	بررسی‌کنندهٔ یکدستی ژاپنی…
+	No inconsistent spellings were found.	هیچ املای ناهمسانی یافت نشد.
+	Pick the spelling to keep in each group.	در هر گروه املایی را که باید حفظ شود انتخاب کنید.
+	Bidirectional text	متن دوجهته
+	Bidirectional Text	متن دوجهته
+	Default direction:	جهت پیش‌فرض:
+	Cursor movement:	حرکت مکان‌نما:
+	Logical	منطقی
+	Visual	بصری
+	Manage Fields	مدیریت فیلدها
+	File locations	مکان‌های فایل
+	File Locations	مکان‌های فایل
+	Documents:	سندها:
+	Pictures:	تصاویر:
+	The system's choice	انتخاب سیستم
+	Show Repairs	نمایش تعمیرها
+	No repairs were needed.	نیازی به تعمیر نبود.
+	These problems were found and repaired when the document was opened:	این مشکلات هنگام باز کردن سند یافت و تعمیر شدند:
+	An unreadable entry in the file was skipped: {what}	یک مدخل ناخوانا در فایل نادیده گرفته شد: {what}
+	An unreadable part was left out: {what}	یک بخش ناخوانا کنار گذاشته شد: {what}
+	Unreadable relationships were ignored: {what}	روابط ناخوانا نادیده گرفته شدند: {what}
+	A missing part of an embedded object was left out: {what}	بخش گمشده‌ای از یک شیء جاسازی‌شده کنار گذاشته شد: {what}
+	Copy File	کپی فایل
+	Find Files	یافتن فایل‌ها
+	Letter Wizard	راهنمای نامه
+	Recipient's name:	نام گیرنده:
+	Salutation:	عبارت خطاب:
+	Subject:	موضوع:
+	Complimentary closing:	عبارت پایانی:
+	Sender's name:	نام فرستنده:
+	Job title:	عنوان شغلی:
+	Company:	شرکت:
+	Enclosures:	پیوست‌ها:
+	Cc:	رونوشت:
+	Edit Links to Files	ویرایش پیوندها به فایل‌ها
+	Source file	فایل منبع
+	Locked	قفل‌شده
+	Change Source	تغییر منبع
+	This document has no links to files.	این سند پیوندی به فایل‌ها ندارد.
+	Web options	گزینه‌های وب
+	Web Options	گزینه‌های وب
+	Allow PNG as a graphics format	اجازهٔ PNG به‌عنوان قالب گرافیکی
+	Rely on CSS for font formatting	تکیه بر CSS برای قالب‌بندی قلم
+	Rely on VML for displaying graphics in browsers	تکیه بر VML برای نمایش گرافیک در مرورگرها
+	Organize supporting files in a folder	سازمان‌دهی فایل‌های پشتیبان در یک پوشه
+	Use long file names whenever possible	استفاده از نام‌های طولانی فایل در صورت امکان
+	Screen size:	اندازهٔ صفحه‌نمایش:
+	Pixels per inch:	پیکسل در هر اینچ:
+	Hangul Hanja Conversion	تبدیل هانگول و هانجا
+	Hangul Hanja Conversion…	تبدیل هانگول و هانجا…
+	Hangul to Hanja	هانگول به هانجا
+	Hanja to Hangul	هانجا به هانگول
+	Put the caret in Korean text to choose its Hanja.	برای انتخاب هانجا، نشانگر را در متن کره‌ای قرار دهید.
+	The selection, or the whole document when nothing is selected.	انتخاب، یا کل سند هنگامی که چیزی انتخاب نشده است.
+	Add frame	افزودن قاب
+	Attributes:	ویژگی‌ها:
+	Border color:	رنگ حاشیه:
+	Border width:	ضخامت حاشیه:
+	Choose how the custom XML editor displays names and removes schema references.	انتخاب کنید ویرایشگر XML سفارشی چگونه نام‌ها را نمایش دهد و ارجاع‌های طرح‌واره را حذف کند.
+	Confirm before removing a schema reference	تأیید پیش از حذف ارجاع طرح‌واره
+	Elements:	عناصر:
+	Enter an absolute HTTP(S) or URN schema URI.	یک URI طرح‌وارهٔ HTTP(S) یا URN مطلق وارد کنید.
+	Frame URL	URL قاب
+	Frame borders:	حاشیه‌های قاب:
+	Frame spacing:	فاصلهٔ قاب:
+	Frames:	قاب‌ها:
+	Frameset Properties	ویژگی‌های مجموعهٔ قاب
+	Hide	پنهان کردن
+	Margin height:	ارتفاع حاشیه:
+	Margin width:	عرض حاشیه:
+	No resize	بدون تغییر اندازه
+	No schema references	بدون ارجاع طرح‌واره
+	Optional	اختیاری
+	Optional, 0–1000	اختیاری، 0–1000
+	Pixels (0–100)	پیکسل (0–100)
+	Remove Attribute	حذف ویژگی
+	Remove schema reference {schema}?	ارجاع طرح‌وارهٔ {schema} حذف شود؟
+	Rows:	ردیف‌ها:
+	Schema Library	کتابخانهٔ طرح‌واره
+	Schema URI:	URI طرح‌واره:
+	Schemas:	طرح‌واره‌ها:
+	Scrolling:	پیمایش:
+	Select a custom XML store with editable datastore properties first.	ابتدا یک ذخیرهٔ XML سفارشی با ویژگی‌های ذخیرهٔ دادهٔ ویرایش‌پذیر انتخاب کنید.
+	Select an XML element to add, change, or remove one of its attributes.	یک عنصر XML را انتخاب کنید تا یکی از ویژگی‌هایش را اضافه، تغییر یا حذف کنید.
+	Selected element: {name}	عنصر انتخاب‌شده: {name}
+	Set Attribute	تنظیم ویژگی
+	Show namespace URIs beside XML names	نمایش URIهای فضای نام کنار نام‌های XML
+	Store: {store}	ذخیره: {store}
+	This XML store is preserved but cannot be edited here.	این ذخیرهٔ XML حفظ می‌شود اما اینجا قابل ویرایش نیست.
+	This document has no custom XML stores.	این سند هیچ ذخیرهٔ XML سفارشی ندارد.
+	This store has no datastore properties part for schema references.	این ذخیره بخش ویژگی‌های ذخیرهٔ داده برای ارجاع‌های طرح‌واره ندارد.
+	This store has no elements available for editing.	این ذخیره هیچ عنصری برای ویرایش ندارد.
+	Value:	مقدار:
+	View and manage schema references associated with custom XML stores.	مشاهده و مدیریت ارجاع‌های طرح‌وارهٔ مرتبط با ذخیره‌های XML سفارشی.
+	XML Element Attributes	ویژگی‌های عنصر XML
+	XML Options	گزینه‌های XML
+	e.g. 25%,*	مثلاً 25%,*
+	e.g. 30%,*	مثلاً 30%,*
+	Web	وب
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	رابط کاربری هنوز نمی‌تواند {language} را درست نمایش دهد: حروفی که به هم می‌پیوندند یا ترتیبشان تغییر می‌کند، و متن راست به چپ، ممکن است نادرست به نظر برسند. با این حال از آن استفاده شود؟

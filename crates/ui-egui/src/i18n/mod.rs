@@ -57,7 +57,7 @@ pub struct LangInfo {
 }
 
 /// The registry. English first: it is the fallback and the source language.
-pub static LANGUAGES: [LangInfo; 87] = [
+pub static LANGUAGES: [LangInfo; 91] = [
     LangInfo { code: "en", name: "English", source: "", prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
     // British English (colour, centre, customise); `en-GB` and `en_GB.UTF-8` resolve here, other
     // English regions keep the built-in US English. New documents stay in Doc4Me's default
@@ -324,6 +324,14 @@ pub static LANGUAGES: [LangInfo; 87] = [
     },
     // AI-generated draft; right-to-left, which the interface does not lay out yet.
     LangInfo { code: "he", name: "עברית", source: include_str!("he.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left with joined letters, which the interface does not lay out or shape yet.
+    LangInfo { code: "ar", name: "العربية", source: include_str!("ar.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "fa", name: "فارسی", source: include_str!("fa.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "ur", name: "اردو", source: include_str!("ur.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "ps", name: "پښتو", source: include_str!("ps.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
 ];
 
 impl LangInfo {
