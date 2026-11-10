@@ -13,6 +13,12 @@
 
 ### ความปลอดภัย
 
+- **เทสต์ fuzz คำสั่งที่เข้าถึงไฟล์ด้วยพารามิเตอร์ปนเปื้อน** (รอบที่ 3 ชุดที่ 18; WordCraft `e7668ae5`)
+  - `crates/engine/src/tests.rs`: `hostile_params_never_panic` ข้ามคำสั่ง `file.*`, `insert.picture` และ `insert.textFromFile`; เพิ่ม `hostile_file_params_never_panic` ที่รันคำสั่งเหล่านั้นด้วยพารามิเตอร์ขยะชุดเดียวกัน และ path ไปยังไฟล์ว่าง โฟลเดอร์ ชื่อที่ไม่มี และไบต์สุ่มของทุกนามสกุลที่เปิด/บันทึกได้ โดยจำกัดด้วย automation root ให้อ่านเฉพาะ `in` เขียนเฉพาะ `out`; ตรวจว่าไม่มีไฟล์นอก root และใน working directory ถูกแตะ และไฟล์ที่ใช้ได้ยังทำงานผ่าน root เดียวกัน
+  - เพิ่มพารามิเตอร์ขยะเป็น 8 ชุด (`hostile_junk`) และตรวจ `caught_panic` (panic ที่ตัวป้องกันใน `Session::run` แปลงเป็น error ยังถือว่าเป็นเส้นทาง crash)
+  - ไม่พบ panic ใน Doc4Me จึงเพิ่มเฉพาะเทสต์ ไม่เปลี่ยนโค้ดแอป; ไม่มีผลต่อไฟล์ .docx เดิม การติดตั้งทับ หรือภาษาไทย
+  - ตรวจสอบ: `cargo test -p doc4me-engine --lib hostile` 13 passed (รวม `hostile_params_never_panic`, `hostile_file_params_never_panic`); `cargo clippy -p doc4me-engine --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **พารามิเตอร์หน้าไม่วนกลับไปหน้าแรกบน 32 บิต/wasm** (รอบที่ 3 ชุดที่ 17; WordCraft `028d413a`)
   - `crates/engine/src/lib.rs`: เพิ่ม `p::page_index` แปลงเลขหน้าเริ่ม 1 เป็น index เริ่ม 0 แบบอิ่มตัว เดิม `as usize - 1` บน 32 บิตและ wasm ตัด 2^32 เป็น 0 แล้วลบหนึ่งวนเป็นหน้า 1 (panic ใน debug)
   - ใช้ใน `edit.goto` (`cmd/edit.rs`), `file.exportPng` (`cmd/file.rs`), `caret.set` (`cmd/caret.rs`, เลขหน้าเริ่ม 0 ที่เกินถูกปฏิเสธแทนการตัดเป็นหน้า 0) และ `render_page` ของ MCP (`crates/mcp/src/lib.rs`)
