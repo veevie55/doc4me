@@ -849,7 +849,8 @@ fn destination(s: &mut Session, to: &[Dest]) -> Option<(Pos, usize)> {
     for d in to {
         match *d {
             Dest::Section(n) => {
-                let in_section: Vec<usize> = (0..pages).filter(|i| l.pages[*i].section + 1 == n as usize).collect();
+                let in_section: Vec<usize> =
+                    (0..pages).filter(|i| u64::try_from(l.pages[*i].section).is_ok_and(|s| s.saturating_add(1) == n)).collect();
                 let (a, b) = match (in_section.first(), in_section.last()) {
                     (Some(a), Some(b)) => (*a, *b),
                     // Past the last section: the last one.
@@ -862,7 +863,7 @@ fn destination(s: &mut Session, to: &[Dest]) -> Option<(Pos, usize)> {
                 (first, last) = (a, b);
             }
             Dest::Page(n) => {
-                let p = (first + n as usize - 1).min(last);
+                let p = first.saturating_add(crate::p::page_index(n)).min(last);
                 (first, last) = (p, p);
             }
             Dest::Relative(n) => {
@@ -897,7 +898,7 @@ fn goto(s: &mut Session, v: &Value) -> CmdResult {
     }
     if let Some(pg) = p::u64(v, "page") {
         let l = s.layout();
-        let idx = (pg.max(1) as usize - 1).min(l.pages.len().saturating_sub(1));
+        let idx = crate::p::page_index(pg).min(l.pages.len().saturating_sub(1));
         let target = l.pages.get(idx).and_then(|page| {
             page.items.iter().find_map(|it| match it {
                 doc4me_layout::Placed::Lines { story, path, para, l0, .. } if *story == StoryRef::Body => {

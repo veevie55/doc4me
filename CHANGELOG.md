@@ -13,6 +13,13 @@
 
 ### ความปลอดภัย
 
+- **พารามิเตอร์หน้าไม่วนกลับไปหน้าแรกบน 32 บิต/wasm** (รอบที่ 3 ชุดที่ 17; WordCraft `028d413a`)
+  - `crates/engine/src/lib.rs`: เพิ่ม `p::page_index` แปลงเลขหน้าเริ่ม 1 เป็น index เริ่ม 0 แบบอิ่มตัว เดิม `as usize - 1` บน 32 บิตและ wasm ตัด 2^32 เป็น 0 แล้วลบหนึ่งวนเป็นหน้า 1 (panic ใน debug)
+  - ใช้ใน `edit.goto` (`cmd/edit.rs`), `file.exportPng` (`cmd/file.rs`), `caret.set` (`cmd/caret.rs`, เลขหน้าเริ่ม 0 ที่เกินถูกปฏิเสธแทนการตัดเป็นหน้า 0) และ `render_page` ของ MCP (`crates/mcp/src/lib.rs`)
+  - ปรับจาก WordCraft: แก้เพิ่มอีก 2 จุดที่ Doc4Me มีแต่ WordCraft ไม่มีในรูปเดียวกัน คือ Go To แบบ "หน้า n ของ section" (`first + n as usize - 1` อาจ underflow) และการเทียบเลข section (`n as usize` อาจตัดค่า)
+  - ผลต่อผู้ใช้และความเข้ากันได้: เลขหน้าปกติทำงานเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `page_index_saturates_instead_of_wrapping_to_page_one`, `hostile_absolute_pages_never_land_on_page_one`, `caret_set_rejects_a_page_number_that_does_not_fit`, `export_png_rejects_a_page_number_that_does_not_fit` (engine) และ `render_page_rejects_a_page_number_that_does_not_fit` (mcp) ผ่าน; `cargo test -p doc4me-engine -p doc4me-mcp` ผ่านทุกชุด; `cargo clippy -p doc4me-engine -p doc4me-mcp --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **PDF: glyph id เกิน 65535 ไม่ทำให้ส่งออกล้ม; WOFF2 collection ที่ไดเรกทอรีใหญ่เกินหรือตารางซ้ำถูกปฏิเสธก่อนถอด** (รอบที่ 3 ชุดที่ 16; WordCraft `f2debdec`, `e00ff04d`)
   - `crates/pdf/src/lib.rs`: การ shape ให้ glyph id 32 บิต แต่ krilla รับ 16 บิตและ panic เมื่อเกิน ทำให้ส่งออก PDF ล้ม (และบน wasm ที่ `panic = "abort"` ปิดแท็บ); `glyph_id()` เขียน id ที่เกินเป็น .notdef (glyph 0) โดยยังคงตำแหน่งไว้
   - `crates/fonts/src/fontdb/user.rs`: ตัวถอด WOFF2 สร้างไดเรกทอรีตารางของทุกฟอนต์ใน collection (16 ไบต์ต่อตาราง) ก่อนตรวจขนาดผลลัพธ์ ขณะที่ไฟล์ใช้แค่ราว 1 ไบต์ต่อตาราง; `check_woff2_collection` ตรวจก่อนถอดว่าไดเรกทอรีรวมไม่เกิน 16 MiB และไม่มีฟอนต์ใดอ้างตารางซ้ำ; แยก `woff2_directory`/`read_255_u16` ออกมาใช้ร่วม (คง `glyf_points_fit` เดิมของ Doc4Me ไว้)

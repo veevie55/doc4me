@@ -139,6 +139,12 @@ impl Registry {
 pub mod p {
     use serde_json::Value;
 
+    /// A 1-based page parameter as a 0-based index. A value that cannot fit in `usize` (32-bit
+    /// and wasm) saturates instead of wrapping to page 1.
+    pub fn page_index(page: u64) -> usize {
+        usize::try_from(page.max(1)).unwrap_or(usize::MAX).saturating_sub(1)
+    }
+
     use crate::CmdError;
 
     pub fn str<'a>(v: &'a Value, k: &str) -> Option<&'a str> {
