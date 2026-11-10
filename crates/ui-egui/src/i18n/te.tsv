@@ -1,0 +1,3046 @@
+# Telugu (te) interface catalog. Columns, separated by a TAB:
+#   context <TAB> English source <TAB> translation
+#   source     the English text exactly as in the code (tl!(...), ribbon labels, command labels)
+#   escapes    \n  \t  \\  inside a column. `{name}` placeholders must appear in both columns, and a
+#              trailing "…" in one needs one in the other.
+#   Lines starting with # and blank lines are ignored. A missing entry shows in English.
+#
+# AI-generated draft written from the plain meaning of each English label; native-speaker review
+# is still required. Clean room: no Microsoft Word (or other product) localisation was consulted.
+# Product, format and technology names (Doc4Me, PDF, Markdown, MCP …), key names and units stay
+# in Latin letters.
+
+	"a" or "an" before the next word; Polish "w"/"we", "z"/"ze".	తదుపరి పదానికి ముందు "a" లేదా "an"; పోలిష్ "w"/"we", "z"/"ze".
+	% of all commits	అన్ని కమిట్‌లలో %
+	(All)	(అన్నీ)
+	(Custom)	(అనుకూలం)
+	(no style)	(శైలి లేదు)
+	(no suggestions)	(సూచనలు లేవు)
+	(none)	(ఏదీ లేదు)
+	(normal text)	(సాధారణ వచనం)
+	(not matched)	(సరిపోలలేదు)
+	(picture or object)	(చిత్రం లేదా వస్తువు)
+	*Bold* and _italic_ with real formatting	నిజమైన ఫార్మాటింగ్‌తో *బోల్డ్* మరియు _ఇటాలిక్_
+	0 or More Characters	0 లేదా అంతకంటే ఎక్కువ అక్షరాలు
+	1. Formatting restrictions	1. ఫార్మాటింగ్ పరిమితులు
+	1. Main document	1. ప్రధాన పత్రం
+	1.5 Line Spacing	1.5 పంక్తి అంతరం
+	1/4 Em Space	1/4 Em ఖాళీ
+	1×2 Empty Matrix	1×2 ఖాళీ మాత్రిక
+	1×3 Empty Matrix	1×3 ఖాళీ మాత్రిక
+	2. Data source	2. డేటా మూలం
+	2. Editing restrictions	2. సవరణ పరిమితులు
+	2×1 Empty Matrix	2×1 ఖాళీ మాత్రిక
+	2×2 Determinant	2×2 నిర్ధారకం
+	2×2 Empty Matrix	2×2 ఖాళీ మాత్రిక
+	2×2 Identity Matrix	2×2 ఏకక మాత్రిక
+	2×2 Identity Matrix (sparse)	2×2 ఏకక మాత్రిక (విరళ)
+	2×2 Matrix in Brackets	బ్రాకెట్లలో 2×2 మాత్రిక
+	2×2 Matrix in Double Bars	ద్వంద్వ గీతలలో 2×2 మాత్రిక
+	2×2 Matrix in Parentheses	కుండలీకరణాలలో 2×2 మాత్రిక
+	2×3 Empty Matrix	2×3 ఖాళీ మాత్రిక
+	3-D	3-D
+	3. Merge the data with the document	3. డేటాను పత్రంతో విలీనం చేయండి
+	3. Start enforcement	3. అమలు ప్రారంభించండి
+	3D Models	3D మోడల్‌లు
+	3×1 Empty Matrix	3×1 ఖాళీ మాత్రిక
+	3×2 Empty Matrix	3×2 ఖాళీ మాత్రిక
+	3×3 Empty Matrix	3×3 ఖాళీ మాత్రిక
+	3×3 Identity Matrix	3×3 ఏకక మాత్రిక
+	3×3 Identity Matrix (sparse)	3×3 ఏకక మాత్రిక (విరళ)
+	5,000 characters a day; give an email address for 50,000.	రోజుకు 5,000 అక్షరాలు; 50,000 కోసం ఇమెయిల్ చిరునామా ఇవ్వండి.
+	<< Less	<< తక్కువ
+	<< Remove	<< తీసివేయి
+	A file dialog is already open.	ఫైల్ డైలాగ్ ఇప్పటికే తెరిచి ఉంది.
+	A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team.	Rust‌లో మొదటి నుండి రాసిన ఉచిత, ఓపెన్-సోర్స్ వర్డ్ ప్రాసెసర్.\nArtCraft బృందం యొక్క WordCraft ఆధారంగా.
+	A header source holds the field names for a data source without a header row.	హెడర్ వరుస లేని డేటా మూలానికి ఫీల్డ్ పేర్లను హెడర్ మూలం కలిగి ఉంటుంది.
+	A mail merge field	మెయిల్ విలీన ఫీల్డ్
+	A new document lists the commands with their shortcuts.	కొత్త పత్రం ఆదేశాలను వాటి షార్ట్‌కట్‌లతో జాబితా చేస్తుంది.
+	A numbered sequence (figures, tables…)	సంఖ్యా క్రమం (చిత్రాలు, పట్టికలు…)
+	A password is required to open this document.	ఈ పత్రాన్ని తెరవడానికి పాస్‌వర్డ్ అవసరం.
+	A space before punctuation, doubled marks, Polish commas before conjunctions.	విరామ చిహ్నానికి ముందు ఖాళీ, రెట్టింపు గుర్తులు, సంయోజకాలకు ముందు పోలిష్ కామాలు.
+	A table of contents	విషయ సూచిక
+	A table's rows keep the same columns here.	పట్టిక వరుసలు ఇక్కడ అవే నిలువు వరుసలను కలిగి ఉంటాయి.
+	A xor B	A xor B
+	A, B, C, …	A, B, C, …
+	a, b, c, …	a, b, c, …
+	AaBbCcDd	అఆఇఈ AaBb
+	AaBbYyZz	అఆహళ AaZz
+	About	గురించి
+	About Doc4Me	Doc4Me గురించి
+	Above Chart	చార్ట్ పైన
+	Above the item	అంశం పైన
+	Absolute position	సంపూర్ణ స్థానం
+	Absolute value cases	పరమ విలువ సందర్భాలు
+	Accent	యాస
+	Accent Gradient	యాస గ్రేడియంట్
+	Accent with Reflection	ప్రతిబింబంతో యాస
+	Accent {n}	యాస {n}
+	Accents	యాసలు
+	Accept	అంగీకరించు
+	Accept All	అన్నీ అంగీకరించు
+	Accept All Changes	అన్ని మార్పులను అంగీకరించు
+	Accept or Reject Changes	మార్పులను అంగీకరించు లేదా తిరస్కరించు
+	Accept This Change	ఈ మార్పును అంగీకరించు
+	Accessed on	యాక్సెస్ చేసిన తేదీ
+	Accessibility	యాక్సెసిబిలిటీ
+	Accessibility Pane	యాక్సెసిబిలిటీ పేన్
+	Acute	అక్యూట్
+	Add	జోడించు
+	Add >>	జోడించు >>
+	Add a comment	వ్యాఖ్యను జోడించండి
+	Add a Table	పట్టికను జోడించు
+	Add at least one field.	కనీసం ఒక ఫీల్డ్‌ను జోడించండి.
+	Add caption when inserting:	చొప్పించేటప్పుడు శీర్షిక జోడించు:
+	Add Chart Element	చార్ట్ మూలకాన్ని జోడించు
+	Add Field	ఫీల్డ్ జోడించు
+	Add Field Name	ఫీల్డ్ పేరు జోడించు
+	Add Font…	ఫాంట్ జోడించు…
+	Add line numbering	పంక్తి సంఖ్యలను జోడించు
+	Add New Placeholder	కొత్త ప్లేస్‌హోల్డర్ జోడించు
+	Add New Placeholder…	కొత్త ప్లేస్‌హోల్డర్ జోడించు…
+	Add New Source…	కొత్త మూలాన్ని జోడించు…
+	Add Object to Selection	ఎంపికకు వస్తువును జోడించు
+	Add Pen	పెన్ జోడించు
+	Add Row	వరుస జోడించు
+	Add Series	శ్రేణి జోడించు
+	Add Shape	ఆకారం జోడించు
+	Add Space Before Paragraph	పేరాకు ముందు ఖాళీ జోడించు
+	Add space between Asian and Latin text	ఆసియా మరియు లాటిన్ వచనం మధ్య ఖాళీ జోడించు
+	Add space between Asian text and numbers	ఆసియా వచనం మరియు సంఖ్యల మధ్య ఖాళీ జోడించు
+	Add tab stop at:	ఇక్కడ ట్యాబ్ స్టాప్ జోడించు:
+	Add Text	వచనం జోడించు
+	Add the chapter number	అధ్యాయ సంఖ్యను జోడించు
+	Add to Dictionary	నిఘంటువుకు జోడించు
+	Add to Document	పత్రానికి జోడించు
+	Add to Quick Access Toolbar	త్వరిత ప్రాప్తి టూల్‌బార్‌కు జోడించు
+	Add to Style Gallery	శైలి గ్యాలరీకి జోడించు
+	Add-ins	యాడ్-ఇన్‌లు
+	Add/Edit\nBibliography	గ్రంథసూచిని\nజోడించు/సవరించు
+	Add/Edit\nCitation	ఉల్లేఖనను\nజోడించు/సవరించు
+	Add\nNote	గమనిక\nజోడించు
+	Add\nPen	పెన్\nజోడించు
+	Add\nShape	ఆకారం\nజోడించు
+	Added	జోడించబడింది
+	Added Fonts	జోడించిన ఫాంట్‌లు
+	Address	చిరునామా
+	Address Block	చిరునామా బ్లాక్
+	Address labels	చిరునామా లేబుల్‌లు
+	Address:	చిరునామా:
+	Address\nBlock	చిరునామా\nబ్లాక్
+	Adjust	సర్దుబాటు
+	Advanced	అధునాతనం
+	Advanced Find	అధునాతన శోధన
+	Advanced Find…	అధునాతన శోధన…
+	After:	తర్వాత:
+	Agents	ఏజెంట్‌లు
+	Align	సమలేఖనం
+	Align Bottom Center	దిగువ మధ్యకు సమలేఖనం
+	Align Bottom Left	దిగువ ఎడమకు సమలేఖనం
+	Align Bottom Right	దిగువ కుడికి సమలేఖనం
+	Align Center	మధ్యకు సమలేఖనం
+	Align Center Left	మధ్య ఎడమకు సమలేఖనం
+	Align Center Right	మధ్య కుడికి సమలేఖనం
+	Align Left	ఎడమకు సమలేఖనం
+	Align Right	కుడికి సమలేఖనం
+	Align Text	వచనాన్ని సమలేఖనం చేయి
+	Align Top Center	ఎగువ మధ్యకు సమలేఖనం
+	Align Top Left	ఎగువ ఎడమకు సమలేఖనం
+	Align Top Right	ఎగువ కుడికి సమలేఖనం
+	Aligned at:	ఇక్కడ సమలేఖనం:
+	Alignment	సమలేఖనం
+	Alignment:	సమలేఖనం:
+	All	అన్నీ
+	All - Linear	అన్నీ - రేఖీయ
+	All - Professional	అన్నీ - వృత్తిపరమైన
+	All Borders	అన్ని అంచులు
+	All Caps	అన్నీ పెద్ద అక్షరాలు
+	All caps	అన్నీ పెద్ద అక్షరాలలో
+	All Commands	అన్ని ఆదేశాలు
+	All files	అన్ని ఫైల్‌లు
+	All Levels	అన్ని స్థాయిలు
+	All Markup	అన్ని మార్కప్
+	All pages	అన్ని పేజీలు
+	All pages in the range	పరిధిలోని అన్ని పేజీలు
+	All records	అన్ని రికార్డులు
+	All symbol sets	అన్ని చిహ్న సమితులు
+	Allow Doc4Me to use online services	ఆన్‌లైన్ సేవలను ఉపయోగించడానికి Doc4Me‌ను అనుమతించు
+	Allow hanging punctuation	వేలాడే విరామ చిహ్నాలను అనుమతించు
+	Allow Latin text to wrap in the middle of a word	లాటిన్ వచనాన్ని పదం మధ్యలో చుట్టడానికి అనుమతించు
+	Allow line breaks	పంక్తి విరామాలను అనుమతించు
+	Allow overlap	అతివ్యాప్తిని అనుమతించు
+	Allow row to break across pages	వరుస పేజీల మధ్య విరగడానికి అనుమతించు
+	Alphabetical	అక్షర క్రమం
+	Alt Text	ప్రత్యామ్నాయ వచనం
+	Alt text	ప్రత్యామ్నాయ వచనము
+	Alt Text Pane	ప్రత్యామ్నాయ వచన పేన్
+	Alt:	Alt:
+	Alt\nText	ప్రత్యామ్నాయ\nవచనం
+	And	మరియు
+	Angle Brackets	కోణ బ్రాకెట్లు
+	Angle Brackets with Separator	విభాజకంతో కోణ బ్రాకెట్లు
+	Angle Brackets with Two Separators	రెండు విభాజకాలతో కోణ బ్రాకెట్లు
+	Animate the caret (it glides and fades)	కర్సర్‌ను యానిమేట్ చేయి (జారి మసకబారుతుంది)
+	Animation	యానిమేషన్
+	Animation effects:	యానిమేషన్ ప్రభావాలు:
+	Annotation Reference	వ్యాఖ్యాన సూచన
+	Annotation Subject	వ్యాఖ్యాన విషయం
+	Annotation Text	వ్యాఖ్యాన వచనం
+	Another file	మరొక ఫైల్
+	Any Character	ఏదైనా అక్షరం
+	Any Digit	ఏదైనా అంకె
+	Any Letter	ఏదైనా అక్షరం (వర్ణం)
+	Anyone can open this document. Encrypt it with a password to keep it private.	ఈ పత్రాన్ని ఎవరైనా తెరవగలరు. దీన్ని ప్రైవేట్‌గా ఉంచడానికి పాస్‌వర్డ్‌తో ఎన్‌క్రిప్ట్ చేయండి.
+	Anyone who opens the document will need this password.	పత్రాన్ని తెరిచే ఎవరికైనా ఈ పాస్‌వర్డ్ అవసరం.
+	APA	APA
+	API key (if the server needs one)	API కీ (సర్వర్‌కు అవసరమైతే)
+	Apply	వర్తింపజేయి
+	Apply as you type	టైప్ చేస్తున్నప్పుడు వర్తింపజేయి
+	Apply Asian line-breaking rules (kinsoku)	ఆసియా పంక్తి విరామ నియమాలను వర్తింపజేయి (kinsoku)
+	Apply Character Style	అక్షర శైలిని వర్తింపజేయి
+	Apply formatting to:	ఫార్మాటింగ్‌ను దీనికి వర్తింపజేయి:
+	Apply special formats to	ప్రత్యేక ఫార్మాట్‌లను దీనికి వర్తింపజేయి
+	Apply Style	శైలిని వర్తింపజేయి
+	Apply Styles	శైలులను వర్తింపజేయి
+	Apply to:	దీనికి వర్తింపజేయి:
+	Arabic	అరబిక్
+	Arch Down	క్రిందికి వంపు
+	Arch Up	పైకి వంపు
+	Area	ప్రాంతం
+	Around	చుట్టూ
+	Arrange	అమర్చు
+	Arrange All	అన్నీ అమర్చు
+	Arrange\nAll	అన్నీ\nఅమర్చు
+	Arrow	బాణం
+	Arrows	బాణాలు
+	Artistic Effects	కళాత్మక ప్రభావాలు
+	As Recommended	సిఫార్సు చేసినట్లు
+	As you type	టైప్ చేస్తున్నప్పుడు
+	ASAP	వీలైనంత త్వరగా
+	Ascending	ఆరోహణ
+	Asian text font:	ఆసియా వచన ఫాంట్:
+	Asian Typography	ఆసియా టైపోగ్రఫీ
+	Assign	కేటాయించు
+	At least	కనీసం
+	At least {n}	కనీసం {n}
+	Atelier	వర్క్‌షాప్
+	Atmosphere	వాతావరణం
+	Attach Template	టెంప్లేట్‌ను జతచేయి
+	Attach…	జతచేయి…
+	Author	రచయిత
+	Auto	స్వయంచాలకం
+	AutoCaption	స్వయం శీర్షిక
+	AutoCaption…	స్వయం శీర్షిక…
+	AutoComplete	స్వయంపూర్తి
+	AutoCorrect	స్వయంసవరణ
+	AutoCorrect Options	స్వయంసవరణ ఎంపికలు
+	AutoFit	స్వయం అమరిక
+	AutoFit Contents	విషయానికి స్వయం అమరిక
+	AutoFit Window	విండోకు స్వయం అమరిక
+	AutoFormat	స్వయంఫార్మాట్
+	AutoFormat (Ctrl+Alt+K) formats the selected paragraphs, or the whole document.	స్వయంఫార్మాట్ (Ctrl+Alt+K) ఎంచుకున్న పేరాలను లేదా మొత్తం పత్రాన్ని ఫార్మాట్ చేస్తుంది.
+	AutoFormat and Review Changes…	స్వయంఫార్మాట్ చేసి మార్పులను సమీక్షించు…
+	AutoFormat As You Type	టైప్ చేస్తున్నప్పుడు స్వయంఫార్మాట్
+	AutoFormat changed {count} paragraphs	స్వయంఫార్మాట్ {count} పేరాలను మార్చింది
+	AutoFormat Now	ఇప్పుడు స్వయంఫార్మాట్ చేయి
+	Automatic	స్వయంచాలకం
+	Automatic ({language})	స్వయంచాలకం ({language})
+	Automatic bulleted lists	స్వయంచాలక బుల్లెట్ జాబితాలు
+	Automatic follows your system's language. Menus and commands change; your documents don't.	స్వయంచాలకం మీ సిస్టమ్ భాషను అనుసరిస్తుంది. మెనూలు మరియు ఆదేశాలు మారతాయి; మీ పత్రాలు మారవు.
+	Automatic numbered lists	స్వయంచాలక సంఖ్యా జాబితాలు
+	Automatic Table 1 (3 levels)	స్వయంచాలక పట్టిక 1 (3 స్థాయిలు)
+	Automatic Table 2 (2 levels)	స్వయంచాలక పట్టిక 2 (2 స్థాయిలు)
+	Automatically hyphenate document	పత్రాన్ని స్వయంచాలకంగా హైఫనేట్ చేయి
+	Automatically Update Document Styles	పత్ర శైలులను స్వయంచాలకంగా నవీకరించు
+	Automatically update document styles	పత్ర శైలులను స్వయంగా నవీకరించు
+	AutoSave	స్వయంసేవ్
+	AutoSave documents you have saved in Doc4Me	Doc4Me‌లో మీరు సేవ్ చేసిన పత్రాలను స్వయంగా సేవ్ చేయి
+	AutoSave failed: {error}. Save the document to turn AutoSave back on.	స్వయంసేవ్ విఫలమైంది: {error}. స్వయంసేవ్‌ను తిరిగి ప్రారంభించడానికి పత్రాన్ని సేవ్ చేయండి.
+	AutoSave isn't available in the browser: it can't write to your files. Save downloads a copy.	బ్రౌజర్‌లో స్వయంసేవ్ అందుబాటులో లేదు: ఇది మీ ఫైల్‌లలో రాయలేదు. సేవ్ ఒక కాపీని డౌన్‌లోడ్ చేస్తుంది.
+	AutoSave only keeps .docx, .odt and .rtf files; {name} can't keep all formatting. Save as .docx to turn on AutoSave.	స్వయంసేవ్ .docx, .odt, .rtf ఫైల్‌లను మాత్రమే ఉంచుతుంది; {name} అన్ని ఫార్మాటింగ్‌ను ఉంచలేదు. స్వయంసేవ్ ప్రారంభించడానికి .docx‌గా సేవ్ చేయండి.
+	AutoSave saves every change to the file (needs a saved document)	స్వయంసేవ్ ప్రతి మార్పును ఫైల్‌లో సేవ్ చేస్తుంది (సేవ్ చేసిన పత్రం అవసరం)
+	AutoSave writes your changes to the file a moment after you stop typing.	మీరు టైప్ చేయడం ఆపిన కొద్దిసేపటికి స్వయంసేవ్ మీ మార్పులను ఫైల్‌లో రాస్తుంది.
+	AutoText	స్వయం వచనం
+	B4 (JIS)   10.12" × 14.33"	B4 (JIS)   10.12" × 14.33"
+	B5 (JIS)   7.17" × 10.12"	B5 (JIS)   7.17" × 10.12"
+	Back	వెనుకకు
+	Backspace	Backspace
+	Balloons	బెలూన్‌లు
+	Banded Columns	బ్యాండెడ్ నిలువు వరుసలు
+	Banded Rows	బ్యాండెడ్ వరుసలు
+	Bar	బార్
+	Base text:	మూల వచనం:
+	Based on: {style}	ఆధారం: {style}
+	Baseline Dots	ఆధార రేఖ చుక్కలు
+	Basic Cycle	ప్రాథమిక చక్రం
+	Basic List	ప్రాథమిక జాబితా
+	Basic Math	ప్రాథమిక గణితం
+	Basic Matrix	ప్రాథమిక మాత్రిక
+	Basic Process	ప్రాథమిక ప్రక్రియ
+	Basic Pyramid	ప్రాథమిక పిరమిడ్
+	Basic Radial	ప్రాథమిక రేడియల్
+	Basic Venn	ప్రాథమిక వెన్
+	Bayes' rule	బేయ్స్ నియమం
+	Before:	ముందు:
+	Beginning of Word	పదం ప్రారంభం
+	Behind Text	వచనం వెనుక
+	Below text	వచనం క్రింద
+	Below the item	అంశం క్రింద
+	Between	మధ్య
+	Bibliography	గ్రంథసూచి
+	Binary assets added	జోడించిన బైనరీ ఆస్తులు
+	Binary assets removed	తీసివేసిన బైనరీ ఆస్తులు
+	Binomial Coefficient	ద్విపద గుణకం
+	Binomial Coefficient (angle)	ద్విపద గుణకం (కోణ)
+	Binomial Coefficient with Angle Brackets	కోణ బ్రాకెట్లతో ద్విపద గుణకం
+	Binomial expansion of (x+a)ⁿ	(x+a)ⁿ యొక్క ద్విపద విస్తరణ
+	Blank	ఖాళీ
+	Blank (Three Columns)	ఖాళీ (మూడు నిలువు వరుసలు)
+	Blank document	ఖాళీ పత్రం
+	Blank Page	ఖాళీ పేజీ
+	Block\nAuthors	రచయితలను\nనిరోధించు
+	Blue:	నీలం:
+	Body Text	ప్రధాన వచనం
+	Body text in a short paragraph to show spacing.	అంతరాన్ని చూపించడానికి చిన్న పేరాలో ప్రధాన వచనం.
+	Bold	బోల్డ్
+	Book	పుస్తకం
+	Book Title	పుస్తక శీర్షిక
+	Book title	పుస్తకం శీర్షిక
+	Bookmark	బుక్‌మార్క్
+	Bookmark name:	బుక్‌మార్క్ పేరు:
+	Border lines	అంచు రేఖలు
+	Border Painter	అంచు పెయింటర్
+	Border\nPainter	అంచు\nపెయింటర్
+	Borders	అంచులు
+	Borders and Shading	అంచులు మరియు షేడింగ్
+	Borders and Shading…	అంచులు మరియు షేడింగ్…
+	Border…	అంచు…
+	Both Sides	రెండు వైపులా
+	Both sides	రెండు వైపులు
+	Bottom	దిగువ
+	Bottom Border	దిగువ అంచు
+	Bottom Margin	దిగువ మార్జిన్
+	Bottom of Page	పేజీ దిగువన
+	Bottom of the Window	విండో దిగువన
+	Bottom:	దిగువ:
+	Box	పెట్టె
+	Boxed Formula	పెట్టెలో సూత్రం
+	Boxed Formula (example)	పెట్టెలో సూత్రం (ఉదాహరణ)
+	Boxed Formulas	పెట్టెలో సూత్రాలు
+	Braces	బ్రేసెస్
+	Braces with Separator	విభాజకంతో బ్రేసెస్
+	Bracket	బ్రాకెట్
+	Brackets	బ్రాకెట్లు
+	Brackets with Separators	విభాజకాలతో బ్రాకెట్లు
+	Break Link	లింక్‌ను విచ్ఛిన్నం చేయి
+	Breaks	విరామాలు
+	Breve	బ్రీవ్
+	Brightness, contrast and transparency change the picture from how it looks now.	ప్రకాశం, కాంట్రాస్ట్ మరియు పారదర్శకత చిత్రాన్ని ఇప్పుడు కనిపించే విధానం నుండి మారుస్తాయి.
+	Brightness:	ప్రకాశం:
+	Bring Forward	ముందుకు తీసుకురా
+	Browse in Doc4Me…	Doc4Me‌లో బ్రౌజ్ చేయి…
+	Browse…	బ్రౌజ్ చేయి…
+	Build table of figures from:	చిత్రాల పట్టికను దీని నుండి నిర్మించు:
+	Building Block Gallery Content Control	బిల్డింగ్ బ్లాక్ గ్యాలరీ కంటెంట్ నియంత్రణ
+	Built from the style or table entry fields chosen in Options.	ఎంపికలలో ఎంచుకున్న శైలి లేదా పట్టిక నమోదు ఫీల్డ్‌ల నుండి నిర్మించబడింది.
+	Built-In	అంతర్నిర్మితం
+	Built-in Heading styles	అంతర్నిర్మిత శీర్షిక శైలులు
+	Built-in style	అంతర్నిర్మిత శైలి
+	Built-in styles can't be deleted.	అంతర్నిర్మిత శైలులను తొలగించలేరు.
+	Bullet	బుల్లెట్
+	Bullet Library	బుల్లెట్ లైబ్రరీ
+	Bullets	బుల్లెట్‌లు
+	By author	రచయిత ప్రకారం
+	By:	ద్వారా:
+	Calendar	క్యాలెండర్
+	Can't be deleted	తొలగించలేరు
+	Cancel	రద్దు చేయి
+	Canvas Member	కాన్వాస్ సభ్యుడు
+	Capitalization	పెద్ద అక్షరీకరణ
+	Capitalize Each Word	ప్రతి పదాన్ని పెద్ద అక్షరంతో ప్రారంభించు
+	Capitalize first letter of sentences	వాక్యాల మొదటి అక్షరాన్ని పెద్దదిగా చేయి
+	Capitalize first letter of table cells	పట్టిక గడుల మొదటి అక్షరాన్ని పెద్దదిగా చేయి
+	Capitalize names of days	రోజుల పేర్లను పెద్ద అక్షరంతో ప్రారంభించు
+	Capitalize the first word of a sentence	వాక్యం యొక్క మొదటి పదాన్ని పెద్ద అక్షరంతో ప్రారంభించు
+	Caption	శీర్షిక
+	Caption label:	శీర్షిక లేబుల్:
+	Caption Numbering	శీర్షిక సంఖ్యలు
+	Caption text	శీర్షిక వచనం
+	Caption:	శీర్షిక:
+	Captions	శీర్షికలు
+	Caret Character	^ అక్షరం
+	Case changes	అక్షర రకం మార్పులు
+	Cases	సందర్భాలు
+	Cases (Three Conditions)	సందర్భాలు (మూడు షరతులు)
+	Cases (Two Conditions)	సందర్భాలు (రెండు షరతులు)
+	Cases and Stacks	సందర్భాలు మరియు స్టాక్‌లు
+	Catalog	కేటలాగ్
+	Categories	వర్గాలు
+	Categories:	వర్గాలు:
+	Category	వర్గం
+	Category {n}	వర్గం {n}
+	Category:	వర్గం:
+	Category…	వర్గం…
+	Ceiling	సీలింగ్
+	Cell	గడి
+	Cell Margins	గడి మార్జిన్‌లు
+	Cell margins	గడి అంచులు
+	Cell Options	గడి ఎంపికలు
+	Cell Size	గడి పరిమాణం
+	Cell\nMargins	గడి\nమార్జిన్‌లు
+	Center	మధ్య
+	Centered	మధ్యలో ఉంచబడింది
+	Centered as Group	సమూహంగా మధ్యలో
+	Centimeters	సెంటీమీటర్లు
+	Change	మార్చు
+	Change Case	అక్షర రకాన్ని మార్చు
+	Change Chart Type	చార్ట్ రకాన్ని మార్చు
+	Change Colors	రంగులను మార్చు
+	Change in y over change in x	x మార్పుపై y మార్పు
+	Change Layout	లేఅవుట్ మార్చు
+	Change List Level	జాబితా స్థాయిని మార్చు
+	Change Password…	పాస్‌వర్డ్ మార్చు…
+	Change Picture	చిత్రాన్ని మార్చు
+	Change Picture…	చిత్రాన్ని మార్చు…
+	Change Shape	ఆకారాన్ని మార్చు
+	Change Structure	నిర్మాణాన్ని మార్చు
+	Change to Display	ప్రదర్శనకు మార్చు
+	Change to Inline	ఇన్‌లైన్‌కు మార్చు
+	Change to Level 1	స్థాయి 1కి మార్చు
+	Change to Level 2	స్థాయి 2కి మార్చు
+	Change to Level 3	స్థాయి 3కి మార్చు
+	Change to Level 4	స్థాయి 4కి మార్చు
+	Change to Level 5	స్థాయి 5కి మార్చు
+	Change to Level 6	స్థాయి 6కి మార్చు
+	Change to Level 7	స్థాయి 7కి మార్చు
+	Change to Level 8	స్థాయి 8కి మార్చు
+	Change to Level 9	స్థాయి 9కి మార్చు
+	Change\nChart Type	చార్ట్ రకాన్ని\nమార్చు
+	Change\nColors	రంగులను\nమార్చు
+	Changed	మార్చబడింది
+	Changed lines:	మార్చిన పంక్తులు:
+	Changes	మార్పులు
+	Changes with highlighting	హైలైట్‌తో మార్పులు
+	Changes without highlighting	హైలైట్ లేకుండా మార్పులు
+	Chapter in a book	పుస్తకంలో అధ్యాయం
+	Chapters begin at:	అధ్యాయాలు ఇక్కడ ప్రారంభమవుతాయి:
+	Character	అక్షరం
+	Character Border	అక్షర అంచు
+	Character code:	అక్షర కోడ్:
+	Character in Range	పరిధిలోని అక్షరం
+	Character level	అక్షర స్థాయి
+	Character Position	అక్షర స్థానం
+	Character Scale	అక్షర స్కేల్
+	Character Shading	అక్షర షేడింగ్
+	Character Spacing	అక్షర అంతరం
+	Character spacing	అక్షరాల అంతరం
+	Character style	అక్షర శైలి
+	Characters	అక్షరాలు
+	Characters (no spaces)	అక్షరాలు (ఖాళీలు లేకుండా)
+	Characters (with spaces)	అక్షరాలు (ఖాళీలతో)
+	Characters per line:	పంక్తికి అక్షరాలు:
+	Chart	చార్ట్
+	Chart Design	చార్ట్ డిజైన్
+	Chart Layouts	చార్ట్ లేఅవుట్‌లు
+	Chart Title	చార్ట్ శీర్షిక
+	Check	తనిఖీ
+	Check Accessibility	యాక్సెసిబిలిటీని తనిఖీ చేయి
+	Check Box Content Control	చెక్ బాక్స్ కంటెంట్ నియంత్రణ
+	Check Compatibility	అనుకూలతను తనిఖీ చేయి
+	Check Errors…	లోపాలను తనిఖీ చేయి…
+	Check for Errors	లోపాల కోసం తనిఖీ చేయి
+	Check Spelling as You Type	టైప్ చేస్తున్నప్పుడు స్పెల్లింగ్ తనిఖీ
+	Check spelling as you type	టైప్ చేసేటప్పుడు స్పెల్లింగ్ తనిఖీ
+	Check\nAccessibility	యాక్సెసిబిలిటీ\nతనిఖీ
+	Checked styles are allowed:	ఎంచుకున్న శైలులు అనుమతించబడతాయి:
+	Checked symbol	ఎంచుకున్న చిహ్నం
+	Chevron Down	క్రింది చెవ్రాన్
+	Chevron Up	పై చెవ్రాన్
+	Chicago	Chicago
+	Chinese (Simplified)	చైనీస్ (సరళీకృత)
+	Chinese (Traditional)	చైనీస్ (సాంప్రదాయ)
+	Choose a command	ఆదేశాన్ని ఎంచుకోండి
+	Choose a shortcut	షార్ట్‌కట్‌ను ఎంచుకోండి
+	Choose List Item	జాబితా అంశాన్ని ఎంచుకోండి
+	Choose the sheet that holds the recipients.	గ్రహీతలను కలిగి ఉన్న షీట్‌ను ఎంచుకోండి.
+	Circle	వృత్తం
+	Circle area from its radius	వ్యాసార్ధం నుండి వృత్త వైశాల్యం
+	Circled Dot	వృత్తంలో చుక్క
+	Circled Plus	వృత్తంలో ప్లస్
+	Circled Times	వృత్తంలో గుణకారం
+	Citation marked.	ఉల్లేఖన గుర్తించబడింది.
+	Citation Style	ఉల్లేఖన శైలి
+	Citations	ఉల్లేఖనలు
+	Citations & Bibliography	ఉల్లేఖనలు మరియు గ్రంథసూచి
+	City	నగరం
+	Clear	తొలగించు
+	Clear All	అన్నీ తొలగించు
+	Clear All Formatting	అన్ని ఫార్మాటింగ్‌ను తొలగించు
+	Clear Character Formatting	అక్షర ఫార్మాటింగ్‌ను తొలగించు
+	Clear Character Style	అక్షర శైలిని తొలగించు
+	Clear Formatting Level	ఫార్మాటింగ్ స్థాయిని తొలగించు
+	Clear Paragraph Formatting	పేరా ఫార్మాటింగ్‌ను తొలగించు
+	Click a border between two cells to merge them. Esc stops.	రెండు గడులను విలీనం చేయడానికి వాటి మధ్య అంచును క్లిక్ చేయండి. Esc ఆపుతుంది.
+	Click an item to paste it.	అతికించడానికి అంశాన్ని క్లిక్ చేయండి.
+	Click level to modify:	సవరించడానికి స్థాయిని క్లిక్ చేయండి:
+	Click the empty text box the text should continue in (Esc cancels)	వచనం కొనసాగవలసిన ఖాళీ టెక్స్ట్ బాక్స్‌ను క్లిక్ చేయండి (Esc రద్దు చేస్తుంది)
+	Click to switch back to inserting	చొప్పించడానికి తిరిగి మారడానికి క్లిక్ చేయండి
+	Clipboard	క్లిప్‌బోర్డ్
+	Clipboard Contents	క్లిప్‌బోర్డ్ విషయాలు
+	Clipboard Items	క్లిప్‌బోర్డ్ అంశాలు
+	Clipboard Pane	క్లిప్‌బోర్డ్ పేన్
+	Close	మూసివేయి
+	Close Equation	సమీకరణాన్ని మూసివేయి
+	Close Header and Footer	హెడర్ మరియు ఫుటర్‌ను మూసివేయి
+	Close Outline View	అవుట్‌లైన్ వీక్షణను మూసివేయి
+	Close Outline\nView	అవుట్‌లైన్\nవీక్షణను మూసివేయి
+	Close Reviewing Pane	సమీక్ష పేన్‌ను మూసివేయి
+	Clustered Bar	క్లస్టర్డ్ బార్
+	Clustered Column	క్లస్టర్డ్ కాలమ్
+	Col #:	నిలు #:
+	Collapse	కుదించు
+	Collapse Selection	ఎంపికను కుదించు
+	Collapse the Ribbon	రిబ్బన్‌ను కుదించు
+	Collate copies	కాపీలను క్రమపరచు
+	Collect entries from:	నమోదులను దీని నుండి సేకరించు:
+	Colon Equal	కోలన్ సమానం
+	Color	రంగు
+	Color model:	రంగు నమూనా:
+	Color only	రంగు మాత్రమే
+	Color:	రంగు:
+	Color: {color}	రంగు: {color}
+	Colorful	రంగురంగుల
+	Colors	రంగులు
+	Colors:	రంగులు:
+	Column	నిలువు వరుస
+	Column Break	నిలువు వరుస విరామం
+	Column Selection	నిలువు వరుస ఎంపిక
+	Column selection: the arrow keys extend the block, Esc ends it	నిలువు వరుస ఎంపిక: బాణం కీలు బ్లాక్‌ను విస్తరిస్తాయి, Esc ముగిస్తుంది
+	Column width	నిలువు వరుస వెడల్పు
+	Column:	నిలువు వరుస:
+	Columns	నిలువు వరుసలు
+	Columns:	నిలువు వరుసలు:
+	Combine	కలుపు
+	Combine Documents	పత్రాలను కలుపు
+	Combo Box Content Control	కాంబో బాక్స్ కంటెంట్ నియంత్రణ
+	Commands	ఆదేశాలు
+	Commands:	ఆదేశాలు:
+	Comment	వ్యాఖ్య
+	Comments	వ్యాఖ్యలు
+	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	PDFలు, ముద్రణలు మరియు చిత్రాలలో ప్రతి పేజీ పక్కన వ్యాఖ్యలు మరియు ట్రాక్ చేసిన మార్పులు; వెబ్ పేజీలు, Markdown మరియు వచనం చివర వ్యాఖ్యల జాబితా.
+	Comments on version	సంస్కరణపై వ్యాఖ్యలు
+	Comments Pane	వ్యాఖ్యల పేన్
+	Commits	కమిట్‌లు
+	Common Accent Objects	సాధారణ యాస వస్తువులు
+	Common Brackets	సాధారణ బ్రాకెట్లు
+	Common Fractions	సాధారణ భిన్నాలు
+	Common Functions	సాధారణ ఫంక్షన్‌లు
+	Common Large Operators	సాధారణ పెద్ద ఆపరేటర్‌లు
+	Common Operator Structures	సాధారణ ఆపరేటర్ నిర్మాణాలు
+	Common Operators	సాధారణ ఆపరేటర్‌లు
+	Common Radicals	సాధారణ మూలాలు
+	Common Subscripts and Superscripts	సాధారణ సబ్‌స్క్రిప్ట్‌లు మరియు సూపర్‌స్క్రిప్ట్‌లు
+	Communication	కమ్యూనికేషన్
+	Compact	కుదించిన
+	Company	సంస్థ
+	Compare	పోల్చు
+	Compare Documents	పత్రాలను పోల్చు
+	Compare to	దీనితో పోల్చు
+	Compared: {changes} changes	పోల్చబడింది: {changes} మార్పులు
+	Comparing with another file needs the desktop app.	మరొక ఫైల్‌తో పోల్చడానికి డెస్క్‌టాప్ యాప్ అవసరం.
+	Comparison	పోలిక
+	Comparison settings	పోలిక సెట్టింగ్‌లు
+	Compatibility mode: {version}	అనుకూలత మోడ్: {version}
+	Compatibility Options	అనుకూలత ఎంపికలు
+	Compatibility Options…	అనుకూలత ఎంపికలు…
+	Compress Pictures	చిత్రాలను కుదించు
+	Compress punctuation at the start of a line	పంక్తి ప్రారంభంలో విరామ చిహ్నాలను కుదించు
+	Condensed	సంక్షిప్త
+	Conference	సమావేశం
+	Conference paper	సమావేశ పత్రం
+	CONFIDENTIAL	రహస్యం
+	Confirm password:	పాస్‌వర్డ్ నిర్ధారించు:
+	Connect Shapes	ఆకారాలను కలుపు
+	Constitutional Provisions	రాజ్యాంగ నిబంధనలు
+	Container Title	కంటైనర్ శీర్షిక
+	Contains	కలిగి ఉంది
+	Content Control at Selection	ఎంపికలోని కంటెంట్ నియంత్రణ
+	Content Control Properties	కంటెంట్ నియంత్రణ లక్షణాలు
+	Contents can't be edited	విషయాలను సవరించలేరు
+	Context	సందర్భం
+	Contextual	సందర్భోచిత
+	Continuous	నిరంతర
+	Continuous numbering	నిరంతర సంఖ్యలు
+	Contour Integral	కాంటూర్ సమాకలనం
+	Contour Integral with Limits	పరిమితులతో కాంటూర్ సమాకలనం
+	Contour Integral with Stacked Limits	పేర్చిన పరిమితులతో కాంటూర్ సమాకలనం
+	Contour Integrals	కాంటూర్ సమాకలనాలు
+	Contrast:	కాంట్రాస్ట్:
+	Contributors	సహకారులు
+	Controls	నియంత్రణలు
+	Conversions	మార్పిడులు
+	Convert	మార్పిడి చేయి
+	Convert between built-up and linear form	నిర్మిత మరియు రేఖీయ రూపాల మధ్య మార్పిడి
+	Convert Notes	గమనికలను మార్పిడి చేయి
+	Convert Permanently	శాశ్వతంగా మార్పిడి చేయి
+	Convert Text to Table	వచనాన్ని పట్టికగా మార్చు
+	Convert Text to Table…	వచనాన్ని పట్టికగా మార్చు…
+	Convert to Arabic Digits	అరబిక్ అంకెలుగా మార్చు
+	Convert to Shapes	ఆకారాలుగా మార్చు
+	Convert to Text	వచనంగా మార్చు
+	Convert to Thai Digits	థాయ్ అంకెలుగా మార్చు
+	Copies	కాపీలు
+	Coproduct	కోప్రొడక్ట్
+	Coproduct with Limits	పరిమితులతో కోప్రొడక్ట్
+	Coproduct with Lower Limit	దిగువ పరిమితితో కోప్రొడక్ట్
+	Coproduct with Subscript-Superscript Limits	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్ పరిమితులతో కోప్రొడక్ట్
+	Copy	కాపీ చేయి
+	Copy Formatting	ఫార్మాటింగ్‌ను కాపీ చేయి
+	Copy of the text a bookmark marks	బుక్‌మార్క్ గుర్తించే వచనం యొక్క కాపీ
+	Copy Styles	శైలులను కాపీ చేయి
+	Copy Text	వచనాన్ని కాపీ చేయి
+	Copy to where?	ఎక్కడికి కాపీ చేయాలి?
+	Copyright	కాపీరైట్
+	Copyright Sign	కాపీరైట్ గుర్తు
+	Corrections	దిద్దుబాట్లు
+	Cosecant Function	కోసెకెంట్ ఫంక్షన్
+	Cosine 2x	కొసైన్ 2x
+	Cosine Function	కొసైన్ ఫంక్షన్
+	Cotangent Function	కోటాంజెంట్ ఫంక్షన్
+	Couldn't add {name}: {reason}	{name}‌ను జోడించలేకపోయాము: {reason}
+	Couldn't download the picture: {reason}	చిత్రాన్ని డౌన్‌లోడ్ చేయలేకపోయాము: {reason}
+	Couldn't download {name}: {error}	{name}‌ను డౌన్‌లోడ్ చేయలేకపోయాము: {error}
+	Couldn't get the add-in list: {reason}	యాడ్-ఇన్ జాబితాను పొందలేకపోయాము: {reason}
+	Couldn't make Doc4Me the default: {error}	Doc4Me‌ను డిఫాల్ట్‌గా చేయలేకపోయాము: {error}
+	Couldn't open {path}: {error}	{path}‌ను తెరవలేకపోయాము: {error}
+	Couldn't search: {reason}	శోధించలేకపోయాము: {reason}
+	Couldn't translate: {reason}	అనువదించలేకపోయాము: {reason}
+	Count by:	దీని ప్రకారం లెక్కించు:
+	Count words in text boxes and notes	టెక్స్ట్ బాక్స్‌లు మరియు గమనికలలోని పదాలను లెక్కించు
+	Country	దేశం
+	Courtesy Title	గౌరవ బిరుదు
+	Cover Page	కవర్ పేజీ
+	Craft	హస్తకళ
+	Create	సృష్టించు
+	Create a Style	శైలిని సృష్టించు
+	Create an interactive outline of your document.\n\nIt's a great way to keep track of where you are or quickly move your content around.\n\nTo get started, go to the Home tab and apply Heading styles to the headings in your document.	మీ పత్రం యొక్క ఇంటరాక్టివ్ అవుట్‌లైన్‌ను సృష్టించండి.\n\nమీరు ఎక్కడ ఉన్నారో తెలుసుకోవడానికి లేదా మీ విషయాన్ని త్వరగా తరలించడానికి ఇది గొప్ప మార్గం.\n\nప్రారంభించడానికి, హోమ్ ట్యాబ్‌కు వెళ్లి మీ పత్రంలోని శీర్షికలకు శీర్షిక శైలులను వర్తింపజేయండి.
+	Create Data Source…	డేటా మూలాన్ని సృష్టించు…
+	Create Graphic	గ్రాఫిక్ సృష్టించు
+	Create Header Source	హెడర్ మూలాన్ని సృష్టించు
+	Create Link	లింక్ సృష్టించు
+	Create New Style	కొత్త శైలిని సృష్టించు
+	Create Source	మూలాన్ని సృష్టించు
+	Create…	సృష్టించు…
+	Crop	క్రాప్ చేయి
+	Cross-reference	క్రాస్-రిఫరెన్స్
+	Cross-reference:	క్రాస్-రిఫరెన్స్:
+	Cube Root	ఘనమూలం
+	Current	ప్రస్తుత
+	Current - Linear	ప్రస్తుత - రేఖీయ
+	Current - Professional	ప్రస్తుత - వృత్తిపరమైన
+	Current keyboard settings	ప్రస్తుత కీబోర్డ్ సెట్టింగ్‌లు
+	Current page	ప్రస్తుత పేజీ
+	Current Position	ప్రస్తుత స్థానం
+	Current record	ప్రస్తుత రికార్డు
+	Current style: {style}	ప్రస్తుత శైలి: {style}
+	Curved Arrow Connector	వంపు బాణం కనెక్టర్
+	Curved Connector	వంపు కనెక్టర్
+	Custom	అనుకూలం
+	Custom dictionary	అనుకూల నిఘంటువు
+	Custom Margins…	అనుకూల మార్జిన్‌లు…
+	Custom mark:	అనుకూల గుర్తు:
+	Custom range	అనుకూల పరిధి
+	Custom Table of Contents	అనుకూల విషయ సూచిక
+	Custom Table of Contents…	అనుకూల విషయ సూచిక…
+	Custom Watermark	అనుకూల వాటర్‌మార్క్
+	Custom Watermark…	అనుకూల వాటర్‌మార్క్…
+	Customize	అనుకూలీకరించు
+	Customize Keyboard	కీబోర్డ్‌ను అనుకూలీకరించు
+	Customize Quick Access Toolbar	త్వరిత ప్రాప్తి టూల్‌బార్‌ను అనుకూలీకరించు
+	Customize Quick Access Toolbar…	త్వరిత ప్రాప్తి టూల్‌బార్‌ను అనుకూలీకరించు…
+	Customize Ribbon	రిబ్బన్‌ను అనుకూలీకరించు
+	Customize the Ribbon…	రిబ్బన్‌ను అనుకూలీకరించు…
+	Customize…	అనుకూలీకరించు…
+	Cut	కత్తిరించు
+	Cut, copy, and paste	కత్తిరించు, కాపీ చేయి మరియు అతికించు
+	Cycle	చక్రం
+	Czech	చెక్
+	Danish	డానిష్
+	Dark	ముదురు
+	Dark Mode	డార్క్ మోడ్
+	Dark page (white text on black)	ముదురు పేజీ (నలుపుపై తెలుపు వచనం)
+	Dark with Shadow	నీడతో ముదురు
+	Darkroom	డార్క్‌రూమ్
+	Dashed	డాష్‌లతో
+	Data	డేటా
+	Data Labels	డేటా లేబుల్‌లు
+	Data source:	డేటా మూలం:
+	Date	తేదీ
+	Date & Time	తేదీ & సమయం
+	Date and Time	తేదీ మరియు సమయం
+	Date format	తేదీ ఫార్మాట్
+	Date formats:	తేదీ ఫార్మాట్‌లు:
+	Date Picker Content Control	తేదీ ఎంపిక కంటెంట్ నియంత్రణ
+	Day	రోజు
+	Decimal	దశాంశం
+	Decorative objects only add visual interest: screen readers skip them.	అలంకార వస్తువులు దృశ్య ఆసక్తిని మాత్రమే జోడిస్తాయి: స్క్రీన్ రీడర్‌లు వాటిని దాటవేస్తాయి.
+	Decrease Font Size	ఫాంట్ పరిమాణాన్ని తగ్గించు
+	Decrease Indent	ఇండెంట్ తగ్గించు
+	Default	డిఫాల్ట్
+	Default Paragraph Font	డిఫాల్ట్ పేరా ఫాంట్
+	Default tab stops:	డిఫాల్ట్ ట్యాబ్ స్టాప్‌లు:
+	Define New Bullet	కొత్త బుల్లెట్‌ను నిర్వచించు
+	Define New Multilevel List	కొత్త బహుళస్థాయి జాబితాను నిర్వచించు
+	Define New Multilevel List…	కొత్త బహుళస్థాయి జాబితాను నిర్వచించు…
+	Define New Number Format	కొత్త సంఖ్య ఫార్మాట్‌ను నిర్వచించు
+	Deflate	గాలి తీయి
+	Delete	తొలగించు
+	Delete Back in Equation	సమీకరణంలో వెనుకకు తొలగించు
+	Delete Cells	గడులను తొలగించు
+	Delete Clipboard Item	క్లిప్‌బోర్డ్ అంశాన్ని తొలగించు
+	Delete Columns	నిలువు వరుసలను తొలగించు
+	Delete Comment	వ్యాఖ్యను తొలగించు
+	Delete in Equation	సమీకరణంలో తొలగించు
+	Delete Label	లేబుల్‌ను తొలగించు
+	Delete Next Word	తదుపరి పదాన్ని తొలగించు
+	Delete Previous Word	మునుపటి పదాన్ని తొలగించు
+	Delete Rows	వరుసలను తొలగించు
+	Delete Selected Ink	ఎంచుకున్న ఇంక్‌ను తొలగించు
+	Delete Style	శైలిని తొలగించు
+	Delete Table	పట్టికను తొలగించు
+	Delete Table Style	పట్టిక శైలిని తొలగించు
+	Deleted	తొలగించబడింది
+	Deletions:	తొలగింపులు:
+	Delivery address:	డెలివరీ చిరునామా:
+	Delta Equal To	డెల్టా సమానం
+	Delta over arrow	బాణం పైన డెల్టా
+	Demote	స్థాయి తగ్గించు
+	Demote to Body Text	ప్రధాన వచనానికి తగ్గించు
+	Derivative as a limit	పరిమితిగా అవకలజం
+	Descending	అవరోహణ
+	Describe what this object shows, for people who can't see it.	ఈ వస్తువు ఏమి చూపిస్తుందో చూడలేని వారి కోసం వివరించండి.
+	Describe what this table shows, for people who can't see it.	ఈ పట్టిక ఏమి చూపిస్తుందో చూడలేని వారి కోసం వివరించండి.
+	Description:	వివరణ:
+	Design	డిజైన్
+	Design Mode	డిజైన్ మోడ్
+	Detach Template	టెంప్లేట్‌ను వేరుచేయి
+	Detect language automatically	భాషను స్వయంచాలకంగా గుర్తించు
+	Developer	డెవలపర్
+	development build	డెవలప్‌మెంట్ బిల్డ్
+	Diagonal	వికర్ణం
+	Diagonal Dots	వికర్ణ చుక్కలు
+	Diamond	వజ్రం
+	Dictate	డిక్టేట్
+	Dictation isn't available here.	డిక్టేషన్ ఇక్కడ అందుబాటులో లేదు.
+	Dictation stopped.	డిక్టేషన్ ఆగింది.
+	Dictation stopped: {reason}	డిక్టేషన్ ఆగింది: {reason}
+	Different First Page	విభిన్న మొదటి పేజీ
+	Different Odd & Even Pages	విభిన్న బేసి & సరి పేజీలు
+	Differential	అవకలనం
+	Differential theta	అవకలనం థీటా
+	Differential x	అవకలనం x
+	Differential y	అవకలనం y
+	Differentials	అవకలనాలు
+	Direct formatting	ప్రత్యక్ష ఫార్మాటింగ్
+	Direction:	దిశ:
+	Directory	డైరెక్టరీ
+	Display	ప్రదర్శన
+	Display for Review	సమీక్ష కోసం ప్రదర్శించు
+	Display gridlines on screen	స్క్రీన్‌పై గ్రిడ్‌లైన్‌లను ప్రదర్శించు
+	Display name	ప్రదర్శన పేరు
+	Display text	ప్రదర్శన వచనం
+	Distance from surrounding text	చుట్టుపక్కల వచనం నుండి దూరం
+	Distribute Columns	నిలువు వరుసలను సమంగా పంచు
+	Distribute letters	అక్షరాలను పంచు
+	Distribute Rows	వరుసలను సమంగా పంచు
+	Distribute spacing	అంతరాన్ని పంచు
+	Distributed	పంపిణీ చేయబడింది
+	Do Not Check Spelling or Grammar	స్పెల్లింగ్ లేదా వ్యాకరణాన్ని తనిఖీ చేయవద్దు
+	Do not check spelling or grammar	స్పెల్లింగ్‌ను లేదా వ్యాకరణాన్ని తనిఖీ చేయవద్దు
+	DO NOT COPY	కాపీ చేయవద్దు
+	Do Not Show in TOC	విషయ సూచికలో చూపవద్దు
+	Do you want to save changes to {name}?	{name}‌లో మార్పులను సేవ్ చేయాలనుకుంటున్నారా?
+	Doc4Me	Doc4Me
+	Doc4Me add-ins are free packs of macros from Doc4Me's add-in catalog. They can only edit the document.	Doc4Me యాడ్-ఇన్‌లు Doc4Me యాడ్-ఇన్ కేటలాగ్ నుండి ఉచిత మాక్రో ప్యాక్‌లు. అవి పత్రాన్ని మాత్రమే సవరించగలవు.
+	Doc4Me is now the default app for Word documents.	Doc4Me ఇప్పుడు Word పత్రాలకు డిఫాల్ట్ యాప్.
+	Document	పత్రం
+	Document End	పత్రం ముగింపు
+	Document Formatting	పత్రం ఫార్మాటింగ్
+	Document Grid	పత్రం గ్రిడ్
+	Document Information	పత్రం సమాచారం
+	Document Property	పత్రం లక్షణం
+	Document Start	పత్రం ప్రారంభం
+	Document template:	పత్రం టెంప్లేట్:
+	Document Text	పత్రం వచనం
+	Document Title	పత్రం శీర్షిక
+	Document1	పత్రం1
+	Document\nPreferences	పత్రం\nప్రాధాన్యతలు
+	Documents	పత్రాలు
+	Documents you open will show up here.	మీరు తెరిచే పత్రాలు ఇక్కడ కనిపిస్తాయి.
+	Does not contain	కలిగి లేదు
+	DOI	DOI
+	Don't add space between paragraphs of the same style	ఒకే శైలి పేరాల మధ్య ఖాళీ జోడించవద్దు
+	Don't capitalize after:	దీని తర్వాత పెద్ద అక్షరం చేయవద్దు:
+	Don't hyphenate	హైఫనేట్ చేయవద్దు
+	Don't print blank lines when data fields are empty	డేటా ఫీల్డ్‌లు ఖాళీగా ఉన్నప్పుడు ఖాళీ పంక్తులను ముద్రించవద్దు
+	Don't read Zotero, Mendeley or EndNote citations and bibliographies	Zotero, Mendeley లేదా EndNote ఉల్లేఖనలను మరియు గ్రంథసూచులను చదవవద్దు
+	Don't Save	సేవ్ చేయవద్దు
+	Don't use HTML paragraph auto spacing	HTML పేరా స్వయం అంతరాన్ని ఉపయోగించవద్దు
+	Dot	చుక్క
+	Dot dash	చుక్క డాష్
+	Dot-dash	చుక్క-డాష్
+	Dots	చుక్కలు
+	Dotted	చుక్కల
+	Double	ద్వంద్వ
+	Double Bar	ద్వంద్వ బార్
+	Double Closing Quote	ద్వంద్వ ముగింపు కొటేషన్
+	Double Dot	ద్వంద్వ చుక్క
+	Double Integral	ద్వంద్వ సమాకలనం
+	Double Integral with Limits	పరిమితులతో ద్వంద్వ సమాకలనం
+	Double Integral with Stacked Limits	పేర్చిన పరిమితులతో ద్వంద్వ సమాకలనం
+	Double Left Arrow with Text Above	పైన వచనంతో ద్వంద్వ ఎడమ బాణం
+	Double Left Arrow with Text Below	క్రింద వచనంతో ద్వంద్వ ఎడమ బాణం
+	Double Left Right Arrow with Text Above	పైన వచనంతో ద్వంద్వ ఎడమ కుడి బాణం
+	Double Left Right Arrow with Text Below	క్రింద వచనంతో ద్వంద్వ ఎడమ కుడి బాణం
+	Double Opening Quote	ద్వంద్వ ప్రారంభ కొటేషన్
+	Double Right Arrow with Text Above	పైన వచనంతో ద్వంద్వ కుడి బాణం
+	Double Right Arrow with Text Below	క్రింద వచనంతో ద్వంద్వ కుడి బాణం
+	Double Spacing	ద్వంద్వ అంతరం
+	Double Square Brackets	ద్వంద్వ చతురస్ర బ్రాకెట్లు
+	Double Strikethrough	ద్వంద్వ కొట్టివేత
+	Double strikethrough	ద్వంద్వ కొట్టివేత గీత
+	Double summation	ద్వంద్వ సంకలనం
+	Double Underline	ద్వంద్వ అండర్‌లైన్
+	Double Vertical Bars	ద్వంద్వ నిలువు గీతలు
+	Doughnut	డోనట్
+	Down	క్రిందికి
+	Downloading the speech model ({mb} MB, once)…	స్పీచ్ మోడల్‌ను డౌన్‌లోడ్ చేస్తోంది ({mb} MB, ఒకసారి)…
+	Downloading…	డౌన్‌లోడ్ చేస్తోంది…
+	DRAFT	డ్రాఫ్ట్
+	Draft	చిత్తుప్రతి
+	Drag a rectangle to draw a table, or a line across cells to split them. Esc stops.	పట్టిక గీయడానికి దీర్ఘచతురస్రాన్ని లాగండి, లేదా గడులను విభజించడానికి వాటి అడ్డంగా గీతను లాగండి. Esc ఆపుతుంది.
+	Draw	గీయి
+	Draw Ink	ఇంక్‌తో గీయి
+	Draw Table	పట్టిక గీయి
+	Draw\nTable	పట్టిక\nగీయి
+	Drawing Canvas	డ్రాయింగ్ కాన్వాస్
+	Drawing Grid	డ్రాయింగ్ గ్రిడ్
+	Drawing Tools	డ్రాయింగ్ సాధనాలు
+	Drawing\nCanvas	డ్రాయింగ్\nకాన్వాస్
+	Drop Cap	డ్రాప్ క్యాప్
+	Drop cap	డ్రాప్ క్యాప్ అక్షరం
+	Drop-Down List Content Control	డ్రాప్-డౌన్ జాబితా కంటెంట్ నియంత్రణ
+	Drops all formatting and pastes plain text.	అన్ని ఫార్మాటింగ్‌ను తీసివేసి సాదా వచనాన్ని అతికిస్తుంది.
+	Dutch	డచ్
+	E-mail Messages	ఇ-మెయిల్ సందేశాలు
+	Edit Category	వర్గాన్ని సవరించు
+	Edit Comment	వ్యాఖ్యను సవరించు
+	Edit Data	డేటాను సవరించు
+	Edit Document	పత్రాన్ని సవరించు
+	Edit Equation	సమీకరణాన్ని సవరించు
+	Edit Field Code	ఫీల్డ్ కోడ్‌ను సవరించు
+	Edit Field…	ఫీల్డ్‌ను సవరించు…
+	Edit Footer	ఫుటర్‌ను సవరించు
+	Edit Header	హెడర్‌ను సవరించు
+	Edit Individual Documents…	వ్యక్తిగత పత్రాలను సవరించు…
+	Edit Items	అంశాలను సవరించు
+	Edit Recipient List	గ్రహీతల జాబితాను సవరించు
+	Edit Source	మూలాన్ని సవరించు
+	Edit\nData	డేటాను\nసవరించు
+	Edit\nRecipient List	గ్రహీతల జాబితాను\nసవరించు
+	Edited	సవరించబడింది
+	Editing	సవరణ
+	Editing header/footer	హెడర్/ఫుటర్ సవరణ
+	Editing in this document is restricted.	ఈ పత్రంలో సవరణ పరిమితం చేయబడింది.
+	Editing — edit the document directly	సవరణ — పత్రాన్ని నేరుగా సవరించు
+	Edition	ఎడిషన్
+	Editor	ఎడిటర్
+	Edit…	సవరించు…
+	Effects	ప్రభావాలు
+	Elbow Arrow Connector	మోచేయి బాణం కనెక్టర్
+	Elbow Connector	మోచేయి కనెక్టర్
+	Ellipsis	ఎలిప్సిస్
+	Em Dash	ఎమ్ డాష్
+	Em Space	ఎమ్ స్పేస్
+	Email address (optional)	ఇమెయిల్ చిరునామా (ఐచ్ఛికం)
+	Emboss	ఎంబాస్
+	Emphasis	ఉద్ఘాటన
+	Empty Matrices	ఖాళీ మాత్రికలు
+	En Dash	ఎన్ డాష్
+	En Space	ఎన్ స్పేస్
+	Enclose Characters	అక్షరాలను చుట్టుముట్టు
+	Enclosure	ఆవరణ
+	Encrypt with Password	పాస్‌వర్డ్‌తో ఎన్‌క్రిప్ట్ చేయి
+	Encrypt with Password…	పాస్‌వర్డ్‌తో ఎన్‌క్రిప్ట్ చేయి…
+	End of document	పత్రం చివర
+	End of section	విభాగం చివర
+	End of Word	పదం చివర
+	Endnote Reference	ఎండ్‌నోట్ సూచన
+	Endnote Text	ఎండ్‌నోట్ వచనం
+	Endnotes	ఎండ్‌నోట్‌లు
+	Endnotes to footnotes	ఎండ్‌నోట్‌లను ఫుట్‌నోట్‌లుగా
+	English	ఆంగ్లం
+	English (United Kingdom)	ఆంగ్లం (యునైటెడ్ కింగ్‌డమ్)
+	English (United States)	ఆంగ్లం (యునైటెడ్ స్టేట్స్)
+	Engrave	చెక్కడం
+	Enlarge symbol	చిహ్నాన్ని పెద్దది చేయి
+	Enter formatting for number:	సంఖ్య కోసం ఫార్మాటింగ్‌ను నమోదు చేయండి:
+	Enter in Equation	సమీకరణంలో Enter
+	Enter page number:	పేజీ సంఖ్యను నమోదు చేయండి:
+	Enter the web address or embed code of an online video:	ఆన్‌లైన్ వీడియో యొక్క వెబ్ చిరునామా లేదా ఎంబెడ్ కోడ్‌ను నమోదు చేయండి:
+	Entry marked.	నమోదు గుర్తించబడింది.
+	Entry:	నమోదు:
+	Envelope #10   4.12" × 9.50"	కవరు #10   4.12" × 9.50"
+	Envelope Address	కవరు చిరునామా
+	Envelope DL   4.33" × 8.66"	కవరు DL   4.33" × 8.66"
+	Envelope Return	కవరు తిరుగు చిరునామా
+	Envelope size:	కవరు పరిమాణం:
+	Envelopes	కవర్లు
+	Equal by Definition	నిర్వచనం ప్రకారం సమానం
+	Equal column width	సమాన నిలువు వరుస వెడల్పు
+	Equal Equal	సమానం సమానం
+	Equal to	సమానం
+	Equals:	సమానం:
+	Equation	సమీకరణం
+	Equation Gallery	సమీకరణ గ్యాలరీ
+	Equation Info	సమీకరణ సమాచారం
+	Equation Number	సమీకరణ సంఖ్య
+	Equation Options	సమీకరణ ఎంపికలు
+	Erase Ink	ఇంక్‌ను చెరిపివేయి
+	Eraser	ఎరేజర్
+	Errors ({n})	లోపాలు ({n})
+	Estonian	ఎస్టోనియన్
+	Euler's identity	ఆయిలర్ సర్వసమానత్వం
+	Even Page	సరి పేజీ
+	Even pages only	సరి పేజీలు మాత్రమే
+	Every change is recorded as a tracked change.	ప్రతి మార్పు ట్రాక్ చేసిన మార్పుగా నమోదవుతుంది.
+	Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel.	ప్రతి ఆదేశం స్క్రిప్ట్‌లకు మరియు AI ఏజెంట్‌లకు అందుబాటులో ఉంది: MCP సర్వర్ కోసం `doc4me-cli mcp` అమలు చేయండి, లేదా JSON నియంత్రణ ఛానెల్ కోసం యాప్‌ను `--control <port>`‌తో ప్రారంభించండి.
+	Every field needs a name.	ప్రతి ఫీల్డ్‌కు పేరు అవసరం.
+	Every font this document uses is installed.	ఈ పత్రం ఉపయోగించే ప్రతి ఫాంట్ ఇన్‌స్టాల్ చేయబడింది.
+	Everyone	అందరూ
+	Exactly	ఖచ్చితంగా
+	Exactly {n}	ఖచ్చితంగా {n}
+	Example: {sample}	ఉదాహరణ: {sample}
+	Exceptions (optional)	మినహాయింపులు (ఐచ్ఛికం)
+	Exceptions…	మినహాయింపులు…
+	Executive   7.25" × 10.50"	Executive   7.25" × 10.50"
+	Exit	నిష్క్రమించు
+	Expand	విస్తరించు
+	Expand or Collapse Heading	శీర్షికను విస్తరించు లేదా కుదించు
+	Expanded	విస్తరించబడింది
+	Exponential	ఘాతాంకం
+	Exponential series	ఘాతాంక శ్రేణి
+	Export	ఎగుమతి
+	Export a copy to share (PDF, Word document)	భాగస్వామ్యం కోసం కాపీని ఎగుమతి చేయి (PDF, Word పత్రం)
+	Export Page as JPEG	పేజీని JPEG‌గా ఎగుమతి చేయి
+	Export Page as PNG	పేజీని PNG‌గా ఎగుమతి చేయి
+	Export PDF	PDF ఎగుమతి చేయి
+	Exported {path}	{path} ఎగుమతి చేయబడింది
+	Expression	వ్యక్తీకరణ
+	Extend Selection	ఎంపికను విస్తరించు
+	Extend Selection by Units	యూనిట్‌ల వారీగా ఎంపికను విస్తరించు
+	Extra space	అదనపు ఖాళీ
+	Extra spaces between words.	పదాల మధ్య అదనపు ఖాళీలు.
+	Field	ఫీల్డ్
+	Field Click	ఫీల్డ్ క్లిక్
+	Field code:	ఫీల్డ్ కోడ్:
+	Field Codes	ఫీల్డ్ కోడ్‌లు
+	Field codes:	ఫీల్డ్ కోడ్‌లు:
+	Field name	ఫీల్డ్ పేరు
+	Field name:	ఫీల్డ్ పేరు:
+	Field names must be different.	ఫీల్డ్ పేర్లు వేర్వేరుగా ఉండాలి.
+	Field names:	ఫీల్డ్ పేర్లు:
+	Field properties	ఫీల్డ్ లక్షణాలు
+	Field:	ఫీల్డ్:
+	Fields	ఫీల్డ్‌లు
+	Fields to insert:	చొప్పించవలసిన ఫీల్డ్‌లు:
+	Fields:	ఫీల్డ్‌లు:
+	Field…	ఫీల్డ్…
+	Figure	చిత్రం
+	File	ఫైల్
+	File name:	ఫైల్ పేరు:
+	Fill	నింపు
+	Fill & Line	నింపు & గీత
+	Fill color:	నింపు రంగు:
+	Fill:	నింపు:
+	Filling in forms	ఫారమ్‌లను నింపడం
+	Film	ఫిల్మ్
+	Filter and Sort	ఫిల్టర్ మరియు క్రమీకరించు
+	Filter and Sort…	ఫిల్టర్ మరియు క్రమీకరించు…
+	Filter Records	రికార్డులను ఫిల్టర్ చేయి
+	Find	కనుగొను
+	Find and Replace	కనుగొని భర్తీ చేయి
+	Find Next	తదుపరిది కనుగొను
+	Find Next Editable Region	తదుపరి సవరించదగిన ప్రాంతాన్ని కనుగొను
+	Find Previous	మునుపటిది కనుగొను
+	Find Recipient	గ్రహీతను కనుగొను
+	Find selects the next changed paragraph; Reject puts the selected one back as it was.	కనుగొను తదుపరి మార్చిన పేరాను ఎంచుకుంటుంది; తిరస్కరించు ఎంచుకున్నదాన్ని మునుపటిలా ఉంచుతుంది.
+	Find What Expression	కనుగొనవలసిన వ్యక్తీకరణ
+	Find What Text	కనుగొనవలసిన వచనం
+	Find what:	ఏమి కనుగొనాలి:
+	Find →	కనుగొను →
+	Find:	కనుగొను:
+	Finish	ముగించు
+	Finish & Merge	ముగించి విలీనం చేయి
+	Finish &\nMerge	ముగించి\nవిలీనం చేయి
+	Finished	పూర్తయింది
+	Finnish	ఫిన్నిష్
+	First	మొదటి
+	First Cell in Column	నిలువు వరుసలో మొదటి గడి
+	First Cell in Row	వరుసలో మొదటి గడి
+	First Column	మొదటి నిలువు వరుస
+	First commit	మొదటి కమిట్
+	First line	మొదటి పంక్తి
+	First line:	మొదటి పంక్తి:
+	First Name	మొదటి పేరు
+	First row of data contains column headers	డేటా మొదటి వరుసలో నిలువు వరుస శీర్షికలు ఉన్నాయి
+	Fit	అమర్చు
+	Fit text	వచనాన్ని అమర్చు
+	Fix Position on Page	పేజీపై స్థానాన్ని స్థిరపరచు
+	Fixed Column Width	స్థిర నిలువు వరుస వెడల్పు
+	Flip Horizontal	అడ్డంగా తిప్పు
+	Flip Vertical	నిలువుగా తిప్పు
+	Floor	ఫ్లోర్
+	Focus	ఫోకస్
+	Follow number with:	సంఖ్య తర్వాత ఇది:
+	Font	ఫాంట్
+	Font Color	ఫాంట్ రంగు
+	Font color	ఫాంట్ యొక్క రంగు
+	Font color:	ఫాంట్ రంగు:
+	Font Dialog	ఫాంట్ డైలాగ్
+	Font not installed	ఫాంట్ ఇన్‌స్టాల్ చేయబడలేదు
+	Font Size	ఫాంట్ పరిమాణం
+	Font Substitution	ఫాంట్ ప్రత్యామ్నాయం
+	Font Substitution…	ఫాంట్ ప్రత్యామ్నాయం…
+	Font:	ఫాంట్:
+	Font: {font}	ఫాంట్: {font}
+	Fonts	ఫాంట్‌లు
+	Font…	ఫాంట్…
+	Footer	ఫుటర్
+	Footnote and Endnote	ఫుట్‌నోట్ మరియు ఎండ్‌నోట్
+	Footnote Reference	ఫుట్‌నోట్ సూచన
+	Footnote Text	ఫుట్‌నోట్ వచనం
+	Footnotes	ఫుట్‌నోట్‌లు
+	Footnotes and endnotes	ఫుట్‌నోట్‌లు మరియు ఎండ్‌నోట్‌లు
+	Footnotes to endnotes	ఫుట్‌నోట్‌లను ఎండ్‌నోట్‌లుగా
+	Form Letters	ఫారమ్ లేఖలు
+	Format	ఫార్మాట్
+	Format Page Numbers	పేజీ సంఖ్యలను ఫార్మాట్ చేయి
+	Format Page Numbers…	పేజీ సంఖ్యలను ఫార్మాట్ చేయి…
+	Format Painter	ఫార్మాట్ పెయింటర్
+	Format Picture	చిత్రాన్ని ఫార్మాట్ చేయి
+	Format Shape	ఆకారాన్ని ఫార్మాట్ చేయి
+	Format:	ఫార్మాట్:
+	Formatted	ఫార్మాట్ చేయబడింది
+	Formatted Text	ఫార్మాట్ చేసిన వచనం
+	Formatting	ఫార్మాటింగ్
+	Formatting at Selection	ఎంపికలోని ఫార్మాటింగ్
+	Formatting completed. You can now:	ఫార్మాటింగ్ పూర్తయింది. ఇప్పుడు మీరు:
+	Formatting exceptions	ఫార్మాటింగ్ మినహాయింపులు
+	Formatting marks	ఫార్మాటింగ్ గుర్తులు
+	Formatting, case changes, white space and tables are compared; the other settings are kept for later.	ఫార్మాటింగ్, అక్షర రకం మార్పులు, ఖాళీ స్థలం మరియు పట్టికలు పోల్చబడతాయి; ఇతర సెట్టింగ్‌లు తర్వాత కోసం ఉంచబడ్డాయి.
+	Formula	సూత్రం
+	Forward	ముందుకు
+	Fraction	భిన్నం
+	Fractions (1/2) as fraction characters (½)	భిన్నాలు (1/2) భిన్న అక్షరాలుగా (½)
+	French	ఫ్రెంచ్
+	French (France)	ఫ్రెంచ్ (ఫ్రాన్స్)
+	From	నుండి
+	From text:	వచనం నుండి:
+	from Unicode (hex)	యూనికోడ్ నుండి (hex)
+	From:	పంపినవారు:
+	Full page of the same label	ఒకే లేబుల్ యొక్క పూర్తి పేజీ
+	Function	ఫంక్షన్
+	Functions	ఫంక్షన్‌లు
+	Gallery	గ్యాలరీ
+	GB/T 7714	GB/T 7714
+	General	సాధారణం
+	Geometry	జ్యామితి
+	German	జర్మన్
+	German (Germany)	జర్మన్ (జర్మనీ)
+	Get Add-ins	యాడ్-ఇన్‌లను పొందు
+	Get Data	డేటాను పొందు
+	Get Data…	డేటాను పొందు…
+	Getting ready…	సిద్ధమవుతోంది…
+	Glow	మెరుపు
+	Glow Colors	మెరుపు రంగులు
+	Go Back	వెనుకకు వెళ్ళు
+	Go To	వెళ్ళు
+	Go to	ఇక్కడికి వెళ్ళు
+	Go To…	వెళ్ళు…
+	Good afternoon	శుభ మధ్యాహ్నం
+	Good evening	శుభ సాయంత్రం
+	Good morning	శుభోదయం
+	GOST (name sort)	GOST (పేరు క్రమం)
+	GOST (title sort)	GOST (శీర్షిక క్రమం)
+	Grab bag	మిశ్రమ సంచి
+	Grammar	వ్యాకరణం
+	Grammar Settings	వ్యాకరణ సెట్టింగ్‌లు
+	Graphic	గ్రాఫిక్
+	Grave	గ్రేవ్
+	Greater than	కంటే ఎక్కువ
+	Greater than or equal	కంటే ఎక్కువ లేదా సమానం
+	Greek	గ్రీకు
+	Greek Letters	గ్రీకు అక్షరాలు
+	Green:	ఆకుపచ్చ:
+	Greeting Line	శుభాకాంక్ష పంక్తి
+	Greeting\nLine	శుభాకాంక్ష\nపంక్తి
+	Grid Settings	గ్రిడ్ సెట్టింగ్‌లు
+	Grid Table 1 Light	గ్రిడ్ పట్టిక 1 లేత
+	Grid Table 4 – Blue	గ్రిడ్ పట్టిక 4 – నీలం
+	Grid Table 4 – Green	గ్రిడ్ పట్టిక 4 – ఆకుపచ్చ
+	Grid Table 4 – Orange	గ్రిడ్ పట్టిక 4 – నారింజ
+	Grid Table 4 – Purple	గ్రిడ్ పట్టిక 4 – ఊదా
+	Gridlines	గ్రిడ్‌లైన్‌లు
+	Group	సమూహం
+	Grouping Character Above	పైన సమూహ అక్షరం
+	Grouping Character Below	క్రింద సమూహ అక్షరం
+	Grow Font 1 Point	ఫాంట్‌ను 1 పాయింట్ పెంచు
+	H:	ఎ:
+	Hanging Indent	వేలాడే ఇండెంట్
+	Harvard (Anglia)	Harvard (Anglia)
+	Hat	టోపీ
+	Header	హెడర్
+	Header & Footer	హెడర్ & ఫుటర్
+	Header Options	హెడర్ ఎంపికలు
+	Header Options:	హెడర్ ఎంపికలు:
+	Header Row	హెడర్ వరుస
+	Header source: {file} (the next data source opened here takes its field names)	హెడర్ మూలం: {file} (ఇక్కడ తెరిచే తదుపరి డేటా మూలం దాని ఫీల్డ్ పేర్లను తీసుకుంటుంది)
+	Header/Footer Position	హెడర్/ఫుటర్ స్థానం
+	Headers and footers	హెడర్‌లు మరియు ఫుటర్‌లు
+	Heading 1	శీర్షిక 1
+	Heading 2	శీర్షిక 2
+	Heading 3	శీర్షిక 3
+	Heading styles (levels 1–{n})	శీర్షిక శైలులు (స్థాయిలు 1–{n})
+	Heading {n}	శీర్షిక {n}
+	Headings	శీర్షికలు
+	Heart	హృదయం
+	Hebrew	హీబ్రూ
+	Height:	ఎత్తు:
+	Help	సహాయం
+	Hex:	Hex:
+	Hidden	దాచబడింది
+	Hidden text	దాచిన వచనం
+	Hide Codes	కోడ్‌లను దాచు
+	Hide from style lists	శైలి జాబితాల నుండి దాచు
+	Hide Ink	ఇంక్‌ను దాచు
+	Hide White Space	ఖాళీ స్థలాన్ని దాచు
+	Hide\nInk	ఇంక్‌ను\nదాచు
+	Hierarchy	శ్రేణి
+	Highlight	హైలైట్
+	Highlight Changes	మార్పులను హైలైట్ చేయి
+	Highlight changes in printed document	ముద్రించిన పత్రంలో మార్పులను హైలైట్ చేయి
+	Highlight changes on screen	స్క్రీన్‌పై మార్పులను హైలైట్ చేయి
+	Highlight Merge Fields	విలీన ఫీల్డ్‌లను హైలైట్ చేయి
+	Highlight\nMerge Fields	విలీన ఫీల్డ్‌లను\nహైలైట్ చేయి
+	Highlighter	హైలైటర్
+	Hindi	హిందీ
+	Historical and Discretional	చారిత్రక మరియు ఐచ్ఛిక
+	Hollow	బోలు
+	Home	హోమ్
+	Home folder	హోమ్ ఫోల్డర్
+	Horizontal	అడ్డం
+	Horizontal Line	అడ్డ గీత
+	Horizontal spacing:	అడ్డ అంతరం:
+	How many pages the whole document has	మొత్తం పత్రంలో ఎన్ని పేజీలు
+	How many pages this section has	ఈ విభాగంలో ఎన్ని పేజీలు
+	How many words the document holds	పత్రంలో ఎన్ని పదాలు
+	HTML Format	HTML ఫార్మాట్
+	Hue:	వర్ణం:
+	Hungarian	హంగేరియన్
+	Hyperbolic Cosecant Function	అతిపరావలయ కోసెకెంట్ ఫంక్షన్
+	Hyperbolic Cosine Function	అతిపరావలయ కొసైన్ ఫంక్షన్
+	Hyperbolic Cotangent Function	అతిపరావలయ కోటాంజెంట్ ఫంక్షన్
+	Hyperbolic Functions	అతిపరావలయ ఫంక్షన్‌లు
+	Hyperbolic Secant Function	అతిపరావలయ సెకెంట్ ఫంక్షన్
+	Hyperbolic Sine Function	అతిపరావలయ సైన్ ఫంక్షన్
+	Hyperbolic Tangent Function	అతిపరావలయ టాంజెంట్ ఫంక్షన్
+	Hyperlink	హైపర్‌లింక్
+	Hyphenate at:	ఇక్కడ హైఫనేట్ చేయి:
+	Hyphenate words in CAPS	పెద్ద అక్షరాల పదాలను హైఫనేట్ చేయి
+	Hyphenation	హైఫనేషన్
+	Hyphenation Options…	హైఫనేషన్ ఎంపికలు…
+	Hyphenation zone:	హైఫనేషన్ జోన్:
+	Hyphens (--) as dashes (—)	హైఫన్‌లు (--) డాష్‌లుగా (—)
+	Hypotenuse	కర్ణం
+	I, II, III, …	I, II, III, …
+	i, ii, iii, …	i, ii, iii, …
+	Icon Color	చిహ్నం రంగు
+	Icons	చిహ్నాలు
+	Identity Matrices	ఏకక మాత్రికలు
+	IEEE	IEEE
+	If…Then…Else	If…Then…Else
+	If…Then…Else…	If…Then…Else…
+	Ignore All	అన్నీ విస్మరించు
+	Ignore punctuation characters	విరామ చిహ్న అక్షరాలను విస్మరించు
+	Ignore web and file addresses	వెబ్ మరియు ఫైల్ చిరునామాలను విస్మరించు
+	Ignore white-space characters	ఖాళీ స్థల అక్షరాలను విస్మరించు
+	Ignore words in capitals	పెద్ద అక్షరాల పదాలను విస్మరించు
+	Ignore words with numbers	సంఖ్యలున్న పదాలను విస్మరించు
+	Illustrations	దృష్టాంతాలు
+	Immersive	లీనమయ్యే
+	Immersive Reader	ఇమ్మర్సివ్ రీడర్
+	Immersive\nReader	ఇమ్మర్సివ్\nరీడర్
+	In Default apps, choose Doc4Me for the document types you want it to open.	డిఫాల్ట్ యాప్‌లలో, Doc4Me తెరవాలనుకునే పత్ర రకాల కోసం Doc4Me‌ను ఎంచుకోండి.
+	In equations, typing a name after a backslash replaces it with its symbol.	సమీకరణాలలో, బ్యాక్‌స్లాష్ తర్వాత పేరును టైప్ చేస్తే అది దాని చిహ్నంగా మారుతుంది.
+	In Front of Text	వచనం ముందు
+	In Line with Text	వచనంతో పంక్తిలో
+	Inches	అంగుళాలు
+	Include label and number	లేబుల్ మరియు సంఖ్యను చేర్చు
+	Include level number from:	దీని నుండి స్థాయి సంఖ్యను చేర్చు:
+	Include page numbers	పేజీ సంఖ్యలను చేర్చు
+	Increase Font Size	ఫాంట్ పరిమాణాన్ని పెంచు
+	Increase Indent	ఇండెంట్ పెంచు
+	Indent	ఇండెంట్
+	Indent from left:	ఎడమ నుండి ఇండెంట్:
+	Indentation	ఇండెంటేషన్
+	Indented	ఇండెంట్ చేయబడింది
+	Indents	ఇండెంట్‌లు
+	Indents and Spacing	ఇండెంట్‌లు మరియు అంతరం
+	Index	సూచిక
+	Index and Tables	సూచిక మరియు పట్టికలు
+	Index Heading	సూచిక శీర్షిక
+	Index {n}	సూచిక {n}
+	Indonesian	ఇండోనేషియన్
+	Inflate	ఉబ్బించు
+	Info	సమాచారం
+	Initials:	మొదటి అక్షరాలు:
+	Ink	ఇంక్
+	Ink Equation	ఇంక్ సమీకరణం
+	Ink Replay	ఇంక్ రీప్లే
+	Ink to Math	ఇంక్ నుండి గణితం
+	Ink to Shape	ఇంక్ నుండి ఆకారం
+	Ink to\nMath	ఇంక్ నుండి\nగణితం
+	Ink to\nShape	ఇంక్ నుండి\nఆకారం
+	Ink\nReplay	ఇంక్\nరీప్లే
+	Inline	ఇన్‌లైన్
+	Input Format	ఇన్‌పుట్ ఫార్మాట్
+	Insert	చొప్పించు
+	Insert a 3D model from a file (.glb, .stl, .obj)	ఫైల్ నుండి 3D మోడల్‌ను చొప్పించు (.glb, .stl, .obj)
+	Insert a new equation (Alt+=)	కొత్త సమీకరణాన్ని చొప్పించు (Alt+=)
+	Insert Above	పైన చొప్పించు
+	Insert Below	క్రింద చొప్పించు
+	Insert Caption	శీర్షికను చొప్పించు
+	Insert Cells	గడులను చొప్పించు
+	Insert Chart	చార్ట్‌ను చొప్పించు
+	Insert Citation	ఉల్లేఖనను చొప్పించు
+	Insert Columns to the Left	ఎడమవైపు నిలువు వరుసలను చొప్పించు
+	Insert Columns to the Right	కుడివైపు నిలువు వరుసలను చొప్పించు
+	Insert Data	డేటాను చొప్పించు
+	Insert Database	డేటాబేస్‌ను చొప్పించు
+	Insert Database…	డేటాబేస్‌ను చొప్పించు…
+	Insert Date Field	తేదీ ఫీల్డ్‌ను చొప్పించు
+	Insert Endnote	ఎండ్‌నోట్‌ను చొప్పించు
+	Insert entire column	మొత్తం నిలువు వరుసను చొప్పించు
+	Insert entire row	మొత్తం వరుసను చొప్పించు
+	Insert Footnote	ఫుట్‌నోట్‌ను చొప్పించు
+	Insert Hyperlink	హైపర్‌లింక్‌ను చొప్పించు
+	Insert Index	సూచికను చొప్పించు
+	Insert Left	ఎడమకు చొప్పించు
+	Insert LISTNUM Field	LISTNUM ఫీల్డ్‌ను చొప్పించు
+	Insert Merge Field	విలీన ఫీల్డ్‌ను చొప్పించు
+	Insert Merge\nField	విలీన\nఫీల్డ్‌ను చొప్పించు
+	Insert New Equation	కొత్త సమీకరణాన్ని చొప్పించు
+	Insert one text or another, depending on a field's value.	ఫీల్డ్ విలువను బట్టి ఒక వచనాన్ని లేదా మరొకదాన్ని చొప్పించు.
+	Insert Page Field	పేజీ ఫీల్డ్‌ను చొప్పించు
+	Insert Right	కుడికి చొప్పించు
+	Insert Rows	వరుసలను చొప్పించు
+	Insert Rows Above	పైన వరుసలను చొప్పించు
+	Insert Rows Below	క్రింద వరుసలను చొప్పించు
+	Insert Shapes	ఆకారాలను చొప్పించు
+	Insert SmartArt	SmartArt చొప్పించు
+	Insert Structure	నిర్మాణాన్ని చొప్పించు
+	Insert Symbol	చిహ్నాన్ని చొప్పించు
+	Insert Table	పట్టికను చొప్పించు
+	Insert Table of Authorities	అధికారాల పట్టికను చొప్పించు
+	Insert Table of Figures	చిత్రాల పట్టికను చొప్పించు
+	Insert Table…	పట్టికను చొప్పించు…
+	Insert Time Field	సమయ ఫీల్డ్‌ను చొప్పించు
+	Insert Video	వీడియోను చొప్పించు
+	Insert\nAbove	పైన\nచొప్పించు
+	Insert\nCaption	శీర్షికను\nచొప్పించు
+	Insert\nCitation	ఉల్లేఖనను\nచొప్పించు
+	Insert\nFootnote	ఫుట్‌నోట్‌ను\nచొప్పించు
+	Inserted	చొప్పించబడింది
+	Insertions and Deletions	చొప్పింపులు మరియు తొలగింపులు
+	Insertions:	చొప్పింపులు:
+	Insertions: {ins}, deletions: {del}, moves: {moves}, formatting: {fmt}, comments: {comments}	చొప్పింపులు: {ins}, తొలగింపులు: {del}, తరలింపులు: {moves}, ఫార్మాటింగ్: {fmt}, వ్యాఖ్యలు: {comments}
+	Inside	లోపల
+	Inside Borders	లోపలి అంచులు
+	Inside Margin	లోపలి మార్జిన్
+	Inside:	లోపల:
+	Inspect Document	పత్రాన్ని తనిఖీ చేయి
+	Inspect Styles at Selection	ఎంపికలోని శైలులను తనిఖీ చేయి
+	Institution	సంస్థ
+	Integral	సమాకలనం
+	Integral of e^(−x²)	e^(−x²) యొక్క సమాకలనం
+	Integral with Limits	పరిమితులతో సమాకలనం
+	Integral with Stacked Limits	పేర్చిన పరిమితులతో సమాకలనం
+	Integrals	సమాకలనాలు
+	Intense Emphasis	తీవ్ర ఉద్ఘాటన
+	Intense Quote	తీవ్ర ఉల్లేఖన
+	Intense Reference	తీవ్ర సూచన
+	Interface	ఇంటర్‌ఫేస్
+	Interface language	ఇంటర్‌ఫేస్ భాష
+	Interface language:	ఇంటర్‌ఫేస్ భాష:
+	Interface size:	ఇంటర్‌ఫేస్ పరిమాణం:
+	Interface Theme	ఇంటర్‌ఫేస్ థీమ్
+	Interface theme:	ఇంటర్‌ఫేస్ థీమ్:
+	Interface\nTheme	ఇంటర్‌ఫేస్\nథీమ్
+	Internet addresses as links	ఇంటర్నెట్ చిరునామాలను లింక్‌లుగా
+	Intersection	ఛేదనం
+	Intersection with Limits	పరిమితులతో ఛేదనం
+	Intersection with Lower Limit	దిగువ పరిమితితో ఛేదనం
+	Intersection with Subscript-Superscript Limits	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్ పరిమితులతో ఛేదనం
+	Inverse Cosecant Function	విలోమ కోసెకెంట్ ఫంక్షన్
+	Inverse Cosine Function	విలోమ కొసైన్ ఫంక్షన్
+	Inverse Cotangent Function	విలోమ కోటాంజెంట్ ఫంక్షన్
+	Inverse Functions	విలోమ ఫంక్షన్‌లు
+	Inverse Hyperbolic Cosecant Function	విలోమ అతిపరావలయ కోసెకెంట్ ఫంక్షన్
+	Inverse Hyperbolic Cosine Function	విలోమ అతిపరావలయ కొసైన్ ఫంక్షన్
+	Inverse Hyperbolic Cotangent Function	విలోమ అతిపరావలయ కోటాంజెంట్ ఫంక్షన్
+	Inverse Hyperbolic Functions	విలోమ అతిపరావలయ ఫంక్షన్‌లు
+	Inverse Hyperbolic Secant Function	విలోమ అతిపరావలయ సెకెంట్ ఫంక్షన్
+	Inverse Hyperbolic Sine Function	విలోమ అతిపరావలయ సైన్ ఫంక్షన్
+	Inverse Hyperbolic Tangent Function	విలోమ అతిపరావలయ టాంజెంట్ ఫంక్షన్
+	Inverse Secant Function	విలోమ సెకెంట్ ఫంక్షన్
+	Inverse Sine Function	విలోమ సైన్ ఫంక్షన్
+	Inverse Tangent Function	విలోమ టాంజెంట్ ఫంక్షన్
+	Ionosphere	అయానోస్ఫియర్
+	Is blank	ఖాళీగా ఉంది
+	Is not blank	ఖాళీగా లేదు
+	ISO 690 (author-date)	ISO 690 (రచయిత-తేదీ)
+	ISO 690 (numerical)	ISO 690 (సంఖ్యాత్మక)
+	Issue	సంచిక
+	it isn't a picture Doc4Me can read	అది Doc4Me చదవగల చిత్రం కాదు
+	Italian	ఇటాలియన్
+	Italic	ఇటాలిక్
+	Japanese	జపనీస్
+	Journal	జర్నల్
+	Justification	జస్టిఫికేషన్
+	Justification of a display equation	ప్రదర్శన సమీకరణం యొక్క జస్టిఫికేషన్
+	Justified	రెండు వైపులా సమలేఖనం
+	Justify	రెండు వైపులా సమలేఖనం చేయి
+	Keep Lines Together	పంక్తులను కలిపి ఉంచు
+	Keep lines together	పంక్తులను కలిసి ఉంచు
+	Keep Source Formatting	మూల ఫార్మాటింగ్‌ను ఉంచు
+	Keep Text Only	వచనం మాత్రమే ఉంచు
+	Keep the password somewhere safe: without it nobody, Doc4Me included, can open the document. Leave both boxes empty to remove the password.	పాస్‌వర్డ్‌ను సురక్షిత స్థలంలో ఉంచండి: అది లేకుండా Doc4Me సహా ఎవరూ పత్రాన్ని తెరవలేరు. పాస్‌వర్డ్‌ను తీసివేయడానికి రెండు పెట్టెలను ఖాళీగా వదిలేయండి.
+	Keep with Next	తదుపరిదానితో ఉంచు
+	Keep with next	తదుపరిదానితో కలిపి ఉంచు
+	Keeps the fonts and formatting of the copied text.	కాపీ చేసిన వచనం యొక్క ఫాంట్‌లు మరియు ఫార్మాటింగ్‌ను ఉంచుతుంది.
+	Kerning for fonts:	ఫాంట్‌ల కోసం కెర్నింగ్:
+	Keyboard shortcuts:	కీబోర్డ్ షార్ట్‌కట్‌లు:
+	Keys for this command:	ఈ ఆదేశం కోసం కీలు:
+	Keywords	కీలకపదాలు
+	Korean	కొరియన్
+	Label changes with:	లేబుల్ దీనితో మారుతుంది:
+	Label:	లేబుల్:
+	Labels	లేబుల్‌లు
+	Landscape	ల్యాండ్‌స్కేప్
+	Language	భాష
+	Language Preferences…	భాషా ప్రాధాన్యతలు…
+	Language…	భాష…
+	Large\nOperator	పెద్ద\nఆపరేటర్
+	Largest Only	అతిపెద్దది మాత్రమే
+	Largest only	అతిపెద్దదాన్ని మాత్రమే
+	Lasso	లాసో
+	Lasso Select	లాసో ఎంపిక
+	Last	చివరి
+	Last Cell in Column	నిలువు వరుసలో చివరి గడి
+	Last Cell in Row	వరుసలో చివరి గడి
+	Last Column	చివరి నిలువు వరుస
+	Last commit	చివరి కమిట్
+	Last Name	ఇంటి పేరు
+	Last, First; Last, First	ఇంటి పేరు, పేరు; ఇంటి పేరు, పేరు
+	Latin text font:	లాటిన్ వచన ఫాంట్:
+	Layout	లేఅవుట్
+	Layout options for this document	ఈ పత్రం కోసం లేఅవుట్ ఎంపికలు
+	Layout Summary	లేఅవుట్ సారాంశం
+	Layouts	లేఅవుట్‌లు
+	Leader	లీడర్
+	Leave a recipient out of the merge when a field has this value.	ఫీల్డ్‌కు ఈ విలువ ఉన్నప్పుడు గ్రహీతను విలీనం నుండి మినహాయించు.
+	Leave Equation	సమీకరణం నుండి నిష్క్రమించు
+	Leave the equation (Esc)	సమీకరణం నుండి నిష్క్రమించు (Esc)
+	Leave the label out of the caption	శీర్షిక నుండి లేబుల్‌ను మినహాయించు
+	Left	ఎడమ
+	Left Arrow with Text Above	పైన వచనంతో ఎడమ బాణం
+	Left Arrow with Text Below	క్రింద వచనంతో ఎడమ బాణం
+	Left Border	ఎడమ అంచు
+	Left border	ఎడమ అంచు గీత
+	Left Bracket Twice	రెండుసార్లు ఎడమ బ్రాకెట్
+	Left indent	ఎడమ ఇండెంట్
+	Left Margin	ఎడమ మార్జిన్
+	Left Only	ఎడమ మాత్రమే
+	Left only	ఎడమవైపు మాత్రమే
+	Left Right Arrow Above	పైన ఎడమ కుడి బాణం
+	Left Right Arrow with Text Above	పైన వచనంతో ఎడమ కుడి బాణం
+	Left Right Arrow with Text Below	క్రింద వచనంతో ఎడమ కుడి బాణం
+	Left Subscript-Superscript	ఎడమ సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్
+	Left-to-right	ఎడమ నుండి కుడికి
+	Left-to-Right Text Direction	ఎడమ నుండి కుడికి వచన దిశ
+	Left:	ఎడమ:
+	Leftwards Arrow Above	పైన ఎడమవైపు బాణం
+	Leftwards Harpoon Above	పైన ఎడమవైపు హార్పూన్
+	Legal   8.50" × 14.00"	Legal   8.50" × 14.00"
+	Legal style numbering	చట్ట శైలి సంఖ్యలు
+	Legend	లెజెండ్
+	Less than	కంటే తక్కువ
+	Less than or equal	కంటే తక్కువ లేదా సమానం
+	Letter	లేఖ
+	Letter   8.50" × 11.00"	Letter   8.50" × 11.00"
+	Letter headings	అక్షర శీర్షికలు
+	Letter-Like Symbols	అక్షరం లాంటి చిహ్నాలు
+	Letters	లేఖలు
+	Level 1	స్థాయి 1
+	Level 2	స్థాయి 2
+	Level 3	స్థాయి 3
+	Level 4	స్థాయి 4
+	Level 5	స్థాయి 5
+	Level 6	స్థాయి 6
+	Level 7	స్థాయి 7
+	Level 8	స్థాయి 8
+	Level 9	స్థాయి 9
+	Level {n}	స్థాయి {n}
+	Level:	స్థాయి:
+	Levels:	స్థాయిలు:
+	LibreTranslate server (open source)	LibreTranslate సర్వర్ (ఓపెన్ సోర్స్)
+	Ligatures:	లిగేచర్‌లు:
+	Light	లేత
+	Light with Outline	అవుట్‌లైన్‌తో లేత
+	Limit	పరిమితి
+	Limit and\nLog	పరిమితి మరియు\nలాగ్
+	Limit consecutive hyphens to:	వరుస హైఫన్‌లను దీనికి పరిమితం చేయి:
+	Limit Example	పరిమితి ఉదాహరణ
+	Limit formatting to a selection of styles	ఫార్మాటింగ్‌ను ఎంచుకున్న శైలులకు పరిమితం చేయి
+	Line	గీత
+	Line and Page Breaks	పంక్తి మరియు పేజీ విరామాలు
+	Line and Paragraph Spacing	పంక్తి మరియు పేరా అంతరం
+	Line between	మధ్య గీత
+	Line Break	పంక్తి విరామం
+	Line breaking	పంక్తి విరగడం
+	Line delta	పంక్తి డెల్టా
+	Line End	పంక్తి ముగింపు
+	Line Number	పంక్తి సంఖ్య
+	Line Numbering Options…	పంక్తి సంఖ్యల ఎంపికలు…
+	Line Numbers	పంక్తి సంఖ్యలు
+	Line Spacing	పంక్తి అంతరం
+	Line spacing	పంక్తుల అంతరం
+	Line Spacing Options…	పంక్తి అంతర ఎంపికలు…
+	Line spacing:	పంక్తి అంతరం:
+	Line Start	పంక్తి ప్రారంభం
+	Line width:	గీత వెడల్పు:
+	Line:	గీత:
+	Linear	రేఖీయ
+	Linear Fraction	రేఖీయ భిన్నం
+	Lines	పంక్తులు
+	Lines +/−	పంక్తులు +/−
+	Lines added	జోడించిన పంక్తులు
+	Lines and characters	పంక్తులు మరియు అక్షరాలు
+	Lines deleted	తొలగించిన పంక్తులు
+	Lines only	పంక్తులు మాత్రమే
+	Lines per page:	పేజీకి పంక్తులు:
+	Link	లింక్
+	Link entries to their headings	నమోదులను వాటి శీర్షికలకు లింక్ చేయి
+	Link level to style:	స్థాయిని శైలికి లింక్ చేయి:
+	Link to Previous	మునుపటిదానికి లింక్ చేయి
+	Linked style (paragraph and character)	లింక్ చేసిన శైలి (పేరా మరియు అక్షరం)
+	Links	లింక్‌లు
+	Links and References	లింక్‌లు మరియు సూచనలు
+	Link…	లింక్…
+	List	జాబితా
+	List Commands	ఆదేశాలను జాబితా చేయి
+	List Definition	జాబితా నిర్వచనం
+	List entries	జాబితా నమోదులు
+	List Paragraph	జాబితా పేరా
+	List styles	జాబితా శైలులు
+	List Table 3 – Blue	జాబితా పట్టిక 3 – నీలం
+	List Table 3 – Green	జాబితా పట్టిక 3 – ఆకుపచ్చ
+	List Table 3 – Orange	జాబితా పట్టిక 3 – నారింజ
+	List Table 3 – Purple	జాబితా పట్టిక 3 – ఊదా
+	Listening… speak now	వింటోంది… ఇప్పుడు మాట్లాడండి
+	Location	స్థానం
+	Location: {path}	స్థానం: {path}
+	Lock aspect ratio	కారక నిష్పత్తిని లాక్ చేయి
+	Lock Fields	ఫీల్డ్‌లను లాక్ చేయి
+	Logarithm	సంవర్గమానం
+	Logarithm with Base	ఆధారంతో సంవర్గమానం
+	Logical AND	తార్కిక AND
+	Logical AND with Limits	పరిమితులతో తార్కిక AND
+	Logical OR	తార్కిక OR
+	Logical OR with Limits	పరిమితులతో తార్కిక OR
+	Long citation:	దీర్ఘ ఉల్లేఖన:
+	lowercase	చిన్న అక్షరాలు
+	Lum:	కాంతి:
+	Macros	మాక్రోలు
+	Made from the author and year when empty	ఖాళీగా ఉన్నప్పుడు రచయిత మరియు సంవత్సరం నుండి తయారవుతుంది
+	Magazine or newspaper article	పత్రిక లేదా వార్తాపత్రిక వ్యాసం
+	Mail Merge	మెయిల్ విలీనం
+	Mail Merge Helper	మెయిల్ విలీన సహాయకుడు
+	Mail Merge Helper…	మెయిల్ విలీన సహాయకుడు…
+	Mailing Labels	మెయిలింగ్ లేబుల్‌లు
+	Mailings	మెయిలింగ్‌లు
+	Main entry:	ప్రధాన నమోదు:
+	Make Doc4Me the default for Word documents…	Word పత్రాలకు Doc4Me‌ను డిఫాల్ట్‌గా చేయి…
+	Makes the ribbon, menus and dialogs larger or smaller, on top of your system's display scaling. Document zoom is separate.	మీ సిస్టమ్ ప్రదర్శన స్కేలింగ్‌పై రిబ్బన్, మెనూలు మరియు డైలాగ్‌లను పెద్దవి లేదా చిన్నవి చేస్తుంది. పత్రం జూమ్ వేరు.
+	Malay	మలయ్
+	Manage Sources	మూలాలను నిర్వహించు
+	Manage Styles	శైలులను నిర్వహించు
+	Manage Styles…	శైలులను నిర్వహించు…
+	Manual Hyphenation	మాన్యువల్ హైఫనేషన్
+	Manual hyphenation is complete.	మాన్యువల్ హైఫనేషన్ పూర్తయింది.
+	Manual Line Break	మాన్యువల్ పంక్తి విరామం
+	Manual Page Break	మాన్యువల్ పేజీ విరామం
+	Manual…	మాన్యువల్…
+	Many pages	అనేక పేజీలు
+	Margin	మార్జిన్
+	Margins	మార్జిన్‌లు
+	Mark	గుర్తించు
+	Mark All	అన్నీ గుర్తించు
+	Mark as decorative	అలంకారంగా గుర్తించు
+	Mark Citation	ఉల్లేఖనను గుర్తించు
+	Mark Citation…	ఉల్లేఖనను గుర్తించు…
+	Mark Entry	నమోదును గుర్తించు
+	Mark Entry…	నమోదును గుర్తించు…
+	Mark grammar errors as you type	టైప్ చేస్తున్నప్పుడు వ్యాకరణ లోపాలను గుర్తించు
+	Mark Index Entry	సూచిక నమోదును గుర్తించు
+	Mark selected text as:	ఎంచుకున్న వచనాన్ని ఇలా గుర్తించు:
+	Mark Table of Contents Entry	విషయ సూచిక నమోదును గుర్తించు
+	Mark\nCitation	ఉల్లేఖనను\nగుర్తించు
+	Mark\nEntry	నమోదును\nగుర్తించు
+	Markdown (*.md)	Markdown (*.md)
+	Match case	అక్షర రకం సరిపోల్చు
+	Match Fields	ఫీల్డ్‌లను సరిపోల్చు
+	Match prefix	ఉపసర్గను సరిపోల్చు
+	Match suffix	ప్రత్యయాన్ని సరిపోల్చు
+	Math AutoCorrect	గణిత స్వయంసవరణ
+	Math Input Control	గణిత ఇన్‌పుట్ నియంత్రణ
+	Matrices with Brackets	బ్రాకెట్లతో మాత్రికలు
+	Matrix	మాత్రిక
+	Maximize	గరిష్ఠీకరించు
+	Maximum	గరిష్ఠం
+	Maximum Example	గరిష్ఠ ఉదాహరణ
+	Measured By	దీని ద్వారా కొలవబడింది
+	Measurement units:	కొలత యూనిట్‌లు:
+	Media	మీడియా
+	Merge	విలీనం చేయి
+	Merge Cells	గడులను విలీనం చేయి
+	Merge Formatting	ఫార్మాటింగ్‌ను విలీనం చేయి
+	Merge Formatting pastes the text in the formatting where it lands, as Keep Text Only does.	ఫార్మాటింగ్ విలీనం వచనాన్ని అది చేరే చోటి ఫార్మాటింగ్‌లో అతికిస్తుంది, వచనం మాత్రమే ఉంచు లాగా.
+	Merge Record #	విలీన రికార్డు #
+	Merge records	రికార్డులను విలీనం చేయి
+	Merge to New Document	కొత్త పత్రంలో విలీనం చేయి
+	Merge to Printer	ప్రింటర్‌కు విలీనం చేయి
+	Merge to:	దీనికి విలీనం చేయి:
+	Merge type: {type}	విలీన రకం: {type}
+	Merged PRs	విలీనమైన PRలు
+	Merge…	విలీనం చేయి…
+	Mesosphere	మెసోస్ఫియర్
+	Middle	మధ్య
+	Midline Dots	మధ్యరేఖ చుక్కలు
+	Millimeters	మిల్లీమీటర్లు
+	Minimum	కనిష్ఠం
+	Minus Equal	మైనస్ సమానం
+	Mirror indents	దర్పణ ఇండెంట్‌లు
+	Mirrored	దర్పణం
+	Missing document font	పత్రం ఫాంట్ లేదు
+	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.	MIT OR Apache-2.0. Copyright (c) 2026 ArtCraft Team and the WordCraft contributors.
+	MLA	MLA
+	Model	మోడల్
+	Models	మోడల్‌లు
+	Moderate	మధ్యస్థ
+	Modify Style	శైలిని సవరించు
+	Modify Table Style	పట్టిక శైలిని సవరించు
+	Modify Table Style…	పట్టిక శైలిని సవరించు…
+	Modify…	సవరించు…
+	Mon	సోమ
+	Month	నెల
+	More >>	మరిన్ని >>
+	More Colors…	మరిన్ని రంగులు…
+	More Columns…	మరిన్ని నిలువు వరుసలు…
+	More Commands…	మరిన్ని ఆదేశాలు…
+	More Symbols…	మరిన్ని చిహ్నాలు…
+	More templates →	మరిన్ని టెంప్లేట్‌లు →
+	Move Down	క్రిందికి తరలించు
+	Move in Equation	సమీకరణంలో కదులు
+	Move object with text	వస్తువును వచనంతో తరలించు
+	Move or Resize	తరలించు లేదా పరిమాణం మార్చు
+	Move Paragraph Down	పేరాను క్రిందికి తరలించు
+	Move Paragraph Up	పేరాను పైకి తరలించు
+	Move Past Citation	ఉల్లేఖన దాటి కదులు
+	Move Past\nCitation	ఉల్లేఖన\nదాటి కదులు
+	Move Selected Ink	ఎంచుకున్న ఇంక్‌ను తరలించు
+	Move Text	వచనాన్ని తరలించు
+	Move to where?	ఎక్కడికి తరలించాలి?
+	Move Up	పైకి తరలించు
+	Move with Text	వచనంతో కదులు
+	Move with text	వచనంతో కలిసి కదులు
+	Moved from	ఇక్కడ నుండి తరలించబడింది
+	Moved to	ఇక్కడికి తరలించబడింది
+	Moves	తరలింపులు
+	Multilevel List	బహుళస్థాయి జాబితా
+	Multiple Pages	బహుళ పేజీలు
+	My Add-ins	నా యాడ్-ఇన్‌లు
+	MyMemory (free, no account)	MyMemory (ఉచితం, ఖాతా అవసరం లేదు)
+	Name	పేరు
+	Name (A–Z)	పేరు (A–Z)
+	Name of the file this document is saved as	ఈ పత్రం సేవ్ చేయబడిన ఫైల్ పేరు
+	Name:	పేరు:
+	Narrow  0.5" all	ఇరుకు  అన్నీ 0.5"
+	Natural Logarithm	సహజ సంవర్గమానం
+	Nature	ప్రకృతి
+	Navigation	నావిగేషన్
+	Navigation Pane	నావిగేషన్ పేన్
+	Negated Relations	నిరాకరించిన సంబంధాలు
+	New	కొత్తది
+	New Comment	కొత్త వ్యాఖ్య
+	New comments and tracked changes are recorded under this name and these initials.	కొత్త వ్యాఖ్యలు మరియు ట్రాక్ చేసిన మార్పులు ఈ పేరు మరియు మొదటి అక్షరాల క్రింద నమోదవుతాయి.
+	New Document	కొత్త పత్రం
+	New document	ఒక కొత్త పత్రం
+	New Drawing Canvas	కొత్త డ్రాయింగ్ కాన్వాస్
+	New Entry	కొత్త నమోదు
+	New Folder	కొత్త ఫోల్డర్
+	New from Template	టెంప్లేట్ నుండి కొత్తది
+	New Group	కొత్త సమూహం
+	New Label	కొత్త లేబుల్
+	New Label…	కొత్త లేబుల్…
+	New Paragraph	కొత్త పేరా
+	New shortcut:	కొత్త షార్ట్‌కట్:
+	New Style…	కొత్త శైలి…
+	New Tab	కొత్త ట్యాబ్
+	New Table Style	కొత్త పట్టిక శైలి
+	New Table Style…	కొత్త పట్టిక శైలి…
+	New Window	కొత్త విండో
+	New word	కొత్త పదం
+	New\nComment	కొత్త\nవ్యాఖ్య
+	New\nWindow	కొత్త\nవిండో
+	New…	కొత్తది…
+	Next	తదుపరి
+	Next Change	తదుపరి మార్పు
+	Next Comment	తదుపరి వ్యాఖ్య
+	Next Field	తదుపరి ఫీల్డ్
+	Next Footnote	తదుపరి ఫుట్‌నోట్
+	Next Page	తదుపరి పేజీ
+	Next Record	తదుపరి రికార్డు
+	Next Section	తదుపరి విభాగం
+	Next Sentence	తదుపరి వాక్యం
+	Next sentence	తదుపరి వాక్యానికి
+	Next Window	తదుపరి విండో
+	No	కాదు
+	No accessibility issues found.	యాక్సెసిబిలిటీ సమస్యలు ఏవీ కనుగొనబడలేదు.
+	No add-ins are listed yet.	ఇంకా యాడ్-ఇన్‌లు జాబితా చేయబడలేదు.
+	No add-ins yet. Add one from the Store.	ఇంకా యాడ్-ఇన్‌లు లేవు. స్టోర్ నుండి ఒకటి జోడించండి.
+	No Border	అంచు లేదు
+	No changes (read only)	మార్పులు లేవు (చదవడానికి మాత్రమే)
+	No Color	రంగు లేదు
+	No contributor data was built into this copy.	ఈ కాపీలో సహకారుల డేటా చేర్చబడలేదు.
+	No data source yet.	ఇంకా డేటా మూలం లేదు.
+	No errors found: every merge field is in the recipient list.	లోపాలు లేవు: ప్రతి విలీన ఫీల్డ్ గ్రహీతల జాబితాలో ఉంది.
+	No Fill	నింపు లేదు
+	No Glow	మెరుపు లేదు
+	No grid	గ్రిడ్ లేదు
+	No icons match your search.	మీ శోధనకు సరిపోలే చిహ్నాలు లేవు.
+	No limit	పరిమితి లేదు
+	No Line	గీత లేదు
+	No Markup	మార్కప్ లేదు
+	No model credits were built into this copy.	ఈ కాపీలో మోడల్ క్రెడిట్‌లు చేర్చబడలేదు.
+	No Outline	అవుట్‌లైన్ లేదు
+	No Paragraph Space	పేరా అంతరం లేదు
+	No pictures found.	చిత్రాలు ఏవీ కనుగొనబడలేదు.
+	No Reflection	ప్రతిబింబం లేదు
+	No revisions	సవరణలు లేవు
+	No Shadow	నీడ లేదు
+	No Soft Edges	మృదువైన అంచులు లేవు
+	No sources yet.	ఇంకా మూలాలు లేవు.
+	No Spacing	అంతరం లేదు
+	no speech program on this system	ఈ సిస్టమ్‌లో స్పీచ్ ప్రోగ్రామ్ లేదు
+	No templates match your search.	మీ శోధనకు సరిపోలే టెంప్లేట్‌లు లేవు.
+	No Transform	రూపాంతరం లేదు
+	No words yet. Add to Dictionary on a misspelled word puts it here.	ఇంకా పదాలు లేవు. తప్పు స్పెల్లింగ్ పదంపై నిఘంటువుకు జోడించు దాన్ని ఇక్కడ ఉంచుతుంది.
+	No-Width Non Break	సున్నా-వెడల్పు విరామరహిత
+	No-Width Optional Break	సున్నా-వెడల్పు ఐచ్ఛిక విరామం
+	Nonbreaking Hyphen	విరామరహిత హైఫన్
+	Nonbreaking Space	విరామరహిత ఖాళీ
+	None	ఏదీ కాదు
+	Normal	సాధారణం
+	Normal  1" all	సాధారణం  అన్నీ 1"
+	Normal Indent	సాధారణ ఇండెంట్
+	Normal probability density	సాధారణ సంభావ్యతా సాంద్రత
+	Normal speed	సాధారణ వేగం
+	Normal Style	సాధారణ శైలి
+	Normal Table	సాధారణ పట్టిక
+	Normal Text	సాధారణ వచనం
+	Normal Word Document	సాధారణ Word పత్రం
+	North	ఉత్తరం
+	Norwegian (Bokmål)	నార్వేజియన్ (బోక్మాల్)
+	Not	కాదు (తార్కిక)
+	Not available right now	ప్రస్తుతం అందుబాటులో లేదు
+	Not equal to	సమానం కాదు
+	Not linked: click a text box	లింక్ కాలేదు: టెక్స్ట్ బాక్స్‌ను క్లిక్ చేయండి
+	Not saved	సేవ్ చేయబడలేదు
+	Not saved yet	ఇంకా సేవ్ చేయబడలేదు
+	Not used by any command	ఏ ఆదేశం ఉపయోగించడం లేదు
+	Not {name}	{name} కాదు
+	Nothing	ఏమీ లేదు
+	Nothing collected yet. Items you copy or cut appear here.	ఇంకా ఏమీ సేకరించబడలేదు. మీరు కాపీ చేసే లేదా కత్తిరించే అంశాలు ఇక్కడ కనిపిస్తాయి.
+	Now used by {command}	ఇప్పుడు {command} ఉపయోగిస్తోంది
+	Nudge	కొద్దిగా జరుపు
+	Num Occurrences	సంభవాల సంఖ్య
+	Number	సంఖ్య
+	Number alignment:	సంఖ్య సమలేఖనం:
+	Number format	సంఖ్య ఫార్మాట్
+	Number of columns:	నిలువు వరుసల సంఖ్య:
+	Number of rows:	వరుసల సంఖ్య:
+	Number of the page the field sits on	ఫీల్డ్ ఉన్న పేజీ సంఖ్య
+	Number of the section the field sits in	ఫీల్డ్ ఉన్న విభాగ సంఖ్య
+	Number style for this level:	ఈ స్థాయి కోసం సంఖ్యా శైలి:
+	Number the equation; the number sits at the right margin (or type # then the number)	సమీకరణానికి సంఖ్య ఇవ్వు; సంఖ్య కుడి మార్జిన్‌లో ఉంటుంది (లేదా # తర్వాత సంఖ్య టైప్ చేయి)
+	Number type:	సంఖ్య రకం:
+	Number:	సంఖ్య:
+	Numbering	సంఖ్యీకరణ
+	Numbering:	సంఖ్యీకరణ:
+	Numbering…	సంఖ్యీకరణ…
+	Numerals	అంకెలు
+	Numerals:	అంకెలు:
+	n×n Identity Matrix	n×n ఏకక మాత్రిక
+	n×n Matrix	n×n మాత్రిక
+	Object	వస్తువు
+	Odd Page	బేసి పేజీ
+	Odd pages only	బేసి పేజీలు మాత్రమే
+	Off	ఆఫ్
+	Office	Office
+	Office 2003 Default	Office 2003 డిఫాల్ట్
+	Offset (pt):	ఆఫ్‌సెట్ (pt):
+	Offset: Bottom	ఆఫ్‌సెట్: దిగువ
+	Offset: Bottom Left	ఆఫ్‌సెట్: దిగువ ఎడమ
+	Offset: Bottom Right	ఆఫ్‌సెట్: దిగువ కుడి
+	Offset: Center	ఆఫ్‌సెట్: మధ్య
+	Offset: Left	ఆఫ్‌సెట్: ఎడమ
+	Offset: Right	ఆఫ్‌సెట్: కుడి
+	Offset: Top	ఆఫ్‌సెట్: ఎగువ
+	Offset: Top Left	ఆఫ్‌సెట్: ఎగువ ఎడమ
+	Offset: Top Right	ఆఫ్‌సెట్: ఎగువ కుడి
+	OK	సరే
+	Omit	వదిలేయి
+	On	ఆన్
+	On: the caret glides to its new place when you type or use the arrow keys, and its blink fades. Off: it jumps and blinks on and off.	ఆన్: మీరు టైప్ చేసినప్పుడు లేదా బాణం కీలు ఉపయోగించినప్పుడు కర్సర్ దాని కొత్త స్థానానికి జారుతుంది, దాని మెరుపు మసకబారుతుంది. ఆఫ్: అది దూకి ఆన్-ఆఫ్ మెరుస్తుంది.
+	One	ఒకటి
+	One half	సగం
+	One label per recipient	గ్రహీతకు ఒక లేబుల్
+	One line per item. Enter adds an item.	అంశానికి ఒక పంక్తి. Enter అంశాన్ని జోడిస్తుంది.
+	One Page	ఒక పేజీ
+	Online Pictures	ఆన్‌లైన్ చిత్రాలు
+	Online Pictures (Openverse), Translate (MyMemory or your LibreTranslate server), Get Add-ins and the download of Dictate's speech model connect to the internet, and only when you use them. Turned off, Doc4Me makes no connection of its own.	ఆన్‌లైన్ చిత్రాలు (Openverse), అనువదించు (MyMemory లేదా మీ LibreTranslate సర్వర్), యాడ్-ఇన్‌లను పొందు మరియు డిక్టేట్ స్పీచ్ మోడల్ డౌన్‌లోడ్ మీరు వాటిని ఉపయోగించినప్పుడు మాత్రమే ఇంటర్నెట్‌కు కనెక్ట్ అవుతాయి. ఆఫ్ చేస్తే, Doc4Me స్వయంగా ఏ కనెక్షన్ చేయదు.
+	Online Pictures…	ఆన్‌లైన్ చిత్రాలు…
+	Online services are turned off (File › Options › Trust Center).	ఆన్‌లైన్ సేవలు ఆఫ్ చేయబడ్డాయి (ఫైల్ › ఎంపికలు › ట్రస్ట్ సెంటర్).
+	Online Video	ఆన్‌లైన్ వీడియో
+	Only allow this kind of editing:	ఈ రకమైన సవరణను మాత్రమే అనుమతించు:
+	Only comments can be added, except in regions marked editable.	సవరించదగినవిగా గుర్తించిన ప్రాంతాలు తప్ప, వ్యాఖ్యలను మాత్రమే జోడించగలరు.
+	Only form fields can be filled in.	ఫారమ్ ఫీల్డ్‌లను మాత్రమే నింపగలరు.
+	only https addresses can be used	https చిరునామాలను మాత్రమే ఉపయోగించగలరు
+	Only pictures I may use commercially	నేను వాణిజ్యపరంగా ఉపయోగించగల చిత్రాలు మాత్రమే
+	Only the allowed styles can be applied.	అనుమతించిన శైలులను మాత్రమే వర్తింపజేయగలరు.
+	Only web (http, https) and email (mailto) links can be followed	వెబ్ (http, https) మరియు ఇమెయిల్ (mailto) లింక్‌లను మాత్రమే అనుసరించగలరు
+	Open	తెరువు
+	Open a file with Doc4Me's own browser when the system file dialog doesn't appear.	సిస్టమ్ ఫైల్ డైలాగ్ కనిపించనప్పుడు Doc4Me సొంత బ్రౌజర్‌తో ఫైల్‌ను తెరువు.
+	Open Data Source…	డేటా మూలాన్ని తెరువు…
+	Open Hyperlink	హైపర్‌లింక్‌ను తెరువు
+	OpenDocument Text (*.odt)	OpenDocument వచనం (*.odt)
+	Opening print dialog…	ముద్రణ డైలాగ్‌ను తెరుస్తోంది…
+	Opens .docx, .doc, .rtf and .odt files and Word templates with Doc4Me from now on.	ఇకపై .docx, .doc, .rtf, .odt ఫైల్‌లను మరియు Word టెంప్లేట్‌లను Doc4Me‌తో తెరుస్తుంది.
+	Opens Settings › Default apps, where you choose Doc4Me for .docx and the other document types.	సెట్టింగ్‌లు › డిఫాల్ట్ యాప్‌లను తెరుస్తుంది, అక్కడ .docx మరియు ఇతర పత్ర రకాల కోసం Doc4Me‌ను ఎంచుకుంటారు.
+	Open…	తెరువు…
+	Operator	ఆపరేటర్
+	Operator Structures	ఆపరేటర్ నిర్మాణాలు
+	Operators	ఆపరేటర్‌లు
+	Optional Hyphen	ఐచ్ఛిక హైఫన్
+	Options	ఎంపికలు
+	Options…	ఎంపికలు…
+	Or	లేదా
+	Or save a copy in another format:	లేదా మరొక ఫార్మాట్‌లో కాపీని సేవ్ చేయి:
+	Ordinals (1st) as superscript	క్రమ సంఖ్యలు (1st) సూపర్‌స్క్రిప్ట్‌గా
+	Organizer	నిర్వాహకుడు
+	Organizer…	నిర్వాహకుడు…
+	Orientation	దిశ
+	Original document	అసలు పత్రం
+	Other	ఇతరం
+	Other Authorities	ఇతర అధికారాలు
+	Other Large Operators	ఇతర పెద్ద ఆపరేటర్‌లు
+	Other paragraph styles	ఇతర పేరా శైలులు
+	Other styles and their TOC level:	ఇతర శైలులు మరియు వాటి విషయ సూచిక స్థాయి:
+	Otherwise insert:	లేకపోతే చొప్పించు:
+	Outline	అవుట్‌లైన్
+	Outline Level	అవుట్‌లైన్ స్థాయి
+	Outline level	అవుట్‌లైన్ యొక్క స్థాయి
+	Outline levels	అవుట్‌లైన్ స్థాయిలు
+	Outline State	అవుట్‌లైన్ స్థితి
+	Outline Tools	అవుట్‌లైన్ సాధనాలు
+	Outlining	అవుట్‌లైనింగ్
+	Outside	బయట
+	Outside border	బయటి అంచు
+	Outside Borders	బయటి అంచులు
+	Outside Margin	బయటి మార్జిన్
+	Outside:	బయట:
+	Outward Brackets	బయటివైపు బ్రాకెట్లు
+	Oval	అండాకారం
+	Overbar	పై గీత
+	Overbars and Underbars	పై మరియు క్రింది గీతలు
+	Overbrace	పై బ్రేస్
+	Overtype	ఓవర్‌టైప్
+	Overtype (typing replaces the characters after the caret)	ఓవర్‌టైప్ (టైప్ చేయడం కర్సర్ తర్వాతి అక్షరాలను భర్తీ చేస్తుంది)
+	Page	పేజీ
+	Page Background	పేజీ నేపథ్యం
+	Page Border	పేజీ అంచు
+	Page Borders	పేజీ అంచులు
+	Page Break	పేజీ విరామం
+	Page Break Before	ముందు పేజీ విరామం
+	Page break before	ముందుగా పేజీ విరామం
+	Page Breaks	పేజీ విరామాలు
+	Page Color	పేజీ రంగు
+	Page display	పేజీ ప్రదర్శన
+	Page Down	పేజీ క్రిందికి
+	Page image (*.jpg, *.jpeg)	పేజీ చిత్రం (*.jpg, *.jpeg)
+	Page image (*.png)	పేజీ చిత్రం (*.png)
+	Page Movement	పేజీ కదలిక
+	Page Number	పేజీ సంఖ్య
+	Page number style	పేజీ సంఖ్య శైలి
+	Page numbers at the right margin	కుడి మార్జిన్‌లో పేజీ సంఖ్యలు
+	Page on which a bookmarked passage falls	బుక్‌మార్క్ చేసిన భాగం ఉన్న పేజీ
+	Page Setup	పేజీ సెటప్
+	Page title	పేజీ శీర్షిక
+	Page Up	పేజీ పైకి
+	Page Width	పేజీ వెడల్పు
+	Page width	పేజీ యొక్క వెడల్పు
+	Page X of Y	పేజీ X / Y
+	Page {page}	పేజీ {page}
+	Page {page} of {pages}	పేజీ {page} / {pages}
+	Page\nBorders	పేజీ\nఅంచులు
+	Page\nColor	పేజీ\nరంగు
+	Page\nNumber	పేజీ\nసంఖ్య
+	Pages	పేజీలు
+	Pages like 1-3, 5	1-3, 5 లాంటి పేజీలు
+	Pages of bookmark:	బుక్‌మార్క్ పేజీలు:
+	Paragraph	పేరా
+	Paragraph Character	పేరా అక్షరం
+	Paragraph Details	పేరా వివరాలు
+	Paragraph Down	పేరా క్రిందికి
+	Paragraph Mark	పేరా గుర్తు
+	Paragraph marks	పేరా గుర్తులు
+	Paragraph Settings	పేరా సెట్టింగ్‌లు
+	Paragraph Spacing	పేరా అంతరం
+	Paragraph style	పేరా శైలి
+	Paragraph Up	పేరా పైకి
+	Paragraphs	పేరాలు
+	Paragraph…	పేరా…
+	Parentheses	కుండలీకరణాలు
+	Parentheses with Separator	విభాజకంతో కుండలీకరణాలు
+	Partial Differential	పాక్షిక అవకలనం
+	Password	పాస్‌వర్డ్
+	Password:	పాస్‌వర్డ్:
+	Paste	అతికించు
+	Paste All	అన్నీ అతికించు
+	Paste as:	ఇలా అతికించు:
+	Paste Clipboard Item	క్లిప్‌బోర్డ్ అంశాన్ని అతికించు
+	Paste Formatting	ఫార్మాటింగ్‌ను అతికించు
+	Paste Special	ప్రత్యేక అతికింపు
+	Paste Special…	ప్రత్యేక అతికింపు…
+	Paste Spike	స్పైక్ అతికించు
+	Paste: Keep Text Only	అతికించు: వచనం మాత్రమే ఉంచు
+	Paste: Merge Formatting	అతికించు: ఫార్మాటింగ్ విలీనం
+	Pasting between documents:	పత్రాల మధ్య అతికించేటప్పుడు:
+	Pasting from other programs:	ఇతర ప్రోగ్రామ్‌ల నుండి అతికించేటప్పుడు:
+	Pasting within the same document:	అదే పత్రంలో అతికించేటప్పుడు:
+	Pause	పాజ్
+	Paused	పాజ్ చేయబడింది
+	PDF document (*.pdf)	PDF పత్రం (*.pdf)
+	Pen	పెన్
+	Pencil	పెన్సిల్
+	Pens	పెన్‌లు
+	People	వ్యక్తులు
+	Periodical	పత్రిక
+	Personalize	వ్యక్తిగతీకరించు
+	Phonetic Guide	ఉచ్చారణ మార్గదర్శి
+	Pi Over 2	పై బై 2
+	Picas	పైకాలు
+	Pick a custom group (New Group makes one)	అనుకూల సమూహాన్ని ఎంచుకోండి (కొత్త సమూహం ఒకటి సృష్టిస్తుంది)
+	Pick a field from the list	జాబితా నుండి ఒక ఫీల్డ్‌ను ఎంచుకోండి
+	Picture	చిత్రం
+	Picture Border	చిత్రం అంచు
+	Picture Content Control	చిత్రం కంటెంట్ నియంత్రణ
+	Picture Format	చిత్రం ఫార్మాట్
+	Picture Styles	చిత్రం శైలులు
+	Pictures	చిత్రాలు
+	Pictures from Openverse. Respect each picture's licence: Doc4Me adds a credit line under it.	Openverse నుండి చిత్రాలు. ప్రతి చిత్రం లైసెన్స్‌ను గౌరవించండి: Doc4Me దాని క్రింద క్రెడిట్ పంక్తిని జోడిస్తుంది.
+	Pie	పై
+	Placeholder Name	ప్లేస్‌హోల్డర్ పేరు
+	Placeholder text	ప్లేస్‌హోల్డర్ వచనం
+	Plain Table 1	సాదా పట్టిక 1
+	Plain text (*.txt)	సాదా వచనం (*.txt)
+	Plain Text Content Control	సాదా వచన కంటెంట్ నియంత్రణ
+	Play	ప్లే చేయి
+	Play Video	వీడియోను ప్లే చేయి
+	Play/Pause	ప్లే/పాజ్
+	Plus Equal	ప్లస్ సమానం
+	Points	పాయింట్‌లు
+	points and above	పాయింట్‌లు మరియు పైన
+	Polish	పోలిష్
+	Portrait	పోర్ట్రెయిట్
+	Portuguese (Brazil)	పోర్చుగీస్ (బ్రెజిల్)
+	Portuguese (Portugal)	పోర్చుగీస్ (పోర్చుగల్)
+	Position	స్థానం
+	Position:	స్థానం:
+	Positioning…	స్థాన నిర్ణయం…
+	Possible spelling mistake	సాధ్యమైన స్పెల్లింగ్ తప్పు
+	Postal Code	పిన్ కోడ్
+	Power series of (1+x)ⁿ	(1+x)ⁿ యొక్క ఘాత శ్రేణి
+	Preferred width:	ప్రాధాన్య వెడల్పు:
+	Preserve	సంరక్షించు
+	Preserve formatting during updates	నవీకరణల సమయంలో ఫార్మాటింగ్‌ను సంరక్షించు
+	Presets	ప్రీసెట్‌లు
+	Press a key combination	కీ కలయికను నొక్కండి
+	Preview	ప్రివ్యూ
+	Preview Results	ఫలితాలను ప్రివ్యూ చేయి
+	Preview\nResults	ఫలితాలను\nప్రివ్యూ చేయి
+	Previous	మునుపటి
+	Previous 1 or More	మునుపటి 1 లేదా అంతకంటే ఎక్కువ
+	Previous Change	మునుపటి మార్పు
+	Previous Comment	మునుపటి వ్యాఖ్య
+	Previous Field	మునుపటి ఫీల్డ్
+	Previous Footnote	మునుపటి ఫుట్‌నోట్
+	Previous Page	మునుపటి పేజీ
+	Previous Record	మునుపటి రికార్డు
+	Previous Section	మునుపటి విభాగం
+	Previous Sentence	మునుపటి వాక్యం
+	Previous sentence	మునుపటి వాక్యానికి
+	Previous Window	మునుపటి విండో
+	Print	ముద్రించు
+	Print blank lines when data fields are empty	డేటా ఫీల్డ్‌లు ఖాళీగా ఉన్నప్పుడు ఖాళీ పంక్తులను ముద్రించు
+	Print Documents	పత్రాలను ముద్రించు
+	Print Documents…	పత్రాలను ముద్రించు…
+	Print failed: {error}	ముద్రణ విఫలమైంది: {error}
+	Print Layout	ముద్రణ లేఅవుట్
+	Print Markup	మార్కప్‌ను ముద్రించు
+	Print the page color	పేజీ రంగును ముద్రించు
+	Print to PDF	PDF‌కు ముద్రించు
+	Print\nLayout	ముద్రణ\nలేఅవుట్
+	Printer	ప్రింటర్
+	Printing	ముద్రణ
+	Process	ప్రక్రియ
+	Product	లబ్ధం
+	Product of A	A యొక్క లబ్ధం
+	Product with Limits	పరిమితులతో లబ్ధం
+	Product with Lower Limit	దిగువ పరిమితితో లబ్ధం
+	Product with Subscript-Superscript Limits	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్ పరిమితులతో లబ్ధం
+	Products and Coproducts	లబ్ధాలు మరియు కోప్రొడక్ట్‌లు
+	Professional	వృత్తిపరమైన
+	Promote	స్థాయి పెంచు
+	Promote to Heading 1	శీర్షిక 1కి పెంచు
+	Proofing	ప్రూఫింగ్
+	Proofing Issues	ప్రూఫింగ్ సమస్యలు
+	Proofing language	ప్రూఫింగ్ భాష
+	Properties	లక్షణాలు
+	Protect	రక్షించు
+	Protect Document	పత్రాన్ని రక్షించు
+	PRs	PRలు
+	pt	pt
+	Publisher	ప్రచురణకర్త
+	Punctuation	విరామ చిహ్నాలు
+	Put the caret in a content control first.	ముందుగా కర్సర్‌ను కంటెంట్ నియంత్రణలో ఉంచండి.
+	Put the default commands back on the Quick Access Toolbar?	డిఫాల్ట్ ఆదేశాలను త్వరిత ప్రాప్తి టూల్‌బార్‌లో తిరిగి ఉంచాలా?
+	Pyramid	పిరమిడ్
+	Quadratic Root	ద్విఘాత మూలం
+	Query Options…	ప్రశ్న ఎంపికలు…
+	Quick Access Toolbar	త్వరిత ప్రాప్తి టూల్‌బార్
+	Quick Parts	త్వరిత భాగాలు
+	Quick Tables	త్వరిత పట్టికలు
+	Quote	ఉల్లేఖనం
+	Radical	రాడికల్
+	Radical with Degree	ఘాతంతో రాడికల్
+	Radicals	రాడికల్‌లు
+	Raised/lowered	పెంచిన/తగ్గించిన
+	Read Aloud	బిగ్గరగా చదువు
+	Read Aloud couldn't start the speech program: {reason}	బిగ్గరగా చదువు స్పీచ్ ప్రోగ్రామ్‌ను ప్రారంభించలేకపోయింది: {reason}
+	Read Aloud couldn't start: {reason}	బిగ్గరగా చదువు ప్రారంభం కాలేదు: {reason}
+	Read Aloud isn't available in the browser	బ్రౌజర్‌లో బిగ్గరగా చదువు అందుబాటులో లేదు
+	Read Aloud Status	బిగ్గరగా చదువు స్థితి
+	Read Aloud stopped: {reason}	బిగ్గరగా చదువు ఆగింది: {reason}
+	Read Mode	పఠన మోడ్
+	Read\nAloud	బిగ్గరగా\nచదువు
+	Read\nMode	పఠన\nమోడ్
+	Reading	పఠనం
+	Reading Column Width	పఠన నిలువు వరుస వెడల్పు
+	Reading Highlight	పఠన హైలైట్
+	Reading Line Spacing	పఠన పంక్తి అంతరం
+	Reading Mode	పఠన విధానం
+	Sepia	సెపియా
+	Inverse	విలోమం
+	Reading Speed	పఠన వేగం
+	Reading Text Size	పఠన వచన పరిమాణం
+	Reads the clipboard's rich text and keeps its formatting.	క్లిప్‌బోర్డ్ రిచ్ టెక్స్ట్‌ను చదివి దాని ఫార్మాటింగ్‌ను ఉంచుతుంది.
+	Reads the clipboard's web content and keeps its formatting.	క్లిప్‌బోర్డ్ వెబ్ కంటెంట్‌ను చదివి దాని ఫార్మాటింగ్‌ను ఉంచుతుంది.
+	Real name	అసలు పేరు
+	Recent	ఇటీవలివి
+	Recent Colors	ఇటీవలి రంగులు
+	Recent documents to show:	చూపించాల్సిన ఇటీవలి పత్రాలు:
+	Recently used symbols:	ఇటీవల ఉపయోగించిన చిహ్నాలు:
+	Recipient List	గ్రహీతల జాబితా
+	Recipient lists	గ్రహీతల జాబితాలు
+	Recipients: {count}	గ్రహీతలు: {count}
+	Recognized (you can correct it):	గుర్తించబడింది (మీరు సరిచేయవచ్చు):
+	Recognized Functions	గుర్తించిన ఫంక్షన్‌లు
+	Recognized Functions…	గుర్తించిన ఫంక్షన్‌లు…
+	Recolor a one-color picture, such as an icon	చిహ్నం లాంటి ఒకే రంగు చిత్రానికి మళ్లీ రంగు వేయి
+	Recolor Selected Ink	ఎంచుకున్న ఇంక్‌కు మళ్లీ రంగు వేయి
+	Record Macro	మాక్రోను రికార్డ్ చేయి
+	Recover Unsaved Documents	సేవ్ చేయని పత్రాలను పునరుద్ధరించు
+	Rectangle	దీర్ఘచతురస్రం
+	Red:	ఎరుపు:
+	Redo	మళ్లీ చేయి
+	Reduce Hanging Indent	వేలాడే ఇండెంట్ తగ్గించు
+	References	సూచనలు
+	Reflection	ప్రతిబింబం
+	Refresh	రిఫ్రెష్
+	Registered	నమోదిత
+	Registered Sign	నమోదిత గుర్తు
+	Regular expressions	రెగ్యులర్ ఎక్స్‌ప్రెషన్‌లు
+	Regulations	నిబంధనలు
+	Reject	తిరస్కరించు
+	Reject All	అన్నీ తిరస్కరించు
+	Reject All Changes	అన్ని మార్పులను తిరస్కరించు
+	Reject Change	మార్పును తిరస్కరించు
+	Relationship	సంబంధం
+	relative to	దీనికి సాపేక్షంగా
+	Relative to:	దీనికి సాపేక్షంగా:
+	Relaxed	విశ్రాంత
+	Remove	తీసివేయి
+	Remove Added Font	జోడించిన ఫాంట్‌ను తీసివేయి
+	Remove Background	నేపథ్యాన్ని తీసివేయి
+	Remove Content Control	కంటెంట్ నియంత్రణను తీసివేయి
+	Remove every custom shortcut and restore the built-in keys?	ప్రతి అనుకూల షార్ట్‌కట్‌ను తీసివేసి అంతర్నిర్మిత కీలను పునరుద్ధరించాలా?
+	Remove every custom tab and group and show all tabs again?	ప్రతి అనుకూల ట్యాబ్ మరియు సమూహాన్ని తీసివేసి అన్ని ట్యాబ్‌లను మళ్లీ చూపించాలా?
+	Remove field	ఫీల్డ్‌ను తీసివేయి
+	Remove Field Name	ఫీల్డ్ పేరును తీసివేయి
+	Remove Footer	ఫుటర్‌ను తీసివేయి
+	Remove from Quick Access Toolbar	త్వరిత ప్రాప్తి టూల్‌బార్ నుండి తీసివేయి
+	Remove Header	హెడర్‌ను తీసివేయి
+	Remove Hyperlink	హైపర్‌లింక్‌ను తీసివేయి
+	Remove Password	పాస్‌వర్డ్‌ను తీసివేయి
+	Remove Pen	పెన్‌ను తీసివేయి
+	Remove Positioning	స్థాన నిర్ణయాన్ని తీసివేయి
+	Remove recipient	గ్రహీతను తీసివేయి
+	Remove row	వరుసను తీసివేయి
+	Remove series	శ్రేణిని తీసివేయి
+	Remove Space After Paragraph	పేరా తర్వాత ఖాళీని తీసివేయి
+	Remove Table of Contents	విషయ సూచికను తీసివేయి
+	Remove the control once edited	సవరించిన తర్వాత నియంత్రణను తీసివేయి
+	Remove the space before the punctuation	విరామ చిహ్నానికి ముందు ఖాళీని తీసివేయి
+	Remove Watermark	వాటర్‌మార్క్‌ను తీసివేయి
+	Rename Style	శైలి పేరు మార్చు
+	Rename…	పేరు మార్చు…
+	Reopen	మళ్లీ తెరువు
+	Repeat	పునరావృతం చేయి
+	Repeat as header row on each page	ప్రతి పేజీలో హెడర్ వరుసగా పునరావృతం చేయి
+	Repeat Header Rows	హెడర్ వరుసలను పునరావృతం చేయి
+	Repeated words	పునరావృత పదాలు
+	Repeating Section Content Control	పునరావృత విభాగ కంటెంట్ నియంత్రణ
+	Replace	భర్తీ చేయి
+	Replace All	అన్నీ భర్తీ చేయి
+	Replace as you type	టైప్ చేస్తున్నప్పుడు భర్తీ చేయి
+	Replace Document Text	పత్రం వచనాన్ని భర్తీ చేయి
+	Replace text as you type	టైప్ చేస్తున్నప్పుడు వచనాన్ని భర్తీ చేయి
+	Replace with:	దీనితో భర్తీ చేయి:
+	Replace:	భర్తీ:
+	Replay	రీప్లే
+	Reply	ప్రత్యుత్తరం
+	Report	నివేదిక
+	Research	పరిశోధన
+	Researcher	పరిశోధకుడు
+	Researcher needs an online service; Doc4Me keeps your documents offline.	పరిశోధకుడికి ఆన్‌లైన్ సేవ అవసరం; Doc4Me మీ పత్రాలను ఆఫ్‌లైన్‌లో ఉంచుతుంది.
+	Reset	రీసెట్
+	Reset All	అన్నీ రీసెట్ చేయి
+	Reset All…	అన్నీ రీసెట్ చేయి…
+	Reset Character Formatting	అక్షర ఫార్మాటింగ్‌ను రీసెట్ చేయి
+	Reset Crop	క్రాప్‌ను రీసెట్ చేయి
+	Reset Graphic	గ్రాఫిక్‌ను రీసెట్ చేయి
+	Reset Paragraph Formatting	పేరా ఫార్మాటింగ్‌ను రీసెట్ చేయి
+	Reset Picture	చిత్రాన్ని రీసెట్ చేయి
+	Reset to Normal	సాధారణానికి రీసెట్ చేయి
+	Reset\nGraphic	గ్రాఫిక్‌ను\nరీసెట్ చేయి
+	Reset…	రీసెట్…
+	Resize Table by Dragging	లాగి పట్టిక పరిమాణాన్ని మార్చు
+	Resolve	పరిష్కరించు
+	Resolved	పరిష్కరించబడింది
+	Restart at 1	1 నుండి పునఃప్రారంభించు
+	Restart Each Page	ప్రతి పేజీలో పునఃప్రారంభించు
+	Restart Each Section	ప్రతి విభాగంలో పునఃప్రారంభించు
+	Restart list after:	దీని తర్వాత జాబితాను పునఃప్రారంభించు:
+	Restore	పునరుద్ధరించు
+	Restore Defaults	డిఫాల్ట్‌లను పునరుద్ధరించు
+	Restore Down	క్రిందికి పునరుద్ధరించు
+	Restore to Normal Word Document	సాధారణ Word పత్రానికి పునరుద్ధరించు
+	Restrict Editing	సవరణను పరిమితం చేయి
+	Restrict\nEditing	సవరణను\nపరిమితం చేయి
+	Result	ఫలితం
+	Results	ఫలితాలు
+	Return address labels	తిరుగు చిరునామా లేబుల్‌లు
+	Return address:	తిరుగు చిరునామా:
+	Reverse the order	క్రమాన్ని తిప్పు
+	Review	సమీక్ష
+	Review AutoFormat Changes	స్వయంఫార్మాట్ మార్పులను సమీక్షించు
+	Review Changes…	మార్పులను సమీక్షించు…
+	Reviewing	సమీక్షిస్తోంది
+	Reviewing Pane	సమీక్ష పేన్
+	Reviewing — edits become suggestions	సమీక్ష — సవరణలు సూచనలుగా మారతాయి
+	Revised document	సవరించిన పత్రం
+	Revisions	సవరణలు
+	Rewind	రివైండ్
+	Ribbon	రిబ్బన్
+	Ribbon and Quick Access Toolbar:	రిబ్బన్ మరియు త్వరిత ప్రాప్తి టూల్‌బార్:
+	Ribbon tabs	రిబ్బన్ ట్యాబ్‌లు
+	Rich Text Content Control	రిచ్ టెక్స్ట్ కంటెంట్ నియంత్రణ
+	Rich Text Format (*.rtf)	రిచ్ టెక్స్ట్ ఫార్మాట్ (*.rtf)
+	Rich Text Format (RTF)	రిచ్ టెక్స్ట్ ఫార్మాట్ (RTF)
+	Right	కుడి
+	Right (vertical)	కుడి (నిలువు)
+	Right align page numbers	పేజీ సంఖ్యలను కుడికి సమలేఖనం
+	Right Arrow with Text Above	పైన వచనంతో కుడి బాణం
+	Right Arrow with Text Below	క్రింద వచనంతో కుడి బాణం
+	Right Border	కుడి అంచు
+	Right border	కుడి అంచు గీత
+	Right Bracket Twice	రెండుసార్లు కుడి బ్రాకెట్
+	Right indent	కుడి ఇండెంట్
+	Right Margin	కుడి మార్జిన్
+	Right Only	కుడి మాత్రమే
+	Right only	కుడివైపు మాత్రమే
+	Right-to-left	కుడి నుండి ఎడమకు
+	Right-to-Left Section	కుడి నుండి ఎడమకు విభాగం
+	Right-to-Left Table	కుడి నుండి ఎడమకు పట్టిక
+	Right-to-Left Text Direction	కుడి నుండి ఎడమకు వచన దిశ
+	Right:	కుడి:
+	Rightwards Arrow Above	పైన కుడివైపు బాణం
+	Rightwards Harpoon Above	పైన కుడివైపు హార్పూన్
+	Roots of ax²+bx+c	ax²+bx+c యొక్క మూలాలు
+	Rotate	తిప్పు
+	Rotate all text 270°	అన్ని వచనాన్ని 270° తిప్పు
+	Rotate all text 90°	అన్ని వచనాన్ని 90° తిప్పు
+	Rotate Left 90°	ఎడమవైపు 90° తిప్పు
+	Rotate Right 90°	కుడివైపు 90° తిప్పు
+	Rotation	భ్రమణం
+	Rotation:	భ్రమణం:
+	Rounded Rectangle	గుండ్రని మూలల దీర్ఘచతురస్రం
+	Row	వరుస
+	Row:	వరుస:
+	Rows & Columns	వరుసలు & నిలువు వరుసలు
+	Ruby text:	రూబీ వచనం:
+	Ruler	స్కేల్
+	Rules	నియమాలు
+	Run	అమలు చేయి
+	Run-in	రన్-ఇన్
+	Russian	రష్యన్
+	Résumé	రెజ్యూమే
+	Same as the whole table	మొత్తం పట్టిక లాగానే
+	SAMPLE	నమూనా
+	Sat:	సంతృప్తత:
+	Save	సేవ్ చేయి
+	Save a copy in another format. Printing goes through a PDF you can print from any viewer.	మరొక ఫార్మాట్‌లో కాపీని సేవ్ చేయి. ముద్రణ ఏ వీక్షకుడి నుండైనా ముద్రించగల PDF ద్వారా జరుగుతుంది.
+	Save As	ఇలా సేవ్ చేయి
+	Save as Template	టెంప్లేట్‌గా సేవ్ చేయి
+	Save documents	పత్రాలను సేవ్ చేయి
+	Save the document to turn on AutoSave	స్వయంసేవ్‌ను ప్రారంభించడానికి పత్రాన్ని సేవ్ చేయండి
+	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	స్వయంసేవ్‌ను ప్రారంభించడానికి పత్రాన్ని సేవ్ చేయండి (మీరు తెరిచిన మాత్రమే ఉన్న ఫైల్ సేవ్ చేసే వరకు మళ్లీ రాయబడదు)
+	Save these pages as PDF…	ఈ పేజీలను PDF‌గా సేవ్ చేయి…
+	Save Version	సంస్కరణను సేవ్ చేయి
+	Saved	సేవ్ చేయబడింది
+	Scale	స్కేల్
+	Scale Drawing	డ్రాయింగ్‌ను స్కేల్ చేయి
+	Scatter	స్కాటర్
+	Screen Clipping	స్క్రీన్ క్లిప్పింగ్
+	Screen clipping didn't work: {reason}	స్క్రీన్ క్లిప్పింగ్ పనిచేయలేదు: {reason}
+	Screen clipping ended without a picture.	స్క్రీన్ క్లిప్పింగ్ చిత్రం లేకుండా ముగిసింది.
+	Screen clipping isn't available here. Copy a picture of the screen, then paste it.	స్క్రీన్ క్లిప్పింగ్ ఇక్కడ అందుబాటులో లేదు. స్క్రీన్ చిత్రాన్ని కాపీ చేసి, తర్వాత అతికించండి.
+	Screenshot	స్క్రీన్‌షాట్
+	Script	లిపి
+	Scripts	లిపులు
+	Scroll ribbon left	రిబ్బన్‌ను ఎడమకు స్క్రోల్ చేయి
+	Scroll ribbon right	రిబ్బన్‌ను కుడికి స్క్రోల్ చేయి
+	Search	శోధన
+	Search Commands	ఆదేశాలను శోధించు
+	Search commands and help	ఆదేశాలు మరియు సహాయం శోధించు
+	Search document	పత్రంలో శోధించు
+	Search for templates	టెంప్లేట్‌ల కోసం శోధించు
+	Search icons	చిహ్నాలను శోధించు
+	Search Openverse (Creative Commons pictures)	Openverse‌లో శోధించు (Creative Commons చిత్రాలు)
+	Search Options	శోధన ఎంపికలు
+	Searching…	శోధిస్తోంది…
+	Secant Function	సెకెంట్ ఫంక్షన్
+	Section Break	విభాగ విరామం
+	Section Breaks	విభాగ విరామాలు
+	Section Character	విభాగ అక్షరం
+	Section direction:	విభాగ దిశ:
+	Section Mark	విభాగ గుర్తు
+	Section Properties	విభాగ లక్షణాలు
+	Sections	విభాగాలు
+	See	చూడండి
+	Select	ఎంచుకో
+	Select a picture, shape, chart or table to describe it.	చిత్రం, ఆకారం, చార్ట్ లేదా పట్టికను వివరించడానికి దాన్ని ఎంచుకోండి.
+	Select All	అన్నీ ఎంచుకో
+	Select Cell	గడిని ఎంచుకో
+	Select Floating Shapes	తేలియాడే ఆకారాలను ఎంచుకో
+	Select Heading and Content	శీర్షిక మరియు విషయాన్ని ఎంచుకో
+	Select Line	పంక్తిని ఎంచుకో
+	Select Objects	వస్తువులను ఎంచుకో
+	Select Paragraph	పేరాను ఎంచుకో
+	Select Range	పరిధిని ఎంచుకో
+	Select Recipients	గ్రహీతలను ఎంచుకో
+	Select recipients first to choose from their fields.	వారి ఫీల్డ్‌ల నుండి ఎంచుకోవడానికి ముందుగా గ్రహీతలను ఎంచుకోండి.
+	Select recipients first to match their fields.	వారి ఫీల్డ్‌లను సరిపోల్చడానికి ముందుగా గ్రహీతలను ఎంచుకోండి.
+	Select Row	వరుసను ఎంచుకో
+	Select Sentence	వాక్యాన్ని ఎంచుకో
+	Select Table	పట్టికను ఎంచుకో
+	Select Text	వచనాన్ని ఎంచుకో
+	Select text in the document to translate it.	అనువదించడానికి పత్రంలో వచనాన్ని ఎంచుకోండి.
+	Select Text with Similar Formatting	ఒకే రకమైన ఫార్మాటింగ్ ఉన్న వచనాన్ని ఎంచుకో
+	Select text, then tick who can still edit it.	వచనాన్ని ఎంచుకుని, తర్వాత ఎవరు ఇంకా సవరించగలరో టిక్ చేయండి.
+	Select the part of the screen to insert.	చొప్పించాల్సిన స్క్రీన్ భాగాన్ని ఎంచుకోండి.
+	Select Word	పదాన్ని ఎంచుకో
+	Select\nRecipients	గ్రహీతలను\nఎంచుకో
+	Selected Fields	ఎంచుకున్న ఫీల్డ్‌లు
+	Selected pages	ఎంచుకున్న పేజీలు
+	Selection	ఎంపిక
+	Selection Pane	ఎంపిక పేన్
+	Send Backward	వెనుకకు పంపు
+	Send the document straight to the system print dialog, or save a copy in another format below.	పత్రాన్ని నేరుగా సిస్టమ్ ముద్రణ డైలాగ్‌కు పంపండి, లేదా క్రింద మరొక ఫార్మాట్‌లో కాపీని సేవ్ చేయండి.
+	Sentence	వాక్యం
+	Sentence case.	వాక్య అక్షర రకం.
+	Separator:	విభాజకం:
+	Sequence name:	క్రమం పేరు:
+	Serbian	సెర్బియన్
+	Serbian (Cyrillic)	సెర్బియన్ (సిరిలిక్)
+	Serbian (Latin)	సెర్బియన్ (లాటిన్)
+	Series name	శ్రేణి పేరు
+	Series {n}	శ్రేణి {n}
+	Server address (https://…)	సర్వర్ చిరునామా (https://…)
+	Set	సెట్ చేయి
+	Set As Default	డిఫాల్ట్‌గా సెట్ చేయి
+	Set as Default	డిఫాల్ట్‌గా సెట్ చేయండి
+	Set Caret	కర్సర్ సెట్ చేయి
+	Set Character Formatting	అక్షర ఫార్మాటింగ్ సెట్ చేయి
+	Set Date	తేదీ సెట్ చేయి
+	Set Equation	సమీకరణం సెట్ చేయి
+	Set Numbering Value	సంఖ్యీకరణ విలువ సెట్ చేయి
+	Set Paragraph Formatting	పేరా ఫార్మాటింగ్ సెట్ చేయి
+	Set Proofing Language…	ప్రూఫింగ్ భాషను సెట్ చేయి…
+	Setting:	సెట్టింగ్:
+	Settings…	సెట్టింగ్‌లు…
+	Shading	షేడింగ్
+	Shadow	నీడ
+	Shadow, glow and soft edges	నీడ, మెరుపు మరియు మృదువైన అంచులు
+	Shape Effects	ఆకార ప్రభావాలు
+	Shape Fill	ఆకార నింపు
+	Shape Format	ఆకార ఫార్మాట్
+	Shape Outline	ఆకార అవుట్‌లైన్
+	Shape Styles	ఆకార శైలులు
+	Shapes	ఆకారాలు
+	Share	భాగస్వామ్యం చేయి
+	Sheet:	షీట్:
+	Shift cells down	గడులను క్రిందికి జరుపు
+	Shift cells right	గడులను కుడికి జరుపు
+	Shift+Tab	Shift+Tab
+	Shipping labels	షిప్పింగ్ లేబుల్‌లు
+	Short citation:	చిన్న ఉల్లేఖన:
+	Shortcut key:	షార్ట్‌కట్ కీ:
+	Show	చూపించు
+	Show all formatting marks	అన్ని ఫార్మాటింగ్ గుర్తులను చూపించు
+	Show All Levels	అన్ని స్థాయిలను చూపించు
+	Show all revisions inline	అన్ని సవరణలను ఇన్‌లైన్‌లో చూపించు
+	Show changes at:	మార్పులను ఇక్కడ చూపించు:
+	Show changes in:	మార్పులను దీనిలో చూపించు:
+	Show Comments	వ్యాఖ్యలను చూపించు
+	Show documents with their colours inverted, like View › Switch Modes. Saving, printing and PDFs are unchanged.	పత్రాలను వాటి రంగులు విలోమంగా చూపించు, వీక్షణ › మోడ్‌లను మార్చు లాగా. సేవ్, ముద్రణ మరియు PDFలు మారవు.
+	Show every bibliography field	ప్రతి గ్రంథసూచి ఫీల్డ్‌ను చూపించు
+	Show First Line Only	మొదటి పంక్తిని మాత్రమే చూపించు
+	Show in the Styles gallery	శైలుల గ్యాలరీలో చూపించు
+	Show KeyTips (Alt or F10)	కీటిప్‌లను చూపించు (Alt లేదా F10)
+	Show Level	స్థాయిని చూపించు
+	Show Level 1	స్థాయి 1 చూపించు
+	Show Level 2	స్థాయి 2 చూపించు
+	Show Level 3	స్థాయి 3 చూపించు
+	Show Level 4	స్థాయి 4 చూపించు
+	Show Level 5	స్థాయి 5 చూపించు
+	Show Level 6	స్థాయి 6 చూపించు
+	Show Level 7	స్థాయి 7 చూపించు
+	Show Level 8	స్థాయి 8 చూపించు
+	Show Level 9	స్థాయి 9 చూపించు
+	Show Markup	మార్కప్ చూపించు
+	Show Notes	గమనికలను చూపించు
+	Show only comments and formatting in balloons	బెలూన్‌లలో వ్యాఖ్యలు మరియు ఫార్మాటింగ్ మాత్రమే చూపించు
+	Show or Hide Style	శైలిని చూపించు లేదా దాచు
+	Show page numbers	పేజీ సంఖ్యలను చూపించు
+	Show revisions in balloons	సవరణలను బెలూన్‌లలో చూపించు
+	Show rulers	స్కేల్‌లను చూపించు
+	Show Text Formatting	వచన ఫార్మాటింగ్‌ను చూపించు
+	Show the equation in the line of text	సమీకరణాన్ని వచన పంక్తిలో చూపించు
+	Show the equation on a line of its own	సమీకరణాన్ని దాని సొంత పంక్తిలో చూపించు
+	Show the mini toolbar when text is selected	వచనం ఎంచుకున్నప్పుడు మినీ టూల్‌బార్ చూపించు
+	Show/Hide ¶	చూపించు/దాచు ¶
+	Show\nComments	వ్యాఖ్యలను\nచూపించు
+	Showing the first {count} items.	మొదటి {count} అంశాలు చూపిస్తున్నాయి.
+	Shows a tree: each item below the item it belongs to.	చెట్టును చూపిస్తుంది: ప్రతి అంశం అది చెందిన అంశం క్రింద.
+	Shows items around a central idea: the first item is the centre.	కేంద్ర ఆలోచన చుట్టూ అంశాలను చూపిస్తుంది: మొదటి అంశం కేంద్రం.
+	Shows items of equal weight as blocks in rows.	సమాన ప్రాధాన్యత గల అంశాలను వరుసలలో బ్లాక్‌లుగా చూపిస్తుంది.
+	Shows overlapping ideas as overlapping circles.	అతివ్యాప్తి ఆలోచనలను అతివ్యాప్తి వృత్తాలుగా చూపిస్తుంది.
+	Shows parts of a whole as quadrants.	మొత్తం యొక్క భాగాలను చతుర్థాంశాలుగా చూపిస్తుంది.
+	Shows parts that build on each other, largest at the bottom.	ఒకదానిపై ఒకటి నిర్మించే భాగాలను చూపిస్తుంది, పెద్దది దిగువన.
+	Shows steps in order, left to right, with arrows between them.	దశలను క్రమంలో, ఎడమ నుండి కుడికి, మధ్యలో బాణాలతో చూపిస్తుంది.
+	Shows steps that repeat, around a circle.	పునరావృతమయ్యే దశలను వృత్తం చుట్టూ చూపిస్తుంది.
+	Shrink Font 1 Point	ఫాంట్‌ను 1 పాయింట్ తగ్గించు
+	Shrink Selection	ఎంపికను తగ్గించు
+	Shrink text	వచనాన్ని కుదించు
+	Side to Side	పక్కపక్కనే
+	Side\nto Side	పక్క\nపక్కనే
+	Sides of a right triangle	లంబకోణ త్రిభుజం భుజాలు
+	Signature Line	సంతకం పంక్తి
+	Sine and cosine series of f(x)	f(x) యొక్క సైన్ మరియు కొసైన్ శ్రేణి
+	Sine Function	సైన్ ఫంక్షన్
+	Sine theta	సైన్ థీటా
+	Single	ఒకే
+	Single Brackets	ఒకే బ్రాకెట్లు
+	Single Closing Quote	ఒకే ముగింపు కొటేషన్
+	Single label	ఒకే లేబుల్
+	Single Left Angle	ఒకే ఎడమ కోణం
+	Single Left Bar	ఒకే ఎడమ బార్
+	Single Left Brace	ఒకే ఎడమ బ్రేస్
+	Single Left Bracket	ఒకే ఎడమ బ్రాకెట్
+	Single Left Parenthesis	ఒకే ఎడమ కుండలీకరణం
+	Single Opening Quote	ఒకే ప్రారంభ కొటేషన్
+	Single Right Brace	ఒకే కుడి బ్రేస్
+	Single Right Bracket	ఒకే కుడి బ్రాకెట్
+	Single Right Parenthesis	ఒకే కుడి కుండలీకరణం
+	Single Spacing	ఒకే అంతరం
+	SIST02	SIST02
+	Site name	సైట్ పేరు
+	Size	పరిమాణం
+	Size (pt):	పరిమాణం (pt):
+	Size and Crop…	పరిమాణం మరియు క్రాప్…
+	Size:	పరిమాణం:
+	Sketchbook	స్కెచ్‌బుక్
+	Skewed Fraction	వాలు భిన్నం
+	Skip citations & bibliography	ఉల్లేఖనలు & గ్రంథసూచిని దాటవేయి
+	Skip Citations and Bibliography	ఉల్లేఖనలు మరియు గ్రంథసూచిని దాటవేయి
+	Skip Record If	అయితే రికార్డును దాటవేయి
+	Skip Record If…	అయితే రికార్డును దాటవేయి…
+	Slant Down	క్రిందికి వాలు
+	Slant Up	పైకి వాలు
+	Small Caps	చిన్న పెద్ద అక్షరాలు
+	Small caps	చిన్న పెద్ద అక్షరాలలో
+	Small change	చిన్న మార్పు
+	Smart quotes instead of straight quotes	నేరు కొటేషన్‌లకు బదులు స్మార్ట్ కొటేషన్‌లు
+	SmartArt	SmartArt
+	SmartArt Design	SmartArt డిజైన్
+	SmartArt Styles	SmartArt శైలులు
+	Smooth scrolling and zooming, and menus and buttons that fade in. Off shows every change at once.	మృదువైన స్క్రోలింగ్ మరియు జూమింగ్, మెల్లగా కనిపించే మెనూలు మరియు బటన్‌లు. ఆఫ్ చేస్తే ప్రతి మార్పు వెంటనే కనిపిస్తుంది.
+	Soft Edges	మృదువైన అంచులు
+	Soft Glow	మృదువైన మెరుపు
+	Solid Accent	ఘన యాస
+	Sort	క్రమీకరించు
+	Sort by	దీని ప్రకారం క్రమీకరించు
+	Sort order:	క్రమ పద్ధతి:
+	Sort Records	రికార్డులను క్రమీకరించు
+	Source code: github.com/chatraweechai/doc4me	సోర్స్ కోడ్: github.com/chatraweechai/doc4me
+	Source Manager	మూల నిర్వాహకుడు
+	Source type:	మూల రకం:
+	Sources in this document:	ఈ పత్రంలోని మూలాలు:
+	South	దక్షిణం
+	Space	ఖాళీ
+	Space after	తర్వాత ఖాళీ
+	Space after: {pt} pt	తర్వాత ఖాళీ: {pt} pt
+	Space before	ముందు ఖాళీ
+	Space before/after:	ముందు/తర్వాత ఖాళీ:
+	Space before: {pt} pt	ముందు ఖాళీ: {pt} pt
+	Spaces	ఖాళీలు
+	Spacing	అంతరం
+	Spacing (pt):	అంతరం (pt):
+	Spacing:	అంతరం:
+	Spanish	స్పానిష్
+	Spanish (Mexico)	స్పానిష్ (మెక్సికో)
+	Spanish (Spain)	స్పానిష్ (స్పెయిన్)
+	Sparse Matrices	విరళ మాత్రికలు
+	Special	ప్రత్యేకం
+	Special Characters	ప్రత్యేక అక్షరాలు
+	Specify height:	ఎత్తు పేర్కొను:
+	Speech	స్పీచ్
+	Speech is recognised on this computer (whisper.cpp); nothing is sent online.	స్పీచ్ ఈ కంప్యూటర్‌లో గుర్తించబడుతుంది (whisper.cpp); ఏదీ ఆన్‌లైన్‌కు పంపబడదు.
+	Speed	వేగం
+	Spelling	స్పెల్లింగ్
+	Spelling & Grammar	స్పెల్లింగ్ & వ్యాకరణం
+	Spelling &\nGrammar	స్పెల్లింగ్ &\nవ్యాకరణం
+	Spelling and grammar are checked in English (United States).	స్పెల్లింగ్ మరియు వ్యాకరణం ఆంగ్లం (యునైటెడ్ స్టేట్స్)‌లో తనిఖీ చేయబడతాయి.
+	Spelling Suggestions	స్పెల్లింగ్ సూచనలు
+	Spike	స్పైక్
+	Split	విభజించు
+	Split apart page break and paragraph mark	పేజీ విరామం మరియు పేరా గుర్తును వేరుచేయి
+	Split Cells	గడులను విభజించు
+	Split Table	పట్టికను విభజించు
+	Spreadsheet Table	స్ప్రెడ్‌షీట్ పట్టిక
+	Square	చతురస్రం
+	Square Root	వర్గమూలం
+	Square Root with Degree	ఘాతంతో వర్గమూలం
+	Square Union	చతురస్ర సమ్మేళనం
+	Stack Object	స్టాక్ వస్తువు
+	Stack Object (Three)	స్టాక్ వస్తువు (మూడు)
+	Stacked	పేర్చిన
+	Stacked Bar	పేర్చిన బార్
+	Stacked Column	పేర్చిన కాలమ్
+	Stacked Fraction	పేర్చిన భిన్నం
+	Stacked, no bar	పేర్చిన, బార్ లేకుండా
+	Standard	ప్రామాణికం
+	Standard and Contextual	ప్రామాణిక మరియు సందర్భోచిత
+	Standard Colors	ప్రామాణిక రంగులు
+	Standard Only	ప్రామాణికం మాత్రమే
+	Star	నక్షత్రం
+	Start at:	ఇక్కడ ప్రారంభించు:
+	Start Enforcing Protection	రక్షణ అమలు ప్రారంభించు
+	Start Mail Merge	మెయిల్ విలీనం ప్రారంభించు
+	Start Mail\nMerge	మెయిల్ విలీనం\nప్రారంభించు
+	State	రాష్ట్రం
+	Statement   5.50" × 8.50"	Statement   5.50" × 8.50"
+	Statistics	గణాంకాలు
+	Status Bar	స్థితి పట్టీ
+	Statutes	శాసనాలు
+	Stop	ఆపు
+	Stop Protection	రక్షణ ఆపు
+	Stop Reading	చదవడం ఆపు
+	Stopped	ఆగిపోయింది
+	Store	స్టోర్
+	Straight Arrow Connector	నేరు బాణం కనెక్టర్
+	Straight Connector	నేరు కనెక్టర్
+	Strikethrough	కొట్టివేత
+	Stroke {n} of {total}	స్ట్రోక్ {n} / {total}
+	Strong	బలమైన
+	Structure Actions	నిర్మాణ చర్యలు
+	Structures	నిర్మాణాలు
+	Studio	స్టూడియో
+	Studio cover	స్టూడియో కవర్
+	Studio handbook (sample)	స్టూడియో హ్యాండ్‌బుక్ (నమూనా)
+	Style	శైలి
+	Style based on:	దీని ఆధారంగా శైలి:
+	Style Inspector	శైలి తనిఖీదారు
+	Style Set	శైలి సమితి
+	Style:	శైలి:
+	Style: APA	శైలి: APA
+	Style: {style}	శైలి: {style}
+	Styles	శైలులు
+	Styles Pane	శైలుల పేన్
+	Styles:	శైలులు:
+	Subentry:	ఉప నమోదు:
+	Subject	విషయం
+	Subscript	సబ్‌స్క్రిప్ట్
+	Subscript-Superscript	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్
+	Subscripts and Superscripts	సబ్‌స్క్రిప్ట్‌లు మరియు సూపర్‌స్క్రిప్ట్‌లు
+	Subset:	ఉపసమితి:
+	Substituted font	ప్రత్యామ్నాయ ఫాంట్
+	Subtitle	ఉపశీర్షిక
+	Subtle Emphasis	సూక్ష్మ ఉద్ఘాటన
+	Subtle Reference	సూక్ష్మ సూచన
+	Sum	మొత్తం
+	Sum of cosines	కొసైన్‌ల మొత్తం
+	Sum or difference of sines	సైన్‌ల మొత్తం లేదా భేదం
+	Summation	సంకలనం
+	Summation from 0 to n	0 నుండి n వరకు సంకలనం
+	Summation over binomials	ద్విపదాలపై సంకలనం
+	Summation with Limits	పరిమితులతో సంకలనం
+	Summation with Lower Limit	దిగువ పరిమితితో సంకలనం
+	Summation with Subscript Limit	సబ్‌స్క్రిప్ట్ పరిమితితో సంకలనం
+	Summation with Subscript-Superscript Limits	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్ పరిమితులతో సంకలనం
+	Summations	సంకలనాలు
+	Superscript	సూపర్‌స్క్రిప్ట్
+	Suppress line numbers	పంక్తి సంఖ్యలను అణచివేయి
+	Surface Integral	ఉపరితల సమాకలనం
+	Surface Integral with Limits	పరిమితులతో ఉపరితల సమాకలనం
+	Surface Integral with Stacked Limits	పేర్చిన పరిమితులతో ఉపరితల సమాకలనం
+	Swap footnotes and endnotes	ఫుట్‌నోట్‌లు మరియు ఎండ్‌నోట్‌లను మార్పిడి చేయి
+	Swedish	స్వీడిష్
+	Switch Modes	మోడ్‌లను మార్చు
+	Switch Windows	విండోలను మార్చు
+	Switch\nModes	మోడ్‌లను\nమార్చు
+	Symbol	చిహ్నం
+	Symbol Font	చిహ్న ఫాంట్
+	Symbols	చిహ్నాలు
+	Synchronous Scrolling	సమకాలిక స్క్రోలింగ్
+	Synonyms	పర్యాయపదాలు
+	System	సిస్టమ్
+	Tab	ట్యాబ్
+	Tab Character	ట్యాబ్ అక్షరం
+	Tab character	ట్యాబ్ యొక్క అక్షరం
+	Tab characters	ట్యాబ్ అక్షరాలు
+	Tab leader:	ట్యాబ్ లీడర్:
+	Tab stop position:	ట్యాబ్ స్టాప్ స్థానం:
+	Tab stops to be cleared:	తొలగించవలసిన ట్యాబ్ స్టాప్‌లు:
+	Table	పట్టిక
+	Table AutoFormat	పట్టిక స్వయంఫార్మాట్
+	Table AutoFormat…	పట్టిక స్వయంఫార్మాట్…
+	Table Column Width	పట్టిక నిలువు వరుస వెడల్పు
+	Table Design	పట్టిక డిజైన్
+	Table direction:	పట్టిక దిశ:
+	Table entry fields	పట్టిక నమోదు ఫీల్డ్‌లు
+	Table Grid	పట్టిక గ్రిడ్
+	Table identifier:	పట్టిక గుర్తింపు:
+	Table Layout	పట్టిక లేఅవుట్
+	Table of Authorities	అధికారాల పట్టిక
+	Table of Contents	విషయ సూచిక
+	Table of Contents Options	విషయ సూచిక ఎంపికలు
+	Table of Contents Styles	విషయ సూచిక శైలులు
+	Table of Figures	చిత్రాల పట్టిక
+	Table of Figures Options	చిత్రాల పట్టిక ఎంపికలు
+	Table of\nContents	విషయ\nసూచిక
+	Table Positioning	పట్టిక స్థాన నిర్ణయం
+	Table Properties	పట్టిక లక్షణాలు
+	Table Row Height	పట్టిక వరుస ఎత్తు
+	Table style	పట్టిక శైలి
+	Table Style Options	పట్టిక శైలి ఎంపికలు
+	Table Styles	పట్టిక శైలులు
+	Table styles:	పట్టిక శైలులు:
+	Tables	పట్టికలు
+	Tabloid   11.00" × 17.00"	Tabloid   11.00" × 17.00"
+	Tabs	ట్యాబ్‌లు
+	Tabs…	ట్యాబ్‌లు…
+	Tabular List	పట్టిక జాబితా
+	Tag	ట్యాగ్
+	Tangent formula	టాంజెంట్ సూత్రం
+	Tangent Function	టాంజెంట్ ఫంక్షన్
+	TC entry fields	TC నమోదు ఫీల్డ్‌లు
+	Technology	సాంకేతికత
+	Templates	టెంప్లేట్‌లు
+	Templates and Add-ins	టెంప్లేట్‌లు మరియు యాడ్-ఇన్‌లు
+	Text	వచనం
+	Text Box	టెక్స్ట్ బాక్స్
+	Text boxes	టెక్స్ట్ బాక్స్‌లు
+	Text Direction	వచన దిశ
+	Text Effects	వచన ప్రభావాలు
+	Text Effects and Typography	వచన ప్రభావాలు మరియు టైపోగ్రఫీ
+	Text Fill	వచన నింపు
+	Text from File	ఫైల్ నుండి వచనం
+	Text Highlight Color	వచన హైలైట్ రంగు
+	Text indent at:	వచన ఇండెంట్ ఇక్కడ:
+	Text isn't squeezed to fit its cell yet.	వచనం ఇంకా దాని గడికి సరిపోయేలా కుదించబడలేదు.
+	Text Outline	వచన అవుట్‌లైన్
+	Text over Colon Equal	కోలన్ సమానం పైన వచనం
+	Text over Equal	సమానం పైన వచనం
+	Text Pane	వచన పేన్
+	Text size	వచన పరిమాణం
+	Text snaps to characters	వచనం అక్షరాలకు అతుక్కుంటుంది
+	Text to display:	చూపించాల్సిన వచనం:
+	Text Wrapping	వచనం చుట్టడం
+	Text wrapping:	వచనం చుట్టడం:
+	Text:	వచనం:
+	Text\nBox	టెక్స్ట్\nబాక్స్
+	Text\nDirection	వచన\nదిశ
+	Thai	థాయ్
+	Thai Distributed	థాయ్ పంపిణీ
+	That format doesn't keep everything, so the document is still open. Save it as a Word document (.docx) to go on.	ఆ ఫార్మాట్ అన్నింటినీ ఉంచదు, కాబట్టి పత్రం ఇంకా తెరిచి ఉంది. కొనసాగడానికి దాన్ని Word పత్రంగా (.docx) సేవ్ చేయండి.
+	That isn't the web address or embed code of an online video.	అది ఆన్‌లైన్ వీడియో యొక్క వెబ్ చిరునామా లేదా ఎంబెడ్ కోడ్ కాదు.
+	That password isn't right. Check it (passwords are case-sensitive) and try again.	ఆ పాస్‌వర్డ్ సరైనది కాదు. దాన్ని తనిఖీ చేసి (పాస్‌వర్డ్‌లు కేస్-సెన్సిటివ్) మళ్లీ ప్రయత్నించండి.
+	The clipboard is empty.	క్లిప్‌బోర్డ్ ఖాళీగా ఉంది.
+	The date it is today	ఈ రోజు తేదీ
+	The document contains no tracked changes.	పత్రంలో ట్రాక్ చేసిన మార్పులు లేవు.
+	The document has no bookmarks yet.	పత్రంలో ఇంకా బుక్‌మార్క్‌లు లేవు.
+	The document is read only, except for regions marked editable.	సవరించదగినవిగా గుర్తించిన ప్రాంతాలు తప్ప, పత్రం చదవడానికి మాత్రమే.
+	The document will be saved with a password. Save it to protect it.	పత్రం పాస్‌వర్డ్‌తో సేవ్ చేయబడుతుంది. దాన్ని రక్షించడానికి సేవ్ చేయండి.
+	The first word of a sentence starts with a capital.	వాక్యం యొక్క మొదటి పదం పెద్ద అక్షరంతో ప్రారంభమవుతుంది.
+	the free daily allowance is used up (try again tomorrow, or give an email address)	ఉచిత రోజువారీ పరిమితి అయిపోయింది (రేపు మళ్లీ ప్రయత్నించండి, లేదా ఇమెయిల్ చిరునామా ఇవ్వండి)
+	the LibreTranslate server	LibreTranslate సర్వర్
+	The Mail Merge Helper sets up a merge in three steps.	మెయిల్ విలీన సహాయకుడు మూడు దశల్లో విలీనాన్ని సెటప్ చేస్తుంది.
+	The new style takes the formatting of the current paragraph.	కొత్త శైలి ప్రస్తుత పేరా ఫార్మాటింగ్‌ను తీసుకుంటుంది.
+	The password is optional; without it anyone can stop the protection.	పాస్‌వర్డ్ ఐచ్ఛికం; అది లేకుండా ఎవరైనా రక్షణను ఆపవచ్చు.
+	The password is removed. Save the document to keep the change.	పాస్‌వర్డ్ తీసివేయబడింది. మార్పును ఉంచడానికి పత్రాన్ని సేవ్ చేయండి.
+	The passwords don't match.	పాస్‌వర్డ్‌లు సరిపోలలేదు.
+	The printer, two-sided printing and pages per sheet are chosen in that dialog.	ప్రింటర్, రెండు వైపుల ముద్రణ మరియు షీట్‌కు పేజీలు ఆ డైలాగ్‌లో ఎంచుకోబడతాయి.
+	The recipient-list field that fills each part of an address block and greeting line.	చిరునామా బ్లాక్ మరియు శుభాకాంక్ష పంక్తి యొక్క ప్రతి భాగాన్ని నింపే గ్రహీతల జాబితా ఫీల్డ్.
+	The same word twice in a row.	ఒకే పదం వరుసగా రెండుసార్లు.
+	The spelling and grammar check is complete.	స్పెల్లింగ్ మరియు వ్యాకరణ తనిఖీ పూర్తయింది.
+	The system file dialog isn't available, so Doc4Me shows its own. To get the system dialog, install a file chooser portal (such as xdg-desktop-portal-gtk) or zenity.	సిస్టమ్ ఫైల్ డైలాగ్ అందుబాటులో లేదు, కాబట్టి Doc4Me దాని సొంతదాన్ని చూపిస్తుంది. సిస్టమ్ డైలాగ్ పొందడానికి, ఫైల్ ఎంపిక పోర్టల్ (xdg-desktop-portal-gtk వంటివి) లేదా zenity‌ను ఇన్‌స్టాల్ చేయండి.
+	The text is sent to {service} to be translated.	వచనం అనువాదం కోసం {service}‌కు పంపబడుతుంది.
+	The time right now	ప్రస్తుత సమయం
+	The video shows as a picture in the document. Double-click it to watch it in your browser.	వీడియో పత్రంలో చిత్రంగా కనిపిస్తుంది. మీ బ్రౌజర్‌లో చూడటానికి దాన్ని డబుల్-క్లిక్ చేయండి.
+	The whole document is translated into a new document, which replaces this one. Save your work first.	మొత్తం పత్రం కొత్త పత్రంగా అనువదించబడుతుంది, అది దీన్ని భర్తీ చేస్తుంది. ముందుగా మీ పనిని సేవ్ చేయండి.
+	Theme Colors	థీమ్ రంగులు
+	Theme Fonts	థీమ్ ఫాంట్‌లు
+	Theme List	థీమ్ జాబితా
+	Themes	థీమ్‌లు
+	Then by	తర్వాత దీని ప్రకారం
+	Then insert:	తర్వాత చొప్పించు:
+	There's no text to translate.	అనువదించడానికి వచనం లేదు.
+	Thesaurus	పర్యాయపద నిఘంటువు
+	These marks show even when Show/Hide ¶ is off.	చూపించు/దాచు ¶ ఆఫ్‌లో ఉన్నా ఈ గుర్తులు కనిపిస్తాయి.
+	These merge fields aren't in the recipient list:	ఈ విలీన ఫీల్డ్‌లు గ్రహీతల జాబితాలో లేవు:
+	These settings will be used for new documents.	ఈ సెట్టింగ్‌లు కొత్త పత్రాలకు ఉపయోగించబడతాయి.
+	Thick	మందమైన
+	Thickness	మందం
+	This Device…	ఈ పరికరం…
+	This document	ఈ పత్రం
+	This field has no options.	ఈ ఫీల్డ్‌కు ఎంపికలు లేవు.
+	This folder can't be read: {error}	ఈ ఫోల్డర్‌ను చదవలేము: {error}
+	This font has no characters to show.	ఈ ఫాంట్‌లో చూపించడానికి అక్షరాలు లేవు.
+	This page	ఈ పేజీ
+	This password type isn't supported.	ఈ పాస్‌వర్డ్ రకానికి మద్దతు లేదు.
+	This point forward	ఈ స్థానం నుండి ముందుకు
+	This section	ఈ విభాగం
+	Three	మూడు
+	Through	ద్వారా
+	Tight	బిగుతుగా
+	Tilde	టిల్డ్
+	Tips ({n})	చిట్కాలు ({n})
+	Title	శీర్షిక
+	Title from the document properties	పత్ర లక్షణాల నుండి శీర్షిక
+	Title:	శీర్షిక:
+	To	వరకు
+	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Word పత్రాలను డిఫాల్ట్‌గా Doc4Me‌తో తెరవడానికి: Finder‌లో ఒకదాన్ని ఎంచుకుని, File › Get Info ఎంచుకుని, Open with క్రింద Doc4Me ఎంచుకుని, తర్వాత Change All క్లిక్ చేయండి.
+	To:	వీరికి:
+	TOA Heading	TOA శీర్షిక
+	TOC Heading	TOC శీర్షిక
+	TOC {n}	TOC {n}
+	Today	ఈ రోజు
+	tOGGLE cASE	అక్షర రకాన్ని తిప్పు
+	Toggle Check Box	చెక్ బాక్స్‌ను టోగుల్ చేయి
+	Toggle Field Codes	ఫీల్డ్ కోడ్‌లను టోగుల్ చేయి
+	Toggle Unicode Character	యూనికోడ్ అక్షరాన్ని టోగుల్ చేయి
+	Tools	సాధనాలు
+	Top	ఎగువ
+	Top and Bottom	పైన మరియు క్రింద
+	Top Border	ఎగువ అంచు
+	Top Margin	ఎగువ మార్జిన్
+	Top of Next Page	తదుపరి పేజీ ఎగువన
+	Top of Page	పేజీ ఎగువన
+	Top of Previous Page	మునుపటి పేజీ ఎగువన
+	Top of the Window	విండో ఎగువన
+	Top:	ఎగువ:
+	Total	మొత్తం
+	Total Row	మొత్తం వరుస
+	Track Changes	మార్పులను ట్రాక్ చేయి
+	Track Changes Options	మార్పుల ట్రాకింగ్ ఎంపికలు
+	Track changes while editing	సవరించేటప్పుడు మార్పులను ట్రాక్ చేయి
+	Track Changes: On	మార్పుల ట్రాకింగ్: ఆన్
+	Track formatting	ఫార్మాటింగ్‌ను ట్రాక్ చేయి
+	Track\nChanges	మార్పులను\nట్రాక్ చేయి
+	Track\nChanges ✓	మార్పులను\nట్రాక్ చేయి ✓
+	Tracked changes	ట్రాక్ చేసిన మార్పులు
+	Tracking	ట్రాకింగ్
+	Trademark	ట్రేడ్‌మార్క్
+	Trademark Sign	ట్రేడ్‌మార్క్ గుర్తు
+	Transform	రూపాంతరం
+	Translate	అనువదించు
+	Translate Document	పత్రాన్ని అనువదించు
+	Translating {done} of {total}	{total}లో {done} అనువదిస్తోంది
+	Translation service	అనువాద సేవ
+	Translator	అనువాదకుడు
+	Transparency	పారదర్శకత
+	Transparency:	పారదర్శకత:
+	Transport	రవాణా
+	Treatises	గ్రంథాలు
+	Triangle	త్రిభుజం
+	Triangle Down	క్రిందికి త్రిభుజం
+	Triangle Up	పైకి త్రిభుజం
+	Trigonometric Functions	త్రికోణమితి ఫంక్షన్‌లు
+	Triple	త్రిగుణం
+	Triple Dot	మూడు చుక్కలు
+	Triple Integral	త్రి సమాకలనం
+	Triple Integral with Limits	పరిమితులతో త్రి సమాకలనం
+	Triple Integral with Stacked Limits	పేర్చిన పరిమితులతో త్రి సమాకలనం
+	Trust Center	ట్రస్ట్ సెంటర్
+	Tue	మంగళ
+	Turabian	Turabian
+	Turkish	టర్కిష్
+	Two	రెండు
+	Type	రకం
+	Type a command, e.g. "insert table"	ఒక ఆదేశాన్ని టైప్ చేయండి, ఉదా. "insert table"
+	Type a New List	కొత్త జాబితాను టైప్ చేయి
+	Type a New List…	కొత్త జాబితాను టైప్ చేయి…
+	Type at least one recipient.	కనీసం ఒక గ్రహీతను టైప్ చేయండి.
+	Type equations in LaTeX	సమీకరణాలను LaTeX‌లో టైప్ చేయి
+	Type equations in the linear format (UnicodeMath)	సమీకరణాలను రేఖీయ ఫార్మాట్‌లో (UnicodeMath) టైప్ చేయి
+	Type in Equation	సమీకరణంలో టైప్ చేయి
+	Type normal (non-math) text in the equation	సమీకరణంలో సాధారణ (గణితేతర) వచనాన్ని టైప్ చేయి
+	Type Text	వచనాన్ని టైప్ చేయి
+	Type the categories down the side and a column of values per series.	పక్కన క్రిందికి వర్గాలను మరియు ప్రతి శ్రేణికి విలువల నిలువు వరుసను టైప్ చేయండి.
+	Type the field's name and its switches, for example PAGE \\* roman.	ఫీల్డ్ పేరు మరియు దాని స్విచ్‌లను టైప్ చేయండి, ఉదాహరణకు PAGE \\* roman.
+	Type the password to stop the protection.	రక్షణను ఆపడానికి పాస్‌వర్డ్‌ను టైప్ చేయండి.
+	Type the recipients, or load them from a file.	గ్రహీతలను టైప్ చేయండి, లేదా ఫైల్ నుండి లోడ్ చేయండి.
+	Type the tag name of the source. You can add more information to this source later by editing the source.	మూలం యొక్క ట్యాగ్ పేరును టైప్ చేయండి. తర్వాత మూలాన్ని సవరించి మరింత సమాచారం జోడించవచ్చు.
+	Type:	రకం:
+	Typing	టైపింగ్
+	Typing replaces selected text	టైప్ చేయడం ఎంచుకున్న వచనాన్ని భర్తీ చేస్తుంది
+	Ukrainian	ఉక్రేనియన్
+	Unchecked symbol	ఎంచుకోని చిహ్నం
+	Underbar	క్రింది గీత
+	Underbrace	క్రింది బ్రేస్
+	Underline	అండర్‌లైన్
+	Underline color	అండర్‌లైన్ రంగు
+	Underline Words Only	పదాలకు మాత్రమే అండర్‌లైన్
+	Undo	రద్దు చేయి
+	Undo Stroke	స్ట్రోక్‌ను రద్దు చేయి
+	Undo {action}	{action}‌ను రద్దు చేయి
+	Unformatted Text	ఫార్మాట్ చేయని వచనం
+	Ungroup	సమూహాన్ని విడదీయి
+	Union	సమ్మేళనం
+	Union of intersections	ఛేదనాల సమ్మేళనం
+	Union with Limits	పరిమితులతో సమ్మేళనం
+	Union with Lower Limit	దిగువ పరిమితితో సమ్మేళనం
+	Union with Plus	ప్లస్‌తో సమ్మేళనం
+	Union with Subscript-Superscript Limits	సబ్‌స్క్రిప్ట్-సూపర్‌స్క్రిప్ట్ పరిమితులతో సమ్మేళనం
+	Unions and Intersections	సమ్మేళనాలు మరియు ఛేదనాలు
+	Unlink Fields	ఫీల్డ్‌ల లింక్ తొలగించు
+	Unlink\nCitations	ఉల్లేఖనల\nలింక్ తొలగించు
+	Unlock Fields	ఫీల్డ్‌లను అన్‌లాక్ చేయి
+	Up	పైకి
+	Up Diagonal Dots	పై వికర్ణ చుక్కలు
+	Up one level	ఒక స్థాయి పైకి
+	Update Field	ఫీల్డ్‌ను నవీకరించు
+	Update fields before printing	ముద్రించే ముందు ఫీల్డ్‌లను నవీకరించు
+	Update Index	సూచికను నవీకరించు
+	Update Style to Match Selection	ఎంపికకు సరిపోయేలా శైలిని నవీకరించు
+	Update Styles from Template	టెంప్లేట్ నుండి శైలులను నవీకరించు
+	Update Table	పట్టికను నవీకరించు
+	Update Table of Figures	చిత్రాల పట్టికను నవీకరించు
+	Update to Match	సరిపోయేలా నవీకరించు
+	Update to Match Selection	ఎంపికకు సరిపోయేలా నవీకరించు
+	UPPERCASE	పెద్ద అక్షరాలు
+	URGENT	అత్యవసరం
+	URL	URL
+	Use "a" before a consonant sound	హల్లు ధ్వని ముందు "a" ఉపయోగించు
+	Use "an" before a vowel sound	అచ్చు ధ్వని ముందు "an" ఉపయోగించు
+	Use an Existing List…	ఇప్పటికే ఉన్న జాబితాను ఉపయోగించు…
+	Use passim (five or more pages)	passim ఉపయోగించు (ఐదు లేదా అంతకంటే ఎక్కువ పేజీలు)
+	Use system setting	సిస్టమ్ సెట్టింగ్‌ను ఉపయోగించు
+	Use the Insert key to switch overtype on and off	ఓవర్‌టైప్‌ను ఆన్/ఆఫ్ చేయడానికి Insert కీని ఉపయోగించు
+	Use wildcards	వైల్డ్‌కార్డ్‌లను ఉపయోగించు
+	User Name	వినియోగదారు పేరు
+	User name:	వినియోగదారు పేరు:
+	Username	యూజర్‌నేమ్
+	Value	విలువ
+	Vector A	సదిశ A
+	Vector AB	సదిశ AB
+	Version	సంస్కరణ
+	Version History	సంస్కరణ చరిత్ర
+	Version {version} ({build})	సంస్కరణ {version} ({build})
+	Versions are kept while the document is open (a .docx file has no versions).	పత్రం తెరిచి ఉన్నంత వరకు సంస్కరణలు ఉంచబడతాయి (.docx ఫైల్‌లో సంస్కరణలు ఉండవు).
+	Vertical	నిలువు
+	Vertical Alignment	నిలువు సమలేఖనం
+	Vertical alignment:	నిలువు సమలేఖనం:
+	Vertical Bars	నిలువు గీతలు
+	Vertical Dots	నిలువు చుక్కలు
+	Vertical spacing:	నిలువు అంతరం:
+	Vietnamese	వియత్నామీస్
+	View	వీక్షణ
+	View Alt Text…	ప్రత్యామ్నాయ వచనాన్ని చూడు…
+	View Gridlines	గ్రిడ్‌లైన్‌లను చూడు
+	View Side by Side	పక్కపక్కనే చూడు
+	View State	వీక్షణ స్థితి
+	Views	వీక్షణలు
+	Visual effects	దృశ్య ప్రభావాలు
+	Voice	స్వరం
+	Volume	సంపుటి
+	Volume Integral	ఘనపరిమాణ సమాకలనం
+	Volume Integral with Limits	పరిమితులతో ఘనపరిమాణ సమాకలనం
+	Volume Integral with Stacked Limits	పేర్చిన పరిమితులతో ఘనపరిమాణ సమాకలనం
+	W:	వె:
+	Waiting for Zotero…	Zotero కోసం వేచి ఉంది…
+	Warm Gradient with Outline	అవుట్‌లైన్‌తో వెచ్చని గ్రేడియంట్
+	Warnings ({n})	హెచ్చరికలు ({n})
+	Watermark	వాటర్‌మార్క్
+	Wave	అల
+	Weather	వాతావరణ స్థితి
+	web access isn't available here	ఇక్కడ వెబ్ యాక్సెస్ అందుబాటులో లేదు
+	Web Layout	వెబ్ లేఅవుట్
+	Web page (*.html)	వెబ్ పేజీ (*.html)
+	Web\nLayout	వెబ్\nలేఅవుట్
+	Website	వెబ్‌సైట్
+	Wed	బుధ
+	Weight	బరువు
+	West	పశ్చిమం
+	When merging records	రికార్డులను విలీనం చేసేటప్పుడు
+	When this document was first created	ఈ పత్రం మొదట సృష్టించబడినప్పుడు
+	When this document was most recently printed	ఈ పత్రం చివరిగా ముద్రించబడినప్పుడు
+	When this document was most recently saved	ఈ పత్రం చివరిగా సేవ్ చేయబడినప్పుడు
+	White Space	ఖాళీ స్థలం
+	White space	ఖాళీ జాగా
+	Who the document properties name as author	పత్ర లక్షణాలు రచయితగా పేర్కొనే వ్యక్తి
+	Whole document	మొత్తం పత్రం
+	Whole page	మొత్తం పేజీ
+	Whole Table	మొత్తం పట్టిక
+	Whole words	పూర్తి పదాలు
+	Wide	వెడల్పు
+	Widow/Orphan Control	విడో/ఆర్ఫన్ నియంత్రణ
+	Widow/Orphan control	విడో/ఆర్ఫన్ పంక్తి నియంత్రణ
+	Width and spacing	వెడల్పు మరియు అంతరం
+	Width:	వెడల్పు:
+	Wildcards (regex)	వైల్డ్‌కార్డ్‌లు (regex)
+	Window	విండో
+	With:	దీనితో:
+	Word 2007	Word 2007
+	Word 2010	Word 2010
+	Word 2013 and later	Word 2013 మరియు తర్వాతివి
+	Word 97–2003	Word 97–2003
+	Word Count	పద గణన
+	Word document	Word పత్రం
+	Word document (*.docx)	Word పత్రం (*.docx)
+	Word forms	Word ఫారమ్‌లు
+	Word Left	పదం ఎడమ
+	Word level	పద స్థాయి
+	Word Right	పదం కుడి
+	Word XML Document (*.xml)	Word XML పత్రం (*.xml)
+	WordArt	WordArt
+	WordArt Styles	WordArt శైలులు
+	Words	పదాలు
+	Words only	పదాలు మాత్రమే
+	Wrap Text	వచనాన్ని చుట్టు
+	Wrap text	వచనాన్ని చుట్టండి
+	Wrap Text Sides	వచనం చుట్టే వైపులు
+	Wrap\nText	వచనాన్ని\nచుట్టు
+	Write & Insert Fields	రాయి & ఫీల్డ్‌లు చొప్పించు
+	Write a reply	ప్రత్యుత్తరం రాయి
+	Write math here with the mouse or a pen.	మౌస్ లేదా పెన్‌తో ఇక్కడ గణితం రాయండి.
+	Writing Style: Grammar	రచనా శైలి: వ్యాకరణం
+	x bar	x బార్
+	Year	సంవత్సరం
+	Yes	అవును
+	Yields	ఇస్తుంది
+	Your changes will be lost if you don't save them.	మీరు సేవ్ చేయకపోతే మీ మార్పులు పోతాయి.
+	Your system doesn't report an animation setting, so animation effects stay on.	మీ సిస్టమ్ యానిమేషన్ సెట్టింగ్‌ను తెలియజేయదు, కాబట్టి యానిమేషన్ ప్రభావాలు ఆన్‌లోనే ఉంటాయి.
+	Your system has animation effects turned off.	మీ సిస్టమ్‌లో యానిమేషన్ ప్రభావాలు ఆఫ్ చేయబడ్డాయి.
+	Your system has animation effects turned on.	మీ సిస్టమ్‌లో యానిమేషన్ ప్రభావాలు ఆన్ చేయబడ్డాయి.
+	Zoom	జూమ్
+	Zoom In	జూమ్ ఇన్
+	Zoom Out	జూమ్ అవుట్
+	Zoom to Page	పేజీకి జూమ్ చేయి
+	Zotero	Zotero
+	Zotero: cancelled	Zotero: రద్దు చేయబడింది
+	Zotero: done	Zotero: పూర్తయింది
+	{cols}×{rows} Table	{cols}×{rows} పట్టిక
+	{contributors} contributors · {commits} commits	{contributors} సహకారులు · {commits} కమిట్‌లు
+	{count} items highlighted	{count} అంశాలు హైలైట్ చేయబడ్డాయి
+	{count} of {total} pages will print	{total}లో {count} పేజీలు ముద్రించబడతాయి
+	{count} paragraphs were changed.	{count} పేరాలు మార్చబడ్డాయి.
+	{count} records; fields: {fields}	{count} రికార్డులు; ఫీల్డ్‌లు: {fields}
+	{fonts} isn't installed on this computer, so this document is shown with {with}. Lines and pages may break differently than with the original font.	{fonts} ఈ కంప్యూటర్‌లో ఇన్‌స్టాల్ కాలేదు, కాబట్టి ఈ పత్రం {with}‌తో చూపబడుతుంది. అసలు ఫాంట్ కంటే పంక్తులు మరియు పేజీలు వేరుగా విరగవచ్చు.
+	{group} settings	{group} సెట్టింగ్‌లు
+	{key}+Click to follow link	లింక్‌ను అనుసరించడానికి {key}+క్లిక్
+	{language} is now the document's default language.	{language} ఇప్పుడు పత్రం యొక్క డిఫాల్ట్ భాష.
+	{name} (Press ENTER to Insert)	{name} (చొప్పించడానికి ENTER నొక్కండి)
+	{name} already exists. Choose Save again to replace it.	{name} ఇప్పటికే ఉంది. దాన్ని భర్తీ చేయడానికి మళ్లీ సేవ్ ఎంచుకోండి.
+	{name} can't be a folder's name.	{name} ఫోల్డర్ పేరు కాకూడదు.
+	{name} is protected with a password.	{name} పాస్‌వర్డ్‌తో రక్షించబడింది.
+	{name} was added. Its macros are under My Add-ins and View › Macros.	{name} జోడించబడింది. దాని మాక్రోలు నా యాడ్-ఇన్‌లు మరియు వీక్షణ › మాక్రోలు క్రింద ఉన్నాయి.
+	{name} wasn't found.	{name} కనుగొనబడలేదు.
+	{n} entries marked.	{n} నమోదులు గుర్తించబడ్డాయి.
+	{n} lines	{n} పంక్తులు
+	{n} of {of} recipients	{of}లో {n} గ్రహీతలు
+	{n} pt	{n} pt
+	{n} records	{n} రికార్డులు
+	{n} revisions	{n} సవరణలు
+	{selected} of {words} words	{words}లో {selected} పదాలు
+	{size} pt	{size} pt
+	{words} words	{words} పదాలు
+	{w} × {h} in	{w} × {h} in
+	{w} × {h} mm	{w} × {h} mm
+	“{text}” ({row}, {series}) isn't a number.	“{text}” ({row}, {series}) సంఖ్య కాదు.
+	← Find	← కనుగొను
+	✓ None	✓ ఏదీ లేదు
+	➕ New comment	➕ కొత్త వ్యాఖ్య
+	📂  Browse…	📂  బ్రౌజ్ చేయి…
+	Add Help Text…	సహాయ వచనాన్ని జోడించు…
+	AutoText entry:	స్వయం వచన నమోదు:
+	Calculate on exit	నిష్క్రమించేటప్పుడు లెక్కించు
+	Calculation	గణన
+	Check Box Form Field	చెక్ బాక్స్ ఫారమ్ ఫీల్డ్
+	Check Box Form Field Options	చెక్ బాక్స్ ఫారమ్ ఫీల్డ్ ఎంపికలు
+	Check box	చెక్ బాక్స్
+	Check box enabled	చెక్ బాక్స్ ప్రారంభించబడింది
+	Check box size:	చెక్ బాక్స్ పరిమాణం:
+	Checked	ఎంచుకోబడింది
+	Current date	ప్రస్తుత తేదీ
+	Current time	ప్రస్తుత సమయం
+	Default value:	డిఫాల్ట్ విలువ:
+	Drop-Down Form Field	డ్రాప్-డౌన్ ఫారమ్ ఫీల్డ్
+	Drop-Down Form Field Options	డ్రాప్-డౌన్ ఫారమ్ ఫీల్డ్ ఎంపికలు
+	Drop-down	డ్రాప్-డౌన్
+	Drop-down enabled	డ్రాప్-డౌన్ ప్రారంభించబడింది
+	Drop-down item:	డ్రాప్-డౌన్ అంశం:
+	Fill In Form Field	నింపే ఫారమ్ ఫీల్డ్
+	Fill-in enabled	నింపడం ప్రారంభించబడింది
+	Form Field	ఫారమ్ ఫీల్డ్
+	Form Field Help Text	ఫారమ్ ఫీల్డ్ సహాయ వచనం
+	Form Field Options	ఫారమ్ ఫీల్డ్ ఎంపికలు
+	Form Field Shading	ఫారమ్ ఫీల్డ్ షేడింగ్
+	Form Field at Selection	ఎంపికలోని ఫారమ్ ఫీల్డ్
+	Help Key (F1)	సహాయ కీ (F1)
+	Insert Form Field	ఫారమ్ ఫీల్డ్‌ను చొప్పించు
+	Items in drop-down list:	డ్రాప్-డౌన్ జాబితాలోని అంశాలు:
+	Legacy Tools	పాత సాధనాలు
+	Maximum length:	గరిష్ఠ పొడవు:
+	Next Form Field	తదుపరి ఫారమ్ ఫీల్డ్
+	Not checked	ఎంచుకోబడలేదు
+	Put the caret on a form field first.	ముందుగా కర్సర్‌ను ఫారమ్ ఫీల్డ్‌పై ఉంచండి.
+	Regular text	సాధారణ వచనము
+	Reset Form Fields	ఫారమ్ ఫీల్డ్‌లను రీసెట్ చేయి
+	Text Form Field	వచన ఫారమ్ ఫీల్డ్
+	Text Form Field Options	వచన ఫారమ్ ఫీల్డ్ ఎంపికలు
+	Type your own:	మీ స్వంతం టైప్ చేయండి:
+	Unlimited	అపరిమితం
+	Protected sections:	రక్షిత విభాగాలు:
+	Section Protection	విభాగ రక్షణ
+	Section {n}	విభాగం {n}
+	Select sections…	విభాగాలను ఎంచుకో…
+	AutoSummarize	స్వయం సారాంశం
+	Create a new document and put the summary there	కొత్త పత్రాన్ని సృష్టించి సారాంశాన్ని అక్కడ ఉంచు
+	Highlight key points	ముఖ్య అంశాలను హైలైట్ చేయి
+	Insert an executive summary or abstract at the top of the document	పత్రం ఎగువన కార్యనిర్వాహక సారాంశం లేదా సంగ్రహాన్ని చొప్పించు
+	Length of summary	సారాంశం పొడవు
+	Percent of original:	అసలు దానిలో శాతం:
+	Summary: {words} of {of} words	సారాంశం: {of}లో {words} పదాలు
+	Type of summary	సారాంశం రకం
+	Update document statistics	పత్ర గణాంకాలను నవీకరించు
+	{n} sentences	{n} వాక్యాలు
+	{n} words or less	{n} పదాలు లేదా తక్కువ
+	At:	వద్ద:
+	Distance from text:	వచనం నుండి దూరం:
+	Format Frame	ఫ్రేమ్‌ను ఫార్మాట్ చేయి
+	Format Frame…	ఫ్రేమ్‌ను ఫార్మాట్ చేయి…
+	Frame	ఫ్రేమ్
+	Frame…	ఫ్రేమ్…
+	Insert Frame	ఫ్రేమ్‌ను చొప్పించు
+	Lock anchor	యాంకర్‌ను లాక్ చేయి
+	Remove Frame	ఫ్రేమ్‌ను తీసివేయి
+	Text wrapping	వచనం చుట్టే విధానం
+	Chinese Conversion	చైనీస్ మార్పిడి
+	Chinese Conversion…	చైనీస్ మార్పిడి…
+	Converted {n} characters	{n} అక్షరాలు మార్చబడ్డాయి
+	Simplified Chinese to Traditional Chinese	సరళీకృత చైనీస్ నుండి సాంప్రదాయ చైనీస్‌కు
+	Simplified to Traditional	సరళీకృతం నుండి సాంప్రదాయానికి
+	Traditional Chinese to Simplified Chinese	సాంప్రదాయ చైనీస్ నుండి సరళీకృత చైనీస్‌కు
+	Traditional to Simplified	సాంప్రదాయం నుండి సరళీకృతానికి
+	Use Taiwan, Hong Kong SAR, and Macao SAR character variants	తైవాన్, హాంగ్‌కాంగ్ SAR మరియు మకావు SAR అక్షర రూపాంతరాలను ఉపయోగించు
+	Asian Layout	ఆసియా లేఅవుట్
+	Fit Text	వచనాన్ని అమర్చండి
+	Fit Text…	వచనాన్ని అమర్చు…
+	Two Lines in One	ఒకదానిలో రెండు పంక్తులు
+	Two Lines in One…	ఒకదానిలో రెండు పంక్తులు…
+	New text width (pt):	కొత్త వచన వెడల్పు (pt):
+	Enclose in brackets	బ్రాకెట్లలో ఉంచు
+	Bracket pair:	బ్రాకెట్ జత:
+	Typography	టైపోగ్రఫీ
+	Character spacing control	అక్షర అంతర నియంత్రణ
+	Don't compress	కుదించవద్దు
+	Compress punctuation only	విరామ చిహ్నాలను మాత్రమే కుదించు
+	Compress punctuation and Japanese kana	విరామ చిహ్నాలు మరియు జపనీస్ కానాను కుదించు
+	First and last characters	మొదటి మరియు చివరి అక్షరాలు
+	Strict	కఠినమైన
+	Cannot start a line:	పంక్తిని ప్రారంభించలేనివి:
+	Cannot end a line:	పంక్తిని ముగించలేనివి:
+	Japanese Find Options	జపనీస్ శోధన ఎంపికలు
+	Sounds like (Japanese)	ఇలా వినిపిస్తుంది (జపనీస్)
+	Match full/half width	పూర్తి/సగం వెడల్పు సరిపోల్చు
+	Match hiragana/katakana	హిరగానా/కటకానా సరిపోల్చు
+	Match small kana	చిన్న కానా సరిపోల్చు
+	Match prolonged sound marks and dashes	దీర్ఘ ధ్వని గుర్తులు మరియు డాష్‌లను సరిపోల్చు
+	Japanese Consistency Checker	జపనీస్ స్థిరత్వ తనిఖీదారు
+	Japanese Consistency Checker…	జపనీస్ స్థిరత్వ తనిఖీదారు…
+	No inconsistent spellings were found.	అస్థిర స్పెల్లింగ్‌లు ఏవీ కనుగొనబడలేదు.
+	Pick the spelling to keep in each group.	ప్రతి సమూహంలో ఉంచాల్సిన స్పెల్లింగ్‌ను ఎంచుకోండి.
+	Bidirectional text	ద్విదిశ వచనం
+	Bidirectional Text	ద్విదిశ వచన సెట్టింగ్
+	Default direction:	డిఫాల్ట్ దిశ:
+	Cursor movement:	కర్సర్ కదలిక:
+	Logical	తార్కిక
+	Visual	దృశ్య
+	Manage Fields	ఫీల్డ్‌లను నిర్వహించు
+	File locations	ఫైల్ స్థానాలు
+	File Locations	ఫైల్ స్థానాల సెట్టింగ్
+	Documents:	పత్రాలు:
+	Pictures:	చిత్రాలు:
+	The system's choice	సిస్టమ్ ఎంపిక
+	Show Repairs	మరమ్మతులను చూపించు
+	No repairs were needed.	ఏ మరమ్మతులు అవసరం లేకపోయాయి.
+	These problems were found and repaired when the document was opened:	పత్రం తెరిచినప్పుడు ఈ సమస్యలు కనుగొనబడి మరమ్మతు చేయబడ్డాయి:
+	An unreadable entry in the file was skipped: {what}	ఫైల్‌లో చదవలేని నమోదు దాటవేయబడింది: {what}
+	An unreadable part was left out: {what}	చదవలేని భాగం వదిలివేయబడింది: {what}
+	Unreadable relationships were ignored: {what}	చదవలేని సంబంధాలు విస్మరించబడ్డాయి: {what}
+	A missing part of an embedded object was left out: {what}	ఎంబెడెడ్ వస్తువు యొక్క తప్పిపోయిన భాగం వదిలివేయబడింది: {what}
+	Copy File	ఫైల్‌ను కాపీ చేయి
+	Find Files	ఫైల్‌లను కనుగొను
+	Letter Wizard	లేఖ విజార్డ్
+	Recipient's name:	గ్రహీత పేరు:
+	Salutation:	సంబోధన:
+	Subject:	విషయం:
+	Complimentary closing:	ముగింపు వందనం:
+	Sender's name:	పంపినవారి పేరు:
+	Job title:	ఉద్యోగ హోదా:
+	Company:	సంస్థ:
+	Enclosures:	జతపరచినవి:
+	Cc:	Cc:
+	Edit Links to Files	ఫైల్‌లకు లింక్‌లను సవరించు
+	Source file	మూల ఫైల్
+	Locked	లాక్ చేయబడింది
+	Change Source	మూలాన్ని మార్చు
+	This document has no links to files.	ఈ పత్రంలో ఫైల్‌లకు లింక్‌లు లేవు.
+	Web options	వెబ్ ఎంపికలు
+	Web Options	వెబ్ ఎంపికల సెట్టింగ్
+	Allow PNG as a graphics format	గ్రాఫిక్స్ ఫార్మాట్‌గా PNG‌ను అనుమతించు
+	Rely on CSS for font formatting	ఫాంట్ ఫార్మాటింగ్ కోసం CSS‌పై ఆధారపడు
+	Rely on VML for displaying graphics in browsers	బ్రౌజర్‌లలో గ్రాఫిక్స్ చూపించడానికి VML‌పై ఆధారపడు
+	Organize supporting files in a folder	సహాయక ఫైల్‌లను ఫోల్డర్‌లో అమర్చు
+	Use long file names whenever possible	వీలైనప్పుడల్లా పొడవైన ఫైల్ పేర్లను ఉపయోగించు
+	Screen size:	స్క్రీన్ పరిమాణం:
+	Pixels per inch:	అంగుళానికి పిక్సెల్‌లు:
+	Hangul Hanja Conversion	హంగుల్ హంజా మార్పిడి
+	Hangul Hanja Conversion…	హంగుల్ హంజా మార్పిడి…
+	Hangul to Hanja	హంగుల్ నుండి హంజాకు
+	Hanja to Hangul	హంజా నుండి హంగుల్‌కు
+	Put the caret in Korean text to choose its Hanja.	దాని హంజాను ఎంచుకోవడానికి కర్సర్‌ను కొరియన్ వచనంలో ఉంచండి.
+	The selection, or the whole document when nothing is selected.	ఎంపిక, లేదా ఏమీ ఎంచుకోనప్పుడు మొత్తం పత్రం.
+	Add frame	ఫ్రేమ్ జోడించు
+	Attributes:	గుణాలు:
+	Border color:	అంచు రంగు:
+	Border width:	అంచు వెడల్పు:
+	Choose how the custom XML editor displays names and removes schema references.	అనుకూల XML ఎడిటర్ పేర్లను ఎలా చూపిస్తుంది మరియు స్కీమా సూచనలను ఎలా తీసివేస్తుందో ఎంచుకోండి.
+	Confirm before removing a schema reference	స్కీమా సూచనను తీసివేయడానికి ముందు నిర్ధారించు
+	Elements:	మూలకాలు:
+	Enter an absolute HTTP(S) or URN schema URI.	సంపూర్ణ HTTP(S) లేదా URN స్కీమా URI‌ను నమోదు చేయండి.
+	Frame URL	ఫ్రేమ్ URL
+	Frame borders:	ఫ్రేమ్ అంచులు:
+	Frame spacing:	ఫ్రేమ్ అంతరం:
+	Frames:	ఫ్రేమ్‌లు:
+	Frameset Properties	ఫ్రేమ్‌సెట్ లక్షణాలు
+	Hide	దాచు
+	Margin height:	మార్జిన్ ఎత్తు:
+	Margin width:	మార్జిన్ వెడల్పు:
+	No resize	పరిమాణం మార్పు లేదు
+	No schema references	స్కీమా సూచనలు లేవు
+	Optional	ఐచ్ఛికం
+	Optional, 0–1000	ఐచ్ఛికం, 0–1000
+	Pixels (0–100)	పిక్సెల్‌లు (0–100)
+	Remove Attribute	గుణాన్ని తీసివేయి
+	Remove schema reference {schema}?	స్కీమా సూచన {schema}‌ను తీసివేయాలా?
+	Rows:	వరుసలు:
+	Schema Library	స్కీమా లైబ్రరీ
+	Schema URI:	స్కీమా URI:
+	Schemas:	స్కీమాలు:
+	Scrolling:	స్క్రోలింగ్:
+	Select a custom XML store with editable datastore properties first.	ముందుగా సవరించదగిన డేటాస్టోర్ లక్షణాలతో అనుకూల XML స్టోర్‌ను ఎంచుకోండి.
+	Select an XML element to add, change, or remove one of its attributes.	దాని గుణాన్ని జోడించడానికి, మార్చడానికి లేదా తీసివేయడానికి XML మూలకాన్ని ఎంచుకోండి.
+	Selected element: {name}	ఎంచుకున్న మూలకం: {name}
+	Set Attribute	గుణాన్ని సెట్ చేయి
+	Show namespace URIs beside XML names	XML పేర్ల పక్కన నేమ్‌స్పేస్ URIలను చూపించు
+	Store: {store}	స్టోర్: {store}
+	This XML store is preserved but cannot be edited here.	ఈ XML స్టోర్ భద్రపరచబడింది కానీ ఇక్కడ సవరించలేము.
+	This document has no custom XML stores.	ఈ పత్రంలో అనుకూల XML స్టోర్‌లు లేవు.
+	This store has no datastore properties part for schema references.	ఈ స్టోర్‌లో స్కీమా సూచనల కోసం డేటాస్టోర్ లక్షణాల భాగం లేదు.
+	This store has no elements available for editing.	ఈ స్టోర్‌లో సవరణ కోసం మూలకాలు లేవు.
+	Value:	విలువ:
+	View and manage schema references associated with custom XML stores.	అనుకూల XML స్టోర్‌లతో అనుబంధించిన స్కీమా సూచనలను చూసి నిర్వహించండి.
+	XML Element Attributes	XML మూలక గుణాలు
+	XML Options	XML ఎంపికలు
+	e.g. 25%,*	ఉదా. 25%,*
+	e.g. 30%,*	ఉదా. 30%,*
+	Web	వెబ్
+	XML	XML
+	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	ఇంటర్‌ఫేస్ ఇంకా {language}‌ను సరిగ్గా గీయలేదు: కలిసే లేదా క్రమం మారే అక్షరాలు, కుడి నుండి ఎడమకు వచనం తప్పుగా కనిపించవచ్చు. అయినా ఉపయోగించాలా?
