@@ -13,6 +13,15 @@
 
 ### ความปลอดภัย
 
+- **`crates/doc`: เพิ่ม media, เดินวัตถุในย่อหน้า และ lookahead ชื่อฟังก์ชันในสมการแบบเชิงเส้น** (รอบที่ 3 ชุดที่ 14; WordCraft `01a75b99`, `3a1c91f2`, `acfc3d50`)
+  - `crates/doc/src/lib.rs`: `Document::add_media` หา media ซ้ำผ่าน `MediaIndex` (แคชส่วนตัว ไม่บันทึกลงไฟล์ ไม่นับใน `==`) แทนการเทียบกับภาพทุกภาพ (เดิมนำเข้าภาพเล็ก 40,000 ภาพเป็นกำลังสอง); ชื่อ `image{n}` ที่สร้างข้ามชื่อที่ถูกใช้แล้วครั้งเดียว
+  - `crates/doc/src/para.rs` และผู้เรียกใน `fields.rs`, `control.rs`, `edit.rs`, `lib.rs`: เพิ่ม `Paragraph::objects_with_offsets` ที่ให้ (offset, object) ในรอบเดียว แทน `object_offsets` + `object_at` ซึ่งนับวัตถุใหม่ทุกครั้ง (กำลังสองกับย่อหน้าที่มี marker หลายหมื่นตัว); ใช้ในการสแกนฟิลด์ (ทุกครั้งที่เปิด .docx), control, bookmark, perm range, `typing_pos`, `past_field_ends` และ marker ที่การลบช่วงเก็บไว้
+  - `crates/doc/src/math_linear.rs`: การมองหาชื่อฟังก์ชัน (`sin`, `arcsin` …) ในสมการแบบเชิงเส้นหยุดที่ความยาวชื่อที่ยาวที่สุดบวกหนึ่ง แทนการสแกนและคัดลอกตัวอักษรที่เหลือทั้งหมดทุกตัว (สมการ 20,000 ตัวอักษรเคยใช้ราว 200 ล้านขั้น)
+  - ปรับจาก WordCraft: Doc4Me มีรายการ Recognized Functions ที่ผู้ใช้กำหนดได้ จึงใช้ความยาวสูงสุดของรายการที่ใช้อยู่ (`max_function_name`) แทนค่าคงที่อย่างเดียว และ run ที่ยาวเกินไม่ถือเป็นชื่อฟังก์ชันเสมอ
+  - ผลต่อผู้ใช้และความเข้ากันได้: ผลเหมือนเดิมสำหรับเอกสารปกติ (ชื่อภาพเดิม ฟิลด์เดิม สมการเดิม); ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `many_distinct_media_add_in_linear_time`, `media_keys_skip_taken_names_once`, `object_walks_are_linear_in_the_paragraph`, `deleting_across_many_lone_control_markers_is_not_quadratic`, `a_long_run_of_letters_parses_in_linear_time` ผ่าน; `cargo test -p doc4me-doc` 151 passed; `cargo clippy -p doc4me-doc --all-targets -- -D warnings` ผ่าน; `cargo check --workspace --all-targets --exclude doc4me-web` ผ่าน; `cargo fmt --all` แล้ว
+  - `handoff.md`: บันทึกผลวัด Windows run 42823797611 (92.2% / 94.1%, ภาษา 95/95) และรายการ commit WordCraft ที่ยังเหลือ
+
 - **DOCX: entry ที่ CRC ผิดถูกนับในงบรวม, ชื่อ part ที่ต่างกันแค่ตัวพิมพ์เป็น part เดียว, comment id ที่ไม่ใช่ตัวเลขไม่เป็นกำลังสอง** (รอบที่ 3 ชุดที่ 13; WordCraft `2337ff75`, `12afc754`, `60a64ace`, `c14e18cf`, ส่วน package ของ `364688a8` และ `932a2e89`)
   - `crates/docx/src/package.rs`: ไบต์ที่ inflate แล้วของ zip entry ถูกนับในงบรวมก่อนตรวจผลการอ่าน entry ที่ CRC ผิด (ตรวจหลัง inflate ครบ) จึง inflate ได้ไม่จำกัดอีกต่อไป
   - `crates/docx/src/package.rs`: `Package` มี index ชื่อตัวพิมพ์เล็ก (`lower`) และ `canonical()`; entry ที่ชื่อต่างกันแค่ตัวพิมพ์ถูกรวมเป็น part เดียว โดยเก็บตัวสะกดที่ relationship อ้างถึง (ถ้าไม่มีใช้ตัวแรกตามลำดับไบต์) และ log เตือนครั้งเดียวต่อ package; `rels()` แปลง target ภายในเป็นตัวสะกดที่เก็บไว้ ภาพที่ถูกอ้างด้วยหลายตัวสะกดจึงถูกเก็บ แคช และเขียนครั้งเดียว (เดิม 64 ตัวสะกดของภาพ 64 KB ได้ media 64 ชุด); `get()` ใช้ index แทนการไล่ทุก part

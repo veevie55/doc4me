@@ -55,6 +55,27 @@ pub fn mentions_function(text: &str) -> bool {
     })
 }
 
+/// Length of the longest of [`FUNCTION_NAMES`].
+const MAX_NAME: usize = {
+    let (mut max, mut i) = (0, 0);
+    while i < FUNCTION_NAMES.len() {
+        if FUNCTION_NAMES[i].len() > max {
+            max = FUNCTION_NAMES[i].len();
+        }
+        i += 1;
+    }
+    max
+};
+
+/// Length of the longest recognized function name in force (the user's list, else the built-in
+/// one): a run of letters longer than it is never a name.
+fn max_function_name() -> usize {
+    FUNCTIONS.with(|c| match &*c.borrow() {
+        Some(names) => names.iter().map(String::len).max().unwrap_or(0),
+        None => MAX_NAME,
+    })
+}
+
 /// Function names whose subscripts go underneath (`lim_(n→∞)`).
 const LIMIT_NAMES: &[&str] = &["lim", "liminf", "limsup", "max", "min", "sup", "inf", "det", "gcd", "Pr"];
 
@@ -447,11 +468,15 @@ impl P {
     fn word(&mut self, stops: &[char]) -> Arg {
         let start = self.i;
         let mut end = start;
-        while self.c.get(end).is_some_and(|c| c.is_ascii_alphabetic()) {
+        // Look no further than the longest name (and one past it, to see the run is longer): a
+        // scan to the end of every run made a long run of letters quadratic (CWE-407).
+        let max_name = max_function_name();
+        while end - start <= max_name && self.c.get(end).is_some_and(char::is_ascii_alphabetic) {
             end += 1;
         }
-        let word: String = self.c.get(start..end).unwrap_or(&[]).iter().collect();
-        if !is_function_name(&word) {
+        let too_long = end - start > max_name;
+        let word: String = if too_long { String::new() } else { self.c.get(start..end).unwrap_or(&[]).iter().collect() };
+        if too_long || !is_function_name(&word) {
             self.i = start + 1;
             return vec![text(self.c.get(start).copied().unwrap_or(' '))];
         }

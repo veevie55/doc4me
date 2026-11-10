@@ -1,6 +1,6 @@
-# Handoff: Doc4Me 1.1.3 · latest completed official readiness **91.3% / 93.2% without 22 deferred** (Windows run [42334133340](https://github.com/veevie55/doc4me/actions/runs/42334133340), measured source `1868cb4`, report commit `ed787f9`, 2026-11-07) · ห้ามออก Release, อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
+# Handoff: Doc4Me 1.1.3 · latest completed official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42823797611](https://github.com/veevie55/doc4me/actions/runs/42823797611), measured source `89bb1a8`, report commit `9e93e8d`, 2026-11-10) · ห้ามออก Release, อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
 
-อัปเดต: 2026-11-07 · fork `veevie55/doc4me` · branch `main`; Windows run 42334133340 วัด source `1868cb4` ครบ 222 เอกสาร และ workflow บันทึก generated report ใน commit `ed787f9` บน `main`. Readiness run 42262955486 ถูกยกเลิกระหว่างดาวน์โหลด; run ทดแทนสำเร็จแล้ว. `manual.tsv` มี 22 deferred หลัง `plat-002` ผ่านจาก run 42262956358. ไม่มีการ publish environment, release หรือ upload package.
+อัปเดต: 2026-11-10 · fork `veevie55/doc4me` · branch `main`; Windows run 42823797611 วัด source `89bb1a8` ครบ 222 เอกสาร และ workflow บันทึก generated report ใน commit `9e93e8d` บน `main`. `manual.tsv` มี 22 deferred. ไม่มีการ publish environment, release หรือ upload package.
 
 ## สถานะปัจจุบัน
 
@@ -9,6 +9,14 @@
 - doc4me แยกจาก WordCraft ที่ `00ed5051`; ตั้งแต่นั้นถึง `1225f561` มี 1,596 commit (1,480 แตะโค้ด). ชุด 56 commit ที่ค้าง (เริ่มที่ `1225f561`) ต้องการ dependency เช่น reference-style links (`62533d21`, #3238) ที่ `79e3610c` เรียกใช้ และยังไม่มีใน doc4me. งานนี้จึงต้อง replay ช่วงกว้างตามลำดับ dependency ไม่ใช่แค่ 56 commit; ยังไม่เริ่มแก้โค้ดชุดนี้ (ทิ้งการแก้ครึ่งทางแล้ว).
 - เกณฑ์ที่เจ้าของยืนยัน: ใช้ readiness **โดยไม่นับ 22 แถว deferred** เป็นเกณฑ์แทน 100% รวม. ยังรายงานตัวเลขรวมและตัวเลขไม่นับ deferred แยกกันเหมือนเดิม. Deferred ยังนับเป็นไม่ผ่านจนกว่าจะมีหลักฐานจากอุปกรณ์หรือบริการจริง ไม่มีหลักฐานดังกล่าวใน `veevie55/doc4me` หรือ `storytold/wordcraft`.
 - ลำดับงานถัดไปที่เจ้าของสั่ง: (1) port WordCraft ตาม dependency แล้ว (2) ทำส่วนที่ไม่ใช่ deferred (ribbon Read Mode 2 รายการ, roundtrip govuk-047/zenodo-018, corpus-pages/breaks, ภาษา) (3) วัดบน Windows แล้วรายงานตัวเลขสองค่า.
+
+### ผลวัด readiness ล่าสุด (2026-11-10)
+
+- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42823797611](https://github.com/veevie55/doc4me/actions/runs/42823797611) (วัด source `89bb1a8`, 222 เอกสาร, report commit `9e93e8d`); ก่อนหน้า 91.3% / 93.2%
+- มิติ: features 97.4% (ribbon 503/503, dialogs 216/228, 12 deferred), file formats 100% (222/222), pagination 60.6% (pages 174/222, breaks 95/222), UI/UX 98.6% (276/280, 4 deferred), stability 100%, performance 100%, **localization 100% (95/95; เดิม 72/95)**, platforms 100%, ecosystem 83.3% (1 deferred), hardware 37.5% (5 deferred)
+- ภาษาครบ 95/95 แล้ว: แค็ตตาล็อกฉบับร่าง AI ครบ 3,034 คีย์ ลงทะเบียน 91 ภาษาใน `LANGUAGES`; 19 ภาษา RTL/อินดิกอยู่ใน `IMPERFECT_RENDERING` (แสดงคำเตือนก่อนใช้) ยังต้องให้เจ้าของภาษาตรวจทาน
+- ส่วนที่ไม่ deferred และยังไม่ 100% เหลือเพียง pagination (ห่าง ~5.9 จุดของคะแนนรวม)
+- Port ความปลอดภัย WordCraft รอบ 3 ต่อแล้วชุด 9–14 (ดู CHANGELOG › ความปลอดภัย); commit ที่ยังไม่ทำต่อจาก `f2352086`: `f2352086 26187afa bec112a4 9b91b64d 48545479 f2debdec a4b1682b 028d413a e00ff04d 1350f62b 560565cd b2734c28 cbe6a9d5 b3da7a4d 96286f0e ef35d79c 729cd0a5 e7668ae5 fa59ed0e b016ecc2` (สคริปต์ 3-way merge อยู่ใน scratchpad ซึ่งหายเมื่อ session จบ ดูวิธีด้านล่าง); ข้ามแล้วเพราะ Doc4Me ไม่มีฟีเจอร์หรือมีอยู่แล้ว: `1225f561 4963e30e c7148d6b bbe1dad1 e541a6f6 b246ea16 68d45318 4c5930da 639964b0 6dc062d1`
 
 ### สรุป readiness (บันทึก 2026-11-09 ก่อนทำงานค้างต่อ; ยังไม่ได้วัดใหม่)
 
