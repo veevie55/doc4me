@@ -873,3 +873,25 @@ fn a_semicolon_in_an_rtf_font_name_round_trips() {
     let long = format!(r"{{\rtf1{{\fonttbl{{\f0 {};}}}}\f0 x\par}}", r"\'3b".repeat(model::MAX_FONT_NAME + 1));
     assert_eq!(spans(&crate::rtf::parse(long.as_bytes()).unwrap())[0].1.font, None);
 }
+
+#[test]
+fn odt_text_s_spaces_have_a_budget_for_the_whole_document() {
+    // Each `<text:s text:c="1000"/>` is a thousand spaces from 25 bytes of XML: a document-wide
+    // budget stops many of them from expanding a small file into gigabytes (WordCraft #3862).
+    let spaces = r#"<text:s text:c="1000"/>"#.repeat(10_000);
+    let xml = format!(
+        r#"<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"><office:body><office:text><text:p>a{spaces}b</text:p></office:text></office:body></office:document-content>"#
+    );
+    let mut z = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+    let o = zip::write::SimpleFileOptions::default();
+    z.start_file("mimetype", o).unwrap();
+    std::io::Write::write_all(&mut z, b"application/vnd.oasis.opendocument.text").unwrap();
+    z.start_file("content.xml", o).unwrap();
+    std::io::Write::write_all(&mut z, xml.as_bytes()).unwrap();
+    let bytes = z.finish().unwrap().into_inner();
+    let doc = import("odt", &bytes).unwrap().unwrap();
+    let text = doc.plain_text(doc4me_doc::StoryRef::Body);
+    assert!(text.starts_with('a') && text.ends_with('b'), "the text around the spaces is kept");
+    assert!(text.len() <= (4 << 20) + 10_000 + 2, "{}", text.len());
+    assert!(text.len() > 4 << 20, "spaces up to the budget are kept");
+}

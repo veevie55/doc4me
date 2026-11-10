@@ -13,6 +13,12 @@
 
 ### ความปลอดภัย
 
+- **งบช่องว่าง `text:s` ของ ODT และงบเซลล์ตาราง Markdown** (รอบที่ 3 ชุดที่ 23; ส่วนหนึ่งของ WordCraft `560565cd`)
+  - `crates/formats/src/odt.rs`: `<text:s text:c="1000"/>` คือช่องว่าง 1,000 ตัวจาก XML 25 ไบต์ เดิมจำกัดเฉพาะต่อ element ทำให้ไฟล์เล็กขยายเป็นหลายกิกะไบต์ได้; ตอนนี้ช่องว่างส่วนเกินทั้งเอกสารไม่เกิน `MAX_EXTRA_SPACES` (4 Mi) และ `text:s` นอกย่อหน้า (ซึ่งถูกทิ้งอยู่แล้ว) ไม่กินงบ
+  - `crates/formats/src/markdown.rs`: ตารางสร้างได้ไม่เกิน `MAX_COLS` (63) คอลัมน์ (ยังตรวจทุกเซลล์ของ header และ delimiter) และไม่เกิน `MAX_ROWS` แถว; ทุกตารางในเอกสารใช้งบเซลล์รวม `MAX_TABLE_CELLS` (2^18) เดิมแถวสั้นถูกเติมให้กว้างเท่า header ก่อนจำกัดใด ๆ ไฟล์เล็กที่มีแถวหนึ่งเซลล์ใต้ header กว้างจึงสร้างเซลล์นับล้าน; แถวที่ถูกตัดยังนับเป็นส่วนของตาราง ข้อความหลังตารางจึงอ่านเหมือนเดิม และ log เตือนเมื่อมีการตัด
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสาร ODT/Markdown ปกติเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `odt_text_s_spaces_have_a_budget_for_the_whole_document`, `table_cells_past_the_document_limits_are_not_built`, `tables_share_one_cell_budget`, `a_wide_table_still_checks_every_header_and_delimiter_cell` ผ่าน; `cargo test -p doc4me-formats` 123 passed; `cargo clippy -p doc4me-formats --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **ลิงก์ใน PDF, ชื่อฟอนต์ใน CSS และใน RTF ไม่ใช้แทรกโค้ดหรือข้อมูลอื่นได้** (รอบที่ 3 ชุดที่ 22; ส่วนหนึ่งของ WordCraft `560565cd`)
   - `crates/pdf/src/lib.rs`: เดิมทุกลิงก์กลายเป็น URI action ใน PDF รวมถึง `javascript:`, `file:`, `data:` และ UNC (`\\host\share`, reader ที่ตามลิงก์จะส่ง credential ของผู้ใช้ไปยังเครื่องนั้น); ตอนนี้เฉพาะ `http`, `https`, `mailto` (`is_web_or_mail_link`) ที่เป็น action ส่วนอื่นเป็นข้อความธรรมดาเหมือน exporter อื่น
   - `crates/formats/src/html.rs`: ชื่อฟอนต์ถูกเขียนเป็น CSS string ที่ escape (`css_font_name`: เครื่องหมายคำพูด `\` `;` `,` และอักขระควบคุมเป็น hex escape) เดิมชื่อที่มี `\` หรือขึ้นบรรทัดใหม่ปิด string แล้วเพิ่ม CSS ของตัวเองได้; ตัวนำเข้าอ่าน CSS escape กลับ (`css_unescape`, รองรับ CR LF/CR/LF/form feed)

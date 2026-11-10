@@ -15,6 +15,7 @@ use doc4me_doc::{Align, Document};
 
 use crate::html::decode_entity;
 use crate::model::{self, Cell, FBlock, FTable, Fmt, Inline, Kind, ListInfo, Para, make_img};
+use doc4me_doc::table::{MAX_COLS, MAX_ROWS};
 
 /// Nesting limit for block containers (quotes, list items) and inline links.
 const MAX_NEST: usize = 32;
@@ -31,12 +32,34 @@ pub fn import(text: &str) -> Document {
 pub fn parse(text: &str) -> model::Flow {
     let text = text.strip_prefix('\u{FEFF}').unwrap_or(text);
     let lines: Vec<String> = text.split('\n').map(|l| expand_tabs(l.trim_end_matches('\r'))).collect();
+    TABLE_CELLS_LEFT.with(|c| c.set(MAX_TABLE_CELLS));
     let mut blocks = parse_blocks(&lines, 0, 0);
     // A leading "Title" from front matter isn't supported; a first-level heading stays a heading.
     if blocks.is_empty() {
         blocks.push(FBlock::Para(Para::default()));
     }
     model::Flow { blocks, meta: Default::default(), frameset: None }
+}
+
+/// Table cells a Markdown document makes in all, header rows included (hostile input). A short
+/// row is padded to its header's width, so a small file of one-cell rows under a wide header
+/// made millions of cells; past this, rows are left out.
+pub(crate) const MAX_TABLE_CELLS: usize = 1 << 18;
+
+thread_local! {
+    /// What is left of [`MAX_TABLE_CELLS`] for the document being parsed.
+    static TABLE_CELLS_LEFT: std::cell::Cell<usize> = const { std::cell::Cell::new(MAX_TABLE_CELLS) };
+}
+
+/// Take `n` cells from the document's table budget; false (and nothing taken) when they don't fit.
+fn take_table_cells(n: usize) -> bool {
+    TABLE_CELLS_LEFT.with(|c| match c.get().checked_sub(n) {
+        Some(left) => {
+            c.set(left);
+            true
+        }
+        None => false,
+    })
 }
 
 /// Leading tabs → spaces (tab stops of 4); the rest of the line is kept.
@@ -382,23 +405,42 @@ fn parse_blocks(lines: &[String], depth: usize, level: u8) -> Vec<FBlock> {
         {
             let head = split_row(t);
             if head.len() == aligns.len() {
+                // Every header and delimiter cell was checked; only the columns a document can
+                // hold are built, and rows (each padded to that width) are held to the
+                // document's cell budget and the row limit. Rows left out still belong to the
+                // table, so the text after it reads as before.
+                let aligns = aligns.get(..aligns.len().min(MAX_COLS)).unwrap_or_default();
                 let mut table = FTable::default();
                 let cell = |s: &str, header: bool, a: Option<Align>| {
                     let p = Para { align: a, inlines: parse_inlines(s, &Fmt::default(), depth), ..Default::default() };
                     Cell { blocks: vec![FBlock::Para(p)], header, ..Default::default() }
                 };
-                table.rows.push(head.iter().zip(&aligns).map(|(s, a)| cell(s, true, *a)).collect());
+                let mut dropped = head.len() > aligns.len();
+                if take_table_cells(aligns.len()) {
+                    table.rows.push(head.iter().zip(aligns).map(|(s, a)| cell(s, true, *a)).collect());
+                } else {
+                    dropped = true;
+                }
                 i += 2;
                 while let Some(l) = lines.get(i) {
                     if is_blank(l) || !l.contains('|') || interrupts(l) {
                         break;
                     }
+                    i += 1;
+                    if table.rows.is_empty() || table.rows.len() >= MAX_ROWS || !take_table_cells(aligns.len()) {
+                        dropped = true;
+                        continue;
+                    }
                     let mut cells = split_row(l);
                     cells.resize(aligns.len(), String::new());
-                    table.rows.push(cells.iter().zip(&aligns).map(|(s, a)| cell(s, false, *a)).collect());
-                    i += 1;
+                    table.rows.push(cells.iter().zip(aligns).map(|(s, a)| cell(s, false, *a)).collect());
                 }
-                out.push(FBlock::Table(table));
+                if dropped {
+                    log::warn!("markdown: table cells past the document's limits were left out");
+                }
+                if !table.rows.is_empty() {
+                    out.push(FBlock::Table(table));
+                }
                 continue;
             }
         }
@@ -1743,5 +1785,56 @@ mod tests {
         // Literal delimiters still take the link of the text before them.
         let s = inl("[a](http://x.org) [b*](http://y.org)");
         assert!(s.iter().any(|i| matches!(i, Inline::Text(t, f) if t == "b*" && f.link.as_deref() == Some("http://y.org"))), "{s:?}");
+    }
+
+    #[test]
+    fn table_cells_past_the_document_limits_are_not_built() {
+        // Every body row was padded to the header's width before any cap.
+        let wide = format!("{}|\n{}|\n|\n| b |\n", "|a".repeat(50_000), "|-".repeat(50_000));
+        let flow = parse(&wide);
+        let FBlock::Table(t) = &flow.blocks[0] else { panic!("expected table") };
+        assert_eq!(t.rows.len(), 3);
+        assert!(t.rows.iter().all(|r| r.len() == MAX_COLS));
+        assert_eq!(t.rows[2][0].text(), "b");
+        // Rows past the limit still belong to the table, so the text after it reads as before.
+        let tall = format!("| a |\n| - |\n{}\nafter\n", "| x |\n".repeat(MAX_ROWS + 10));
+        let flow = parse(&tall);
+        let FBlock::Table(t) = &flow.blocks[0] else { panic!("expected table") };
+        assert_eq!(t.rows.len(), MAX_ROWS);
+        let FBlock::Para(p) = &flow.blocks[1] else { panic!("expected paragraph") };
+        assert_eq!(p.text(), "after");
+        assert_eq!(flow.blocks.len(), 2);
+    }
+
+    #[test]
+    fn tables_share_one_cell_budget() {
+        // A short row is padded to its header's width, so a small file of one-cell rows under wide
+        // headers made millions of cells. Rows past the budget are left out, and their lines make
+        // no paragraphs.
+        let header = |n: usize| format!("|{}|\n|{}|\n", vec![" h "; n].join("|"), vec!["-"; n].join("|"));
+        let fits = MAX_TABLE_CELLS / MAX_COLS;
+        let src = format!("{}{}\nafter\n\n{}| 1 | 2 |\n", header(MAX_COLS), "| x |\n".repeat(fits + 100), header(2));
+        let flow = parse(&src);
+        let tables: Vec<&FTable> = flow.blocks.iter().filter_map(|b| if let FBlock::Table(t) = b { Some(t) } else { None }).collect();
+        let cells: usize = tables.iter().flat_map(|t| &t.rows).map(Vec::len).sum();
+        assert!(cells <= MAX_TABLE_CELLS, "{cells} cells");
+        assert_eq!(tables.iter().map(|t| t.rows.len()).collect::<Vec<_>>(), [fits], "the second table is past the budget");
+        let texts: Vec<String> = flow.blocks.iter().filter_map(|b| if let FBlock::Para(p) = b { Some(p.text()) } else { None }).collect();
+        assert_eq!(texts, ["after"]);
+        // Each document has a budget of its own.
+        let flow = parse(&format!("{}| 1 | 2 |\n", header(2)));
+        let [FBlock::Table(t)] = flow.blocks.as_slice() else { panic!("{:?}", flow.blocks) };
+        assert_eq!(t.rows.len(), 2);
+    }
+
+    #[test]
+    fn a_wide_table_still_checks_every_header_and_delimiter_cell() {
+        // Only the first 63 columns are kept, but every cell is counted and checked.
+        let head = "|a".repeat(100) + "|\n";
+        let delim = |bad: Option<usize>| (0..100).map(|i| if Some(i) == bad { "|x" } else { "|-" }).collect::<String>() + "|\n";
+        let is_table = |md: String| matches!(parse(&md).blocks.first(), Some(FBlock::Table(_)));
+        assert!(is_table(format!("{head}{}| b |\n", delim(None))));
+        assert!(!is_table(format!("{head}{}| b |\n", delim(Some(80)))), "a bad delimiter cell past the kept ones");
+        assert!(!is_table(format!("{}|\n{}| b |\n", "|a".repeat(99), delim(None))), "99 header cells, 100 delimiter cells");
     }
 }

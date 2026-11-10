@@ -959,7 +959,13 @@ struct Body<'a> {
     depth: usize,
     frame: Option<(Option<f32>, Option<f32>, Option<Vec<u8>>, String)>,
     in_desc: bool,
+    /// What is left of [`MAX_EXTRA_SPACES`].
+    spaces_left: usize,
 }
+
+/// Most spaces the document's `text:s` elements add beyond the one each stands for: each says
+/// how many spaces it is, so many small elements would expand a small file into gigabytes.
+const MAX_EXTRA_SPACES: usize = 4 << 20;
 
 impl Body<'_> {
     fn container(&mut self) -> &mut Vec<FBlock> {
@@ -1133,10 +1139,14 @@ impl Body<'_> {
                 }
                 self.fmt.push(f);
             }
-            "s" => {
+            // Outside a paragraph `push_text` drops spaces, so they cost no budget.
+            "s" if self.para.is_some() => {
                 let n = get(a, "text:c").and_then(|v| v.parse::<usize>().ok()).unwrap_or(1).clamp(1, 1000);
-                self.push_text(&" ".repeat(n));
+                let extra = (n - 1).min(self.spaces_left);
+                self.spaces_left -= extra;
+                self.push_text(&" ".repeat(1 + extra));
             }
+            "s" => {}
             "tab" => self.push_text("\t"),
             "line-break" => self.push_text("\n"),
             "bookmark" | "bookmark-start" => {
@@ -1427,6 +1437,7 @@ pub fn parse(bytes: &[u8]) -> Result<Flow, String> {
         depth: 0,
         frame: None,
         in_desc: false,
+        spaces_left: MAX_EXTRA_SPACES,
     };
     events(&content, |ev| match ev {
         Ev::Start(q, a) => {
