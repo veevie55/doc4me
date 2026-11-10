@@ -46,6 +46,21 @@ pub struct LineHit<'a> {
     pub right: f32,
 }
 
+/// Object positions in one layout, keeping each page they appear on for page-hinted lookups.
+/// Built once for a batch of lookups ([`DocLayout::object_index`]); rebuilt when the layout
+/// changes.
+pub struct ObjectIndex {
+    by_pos: HashMap<Pos, Vec<ObjectHit>>,
+}
+
+impl ObjectIndex {
+    /// Like [`DocLayout::object`]: on `page_hint` if it is there, otherwise its first page.
+    pub fn object(&self, pos: &Pos, page_hint: usize) -> Option<&ObjectHit> {
+        let hits = self.by_pos.get(pos)?;
+        hits.binary_search_by_key(&page_hint, |h| h.page).ok().and_then(|i| hits.get(i)).or_else(|| hits.first())
+    }
+}
+
 /// A picture, shape or text box as laid out (see [`Placed::Object`]).
 #[derive(Clone, Debug, PartialEq)]
 pub struct ObjectHit {
@@ -330,6 +345,23 @@ impl DocLayout {
     /// Where the object at `pos` (its U+FFFC) is laid out.
     pub fn object(&self, pos: &Pos, page_hint: usize) -> Option<ObjectHit> {
         self.find_object(page_hint, |o| o.story == pos.story && o.path == pos.path && o.off == pos.off)
+    }
+
+    /// Index objects once for repeated [`Self::object`] lookups, preserving their selection
+    /// order, including objects repeated on several pages (headers or repeated table rows).
+    pub fn object_index(&self) -> ObjectIndex {
+        let mut by_pos: HashMap<Pos, Vec<ObjectHit>> = HashMap::new();
+        for (i, page) in self.pages.iter().enumerate() {
+            for hit in all_objects(page, i) {
+                let pos = Pos { story: hit.story, path: hit.path.clone(), off: hit.off };
+                let hits = by_pos.entry(pos).or_default();
+                // `all_objects` has the same within-page order as `find_object`: first wins.
+                if hits.last().is_none_or(|prev| prev.page != i) {
+                    hits.push(hit);
+                }
+            }
+        }
+        ObjectIndex { by_pos }
     }
 
     /// Where the text box showing story `part` is laid out.

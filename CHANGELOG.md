@@ -13,6 +13,12 @@
 
 ### ความปลอดภัย
 
+- **จัดเส้นเชื่อมใหม่ด้วย index ของวัตถุที่จัดวางแล้ว** (รอบที่ 3 ชุดที่ 20; WordCraft `a4b1682b`)
+  - `crates/layout/src/hit.rs`: เพิ่ม `ObjectIndex` และ `DocLayout::object_index()` ที่ทำ index ตำแหน่งวัตถุครั้งเดียว (เก็บทุกหน้าที่วัตถุปรากฏ เพื่อค้นแบบเจาะจงหน้า) แทน `DocLayout::object` ที่ไล่ทุกหน้าทุกครั้ง
+  - `crates/engine/src/cmd/connectors.rs`: `reroute` ใช้ index นั้นสำหรับทุกปลายเส้นเชื่อม (เดิมเอกสาร 8,000 หน้าที่มีเส้นเชื่อมติดรูปร่างค้นทุกหน้าต่อปลายแต่ละปลาย) และ `scan` ใช้ `objects_with_offsets` เดินวัตถุในย่อหน้ารอบเดียว
+  - ผลต่อผู้ใช้และความเข้ากันได้: เส้นเชื่อมจัดตำแหน่งเหมือนเดิม; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `rerouting_many_pages_does_not_rescan_all_objects_per_connector` ผ่าน; `cargo test -p doc4me-engine -p doc4me-layout` ผ่านทุกชุด; `cargo clippy -p doc4me-engine -p doc4me-layout --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **Print Preview ไม่สร้าง texture เกินขีดจำกัดของ GPU; ช่องใน Page Setup ไม่ขยายเกินความกว้างเมื่อวางค่ายาว** (รอบที่ 3 ชุดที่ 19; ปรับจาก WordCraft `b3da7a4d`, `fa59ed0e`)
   - `crates/ui-egui/src/print_page.rs`: ภาพตัวอย่างหน้าเรนเดอร์ได้ถึง 4 เท่าของความกว้างหน้า ซึ่งเกิน `max_texture_side` ของ GPU บางรุ่นได้ และ texture ที่เกินทำให้ wgpu panic นอก `Session::run`; ตอนนี้ลดสเกลให้ทั้งกว้างและสูงไม่เกินขีดจำกัด (และ `doc4me_render::MAX_SIDE`) และถ้ายังเกินจะไม่แสดง texture แทนการล่ม
   - ปรับจาก WordCraft: `b3da7a4d` แก้ภาพตัวอย่างตอนลากวัตถุ แต่ Doc4Me ใช้ texture ของหน้าที่แคชไว้ (ซึ่งจำกัดขนาดอยู่แล้ว) จึงนำหลักการเดียวกันมาใช้กับ Print Preview ที่ยังไม่จำกัด
