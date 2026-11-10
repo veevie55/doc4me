@@ -13,6 +13,12 @@
 
 ### ความปลอดภัย
 
+- **กฎ Mail Merge เก็บเครื่องหมายคำพูดและ `\` ในข้อความและชื่อฟิลด์** (รอบที่ 3 ชุดที่ 25; ส่วนหนึ่งของ WordCraft `560565cd`)
+  - `crates/engine/src/cmd/mailings.rs`: `mailings.rules` (IF/SKIPIF/NEXTIF) และ `mailings.insertField` เขียนชื่อฟิลด์ด้วย `field_arg` และค่า/ข้อความด้วย `quoted` เดิมเขียนค่าดิบในเครื่องหมายคำพูด ค่าที่มี `"` จึงปิด string แล้วเพิ่มข้อความหรือ switch ของตัวเองได้ และชื่อฟิลด์ที่มี `"` อ่านกลับผิด; ตอนรวมจดหมาย `mergefield_name` และ `condition` อ่านคำด้วย `field_words` (escape แบบเดียวกับ field code) แทนการแยกด้วย `"`
+  - `crates/engine/src/cmd/references.rs`: แยกตัวตัดคำของ `FieldCode::parse` ออกเป็น `field_words` เพื่อใช้ร่วม (พฤติกรรม `FieldCode::parse` เหมือนเดิม)
+  - ผลต่อผู้ใช้และความเข้ากันได้: กฎและฟิลด์ปกติ (ไม่มี `"` หรือ `\`) เขียนเหมือนเดิมทุกตัวอักษร; ไฟล์ .docx เดิม การติดตั้งทับ และภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `rule_texts_keep_their_quotes` ผ่าน; `cargo test -p doc4me-engine` ผ่านทุกชุด (เทสต์ mailings 20 ผ่าน); `cargo clippy -p doc4me-engine --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **Mark Entry ใส่เครื่องหมายคำพูดให้ชื่อ bookmark และความกว้างภาพที่ใหญ่มากไม่ทำให้ขนาดเป็นอนันต์** (รอบที่ 3 ชุดที่ 24; ส่วนหนึ่งของ WordCraft `560565cd`)
   - `crates/engine/src/cmd/index.rs`: `references.markEntry` หา bookmark ด้วยชื่อที่ตัดช่องว่างแล้ว (เดิมเทียบชื่อเดิมแต่เขียนชื่อที่ตัดแล้ว) และเขียนชื่อใน `\r` ผ่าน `field_arg` ชื่อที่มีช่องว่าง เครื่องหมายคำพูด หรือ `\` (ซึ่งไฟล์มีได้) จึงถูกใส่เครื่องหมายคำพูดและ escape แทนการปิด switch หรือเพิ่ม switch ของตัวเอง
   - `crates/engine/src/cmd/references.rs`: เพิ่ม `quoted`/`field_arg` ที่ escape `"` และ `\` ตามที่ `FieldCode::parse` อ่าน

@@ -115,35 +115,7 @@ pub struct FieldCode {
 
 impl FieldCode {
     pub fn parse(instr: &str) -> FieldCode {
-        let mut words: Vec<(String, bool)> = Vec::new();
-        let mut chars = instr.chars().peekable();
-        while let Some(&c) = chars.peek() {
-            if c.is_whitespace() {
-                chars.next();
-            } else if c == '"' {
-                chars.next();
-                let mut w = String::new();
-                while let Some(c) = chars.next() {
-                    match c {
-                        '"' => break,
-                        '\\' if matches!(chars.peek(), Some('"' | '\\')) => w.extend(chars.next()),
-                        c => w.push(c),
-                    }
-                }
-                words.push((w, true));
-            } else {
-                let mut w = String::new();
-                while let Some(&c) = chars.peek() {
-                    if c.is_whitespace() || (c == '"' && !w.is_empty()) {
-                        break;
-                    }
-                    w.push(c);
-                    chars.next();
-                }
-                words.push((w, false));
-            }
-        }
-        let mut words = words.into_iter().peekable();
+        let mut words = field_words(instr).into_iter().peekable();
         let mut f =
             FieldCode { name: words.next().map(|(w, _)| w.trim_start_matches('=').to_ascii_uppercase()).unwrap_or_default(), ..Default::default() };
         while let Some((w, quoted)) = words.next() {
@@ -170,6 +142,40 @@ impl FieldCode {
     pub fn arg(&self, c: char) -> Option<&str> {
         self.switches.iter().find(|(k, _)| *k == c).and_then(|(_, a)| a.as_deref())
     }
+}
+
+/// The words of a field instruction, each with whether it was quoted: quoted text stays whole
+/// (without the quotes; `\"` and `\\` inside it are a quote and a backslash).
+pub fn field_words(instr: &str) -> Vec<(String, bool)> {
+    let mut words: Vec<(String, bool)> = Vec::new();
+    let mut chars = instr.chars().peekable();
+    while let Some(&c) = chars.peek() {
+        if c.is_whitespace() {
+            chars.next();
+        } else if c == '"' {
+            chars.next();
+            let mut w = String::new();
+            while let Some(c) = chars.next() {
+                match c {
+                    '"' => break,
+                    '\\' if matches!(chars.peek(), Some('"' | '\\')) => w.extend(chars.next()),
+                    c => w.push(c),
+                }
+            }
+            words.push((w, true));
+        } else {
+            let mut w = String::new();
+            while let Some(&c) = chars.peek() {
+                if c.is_whitespace() || (c == '"' && !w.is_empty()) {
+                    break;
+                }
+                w.push(c);
+                chars.next();
+            }
+            words.push((w, false));
+        }
+    }
+    words
 }
 
 /// `s` as a quoted field-code argument: `"` and `\` escaped, as [`FieldCode::parse`] reads them.
