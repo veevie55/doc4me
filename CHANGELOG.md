@@ -13,6 +13,14 @@
 
 ### ความปลอดภัย
 
+- **DOCX: entry ที่ CRC ผิดถูกนับในงบรวม, ชื่อ part ที่ต่างกันแค่ตัวพิมพ์เป็น part เดียว, comment id ที่ไม่ใช่ตัวเลขไม่เป็นกำลังสอง** (รอบที่ 3 ชุดที่ 13; WordCraft `2337ff75`, `12afc754`, `60a64ace`, `c14e18cf`, ส่วน package ของ `364688a8` และ `932a2e89`)
+  - `crates/docx/src/package.rs`: ไบต์ที่ inflate แล้วของ zip entry ถูกนับในงบรวมก่อนตรวจผลการอ่าน entry ที่ CRC ผิด (ตรวจหลัง inflate ครบ) จึง inflate ได้ไม่จำกัดอีกต่อไป
+  - `crates/docx/src/package.rs`: `Package` มี index ชื่อตัวพิมพ์เล็ก (`lower`) และ `canonical()`; entry ที่ชื่อต่างกันแค่ตัวพิมพ์ถูกรวมเป็น part เดียว โดยเก็บตัวสะกดที่ relationship อ้างถึง (ถ้าไม่มีใช้ตัวแรกตามลำดับไบต์) และ log เตือนครั้งเดียวต่อ package; `rels()` แปลง target ภายในเป็นตัวสะกดที่เก็บไว้ ภาพที่ถูกอ้างด้วยหลายตัวสะกดจึงถูกเก็บ แคช และเขียนครั้งเดียว (เดิม 64 ตัวสะกดของภาพ 64 KB ได้ media 64 ชุด); `get()` ใช้ index แทนการไล่ทุก part
+  - `crates/docx/src/read/mod.rs`: comment ที่ `w:id` ไม่ใช่ตัวเลขหา id ว่างด้วย set ที่สร้างครั้งเดียว แทนการไล่ id ทั้งหมดทุกครั้ง
+  - ไม่นำมา: `4c5930da` และส่วน font table ของ `364688a8`/`932a2e89` เพราะ Doc4Me ไม่อ่านฟอนต์ฝัง (`w:embedRegular`); `639964b0`, `6dc062d1` และส่วน `scrub_private` ของ `932a2e89` เพราะ Doc4Me ไม่มีการเขียน glossary จาก model และไม่มีตัวเลือกลบข้อมูลส่วนตัวตอนบันทึก
+  - ผลต่อผู้ใช้และความเข้ากันได้: ไฟล์ .docx ปกติ (ชื่อ part ไม่ชนกัน) เปิดและบันทึกเหมือนเดิม; ไฟล์ที่มีชื่อ part ชนกันแค่ตัวพิมพ์จะเก็บ part เดียว; การติดตั้งทับและภาษาไทยไม่ได้รับผลกระทบ
+  - ตรวจสอบ: เทสต์ใหม่ `entries_that_fail_their_check_still_count_against_the_total`, `case_colliding_entries_are_one_part`, `the_spelling_a_relationship_names_is_kept` และ `comments_with_non_numeric_ids_open_in_linear_time` (`crates/docx/tests/malformed.rs`) ผ่าน; `cargo test -p doc4me-docx` ทุกชุดผ่าน; `cargo clippy -p doc4me-docx --all-targets -- -D warnings` ผ่าน; `cargo fmt --all` แล้ว
+
 - **ฟอนต์: จำกัดจำนวน face ต่อไฟล์ก่อนสร้าง และ log ชื่อฟอนต์แบบ escape** (รอบที่ 3 ชุดที่ 12; WordCraft `ce7e4ea2`, `6c632648`)
   - `crates/fonts/src/fontdb.rs`: `enumerate_faces` อ่านไฟล์ได้ไม่เกิน `MAX_FILE_FACES` (256) face ทั้งสมาชิกของ collection (TTC ที่อ้างตารางเดียวกันซ้ำนับล้านครั้ง) และ named instance ของฟอนต์แปรผัน; face ที่ชื่อตระกูลและสไตล์ซ้ำกับตัวก่อนในไฟล์ถูกข้าม; `add_fonts` ตรวจซ้ำด้วย set แทนการเทียบกับทุก face ในฐานข้อมูล; ฟอนต์ที่ผู้ใช้เพิ่มเกิน 256 face ยังถูกปฏิเสธเหมือนเดิม
   - `crates/fonts/src/fontdb/user.rs`: ชื่อไฟล์ฟอนต์ที่ผู้เรียกส่งมาถูก log ด้วย `{:?}` (escape และใส่เครื่องหมายคำพูด) จึงปลอมบรรทัด log ด้วยการขึ้นบรรทัดใหม่ในชื่อไม่ได้
