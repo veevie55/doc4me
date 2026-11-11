@@ -11,6 +11,13 @@
 
 ## [Unreleased]
 
+### แก้ไข
+- **ข้อความในเซลล์ตารางไม่ถูกบังคับให้ตรงกับ document grid เมื่อเอกสารไม่ได้เปิด `w:adjustLineHeightInTable`** (`crates/layout/src/table.rs`: `layout_cell`; `crates/doc/src/lib.rs`: `Settings::adjust_line_height_in_table`; `crates/docx/src/read/mod.rs`: อ่าน `w:adjustLineHeightInTable`)
+  - เหตุผล: เอกสารที่มี `w:docGrid w:type="lines"` เช่น zenodo-103 ทำให้ Doc4Me ปัดความสูงบรรทัดในตารางขึ้นเป็นทวีคูณของระยะ grid (1.5 บรรทัดกลายเป็น 24.45pt ทั้งที่ Word ได้ 18.12pt) ตารางภาคผนวกยาวจึงบวมจาก 29 หน้าของ Word เป็น 36 หน้า ส่วนเอกสารที่เปิด flag นี้ (เช่น zenodo-006, zenodo-087) ยังปัดตาม grid เหมือนเดิม
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ไม่มี document grid หรือไม่มีตารางไม่เปลี่ยน; เอกสาร grid ที่มีตารางแต่ไม่มี flag จะจัดหน้าใกล้ Word ขึ้น; flag ถูกเก็บและเขียนกลับตอนบันทึก .docx (ตรวจรอบ zenodo-006) ไฟล์ .docx เดิมเปิดและบันทึกได้เหมือนเดิม
+  - ตรวจสอบ: เทสต์ใหม่ `table_cells_snap_to_the_grid_only_when_the_document_asks` (flag ปิด: ความสูงตามธรรมชาติ, เปิด: ปัดเข้า grid); วัดคลัง 222 เอกสารบน Linux ก่อนและหลัง: จำนวนหน้าไม่ตรง 45 → 44 (zenodo-103 36 → 29 หน้า ตรง Word), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าไม่ตรงคงเดิม 129; ทั้ง 5 เอกสารที่มี grid (zenodo-006/056/073/087/103) ไม่แย่ลง; `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อจำกัดที่ทราบ: ตัวเลขข้างบนวัดบน Linux (ฟอนต์ต่างจาก Windows) ตัวเลข readiness ทางการต้องวัดบน Windows ใหม่; zenodo-103 ยังมีตำแหน่งตัดหน้าตรง Word 21 จาก 29 หน้า ไม่ถึงเกณฑ์ผ่านของชุด corpus-breaks
+
 ## [1.1.3] - 2026-11-11
 
 ### ความปลอดภัย

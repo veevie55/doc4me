@@ -91,3 +91,40 @@ fn character_grid_places_east_asian_text_on_the_pitch() {
         }
     }
 }
+
+/// Every laid-out line's height in `doc`, in order (the first is the table cell's).
+fn cell_line_heights(doc: &Document) -> Vec<f32> {
+    let l = lay(doc);
+    let mut hs = Vec::new();
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                hs.extend(para.lines[*l0..*l1].iter().map(|line| line.height));
+            }
+        }
+    }
+    hs
+}
+
+#[test]
+fn table_cells_snap_to_the_grid_only_when_the_document_asks() {
+    // `w:adjustLineHeightInTable` off (Word's default): a cell's lines keep their natural height,
+    // as in the reference layout of a grid document whose tables would otherwise swell. On, they
+    // snap to the grid like body text.
+    let mut d = Document::from_text("");
+    let mut t = doc4me_doc::Table::new(1, 1, 200.0);
+    if let Some(cell) = t.rows.get_mut(0).and_then(|r| r.cells.get_mut(0)) {
+        let mut p = doc4me_doc::Paragraph::with_text("cell", doc4me_doc::CharProps::default());
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p.props.line_spacing = Some(LineSpacing::Multiple(1.0));
+        cell.blocks = vec![std::sync::Arc::new(Block::Para(p))];
+    }
+    d.body = vec![std::sync::Arc::new(Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    d.last_section.doc_grid = Some(DocGrid { kind: DocGridType::Lines, line_pitch: 40.0, char_space: 0 });
+    let natural = cell_line_heights(&d);
+    assert!(natural.first().is_some_and(|h| *h < 40.0), "off: the cell's natural height, got {natural:?}");
+    d.settings.adjust_line_height_in_table = true;
+    let snapped = cell_line_heights(&d);
+    assert!(snapped.first().is_some_and(|h| (*h - 40.0).abs() < 0.01), "on: the cell's line takes a grid line, got {snapped:?}");
+}

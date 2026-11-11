@@ -482,6 +482,10 @@ pub struct Settings {
     /// stays with the break.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub split_page_break_mark: bool,
+    /// Text in table cells snaps to the document grid (`w:adjustLineHeightInTable`); otherwise a
+    /// cell's lines keep their own height, as Word lays out such a document.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub adjust_line_height_in_table: bool,
     /// Drawing grid spacing in points, across and down (View › Gridlines); ECMA-376's default is 1/8 inch.
     pub grid_h: f32,
     pub grid_v: f32,
@@ -846,6 +850,7 @@ impl Default for Settings {
             compat_mode: COMPAT_MODE_CURRENT,
             add_para_spacing: false,
             split_page_break_mark: false,
+            adjust_line_height_in_table: false,
             grid_h: DEFAULT_GRID,
             grid_v: DEFAULT_GRID,
             math: None,

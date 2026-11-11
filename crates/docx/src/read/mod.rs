@@ -1046,6 +1046,7 @@ impl Reader<'_> {
                     }
                     s.add_para_spacing = k.children("w:doNotUseHTMLParagraphAutoSpacing").next().is_some_and(on_off);
                     s.split_page_break_mark = k.children("w:splitPgBreakAndParaMark").next().is_some_and(on_off);
+                    s.adjust_line_height_in_table = k.children("w:adjustLineHeightInTable").next().is_some_and(on_off);
                 }
                 "w:trackRevisions" => s.track_changes = on_off(k),
                 "w:defaultTabStop" => {

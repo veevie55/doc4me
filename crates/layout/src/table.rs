@@ -350,6 +350,28 @@ fn layout_cell(
     depth: usize,
 ) -> BoxLayout {
     let n = cell.blocks.len();
+    // A cell's text isn't snapped to the document grid unless the document asks for it
+    // (`w:adjustLineHeightInTable`): Word lays such a document's table rows out at their natural
+    // line heights (zenodo-103: a 36-page layout became Word's 29).
+    let saved_grid = ctx.grid;
+    if !ctx.doc.settings.adjust_line_height_in_table {
+        ctx.grid = crate::para::Grid::default();
+    }
+    let r = layout_cell_in(ctx, story, cell, cpath, cw, text, depth, n);
+    ctx.grid = saved_grid;
+    r
+}
+
+fn layout_cell_in(
+    ctx: &mut Ctx,
+    story: StoryRef,
+    cell: &doc4me_doc::table::Cell,
+    cpath: &[u32],
+    cw: f32,
+    text: Option<&CellText>,
+    depth: usize,
+    n: usize,
+) -> BoxLayout {
     let ignored = cell.props.hide_mark && cell.blocks.last().and_then(|b| b.as_para()).is_some_and(|p| mark_only(ctx, p));
     if !ignored || n == 0 {
         return layout_box(ctx, story, &cell.blocks, cpath, cw, text, depth, None);
