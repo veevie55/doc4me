@@ -12,6 +12,10 @@
 ## [Unreleased]
 
 ### แก้ไข
+- **Helvetica / Arial Nova ใช้ Arial และ Times ใช้ Times New Roman เมื่อเครื่องไม่มีฟอนต์ที่ขอ** (`crates/fonts/src/word.rs`: รายการ `ARIAL`, `TIMES`)
+  - เหตุผล: รายการตัวแทนของ Helvetica/Arial Nova และ Times ไม่มี Arial และ Times New Roman เอง บน Windows ที่มีฟอนต์ Microsoft แต่ไม่มี Liberation จึงตกไปใช้ Source Sans 3 และ Source Serif 4 ซึ่งกว้างกว่า (รายการฟอนต์ที่ต้องแทนจาก run 42987830938 บน Windows: govuk-006, govuk-020, govuk-060, zenodo-156 "Times=Source Serif 4"; govuk-052, govuk-054, govuk-072, zenodo-006, zenodo-012, zenodo-017, zenodo-068 "Helvetica=Source Sans 3"; zenodo-081 "Arial Nova=Source Sans 3") ขณะที่ PDF อ้างอิงของ Word ใช้ Times/Helvetica จริง ซึ่งกว้างเท่า Times New Roman/Arial
+  - ผลต่อผู้ใช้และความเข้ากันได้: บน Windows เอกสารที่ขอ Helvetica, Arial Nova หรือ Times จะแสดงด้วย Arial/Times New Roman ตามที่ Word ทำ บน Linux ยังใช้ Liberation (ตัวเทียบขนาด) เหมือนเดิม ไฟล์เอกสารไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `helvetica_and_times_try_the_windows_fonts_with_their_widths_first`; `cargo test -p doc4me-fonts` ผ่าน 71 รายการ; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลต่อตัวเลข readiness ต้องวัดบน Windows (Linux ไม่เปลี่ยนเพราะมี Liberation)
 - **ฟอนต์ธีม `majorBidi` / `minorBidi` / `majorEastAsia` / `minorEastAsia` ใช้ฟอนต์ complex script และ East Asian ของธีม ไม่ใช่ฟอนต์ Latin** (`crates/docx/src/read/props.rs`: `theme_font`, `ThemeFontSet`, `apply_theme_languages`; `crates/docx/src/read/mod.rs`: `read_theme`, `read_theme_languages`)
   - เหตุผล: เดิม `theme_font` ดูแค่คำนำหน้า major/minor แล้วคืนฟอนต์ Latin ของธีมทุกกรณี ตาม ECMA-376 §17.18.96 `majorBidi` คือฟอนต์ `a:cs` ของธีม และถ้าว่างให้ใช้ฟอนต์รายสคริปต์ (`a:font script="Arab"` ฯลฯ) ของสคริปต์ตามภาษาใน `w:themeFontLang` (`w:bidi`, `w:eastAsia`) เช่น zenodo-114 ใช้ `w:asciiTheme="majorBidi"` กับธีมที่ `a:cs` ว่างและ ar-SA → Arab → Times New Roman ซึ่ง Word วาดเป็น Times New Roman แต่ Doc4Me วาดเป็น Calibri Light
   - พฤติกรรม: อ่าน `a:cs`, `a:ea` และ `a:font script=…` ของ `a:majorFont`/`a:minorFont` (ไม่เกิน 64 รายการ, ชื่อไม่เกิน 255 ไบต์) และอ่าน `w:themeFontLang` ก่อนสไตล์; ถ้าธีมไม่ให้ฟอนต์สำหรับสคริปต์นั้น ยังใช้ฟอนต์ Latin เหมือนเดิม

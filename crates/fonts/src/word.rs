@@ -29,8 +29,13 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     const SANS: &[&str] = &["Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
     const SERIF: &[&str] = &["Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     const MONO: &[&str] = &["Courier New", "Liberation Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "JetBrains Mono"];
-    const ARIAL: &[&str] = &["Liberation Sans", "Helvetica", "Helvetica Neue", "Arimo", "Source Sans 3"];
-    const TIMES: &[&str] = &["Liberation Serif", "Times", "Tinos", "Source Serif 4"];
+    // Arial itself first: Helvetica and Arial Nova asked for on Windows, where Arial is installed
+    // and they aren't, are set in Arial (Arial was drawn to Helvetica's widths), as Word does;
+    // without it they fell through to Source Sans 3, a wider face (corpus govuk-052, zenodo-068).
+    const ARIAL: &[&str] = &["Arial", "Liberation Sans", "Helvetica", "Helvetica Neue", "Arimo", "Source Sans 3"];
+    // Times New Roman first for the same reason: "Times" (a Mac font) has its widths, and on
+    // Windows fell through to Source Serif 4 (corpus govuk-006, govuk-020).
+    const TIMES: &[&str] = &["Times New Roman", "Liberation Serif", "Times", "Tinos", "Source Serif 4"];
     const SYMBOL: &[&str] = &["Apple Symbols", "Segoe UI Symbol", "DejaVu Sans", "Noto Sans Symbols", "Source Sans 3"];
     // Verdana: DejaVu Sans (Bitstream Vera's design) sets English text 1.2% narrower in regular
     // and 0.2% wider in bold, and breaks 60% / 74% of lines at the same word (measured against
@@ -648,6 +653,21 @@ mod tests {
         assert_eq!(em("Wingdings"), (0.8989, 0.2109));
         assert_eq!(em("Segoe UI Symbol"), (1.0791, 0.251));
         assert_eq!(em("MS Gothic"), (0.8594, 0.1406));
+    }
+
+    #[test]
+    fn helvetica_and_times_try_the_windows_fonts_with_their_widths_first() {
+        // On Windows, where Arial and Times New Roman are installed and Helvetica, Arial Nova and
+        // Times aren't, Word sets them in Arial and Times New Roman.
+        for f in ["Helvetica", "helvetica", "Arial Nova"] {
+            assert_eq!(substitutes(f).first(), Some(&"Arial"), "{f}");
+        }
+        for f in ["Times", "times"] {
+            assert_eq!(substitutes(f).first(), Some(&"Times New Roman"), "{f}");
+        }
+        // The open metric-compatible faces come right after, for machines without Microsoft's.
+        assert_eq!(substitutes("Helvetica").get(1), Some(&"Liberation Sans"));
+        assert_eq!(substitutes("Times").get(1), Some(&"Liberation Serif"));
     }
 
     #[test]
