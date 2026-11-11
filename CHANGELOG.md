@@ -11,6 +11,14 @@
 
 ## [Unreleased]
 
+### เพิ่ม
+- **ฝังฟอนต์เทียบขนาดของฟอนต์หลักใน Word (OFL 1.1) ในรุ่นเดสก์ท็อป: Carlito (Calibri), Caladea (Cambria), Arimo (Arial), Tinos (Times New Roman), Cousine (Courier New) ครบ 4 แบบ (ปกติ/หนา/เอียง/หนาเอียง)** (`assets/fonts/{Carlito,Caladea,Arimo,Tinos,Cousine}-*.ttf`, `assets/fonts/OFL-*.txt`, `crates/fonts/src/fontdb.rs`: `DESKTOP_BUNDLED`; `crates/fonts/src/word.rs`: "Source Sans Pro" → Source Sans 3 ที่ฝังอยู่แล้ว; `ATTRIBUTION.md`)
+  - เหตุผล: เจ้าของโครงการสั่งให้ฝังฟอนต์ที่ไม่ติดลิขสิทธิ์ เพื่อให้เอกสารที่ใช้ฟอนต์ Microsoft แสดงและตัดบรรทัดเท่า Word บนเครื่องที่ไม่มีฟอนต์เหล่านั้น (macOS, Linux ที่ติดตั้งน้อย) ฟอนต์ Microsoft เองแจกจ่ายต่อไม่ได้ จึงใช้ตัวเทียบขนาดที่มีลิขสิทธิ์เปิด
+  - ลิขสิทธิ์: ทุกไฟล์ใช้ SIL Open Font License 1.1 (แจกจ่ายร่วมกับซอฟต์แวร์ได้ ห้ามขายตัวฟอนต์แยก) และ `fsType=0` (ติดตั้ง/ฝังได้ไม่จำกัด) ดาวน์โหลดจาก google/fonts และ googlefonts/Arimo ไม่แก้ไข พร้อมไฟล์ `OFL-*.txt` และรายการ SHA-256 ใน `ATTRIBUTION.md`
+  - พฤติกรรม: ใช้เฉพาะเมื่อเครื่องไม่มีฟอนต์ที่ขอและไม่มีฟอนต์ระบบที่ชื่อนั้น บน Windows ที่มี Calibri/Cambria/Arial ฯลฯ ยังใช้ฟอนต์จริง ไม่ฝังในรุ่นเว็บ (งบขนาด) ตัวโปรแกรมเดสก์ท็อปใหญ่ขึ้นราว 9 MB
+  - ทดลองแล้วไม่ใส่ (มีหลักฐาน): variable font รุ่นปัจจุบันของ Gelasio, Overpass, Open Sans, Roboto, Archivo และ League Spartan ทำให้คลังบน Linux แย่ลง (จำนวนหน้าไม่ตรง 42 → 45: zenodo-033, zenodo-067, zenodo-129 ไม่ผ่านใหม่; zenodo-022 21 → 27 และ zenodo-069 26 → 34 หน้า) เพราะ Word ของผู้เขียนมักไม่มีฟอนต์เหล่านั้นเช่นกัน หรือมีรุ่นที่ขนาดต่างกัน และ Gelasio รุ่นใหม่ไม่เทียบขนาดกับ Georgia แล้ว
+  - ตรวจสอบ: เทสต์ใหม่ `desktop_bundles_the_metric_compatible_stand_ins`; `cargo xtask assets` ผ่าน (ทุกไฟล์มีรายการใน ATTRIBUTION.md); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร (เครื่องมีฟอนต์เหล่านี้อยู่แล้ว); `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบหนึ่งเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนาน แต่ผ่านเมื่อรันเดี่ยว 3 รอบและผ่านในรอบเต็มถัดไป)
+
 ### แก้ไข
 - **Helvetica / Arial Nova ใช้ Arial และ Times ใช้ Times New Roman เมื่อเครื่องไม่มีฟอนต์ที่ขอ** (`crates/fonts/src/word.rs`: รายการ `ARIAL`, `TIMES`)
   - เหตุผล: รายการตัวแทนของ Helvetica/Arial Nova และ Times ไม่มี Arial และ Times New Roman เอง บน Windows ที่มีฟอนต์ Microsoft แต่ไม่มี Liberation จึงตกไปใช้ Source Sans 3 และ Source Serif 4 ซึ่งกว้างกว่า (รายการฟอนต์ที่ต้องแทนจาก run 42987830938 บน Windows: govuk-006, govuk-020, govuk-060, zenodo-156 "Times=Source Serif 4"; govuk-052, govuk-054, govuk-072, zenodo-006, zenodo-012, zenodo-017, zenodo-068 "Helvetica=Source Sans 3"; zenodo-081 "Arial Nova=Source Sans 3") ขณะที่ PDF อ้างอิงของ Word ใช้ Times/Helvetica จริง ซึ่งกว้างเท่า Times New Roman/Arial

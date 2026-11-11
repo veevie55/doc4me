@@ -44,6 +44,7 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     const VERDANA: &[&str] = &["DejaVu Sans", "Bitstream Vera Sans", "Inter", "Source Sans 3"];
     // Georgia: Gelasio is made metric-compatible with it; the bundled Source Serif 4 sets English
     // text 0.1% wider and breaks 54% of lines at the same word (Caladea: 8.5% narrower, 1%).
+    const SOURCE_SANS: &[&str] = &["Source Sans 3", "Arial", "Liberation Sans"];
     const GEORGIA: &[&str] = &["Gelasio", "Source Serif 4", "Caladea", "Liberation Serif", "Noto Serif"];
     // Persian / Arabic document fonts. Naskh (book) faces such as B Nazanin, B Lotus, B Zar and
     // Traditional Arabic, then the sans faces (B Yekan, B Titr, IRANSans) people use for
@@ -100,6 +101,8 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "courier new" | "courier" | "consolas" | "lucida console" | "cascadia code" | "cascadia mono" => MONO,
         "symbol" | "wingdings" | "segoe ui symbol" | "webdings" => SYMBOL,
         "verdana" => VERDANA,
+        // Source Sans 3's earlier name (the bundled face is the same design, renamed in 2021).
+        "source sans pro" | "source sans pro light" | "source sans pro semibold" => SOURCE_SANS,
         "georgia" => GEORGIA,
         "cambria"
         | "cambria math"

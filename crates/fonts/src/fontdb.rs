@@ -62,6 +62,39 @@ static BUNDLED: &[&[u8]] = &[
     include_bytes!("../../../assets/fonts/IntosDisplay-BoldItalic.ttf"),
 ];
 
+/// More bundled fonts (OFL), on the desktop only (the web build keeps to its size budget):
+/// metric-compatible stand-ins for Word's core fonts, so documents keep Word's line and page
+/// breaks where those aren't installed: Carlito (Calibri), Caladea (Cambria), Arimo (Arial),
+/// Tinos (Times New Roman) and Cousine (Courier New). Each is drawn only when the system hasn't
+/// the family itself. Families documents merely name (Overpass, Open Sans, Roboto…) and today's
+/// variable Gelasio are left out: measured on the corpus, they moved pages away from Word's, whose
+/// author often hadn't the font either, or had a version with other metrics.
+#[cfg(not(target_arch = "wasm32"))]
+static DESKTOP_BUNDLED: &[&[u8]] = &[
+    include_bytes!("../../../assets/fonts/Carlito-Regular.ttf"),
+    include_bytes!("../../../assets/fonts/Carlito-Bold.ttf"),
+    include_bytes!("../../../assets/fonts/Carlito-Italic.ttf"),
+    include_bytes!("../../../assets/fonts/Carlito-BoldItalic.ttf"),
+    include_bytes!("../../../assets/fonts/Caladea-Regular.ttf"),
+    include_bytes!("../../../assets/fonts/Caladea-Bold.ttf"),
+    include_bytes!("../../../assets/fonts/Caladea-Italic.ttf"),
+    include_bytes!("../../../assets/fonts/Caladea-BoldItalic.ttf"),
+    include_bytes!("../../../assets/fonts/Arimo-Regular.ttf"),
+    include_bytes!("../../../assets/fonts/Arimo-Bold.ttf"),
+    include_bytes!("../../../assets/fonts/Arimo-Italic.ttf"),
+    include_bytes!("../../../assets/fonts/Arimo-BoldItalic.ttf"),
+    include_bytes!("../../../assets/fonts/Tinos-Regular.ttf"),
+    include_bytes!("../../../assets/fonts/Tinos-Bold.ttf"),
+    include_bytes!("../../../assets/fonts/Tinos-Italic.ttf"),
+    include_bytes!("../../../assets/fonts/Tinos-BoldItalic.ttf"),
+    include_bytes!("../../../assets/fonts/Cousine-Regular.ttf"),
+    include_bytes!("../../../assets/fonts/Cousine-Bold.ttf"),
+    include_bytes!("../../../assets/fonts/Cousine-Italic.ttf"),
+    include_bytes!("../../../assets/fonts/Cousine-BoldItalic.ttf"),
+];
+#[cfg(target_arch = "wasm32")]
+static DESKTOP_BUNDLED: &[&[u8]] = &[];
+
 #[derive(Clone)]
 enum FontBytes {
     Static(&'static [u8]),
@@ -909,7 +942,7 @@ impl FontDb {
     pub fn with_font_dirs(font_dirs: Vec<std::path::PathBuf>) -> Self {
         let mut faces = Vec::new();
         let craft = crate::japanese_document_fonts().into_iter().chain(crate::chinese_fonts()).map(|f| f.bytes);
-        for data in BUNDLED.iter().copied().chain(craft) {
+        for data in BUNDLED.iter().chain(DESKTOP_BUNDLED).copied().chain(craft) {
             for f in enumerate_faces(data, MAX_FILE_FACES) {
                 if let Some(mut face) = make_face(FontBytes::Static(data), f.index, f.family, f.style, f.legacy, f.coords) {
                     face.local_names = f.local;
@@ -1727,6 +1760,23 @@ mod tests_sysfonts;
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    #[cfg(not(target_arch = "wasm32"))]
+    fn desktop_bundles_the_metric_compatible_stand_ins() {
+        // Every family, with its four RIBBI faces where the files are static, loads from the
+        // bundled bytes: no system font is needed for any of them.
+        let db = FontDb::with_font_dirs(Vec::new());
+        for family in ["Carlito", "Caladea", "Arimo", "Tinos", "Cousine"] {
+            assert!(db.is_loaded(family), "{family} is bundled");
+        }
+        for family in ["Carlito", "Caladea", "Arimo", "Tinos", "Cousine"] {
+            for style in ["Regular", "Bold", "Italic", "Bold Italic"] {
+                let f = db.face(family, style);
+                assert_eq!((f.family.as_str(), f.style.as_str()), (family, style), "{family} {style}");
+            }
+        }
+    }
 
     #[test]
     #[cfg(all(unix, not(target_os = "macos"), not(target_arch = "wasm32")))]
