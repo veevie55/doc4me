@@ -11,6 +11,12 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง
+- **Font › Advanced › Spacing มีปุ่มลูกศร ▲▼ ปรับช่อง By ทีละ 0.5 pt** (`crates/ui-egui/src/dialogs.rs`: `step_spacing_by`)
+  - เหตุผล: ช่อง Spacing ของ Word เลือก Normal / Expanded / Condensed แล้วใส่ค่า By ระหว่าง 0–1584 pt พร้อมลูกศรปรับทีละ 0.5 pt ส่วนของ Doc4Me มีรายการเลือกและช่อง By 0–1584 pt อยู่แล้ว แต่ปรับได้ด้วยการลากเท่านั้น และ `format.spacing` จำกัดช่วง ±1584 pt เท่าตัวอ่าน DOCX อยู่แล้ว (เดิม ±100)
+  - ผลต่อผู้ใช้และความเข้ากันได้: ลูกศรใช้ได้เมื่อเลือก Expanded หรือ Condensed เท่านั้น ค่าอยู่ในช่วง 0–1584 pt เสมอ เอกสารเดิมและไฟล์ .docx ไม่เปลี่ยน; ไม่เพิ่มข้อความที่ต้องแปล (ลูกศรไม่มีคำอธิบาย hover)
+  - ตรวจสอบ: เทสต์ `font_spacing_is_normal_expanded_or_condensed_up_to_1584_pt` ขยายให้ตรวจการก้าว 0.5 pt, ขอบล่าง 0 และขอบบน 1584 และค่าที่ไม่ใช่ตัวเลข; `cargo xtask ci` ผ่านครบ 6 ขั้น, `cargo audit` ไม่พบช่องโหว่
+
 ### แก้ไข
 - **ข้อความในเซลล์ตารางไม่ถูกบังคับให้ตรงกับ document grid เมื่อเอกสารไม่ได้เปิด `w:adjustLineHeightInTable`** (`crates/layout/src/table.rs`: `layout_cell`; `crates/doc/src/lib.rs`: `Settings::adjust_line_height_in_table`; `crates/docx/src/read/mod.rs`: อ่าน `w:adjustLineHeightInTable`)
   - เหตุผล: เอกสารที่มี `w:docGrid w:type="lines"` เช่น zenodo-103 ทำให้ Doc4Me ปัดความสูงบรรทัดในตารางขึ้นเป็นทวีคูณของระยะ grid (1.5 บรรทัดกลายเป็น 24.45pt ทั้งที่ Word ได้ 18.12pt) ตารางภาคผนวกยาวจึงบวมจาก 29 หน้าของ Word เป็น 36 หน้า ส่วนเอกสารที่เปิด flag นี้ (เช่น zenodo-006, zenodo-087) ยังปัดตาม grid เหมือนเดิม
