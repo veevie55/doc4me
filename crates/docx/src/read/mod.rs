@@ -186,6 +186,7 @@ pub(crate) fn read_opened(pkg: &Package) -> Result<Document, DocxError> {
     // Styles come before settings, but their theme colours already follow its colour mapping.
     if let Some(p) = part(rt::SETTINGS) {
         r.read_color_mapping(&p);
+        r.read_theme_languages(&p);
     }
     if let Some(p) = part(rt::STYLES) {
         lenient("styles", &p, r.read_styles(&p));
@@ -691,6 +692,23 @@ impl Reader<'_> {
             self.doc.settings.theme_colors = colors;
         }
         if let Some(fs) = el.child("a:fontScheme") {
+            // Complex-script and East Asian typefaces, and the per-script fonts, for
+            // `majorBidi`/`majorEastAsia` (picked once the theme language is known).
+            for (i, n) in ["a:majorFont", "a:minorFont"].iter().enumerate() {
+                let Some(f) = fs.child(n) else { continue };
+                let tf = |c: &str| {
+                    f.child(c).and_then(|x| x.attr("typeface")).map(str::trim).filter(|t| !t.is_empty() && t.len() < 256).unwrap_or("").to_string()
+                };
+                let scripts = f
+                    .children("a:font")
+                    .take(64)
+                    .filter_map(|x| {
+                        let (s, t) = (x.attr("script")?.trim(), x.attr("typeface")?.trim());
+                        (!s.is_empty() && s.len() <= 8 && !t.is_empty() && t.len() < 256).then(|| (s.to_string(), t.to_string()))
+                    })
+                    .collect();
+                self.pc.theme_sets[i] = props::ThemeFontSet { cs: tf("a:cs"), ea: tf("a:ea"), scripts };
+            }
             let face =
                 |n: &str| fs.child(n).and_then(|f| f.child("a:latin")).and_then(|l| l.attr("typeface")).filter(|t| !t.is_empty()).map(str::to_string);
             if let Some(f) = face("a:majorFont") {
@@ -744,6 +762,16 @@ impl Reader<'_> {
             }
         }
         self.pc.color_map = Some(map);
+    }
+
+    /// `w:themeFontLang`: the languages whose scripts pick the theme's complex-script and East
+    /// Asian fonts (read before the styles, which name theme fonts).
+    fn read_theme_languages(&mut self, path: &str) {
+        let Ok(Some(root)) = self.xml(path) else { return };
+        let lang = root.child("w:themeFontLang");
+        let bidi = lang.and_then(|l| l.attr("w:bidi")).map(str::to_string);
+        let ea = lang.and_then(|l| l.attr("w:eastAsia")).map(str::to_string);
+        self.pc.apply_theme_languages(bidi.as_deref(), ea.as_deref());
     }
 
     fn read_styles(&mut self, path: &str) -> Result<(), DocxError> {

@@ -21,6 +21,15 @@ use crate::xml::El;
 pub struct PropCtx {
     pub major_font: String,
     pub minor_font: String,
+    /// The theme's fonts for complex-script (`majorBidi`, `minorBidi`) and East Asian
+    /// (`majorEastAsia`, `minorEastAsia`) text: its `a:cs` / `a:ea` typeface, else its font for the
+    /// script of the document's theme language (`w:themeFontLang`); empty when neither is given.
+    pub major_bidi: String,
+    pub minor_bidi: String,
+    pub major_ea: String,
+    pub minor_ea: String,
+    /// The theme's major and minor font sets as read, until the theme language picks from them.
+    pub theme_sets: [ThemeFontSet; 2],
     /// The theme's colour scheme (dk1, lt1, dk2, lt2, accent1..6, hlink, folHlink); empty when the
     /// package has none, and then `w:themeColor` falls back to the fixed colour.
     pub theme_colors: Vec<Rgb>,
@@ -33,14 +42,89 @@ pub struct PropCtx {
     pub theme: Vec<Rgb>,
 }
 
+/// A theme font set (`a:majorFont` or `a:minorFont`): its complex-script and East Asian
+/// typefaces and its per-script fonts (`a:font script="Arab" typeface="Times New Roman"`).
+#[derive(Default, Clone, Debug)]
+pub struct ThemeFontSet {
+    pub cs: String,
+    pub ea: String,
+    pub scripts: Vec<(String, String)>,
+}
+
+impl ThemeFontSet {
+    /// `direct` when the theme gives one, else the font for `script`, else nothing.
+    fn pick(&self, direct: &str, script: Option<&str>) -> String {
+        if !direct.is_empty() {
+            return direct.to_string();
+        }
+        script.and_then(|s| self.scripts.iter().find(|(k, _)| k == s)).map(|(_, f)| f.clone()).unwrap_or_default()
+    }
+}
+
+/// The ISO 15924 script a theme's per-script font list uses for a language tag.
+fn script_for_language(lang: &str) -> Option<&'static str> {
+    let lower = lang.trim().to_ascii_lowercase();
+    let primary = lower.split(['-', '_']).next().unwrap_or("");
+    Some(match primary {
+        "ar" | "fa" | "ur" | "ps" | "sd" | "ug" | "ku" | "prs" => "Arab",
+        "he" | "yi" => "Hebr",
+        "th" => "Thai",
+        "syr" => "Syrc",
+        "dv" => "Thaa",
+        "hi" | "mr" | "ne" | "sa" | "kok" => "Deva",
+        "bn" | "as" => "Beng",
+        "gu" => "Gujr",
+        "pa" => "Guru",
+        "or" => "Orya",
+        "ta" => "Taml",
+        "te" => "Telu",
+        "kn" => "Knda",
+        "ml" => "Mlym",
+        "si" => "Sinh",
+        "km" => "Khmr",
+        "lo" => "Laoo",
+        "bo" => "Tibt",
+        "am" | "ti" => "Ethi",
+        "my" => "Mymr",
+        "ja" => "Jpan",
+        "ko" => "Hang",
+        "zh" if lower.contains("hant") || lower.ends_with("-tw") || lower.ends_with("-hk") || lower.ends_with("-mo") => "Hant",
+        "zh" => "Hans",
+        _ => return None,
+    })
+}
+
 impl PropCtx {
     pub fn style_id(&self, id: &str) -> String {
         self.alias.get(id).cloned().unwrap_or_else(|| id.to_string())
     }
 
+    /// The font a theme font name stands for (ECMA-376 §17.18.96 ST_Theme): `majorAscii` and
+    /// `majorHAnsi` the theme's major Latin font, `majorBidi` its complex-script font and
+    /// `majorEastAsia` its East Asian font (minor likewise). A complex-script or East Asian theme
+    /// font the theme doesn't give falls back to the Latin one, as before these were read.
     fn theme_font(&self, t: &str) -> Option<String> {
-        let f = if t.starts_with("major") { &self.major_font } else { &self.minor_font };
+        let major = t.starts_with("major");
+        let latin = if major { &self.major_font } else { &self.minor_font };
+        let script = match t {
+            "majorBidi" => &self.major_bidi,
+            "minorBidi" => &self.minor_bidi,
+            "majorEastAsia" => &self.major_ea,
+            "minorEastAsia" => &self.minor_ea,
+            _ => latin,
+        };
+        let f = if script.is_empty() { latin } else { script };
         (!f.is_empty()).then(|| f.clone())
+    }
+
+    /// Pick the complex-script and East Asian theme fonts for the theme languages `bidi` and
+    /// `east_asia` (`w:themeFontLang`'s `w:bidi` and `w:eastAsia`, BCP 47).
+    pub fn apply_theme_languages(&mut self, bidi: Option<&str>, east_asia: Option<&str>) {
+        let [major, minor] = &self.theme_sets;
+        self.major_bidi = major.pick(&major.cs, bidi.and_then(script_for_language));
+        self.minor_bidi = minor.pick(&minor.cs, bidi.and_then(script_for_language));
+        self.major_ea = major.pick(&major.ea, east_asia.and_then(script_for_language));
+        self.minor_ea = minor.pick(&minor.ea, east_asia.and_then(script_for_language));
     }
 
     /// The theme colour `e` names in `attr` (`w:themeColor`, `w:themeFill`), through the colour

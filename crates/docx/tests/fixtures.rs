@@ -1660,3 +1660,35 @@ fn bookmark_end_name_and_id_trim() {
         .collect();
     assert_eq!(names, vec![("start", "section_intro".into()), ("end", "section_intro".into()), ("end", "standalone_target".into())]);
 }
+
+/// `majorBidi` and `minorEastAsia` name the theme's complex-script and East Asian fonts, not its
+/// Latin ones: the `a:cs` / `a:ea` typeface, else the font the theme gives the script of the
+/// document's theme language (`w:themeFontLang`), as Word draws zenodo-114's quotation in Times
+/// New Roman (its theme's Arabic font) where the Latin major font is Calibri Light.
+#[test]
+fn bidi_and_east_asian_theme_fonts_follow_the_theme_language() {
+    let theme = r#"<a:theme xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" name="T"><a:themeElements><a:fontScheme name="T"><a:majorFont><a:latin typeface="Major Latin"/><a:ea typeface=""/><a:cs typeface=""/><a:font script="Jpan" typeface="Major Japanese"/><a:font script="Arab" typeface="Major Arabic"/><a:font script="Hebr" typeface="Major Hebrew"/></a:majorFont><a:minorFont><a:latin typeface="Minor Latin"/><a:ea typeface="Minor EA"/><a:cs typeface="Minor CS"/><a:font script="Arab" typeface="Minor Arabic"/></a:minorFont></a:fontScheme></a:themeElements></a:theme>"#;
+    let styles =
+        format!(r#"<w:styles {W_NS}><w:style w:type="paragraph" w:default="1" w:styleId="Normal"><w:name w:val="Normal"/></w:style></w:styles>"#);
+    let body = r#"<w:p><w:r><w:rPr><w:rFonts w:asciiTheme="majorBidi" w:hAnsiTheme="majorBidi"/></w:rPr><w:t>a</w:t></w:r><w:r><w:rPr><w:rFonts w:asciiTheme="minorBidi"/></w:rPr><w:t>b</w:t></w:r><w:r><w:rPr><w:rFonts w:asciiTheme="majorEastAsia"/></w:rPr><w:t>c</w:t></w:r><w:r><w:rPr><w:rFonts w:asciiTheme="majorHAnsi"/></w:rPr><w:t>d</w:t></w:r><w:r><w:rPr><w:rFonts w:asciiTheme="minorEastAsia"/></w:rPr><w:t>e</w:t></w:r></w:p>"#;
+    let fonts = |settings: &str| {
+        let settings = format!(r#"<w:settings {W_NS}>{settings}</w:settings>"#);
+        let rels = [("rId1", "styles", "styles.xml"), ("rId2", "theme", "theme/theme1.xml"), ("rId3", "settings", "settings.xml")];
+        let d = doc4me_docx::read(&docx(
+            body,
+            &rels,
+            &[("word/styles.xml", styles.as_str()), ("word/theme/theme1.xml", theme), ("word/settings.xml", settings.as_str())],
+        ))
+        .unwrap();
+        let p = d.para(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().clone();
+        (0..5).map(|i| p.props_of_char(i).font.clone().unwrap_or_default()).collect::<Vec<_>>()
+    };
+    // Arabic and Japanese theme languages: the per-script fonts where the theme gives no typeface.
+    assert_eq!(
+        fonts(r#"<w:themeFontLang w:val="en-US" w:eastAsia="ja-JP" w:bidi="ar-SA"/>"#),
+        ["Major Arabic", "Minor CS", "Major Japanese", "Major Latin", "Minor EA"]
+    );
+    assert_eq!(fonts(r#"<w:themeFontLang w:val="en-US" w:bidi="he-IL"/>"#)[0], "Major Hebrew");
+    // No theme language and no typeface: the Latin font, as before.
+    assert_eq!(fonts(""), ["Major Latin", "Minor CS", "Major Latin", "Major Latin", "Minor EA"]);
+}

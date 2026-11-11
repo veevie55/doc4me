@@ -11,6 +11,14 @@
 
 ## [Unreleased]
 
+### แก้ไข
+- **ฟอนต์ธีม `majorBidi` / `minorBidi` / `majorEastAsia` / `minorEastAsia` ใช้ฟอนต์ complex script และ East Asian ของธีม ไม่ใช่ฟอนต์ Latin** (`crates/docx/src/read/props.rs`: `theme_font`, `ThemeFontSet`, `apply_theme_languages`; `crates/docx/src/read/mod.rs`: `read_theme`, `read_theme_languages`)
+  - เหตุผล: เดิม `theme_font` ดูแค่คำนำหน้า major/minor แล้วคืนฟอนต์ Latin ของธีมทุกกรณี ตาม ECMA-376 §17.18.96 `majorBidi` คือฟอนต์ `a:cs` ของธีม และถ้าว่างให้ใช้ฟอนต์รายสคริปต์ (`a:font script="Arab"` ฯลฯ) ของสคริปต์ตามภาษาใน `w:themeFontLang` (`w:bidi`, `w:eastAsia`) เช่น zenodo-114 ใช้ `w:asciiTheme="majorBidi"` กับธีมที่ `a:cs` ว่างและ ar-SA → Arab → Times New Roman ซึ่ง Word วาดเป็น Times New Roman แต่ Doc4Me วาดเป็น Calibri Light
+  - พฤติกรรม: อ่าน `a:cs`, `a:ea` และ `a:font script=…` ของ `a:majorFont`/`a:minorFont` (ไม่เกิน 64 รายการ, ชื่อไม่เกิน 255 ไบต์) และอ่าน `w:themeFontLang` ก่อนสไตล์; ถ้าธีมไม่ให้ฟอนต์สำหรับสคริปต์นั้น ยังใช้ฟอนต์ Latin เหมือนเดิม
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ใช้ฟอนต์ธีม Bidi/East Asian กับข้อความ Latin จะแสดงด้วยฟอนต์ที่ Word ใช้ ไม่กระทบเอกสารที่ใช้ `majorHAnsi`/`minorHAnsi`; การบันทึก .docx ไม่เปลี่ยน (เขียนชื่อฟอนต์ที่อ่านได้เหมือนการอ่านฟอนต์ธีมแบบเดิม)
+  - ตรวจสอบ: เทสต์ใหม่ `bidi_and_east_asian_theme_fonts_follow_the_theme_language` (ภาษา Arabic/Japanese/Hebrew, typeface ตรงของธีม และกรณีไม่มีภาษาธีม); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 44 → 42 (zenodo-030 และ zenodo-161 ผ่าน, zenodo-114 81 → 75 หน้า เทียบ Word 71), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าคงเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อจำกัดที่ทราบ: `w:cstheme` และ `w:eastAsiaTheme` (ฟอนต์ของข้อความ complex script/East Asian เอง) ยังไม่ถูกอ่าน; zenodo-083 เปลี่ยนจาก 32 เป็น 30 หน้า (Word 31) ยังไม่ผ่านเหมือนเดิม
+
 ### เพิ่ม
 - **`cargo xtask readiness --diagnostics` พิมพ์ฟอนต์ที่ต้องแทนของเอกสารที่ไม่ผ่าน** (`xtask/src/readiness.rs`: `font_diagnostics`)
   - เหตุผล: เพื่อแยกหน้าที่ต่างจาก Word เพราะเครื่องวัดไม่มีฟอนต์ที่เอกสารขอ ออกจากหน้าที่ต่างเพราะกฎจัดหน้า บนเครื่อง Windows ที่ใช้วัดทางการ (ซึ่งมีฟอนต์ Microsoft แท้ แต่ไม่มีฟอนต์ที่มากับ Office หรือฟอนต์ cloud)
