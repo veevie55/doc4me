@@ -1,12 +1,12 @@
-# Handoff: Doc4Me 1.1.3 (re-released 2026-11-11 from the latest code) · latest official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42941045723](https://github.com/veevie55/doc4me/actions/runs/42941045723), measured source `ec23a59`, report commit `6871537`) · ห้ามออก Release ถัดไป อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
+# Handoff: Doc4Me 1.1.3 (re-released 2026-11-11 from the latest code) · latest official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42961322752](https://github.com/veevie55/doc4me/actions/runs/42961322752), measured source `9abf2d6`, report commit `1df7aae`) · ห้ามออก Release ถัดไป อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
 
 อัปเดต: 2026-11-11 · fork `veevie55/doc4me` · branch `main`; ผู้ใช้สั่ง "ตรวจ readiness อีกครั้งแล้วลบเวอร์ชั่น 1.1.3 ทิ้งและออกเวอร์ชั่น 1.1.3 ใหม่ตามสถานะโค้ดล่าสุด" — ผู้ใช้ลบ Release/tag v1.1.3 รุ่นแรก (2026-11-10, สร้างที่ `d19a836`) เอง เพราะ session นี้ลบไม่ได้ (API 403) แล้วออก v1.1.3 ใหม่จากโค้ดล่าสุด; v1.1.3 เป็น Release เดียวใน fork (v1.0.0–v1.1.2 เดิมไม่มีแล้ว); CHANGELOG `[1.1.3]` รวมงานหลัง `d19a836` (ตารางซ้อน 18 ชั้น, control/MCP กันทิ้งงานที่ยังไม่บันทึก, Undo ใช้ style sheet ร่วม, AccessKit focus guard)
 
 ## สถานะปัจจุบัน (2026-11-11, ออก v1.1.3 ใหม่)
 
 ### Readiness
-- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42941045723](https://github.com/veevie55/doc4me/actions/runs/42941045723) (วัด source `ec23a59` ซึ่งรวมงาน port ล่าสุดทั้งหมด, 222 เอกสาร, report commit `6871537`); เท่ากับ run 42836913553 (source `1352238`) และ run 42823797611 ก่อนหน้าทุกมิติ จึงไม่ถดถอย
-- มิติ: features 97.4% (ribbon 503/503, dialogs 216/228, 12 deferred), file formats 100% (222/222), pagination 60.6% (pages 174/222, boundaries 95/222), UI/UX 98.6% (276/280, 4 deferred), stability 100%, performance 100%, localization 100% (95/95), platforms 100% (5/5), ecosystem 83.3% (1 deferred), hardware 37.5% (5 deferred)
+- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42961322752](https://github.com/veevie55/doc4me/actions/runs/42961322752) (วัด source `9abf2d6` ซึ่งรวมงาน port ล่าสุดทั้งหมด, 222 เอกสาร, report commit `1df7aae`); เทียบ run 42836913553 (source `1352238`) แล้วดีขึ้นเฉพาะจำนวนหน้า 174 → 175 (zenodo-103 ตรง Word หลังหยุดปัดข้อความในตารางเข้า document grid เมื่อไม่มี `w:adjustLineHeightInTable`) ที่เหลือเท่าเดิม ไม่มีมิติใดถดถอย
+- มิติ: features 97.4% (ribbon 503/503, dialogs 216/228, 12 deferred), file formats 100% (222/222), pagination 60.8% (pages 175/222, boundaries 95/222), UI/UX 98.6% (276/280, 4 deferred), stability 100%, performance 100%, localization 100% (95/95), platforms 100% (5/5), ecosystem 83.3% (1 deferred), hardware 37.5% (5 deferred)
 - ส่วนที่ไม่ deferred และยังไม่ 100% มีเพียง pagination (ห่าง 5.9 จุดของคะแนนรวม); deferred 22 แถวยังนับไม่ผ่านจนมีหลักฐานจากอุปกรณ์/บริการจริง
 
 ### ภาษา
@@ -20,7 +20,11 @@
 - วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
 
 ### งานถัดไป
-1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred) — วิเคราะห์บน Windows เพราะ Linux ไม่มีฟอนต์ Windows หลายตัว
+1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred; ต้องผ่านจำนวนหน้า 222/222 และตำแหน่งตัดหน้า 222/222 ตอนนี้ 175 และ 95)
+   - วิธีวิเคราะห์บน Linux (ใช้ได้จริง: เอกสารที่ไม่ผ่านบน Linux 34 จาก 45 ตรงกับ Windows เป๊ะ): `cargo xtask readiness --download` แล้ว `cargo xtask readiness --corpus --diagnostics --dry-run --jobs 4 --cli <target/release/doc4me-cli ที่เพิ่ง build>` (ถ้าไม่ใส่ `--cli` จะใช้ `target/release` เดิมซึ่งอาจเก่า); เทียบแต่ละหน้าด้วย `pdftotext -bbox` และ `doc4me-cli convert`
+   - แก้แล้ว: zenodo-103 (ตารางในเอกสารที่มี `w:docGrid type=lines` แต่ไม่มี `w:adjustLineHeightInTable` ไม่ปัดเข้า grid)
+   - พบแล้วว่าแก้ที่ layout ไม่ได้: zenodo-149 (41 เทียบ 28 หน้า) เพราะ PDF อ้างอิงของ Word ใช้ฟอนต์แทน Calibri ที่แคบกว่า Carlito ราว 15% (Calibri Light/Arial Nova Cond ฝังอยู่ในไฟล์) ตัวเลข 100% ของมิตินี้จึงอาจไปไม่ถึงโดยไม่มีฟอนต์ตรงกัน
+   - ตัวถัดไปที่น่าตรวจ: zenodo-114 (81 เทียบ 71), zenodo-049 (52 เทียบ 43 บน Linux, 46 บน Windows), zenodo-104 (25 เทียบ 29 น้อยกว่า Word), govuk-026 (4 เทียบ 7)
 2. replay commit WordCraft ช่วงที่เหลือตามลำดับ dependency (ดูบันทึกสำรวจ 2026-11-09 ด้านล่าง; รายการที่ค้างเฉพาะเจาะจงของรอบนี้ทำครบแล้ว)
 3. ให้เจ้าของภาษาตรวจทาน 26 แค็ตตาล็อกฉบับร่าง AI; รองรับ shaping/RTL ใน UI
 

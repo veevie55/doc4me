@@ -3,7 +3,7 @@
 Reviewed 2026-11-07. The owner explicitly resumed all deferred work. The 22 rows remain
 incomplete until implementation and the stated verification succeed. Original TSV notes that
 say “skip until asked” describe the scheduling history, not the current blocker. No row is
-marked passing by this plan. The last official measurement remains Windows run 42941045723.
+marked passing by this plan. The last official measurement remains Windows run 42961322752.
 
 ## Dialogs (12)
 

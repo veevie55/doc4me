@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42941045723 on `ec23a59`, report commit `6871537`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42961322752 on `9abf2d6`, report commit `1df7aae`: 92.2% / 94.1% without 22 deferred; pagination 175/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -73,8 +73,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **92.2%** in the latest official Windows report (run 42941045723, source
-`ec23a59`, report commit `6871537`; ribbon 503/503, dialogs 216/228, pages 174/222, boundaries
+2026-10-25 report, and **92.2%** in the latest official Windows report (run 42961322752, source
+`9abf2d6`, report commit `1df7aae`; ribbon 503/503, dialogs 216/228, pages 175/222, boundaries
 95/222, languages 95/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222),
 7.8 points short of 100% overall. That report says 94.1% without its 22 deferred rows, 5.9 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
@@ -117,14 +117,14 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 42941045723 passes stability (222/222 corpus; 5/5 hand checks),
+Windows measurement 42961322752 passes stability (222/222 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (174/222 page-count and 95/222
+the remaining measured area without deferred rows is pagination (175/222 page-count and 95/222
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
 Earlier work fixed contextual trailing spacing between paragraphs in table cells. The latest official
-Windows report is 174/222 page-count passes and 95/222 boundary passes; the trial section-marker
+Windows report is 175/222 page-count passes and 95/222 boundary passes; the trial section-marker
 change was reverted after a corpus boundary regression. Deferred work is now active under the owner's 2026-11-07 request;
 [the completion plan](readiness/deferred-plan.md) lists the remaining implementation and verification prerequisites.
 Some rows can only pass
@@ -153,7 +153,7 @@ languages, screen-reader access.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
-| 2026-11-11 | minor | Windows run 42941045723 measured `ec23a59`; report commit `6871537`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95, unchanged from run 42836913553. v1.1.3 was deleted and released again from the latest code, adding nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets and the AccessKit focus guard. Headline numbers refreshed (503/503 catalog, 729 commands, 2,477 tests, 233,179 lines of Rust). |
+| 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 measured `ed4284d`; generated report commit `29e6672` records 91.3% / 93.2% without 22 deferred rows, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 and shortcuts 276/280; platforms pass 5/5. Pagination is one page-count and one boundary pass below the previous report. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95 and shortcuts 276/280. A later report supersedes these values. |

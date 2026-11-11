@@ -23,7 +23,7 @@ this page is the local copy of the decision.
 
 ## In Doc4Me
 
-- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab.
+- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab. The About tab names the developer (Chatrawichai Chanprom, veevie55); it has no source code link.
 
 ## Credit yourself
 
