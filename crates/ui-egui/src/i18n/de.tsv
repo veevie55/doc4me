@@ -75,6 +75,7 @@
 	AutoSave failed: {error}. Save the document to turn AutoSave back on.	AutoSpeichern fehlgeschlagen: {error}. Speichern Sie das Dokument, um AutoSpeichern wieder zu aktivieren.
 	Balloons	Sprechblasen
 	Bottom Margin	Unterer Rand
+	Chatrawichai Chanprom (veevie55)	Chatrawichai Chanprom (veevie55)
 	Click a border between two cells to merge them. Esc stops.	Klicken Sie auf eine Rahmenlinie zwischen zwei Zellen, um sie zu verbinden. Esc beendet.
 	Bullet	Aufzählungszeichen
 	By author	Nach Autor
@@ -741,7 +742,6 @@
 	Small caps	Kapitälchen
 	SmartArt	SmartArt
 	Sort	Sortieren
-	Source code: github.com/chatraweechai/doc4me	Quellcode: github.com/chatraweechai/doc4me
 	Space	Leerzeichen
 	Space before/after:	Abstand vor/nach:
 	Spacing	Abstand
