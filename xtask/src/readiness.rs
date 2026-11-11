@@ -147,6 +147,13 @@ pub fn run(root: &Path, args: &[&str]) -> Result<(), String> {
         if !failures.is_empty() {
             println!("Full corpus failures (set<TAB>document<TAB>reason):\n{failures}");
         }
+        // The fonts each failing document asks for that this machine hasn't got, and what draws
+        // them: tells a page that differs because of a missing font from one that differs
+        // because of layout.
+        let fonts = font_diagnostics(&sets, &cli, &corpus_dir, &root.join("target/readiness/fonts"));
+        if !fonts.is_empty() {
+            println!("Fonts substituted in failing documents (fonts<TAB>document<TAB>requested=substitute, …):\n{fonts}");
+        }
     }
     if opts.write {
         let out = root.join("docs/readiness.md");
@@ -858,6 +865,44 @@ fn full_diagnostics(sets: &[SetResult]) -> String {
         .join("\n")
 }
 
+/// For each document a corpus check failed on, `doc4me-cli`'s `file.fontSubstitution` (the
+/// requested families this machine lacks and the faces drawn instead), one tab-separated row per
+/// document. Documents whose fonts are all installed get no row.
+fn font_diagnostics(sets: &[SetResult], cli: &Path, corpus_dir: &Path, work: &Path) -> String {
+    if std::fs::create_dir_all(work).is_err() {
+        return String::new();
+    }
+    let ids: std::collections::BTreeSet<&str> =
+        sets.iter().filter(|s| s.name.starts_with("corpus-")).flat_map(|s| s.failing.iter().map(|(id, _)| id.as_str())).collect();
+    let mut rows = Vec::new();
+    for id in ids {
+        // Corpus IDs are manifest names (letters, digits, hyphens); anything else isn't a file here.
+        if !id.chars().all(|c| c.is_ascii_alphanumeric() || c == '-') {
+            continue;
+        }
+        let docx = corpus_dir.join(format!("{id}.docx"));
+        let docx = docx.to_string_lossy();
+        let Outcome::Ok(out) =
+            run_step(cli_cmd(cli, &["run", "--file", &docx, "--cmd", "file.fontSubstitution={}", "--print"]), work, id, STEP_TIMEOUT)
+        else {
+            continue;
+        };
+        let Some((_, json)) = out.split_once(':') else { continue };
+        let Ok(v) = serde_json::from_str::<serde_json::Value>(json.trim()) else { continue };
+        let pairs: Vec<String> = v
+            .get("fonts")
+            .and_then(serde_json::Value::as_array)
+            .into_iter()
+            .flatten()
+            .filter_map(|f| Some(format!("{}={}", f.get("font")?.as_str()?, f.get("substitute")?.as_str()?)))
+            .collect();
+        if !pairs.is_empty() {
+            rows.push(format!("fonts\t{id}\t{}", pairs.join(", ")));
+        }
+    }
+    rows.join("\n")
+}
+
 fn commit(root: &Path) -> String {
     let out = Command::new("git").current_dir(root).args(["rev-parse", "--short", "HEAD"]).output();
     let hash = out.map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string()).unwrap_or_default();
@@ -929,6 +974,40 @@ mod tests {
         assert!(report.contains("corpus-pages\tdoc-000\tpage count differs"));
         assert!(report.contains("corpus-pages\tdoc-041\tpage count differs"));
         assert!(!report.contains("dlg-1"));
+    }
+
+    #[test]
+    fn font_diagnostics_list_missing_fonts_of_failing_documents_only() {
+        let dir = std::env::temp_dir().join(format!("xtask-fonts-{}", std::process::id()));
+        let _ = std::fs::create_dir_all(&dir);
+        // A stand-in CLI that answers as `doc4me-cli run … --print` does for every document.
+        #[cfg(unix)]
+        let cli = {
+            use std::os::unix::fs::PermissionsExt;
+            let cli = dir.join("cli.sh");
+            std::fs::write(
+                &cli,
+                "#!/bin/sh\necho 'file.fontSubstitution: {\"converted\":0,\"fonts\":[{\"font\":\"Arial Narrow\",\"substitute\":\"Carlito\"}]}'\n",
+            )
+            .unwrap();
+            std::fs::set_permissions(&cli, std::fs::Permissions::from_mode(0o755)).unwrap();
+            cli
+        };
+        #[cfg(not(unix))]
+        let cli = dir.join("missing-cli.exe");
+        let mut pages = SetResult::new("corpus-pages");
+        pages.fail("doc-1", "page count differs");
+        pages.fail("../escape", "not a manifest name");
+        let mut breaks = SetResult::new("corpus-breaks");
+        breaks.fail("doc-1", "page count differs");
+        let mut dialogs = SetResult::new("dialogs");
+        dialogs.fail("dlg-1", "missing dialog");
+        let report = font_diagnostics(&[pages, breaks, dialogs], &cli, &dir, &dir.join("work"));
+        #[cfg(unix)]
+        assert_eq!(report, "fonts\tdoc-1\tArial Narrow=Carlito", "one row per failing document, names only from the manifest");
+        #[cfg(not(unix))]
+        assert_eq!(report, "", "no CLI, no rows");
+        let _ = std::fs::remove_dir_all(&dir);
     }
 
     #[test]

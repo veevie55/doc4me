@@ -11,6 +11,13 @@
 
 ## [Unreleased]
 
+### เพิ่ม
+- **`cargo xtask readiness --diagnostics` พิมพ์ฟอนต์ที่ต้องแทนของเอกสารที่ไม่ผ่าน** (`xtask/src/readiness.rs`: `font_diagnostics`)
+  - เหตุผล: เพื่อแยกหน้าที่ต่างจาก Word เพราะเครื่องวัดไม่มีฟอนต์ที่เอกสารขอ ออกจากหน้าที่ต่างเพราะกฎจัดหน้า บนเครื่อง Windows ที่ใช้วัดทางการ (ซึ่งมีฟอนต์ Microsoft แท้ แต่ไม่มีฟอนต์ที่มากับ Office หรือฟอนต์ cloud)
+  - พฤติกรรม: ต่อท้ายรายการ "Full corpus failures" ด้วยแถว `fonts<TAB>เอกสาร<TAB>ฟอนต์ที่ขอ=ฟอนต์ที่ใช้แทน, …` จาก `doc4me-cli run --cmd file.fontSubstitution={}` ของเอกสารที่ไม่ผ่านแต่ละฉบับ (เฉพาะชื่อจาก manifest, จำกัดเวลาเท่าขั้นอื่น) ไม่เปลี่ยนรายงาน `docs/readiness.md` หรือตัวเลข readiness
+  - ตรวจสอบ: เทสต์ใหม่ `font_diagnostics_list_missing_fonts_of_failing_documents_only`; `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อค้นพบระหว่างทาง (ไม่ได้แก้โค้ด): ลองให้ฟอนต์ที่มีตัวเทียบขนาด (Aptos → Intos) ใช้ตัวเทียบก่อนชื่อสำรอง `w:altName` ในตารางฟอนต์ แต่ PDF ของ Word ใน zenodo-168 วาดด้วย Arial ซึ่งเป็นชื่อสำรอง (Word ที่สร้าง PDF ไม่มี Aptos) จึงยกเลิก พฤติกรรมเดิมที่ใช้ `w:altName` เมื่อไม่มีฟอนต์ตรงกับ Word แล้ว
+
 ## [1.1.3] - 2026-11-11
 
 ### ความปลอดภัย
