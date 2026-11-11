@@ -1,41 +1,42 @@
-# Handoff: Doc4Me 1.1.3 (released 2026-11-11 from `7422790`) · `main` มีงานหลังรุ่นนี้ที่ยังไม่ออกรุ่น · readiness ล่าสุด **92.6% / 94.5% without 22 deferred** (Windows run [43011248444](https://github.com/veevie55/doc4me/actions/runs/43011248444), source `426ecad`) · ห้ามออก Release ถัดไปจนกว่าผู้ใช้จะสั่ง
+# Handoff: Doc4Me 1.1.3 (ออกใหม่ 2026-11-11 จาก `552a0b6`) · readiness ล่าสุด **92.7% / 94.5% without 22 deferred** (Windows run [43051188273](https://github.com/veevie55/doc4me/actions/runs/43051188273), source `bd2d2d6`, คลัง 220 เอกสาร) · ห้ามออก Release ถัดไปจนกว่าผู้ใช้จะสั่ง
 
-อัปเดต: 2026-11-11 · fork `veevie55/doc4me` · branch `main`; ผู้ใช้สั่ง "ตรวจ readiness อีกครั้งแล้วลบเวอร์ชั่น 1.1.3 ทิ้งและออกเวอร์ชั่น 1.1.3 ใหม่ตามสถานะโค้ดล่าสุด" — ผู้ใช้ลบ Release/tag v1.1.3 รุ่นแรก (2026-11-10, สร้างที่ `d19a836`) เอง เพราะ session นี้ลบไม่ได้ (API 403) แล้วออก v1.1.3 ใหม่จากโค้ดล่าสุด; v1.1.3 เป็น Release เดียวใน fork (v1.0.0–v1.1.2 เดิมไม่มีแล้ว); CHANGELOG `[1.1.3]` รวมงานหลัง `d19a836` (ตารางซ้อน 18 ชั้น, control/MCP กันทิ้งงานที่ยังไม่บันทึก, Undo ใช้ style sheet ร่วม, AccessKit focus guard)
+อัปเดต: 2026-11-11 · fork `veevie55/doc4me` · branch `main`; คำสั่งล่าสุดของผู้ใช้: "ตั้ง zenodo-104 และ govuk-003 (PDF อ้างอิงไม่ตรงกับไฟล์ .docx) เป็น excluded ตรวจ readiness อีกครั้ง แก้ไขเนื้อหาทุกไฟล์ตามโค้ดล่าสุด ออกเวอร์ชัน 1.1.3 ใหม่จากโค้ดล่าสุด บันทึก handoff และยุติการทำงานทั้งหมด" — ทำครบแล้ว และยุติงานทั้งหมด
 
-## ยุติงานตามคำสั่งผู้ใช้ (2026-11-11): สถานะล่าสุดสำหรับ session ถัดไป
+## ยุติงานตามคำสั่งผู้ใช้ (2026-11-11, รอบสุดท้าย): สถานะสำหรับ session ถัดไป
 
-ผู้ใช้สั่ง "บันทึก handoff และยุติงานที่ทำทั้งหมด" หลังรายงานว่าเป้า 100% (ไม่นับ deferred) ไปไม่ถึงด้วยการแก้โค้ดอย่างเดียว ไม่มีงานรันค้าง, working tree สะอาด, ทุกอย่าง push เข้า `main` แล้ว
+ไม่มีงานรันค้าง, working tree สะอาด, ทุกอย่าง push เข้า `main` แล้ว
 
-### ตัวเลขทางการล่าสุด (Windows run 43011248444, source `426ecad`)
-- **92.6% รวม / 94.5% ไม่นับ deferred**; pages **182/222**, boundaries **99/222**; มิติอื่นไม่นับ deferred 100% ทั้งหมด
-- ลำดับรอบนี้: 175/95 (v1.1.3 ออก) → 178/96 → 183/97 → 183/100 → 182/99 (รอบสุดท้ายเสีย zenodo-067 จากการแก้ลำดับฟอนต์ ดูด้านล่าง)
+### สิ่งที่ทำในรอบนี้
+- `718d22a`: ตั้ง zenodo-104 และ govuk-003 ใน `docs/readiness/corpus.tsv` เป็น `excluded` พร้อมเหตุผล (PDF อ้างอิงไม่ได้สร้างจาก .docx ในคลัง) คลังนับ 220 เอกสาร (excluded 24 แถว)
+- `ff503b1` และ `bd2d2d6`: ขั้นวินิจฉัยฟอนต์ใน `.github/workflows/readiness-windows.yml` เอา govuk-003 ออก ข้ามเอกสารที่ไม่ได้ดาวน์โหลด และแก้ `"$id:"` เป็น `"${id}:"` (PowerShell อ่าน `$id:` เป็นตัวแปรมี scope จน parse ล้ม; run 43043846909 และ 43047705006 ล้มที่ขั้นนี้จึงไม่ได้ commit รายงาน)
+- Windows run 43051188273 (source `bd2d2d6`, report commit `5292abd`): **92.7% / 94.5%**, pages **181/220**, boundaries **99/220**, เปิด/round-trip/เสถียร 220/220, มิติอื่นไม่นับ deferred 100% (ก่อนตั้ง excluded: run 43011248444 ได้ 182/222 และ 99/222; govuk-003 เคยผ่านจำนวนหน้า)
+- `552a0b6`: แก้เอกสารทุกไฟล์ให้ตรงโค้ด (ROADMAP, docs/roadmap, docs/*-parity, docs/gaps, docs/readiness/README, deferred-plan, README/README.en เพิ่มฟอนต์ที่ฝัง; สถิติ 729 คำสั่ง, 2,487 `#[test]`, 233,735 บรรทัด Rust) และย้าย `[Unreleased]` เข้า `## [1.1.3] - 2026-11-11`; `cargo xtask ci` ผ่านครบ 6 ขั้น
+- ผู้ใช้ลบ Release/tag v1.1.3 เดิม (จาก `7422790`) เอง แล้ว workflow run [43055170446](https://github.com/veevie55/doc4me/actions/runs/43055170446) สร้าง tag `v1.1.3` ที่ `552a0b6` และ [Release v1.1.3](https://github.com/veevie55/doc4me/releases/tag/v1.1.3) มี `doc4me-1.1.3-windows-x64.msi` (50,376,704 ไบต์) และ `doc4me-1.1.3-windows-x64-portable.zip` (69,668,496 ไบต์) ยังไม่ลงลายเซ็นดิจิทัล
+- v1.1.3 นี้รวม: ฟอนต์ธีม `majorBidi`/`majorEastAsia`, Helvetica/Times → Arial/Times New Roman, ฝัง Carlito/Caladea/Arimo/Tinos/Cousine (OFL, เดสก์ท็อป) ต่อท้ายฟอนต์ระบบ, โหมด 14/15 รอบ page break, เลขหน้าเริ่มที่ 0, section ต่อเนื่องใต้วัตถุลอย, ตัดบรรทัดหลังยัติภังค์ระหว่างตัวเลข, grid ในตาราง, Font › Advanced › Spacing ▲▼ ทีละ 0.1 pt, About ระบุผู้พัฒนา, `cargo xtask readiness --diagnostics` แถว `fonts`
 
-### อยู่ใน `main` หลัง v1.1.3 (ยังไม่ออกรุ่น; CHANGELOG `[Unreleased]` บันทึกครบพร้อมผลวัด)
-- ฟอนต์ธีม `majorBidi`/`majorEastAsia` ใช้ `a:cs`/`a:ea` และฟอนต์รายสคริปต์ตาม `w:themeFontLang`
-- Helvetica/Arial Nova → Arial, Times → Times New Roman; ฟอนต์ไม่รู้จักใช้ฟอนต์ระบบก่อน Carlito/Caladea ที่ฝัง (Calibri/Cambria ใช้ Carlito/Caladea ก่อน)
-- ฝัง Carlito/Caladea/Arimo/Tinos/Cousine (OFL) ในรุ่นเดสก์ท็อป (`DESKTOP_BUNDLED` ใน `crates/fonts/src/fontdb.rs`)
-- layout: โหมด 14 เก็บ paragraph mark หลัง page break, โหมด < 15 ตัด space-before หลัง page break, เลขหน้าเริ่มที่ 0, section ต่อเนื่องเริ่มใต้วัตถุลอย, ตัดบรรทัดหลังยัติภังค์ระหว่างตัวเลข
-- `cargo xtask readiness --diagnostics` พิมพ์แถว `fonts` ของเอกสารที่ไม่ผ่าน
-- UI: Font › Advanced › Spacing ลูกศร ▲▼ ทีละ 0.1 pt; หน้าต่าง About ระบุชื่อผู้พัฒนาแทนลิงก์ซอร์สโค้ด (อยู่ใน v1.1.3 แล้ว)
+### หมายเหตุ
+- session นี้ลบ Release/tag ผ่าน API ไม่ได้ (403) ถ้าต้องออกรุ่นซ้ำ ผู้ใช้ต้องลบเองก่อน แล้วสั่ง `windows-x64-installer.yml` ด้วย `{"release": true}` บน `main` (workflow ปฏิเสธถ้า tag มีอยู่แล้ว) และห้าม push ระหว่าง workflow รัน
+- ห้ามแก้ลิงก์ Releases ใน README (ชี้ `chatraweechai/doc4me` ตามที่ผู้ใช้ต้องการ)
 
-### ค้างให้ผู้ใช้ตัดสิน (ยังไม่ได้คำตอบ)
-1. ตั้ง `excluded` พร้อมเหตุผลให้แถวที่ PDF อ้างอิงไม่ตรงกับ .docx หรือไม่: zenodo-104 (PDF มีปก/หน้าว่าง 4 หน้าที่ไม่มีในไฟล์), govuk-003 (PDF มี "FOR OFFICIAL USE ONLY / Date received" ที่ไม่มีในไฟล์)
-2. ทำ pagination ต่อแบบไม่กำหนดเวลา หรือออก 1.1.3 ใหม่จากโค้ดปัจจุบัน (ต้องอัปเดตเอกสารทุกไฟล์ให้ตรงตัวเลขล่าสุดก่อน: ROADMAP, docs/*parity*, docs/roadmap.md, docs/gaps.md, readiness README, README และย้าย `[Unreleased]` เข้า `[1.1.3]`)
-- คำสั่งเดิมของผู้ใช้: "ทำงานเสร็จครบ 100% เมื่อไร ให้แก้ไขเนื้อหาในไฟล์ทุกไฟล์ให้ตรงตามโค้ดล่าสุด และออกเวอร์ชั่น 1.1.3 ใหม่" ยังไม่ได้ทำเพราะยังไม่ถึง 100%
-
-### งานที่รู้สาเหตุแต่ยังไม่แก้
-- zenodo-067: ผ่านก่อนหน้าเพราะ Carlito กว้างใกล้ Overpass (Word ใช้ Overpass จริง); ลำดับฟอนต์ปัจจุบันตรงกับที่ Word แทนฟอนต์ที่ไม่มี จึงไม่ย้อนกลับ
-- govuk-001, zenodo-097: วัตถุลอยที่ anchor อยู่หลัง page break ในย่อหน้าเดียวกัน ต้องวางในหน้าถัดไป (Doc4Me วางตามหัวย่อหน้าใน `anchor_floats`)
-- ฟอนต์ที่ฝังใน .docx: ถอดรหัสถูกแล้ว (XOR 32 ไบต์แรกด้วยคีย์จาก GUID ใน `w:fontKey` อ่านคู่ hex จากท้ายมาหน้า; ลงทะเบียนด้วย `w:name` เพราะ subset ถูกเปลี่ยนชื่อเป็น `___WRD_EMBED_SUB_NN`) แต่ทำให้ zenodo-102/129 แย่ลง ต้องสืบเมตริกบรรทัดก่อน (โค้ดทดลองไม่ได้ commit)
-- govuk-034 เหลือเกิน 1 หน้า; govuk-026 Word ยกตารางย่อยไปหน้าใหม่ทั้งที่ใส่ได้; govuk-037/zenodo-114 Word มีหน้าว่างที่ยังอธิบายไม่ได้; zenodo-023 หน้าสุดท้าย Word แสดงหัว/ท้ายกระดาษของ section ก่อนหน้า
-- zenodo-149: Arial Nova Cond Light/Arial Narrow ไม่มีบน Windows runner และไม่มีตัวเทียบขนาดเปิด
+### งานที่เหลือ (เมื่อผู้ใช้สั่งต่อ)
+1. Pagination มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred (181/220 และ 99/220); เป้า 100% ไปไม่ถึงด้วยการแก้โค้ดอย่างเดียว เพราะบางเอกสารขึ้นกับฟอนต์ที่ไม่มีตัวเทียบขนาดเปิด (zenodo-149: Arial Nova Cond Light/Arial Narrow)
+2. งานที่รู้สาเหตุแต่ยังไม่แก้:
+   - zenodo-067 ผ่านก่อนหน้าเพราะ Carlito กว้างใกล้ Overpass ลำดับฟอนต์ปัจจุบันตรงกับ Word จึงไม่ย้อนกลับ
+   - govuk-001, zenodo-097: วัตถุลอยที่ anchor อยู่หลัง page break ในย่อหน้าเดียวกันต้องไปหน้าถัดไป (`anchor_floats`)
+   - ฟอนต์ที่ฝังใน .docx (`.odttf`): ถอดรหัสถูก (XOR 32 ไบต์แรกด้วยคีย์จาก `w:fontKey`, ลงทะเบียนด้วย `w:name`) แต่ทำให้ zenodo-102/129 แย่ลง ต้องสืบเมตริกบรรทัดก่อน (โค้ดทดลองไม่ได้ commit)
+   - govuk-034 เกิน 1 หน้า; govuk-026 Word ยกตารางย่อยไปหน้าใหม่; govuk-037/zenodo-114 หน้าว่างของ Word ที่ยังอธิบายไม่ได้; zenodo-023 หัว/ท้ายกระดาษหน้าสุดท้าย
+3. replay commit WordCraft ช่วงที่เหลือตามบันทึกสำรวจ 2026-11-09 ด้านล่าง
+4. ให้เจ้าของภาษาตรวจทาน 26 แค็ตตาล็อกฉบับร่าง AI; shaping/RTL ใน UI
+5. deferred 22 แถวต้องมีหลักฐานจากอุปกรณ์/บริการจริง
 
 ### วิธีทำงานที่ใช้ได้ผล
-- วัดบน Linux: `cargo xtask readiness --corpus --dry-run --jobs 4 --diagnostics --cli target-port/release/doc4me-cli` (ต้องใส่ `--cli` ไม่อย่างนั้นใช้ `target/release` เก่า) แล้วเทียบรายเอกสารก่อน/หลังทุกครั้ง; ผลบน Linux ตรงกับ Windows ส่วนใหญ่ แต่การเปลี่ยนเรื่องฟอนต์ต้องยืนยันบน Windows
-- อ่านรายการเอกสารที่ไม่ผ่านและแถว `fonts` จาก log ของ job บน Windows (`get_job_logs`; ผลใหญ่จะถูกบันทึกเป็นไฟล์ให้ประมวลผลด้วยสคริปต์)
-- เทสต์วัดเวลาที่ใกล้เกณฑ์และล้มเป็นครั้งคราวตอนรันขนาน: `a_long_unbreakable_word_lays_out_in_linear_time` (17–24 เท่า เกณฑ์ 24), `conversion_work_scales_with_reference_and_formatting_runs`; ตรวจแล้วว่าไม่เกี่ยวกับงานรอบนี้
+- วัดบน Linux: `cargo xtask readiness --corpus --dry-run --jobs 4 --diagnostics --cli target-port/release/doc4me-cli` (ต้องใส่ `--cli`) แล้วเทียบรายเอกสารก่อน/หลัง; เรื่องฟอนต์ต้องยืนยันบน Windows (`readiness-windows.yml` เป็นผลทางการ และ commit `docs/readiness.md` เอง)
+- อ่านรายการเอกสารที่ไม่ผ่านและแถว `fonts` จาก log ของ job บน Windows (`get_job_logs`)
+- เทสต์วัดเวลาที่ล้มเป็นครั้งคราวตอนรันขนาน: `a_long_unbreakable_word_lays_out_in_linear_time`, `conversion_work_scales_with_reference_and_formatting_runs`
 
-## สถานะปัจจุบัน (2026-11-11, ออก v1.1.3 ใหม่)
+## สถานะก่อนหน้า (ข้อมูลเก่า; ตัวเลขล่าสุดอยู่ด้านบน)
+
+### สถานะเมื่อออก v1.1.3 จาก `7422790` (2026-11-11, ถูกแทนแล้ว)
 
 ### Readiness
 - **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42961322752](https://github.com/veevie55/doc4me/actions/runs/42961322752) (วัด source `9abf2d6` ซึ่งรวมงาน port ล่าสุดทั้งหมด, 222 เอกสาร, report commit `1df7aae`); เทียบ run 42836913553 (source `1352238`) แล้วดีขึ้นเฉพาะจำนวนหน้า 174 → 175 (zenodo-103 ตรง Word หลังหยุดปัดข้อความในตารางเข้า document grid เมื่อไม่มี `w:adjustLineHeightInTable`) ที่เหลือเท่าเดิม ไม่มีมิติใดถดถอย
