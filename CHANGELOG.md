@@ -26,6 +26,11 @@
   - ตรวจสอบ: เทสต์ใหม่ `desktop_bundles_the_metric_compatible_stand_ins`; `cargo xtask assets` ผ่าน (ทุกไฟล์มีรายการใน ATTRIBUTION.md); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร (เครื่องมีฟอนต์เหล่านี้อยู่แล้ว); `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบหนึ่งเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนาน แต่ผ่านเมื่อรันเดี่ยว 3 รอบและผ่านในรอบเต็มถัดไป)
 
 ### แก้ไข
+- **ฟอนต์ที่ไม่รู้จักกลับไปใช้ฟอนต์ของระบบก่อนฟอนต์ที่ฝัง (Arial/Times New Roman บน Windows, Helvetica Neue บน macOS) ส่วน Calibri/Cambria ใช้ Carlito/Caladea ก่อนเสมอ** (`crates/fonts/src/word.rs`: รายการ `SANS`, `SERIF`, `CALIBRI`, `CAMBRIA`)
+  - เหตุผล: หลังฝัง Carlito/Caladea (ในรุ่นนี้) สองฟอนต์นี้มีทุกเครื่อง และอยู่หัวรายการตัวแทนทั่วไป log ของ Windows run 43005431349 จึงเปลี่ยนเป็น "Arial Narrow=Carlito", "Univers=Carlito", "Garamond=Caladea" ทั้งที่ PDF ของ Word ใช้ Arial (govuk-017/018) และ Times New Roman (zenodo-114) ตามพฤติกรรมเดิมก่อนฝังฟอนต์
+  - พฤติกรรม: ลำดับใหม่ให้ผลเหมือนก่อนฝังฟอนต์ทุกแพลตฟอร์ม (Windows: Arial/Times New Roman, macOS: Helvetica Neue/Times New Roman, Linux: Carlito/Caladea) ยกเว้น Calibri/Cambria ที่ตอนนี้ใช้ตัวเทียบขนาด Carlito/Caladea ได้บน macOS ด้วย
+  - ตรวจสอบ: เทสต์ใหม่ `unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins` และปรับเทสต์เดิม 2 ตัวที่ยืนยันลำดับเก่าของ Garamond; `cargo test -p doc4me-fonts` ผ่าน 73 รายการ; วัดคลังบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลบน Windows ต้องวัดใหม่
+
 - **ตัดบรรทัดได้หลังยัติภังค์ระหว่างตัวเลข เช่นเบอร์โทร "98173-" | "4097" หรือช่วงปี "2010-" | "2015"** (`crates/layout/src/para.rs`: `digit_hyphen_breaks`)
   - เหตุผล: กฎ UAX #14 (LB25, `HY × NU`) ถือว่า "-" หน้าตัวเลขเป็นเครื่องหมายลบจึงไม่ให้ตัด แต่ Word ตัดหลังยัติภังค์ที่มีตัวเลขทั้งสองข้าง (zenodo-012 หน้า 3: Word ขึ้นบรรทัดใหม่ที่ "4097;")
   - พฤติกรรม: เพิ่มจุดตัดเฉพาะ "-" (U+002D) ที่มีเลขอารบิกทั้งหน้าและหลัง เครื่องหมายลบหน้าตัวเลข (-5), ยัติภังค์ระหว่างตัวอักษร และ en dash ไม่เปลี่ยน

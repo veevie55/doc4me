@@ -26,8 +26,16 @@ pub struct Resolved {
 /// Liberation ↔ Arial / Times New Roman / Courier New), then common system fonts, then our bundled
 /// families.
 fn substitutes(family: &str) -> &'static [&'static str] {
-    const SANS: &[&str] = &["Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
-    const SERIF: &[&str] = &["Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
+    // An unknown sans or serif family is set in the platform's own (Arial and Times New Roman on
+    // Windows, Helvetica Neue on a Mac), as Word sets it (corpus govuk-017/018: "Arial Narrow" in
+    // Arial; zenodo-114: Garamond in Times New Roman). Carlito and Caladea, bundled on the desktop
+    // since 1.1.3, come after them, so they stand in only where neither is installed (Linux), as
+    // before they were bundled.
+    const SANS: &[&str] = &["Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
+    const SERIF: &[&str] = &["Times New Roman", "Caladea", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
+    // Calibri and Cambria themselves: their metric-compatible stand-ins first, wherever.
+    const CALIBRI: &[&str] = &["Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
+    const CAMBRIA: &[&str] = &["Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     const MONO: &[&str] = &["Courier New", "Liberation Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "JetBrains Mono"];
     // Arial itself first: Helvetica and Arial Nova asked for on Windows, where Arial is installed
     // and they aren't, are set in Arial (Arial was drawn to Helvetica's widths), as Word does;
@@ -104,16 +112,9 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         // Source Sans 3's earlier name (the bundled face is the same design, renamed in 2021).
         "source sans pro" | "source sans pro light" | "source sans pro semibold" => SOURCE_SANS,
         "georgia" => GEORGIA,
-        "cambria"
-        | "cambria math"
-        | "garamond"
-        | "constantia"
-        | "baskerville old face"
-        | "century"
-        | "century schoolbook"
-        | "bookman old style"
-        | "sitka text"
-        | "sitka" => SERIF,
+        "calibri" | "calibri light" => CALIBRI,
+        "cambria" | "cambria math" => CAMBRIA,
+        "garamond" | "constantia" | "baskerville old face" | "century" | "century schoolbook" | "bookman old style" | "sitka text" | "sitka" => SERIF,
         _ if f.contains("mono") || f.contains("code") => MONO,
         _ if f.contains("serif") && !f.contains("sans") => SERIF,
         _ => SANS,
@@ -659,6 +660,23 @@ mod tests {
     }
 
     #[test]
+    fn unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins() {
+        // Carlito and Caladea are bundled on the desktop, so they are always there: an unknown
+        // family still goes to Arial or Times New Roman first where those are installed, as Word
+        // does, and Calibri and Cambria to their metric-compatible stand-ins first.
+        for f in ["Arial Narrow", "Univers", "Gotham Book"] {
+            let s = substitutes(f);
+            assert!(s.iter().position(|x| *x == "Arial") < s.iter().position(|x| *x == "Carlito"), "{f}: {s:?}");
+        }
+        let s = substitutes("Garamond");
+        assert!(s.iter().position(|x| *x == "Times New Roman") < s.iter().position(|x| *x == "Caladea"), "{s:?}");
+        assert_eq!(substitutes("Calibri").first(), Some(&"Carlito"));
+        assert_eq!(substitutes("Calibri Light").first(), Some(&"Carlito"));
+        assert_eq!(substitutes("Cambria").first(), Some(&"Caladea"));
+        assert_eq!(substitutes("Cambria Math").first(), Some(&"Caladea"));
+    }
+
+    #[test]
     fn helvetica_and_times_try_the_windows_fonts_with_their_widths_first() {
         // On Windows, where Arial and Times New Roman are installed and Helvetica, Arial Nova and
         // Times aren't, Word sets them in Arial and Times New Roman.
@@ -776,8 +794,9 @@ mod tests {
             // All of them come before the generic serif fallbacks (Caladea, Times New Roman).
             assert!(pos("Palatino") < pos("Caladea") && pos("TeX Gyre Pagella") < pos("Times New Roman"), "{name}");
         }
-        // Other serif families are unchanged.
-        assert_eq!(substitutes("Garamond").first(), Some(&"Caladea"));
+        // Other serif families go to the generic serif list (Times New Roman first, see
+        // `unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins`).
+        assert_eq!(substitutes("Garamond").first(), Some(&"Times New Roman"));
     }
 
     /// Verdana and Georgia go to the open fonts nearest their widths (DejaVu Sans, Source Serif
@@ -799,7 +818,7 @@ mod tests {
             assert_eq!(substitutes(name), &["Sarabun"], "{name}");
         }
         // Other families keep their substitutes ("Thai" only in a name like "Noto Sans Thai").
-        assert_eq!(substitutes("Garamond").first(), Some(&"Caladea"));
+        assert_eq!(substitutes("Garamond").first(), Some(&"Times New Roman"));
         assert_ne!(substitutes("Tahoma"), &["Sarabun"]);
         assert_ne!(substitutes("Theinhardt"), &["Sarabun"]);
         // Not installed here, so the request resolves to Sarabun itself (bundled).
