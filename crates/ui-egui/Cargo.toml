@@ -38,6 +38,9 @@ js-sys = "0.3"
 [dev-dependencies]
 egui_kittest = { workspace = true, features = ["wgpu", "snapshot"] }
 zip = { workspace = true }
+# The regression test for the focus guard: the consumer the Windows adapter runs, fed with our
+# updates. Pinned to the version `accesskit_windows` already brings into the tree.
+accesskit_consumer = "=0.35.0"
 
 [build-dependencies]
 serde_json = { workspace = true }

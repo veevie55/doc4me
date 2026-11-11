@@ -64,6 +64,39 @@ pub struct Tree {
     pub selection: Option<TextSelection>,
 }
 
+/// AccessKit's contract is that every update's focus is in the node list, and
+/// `accesskit_consumer` treats a breach as fatal: `validate_global` panics on the UI thread,
+/// which closes the window (the Windows adapter reports `Focused ID #… is not in the node list`).
+/// egui can send an update that drops a focused widget's node, and a screen reader's focus
+/// request targets nodes in this document description, which the list carries only while the
+/// layout, the pages on screen and the selection are the same as when it asked. This guard runs
+/// on every update egui produces, before it reaches the adapter: a focus the update does not
+/// carry falls back to the root, so the reader starts from the top of the document instead of
+/// the process dying.
+pub struct FocusGuard;
+
+impl egui::plugin::Plugin for FocusGuard {
+    fn debug_name(&self) -> &'static str {
+        "a11y focus guard"
+    }
+
+    fn output_hook(&mut self, _ctx: &egui::Context, output: &mut egui::FullOutput) {
+        if let Some(update) = &mut output.platform_output.accesskit_update {
+            guard_update(update);
+        }
+    }
+}
+
+/// Point the focus at the root when this update's node list does not contain it.
+fn guard_update(update: &mut accesskit::TreeUpdate) {
+    if update.nodes.iter().any(|(id, _)| *id == update.focus) {
+        return;
+    }
+    if let Some(root) = update.tree.as_ref().map(|t| t.root) {
+        update.focus = root;
+    }
+}
+
 /// The pages to describe: those meeting `view`, and one either side.
 pub fn page_window(rects: &[Rect], view: Rect) -> Option<(usize, usize)> {
     let first = rects.iter().position(|r| r.intersects(view))?;
@@ -692,6 +725,98 @@ mod tests {
             b.y0 <= f64::from(caret.y) + 0.5 && f64::from(caret.y + height) <= b.y1 + 0.5,
             "{step}: it is on the caret's line: {b:?} vs caret {caret:?} + {height}"
         );
+    }
+
+    /// The Windows adapter's consumer dies on an update whose focus is not in the node list
+    /// (`Focused ID #… is not in the node list`): `Tree::new` panics. The guard moves the focus to
+    /// the root, and the same update is accepted.
+    #[test]
+    fn a_focus_the_update_does_not_carry_falls_back_to_the_root() {
+        let root = egui::accesskit_root_id().accesskit_id();
+        let lost = egui::Id::new("run_that_was_dropped").accesskit_id();
+        let kept = egui::Id::new("kept").accesskit_id();
+        let make = |focus: accesskit::NodeId| accesskit::TreeUpdate {
+            nodes: vec![
+                (root, {
+                    let mut n = Node::new(Role::Window);
+                    n.push_child(kept);
+                    n
+                }),
+                (kept, Node::new(Role::TextRun)),
+            ],
+            tree: Some(accesskit::Tree::new(root)),
+            tree_id: accesskit::TreeId::ROOT,
+            focus,
+        };
+        // Red without the guard: the raw update breaks the consumer's contract.
+        let raw = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| accesskit_consumer::Tree::new(make(lost), true)));
+        assert!(raw.is_err(), "the update that drops the focused node must break the consumer");
+        let mut fixed = make(lost);
+        guard_update(&mut fixed);
+        assert_eq!(fixed.focus, root);
+        assert!(
+            std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| accesskit_consumer::Tree::new(fixed, true))).is_ok(),
+            "the guarded update is accepted"
+        );
+        // An update whose focus is carried is left alone.
+        let mut fine = make(kept);
+        guard_update(&mut fine);
+        assert_eq!(fine.focus, kept);
+    }
+
+    struct NoopHandler;
+
+    impl accesskit_consumer::TreeChangeHandler for NoopHandler {
+        fn node_added(&mut self, _node: &accesskit_consumer::Node) {}
+        fn node_updated(&mut self, _old: &accesskit_consumer::Node, _new: &accesskit_consumer::Node) {}
+        fn focus_moved(&mut self, _old: Option<&accesskit_consumer::Node>, _new: Option<&accesskit_consumer::Node>) {}
+        fn node_removed(&mut self, _node: &accesskit_consumer::Node) {}
+    }
+
+    /// Every update the app sends (idle frames, typing, a screen reader's focus request for a
+    /// node that is not there) feeds the real Windows consumer without breaking its contract.
+    #[test]
+    fn every_update_the_app_sends_is_valid_for_the_consumer() {
+        let mut app = crate::WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), Default::default());
+        app.run("text.insert", json!({"text": "Hello word"})).unwrap();
+        app.run("insert.table", json!({"rows": 2, "cols": 2})).unwrap();
+        app.run("text.insert", json!({"text": "Cell"})).unwrap();
+        let ctx = egui::Context::default();
+        ctx.enable_accesskit();
+        let mut handler = NoopHandler;
+        let mut tree: Option<accesskit_consumer::Tree> = None;
+        for frame in 0..10 {
+            let mut input = egui::RawInput {
+                screen_rect: Some(Rect::from_min_size(egui::Pos2::ZERO, egui::vec2(1440.0, 900.0))),
+                time: Some(frame as f64 * 0.1),
+                ..Default::default()
+            };
+            if frame == 5 {
+                // A screen reader asks to focus a node that is not in this frame's description.
+                input.events.push(egui::Event::AccessKitActionRequest(accesskit::ActionRequest {
+                    action: accesskit::Action::Focus,
+                    target_node: egui::Id::new("a node that is long gone").accesskit_id(),
+                    target_tree: accesskit::TreeId::ROOT,
+                    data: None,
+                }));
+            }
+            let mut out = ctx.run_ui(input, |ui| {
+                app.logic(ui.ctx());
+                app.ui(ui);
+            });
+            out.textures_delta.clear();
+            let Some(update) = out.platform_output.accesskit_update else { continue };
+            tree = Some(match tree {
+                None => accesskit_consumer::Tree::new(update, true),
+                Some(mut t) => {
+                    t.update_and_process_changes(update, &mut handler);
+                    t
+                }
+            });
+        }
+        let tree = tree.expect("the app sends AccessKit updates");
+        let focus = tree.state().focus_id_in_tree();
+        assert!(tree.state().has_node(focus), "the consumer's focus is in the node list");
     }
 
     /// Hostile layouts and junk geometry don't panic and the tree stays bounded.

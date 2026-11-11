@@ -11,6 +11,14 @@
 
 ## [Unreleased]
 
+### แก้ไข
+- **โปรแกรมไม่ปิดตัวเองเมื่อโปรแกรมอ่านหน้าจอได้รับ focus ที่ไม่อยู่ในรายการ node** (`crates/ui-egui/src/a11y.rs`: `FocusGuard`, `crates/ui-egui/src/lib.rs`: ลงทะเบียนใน `WordApp::logic`)
+  - เหตุผล: AccessKit กำหนดว่า focus ของทุกอัปเดตต้องอยู่ในรายการ node และ `accesskit_consumer` (ตัวที่อะแดปเตอร์ Windows ใช้) ถือว่าผิดสัญญานี้เป็นข้อผิดพลาดร้ายแรง: panic บนเธรด UI แล้วหน้าต่างปิด (ข้อความ `Focused ID #… is not in the node list`) egui อาจส่งอัปเดตที่ทิ้ง node ของวิดเจ็ตที่ถือ focus และคำขอ focus ของโปรแกรมอ่านหน้าจอชี้ node ในคำอธิบายเอกสารที่มีอยู่เฉพาะเมื่อเลย์เอาต์ หน้าที่แสดง และการเลือกยังเหมือนตอนที่ขอ (พอร์ตจาก WordCraft `1350f62b`, #2726)
+  - พฤติกรรม: ปลั๊กอิน `FocusGuard` ตรวจทุกอัปเดตก่อนถึงอะแดปเตอร์ ถ้า focus ไม่อยู่ในรายการ node ให้ย้าย focus ไปที่ root ตัวอ่านหน้าจอจึงเริ่มจากต้นเอกสารแทนที่โปรแกรมจะล่ม
+  - ผลต่อผู้ใช้และความเข้ากันได้: ผู้ใช้โปรแกรมอ่านหน้าจอ (NVDA, JAWS, Narrator) ไม่เจอหน้าต่างปิดเอง; ไม่กระทบไฟล์เอกสารและผู้ใช้ทั่วไป
+  - ตรวจสอบ: เทสต์ใหม่ `a_focus_the_update_does_not_carry_falls_back_to_the_root` (อัปเดตดิบทำให้ consumer panic จริง, หลังผ่าน guard ถูกรับ, focus ที่มีอยู่ไม่ถูกแตะ) และ `every_update_the_app_sends_is_valid_for_the_consumer` (10 เฟรมรวมคำขอ focus ไปยัง node ที่ไม่มี ป้อน consumer จริง); `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - การพึ่งพา: เพิ่ม `accesskit_consumer = "=0.35.0"` เป็น dev-dependency ของ `doc4me-ui-egui` เฉพาะเทสต์ (เวอร์ชันเดียวกับที่ `accesskit_windows` ใช้อยู่แล้วใน Cargo.lock จึงไม่ดึง crate ใหม่เข้าตัวโปรแกรม)
+
 ### เปลี่ยนแปลง
 - **ขั้น Undo ใช้ style sheet และรายการลำดับเลข (list definitions) ร่วมกัน แทนการคัดลอกทุกขั้น** (`crates/doc/src/lib.rs`: `Document::styles` เป็น `Arc<StyleSheet>`, `Document::numbering` เป็น `Arc<Numbering>`; จุดที่แก้ใน `crates/engine`, `crates/docx`, `crates/docbin`, `crates/formats`, `crates/zotero`, `crates/ui-egui` และเทสต์ใช้ `Arc::make_mut`)
   - เหตุผล: ทุกขั้น Undo คัดลอก style sheet ทั้งชุด (กิโลไบต์ต่อสไตล์) จึงพิมพ์ในเอกสารที่มีสไตล์หลายร้อยรายการแล้วกินหน่วยความจำเป็นเมกะไบต์ต่อขั้น WordCraft วัดได้ 1.2 GB → 21 MB เมื่อประวัติเต็ม (พอร์ตจาก WordCraft `b2734c28`, #2694)
