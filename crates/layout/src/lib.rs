@@ -1837,7 +1837,8 @@ impl PageBuilder<'_> {
             self.line_no = 0;
         }
         let s = self.sect;
-        self.number = self.number.saturating_add(1);
+        // Wrapping: a section restarting at page 0 sets the count one below it (`u32::MAX`).
+        self.number = self.number.wrapping_add(1);
         let (w, h) = if self.web { (s.page_w, f32::MAX / 4.0) } else { (s.page_w, s.page_h) };
         // A footer taller than the bottom margin pushes the body up (Word: no gap), leaving it at
         // least a little room.
@@ -2137,7 +2138,9 @@ fn layout_pass(
         } else if pb.pages.is_empty() || start != SectionStart::Continuous || turn != prev_turn {
             // A page holds text running one way: a section turning the other way starts a page.
             if let Some(n) = restart {
-                pb.number = n.saturating_sub(1);
+                // The page before the restart: 0 (Word's `w:start="0"`, a title page counted as
+                // page 0) wraps to `u32::MAX`, so the next page is numbered 0.
+                pb.number = n.wrapping_sub(1);
             }
             pb.foot_top = first_foot;
             pb.new_page(block, first_top);

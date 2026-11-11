@@ -2452,6 +2452,23 @@ fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
 }
 
 #[test]
+fn page_numbers_can_restart_at_zero() {
+    // `w:pgNumType w:start="0"`: a title page counted as page 0, so the page after it shows 1
+    // (corpus govuk-032, zenodo-096, zenodo-097, zenodo-140, zenodo-147). It used to start at 1.
+    let mut d = Document::new();
+    d.last_section.page_num_start = Some(0);
+    let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    let b = doc4me_doc::Paragraph::with_text(&format!("B{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    d.body =
+        vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("C", Default::default()))];
+    let numbers: Vec<u32> = lay(&d).pages.iter().map(|p| p.number).collect();
+    assert_eq!(numbers, [0, 1, 2]);
+    d.last_section.page_num_start = Some(5);
+    let numbers: Vec<u32> = lay(&d).pages.iter().map(|p| p.number).collect();
+    assert_eq!(numbers, [5, 6, 7], "other starts are unchanged");
+}
+
+#[test]
 fn space_before_after_a_page_break_follows_the_compatibility_mode() {
     // A heading with space before starts the page after a page break that ended the paragraph
     // before. Word 2010 and earlier (compatibility mode below 15) drop that space at the top of the
