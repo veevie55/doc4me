@@ -2155,7 +2155,11 @@ fn layout_pass(
             // Continuous: new column layout below the current text (its tallest column).
             pb.cols = sect.column_boxes();
             pb.col = 0;
-            pb.top = pb.text_bottom();
+            // And below the objects on the page the text wraps around: Word starts zenodo-153's
+            // two-column section under the wide text box anchored in the section before, not in
+            // the gap above the box.
+            let floats_bottom = pb.excl.iter().map(|a| a.0.bottom()).fold(f32::MIN, f32::max);
+            pb.top = pb.text_bottom().max(floats_bottom);
             pb.y = pb.top;
             pb.max_y = pb.top;
         }

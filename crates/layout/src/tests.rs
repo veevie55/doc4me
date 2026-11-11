@@ -2452,6 +2452,53 @@ fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
 }
 
 #[test]
+fn a_continuous_section_starts_below_the_objects_text_wraps_around() {
+    use doc4me_doc::section::SectionStart;
+    // Section one: one paragraph anchoring a square-wrapped box 80pt below it, as wide as the
+    // text. Section two (continuous) starts below the box, not in the gap above it (zenodo-153).
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Margin,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 80.0,
+        ..Default::default()
+    };
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 468.0,
+        h: 60.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    let mut a = doc4me_doc::Paragraph::with_text("A", Default::default());
+    a.text.push(doc4me_doc::para::OBJ);
+    a.objects = vec![shape];
+    if let Some(r) = a.runs.last_mut() {
+        r.len += doc4me_doc::para::OBJ.len_utf8();
+    }
+    a.section = Some(Box::new(doc4me_doc::SectionProps::default()));
+    let b = doc4me_doc::Paragraph::with_text("B", Default::default());
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b)];
+    // Two columns, as in zenodo-153: the new column layout's top used to ignore the box.
+    d.last_section.start = SectionStart::Continuous;
+    d.last_section.columns.count = 2;
+    let l = lay(&d);
+    let items = &l.pages[0].items;
+    let box_bottom = items.iter().find_map(|i| if let Placed::Shape { rect, .. } = i { Some(rect.bottom()) } else { None }).expect("the box");
+    let tops: Vec<f32> = items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+    let b_top = *tops.last().expect("B's line");
+    assert!(b_top >= box_bottom - 0.01, "B starts below the box: {b_top} < {box_bottom} ({tops:?})");
+}
+
+#[test]
 fn page_numbers_can_restart_at_zero() {
     // `w:pgNumType w:start="0"`: a title page counted as page 0, so the page after it shows 1
     // (corpus govuk-032, zenodo-096, zenodo-097, zenodo-140, zenodo-147). It used to start at 1.
