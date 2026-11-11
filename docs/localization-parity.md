@@ -1,10 +1,10 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-10 · **Last updated:** 2026-11-10 · **Change:** minor (Windows run 42836913553 on `1352238`, report commit `8fc9173`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42941045723 on `ec23a59`, report commit `6871537`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every culture row of the readiness catalog now has a registered interface catalog: 22 catalogs
 were added in November 2026 as AI-generated drafts (among them Hindi, Arabic, Korean, Persian, Urdu,
-Pashto, Hebrew and the Indic languages), and the official Windows run 42836913553 reports 95/95.
+Pashto, Hebrew and the Indic languages), and the official Windows run 42941045723 reports 95/95.
 They still need native-speaker review.
 
 Interface languages, script support and proofing per language. How translation works (catalog
@@ -12,8 +12,8 @@ format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
 **Dimension: ~45% (estimated), 60–100 h to full for the twelve key languages**, mostly
 native-speaker review (human) and right-to-left/shaped interface rendering. This estimate is
-separate from the readiness check: Windows run 42836913553 on source `1352238` (report commit
-`8fc9173`) records 95/95 culture rows passing the catalog key-row coverage rule. The check does not
+separate from the readiness check: Windows run 42941045723 on source `ec23a59` (report commit
+`6871537`) records 95/95 culture rows passing the catalog key-row coverage rule. The check does not
 distinguish translated values from English-identical values and does not assess meaning or
 native-speaker quality. Bundled OFL Noto fallbacks cover every registered script (including a Hangul
 subset). The 19 right-to-left and Indic languages (ar, as, bn, fa, gu, he, hi, kn, kok, ml, mr, ne,
@@ -36,7 +36,7 @@ never picks one. That still prevents claiming interface readiness for them.
   language catalogs, each with the 3,034 interface keys. 26 registered catalogs are AI-generated
   drafts that require native-speaker review (Igbo, Setswana, Wolof, Yoruba and the 22 added in
   November 2026); key presence counts them without measuring their quality. The 95-row readiness
-  catalog maps cultures to these files: Windows run 42836913553 reports 95/95 passing rows.
+  catalog maps cultures to these files: Windows run 42941045723 reports 95/95 passing rows.
   `LANGUAGES` is authoritative for choices and locale matching; `languages.tsv` is the separate
   readiness denominator.
 - `cargo xtask readiness` parses unique catalog keys and compares key sets, not non-English
@@ -148,6 +148,7 @@ allows); all other text is written from the meaning of the English. No Italian p
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
+| 2026-11-11 | minor | Windows run 42941045723 measured `ec23a59`; report commit `6871537`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95, unchanged from run 42836913553. v1.1.3 was deleted and released again from the latest code, adding nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets and the AccessKit focus guard. Headline numbers refreshed (503/503 catalog, 729 commands, 2,477 tests, 233,179 lines of Rust). |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Corrected 13 file-filter translations and validated literal glob patterns; language coverage remains72/95. |
 | 2026-11-07 | minor | Corrected 13 translated file-filter labels in Wolof, Igbo and Kinyarwanda. Catalog validation now preserves literal glob patterns, including Unicode suffixes and multi-part extensions, while allowing reordered alternatives. Official language coverage remains 72/95; no unreviewed candidate was registered. |

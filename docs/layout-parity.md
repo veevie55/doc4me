@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-10 · **Last updated:** 2026-11-10 · **Change:** minor (Windows run 42836913553 on `1352238`, report commit `8fc9173`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42941045723 on `ec23a59`, report commit `6871537`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 174/222 and 96/222.
 
@@ -11,8 +11,8 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 42836913553,
-source `1352238`, report commit `8fc9173`) matches Word's page count for 174/222 documents and every
+most of Word's layout rules; the latest official Windows corpus measurement (run 42941045723,
+source `ec23a59`, report commit `6871537`) matches Word's page count for 174/222 documents and every
 page's first and last word for 95/222. The current code can use DOCX `w:altName` fonts when the
 primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions.
 The previous official report had 96/222 boundaries; the latest has 95/222. In run 42334133340, govuk-005
@@ -95,6 +95,7 @@ still needed.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
+| 2026-11-11 | minor | Windows run 42941045723 measured `ec23a59`; report commit `6871537`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95, unchanged from run 42836913553. v1.1.3 was deleted and released again from the latest code, adding nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets and the AccessKit focus guard. Headline numbers refreshed (503/503 catalog, 729 commands, 2,477 tests, 233,179 lines of Rust). |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 174/222 and 96/222. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 on `ed4284d` matches 174/222 page counts and 96/222 page boundaries; each is one below the preceding report. Font diagnostics sampled substitutions but did not identify a cause or safe broad fix. |

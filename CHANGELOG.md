@@ -11,20 +11,7 @@
 
 ## [Unreleased]
 
-### แก้ไข
-- **โปรแกรมไม่ปิดตัวเองเมื่อโปรแกรมอ่านหน้าจอได้รับ focus ที่ไม่อยู่ในรายการ node** (`crates/ui-egui/src/a11y.rs`: `FocusGuard`, `crates/ui-egui/src/lib.rs`: ลงทะเบียนใน `WordApp::logic`)
-  - เหตุผล: AccessKit กำหนดว่า focus ของทุกอัปเดตต้องอยู่ในรายการ node และ `accesskit_consumer` (ตัวที่อะแดปเตอร์ Windows ใช้) ถือว่าผิดสัญญานี้เป็นข้อผิดพลาดร้ายแรง: panic บนเธรด UI แล้วหน้าต่างปิด (ข้อความ `Focused ID #… is not in the node list`) egui อาจส่งอัปเดตที่ทิ้ง node ของวิดเจ็ตที่ถือ focus และคำขอ focus ของโปรแกรมอ่านหน้าจอชี้ node ในคำอธิบายเอกสารที่มีอยู่เฉพาะเมื่อเลย์เอาต์ หน้าที่แสดง และการเลือกยังเหมือนตอนที่ขอ (พอร์ตจาก WordCraft `1350f62b`, #2726)
-  - พฤติกรรม: ปลั๊กอิน `FocusGuard` ตรวจทุกอัปเดตก่อนถึงอะแดปเตอร์ ถ้า focus ไม่อยู่ในรายการ node ให้ย้าย focus ไปที่ root ตัวอ่านหน้าจอจึงเริ่มจากต้นเอกสารแทนที่โปรแกรมจะล่ม
-  - ผลต่อผู้ใช้และความเข้ากันได้: ผู้ใช้โปรแกรมอ่านหน้าจอ (NVDA, JAWS, Narrator) ไม่เจอหน้าต่างปิดเอง; ไม่กระทบไฟล์เอกสารและผู้ใช้ทั่วไป
-  - ตรวจสอบ: เทสต์ใหม่ `a_focus_the_update_does_not_carry_falls_back_to_the_root` (อัปเดตดิบทำให้ consumer panic จริง, หลังผ่าน guard ถูกรับ, focus ที่มีอยู่ไม่ถูกแตะ) และ `every_update_the_app_sends_is_valid_for_the_consumer` (10 เฟรมรวมคำขอ focus ไปยัง node ที่ไม่มี ป้อน consumer จริง); `cargo xtask ci` ผ่านครบ 6 ขั้น
-  - การพึ่งพา: เพิ่ม `accesskit_consumer = "=0.35.0"` เป็น dev-dependency ของ `doc4me-ui-egui` เฉพาะเทสต์ (เวอร์ชันเดียวกับที่ `accesskit_windows` ใช้อยู่แล้วใน Cargo.lock จึงไม่ดึง crate ใหม่เข้าตัวโปรแกรม)
-
-### เปลี่ยนแปลง
-- **ขั้น Undo ใช้ style sheet และรายการลำดับเลข (list definitions) ร่วมกัน แทนการคัดลอกทุกขั้น** (`crates/doc/src/lib.rs`: `Document::styles` เป็น `Arc<StyleSheet>`, `Document::numbering` เป็น `Arc<Numbering>`; จุดที่แก้ใน `crates/engine`, `crates/docx`, `crates/docbin`, `crates/formats`, `crates/zotero`, `crates/ui-egui` และเทสต์ใช้ `Arc::make_mut`)
-  - เหตุผล: ทุกขั้น Undo คัดลอก style sheet ทั้งชุด (กิโลไบต์ต่อสไตล์) จึงพิมพ์ในเอกสารที่มีสไตล์หลายร้อยรายการแล้วกินหน่วยความจำเป็นเมกะไบต์ต่อขั้น WordCraft วัดได้ 1.2 GB → 21 MB เมื่อประวัติเต็ม (พอร์ตจาก WordCraft `b2734c28`, #2694)
-  - ผลต่อผู้ใช้และความเข้ากันได้: พฤติกรรมของโปรแกรมไม่เปลี่ยน แต่ใช้หน่วยความจำน้อยลงมากเมื่อแก้เอกสารที่มีสไตล์/รายการเลขจำนวนมาก; คำสั่งที่แก้สไตล์หรือรายการเลขคัดลอกชุดนั้นหนึ่งครั้ง และ Undo คืนชุดเดิมของขั้นนั้น; รูปแบบไฟล์ `.json`, `.docx` และ `.doc` ไม่เปลี่ยน (Arc แปลงเป็น JSON เหมือนค่าเดิม)
-  - ตรวจสอบ: เทสต์ใหม่ `undo_steps_share_the_style_sheet_and_lists_until_a_command_changes_them` (ขั้น Undo ถือ style sheet ตัวเดียวกัน, `styles.modify` แล้ว Undo ได้ตัวเดิมคืน, รายการเลขเช่นกัน); `cargo xtask ci` ผ่านครบ 6 ขั้น
-  - ข้อจำกัดที่ทราบ: ไม่ได้พอร์ตเทสต์วัดขนาดใหญ่ (1,000 การแก้ใน 600 สไตล์) ของ WordCraft
+## [1.1.3] - 2026-11-11
 
 ### ความปลอดภัย
 - **ช่องทาง control และ MCP ปฏิเสธคำสั่งที่จะทิ้งงานที่ยังไม่บันทึก** (`crates/ui-egui/src/control.rs`, `crates/ui-egui/src/lib.rs`, `crates/mcp/src/tools.rs`, `docs/control-protocol.md`)
@@ -40,11 +27,6 @@
   - ผลต่อผู้ใช้และความเข้ากันได้: ตารางซ้อนไม่เกิน 18 ชั้นทำงานเหมือนเดิม ไฟล์ .docx เดิมที่ซ้อนลึกกว่า 18 (สูงสุด 24) ยังเปิดได้ แต่ตารางใหม่ที่แทรกหรือวางเพิ่มจะไม่ซ้อนลึกกว่าเพดาน
   - ตรวจสอบ: เทสต์ใหม่ `tables_nest_at_most_max_table_depth` และ `pasting_a_table_into_its_own_cell_stops_at_max_table_depth` (วางซ้ำ 8 รอบแล้วข้อความครบ 256/256) ผ่าน; `cargo xtask ci` ผ่านครบ 6 ขั้น
   - พอร์ตจาก WordCraft `560565cd` (ส่วนเพดานตารางซ้อน)
-
-
-## [1.1.3] - 2026-11-10
-
-### ความปลอดภัย
 
 - **บันทึกข้อจำกัดที่ยังไม่แก้: ความลึกตารางซ้อนจากการแทรก/วาง** (`handoff.md` เท่านั้น ไม่เปลี่ยนโค้ด)
   - ระหว่าง port WordCraft `560565cd` พบว่า Doc4Me ไม่จำกัดความลึกของตารางซ้อนที่สร้างด้วย `insert.table` หรือการวาง (DOCX reader จำกัดที่ 24 ชั้นอยู่แล้ว) ตารางที่ซ้อนลึกมากอาจทำให้ stack overflow ตอนบันทึก/คัดลอก และไฟล์ `.json` ที่ลึกเกิน 127 ชั้นของ serde_json อ่านกลับไม่ได้; บันทึกแนวทางแก้ (เพดาน 18 ชั้นแบบ WordCraft) ไว้ใน `handoff.md`
@@ -636,10 +618,15 @@
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
 ### เปลี่ยนแปลง
-- **ออกเวอร์ชัน 1.1.3 และปรับเอกสารให้ตรงกับโค้ดปัจจุบัน**: ตรวจ readiness ซ้ำบน Windows (run 42836913553 วัด `1352238`: 92.2% รวม / 94.1% ไม่นับ 22 แถว deferred ภาษา 95/95 หน้า 174/222 ตำแหน่งตัดหน้า 95/222 เท่ากับ run ก่อนหน้า) แล้วแก้ข้อความสถานะใน `ROADMAP.md`, `docs/roadmap.md`, `docs/target-app-parity.md`, `docs/localization-parity.md`, `docs/gaps.md`, `docs/file-format-parity.md`, `docs/layout-parity.md`, `docs/ui-parity.md`, `docs/readiness/README.md`, `docs/readiness/deferred-plan.md`, `README.md`, `README.en.md`, `ATTRIBUTION.md` และ `handoff.md` (ตัวเลข readiness, จำนวนภาษา 91 ตัวเลือก/90 แค็ตตาล็อก/3,034 คีย์, ตารางภาษาหลัก, รายการ "รุ่นถัดไป" เป็น "ตั้งแต่ 1.1.3", Release v1.1.3 เป็นรุ่นเดียวใน fork) โดยไม่แก้ประวัติในตาราง revision/progress log
+- **ขั้น Undo ใช้ style sheet และรายการลำดับเลข (list definitions) ร่วมกัน แทนการคัดลอกทุกขั้น** (`crates/doc/src/lib.rs`: `Document::styles` เป็น `Arc<StyleSheet>`, `Document::numbering` เป็น `Arc<Numbering>`; จุดที่แก้ใน `crates/engine`, `crates/docx`, `crates/docbin`, `crates/formats`, `crates/zotero`, `crates/ui-egui` และเทสต์ใช้ `Arc::make_mut`)
+  - เหตุผล: ทุกขั้น Undo คัดลอก style sheet ทั้งชุด (กิโลไบต์ต่อสไตล์) จึงพิมพ์ในเอกสารที่มีสไตล์หลายร้อยรายการแล้วกินหน่วยความจำเป็นเมกะไบต์ต่อขั้น WordCraft วัดได้ 1.2 GB → 21 MB เมื่อประวัติเต็ม (พอร์ตจาก WordCraft `b2734c28`, #2694)
+  - ผลต่อผู้ใช้และความเข้ากันได้: พฤติกรรมของโปรแกรมไม่เปลี่ยน แต่ใช้หน่วยความจำน้อยลงมากเมื่อแก้เอกสารที่มีสไตล์/รายการเลขจำนวนมาก; คำสั่งที่แก้สไตล์หรือรายการเลขคัดลอกชุดนั้นหนึ่งครั้ง และ Undo คืนชุดเดิมของขั้นนั้น; รูปแบบไฟล์ `.json`, `.docx` และ `.doc` ไม่เปลี่ยน (Arc แปลงเป็น JSON เหมือนค่าเดิม)
+  - ตรวจสอบ: เทสต์ใหม่ `undo_steps_share_the_style_sheet_and_lists_until_a_command_changes_them` (ขั้น Undo ถือ style sheet ตัวเดียวกัน, `styles.modify` แล้ว Undo ได้ตัวเดิมคืน, รายการเลขเช่นกัน); `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อจำกัดที่ทราบ: ไม่ได้พอร์ตเทสต์วัดขนาดใหญ่ (1,000 การแก้ใน 600 สไตล์) ของ WordCraft
+- **ออกเวอร์ชัน 1.1.3 และปรับเอกสารให้ตรงกับโค้ดปัจจุบัน**: ตรวจ readiness ซ้ำบน Windows (run 42941045723 วัด `ec23a59`: 92.2% รวม / 94.1% ไม่นับ 22 แถว deferred ภาษา 95/95 หน้า 174/222 ตำแหน่งตัดหน้า 95/222 เท่ากับ run 42836913553 และ run ก่อนหน้า) ลบ Release/tag v1.1.3 รุ่นแรก (2026-11-10, สร้างที่ `d19a836`) แล้วออก v1.1.3 ใหม่จากโค้ดล่าสุด จึงรวมงานหลัง `d19a836` ไว้ในรุ่นนี้ (เพดานตารางซ้อน, control/MCP กันทิ้งงานที่ยังไม่บันทึก, Undo ใช้ style sheet ร่วม, AccessKit focus guard) แล้วแก้ข้อความสถานะใน `ROADMAP.md`, `docs/roadmap.md`, `docs/target-app-parity.md`, `docs/localization-parity.md`, `docs/gaps.md`, `docs/file-format-parity.md`, `docs/layout-parity.md`, `docs/ui-parity.md`, `docs/readiness/README.md`, `docs/readiness/deferred-plan.md`, `README.md`, `README.en.md`, `ATTRIBUTION.md` และ `handoff.md` (ตัวเลข readiness, จำนวนภาษา 91 ตัวเลือก/90 แค็ตตาล็อก/3,034 คีย์, ตารางภาษาหลัก, รายการ "รุ่นถัดไป" เป็น "ตั้งแต่ 1.1.3", Release v1.1.3 เป็นรุ่นเดียวใน fork) โดยไม่แก้ประวัติในตาราง revision/progress log
   - เวอร์ชันใน `Cargo.toml` เป็น 1.1.3 อยู่แล้ว จึงไม่ต้อง bump; Release สร้างจาก workflow `windows-x64-installer.yml` (`release: true`) ซึ่งสร้าง tag `v1.1.3` เอง
   - ผลต่อผู้ใช้และความเข้ากันได้: ตัวติดตั้ง MSI ติดตั้งทับรุ่นก่อนได้ (UpgradeCode เดิม); ไฟล์ .docx เดิมและภาษาไทยไม่ได้รับผลกระทบ
-  - ตรวจสอบ: `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm); `cargo audit` ไม่พบช่องโหว่ (มีคำเตือน crate ที่เลิกดูแลหรือถูก yank 6 รายการตามที่อนุญาตไว้); `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65; `cargo xtask parity` ได้ 503/503 (`docs/parity-checklist.md` เพิ่มแถว Read Mode); `cargo xtask stats` ได้เทสต์ 2,471 รายการ โค้ด Rust 232,788 บรรทัด; `doc4me-cli commands --json` มี 729 คำสั่ง; readiness บน Windows (run 42836913553) ได้ 92.2% / 94.1%
+  - ตรวจสอบ: `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm); `cargo audit` ไม่พบช่องโหว่ (มีคำเตือน crate ที่เลิกดูแลหรือถูก yank 6 รายการตามที่อนุญาตไว้); `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65; `cargo xtask parity` ได้ 503/503 (`docs/parity-checklist.md` เพิ่มแถว Read Mode); `cargo xtask stats` ได้เทสต์ 2,477 รายการ โค้ด Rust 233,179 บรรทัด; `doc4me-cli commands --json` มี 729 คำสั่ง; readiness บน Windows (run 42941045723) ได้ 92.2% / 94.1%; หลังเพิ่มงานรอบ 2026-11-11 `cargo xtask ci` ผ่านครบ 6 ขั้นและ `cargo audit` ไม่พบช่องโหว่
 
 - **บันทึกขอบเขตการ port WordCraft และเกณฑ์ readiness (2026-11-09)** — เอกสารล้วน ไม่แก้โค้ด. การสำรวจ `storytold/wordcraft` พบว่า doc4me แยกจาก WordCraft ที่ `00ed5051`; หลังจุดนั้นถึง `1225f561` มี 1,596 commit (1,480 commit แตะ `crates`/`apps`/`xtask`). ชุด 56 commit ที่ค้างต้องการ dependency ที่ไม่อยู่ใน doc4me เช่น reference-style links ของ Markdown (`62533d21`, #3238) ซึ่ง `79e3610c` เรียกใช้. การ port ตามลำดับ dependency จึงหมายถึงการ replay ทั้งช่วง ไม่ใช่แค่ 56 commit. เจ้าของยืนยันเกณฑ์ใหม่: ใช้ readiness โดยไม่นับ 22 แถว deferred เป็นเกณฑ์ปฏิบัติ แทน 100% รวม โดยยังรายงานตัวเลขรวมและไม่นับ deferred แยกกันเหมือนเดิม. ตรวจ: ไม่มีการรันเทสต์ใหม่ (ไม่มีโค้ดเปลี่ยน). ไฟล์ที่เกี่ยวข้อง: `handoff.md`.
 
@@ -649,6 +636,12 @@
   - ตรวจสอบ: คำนวณผลรวมถ่วงน้ำหนักจากตารางใน `docs/readiness.md` ซ้ำได้ 91.27% / 93.15% ตรงกับรายงาน; ไม่ได้รัน readiness ใหม่
 
 ### แก้ไข
+- **โปรแกรมไม่ปิดตัวเองเมื่อโปรแกรมอ่านหน้าจอได้รับ focus ที่ไม่อยู่ในรายการ node** (`crates/ui-egui/src/a11y.rs`: `FocusGuard`, `crates/ui-egui/src/lib.rs`: ลงทะเบียนใน `WordApp::logic`)
+  - เหตุผล: AccessKit กำหนดว่า focus ของทุกอัปเดตต้องอยู่ในรายการ node และ `accesskit_consumer` (ตัวที่อะแดปเตอร์ Windows ใช้) ถือว่าผิดสัญญานี้เป็นข้อผิดพลาดร้ายแรง: panic บนเธรด UI แล้วหน้าต่างปิด (ข้อความ `Focused ID #… is not in the node list`) egui อาจส่งอัปเดตที่ทิ้ง node ของวิดเจ็ตที่ถือ focus และคำขอ focus ของโปรแกรมอ่านหน้าจอชี้ node ในคำอธิบายเอกสารที่มีอยู่เฉพาะเมื่อเลย์เอาต์ หน้าที่แสดง และการเลือกยังเหมือนตอนที่ขอ (พอร์ตจาก WordCraft `1350f62b`, #2726)
+  - พฤติกรรม: ปลั๊กอิน `FocusGuard` ตรวจทุกอัปเดตก่อนถึงอะแดปเตอร์ ถ้า focus ไม่อยู่ในรายการ node ให้ย้าย focus ไปที่ root ตัวอ่านหน้าจอจึงเริ่มจากต้นเอกสารแทนที่โปรแกรมจะล่ม
+  - ผลต่อผู้ใช้และความเข้ากันได้: ผู้ใช้โปรแกรมอ่านหน้าจอ (NVDA, JAWS, Narrator) ไม่เจอหน้าต่างปิดเอง; ไม่กระทบไฟล์เอกสารและผู้ใช้ทั่วไป
+  - ตรวจสอบ: เทสต์ใหม่ `a_focus_the_update_does_not_carry_falls_back_to_the_root` (อัปเดตดิบทำให้ consumer panic จริง, หลังผ่าน guard ถูกรับ, focus ที่มีอยู่ไม่ถูกแตะ) และ `every_update_the_app_sends_is_valid_for_the_consumer` (10 เฟรมรวมคำขอ focus ไปยัง node ที่ไม่มี ป้อน consumer จริง); `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - การพึ่งพา: เพิ่ม `accesskit_consumer = "=0.35.0"` เป็น dev-dependency ของ `doc4me-ui-egui` เฉพาะเทสต์ (เวอร์ชันเดียวกับที่ `accesskit_windows` ใช้อยู่แล้วใน Cargo.lock จึงไม่ดึง crate ใหม่เข้าตัวโปรแกรม)
 - **ฟิลด์ HYPERLINK ที่ผลลัพธ์ว่างหายตอนบันทึก (roundtrip govuk-047 และ zenodo-018)** — เดิม `read/story.rs` เมื่อเจอฟิลด์ `HYPERLINK` ที่ไม่มีข้อความผลลัพธ์ จะแปลงเป็นลิงก์บนข้อความที่ว่าง จึงไม่มีอะไรให้บันทึกและฟิลด์หายไปทั้งตัว. ตอนนี้ฟิลด์ที่ไม่มีผลลัพธ์จะคงเป็นฟิลด์เดิมและถูกบันทึกกลับไป (เหมือนที่ Word ทำกับลิงก์ว่าง). ผลต่อผู้ใช้: ไฟล์ .docx ที่มีสารบัญซึ่งลิงก์ว่างจะไม่สูญเสียฟิลด์หลังบันทึกอีก; ไฟล์เดิมที่มีฟิลด์ผลลัพธ์ไม่เปลี่ยน. ไฟล์: `crates/docx/src/read/story.rs`. ตรวจแล้ว: เทสต์ใหม่ `empty_hyperlink_field_survives_a_save` ใน `crates/docx/tests/toc_ranges.rs` ผ่าน; `cargo test -p doc4me-docx` ทุกชุดผ่าน; รัน `doc4me-cli inspect` ก่อนและหลัง convert กับ govuk-047 และ zenodo-018 พบว่าจำนวนฟิลด์เท่ากันทั้งสองไฟล์ (ก่อนแก้ govuk-047 7→6, zenodo-018 8→0). ยังไม่ได้วัดด้วย readiness บน Windows.
 
 - **ยืนยัน readiness บน Windows หลังแก้ IME/file-filter**: run [42334133340](https://github.com/veevie55/doc4me/actions/runs/42334133340) วัด source `1868cb4` ครบ 222 เอกสาร และ bot บันทึกรายงานใน `ed787f9`: 91.3% รวม / 93.2% ไม่นับ 22 deferred, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 และ shortcuts 276/280 เท่าเดิม. Diagnostic แสดงคำต้น/ท้ายของหน้าที่ไม่ตรงแล้ว; ไม่อ้างว่า software regression tests พิสูจน์ physical Windows IME/hardware.

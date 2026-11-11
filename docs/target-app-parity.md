@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-10 · **Last updated:** 2026-11-10 · **Change:** minor (Windows run 42836913553 on `1352238`, report commit `8fc9173`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42941045723 on `ec23a59`, report commit `6871537`: 92.2% / 94.1% without 22 deferred; pagination 174/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -16,7 +16,7 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | Ribbon/menu catalog coverage | **500 / 500 (100%)** | **measured 2026-11-07**: `cargo xtask parity` (re-derived from `crates/engine/src/catalog.rs` against every `CommandSpec::new` id; identical to the checked-in `parity-checklist.md`) |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **92.2%** | **latest official measurement**: Windows run 42836913553, source `1352238`, report commit `8fc9173` ([readiness.md](readiness.md)); all 222 documents, 94.1% without 22 deferred checks. |
+| **Ready for real work** (full target) | **92.2%** | **latest official measurement**: Windows run 42941045723, source `ec23a59`, report commit `6871537` ([readiness.md](readiness.md)); all 222 documents, 94.1% without 22 deferred checks. |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
@@ -50,8 +50,8 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 - Word's file formats, ribbon, dialogs and keyboard shortcuts from Microsoft's public documentation
   and our knowledge of Word for Windows and Mac (Microsoft 365). Windows-only features (PDF Reflow
   open, Works/WordPerfect import) are counted, because a Word user on Windows expects them.
-- The latest official Windows readiness report (run 42836913553, source 1352238, report commit
-  8fc9173) measures all 222 corpus documents; the xtask diagnostic prints the exact first/last-word
+- The latest official Windows readiness report (run 42941045723, source ec23a59, report commit
+  6871537) measures all 222 corpus documents; the xtask diagnostic prints the exact first/last-word
   pairs for each failing page. See [handoff.md](../handoff.md).
 - **Not done this pass:** opening the corpus in Word and Doc4Me side by side for direct UI/page
   comparison. The readiness harness compares Doc4Me output with the saved Word-made PDFs; it does
@@ -123,7 +123,7 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 
 ### Full target (ready for real work): 92.2% latest official measurement
 
-Measured 2026-11-10 on Windows (run 42836913553, source `1352238`, report commit `8fc9173`; see
+Measured 2026-11-10 on Windows (run 42941045723, source `ec23a59`, report commit `6871537`; see
 [readiness.md](readiness.md), check sets and rules in [readiness/README.md](readiness/README.md)):
 the weights of the dimension table over fixed pass/fail check sets and all 222 real-world documents.
 The report says 94.1% excluding 22 deferred rows; every dimension except pagination is at 100% without deferred rows. ARM64 `plat-002` passes after run 42262956358
@@ -206,7 +206,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | Dimension | Weight | Parity | Hours to full | Doc | Evidence |
 |---|---|---|---|---|---|
 | Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
-| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 42836913553 confirms all 222 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 42941045723 confirms all 222 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
 | Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); column balancing and full compatibility-mode coverage remain gaps; footnote continuation (#352) and document grid (#391) are implemented. |
 | UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, and the latest official Windows shortcut result of 276/280 with 4 deferred (all non-deferred rows pass); 60 modal dialogs against Word's ~100; keyboard/ribbon customization is present |
 | Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
@@ -269,6 +269,7 @@ can be used without committing Word output.
 | Date | Change | Summary |
 |---|---|---|
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
+| 2026-11-11 | minor | Windows run 42941045723 measured `ec23a59`; report commit `6871537`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95, unchanged from run 42836913553. v1.1.3 was deleted and released again from the latest code, adding nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets and the AccessKit focus guard. Headline numbers refreshed (503/503 catalog, 729 commands, 2,477 tests, 233,179 lines of Rust). |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 measured `ed4284d`; report commit `29e6672` records 91.3% / 93.2% without 22 deferred, dialogs 216/228, pages 174/222, boundaries 96/222, languages 72/95, shortcuts 276/280 and platforms 5/5. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189 measured `84db9fc`: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 and shortcuts 276/280. |

@@ -1,11 +1,11 @@
-# Handoff: Doc4Me 1.1.3 (released 2026-11-10) · latest official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42836913553](https://github.com/veevie55/doc4me/actions/runs/42836913553), measured source `1352238`, report commit `8fc9173`) · ห้ามออก Release ถัดไป อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
+# Handoff: Doc4Me 1.1.3 (re-released 2026-11-11 from the latest code) · latest official readiness **92.2% / 94.1% without 22 deferred** (Windows run [42941045723](https://github.com/veevie55/doc4me/actions/runs/42941045723), measured source `ec23a59`, report commit `6871537`) · ห้ามออก Release ถัดไป อัปโหลด package หรือเผยแพร่ environment จนกว่าผู้ใช้จะสั่ง
 
-อัปเดต: 2026-11-10 · fork `veevie55/doc4me` · branch `main`; ผู้ใช้สั่ง "ตรวจ readiness อีกครั้ง แล้วแก้ไขไฟล์ทุกไฟล์ให้มีสถานะ/เนื้อหาตรงตามโค้ดปัจจุบัน แล้วออกเวอร์ชั่น 1.1.3" — v1.1.3 เป็น Release เดียวใน fork (Release/tag v1.0.0–v1.1.2 เดิมไม่มีแล้ว)
+อัปเดต: 2026-11-11 · fork `veevie55/doc4me` · branch `main`; ผู้ใช้สั่ง "ตรวจ readiness อีกครั้งแล้วลบเวอร์ชั่น 1.1.3 ทิ้งและออกเวอร์ชั่น 1.1.3 ใหม่ตามสถานะโค้ดล่าสุด" — ผู้ใช้ลบ Release/tag v1.1.3 รุ่นแรก (2026-11-10, สร้างที่ `d19a836`) เอง เพราะ session นี้ลบไม่ได้ (API 403) แล้วออก v1.1.3 ใหม่จากโค้ดล่าสุด; v1.1.3 เป็น Release เดียวใน fork (v1.0.0–v1.1.2 เดิมไม่มีแล้ว); CHANGELOG `[1.1.3]` รวมงานหลัง `d19a836` (ตารางซ้อน 18 ชั้น, control/MCP กันทิ้งงานที่ยังไม่บันทึก, Undo ใช้ style sheet ร่วม, AccessKit focus guard)
 
-## สถานะปัจจุบัน (2026-11-10, ออก v1.1.3)
+## สถานะปัจจุบัน (2026-11-11, ออก v1.1.3 ใหม่)
 
 ### Readiness
-- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42836913553](https://github.com/veevie55/doc4me/actions/runs/42836913553) (วัด source `1352238` หลังชุดความปลอดภัย 23, 222 เอกสาร, report commit `8fc9173`); เท่ากับ run 42823797611 ก่อนหน้า จึงไม่ถดถอยจากงาน port ชุด 10–23 (ชุด 24–25 แก้เฉพาะ engine/mail merge ไม่กระทบ corpus)
+- **92.2% รวม / 94.1% เมื่อไม่นับ 22 แถว deferred** จาก Windows run [42941045723](https://github.com/veevie55/doc4me/actions/runs/42941045723) (วัด source `ec23a59` ซึ่งรวมงาน port ล่าสุดทั้งหมด, 222 เอกสาร, report commit `6871537`); เท่ากับ run 42836913553 (source `1352238`) และ run 42823797611 ก่อนหน้าทุกมิติ จึงไม่ถดถอย
 - มิติ: features 97.4% (ribbon 503/503, dialogs 216/228, 12 deferred), file formats 100% (222/222), pagination 60.6% (pages 174/222, boundaries 95/222), UI/UX 98.6% (276/280, 4 deferred), stability 100%, performance 100%, localization 100% (95/95), platforms 100% (5/5), ecosystem 83.3% (1 deferred), hardware 37.5% (5 deferred)
 - ส่วนที่ไม่ deferred และยังไม่ 100% มีเพียง pagination (ห่าง 5.9 จุดของคะแนนรวม); deferred 22 แถวยังนับไม่ผ่านจนมีหลักฐานจากอุปกรณ์/บริการจริง
 
@@ -15,8 +15,8 @@
 
 ### ความปลอดภัย (port จาก WordCraft)
 - รอบ 3 ชุด 1–25 อยู่ใน 1.1.3 (ดู CHANGELOG `[1.1.3]` › ความปลอดภัย); ตรวจ `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่านหลังชุด 25
-- port WordCraft: ครบแล้วทุกส่วนที่ใช้กับ Doc4Me (หลัง 1.1.3, ยังไม่ออกรุ่น): `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel/MCP ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก; ไม่พอร์ตส่วนหลายเอกสาร) และเพดานตารางซ้อนของ `560565cd`; ส่วน ODT ของ `560565cd` ไม่ต้องพอร์ต (ตัวอ่าน ODT ของ Doc4Me มีงบ `text:s` ของเนื้อหาอยู่แล้ว และไม่อ่านหัว/ท้ายกระดาษ) — commit ที่เหลือของ WordCraft ตามบันทึกสำรวจ 2026-11-09 ด้านล่างยังไม่ได้ replay
-- แก้แล้ว (หลัง 1.1.3, ยังไม่ออกรุ่น): จำกัดความลึกตารางซ้อนที่ 18 ชั้นเมื่อแทรก/วาง (`MAX_TABLE_DEPTH` ใน `crates/doc/src/table.rs`)
+- port WordCraft: ครบแล้วทุกส่วนที่ใช้กับ Doc4Me (รวมใน 1.1.3 ที่ออกใหม่ 2026-11-11): `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel/MCP ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก; ไม่พอร์ตส่วนหลายเอกสาร) และเพดานตารางซ้อนของ `560565cd`; ส่วน ODT ของ `560565cd` ไม่ต้องพอร์ต (ตัวอ่าน ODT ของ Doc4Me มีงบ `text:s` ของเนื้อหาอยู่แล้ว และไม่อ่านหัว/ท้ายกระดาษ) — commit ที่เหลือของ WordCraft ตามบันทึกสำรวจ 2026-11-09 ด้านล่างยังไม่ได้ replay
+- แก้แล้ว (รวมใน 1.1.3 ที่ออกใหม่ 2026-11-11): จำกัดความลึกตารางซ้อนที่ 18 ชั้นเมื่อแทรก/วาง (`MAX_TABLE_DEPTH` ใน `crates/doc/src/table.rs`)
 - วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
 
 ### งานถัดไป
