@@ -2499,6 +2499,27 @@ fn a_continuous_section_starts_below_the_objects_text_wraps_around() {
 }
 
 #[test]
+fn a_hyphen_between_digits_is_a_break_opportunity() {
+    // Word breaks a phone number or a year range after its hyphen (zenodo-012: "98173-" | "4097"),
+    // where UAX #14 reads the hyphen as a minus sign. A minus before a number, a hyphen between
+    // letters and an en dash are left as they were.
+    assert_eq!(para::digit_hyphen_breaks("16 98173-4097;"), vec![9]);
+    assert_eq!(para::digit_hyphen_breaks("2010-2015 and 1-2-3"), vec![5, 16, 18]);
+    assert!(para::digit_hyphen_breaks("-5 well-known 5–6 5-").is_empty());
+    // In a line too narrow for the number, it breaks right after the hyphen, not at whatever
+    // character the width runs out at.
+    let mut d = Document::from_text("98173-4097");
+    d.last_section.page_w = d.last_section.margin_left + d.last_section.margin_right + 45.0;
+    let l = lay(&d);
+    let first_line_end = l.pages[0]
+        .items
+        .iter()
+        .find_map(|i| if let Placed::Lines { para, l0, .. } = i { para.lines.get(*l0).map(|ln| para.clusters[ln.c1 - 1].end) } else { None })
+        .expect("a line");
+    assert_eq!(first_line_end, 6, "the first line is \"98173-\"");
+}
+
+#[test]
 fn page_numbers_can_restart_at_zero() {
     // `w:pgNumType w:start="0"`: a title page counted as page 0, so the page after it shows 1
     // (corpus govuk-032, zenodo-096, zenodo-097, zenodo-140, zenodo-147). It used to start at 1.

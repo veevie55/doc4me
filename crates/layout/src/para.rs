@@ -501,6 +501,13 @@ pub(crate) fn font_for_aliases<'a>(aliases: &'a std::collections::BTreeMap<Strin
     Cow::Borrowed(&alias.alternate)
 }
 
+/// Break opportunities after each hyphen-minus that has a digit on both sides, as byte offsets
+/// just past the hyphen.
+pub(crate) fn digit_hyphen_breaks(text: &str) -> Vec<usize> {
+    let b = text.as_bytes();
+    (1..b.len().saturating_sub(1)).filter(|&i| b[i] == b'-' && b[i - 1].is_ascii_digit() && b[i + 1].is_ascii_digit()).map(|i| i + 1).collect()
+}
+
 /// What a piece of text is shaped as: one face, case, script formatting and direction.
 #[derive(Clone, Copy)]
 struct SegKey {
@@ -1620,6 +1627,15 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         if (o == unicode_linebreak::BreakOpportunity::Allowed || i < text.len()) && !after_slash {
             found.push(i);
         }
+    }
+    // Word breaks after a hyphen between digits ("98173-" | "4097", "2010-" | "2015"), where
+    // UAX #14 (LB25, `HY × NU`) reads the hyphen as a minus sign and keeps the number whole
+    // (corpus zenodo-012). A hyphen before a number with no digit ahead of it (-5) stays joined.
+    let digit_hyphens = digit_hyphen_breaks(&text);
+    if !digit_hyphens.is_empty() {
+        found.extend(digit_hyphens);
+        found.sort_unstable();
+        found.dedup();
     }
     // Unicode 15.1 dropped rule LB15 (`QU SP* × OP`), which `unicode-linebreak` 0.1 still applies:
     // Word breaks after the space in `estratégicos” (según`, as after any other space.
