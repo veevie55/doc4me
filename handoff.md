@@ -19,6 +19,15 @@
 - แก้แล้ว (รวมใน 1.1.3 ที่ออกใหม่ 2026-11-11): จำกัดความลึกตารางซ้อนที่ 18 ชั้นเมื่อแทรก/วาง (`MAX_TABLE_DEPTH` ใน `crates/doc/src/table.rs`)
 - วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
 
+### ความคืบหน้า pagination หลังออก 1.1.3 (2026-11-11, ยังไม่ออกรุ่น; เป้า 100% ไม่นับ deferred แล้วจึงอัปเดตเอกสารทั้งหมดและออก 1.1.3 ใหม่ตามที่ผู้ใช้สั่ง)
+- ผล Windows ล่าสุด: run 43001098341 (source `b859862`) **92.6% / 94.5%**, pages **183/222**, boundaries **97/222** (จาก 175/95 ก่อนรอบนี้)
+- แก้แล้ว: ฟอนต์ธีม `majorBidi`/`majorEastAsia` (ใช้ `a:cs`/`a:ea` และฟอนต์รายสคริปต์ตาม `w:themeFontLang`); Helvetica/Arial Nova → Arial และ Times → Times New Roman บน Windows; โหมด 14 ไม่ส่ง paragraph mark หลัง page break ไปหน้าใหม่; โหมด < 15 ตัด space-before ของย่อหน้าแรกหลัง page break; ตารางไม่ snap document grid ถ้าไม่มี `w:adjustLineHeightInTable`
+- ฟอนต์: ฝัง Carlito/Caladea/Arimo/Tinos/Cousine (OFL, static) ในรุ่นเดสก์ท็อป; variable font ของ Gelasio/Overpass/Open Sans/Roboto/Archivo/League Spartan ทำให้คลังแย่ลง จึงไม่ใส่; ฟอนต์ที่ฝังในเอกสาร (`word/fonts/*.odttf`) ยังไม่รองรับ (7 เอกสาร, ที่ได้ผลบน Windows จริงคือ zenodo-129)
+- `cargo xtask readiness --diagnostics` พิมพ์แถว `fonts<TAB>doc<TAB>ขอ=แทน` ของเอกสารที่ไม่ผ่าน อ่านจาก log ของ job บน Windows (`get_job_logs`)
+- วิธีวัดบน Linux ต้องใส่ `--cli target-port/release/doc4me-cli` (ไม่ใส่จะใช้ `target/release` เก่า); เทียบก่อน/หลังรายเอกสารทุกครั้ง ผลเอกสารที่ไม่ผ่านบน Linux 34/45 ตรงกับ Windows
+- ข้อค้นพบที่ยังไม่แก้: govuk-001 และ zenodo-097 มีวัตถุลอยที่ anchor อยู่หลัง page break ในย่อหน้าเดียวกัน (Word วางในหน้าถัดไป, Doc4Me วางที่หัวย่อหน้า); govuk-026 Word ยกตารางย่อยไปหน้าใหม่ทั้งที่ใส่ได้ (ยังไม่พบเหตุใน XML); govuk-037 Word มีหน้าว่างหลัง page break + section continuous (ยังไม่พบเหตุ); govuk-034 เหลือเกิน 1 หน้า; zenodo-114 Word มีหน้าว่างก่อน section ที่เป็น nextColumn
+- ต้องให้เจ้าของตัดสิน: zenodo-104 PDF อ้างอิงมีหน้าที่ไม่มีใน .docx (ปก, หน้าว่าง, ปกหลัง 4 หน้า) จัดหน้าอย่างไรก็ไม่ตรง; zenodo-149 Word ใช้ Arial Nova Cond Light/Arial Narrow ที่ไม่มีบน Windows runner และไม่มีตัวเทียบขนาดเปิด
+
 ### งานถัดไป
 1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred; ต้องผ่านจำนวนหน้า 222/222 และตำแหน่งตัดหน้า 222/222 ตอนนี้ 175 และ 95)
    - วิธีวิเคราะห์บน Linux (ใช้ได้จริง: เอกสารที่ไม่ผ่านบน Linux 34 จาก 45 ตรงกับ Windows เป๊ะ): `cargo xtask readiness --download` แล้ว `cargo xtask readiness --corpus --diagnostics --dry-run --jobs 4 --cli <target/release/doc4me-cli ที่เพิ่ง build>` (ถ้าไม่ใส่ `--cli` จะใช้ `target/release` เดิมซึ่งอาจเก่า); เทียบแต่ละหน้าด้วย `pdftotext -bbox` และ `doc4me-cli convert`
