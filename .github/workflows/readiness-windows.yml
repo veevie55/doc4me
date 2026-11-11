@@ -74,7 +74,7 @@ jobs:
           foreach ($id in $ids) {
             $document = Join-Path $env:GITHUB_WORKSPACE "corpus/readiness/$id.docx"
             # A row set to `excluded` in corpus.tsv isn't downloaded: a diagnostic, not a failure.
-            if (-not (Test-Path $document)) { Write-Output "--- $id: not in the corpus download (excluded?), skipped ---"; continue }
+            if (-not (Test-Path $document)) { Write-Output "--- ${id}: not in the corpus download (excluded?), skipped ---"; continue }
             Write-Output "--- $id ---"
             & $cli run --file $document --cmd 'file.fontSubstitution={}' --cmd 'file.info={}' --print
             if ($LASTEXITCODE -ne 0) { throw "Font-resolution diagnostic failed for $id" }

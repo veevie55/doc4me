@@ -17,6 +17,7 @@
   - ตามกติกาของคลัง แถวไม่ถูกลบ ตั้งเป็น `excluded` พร้อมเหตุผลในคอลัมน์ note ไม่ถูกดาวน์โหลดหรือนับ ชุด corpus จึงนับ 220 เอกสาร (จาก 222)
   - ตรวจสอบ: `cargo test -p xtask` ผ่าน; ตัวเลข readiness ใหม่วัดบน Windows
   - แก้ตามมา: ขั้น "Inspect Windows font resolution" ใน `.github/workflows/readiness-windows.yml` มีรายชื่อเอกสารตายตัวที่รวม govuk-003 และล้มเมื่อหาไฟล์ไม่เจอ (run 43043846909 วัดผ่านแล้วแต่ไม่ได้ commit รายงาน) จึงเอา govuk-003 ออกจากรายชื่อและให้ข้ามเอกสารที่ไม่ได้ดาวน์โหลดแทนการล้ม
+  - แก้ตามมาอีกครั้ง: ข้อความข้ามใน PowerShell เขียน `"--- $id: ..."` ซึ่ง PowerShell อ่าน `$id:` เป็นการอ้างตัวแปรแบบมี scope จึงล้มตอน parse (run 43047705006 วัดได้ 92.7% แต่ไม่ได้ commit รายงาน) แก้เป็น `${id}` ส่วน `$tag:` ใน `windows-x64-installer.yml` เป็น bash ไม่กระทบ
 
 ### เปลี่ยนแปลง
 - **ลูกศร ▲▼ ของช่อง By ใน Font › Advanced › Spacing ปรับทีละ 0.1 pt (เดิม 0.5 pt)** (`crates/ui-egui/src/dialogs.rs`: `step_spacing_by`)
