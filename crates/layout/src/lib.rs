@@ -3087,11 +3087,12 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
                 break;
             }
         }
-        // Word 2013 and later keep the paragraph mark after a page break that ends a paragraph on
-        // the break's page, so the next page doesn't start with an empty line.
+        // Word keeps the paragraph mark after a page break that ends a paragraph on the break's
+        // page, so the next page doesn't start with an empty line; only `w:splitPgBreakAndParaMark`
+        // sends it on. That holds for Word 2010 documents (compatibility mode 14) too: Word's
+        // layout of the corpus's mode-14 documents has no such line (govuk-043, -045, -054).
         if forced_break == Some(LineEnd::PageBreak)
             && l1 + 1 == n
-            && ctx.doc.settings.compat_mode >= doc4me_doc::COMPAT_MODE_CURRENT
             && !ctx.doc.settings.split_page_break_mark
             && pl.lines.get(l1).is_some_and(|l| pl.clusters.get(l.c0..l.c1).is_some_and(|cs| cs.iter().all(|c| c.kind == para::ClKind::Marker)))
         {

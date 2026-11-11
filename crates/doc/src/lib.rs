@@ -478,8 +478,8 @@ pub struct Settings {
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub add_para_spacing: bool,
     /// A page break that ends a paragraph sends the paragraph mark to the next page, as Word 2010
-    /// and earlier did (`w:splitPgBreakAndParaMark`); otherwise, in compatibility mode 15, the mark
-    /// stays with the break.
+    /// and earlier did (`w:splitPgBreakAndParaMark`); otherwise the mark stays with the break, in
+    /// Word 2010 documents (compatibility mode 14) too, as Word lays them out today.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
     pub split_page_break_mark: bool,
     /// Text in table cells snaps to the document grid (`w:adjustLineHeightInTable`); otherwise a

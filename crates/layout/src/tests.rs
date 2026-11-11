@@ -2416,9 +2416,10 @@ fn the_larger_of_space_after_and_space_before_separates_paragraphs() {
 
 #[test]
 fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
-    let top_of_b = |split: bool| {
+    let top_of_b = |split: bool, mode: u32| {
         let mut d = Document::new();
         d.settings.split_page_break_mark = split;
+        d.settings.compat_mode = mode;
         let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
         let b = doc4me_doc::Paragraph::with_text("B", Default::default());
         d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b)];
@@ -2429,11 +2430,16 @@ fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
         (tops[0], *tops.last().unwrap())
     };
     // Word 2013 and later: B starts page two.
-    let (first, b) = top_of_b(false);
+    let (first, b) = top_of_b(false, doc4me_doc::COMPAT_MODE_CURRENT);
     assert!((first - b).abs() < 0.01, "only B on page two: {first} {b}");
     // splitPgBreakAndParaMark (Word 2010): the mark takes a line there first.
-    let (first, b) = top_of_b(true);
+    let (first, b) = top_of_b(true, doc4me_doc::COMPAT_MODE_CURRENT);
     assert!(b > first + 5.0, "the mark's line comes first: {first} {b}");
+    // A Word 2010 document (compatibility mode 14) without the setting lays out like the rest:
+    // Word's own layout of such documents in the corpus has no empty line there (govuk-034,
+    // govuk-043, govuk-045, govuk-054).
+    let (first, b) = top_of_b(false, 14);
+    assert!((first - b).abs() < 0.01, "mode 14 without the setting: only B on page two: {first} {b}");
     // The space after a paragraph ending with a page break stays behind, so a heading that starts
     // a page of its own (page break before) doesn't add another page.
     let mut d = Document::new();
