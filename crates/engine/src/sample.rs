@@ -50,10 +50,10 @@ pub fn sample_document() -> Document {
     quote.props.space_before = Some(12.0);
     b.push(Block::Para(quote));
     b.push(Block::Para(styled("What we agree on", "Heading2")));
-    let mut num = d.numbering.clone();
+    let mut num = (*d.numbering).clone();
     let bullets = num.add_list(ListKind::Bullet);
     let steps = num.add_list(ListKind::Numbered);
-    d.numbering = num;
+    d.numbering = std::sync::Arc::new(num);
     for (lead, rest) in [
         ("Clean as you go. ", "Leave a table the way you would like to find it."),
         ("Label what is yours. ", "Unlabelled supplies on the commons shelf are fair game."),

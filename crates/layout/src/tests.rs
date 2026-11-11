@@ -561,7 +561,7 @@ fn right_tab_aligns_text_end() {
 #[test]
 fn lists_get_labels_and_indent() {
     let mut d = Document::from_text("one\ntwo\nthree");
-    let id = d.numbering.add_list(doc4me_doc::ListKind::Numbered);
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
     d.format_paragraphs(&Pos::body(0, 0), &Pos::body(2, 5), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
     let l = lay(&d);
     let labels: Vec<String> = l.pages[0]
@@ -579,8 +579,8 @@ fn chinese_counting_list_labels_and_their_font_runs() {
     // Issue #534: a "一、" list showed digits, drawn with glyph ids of another font.
     use doc4me_doc::section::NumFormat;
     let mut d = Document::from_text("甲\n乙\n丙");
-    let id = d.numbering.add_list(doc4me_doc::ListKind::Numbered);
-    for a in &mut d.numbering.abstracts {
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
         if let Some(l) = a.levels.first_mut() {
             l.format = NumFormat::ChineseCounting;
             l.text = "%1、".into();
@@ -612,7 +612,7 @@ fn chinese_counting_list_labels_and_their_font_runs() {
     let got = labels(&d);
     assert_eq!(got.iter().map(|(t, _)| t.as_str()).collect::<Vec<_>>(), ["一、", "二、", "三、"]);
     // A decimal label next to a CJK comma mixes faces when the Latin face lacks the comma.
-    for a in &mut d.numbering.abstracts {
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
         if let Some(l) = a.levels.first_mut() {
             l.format = NumFormat::Decimal;
         }
@@ -627,8 +627,8 @@ fn chinese_counting_list_labels_and_their_font_runs() {
 fn symbol_font_bullet_without_the_font_draws_a_bullet() {
     // Word's default bullet: U+F0B7 in Symbol.
     let mut d = Document::from_text("one");
-    let id = d.numbering.add_list(doc4me_doc::ListKind::BulletChar('\u{F0B7}'));
-    for a in &mut d.numbering.abstracts {
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::BulletChar('\u{F0B7}'));
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
         if let Some(l) = a.levels.first_mut() {
             l.chr.font = Some("Symbol".into());
         }
@@ -1412,7 +1412,7 @@ fn hidden_float_leaves_no_wrap_area_when_hidden_text_is_not_shown() {
     // resolved formatting says so). Measured in Word: not printed, and the text runs full width.
     let text = "Words flow around the picture here. ".repeat(30);
     let mut d = Document::from_text(&text);
-    d.styles.upsert(doc4me_doc::Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
         id: "Secret".into(),
         name: "Secret".into(),
         kind: doc4me_doc::StyleKind::Character,
@@ -1783,7 +1783,7 @@ fn table_style_paragraph_props_beat_document_defaults() {
 #[test]
 fn paragraph_style_and_direct_formatting_beat_table_style() {
     let mut d = styled_table_doc(Some("TableGrid"), 3);
-    d.styles.upsert(doc4me_doc::Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
         id: "Spaced".into(),
         name: "Spaced".into(),
         based_on: Some("Normal".into()),
@@ -1809,7 +1809,7 @@ fn paragraph_style_and_direct_formatting_beat_table_style() {
     assert_eq!(cell_para(&l, 1, 0).rp.space_after, 3.0, "direct formatting");
     assert_eq!(cell_para(&l, 2, 0).rp.space_after, 0.0, "table style");
     // Normal setting its own spacing wins too, even where it equals nothing in the defaults.
-    if let Some(n) = d.styles.get_mut("Normal") {
+    if let Some(n) = std::sync::Arc::make_mut(&mut d.styles).get_mut("Normal") {
         n.para.space_after = Some(10.0);
     }
     assert_eq!(cell_para(&lay(&d), 2, 0).rp.space_after, 10.0, "Normal");
@@ -1822,7 +1822,7 @@ fn derived_table_style_merges_its_base() {
     use doc4me_doc::styles::TableStyleParts;
     let red = doc4me_doc::Rgb(0xC0, 0, 0);
     let mut d = styled_table_doc(Some("RedGrid"), 3);
-    d.styles.upsert(doc4me_doc::Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
         id: "RedGrid".into(),
         name: "Red Grid".into(),
         kind: doc4me_doc::StyleKind::Table,
@@ -2752,7 +2752,7 @@ fn labels(l: &DocLayout) -> Vec<String> {
 }
 
 fn numbered(d: &mut Document, texts: &[&str], props: ParaProps) -> Vec<doc4me_doc::Paragraph> {
-    let num = d.numbering.add_list(doc4me_doc::ListKind::Numbered);
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
     texts
         .iter()
         .map(|t| {
@@ -2773,7 +2773,7 @@ fn thai_list_labels() {
         (doc4me_doc::ListKind::ThaiCounting, ["หนึ่ง.", "สอง.", "สาม.", "สี่."]),
     ] {
         let mut d = Document::new();
-        let num = d.numbering.add_list(kind);
+        let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(kind);
         d.body = (0..4)
             .map(|i| {
                 let mut p = doc4me_doc::Paragraph::with_text(&format!("ข้อ {i}"), Default::default());
@@ -4402,11 +4402,11 @@ fn unproofed_languages_and_no_proof_runs_are_not_marked() {
     let text = "Nous écrivons beaucoup aujourd'hui.";
     let mut d = Document::from_text(text);
     assert!(issues(&d) > 0, "French words are English misspellings in an English document");
-    d.styles.default_chr.lang = Some("fr-FR".into());
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some("fr-FR".into());
     assert_eq!(issues(&d), 0, "no French dictionary: no marks");
-    d.styles.default_chr.lang = Some("pl-PL".into());
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some("pl-PL".into());
     let mut pl = Document::from_text("Płynie żeka.");
-    pl.styles.default_chr.lang = Some("pl-PL".into());
+    std::sync::Arc::make_mut(&mut pl.styles).default_chr.lang = Some("pl-PL".into());
     assert_eq!(issues(&pl), 1);
     pl.format_range(&Pos::body(0, 0), &Pos::body(0, "Płynie żeka.".len()), &|c| c.no_proof = Some(true)).unwrap();
     assert_eq!(issues(&pl), 0);

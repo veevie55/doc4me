@@ -222,9 +222,9 @@ fn read_limited(bytes: &[u8], max_paragraphs: usize) -> Result<Document, DocbinE
 
     let mut doc = Document::new();
     doc.body.clear();
-    doc.styles = fmt::stylesheet(&raw_styles, &fonts);
-    doc.numbering = list::parse(&table, &fib, &fonts);
-    let sheet: StyleSheet = doc.styles.clone();
+    doc.styles = std::sync::Arc::new(fmt::stylesheet(&raw_styles, &fonts));
+    doc.numbering = std::sync::Arc::new(list::parse(&table, &fib, &fonts));
+    let sheet: StyleSheet = StyleSheet::clone(&doc.styles);
     let sects = sections::parse(&word, &table, &fib);
     let stories = sections::header_stories(&table, &fib);
     // Subdocument layout in the CP space: main document, footnotes, headers, comments,

@@ -811,7 +811,7 @@ impl Reader<'_> {
             }
             sheet.styles.push(st);
         }
-        self.doc.styles = sheet;
+        self.doc.styles = std::sync::Arc::new(sheet);
         Ok(())
     }
 
@@ -928,8 +928,8 @@ impl Reader<'_> {
                 a.levels = levels;
             }
         }
-        self.doc.numbering.abstracts = abstracts;
-        self.doc.numbering.nums = nums;
+        std::sync::Arc::make_mut(&mut self.doc.numbering).abstracts = abstracts;
+        std::sync::Arc::make_mut(&mut self.doc.numbering).nums = nums;
         Ok(())
     }
 

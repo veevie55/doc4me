@@ -180,13 +180,13 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
         Some(n) => {
             // Change the list in place: every list sharing its definition follows.
             let aid = s.doc.numbering.num(n).map(|x| x.abstract_id).ok_or_else(|| CmdError::Params("no such list".into()))?;
-            if let Some(a) = s.doc.numbering.abstracts.iter_mut().find(|a| a.id == aid) {
+            if let Some(a) = std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.iter_mut().find(|a| a.id == aid) {
                 a.levels = levels.clone();
                 if name.is_some() {
                     a.name = name;
                 }
             }
-            if let Some(x) = s.doc.numbering.nums.iter_mut().find(|x| x.id == n) {
+            if let Some(x) = std::sync::Arc::make_mut(&mut s.doc.numbering).nums.iter_mut().find(|x| x.id == n) {
                 x.level_overrides.clear();
             }
             let sharing: Vec<u32> = s.doc.numbering.nums.iter().filter(|x| x.abstract_id == aid).map(|x| x.id).collect();
@@ -195,9 +195,9 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
         }
         None => {
             let aid = s.doc.numbering.abstracts.iter().map(|a| a.id.saturating_add(1)).max().unwrap_or(0);
-            s.doc.numbering.abstracts.push(AbstractNum { id: aid, name, levels: levels.clone() });
+            std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.push(AbstractNum { id: aid, name, levels: levels.clone() });
             let nid = s.doc.numbering.nums.iter().map(|n| n.id.saturating_add(1)).max().unwrap_or(1).max(1);
-            s.doc.numbering.nums.push(Num { id: nid, abstract_id: aid, ..Default::default() });
+            std::sync::Arc::make_mut(&mut s.doc.numbering).nums.push(Num { id: nid, abstract_id: aid, ..Default::default() });
             nid
         }
     };
@@ -205,7 +205,7 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
     let mut linked = Vec::new();
     for (i, l) in levels.iter().enumerate() {
         let Some(id) = l.style.as_deref().map(|st| s.doc.styles.find(st).map(|x| x.id.clone()).unwrap_or_else(|| st.to_string())) else { continue };
-        if let Some(st) = s.doc.styles.get_mut(&id) {
+        if let Some(st) = std::sync::Arc::make_mut(&mut s.doc.styles).get_mut(&id) {
             st.para.numbering = Some(NumRef { num, level: i as u8 });
             linked.push(id);
         }

@@ -3775,7 +3775,7 @@ fn deleting_a_table_style_from_manage_styles_uses_table_style_deletion() {
     assert_eq!((r["deleted"][0].as_str(), r["restyled"].as_u64()), (Some("Base"), Some(1)));
     assert_eq!(s.doc.table(StoryRef::Body, &tp).unwrap().props.style.as_deref(), Some("TableGrid"));
     assert_eq!(s.doc.styles.table_style("Child").unwrap().parts.header_fill, Some(Rgb(0xC0, 0, 0)), "the child keeps its look");
-    for st in s.doc.styles.styles.iter_mut() {
+    for st in std::sync::Arc::make_mut(&mut s.doc.styles).styles.iter_mut() {
         st.builtin = false;
     }
     assert!(s.run("styles.delete", &json!({"style": "Table Grid"})).is_err());
@@ -3912,7 +3912,7 @@ fn delete_table_style_falls_back_and_undoes() {
 fn builtin_table_styles_marked_custom_in_a_docx_cant_be_deleted() {
     let mut s = s();
     run(&mut s, "insert.table", json!({"rows": 1, "cols": 1}));
-    for st in s.doc.styles.styles.iter_mut() {
+    for st in std::sync::Arc::make_mut(&mut s.doc.styles).styles.iter_mut() {
         st.builtin = false;
     }
     for name in ["Table Grid", "Normal Table", "TableGrid"] {
@@ -4519,7 +4519,7 @@ fn list_buttons_follow_the_paragraphs_own_level() {
     // A bulleted list whose second level is numbered: at level 2 the paragraph is numbered.
     let num = s.doc.para_at(&s.sel.focus).unwrap().props.numbering.unwrap().num;
     let numbered = doc4me_doc::numbering::Level { text: "%2.".into(), ..Default::default() };
-    s.doc.numbering.nums.iter_mut().find(|n| n.id == num).unwrap().level_overrides.push((1, numbered));
+    std::sync::Arc::make_mut(&mut s.doc.numbering).nums.iter_mut().find(|n| n.id == num).unwrap().level_overrides.push((1, numbered));
     run(&mut s, "para.listLevel", json!({"level": 1}));
     assert_eq!(state(&s), ListButtons { bullets: false, numbering: true, multilevel: false });
     run(&mut s, "para.numbering", json!({}));
@@ -6289,4 +6289,33 @@ fn a_huge_picture_width_keeps_the_size_finite() {
     assert!(w.is_finite() && h.is_finite(), "{w} x {h}");
     let saved = crate::io::save_bytes("a.json", &s.doc).unwrap();
     assert!(crate::io::open_bytes("a.json", &saved).is_ok());
+}
+
+#[test]
+fn undo_steps_share_the_style_sheet_and_lists_until_a_command_changes_them() {
+    // Every undo step copied the whole style sheet and list definitions: kilobytes a style, so
+    // typing into a document with hundreds of styles cost megabytes a step.
+    use std::sync::Arc;
+    let mut s = Session::new(doc4me_doc::Document::from_text("One two three."));
+    for _ in 0..5 {
+        run(&mut s, "text.insert", json!({"text": "word "}));
+        run(&mut s, "caret.left", json!({}));
+    }
+    assert!(s.undo_labels().len() >= 5, "five or more undo steps");
+    assert!(Arc::strong_count(&s.doc.styles) >= 6, "the document and each step hold one style sheet");
+    assert!(Arc::strong_count(&s.doc.numbering) >= 6, "and one set of list definitions");
+    // A command that changes a style copies the sheet once; undo puts the shared one back.
+    let sheet = Arc::clone(&s.doc.styles);
+    run(&mut s, "styles.modify", json!({"style": "Normal", "chr": {"bold": true}}));
+    assert!(!Arc::ptr_eq(&sheet, &s.doc.styles));
+    assert_ne!(*sheet, *s.doc.styles, "the change is in the new copy only");
+    run(&mut s, "edit.undo", json!({}));
+    assert!(Arc::ptr_eq(&sheet, &s.doc.styles), "undo restores the step's own sheet");
+    // Lists likewise.
+    let lists = Arc::clone(&s.doc.numbering);
+    run(&mut s, "para.numbering", json!({}));
+    assert!(!Arc::ptr_eq(&lists, &s.doc.numbering));
+    assert!(s.doc.numbering.nums.len() > lists.nums.len());
+    run(&mut s, "edit.undo", json!({}));
+    assert!(Arc::ptr_eq(&lists, &s.doc.numbering));
 }

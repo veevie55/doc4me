@@ -411,10 +411,11 @@ fn complex_script_values_follow_the_latin_ones_until_export() {
     assert_eq!(read, before);
     // So does one whose styles set them.
     let mut word = Document::new();
-    word.styles.default_chr.font_cs = Some("TH SarabunPSK".into());
-    word.styles.default_chr.size_cs = Some(16.0);
-    word.styles.default_chr.bold_cs = Some(false);
-    word.styles.default_chr.italic_cs = Some(false);
+    let chr = &mut Arc::make_mut(&mut word.styles).default_chr;
+    chr.font_cs = Some("TH SarabunPSK".into());
+    chr.size_cs = Some(16.0);
+    chr.bold_cs = Some(false);
+    chr.italic_cs = Some(false);
     let before = word.clone();
     assert!(!word.complex_script_falls_back());
     word.make_complex_script_explicit();

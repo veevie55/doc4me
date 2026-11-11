@@ -589,8 +589,8 @@ pub fn specs() -> Vec<CommandSpec> {
                 .and_then(|x| x.props.numbering)
                 .filter(|n| n.num != 0)
                 .ok_or_else(|| CmdError::Failed("not in a numbered list".into()))?;
-            let new = s.doc.numbering.restart(n.num).ok_or_else(|| CmdError::Failed("bad list".into()))?;
-            if let Some(num) = s.doc.numbering.nums.iter_mut().find(|x| x.id == new) {
+            let new = std::sync::Arc::make_mut(&mut s.doc.numbering).restart(n.num).ok_or_else(|| CmdError::Failed("bad list".into()))?;
+            if let Some(num) = std::sync::Arc::make_mut(&mut s.doc.numbering).nums.iter_mut().find(|x| x.id == new) {
                 num.start_overrides = vec![(n.level, value)];
             }
             let paths: Vec<_> = s.doc.para_paths(f.story).into_iter().filter(|q| *q >= f.path).collect();
@@ -613,9 +613,9 @@ pub fn specs() -> Vec<CommandSpec> {
             let fmt = doc4me_doc::section::NumFormat::from_ooxml(p::str(v, "format").unwrap_or("decimal"));
             let text = p::str(v, "text").unwrap_or("%1.").to_string();
             let start = p::u64(v, "start").unwrap_or(1).min(100_000) as u32;
-            let id = s.doc.numbering.add_list(doc4me_doc::ListKind::Numbered);
+            let id = std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(doc4me_doc::ListKind::Numbered);
             if let Some(a) = s.doc.numbering.abstract_of(id).map(|a| a.id)
-                && let Some(abs) = s.doc.numbering.abstracts.iter_mut().find(|x| x.id == a)
+                && let Some(abs) = std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.iter_mut().find(|x| x.id == a)
                 && let Some(l) = abs.levels.first_mut()
             {
                 l.format = fmt;
@@ -724,9 +724,9 @@ fn language(s: &mut Session, v: &Value) -> CmdResult {
     }
     if p::bool(v, "default") == Some(true) {
         let l = lang.clone().ok_or_else(|| CmdError::Params("`default` needs `lang`".into()))?;
-        s.doc.styles.default_chr.lang = Some(l.clone());
+        std::sync::Arc::make_mut(&mut s.doc.styles).default_chr.lang = Some(l.clone());
         // A Normal style that names its own language follows the new default.
-        if let Some(n) = s.doc.styles.styles.iter_mut().find(|x| x.id == "Normal")
+        if let Some(n) = std::sync::Arc::make_mut(&mut s.doc.styles).styles.iter_mut().find(|x| x.id == "Normal")
             && n.chr.lang.is_some()
         {
             n.chr.lang = Some(l);
@@ -769,7 +769,7 @@ fn list_commands(s: &mut Session, v: &Value) -> CmdResult {
     rows.sort_by(|a, b| a[0].to_lowercase().cmp(&b[0].to_lowercase()).then_with(|| a[2].cmp(&b[2])));
     let mut d = Document::new();
     if let Some(lang) = &s.editing_lang {
-        d.styles.default_chr.lang = Some(lang.clone());
+        std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some(lang.clone());
     }
     let mut t = doc4me_doc::Table::new(rows.len() + 1, 3, d.last_section.text_width());
     t.props.style = Some("TableGrid".into());

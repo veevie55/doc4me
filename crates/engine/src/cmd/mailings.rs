@@ -1279,7 +1279,7 @@ pub const RETURN_STYLE: &str = "EnvelopeReturn";
 fn envelope_styles(doc: &mut Document, delivery: &CharProps, ret: &CharProps) {
     for (id, name, size, chr) in [(ADDRESS_STYLE, "Envelope Address", 12.0, delivery), (RETURN_STYLE, "Envelope Return", 10.0, ret)] {
         if doc.styles.get(id).is_none() {
-            doc.styles.upsert(doc4me_doc::Style {
+            std::sync::Arc::make_mut(&mut doc.styles).upsert(doc4me_doc::Style {
                 id: id.into(),
                 name: name.into(),
                 kind: doc4me_doc::StyleKind::Paragraph,
@@ -1288,7 +1288,7 @@ fn envelope_styles(doc: &mut Document, delivery: &CharProps, ret: &CharProps) {
                 ..Default::default()
             });
         }
-        if let Some(st) = doc.styles.get_mut(id) {
+        if let Some(st) = std::sync::Arc::make_mut(&mut doc.styles).get_mut(id) {
             st.chr.overlay(chr);
         }
     }

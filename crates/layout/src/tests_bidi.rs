@@ -214,7 +214,7 @@ fn rtl_indents_and_alignment_are_measured_from_the_right() {
 #[test]
 fn rtl_list_label_sits_on_the_right() {
     let mut d = doc_of(&[("مورد اول", true), ("مورد دوم", true)]);
-    let id = d.numbering.add_list(doc4me_doc::ListKind::Numbered);
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
     d.format_paragraphs(&Pos::body(0, 0), &Pos::body(1, 0), &|p: &mut ParaProps| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 }))
         .unwrap();
     let l = lay(&d);

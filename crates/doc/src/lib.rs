@@ -868,8 +868,12 @@ pub struct Document {
     /// Properties of the last section (OOXML's body-level `w:sectPr`).
     pub last_section: SectionProps,
     pub parts: BTreeMap<u32, Part>,
-    pub styles: StyleSheet,
-    pub numbering: Numbering,
+    /// Shared, like the blocks: an undo step copies it only when a command changes it (a full
+    /// copy is kilobytes a style, so typing into a document with hundreds of styles cost megabytes
+    /// a step).
+    pub styles: Arc<StyleSheet>,
+    /// Shared like [`Document::styles`].
+    pub numbering: Arc<Numbering>,
     pub comments: BTreeMap<u32, Comment>,
     pub revisions: Vec<Revision>,
     pub settings: Settings,
@@ -991,8 +995,8 @@ impl Document {
             body: vec![para_block(Paragraph::new())],
             last_section: SectionProps::default(),
             parts: BTreeMap::new(),
-            styles: StyleSheet::builtin(),
-            numbering: Numbering::default(),
+            styles: Arc::new(StyleSheet::builtin()),
+            numbering: Arc::default(),
             comments: BTreeMap::new(),
             revisions: Vec::new(),
             settings: Settings::default(),
@@ -1553,11 +1557,12 @@ impl Document {
                 c.italic_cs = c.italic;
             }
         };
-        fill(&mut self.styles.default_chr);
-        for st in &mut self.styles.styles {
+        let styles = Arc::make_mut(&mut self.styles);
+        fill(&mut styles.default_chr);
+        for st in &mut styles.styles {
             fill(&mut st.chr);
         }
-        for a in &mut self.numbering.abstracts {
+        for a in &mut Arc::make_mut(&mut self.numbering).abstracts {
             for l in &mut a.levels {
                 fill(&mut l.chr);
             }

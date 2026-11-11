@@ -174,11 +174,11 @@ fn new(s: &mut Session, v: &Value) -> CmdResult {
             // A blank document is written in the editing language (the templates' text is English).
             let mut d = Document::new();
             if let Some(lang) = &s.editing_lang {
-                d.styles.default_chr.lang = Some(lang.clone());
+                std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some(lang.clone());
             }
             // Options › Advanced › Bidirectional text › Default direction: right to left.
             if s.prefs.rtl_default {
-                d.styles.default_para.bidi = Some(true);
+                std::sync::Arc::make_mut(&mut d.styles).default_para.bidi = Some(true);
             }
             d
         }
@@ -205,7 +205,7 @@ fn open(s: &mut Session, v: &Value) -> CmdResult {
     if let Some(lang) = &s.editing_lang
         && matches!(ext.as_str(), "txt" | "text" | "md" | "markdown")
     {
-        doc.styles.default_chr.lang = Some(lang.clone());
+        std::sync::Arc::make_mut(&mut doc.styles).default_chr.lang = Some(lang.clone());
     }
     s.set_document(doc);
     s.path = Some(path.into());
@@ -298,7 +298,7 @@ fn letter_wizard(s: &mut Session, v: &Value) -> CmdResult {
     };
     let mut doc = crate::sample::letter_from(&f);
     if let Some(lang) = &s.editing_lang {
-        doc.styles.default_chr.lang = Some(lang.clone());
+        std::sync::Arc::make_mut(&mut doc.styles).default_chr.lang = Some(lang.clone());
     }
     s.set_document(doc);
     s.path = None;
@@ -602,8 +602,8 @@ fn font_substitution(s: &mut Session, v: &Value) -> CmdResult {
             fix(&mut o, &mut converted);
             *f = o.unwrap_or_default();
         }
-        fix_char_props(&mut s.doc.styles.default_chr, &mut fix, &mut converted);
-        for st in &mut s.doc.styles.styles {
+        fix_char_props(&mut std::sync::Arc::make_mut(&mut s.doc.styles).default_chr, &mut fix, &mut converted);
+        for st in &mut std::sync::Arc::make_mut(&mut s.doc.styles).styles {
             fix_char_props(&mut st.chr, &mut fix, &mut converted);
         }
         let stories: Vec<StoryRef> = std::iter::once(StoryRef::Body).chain(s.doc.parts.keys().map(|id| StoryRef::Part(*id))).collect();

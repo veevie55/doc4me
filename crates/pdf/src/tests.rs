@@ -35,7 +35,7 @@ fn sample() -> Document {
     p.insert_text(n, " back to top", &CharProps { link: Some("#intro".into()), italic: Some(true), ..Default::default() }).unwrap();
     b.push(para_block(p));
     b.push(para_block(Paragraph::with_text("Details", CharProps::default()).styled("Heading2")));
-    let list = d.numbering.add_list(ListKind::Numbered);
+    let list = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Numbered);
     for t in ["alpha item", "beta item"] {
         let mut q = Paragraph::with_text(t, CharProps::default()).styled("ListParagraph");
         q.props.numbering = Some(NumRef { num: list, level: 0 });
@@ -268,7 +268,7 @@ fn deleted_heading_text_stays_out_of_bookmarks_and_tags() {
 fn hidden_heading_text_stays_out_of_bookmarks_and_tags() {
     let mut d = Document::new();
     // Hidden text both directly and through a character style.
-    d.styles.upsert(doc4me_doc::Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
         id: "Secret".into(),
         name: "Secret".into(),
         kind: doc4me_doc::StyleKind::Character,
@@ -379,7 +379,7 @@ fn table_style_hidden_heading_text_stays_out_of_bookmarks_and_tags() {
     // Hidden by the table style's header row, so only the layout's resolution (table conditional
     // formatting under the runs' own) says the text is hidden.
     let mut d = Document::new();
-    d.styles.upsert(doc4me_doc::Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
         id: "SecretHeader".into(),
         name: "Secret Header".into(),
         kind: doc4me_doc::StyleKind::Table,

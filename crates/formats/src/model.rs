@@ -490,7 +490,7 @@ impl Builder<'_> {
                 src.get(i).cloned().unwrap_or_default()
             })
             .collect();
-        let numbering = &mut self.doc.numbering;
+        let numbering = std::sync::Arc::make_mut(&mut self.doc.numbering);
         let aid = numbering.abstracts.iter().map(|a| a.id + 1).max().unwrap_or(0);
         numbering.abstracts.push(AbstractNum { id: aid, name: None, levels });
         let nid = numbering.nums.iter().map(|n| n.id + 1).max().unwrap_or(1).max(1);
@@ -611,7 +611,7 @@ pub fn to_doc(flow: &Flow) -> Document {
     doc.numbering = Default::default();
     let uses_code = uses_kind(&flow.blocks, Kind::Code, 0);
     if uses_code {
-        doc.styles.upsert(code_style());
+        std::sync::Arc::make_mut(&mut doc.styles).upsert(code_style());
     }
     let body = Builder { doc: &mut doc, run_strings: 0 }.blocks(&flow.blocks, 0);
     doc.body = body;

@@ -97,8 +97,8 @@ fn set_fonts(s: &mut Session, heading: &str, body: &str) {
     let old_heading = (settings.major_font != settings.minor_font).then(|| settings.major_font.clone());
     s.doc.settings.major_font = heading.into();
     s.doc.settings.minor_font = body.into();
-    s.doc.styles.default_chr.font = Some(body.into());
-    for st in &mut s.doc.styles.styles {
+    std::sync::Arc::make_mut(&mut s.doc.styles).default_chr.font = Some(body.into());
+    for st in &mut std::sync::Arc::make_mut(&mut s.doc.styles).styles {
         if let Some(f) = &st.chr.font
             && (old_heading.as_deref() == Some(f.as_str()) || st.id.starts_with("Heading") || st.id == "Title")
         {
@@ -110,7 +110,7 @@ fn set_fonts(s: &mut Session, heading: &str, body: &str) {
 }
 
 fn set_accent(s: &mut Session, accent: Rgb) {
-    for st in &mut s.doc.styles.styles {
+    for st in &mut std::sync::Arc::make_mut(&mut s.doc.styles).styles {
         if st.id.starts_with("Heading") && st.id.len() == 8 && st.id.as_bytes().get(7).is_some_and(|d| *d <= b'5')
             || st.id == "IntenseQuote"
             || st.id == "IntenseEmphasis"
@@ -178,7 +178,7 @@ fn style_set(s: &mut Session, v: &Value) -> CmdResult {
     fresh.styles.extend(customs);
     fresh.default_chr.font = s.doc.styles.default_chr.font.clone();
     fresh.default_chr.font_cs = s.doc.styles.default_chr.font_cs.clone();
-    s.doc.styles = fresh;
+    s.doc.styles = std::sync::Arc::new(fresh);
     let (h, b) = (s.doc.settings.major_font.clone(), s.doc.settings.minor_font.clone());
     set_fonts(s, &h, &b);
     set_accent(s, accent);
@@ -195,9 +195,9 @@ fn para_spacing(s: &mut Session, v: &Value) -> CmdResult {
         "double" => (0.0, 8.0, 2.0),
         _ => (0.0, 8.0, 1.15),
     };
-    s.doc.styles.default_para.space_before = Some(before);
-    s.doc.styles.default_para.space_after = Some(after);
-    s.doc.styles.default_para.line_spacing = Some(LineSpacing::Multiple(line));
+    std::sync::Arc::make_mut(&mut s.doc.styles).default_para.space_before = Some(before);
+    std::sync::Arc::make_mut(&mut s.doc.styles).default_para.space_after = Some(after);
+    std::sync::Arc::make_mut(&mut s.doc.styles).default_para.line_spacing = Some(LineSpacing::Multiple(line));
     sel_result(s)
 }
 

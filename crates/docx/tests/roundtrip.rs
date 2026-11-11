@@ -258,7 +258,7 @@ fn every_para_prop_round_trips() {
 #[test]
 fn styles_and_lists_round_trip() {
     let mut d = Document::new();
-    d.styles.upsert(Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
         id: "MyStyle".into(),
         name: "My Style".into(),
         kind: StyleKind::Paragraph,
@@ -274,7 +274,7 @@ fn styles_and_lists_round_trip() {
         locked: true,
         table: None,
     });
-    d.styles.upsert(Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
         id: "MyStyleChar".into(),
         name: "My Style Char".into(),
         kind: StyleKind::Character,
@@ -283,10 +283,10 @@ fn styles_and_lists_round_trip() {
         hidden: true,
         ..Default::default()
     });
-    let bullets = d.numbering.add_list(ListKind::Bullet);
-    let nums = d.numbering.add_list(ListKind::Legal);
-    let outline = d.numbering.add_list(ListKind::Outline);
-    if let Some(n) = d.numbering.nums.iter_mut().find(|n| n.id == outline) {
+    let bullets = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Bullet);
+    let nums = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Legal);
+    let outline = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Outline);
+    if let Some(n) = std::sync::Arc::make_mut(&mut d.numbering).nums.iter_mut().find(|n| n.id == outline) {
         n.start_overrides.push((0, 4));
     }
     let mut ps = Vec::new();
@@ -597,7 +597,7 @@ fn table_style_formatting_round_trips() {
         band_size: Some(3),
         ..Default::default()
     };
-    d.styles.upsert(Style {
+    std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
         id: "Whole".into(),
         name: "Whole".into(),
         kind: StyleKind::Table,
@@ -1420,7 +1420,7 @@ fn kitchen_sink() -> Document {
     let mut d = Document::new();
     let png = tiny_png();
     let key = d.add_media(png, "png");
-    let num = d.numbering.add_list(ListKind::Numbered);
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Numbered);
     let h = d.add_part(PartKind::Header, vec![para_block(Paragraph::with_text("Head", CharProps::default()))]);
     let f = d.add_part(PartKind::Footnote, vec![para_block(Paragraph::with_text("Note", CharProps::default()))]);
     let c = d.add_part(PartKind::Comment, vec![para_block(Paragraph::with_text("Comment", CharProps::default()))]);
@@ -1654,10 +1654,10 @@ fn list_level_overrides_round_trip() {
     use doc4me_doc::numbering::{Counters, Level};
     use doc4me_doc::section::NumFormat;
     let mut d = Document::new();
-    let num = d.numbering.add_list(ListKind::Numbered);
-    let restart = d.numbering.restart(num).unwrap();
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(ListKind::Numbered);
+    let restart = std::sync::Arc::make_mut(&mut d.numbering).restart(num).unwrap();
     let own = Level { format: NumFormat::DecimalZero, text: "%1.%2".into(), indent: 26.5, hanging: 26.5, ..Level::default() };
-    if let Some(n) = d.numbering.nums.iter_mut().find(|n| n.id == restart) {
+    if let Some(n) = std::sync::Arc::make_mut(&mut d.numbering).nums.iter_mut().find(|n| n.id == restart) {
         n.level_overrides = vec![(1, own.clone())];
     }
     let back = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
@@ -2424,12 +2424,12 @@ fn new_documents_spell_out_complex_script_properties() {
 #[test]
 fn kerning_and_ligatures_round_trip() {
     let mut d = Document::from_text("AV fi");
-    d.styles.default_chr.kern = Some(1.0);
-    d.styles.default_chr.ligatures = Some("standardContextual".into());
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.kern = Some(1.0);
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.ligatures = Some("standardContextual".into());
     let r = rt(&d);
     assert_eq!(r.styles.default_chr.kern, Some(1.0));
     assert_eq!(r.styles.default_chr.ligatures.as_deref(), Some("standardContextual"));
-    d.styles.default_chr.ligatures = Some("<bogus/>".into());
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.ligatures = Some("<bogus/>".into());
     let bytes = doc4me_docx::write(&d).expect("write");
     let r = doc4me_docx::read(&bytes).expect("read");
     assert_eq!(r.styles.default_chr.ligatures, None);

@@ -11,6 +11,13 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง
+- **ขั้น Undo ใช้ style sheet และรายการลำดับเลข (list definitions) ร่วมกัน แทนการคัดลอกทุกขั้น** (`crates/doc/src/lib.rs`: `Document::styles` เป็น `Arc<StyleSheet>`, `Document::numbering` เป็น `Arc<Numbering>`; จุดที่แก้ใน `crates/engine`, `crates/docx`, `crates/docbin`, `crates/formats`, `crates/zotero`, `crates/ui-egui` และเทสต์ใช้ `Arc::make_mut`)
+  - เหตุผล: ทุกขั้น Undo คัดลอก style sheet ทั้งชุด (กิโลไบต์ต่อสไตล์) จึงพิมพ์ในเอกสารที่มีสไตล์หลายร้อยรายการแล้วกินหน่วยความจำเป็นเมกะไบต์ต่อขั้น WordCraft วัดได้ 1.2 GB → 21 MB เมื่อประวัติเต็ม (พอร์ตจาก WordCraft `b2734c28`, #2694)
+  - ผลต่อผู้ใช้และความเข้ากันได้: พฤติกรรมของโปรแกรมไม่เปลี่ยน แต่ใช้หน่วยความจำน้อยลงมากเมื่อแก้เอกสารที่มีสไตล์/รายการเลขจำนวนมาก; คำสั่งที่แก้สไตล์หรือรายการเลขคัดลอกชุดนั้นหนึ่งครั้ง และ Undo คืนชุดเดิมของขั้นนั้น; รูปแบบไฟล์ `.json`, `.docx` และ `.doc` ไม่เปลี่ยน (Arc แปลงเป็น JSON เหมือนค่าเดิม)
+  - ตรวจสอบ: เทสต์ใหม่ `undo_steps_share_the_style_sheet_and_lists_until_a_command_changes_them` (ขั้น Undo ถือ style sheet ตัวเดียวกัน, `styles.modify` แล้ว Undo ได้ตัวเดิมคืน, รายการเลขเช่นกัน); `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อจำกัดที่ทราบ: ไม่ได้พอร์ตเทสต์วัดขนาดใหญ่ (1,000 การแก้ใน 600 สไตล์) ของ WordCraft
+
 ### ความปลอดภัย
 - **ช่องทาง control และ MCP ปฏิเสธคำสั่งที่จะทิ้งงานที่ยังไม่บันทึก** (`crates/ui-egui/src/control.rs`, `crates/ui-egui/src/lib.rs`, `crates/mcp/src/tools.rs`, `docs/control-protocol.md`)
   - เหตุผล: การเรียกผ่าน control/MCP ไม่เคยเห็นกล่อง Save Changes จึงสั่ง `file.new`, `file.open` (มี `path`), `file.close`, คำสั่ง mailings ที่แทนที่เอกสาร หรือ `app.quit` ทับงานที่ยังไม่บันทึกได้เงียบๆ (พอร์ตจาก WordCraft `ef35d79c`, #1268/#3274 ในส่วนที่ใช้กับแอปเอกสารเดียว)

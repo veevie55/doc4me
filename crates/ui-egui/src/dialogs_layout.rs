@@ -807,10 +807,12 @@ mod tests {
             a.run("select.all", json!({})).unwrap();
             let proofing = doc4me_doc::CharProps { lang: Some("en-GB".into()), no_proof: Some(true), ..Default::default() };
             match source {
-                "default" => a.session.doc.styles.default_chr.overlay(&proofing),
-                "paragraph" => a.session.doc.styles.styles.iter_mut().find(|s| s.id == "Normal").unwrap().chr.overlay(&proofing),
+                "default" => std::sync::Arc::make_mut(&mut a.session.doc.styles).default_chr.overlay(&proofing),
+                "paragraph" => {
+                    std::sync::Arc::make_mut(&mut a.session.doc.styles).styles.iter_mut().find(|s| s.id == "Normal").unwrap().chr.overlay(&proofing)
+                }
                 _ => {
-                    a.session.doc.styles.styles.push(doc4me_doc::Style {
+                    std::sync::Arc::make_mut(&mut a.session.doc.styles).styles.push(doc4me_doc::Style {
                         id: "ProofingCharacter".into(),
                         kind: doc4me_doc::StyleKind::Character,
                         chr: proofing,
@@ -835,7 +837,7 @@ mod tests {
         use egui_kittest::kittest::Queryable;
         let mut a = app();
         a.run("ui.language", json!({"value": "en"})).unwrap();
-        let normal = a.session.doc.styles.styles.iter_mut().find(|s| s.id == "Normal").unwrap();
+        let normal = std::sync::Arc::make_mut(&mut a.session.doc.styles).styles.iter_mut().find(|s| s.id == "Normal").unwrap();
         normal.chr.lang = Some("en-GB".into());
         normal.chr.no_proof = Some(true);
         a.run("select.all", json!({})).unwrap();

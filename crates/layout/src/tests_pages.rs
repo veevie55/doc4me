@@ -298,7 +298,7 @@ fn a_long_keep_with_next_paragraph_breaks_and_keeps_its_end_with_the_next() {
 #[test]
 fn automatic_spacing_skips_list_items_and_the_first_paragraph() {
     let mut d = Document::from_text("");
-    let num = d.numbering.add_list(doc4me_doc::ListKind::Bullet);
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Bullet);
     let auto = |text: &str, list: bool| {
         let mut p = Paragraph::with_text(text, Default::default());
         p.props.space_before_auto = Some(true);

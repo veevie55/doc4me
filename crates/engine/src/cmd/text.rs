@@ -173,7 +173,7 @@ fn list_autoformat(s: &mut Session) -> Result<bool, CmdError> {
     // Bullets join an existing bullet list; typing "1. " always starts numbering again at 1,
     // as in Word.
     let found = if kind.is_bullet() { s.doc.numbering.find_kind(kind) } else { None };
-    let num = found.unwrap_or_else(|| s.doc.numbering.add_list(kind));
+    let num = found.unwrap_or_else(|| std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind));
     let para = s.doc.para_mut(f.story, &f.path)?;
     let len = para.len();
     para.delete(0, len)?;

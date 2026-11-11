@@ -100,8 +100,8 @@ fn update_styles(s: &mut Session, v: &Value) -> CmdResult {
 
 /// What [`update_styles`] does to a document: all of `src`'s styles and its defaults.
 pub fn apply_template_styles(doc: &mut Document, src: &Document) -> Value {
-    doc.styles.default_chr = src.styles.default_chr.clone();
-    doc.styles.default_para = src.styles.default_para.clone();
+    std::sync::Arc::make_mut(&mut doc.styles).default_chr = src.styles.default_chr.clone();
+    std::sync::Arc::make_mut(&mut doc.styles).default_para = src.styles.default_para.clone();
     let ids: Vec<String> = src.styles.styles.iter().map(|st| st.id.clone()).collect();
     copy_styles(doc, src, &ids)
 }
@@ -172,7 +172,7 @@ fn rename(s: &mut Session, v: &Value) -> CmdResult {
     if s.doc.styles.styles.iter().any(|o| o.id != st.id && o.name.eq_ignore_ascii_case(&name)) {
         return Err(CmdError::Failed(format!("a style named `{name}` already exists")));
     }
-    if let Some(x) = s.doc.styles.get_mut(&st.id) {
+    if let Some(x) = std::sync::Arc::make_mut(&mut s.doc.styles).get_mut(&st.id) {
         x.name = name.clone();
     }
     touch_all(s);
@@ -349,7 +349,7 @@ pub fn copy_styles(doc: &mut Document, src: &Document, ids: &[String]) -> Value 
             }
         };
         let builtin = doc.styles.get(&target).is_some_and(|d| d.builtin) || st.builtin;
-        doc.styles.upsert(Style { id: target.clone(), builtin, ..st.clone() });
+        std::sync::Arc::make_mut(&mut doc.styles).upsert(Style { id: target.clone(), builtin, ..st.clone() });
         map.insert(st.id.clone(), target.clone());
         order.push((st.id.clone(), target));
     }
@@ -369,7 +369,7 @@ pub fn copy_styles(doc: &mut Document, src: &Document, ids: &[String]) -> Value 
             }
             n
         });
-        if let Some(d) = doc.styles.get_mut(&target) {
+        if let Some(d) = std::sync::Arc::make_mut(&mut doc.styles).get_mut(&target) {
             d.based_on = based_on;
             d.next = next;
             d.linked = linked;
@@ -392,8 +392,8 @@ fn import_num(doc: &mut Document, src: &Document, num: u32, map: &HashMap<String
     for l in &mut levels {
         l.style = l.style.as_deref().and_then(|s| map.get(s).cloned().or_else(|| doc.styles.get(s).map(|x| x.id.clone())));
     }
-    doc.numbering.abstracts.push(AbstractNum { id: new_abs, name: abs.name.clone(), levels });
-    doc.numbering.nums.push(Num { id: new_num, abstract_id: new_abs, ..n.clone() });
+    std::sync::Arc::make_mut(&mut doc.numbering).abstracts.push(AbstractNum { id: new_abs, name: abs.name.clone(), levels });
+    std::sync::Arc::make_mut(&mut doc.numbering).nums.push(Num { id: new_num, abstract_id: new_abs, ..n.clone() });
     done.insert(num, new_num);
     Some(new_num)
 }
@@ -431,17 +431,17 @@ mod tests {
     /// "Box" (missing in the document) and a numbered "Steps" style.
     fn template() -> Document {
         let mut t = Document::new();
-        if let Some(h) = t.styles.get_mut("Heading1") {
+        if let Some(h) = std::sync::Arc::make_mut(&mut t.styles).get_mut("Heading1") {
             h.chr.size = Some(31.0);
         }
-        t.styles.upsert(Style {
+        std::sync::Arc::make_mut(&mut t.styles).upsert(Style {
             id: "Box".into(),
             name: "Box".into(),
             kind: StyleKind::Paragraph,
             based_on: Some("Normal".into()),
             ..Default::default()
         });
-        t.styles.upsert(Style {
+        std::sync::Arc::make_mut(&mut t.styles).upsert(Style {
             id: "Callout".into(),
             name: "Callout".into(),
             kind: StyleKind::Paragraph,
@@ -449,8 +449,8 @@ mod tests {
             chr: CharProps { italic: Some(true), ..Default::default() },
             ..Default::default()
         });
-        let num = t.numbering.add_list(ListKind::Numbered);
-        t.styles.upsert(Style {
+        let num = std::sync::Arc::make_mut(&mut t.numbering).add_list(ListKind::Numbered);
+        std::sync::Arc::make_mut(&mut t.styles).upsert(Style {
             id: "Steps".into(),
             name: "Steps".into(),
             kind: StyleKind::Paragraph,

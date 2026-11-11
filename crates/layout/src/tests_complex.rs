@@ -229,7 +229,7 @@ fn distributed_lines_ending_in_a_space_still_reach_the_margin() {
 /// space before or after, with `chr` applied on top of the defaults.
 fn doc_in(font: &str, size: f32, text: &str, chr: impl FnOnce(&mut doc4me_doc::props::CharProps)) -> Document {
     let mut d = Document::from_text(text);
-    let c = &mut d.styles.default_chr;
+    let c = &mut std::sync::Arc::make_mut(&mut d.styles).default_chr;
     (c.font, c.font_cs, c.size, c.size_cs) = (Some(font.into()), Some(font.into()), Some(size), Some(size));
     chr(c);
     if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {

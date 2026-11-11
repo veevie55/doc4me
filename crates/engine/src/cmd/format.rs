@@ -642,8 +642,9 @@ fn convert_generated_numbers(s: &mut Session, a: &Pos, b: &Pos, thai: bool) -> R
     for n in nums {
         let Some(aid) = s.doc.numbering.num(n).map(|x| x.abstract_id) else { continue };
         let mut changed = false;
-        let levels = s.doc.numbering.abstracts.iter_mut().filter(|x| x.id == aid).flat_map(|x| x.levels.iter_mut());
-        let own = s.doc.numbering.nums.iter_mut().filter(|x| x.abstract_id == aid).flat_map(|x| x.level_overrides.iter_mut().map(|(_, l)| l));
+        let numbering = std::sync::Arc::make_mut(&mut s.doc.numbering);
+        let levels = numbering.abstracts.iter_mut().filter(|x| x.id == aid).flat_map(|x| x.levels.iter_mut());
+        let own = numbering.nums.iter_mut().filter(|x| x.abstract_id == aid).flat_map(|x| x.level_overrides.iter_mut().map(|(_, l)| l));
         for l in levels.chain(own) {
             if let Some(f) = swap_num_format(l.format, thai) {
                 l.format = f;

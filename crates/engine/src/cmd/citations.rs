@@ -784,7 +784,7 @@ pub fn update_generated(s: &mut Session) -> Result<(), CmdError> {
 /// yet takes `leader` (dots when `None`).
 fn rebuild_generated(s: &mut Session, leader: Option<TabLeader>) -> Result<(), CmdError> {
     if s.doc.styles.get(ENTRY_STYLE).is_none() {
-        s.doc.styles.upsert(doc4me_doc::Style {
+        std::sync::Arc::make_mut(&mut s.doc.styles).upsert(doc4me_doc::Style {
             id: ENTRY_STYLE.into(),
             name: "List Entry".into(),
             kind: doc4me_doc::StyleKind::Paragraph,

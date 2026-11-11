@@ -507,8 +507,10 @@ fn styles(s: &mut Session, range: std::ops::Range<usize>, o: &AutoFormatPrefs) -
             let on = if kind.is_bullet() { o.bullets } else { o.lists };
             let num = match list {
                 Some((k, last, num)) if k == kind && (kind.is_bullet() || n == last + 1) => Some(num),
-                _ if kind.is_bullet() => Some(s.doc.numbering.find_kind(kind).unwrap_or_else(|| s.doc.numbering.add_list(kind))),
-                _ if n == 1 => Some(s.doc.numbering.add_list(kind)),
+                _ if kind.is_bullet() => {
+                    Some(s.doc.numbering.find_kind(kind).unwrap_or_else(|| std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind)))
+                }
+                _ if n == 1 => Some(std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind)),
                 _ => None,
             };
             if let (true, Some(num)) = (on, num) {
@@ -555,7 +557,7 @@ fn styles(s: &mut Session, range: std::ops::Range<usize>, o: &AutoFormatPrefs) -
 /// Word's built-in Body Text style (Normal with 6 pt after), for documents without it.
 fn ensure_body_text(s: &mut Session) {
     if s.doc.styles.get("BodyText").is_none() {
-        s.doc.styles.upsert(Style {
+        std::sync::Arc::make_mut(&mut s.doc.styles).upsert(Style {
             id: "BodyText".into(),
             name: "Body Text".into(),
             kind: StyleKind::Paragraph,
