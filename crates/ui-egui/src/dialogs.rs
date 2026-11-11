@@ -1627,11 +1627,11 @@ fn spacing_kind(points: f32) -> usize {
     }
 }
 
-/// The "By" amount after one click of its ▲ or ▼ arrow: half a point either way, within Word's
-/// 0 to 1584 pt.
+/// The "By" amount after one click of its ▲ or ▼ arrow: a tenth of a point either way, within
+/// Word's 0 to 1584 pt (rounded to a hundredth, so repeated clicks don't drift).
 fn step_spacing_by(by: f32, up: bool) -> f32 {
     let by = if by.is_finite() { by } else { 0.0 };
-    (((by + if up { 0.5 } else { -0.5 }) * 100.0).round() / 100.0).clamp(0.0, 1584.0)
+    (((by + if up { 0.1 } else { -0.1 }) * 100.0).round() / 100.0).clamp(0.0, 1584.0)
 }
 
 /// The character spacing for a Spacing choice ([`spacing_kind`]) and its "By" amount.
@@ -1785,7 +1785,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                             kind != 0,
                             egui::DragValue::new(&mut by).speed(0.1).range(0.0..=1584.0).clamp_existing_to_range(false).suffix(" pt"),
                         );
-                        // Word's spin arrows: each click steps the amount by half a point.
+                        // Spin arrows: each click steps the amount by a tenth of a point.
                         ui.add_enabled_ui(kind != 0, |ui| {
                             if ui.add(egui::Button::new("▲").small()).clicked() {
                                 by = step_spacing_by(by, true);
@@ -4110,9 +4110,11 @@ mod tests {
     fn font_spacing_is_normal_expanded_or_condensed_up_to_1584_pt() {
         assert_eq!([spacing_kind(0.0), spacing_kind(2.5), spacing_kind(-1584.0), spacing_kind(-0.0)], [0, 1, 2, 0]);
         assert_eq!([spacing_value(0, 7.0), spacing_value(1, 1584.0), spacing_value(2, 1584.0)], [0.0, 1584.0, -1584.0]);
-        // The arrows step half a point and stop at both ends of the range (and a junk amount starts over).
-        assert_eq!([step_spacing_by(1.0, true), step_spacing_by(1.0, false), step_spacing_by(0.2, false)], [1.5, 0.5, 0.0]);
-        assert_eq!([step_spacing_by(1584.0, true), step_spacing_by(1583.75, true), step_spacing_by(f32::NAN, true)], [1584.0, 1584.0, 0.5]);
+        // The arrows step a tenth of a point and stop at both ends of the range (and a junk amount starts over).
+        assert_eq!([step_spacing_by(1.0, true), step_spacing_by(1.0, false), step_spacing_by(0.05, false)], [1.1, 0.9, 0.0]);
+        assert_eq!([step_spacing_by(1584.0, true), step_spacing_by(1583.95, true), step_spacing_by(f32::NAN, true)], [1584.0, 1584.0, 0.1]);
+        // Ten clicks from zero land on 1 pt exactly, not 0.99… or 1.00…01.
+        assert_eq!((0..10).fold(0.0, |by, _| step_spacing_by(by, true)), 1.0);
         let mut app = app_with("Example");
         let _ = app.run("select.all", json!({}));
         for shown in [-1584.0, 1584.0, -2000.0, 0.0] {

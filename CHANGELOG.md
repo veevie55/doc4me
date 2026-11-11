@@ -11,6 +11,12 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง
+- **ลูกศร ▲▼ ของช่อง By ใน Font › Advanced › Spacing ปรับทีละ 0.1 pt (เดิม 0.5 pt)** (`crates/ui-egui/src/dialogs.rs`: `step_spacing_by`)
+  - เหตุผล: เจ้าของโครงการสั่งให้ปรับละเอียดขึ้นเป็นทีละ 0.1 pt
+  - พฤติกรรม: ยังอยู่ในช่วง 0–1584 pt และปัดเป็นหนึ่งในร้อยทุกครั้ง กดสิบครั้งจาก 0 ได้ 1 pt พอดี ไม่คลาดสะสม; การพิมพ์หรือลากค่าในช่องไม่เปลี่ยน; เอกสารเดิมไม่กระทบ
+  - ตรวจสอบ: ปรับเทสต์ `font_spacing_is_normal_expanded_or_condensed_up_to_1584_pt` (ก้าว 0.1, ขอบล่าง/บน, ค่าที่ไม่ใช่ตัวเลข, สิบครั้งได้ 1.0) ผ่าน; `cargo clippy -p doc4me-ui-egui --all-targets -- -D warnings` และ `cargo fmt --check` ผ่าน
+
 ### เพิ่ม
 - **ฝังฟอนต์เทียบขนาดของฟอนต์หลักใน Word (OFL 1.1) ในรุ่นเดสก์ท็อป: Carlito (Calibri), Caladea (Cambria), Arimo (Arial), Tinos (Times New Roman), Cousine (Courier New) ครบ 4 แบบ (ปกติ/หนา/เอียง/หนาเอียง)** (`assets/fonts/{Carlito,Caladea,Arimo,Tinos,Cousine}-*.ttf`, `assets/fonts/OFL-*.txt`, `crates/fonts/src/fontdb.rs`: `DESKTOP_BUNDLED`; `crates/fonts/src/word.rs`: "Source Sans Pro" → Source Sans 3 ที่ฝังอยู่แล้ว; `ATTRIBUTION.md`)
   - เหตุผล: เจ้าของโครงการสั่งให้ฝังฟอนต์ที่ไม่ติดลิขสิทธิ์ เพื่อให้เอกสารที่ใช้ฟอนต์ Microsoft แสดงและตัดบรรทัดเท่า Word บนเครื่องที่ไม่มีฟอนต์เหล่านั้น (macOS, Linux ที่ติดตั้งน้อย) ฟอนต์ Microsoft เองแจกจ่ายต่อไม่ได้ จึงใช้ตัวเทียบขนาดที่มีลิขสิทธิ์เปิด
