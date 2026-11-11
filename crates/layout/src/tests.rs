@@ -2452,6 +2452,33 @@ fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
 }
 
 #[test]
+fn space_before_after_a_page_break_follows_the_compatibility_mode() {
+    // A heading with space before starts the page after a page break that ended the paragraph
+    // before. Word 2010 and earlier (compatibility mode below 15) drop that space at the top of the
+    // new page; Word 2013 and later keep it.
+    let heading_top = |mode: u32| {
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+        let mut b = doc4me_doc::Paragraph::with_text("B", Default::default());
+        b.props.space_before = Some(24.0);
+        let mut c = doc4me_doc::Paragraph::with_text("C", Default::default());
+        c.props.space_before = Some(24.0);
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b), doc4me_doc::para_block(c)];
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 2);
+        let tops: Vec<f32> =
+            l.pages[1].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        (tops[0], tops[1])
+    };
+    let (b14, c14) = heading_top(14);
+    let (b15, c15) = heading_top(doc4me_doc::COMPAT_MODE_CURRENT);
+    assert!((b15 - b14 - 24.0).abs() < 0.01, "mode 15 keeps B's space before, mode 14 drops it: {b14} {b15}");
+    // Only the first paragraph on the page: C keeps its space before in both.
+    assert!(((c15 - b15) - (c14 - b14)).abs() < 0.01, "C's space before is kept: {c14} {c15}");
+}
+
+#[test]
 fn at_least_rows_add_cell_margins_and_border_bands() {
     use doc4me_doc::props::{Border, BorderStyle, Borders, HeightRule};
     let mut d = Document::from_text("");

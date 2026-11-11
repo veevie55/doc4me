@@ -1461,6 +1461,9 @@ struct PageBuilder<'a> {
     /// The paragraph placed last: its style, whether it has contextual spacing, its space after,
     /// and whether it is a list item with automatic space after.
     prev: Option<(String, bool, f32, bool)>,
+    /// The page was started by a page break that ended the paragraph before (its mark stayed on
+    /// the page before): the next paragraph at the top of this page drops its space before.
+    after_break: bool,
     /// Wrap areas of floating objects on this page (see [`wrap_area`]).
     excl: Vec<WrapArea>,
     /// Wrap areas of the floating tables on this page, which others may not overlap.
@@ -2057,6 +2060,7 @@ fn layout_pass(
         carry: Vec::new(),
         orig_bottom: 0.0,
         prev: None,
+        after_break: false,
         excl: Vec::new(),
         float_tables: Vec::new(),
         line_no: 0,
@@ -2939,6 +2943,13 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     }
     // Contextual spacing: no space between paragraphs of the same style when either asks for it.
     let mut before = pl.rp.space_before;
+    // In documents laid out as Word 2010 and earlier did (compatibility mode below 15), the first
+    // paragraph after a page break that ended the paragraph before drops its space before at the
+    // top of the new page; Word 2013 and later keep it (corpus: govuk-034, govuk-047, zenodo-123
+    // in modes 14 and 12 match Word with it dropped, govuk-046 in mode 15 with it kept).
+    if std::mem::take(&mut pb.after_break) && pb.at_top() && ctx.doc.settings.compat_mode < doc4me_doc::COMPAT_MODE_CURRENT {
+        before = 0.0;
+    }
     // Automatic (HTML) space before isn't put above the document's first paragraph.
     if pl.rp.space_before_auto && block == 0 && pb.pages.len() <= 1 && pb.at_top() {
         before = 0.0;
@@ -3256,6 +3267,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         }
     }
     if ends_on_break {
+        pb.after_break = true;
         return;
     }
     // The bottom border's band below the last line.
