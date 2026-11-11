@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 42961322752 on `9abf2d6`, report commit `1df7aae`: 92.2% / 94.1% without 22 deferred; pagination 175/222 pages and 95/222 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (Windows run 43051188273 on `bd2d2d6`, report commit `5292abd`: 92.7% / 94.5% without 22 deferred; corpus 220 documents after zenodo-104 and govuk-003 were excluded (their reference PDFs aren't of their .docx); pagination 181/220 pages and 99/220 boundaries; languages 95/95; dialogs 216/228; shortcuts 276/280; platforms 5/5; release 1.1.3. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -11,7 +11,7 @@ Opus 5.5 agent wall-clock.
 1. **Review relevant upstream WordCraft changes before duplicating work.** Check individual patches
    against the remaining gaps (including Hebrew RTL, IME behavior and locale coverage); the upstream
    open-PR count is not maintained as a current project metric.
-2. **DOCX real-world fidelity** (gap #1, 30–50 h): the 222-document corpus is measured for open,
+2. **DOCX real-world fidelity** (gap #1, 30–50 h): the 220-document corpus is measured for open,
    round-trip, stability and pagination; all documents preserve measured structure after save and
    reopen, but formatting still needs direct comparison with Word. Omitted/empty paragraph defaults
    also have synthetic save/reopen coverage.
@@ -37,7 +37,7 @@ desktop in WordCraft and have not been re-run on Windows yet.
 | Core workflow | Works end to end? | Evidence | Hours to pass |
 |---|---|---|---|
 | Write and format a document: type, fonts, paragraph formatting, styles, lists, undo, find/replace; save as .docx and reopen | yes | 727 registered engine command specs (confirmed by `doc4me-cli commands --json`), typing parity pinned by `tests_typing.rs`, DOCX round-trip tests (`crates/docx/tests/roundtrip.rs`) | 0 |
-| Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; all 222 real-world documents open and preserve measured structure through save and reopen (formatting not compared yet). Charts, SmartArt, OLE, groups and drawing canvases are preserved; Word-created charts/SmartArt remain read-only and OLE shows its picture. Move tracking supports tracked cut/paste; drag-and-drop moves remain missing (gaps #1, #2, #5) | 0 (beta work: 50–80) |
+| Open a .docx someone sent, edit it, send back a .docx Word opens | partial (not blocking) | Word opens our files; all 220 real-world documents open and preserve measured structure through save and reopen (formatting not compared yet). Charts, SmartArt, OLE, groups and drawing canvases are preserved; Word-created charts/SmartArt remain read-only and OLE shows its picture. Move tracking supports tracked cut/paste; drag-and-drop moves remain missing (gaps #1, #2, #5) | 0 (beta work: 50–80) |
 | Build a structured document: tables, pictures, headers/footers, page numbers, sections, columns | yes | Tables with row splitting and floating tables (#137), floating pictures (#136), first/odd/even headers; columns don't balance (gap #4) | 0 |
 | Review with others: comments, track changes, accept/reject, compare | yes | Margin balloons, tracked insert/delete incl. paragraph marks (#125, #244), formatting revisions (#41) and move tracking (#400); compare | 0 |
 | References for reports and papers: TOC, footnotes, citations and bibliography, captions | yes | Updatable TOC field (#52), notes with continuation across pages (#352), APA/MLA/Chicago/IEEE, Zotero (#189), and bibliography-source DOCX round-trip (#532) | 0 |
@@ -52,7 +52,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | # | Milestone | State | Remaining |
 |---|---|---|---|
 | M0 | Skeleton and vertical slice (model, layout, render, engine, Word-style UI, CLI, MCP, web) | done | — |
-| M1 | DOCX I/O | corpus measured: 222/222 open and preserve measured structure; direct formatting comparison remains | 30–50 h |
+| M1 | DOCX I/O | corpus measured: 220/220 open and preserve measured structure; direct formatting comparison remains | 30–50 h |
 | M2 | Home tab | done (Paste Special, Clipboard pane, Style Inspector, Manage Styles and Asian Typography landed; Dictate with whisper.cpp on the computer, 2026-10-25) | — |
 | M3 | Insert tab | done: equations (#191), icons (#309), charts, SmartArt, Screenshot › Screen Clipping, Online Video, 3D Models (as a picture), Online Pictures (Openverse), Get Add-ins (Doc4Me's own catalog) and Ink Equation landed | — |
 | M4 | Layout and Design tabs | done except column balancing | 6–10 h |
@@ -73,8 +73,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **92.2%** in the latest official Windows report (run 42961322752, source
-`9abf2d6`, report commit `1df7aae`; ribbon 503/503, dialogs 216/228, pages 175/222, boundaries
+2026-10-25 report, and **92.7%** in the latest official Windows report (run 43051188273, source
+`bd2d2d6`, report commit `5292abd`; ribbon 503/503, dialogs 216/228, pages 181/220, boundaries
 95/222, languages 95/95, shortcuts 276/280; all 222 documents; DOCX open and round-trip 222/222),
 7.8 points short of 100% overall. That report says 94.1% without its 22 deferred rows, 5.9 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
@@ -117,9 +117,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 42961322752 passes stability (222/222 corpus; 5/5 hand checks),
+Windows measurement 43051188273 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (175/222 page-count and 95/222
+the remaining measured area without deferred rows is pagination (181/220 page-count and 99/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
@@ -154,6 +154,7 @@ languages, screen-reader access.
 |---|---|---|
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
 | 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |
+| 2026-11-11 | minor | Windows run 43051188273 measured `bd2d2d6`; report commit `5292abd`: 92.7% / 94.5% without 22 deferred on 220 documents (zenodo-104 and govuk-003 excluded by owner decision: their reference PDFs aren't of their .docx); page counts 181/220, boundaries 99/220, languages 95/95. Changes since run 42961322752: theme fonts, Helvetica/Times substitution, bundled metric-compatible fonts (Carlito, Caladea, Arimo, Tinos, Cousine; OFL 1.1) behind the platform's own fallbacks, mode-14 page-break mark, page numbering from 0, continuous sections below floats, digit-hyphen line breaks, grid in tables, Font spacing ▲▼ at 0.1 pt. v1.1.3 was deleted and released again from this code. |
 | 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
 | 2026-11-07 | minor | Latest official Windows run 42274814600 measured `ed4284d`; generated report commit `29e6672` records 91.3% / 93.2% without 22 deferred rows, pages 174/222, boundaries 96/222, languages 72/95, dialogs 216/228 and shortcuts 276/280; platforms pass 5/5. Pagination is one page-count and one boundary pass below the previous report. |
 | 2026-11-06 | minor | Previous official Windows run 42211564189: readiness 90.5% / 93.1% without 23 deferred; dialogs 210/222, pagination 175/222 pages and 97/222 boundaries, languages 68/95 and shortcuts 276/280. A later report supersedes these values. |

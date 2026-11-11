@@ -32,6 +32,7 @@ web build are in [`packaging/`](packaging/).
   (whisper.cpp; the free speech model is downloaded once); Translate (MyMemory or your own
   LibreTranslate server), Online Pictures (Creative Commons pictures from Openverse, credited),
   Ink Equation and Get Add-ins.
+- Since 1.1.3: the desktop app bundles fonts with the same metrics as Word's core fonts (Carlito for Calibri, Caladea for Cambria, Arimo for Arial, Tinos for Times New Roman, Cousine for Courier New; OFL 1.1), used when the computer lacks the original, so lines and pages break closer to Word.
 - Light and dark themes; in the dark theme the page stays white.
 - `doc4me-cli` converts and edits documents without a window, and `doc4me-cli mcp` serves every
   command to AI agents ([docs/mcp.md](docs/mcp.md)).

@@ -11,79 +11,6 @@
 
 ## [Unreleased]
 
-### เปลี่ยนแปลง
-- **ตั้งแถว zenodo-104 และ govuk-003 ในคลัง readiness เป็น `excluded` ตามคำตัดสินของเจ้าของโครงการ** (`docs/readiness/corpus.tsv`)
-  - เหตุผล: PDF อ้างอิงของทั้งสองไม่ได้สร้างจากไฟล์ .docx ที่อยู่ในคลัง จัดหน้าอย่างไรก็ไม่ตรง: zenodo-104 มีปกหน้า หน้าว่าง และปกหลังที่ไม่มีในไฟล์ (29 หน้า เทียบเอกสาร 25 หน้า), govuk-003 มีกล่อง "FOR OFFICIAL USE ONLY / Date received" ที่ไม่มีใน part ใดของไฟล์ (ตรวจทุก `word/*.xml` แล้ว)
-  - ตามกติกาของคลัง แถวไม่ถูกลบ ตั้งเป็น `excluded` พร้อมเหตุผลในคอลัมน์ note ไม่ถูกดาวน์โหลดหรือนับ ชุด corpus จึงนับ 220 เอกสาร (จาก 222)
-  - ตรวจสอบ: `cargo test -p xtask` ผ่าน; ตัวเลข readiness ใหม่วัดบน Windows
-  - แก้ตามมา: ขั้น "Inspect Windows font resolution" ใน `.github/workflows/readiness-windows.yml` มีรายชื่อเอกสารตายตัวที่รวม govuk-003 และล้มเมื่อหาไฟล์ไม่เจอ (run 43043846909 วัดผ่านแล้วแต่ไม่ได้ commit รายงาน) จึงเอา govuk-003 ออกจากรายชื่อและให้ข้ามเอกสารที่ไม่ได้ดาวน์โหลดแทนการล้ม
-  - แก้ตามมาอีกครั้ง: ข้อความข้ามใน PowerShell เขียน `"--- $id: ..."` ซึ่ง PowerShell อ่าน `$id:` เป็นการอ้างตัวแปรแบบมี scope จึงล้มตอน parse (run 43047705006 วัดได้ 92.7% แต่ไม่ได้ commit รายงาน) แก้เป็น `${id}` ส่วน `$tag:` ใน `windows-x64-installer.yml` เป็น bash ไม่กระทบ
-
-### เปลี่ยนแปลง
-- **ลูกศร ▲▼ ของช่อง By ใน Font › Advanced › Spacing ปรับทีละ 0.1 pt (เดิม 0.5 pt)** (`crates/ui-egui/src/dialogs.rs`: `step_spacing_by`)
-  - เหตุผล: เจ้าของโครงการสั่งให้ปรับละเอียดขึ้นเป็นทีละ 0.1 pt
-  - พฤติกรรม: ยังอยู่ในช่วง 0–1584 pt และปัดเป็นหนึ่งในร้อยทุกครั้ง กดสิบครั้งจาก 0 ได้ 1 pt พอดี ไม่คลาดสะสม; การพิมพ์หรือลากค่าในช่องไม่เปลี่ยน; เอกสารเดิมไม่กระทบ
-  - ตรวจสอบ: ปรับเทสต์ `font_spacing_is_normal_expanded_or_condensed_up_to_1584_pt` (ก้าว 0.1, ขอบล่าง/บน, ค่าที่ไม่ใช่ตัวเลข, สิบครั้งได้ 1.0) ผ่าน; `cargo clippy -p doc4me-ui-egui --all-targets -- -D warnings` และ `cargo fmt --check` ผ่าน
-
-### เพิ่ม
-- **ฝังฟอนต์เทียบขนาดของฟอนต์หลักใน Word (OFL 1.1) ในรุ่นเดสก์ท็อป: Carlito (Calibri), Caladea (Cambria), Arimo (Arial), Tinos (Times New Roman), Cousine (Courier New) ครบ 4 แบบ (ปกติ/หนา/เอียง/หนาเอียง)** (`assets/fonts/{Carlito,Caladea,Arimo,Tinos,Cousine}-*.ttf`, `assets/fonts/OFL-*.txt`, `crates/fonts/src/fontdb.rs`: `DESKTOP_BUNDLED`; `crates/fonts/src/word.rs`: "Source Sans Pro" → Source Sans 3 ที่ฝังอยู่แล้ว; `ATTRIBUTION.md`)
-  - เหตุผล: เจ้าของโครงการสั่งให้ฝังฟอนต์ที่ไม่ติดลิขสิทธิ์ เพื่อให้เอกสารที่ใช้ฟอนต์ Microsoft แสดงและตัดบรรทัดเท่า Word บนเครื่องที่ไม่มีฟอนต์เหล่านั้น (macOS, Linux ที่ติดตั้งน้อย) ฟอนต์ Microsoft เองแจกจ่ายต่อไม่ได้ จึงใช้ตัวเทียบขนาดที่มีลิขสิทธิ์เปิด
-  - ลิขสิทธิ์: ทุกไฟล์ใช้ SIL Open Font License 1.1 (แจกจ่ายร่วมกับซอฟต์แวร์ได้ ห้ามขายตัวฟอนต์แยก) และ `fsType=0` (ติดตั้ง/ฝังได้ไม่จำกัด) ดาวน์โหลดจาก google/fonts และ googlefonts/Arimo ไม่แก้ไข พร้อมไฟล์ `OFL-*.txt` และรายการ SHA-256 ใน `ATTRIBUTION.md`
-  - พฤติกรรม: ใช้เฉพาะเมื่อเครื่องไม่มีฟอนต์ที่ขอและไม่มีฟอนต์ระบบที่ชื่อนั้น บน Windows ที่มี Calibri/Cambria/Arial ฯลฯ ยังใช้ฟอนต์จริง ไม่ฝังในรุ่นเว็บ (งบขนาด) ตัวโปรแกรมเดสก์ท็อปใหญ่ขึ้นราว 9 MB
-  - ทดลองแล้วไม่ใส่ (มีหลักฐาน): variable font รุ่นปัจจุบันของ Gelasio, Overpass, Open Sans, Roboto, Archivo และ League Spartan ทำให้คลังบน Linux แย่ลง (จำนวนหน้าไม่ตรง 42 → 45: zenodo-033, zenodo-067, zenodo-129 ไม่ผ่านใหม่; zenodo-022 21 → 27 และ zenodo-069 26 → 34 หน้า) เพราะ Word ของผู้เขียนมักไม่มีฟอนต์เหล่านั้นเช่นกัน หรือมีรุ่นที่ขนาดต่างกัน และ Gelasio รุ่นใหม่ไม่เทียบขนาดกับ Georgia แล้ว
-  - ตรวจสอบ: เทสต์ใหม่ `desktop_bundles_the_metric_compatible_stand_ins`; `cargo xtask assets` ผ่าน (ทุกไฟล์มีรายการใน ATTRIBUTION.md); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร (เครื่องมีฟอนต์เหล่านี้อยู่แล้ว); `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบหนึ่งเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนาน แต่ผ่านเมื่อรันเดี่ยว 3 รอบและผ่านในรอบเต็มถัดไป)
-
-### แก้ไข
-- **ฟอนต์ที่ไม่รู้จักกลับไปใช้ฟอนต์ของระบบก่อนฟอนต์ที่ฝัง (Arial/Times New Roman บน Windows, Helvetica Neue บน macOS) ส่วน Calibri/Cambria ใช้ Carlito/Caladea ก่อนเสมอ** (`crates/fonts/src/word.rs`: รายการ `SANS`, `SERIF`, `CALIBRI`, `CAMBRIA`)
-  - เหตุผล: หลังฝัง Carlito/Caladea (ในรุ่นนี้) สองฟอนต์นี้มีทุกเครื่อง และอยู่หัวรายการตัวแทนทั่วไป log ของ Windows run 43005431349 จึงเปลี่ยนเป็น "Arial Narrow=Carlito", "Univers=Carlito", "Garamond=Caladea" ทั้งที่ PDF ของ Word ใช้ Arial (govuk-017/018) และ Times New Roman (zenodo-114) ตามพฤติกรรมเดิมก่อนฝังฟอนต์
-  - พฤติกรรม: ลำดับใหม่ให้ผลเหมือนก่อนฝังฟอนต์ทุกแพลตฟอร์ม (Windows: Arial/Times New Roman, macOS: Helvetica Neue/Times New Roman, Linux: Carlito/Caladea) ยกเว้น Calibri/Cambria ที่ตอนนี้ใช้ตัวเทียบขนาด Carlito/Caladea ได้บน macOS ด้วย
-  - ตรวจสอบ: เทสต์ใหม่ `unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins` และปรับเทสต์เดิม 2 ตัวที่ยืนยันลำดับเก่าของ Garamond; `cargo test -p doc4me-fonts` ผ่าน 73 รายการ; วัดคลังบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลบน Windows ต้องวัดใหม่
-
-- **ตัดบรรทัดได้หลังยัติภังค์ระหว่างตัวเลข เช่นเบอร์โทร "98173-" | "4097" หรือช่วงปี "2010-" | "2015"** (`crates/layout/src/para.rs`: `digit_hyphen_breaks`)
-  - เหตุผล: กฎ UAX #14 (LB25, `HY × NU`) ถือว่า "-" หน้าตัวเลขเป็นเครื่องหมายลบจึงไม่ให้ตัด แต่ Word ตัดหลังยัติภังค์ที่มีตัวเลขทั้งสองข้าง (zenodo-012 หน้า 3: Word ขึ้นบรรทัดใหม่ที่ "4097;")
-  - พฤติกรรม: เพิ่มจุดตัดเฉพาะ "-" (U+002D) ที่มีเลขอารบิกทั้งหน้าและหลัง เครื่องหมายลบหน้าตัวเลข (-5), ยัติภังค์ระหว่างตัวอักษร และ en dash ไม่เปลี่ยน
-  - ผลต่อผู้ใช้และความเข้ากันได้: เบอร์โทร ช่วงตัวเลขและวันที่ที่อยู่ท้ายบรรทัดจะตัดเหมือน Word แทนที่จะยกทั้งก้อนไปบรรทัดใหม่ ไฟล์ไม่เปลี่ยน
-  - ตรวจสอบ: เทสต์ใหม่ `a_hyphen_between_digits_is_a_break_opportunity` (ตรวจแล้วว่าล้มเมื่อไม่มีการแก้); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ไม่มีเอกสารใดแย่ลง, zenodo-012 จุดต่างแรกเลื่อนจากหน้า 3 ไปหน้า 5; `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบแรกเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ได้ 24.2 เท่าเกินเกณฑ์ 24 เล็กน้อยตอนรันขนาน ข้อความในเทสต์ไม่มีตัวเลข ผ่านในรอบถัดไป)
-
-- **section แบบต่อเนื่อง (continuous) เริ่มใต้วัตถุลอยที่ข้อความต้องหลบในหน้านั้น ไม่ใช่ในช่องว่างเหนือวัตถุ** (`crates/layout/src/lib.rs`: การเริ่ม section ต่อเนื่อง)
-  - เหตุผล: zenodo-153 มี section แรกเป็นย่อหน้าว่างที่ anchor กล่องข้อความกว้างเต็มบรรทัด (wrap square) ต่ำลงไป 39pt Word เริ่ม section ที่สอง (2 คอลัมน์) ใต้กล่อง แต่ Doc4Me เริ่มใต้บรรทัดสุดท้ายแล้วใส่ข้อความลงในช่องว่างเหนือกล่อง ข้อความจึงขึ้นไปทับชื่อเรื่อง
-  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ขึ้น section ต่อเนื่อง (มักเปลี่ยนจำนวนคอลัมน์) ใต้รูปหรือกล่องข้อความที่ตัดข้อความ จะไม่มีข้อความแทรกเหนือวัตถุอีก ไฟล์ไม่เปลี่ยน
-  - ตรวจสอบ: เทสต์ใหม่ `a_continuous_section_starts_below_the_objects_text_wraps_around` (ตรวจแล้วว่าล้มเมื่อไม่มีการแก้: B อยู่ที่ 105.6pt เหนือกล่องที่ 152–212pt); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ไม่มีเอกสารใดแย่ลง, zenodo-153 หน้า 1 ตรงกับ Word แล้ว (จุดต่างแรกเลื่อนไปหน้า 2); `cargo xtask ci` ผ่านครบ 6 ขั้น
-
-- **เลขหน้าที่ตั้งให้เริ่มที่ 0 (`w:pgNumType w:start="0"`) เริ่มที่ 0 จริง** (`crates/layout/src/lib.rs`: `PageBuilder::new_page`, การเริ่มเลขหน้าใหม่ของ section)
-  - เหตุผล: เดิมใช้ `saturating_sub(1)` ก่อนขึ้นหน้าใหม่ ค่า 0 จึงกลายเป็น 1 เอกสารที่นับหน้าปกเป็นหน้า 0 (หน้าถัดไปแสดง "1") จึงแสดงเลขหน้าเกินไป 1 ทุกหน้า และหน้าคู่/คี่สำหรับหัว/ท้ายกระดาษสลับกัน
-  - ผลต่อผู้ใช้และความเข้ากันได้: เลขหน้าในหัว/ท้ายกระดาษ ฟิลด์ PAGE และการเลือกหัว/ท้ายกระดาษหน้าคู่/คี่ตรงกับ Word สำหรับเอกสารที่เริ่มนับที่ 0; การตั้งค่าเริ่มอื่นไม่เปลี่ยน ไฟล์ไม่เปลี่ยน
-  - ตรวจสอบ: เทสต์ใหม่ `page_numbers_can_restart_at_zero` (0, 1, 2 และ 5, 6, 7); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ตำแหน่งตัดหน้าไม่ตรง 129 → 126 (govuk-032, zenodo-097, zenodo-147 ผ่าน; govuk-054, zenodo-096, zenodo-140 จุดต่างแรกเลื่อนไปหน้าหลัง), ไม่มีเอกสารใดแย่ลง; `cargo xtask ci` ผ่านครบ 6 ขั้น
-
-- **เอกสารโหมดความเข้ากันได้ต่ำกว่า 15 ตัด space-before ของย่อหน้าแรกที่หัวหน้าใหม่หลัง page break ที่จบย่อหน้าก่อน** (`crates/layout/src/lib.rs`: `PageBuilder::after_break`, `place_para`)
-  - เหตุผล: Word 2010 และเก่ากว่าไม่ใส่ space-before ให้ย่อหน้าแรกของหน้าที่เริ่มเพราะ page break ส่วน Word 2013 ขึ้นไป (โหมด 15) ใส่ตามปกติ ในคลัง govuk-034 และ govuk-047 (โหมด 14) ตรงกับ Word เมื่อตัด ส่วน govuk-046 (โหมด 15) ตรงกับ Word เมื่อคงไว้ (ลองแบบไม่แยกโหมดแล้ว govuk-046 ไม่ผ่านใหม่ จึงจำกัดตามโหมด)
-  - ผลต่อผู้ใช้และความเข้ากันได้: เฉพาะเอกสาร Word 2010 และเก่ากว่าที่มีหัวข้อมี space-before ตามหลัง page break จะเริ่มหน้าสูงขึ้นเท่า Word; เอกสารโหมด 15 ไม่เปลี่ยน ไฟล์ไม่เปลี่ยน
-  - ตรวจสอบ: เทสต์ใหม่ `space_before_after_a_page_break_follows_the_compatibility_mode`; วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 40 → 39 (govuk-047 ผ่าน, govuk-034 16 → 15 หน้า เทียบ Word 14), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าคงเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น
-
-- **เอกสาร Word 2010 (โหมดความเข้ากันได้ 14) ไม่ขึ้นบรรทัดว่างที่หัวหน้าใหม่หลัง page break ที่จบย่อหน้า** (`crates/layout/src/lib.rs`, `crates/doc/src/lib.rs` เอกสารประกอบ `split_page_break_mark`)
-  - เหตุผล: เดิมเอกสารโหมด 14 หรือต่ำกว่าส่ง paragraph mark หลัง page break ไปหน้าใหม่ (เลียนแบบ Word 2010) แต่ PDF ของ Word สำหรับเอกสารโหมด 14 ในคลังไม่มีบรรทัดว่างนั้น (govuk-034 หน้า 5 ของ Doc4Me เริ่มต่ำกว่า Word 40pt) ตอนนี้ส่ง mark ไปหน้าใหม่เฉพาะเอกสารที่ระบุ `w:splitPgBreakAndParaMark`
-  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสาร .docx/.doc รุ่นเก่าที่มี page break ท้ายย่อหน้าจะไม่มีบรรทัดว่างที่หัวหน้า ตรงกับ Word ปัจจุบัน; การบันทึกไม่เปลี่ยน
-  - ตรวจสอบ: เพิ่มกรณีโหมด 14 ในเทสต์ `a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page`; วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 42 → 40 (govuk-043, govuk-045, govuk-054 ผ่าน), zenodo-065 จุดต่างแรกเลื่อนจากหน้า 3 ไปหน้า 5, ตำแหน่งตัดหน้าไม่ตรงคงเดิม 129; zenodo-095 เปลี่ยนจากผ่านเป็น 9 หน้า (Word 10) บน Linux ซึ่งเท่ากับผลบน Windows ก่อนแก้ (เอกสารใช้ฟอนต์ Gotham ที่ไม่มีทั้งสองเครื่อง); `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนานหนึ่งรอบ: ได้ 17–24 เท่าทั้งก่อนและหลังการแก้รอบนี้และก่อนฝังฟอนต์ (เกณฑ์ 24) จึงเป็นความผันผวนของเครื่อง ผ่านในรอบเต็มถัดไป)
-  - ข้อจำกัดที่ทราบ: govuk-034 ยังเกิน 1 หน้า เพราะ Word ตัด space-before ของย่อหน้าแรกที่หัวหน้าหลัง page break ในเอกสารนี้ แต่ Doc4Me ไม่ตัด (ยังไม่แก้ เพราะมีหลักฐานจากเอกสารเดียว)
-
-- **Helvetica / Arial Nova ใช้ Arial และ Times ใช้ Times New Roman เมื่อเครื่องไม่มีฟอนต์ที่ขอ** (`crates/fonts/src/word.rs`: รายการ `ARIAL`, `TIMES`)
-  - เหตุผล: รายการตัวแทนของ Helvetica/Arial Nova และ Times ไม่มี Arial และ Times New Roman เอง บน Windows ที่มีฟอนต์ Microsoft แต่ไม่มี Liberation จึงตกไปใช้ Source Sans 3 และ Source Serif 4 ซึ่งกว้างกว่า (รายการฟอนต์ที่ต้องแทนจาก run 42987830938 บน Windows: govuk-006, govuk-020, govuk-060, zenodo-156 "Times=Source Serif 4"; govuk-052, govuk-054, govuk-072, zenodo-006, zenodo-012, zenodo-017, zenodo-068 "Helvetica=Source Sans 3"; zenodo-081 "Arial Nova=Source Sans 3") ขณะที่ PDF อ้างอิงของ Word ใช้ Times/Helvetica จริง ซึ่งกว้างเท่า Times New Roman/Arial
-  - ผลต่อผู้ใช้และความเข้ากันได้: บน Windows เอกสารที่ขอ Helvetica, Arial Nova หรือ Times จะแสดงด้วย Arial/Times New Roman ตามที่ Word ทำ บน Linux ยังใช้ Liberation (ตัวเทียบขนาด) เหมือนเดิม ไฟล์เอกสารไม่เปลี่ยน
-  - ตรวจสอบ: เทสต์ใหม่ `helvetica_and_times_try_the_windows_fonts_with_their_widths_first`; `cargo test -p doc4me-fonts` ผ่าน 71 รายการ; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลต่อตัวเลข readiness ต้องวัดบน Windows (Linux ไม่เปลี่ยนเพราะมี Liberation)
-- **ฟอนต์ธีม `majorBidi` / `minorBidi` / `majorEastAsia` / `minorEastAsia` ใช้ฟอนต์ complex script และ East Asian ของธีม ไม่ใช่ฟอนต์ Latin** (`crates/docx/src/read/props.rs`: `theme_font`, `ThemeFontSet`, `apply_theme_languages`; `crates/docx/src/read/mod.rs`: `read_theme`, `read_theme_languages`)
-  - เหตุผล: เดิม `theme_font` ดูแค่คำนำหน้า major/minor แล้วคืนฟอนต์ Latin ของธีมทุกกรณี ตาม ECMA-376 §17.18.96 `majorBidi` คือฟอนต์ `a:cs` ของธีม และถ้าว่างให้ใช้ฟอนต์รายสคริปต์ (`a:font script="Arab"` ฯลฯ) ของสคริปต์ตามภาษาใน `w:themeFontLang` (`w:bidi`, `w:eastAsia`) เช่น zenodo-114 ใช้ `w:asciiTheme="majorBidi"` กับธีมที่ `a:cs` ว่างและ ar-SA → Arab → Times New Roman ซึ่ง Word วาดเป็น Times New Roman แต่ Doc4Me วาดเป็น Calibri Light
-  - พฤติกรรม: อ่าน `a:cs`, `a:ea` และ `a:font script=…` ของ `a:majorFont`/`a:minorFont` (ไม่เกิน 64 รายการ, ชื่อไม่เกิน 255 ไบต์) และอ่าน `w:themeFontLang` ก่อนสไตล์; ถ้าธีมไม่ให้ฟอนต์สำหรับสคริปต์นั้น ยังใช้ฟอนต์ Latin เหมือนเดิม
-  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ใช้ฟอนต์ธีม Bidi/East Asian กับข้อความ Latin จะแสดงด้วยฟอนต์ที่ Word ใช้ ไม่กระทบเอกสารที่ใช้ `majorHAnsi`/`minorHAnsi`; การบันทึก .docx ไม่เปลี่ยน (เขียนชื่อฟอนต์ที่อ่านได้เหมือนการอ่านฟอนต์ธีมแบบเดิม)
-  - ตรวจสอบ: เทสต์ใหม่ `bidi_and_east_asian_theme_fonts_follow_the_theme_language` (ภาษา Arabic/Japanese/Hebrew, typeface ตรงของธีม และกรณีไม่มีภาษาธีม); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 44 → 42 (zenodo-030 และ zenodo-161 ผ่าน, zenodo-114 81 → 75 หน้า เทียบ Word 71), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าคงเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น
-  - ข้อจำกัดที่ทราบ: `w:cstheme` และ `w:eastAsiaTheme` (ฟอนต์ของข้อความ complex script/East Asian เอง) ยังไม่ถูกอ่าน; zenodo-083 เปลี่ยนจาก 32 เป็น 30 หน้า (Word 31) ยังไม่ผ่านเหมือนเดิม
-
-### เพิ่ม
-- **`cargo xtask readiness --diagnostics` พิมพ์ฟอนต์ที่ต้องแทนของเอกสารที่ไม่ผ่าน** (`xtask/src/readiness.rs`: `font_diagnostics`)
-  - เหตุผล: เพื่อแยกหน้าที่ต่างจาก Word เพราะเครื่องวัดไม่มีฟอนต์ที่เอกสารขอ ออกจากหน้าที่ต่างเพราะกฎจัดหน้า บนเครื่อง Windows ที่ใช้วัดทางการ (ซึ่งมีฟอนต์ Microsoft แท้ แต่ไม่มีฟอนต์ที่มากับ Office หรือฟอนต์ cloud)
-  - พฤติกรรม: ต่อท้ายรายการ "Full corpus failures" ด้วยแถว `fonts<TAB>เอกสาร<TAB>ฟอนต์ที่ขอ=ฟอนต์ที่ใช้แทน, …` จาก `doc4me-cli run --cmd file.fontSubstitution={}` ของเอกสารที่ไม่ผ่านแต่ละฉบับ (เฉพาะชื่อจาก manifest, จำกัดเวลาเท่าขั้นอื่น) ไม่เปลี่ยนรายงาน `docs/readiness.md` หรือตัวเลข readiness
-  - ตรวจสอบ: เทสต์ใหม่ `font_diagnostics_list_missing_fonts_of_failing_documents_only`; `cargo xtask ci` ผ่านครบ 6 ขั้น
-  - ข้อค้นพบระหว่างทาง (ไม่ได้แก้โค้ด): ลองให้ฟอนต์ที่มีตัวเทียบขนาด (Aptos → Intos) ใช้ตัวเทียบก่อนชื่อสำรอง `w:altName` ในตารางฟอนต์ แต่ PDF ของ Word ใน zenodo-168 วาดด้วย Arial ซึ่งเป็นชื่อสำรอง (Word ที่สร้าง PDF ไม่มี Aptos) จึงยกเลิก พฤติกรรมเดิมที่ใช้ `w:altName` เมื่อไม่มีฟอนต์ตรงกับ Word แล้ว
-
 ## [1.1.3] - 2026-11-11
 
 ### ความปลอดภัย
@@ -319,6 +246,18 @@
   - ตรวจสอบ (Linux x86_64, rustc 1.97.0): `cargo fmt --all -- --check` ผ่าน; `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่าน; `cargo test --workspace --exclude doc4me-web --no-fail-fast` ผ่าน 2,309 ไม่ผ่าน 0; `cargo xtask layers` (20 crates), `cargo xtask assets` (112 ไฟล์) และ `cargo xtask wasm` ผ่าน; patch ที่ลงด้วย fuzz ตรวจด้วยตาทุกไฟล์ (พบเทสต์ถูกวางผิดตำแหน่ง 3 จุด ใน `freeform.rs`, `affix.rs`, `objects.rs` แล้วย้ายหรือย้อนออก); ยังไม่ได้รันบน Windows และยังไม่ได้วัด readiness ใหม่
 
 ### เพิ่ม
+
+- **ฝังฟอนต์เทียบขนาดของฟอนต์หลักใน Word (OFL 1.1) ในรุ่นเดสก์ท็อป: Carlito (Calibri), Caladea (Cambria), Arimo (Arial), Tinos (Times New Roman), Cousine (Courier New) ครบ 4 แบบ (ปกติ/หนา/เอียง/หนาเอียง)** (`assets/fonts/{Carlito,Caladea,Arimo,Tinos,Cousine}-*.ttf`, `assets/fonts/OFL-*.txt`, `crates/fonts/src/fontdb.rs`: `DESKTOP_BUNDLED`; `crates/fonts/src/word.rs`: "Source Sans Pro" → Source Sans 3 ที่ฝังอยู่แล้ว; `ATTRIBUTION.md`)
+  - เหตุผล: เจ้าของโครงการสั่งให้ฝังฟอนต์ที่ไม่ติดลิขสิทธิ์ เพื่อให้เอกสารที่ใช้ฟอนต์ Microsoft แสดงและตัดบรรทัดเท่า Word บนเครื่องที่ไม่มีฟอนต์เหล่านั้น (macOS, Linux ที่ติดตั้งน้อย) ฟอนต์ Microsoft เองแจกจ่ายต่อไม่ได้ จึงใช้ตัวเทียบขนาดที่มีลิขสิทธิ์เปิด
+  - ลิขสิทธิ์: ทุกไฟล์ใช้ SIL Open Font License 1.1 (แจกจ่ายร่วมกับซอฟต์แวร์ได้ ห้ามขายตัวฟอนต์แยก) และ `fsType=0` (ติดตั้ง/ฝังได้ไม่จำกัด) ดาวน์โหลดจาก google/fonts และ googlefonts/Arimo ไม่แก้ไข พร้อมไฟล์ `OFL-*.txt` และรายการ SHA-256 ใน `ATTRIBUTION.md`
+  - พฤติกรรม: ใช้เฉพาะเมื่อเครื่องไม่มีฟอนต์ที่ขอและไม่มีฟอนต์ระบบที่ชื่อนั้น บน Windows ที่มี Calibri/Cambria/Arial ฯลฯ ยังใช้ฟอนต์จริง ไม่ฝังในรุ่นเว็บ (งบขนาด) ตัวโปรแกรมเดสก์ท็อปใหญ่ขึ้นราว 9 MB
+  - ทดลองแล้วไม่ใส่ (มีหลักฐาน): variable font รุ่นปัจจุบันของ Gelasio, Overpass, Open Sans, Roboto, Archivo และ League Spartan ทำให้คลังบน Linux แย่ลง (จำนวนหน้าไม่ตรง 42 → 45: zenodo-033, zenodo-067, zenodo-129 ไม่ผ่านใหม่; zenodo-022 21 → 27 และ zenodo-069 26 → 34 หน้า) เพราะ Word ของผู้เขียนมักไม่มีฟอนต์เหล่านั้นเช่นกัน หรือมีรุ่นที่ขนาดต่างกัน และ Gelasio รุ่นใหม่ไม่เทียบขนาดกับ Georgia แล้ว
+  - ตรวจสอบ: เทสต์ใหม่ `desktop_bundles_the_metric_compatible_stand_ins`; `cargo xtask assets` ผ่าน (ทุกไฟล์มีรายการใน ATTRIBUTION.md); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร (เครื่องมีฟอนต์เหล่านี้อยู่แล้ว); `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบหนึ่งเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนาน แต่ผ่านเมื่อรันเดี่ยว 3 รอบและผ่านในรอบเต็มถัดไป)
+- **`cargo xtask readiness --diagnostics` พิมพ์ฟอนต์ที่ต้องแทนของเอกสารที่ไม่ผ่าน** (`xtask/src/readiness.rs`: `font_diagnostics`)
+  - เหตุผล: เพื่อแยกหน้าที่ต่างจาก Word เพราะเครื่องวัดไม่มีฟอนต์ที่เอกสารขอ ออกจากหน้าที่ต่างเพราะกฎจัดหน้า บนเครื่อง Windows ที่ใช้วัดทางการ (ซึ่งมีฟอนต์ Microsoft แท้ แต่ไม่มีฟอนต์ที่มากับ Office หรือฟอนต์ cloud)
+  - พฤติกรรม: ต่อท้ายรายการ "Full corpus failures" ด้วยแถว `fonts<TAB>เอกสาร<TAB>ฟอนต์ที่ขอ=ฟอนต์ที่ใช้แทน, …` จาก `doc4me-cli run --cmd file.fontSubstitution={}` ของเอกสารที่ไม่ผ่านแต่ละฉบับ (เฉพาะชื่อจาก manifest, จำกัดเวลาเท่าขั้นอื่น) ไม่เปลี่ยนรายงาน `docs/readiness.md` หรือตัวเลข readiness
+  - ตรวจสอบ: เทสต์ใหม่ `font_diagnostics_list_missing_fonts_of_failing_documents_only`; `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อค้นพบระหว่างทาง (ไม่ได้แก้โค้ด): ลองให้ฟอนต์ที่มีตัวเทียบขนาด (Aptos → Intos) ใช้ตัวเทียบก่อนชื่อสำรอง `w:altName` ในตารางฟอนต์ แต่ PDF ของ Word ใน zenodo-168 วาดด้วย Arial ซึ่งเป็นชื่อสำรอง (Word ที่สร้าง PDF ไม่มี Aptos) จึงยกเลิก พฤติกรรมเดิมที่ใช้ `w:altName` เมื่อไม่มีฟอนต์ตรงกับ Word แล้ว
 - **ภาษาอินเทอร์เฟซอาหรับ (ar), เปอร์เซีย (fa), อูรดู (ur) และปาชโต (ps)**: เพิ่มแค็ตตาล็อกใหม่ครบ 3,034 คีย์ต่อภาษา และลงทะเบียนใน `LANGUAGES` (จาก 87 เป็น 91) ชื่อภาษาในรายการเขียนด้วยอักษรของภาษานั้นเอง คือ العربية, فارسی, اردو และ پښتو เป็นฉบับร่างที่ AI แปล ยังไม่ผ่านการตรวจทานจากเจ้าของภาษา (ผู้ใช้สั่งให้แปลให้ครบก่อนโดยไม่ต้องรอ)
   - ใส่ค่าในคอลัมน์ catalog ของ `docs/readiness/languages.tsv` ที่แถว `lang-003`, `lang-064`, `lang-090` และ `lang-063`
   - ทั้งสี่ภาษาอยู่ใน `IMPERFECT_RENDERING` อยู่แล้ว เพราะเขียนจากขวาไปซ้ายและตัวอักษรต้องเชื่อมกัน ซึ่ง UI ยังจัดวางและ shaping ไม่ได้ ผู้ใช้จึงเห็นคำเตือนพร้อมปุ่ม OK/Cancel ก่อนเปลี่ยน และโหมด Automatic จะไม่เลือกให้เอง
@@ -691,6 +630,21 @@
   - ความปลอดภัย: สิทธิ์ `contents: write` ให้เฉพาะ job นี้เพื่อ push ผลวัด; action ทุกตัวปักที่ SHA เดียวกับ workflow installer
 
 ### เปลี่ยนแปลง
+
+- **ออกเวอร์ชัน 1.1.3 ใหม่อีกครั้งจากโค้ดล่าสุด และปรับเอกสารให้ตรงกับโค้ด**: ลบ Release/tag v1.1.3 ที่สร้างจาก `7422790` (เจ้าของโครงการลบเอง) แล้วออกใหม่จาก `main` ล่าสุด รุ่นนี้จึงรวมงานหลัง `7422790` ทั้งหมดที่บันทึกในหัวข้อนี้ (ฟอนต์ธีม, แทน Helvetica/Times, ฟอนต์ OFL ที่ฝัง Carlito/Caladea/Arimo/Tinos/Cousine ต่อท้ายฟอนต์ของระบบ, เครื่องหมายตัวแบ่งหน้าโหมด 14, ระยะก่อนย่อหน้าหลังตัวแบ่งหน้าในโหมด < 15, เลขหน้าเริ่มที่ 0, section ต่อเนื่องใต้วัตถุลอย, ตัดบรรทัดที่ขีดหลังตัวเลข, grid ในตาราง, ลูกศร ▲▼ ของ Font spacing ทีละ 0.1 pt, คำวินิจฉัยฟอนต์ของ readiness, ตั้ง zenodo-104/govuk-003 เป็น excluded)
+  - เอกสารที่แก้: `ROADMAP.md`, `docs/roadmap.md`, `docs/target-app-parity.md`, `docs/layout-parity.md`, `docs/gaps.md`, `docs/file-format-parity.md`, `docs/ui-parity.md`, `docs/localization-parity.md`, `docs/readiness/README.md`, `docs/readiness/deferred-plan.md` (run 43051188273, 92.7% / 94.5%, 181/220 หน้า, 99/220 ตำแหน่งตัดหน้า, คลัง 220 เอกสาร, 2,487 เทสต์, 233,735 บรรทัด Rust ตาม `cargo xtask stats`) พร้อมแถวประวัติใหม่ โดยไม่แก้แถวประวัติเดิม; `README.md` และ `README.en.md` เพิ่มรายการฟอนต์ที่ฝังในรุ่นเดสก์ท็อป (ไม่เปลี่ยนลิงก์ Releases)
+  - ผลต่อผู้ใช้: ไม่มีผลต่อโค้ดหรือไฟล์ .docx เดิม ติดตั้ง MSI ทับรุ่นก่อนได้ตามเดิม
+  - ตรวจสอบ: `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm; เทสต์ 2,478 ตัวที่รันผ่าน 0 ล้ม), `cargo xtask stats` ได้ 389 ไฟล์ 233,735 บรรทัด 2,487 `#[test]`
+- **ตั้งแถว zenodo-104 และ govuk-003 ในคลัง readiness เป็น `excluded` ตามคำตัดสินของเจ้าของโครงการ** (`docs/readiness/corpus.tsv`)
+  - เหตุผล: PDF อ้างอิงของทั้งสองไม่ได้สร้างจากไฟล์ .docx ที่อยู่ในคลัง จัดหน้าอย่างไรก็ไม่ตรง: zenodo-104 มีปกหน้า หน้าว่าง และปกหลังที่ไม่มีในไฟล์ (29 หน้า เทียบเอกสาร 25 หน้า), govuk-003 มีกล่อง "FOR OFFICIAL USE ONLY / Date received" ที่ไม่มีใน part ใดของไฟล์ (ตรวจทุก `word/*.xml` แล้ว)
+  - ตามกติกาของคลัง แถวไม่ถูกลบ ตั้งเป็น `excluded` พร้อมเหตุผลในคอลัมน์ note ไม่ถูกดาวน์โหลดหรือนับ ชุด corpus จึงนับ 220 เอกสาร (จาก 222)
+  - ตรวจสอบ: `cargo test -p xtask` ผ่าน; ตัวเลข readiness ใหม่วัดบน Windows run 43051188273 (source `bd2d2d6`, report commit `5292abd`): คลังนับ 220 เอกสาร (เปิด/round-trip/เสถียร 220/220) จำนวนหน้า 181/220 ตำแหน่งตัดหน้า 99/220 รวม 92.7% / 94.5% ไม่นับ 22 แถว deferred (run 43011248444 ก่อนตั้ง excluded: 182/222 และ 99/222, 92.6% / 94.5%; govuk-003 เคยผ่านจำนวนหน้าจึงลดไป 1) มิติอื่นเท่าเดิม
+  - แก้ตามมา: ขั้น "Inspect Windows font resolution" ใน `.github/workflows/readiness-windows.yml` มีรายชื่อเอกสารตายตัวที่รวม govuk-003 และล้มเมื่อหาไฟล์ไม่เจอ (run 43043846909 วัดผ่านแล้วแต่ไม่ได้ commit รายงาน) จึงเอา govuk-003 ออกจากรายชื่อและให้ข้ามเอกสารที่ไม่ได้ดาวน์โหลดแทนการล้ม
+  - แก้ตามมาอีกครั้ง: ข้อความข้ามใน PowerShell เขียน `"--- $id: ..."` ซึ่ง PowerShell อ่าน `$id:` เป็นการอ้างตัวแปรแบบมี scope จึงล้มตอน parse (run 43047705006 วัดได้ 92.7% แต่ไม่ได้ commit รายงาน) แก้เป็น `${id}` ส่วน `$tag:` ใน `windows-x64-installer.yml` เป็น bash ไม่กระทบ
+- **ลูกศร ▲▼ ของช่อง By ใน Font › Advanced › Spacing ปรับทีละ 0.1 pt (เดิม 0.5 pt)** (`crates/ui-egui/src/dialogs.rs`: `step_spacing_by`)
+  - เหตุผล: เจ้าของโครงการสั่งให้ปรับละเอียดขึ้นเป็นทีละ 0.1 pt
+  - พฤติกรรม: ยังอยู่ในช่วง 0–1584 pt และปัดเป็นหนึ่งในร้อยทุกครั้ง กดสิบครั้งจาก 0 ได้ 1 pt พอดี ไม่คลาดสะสม; การพิมพ์หรือลากค่าในช่องไม่เปลี่ยน; เอกสารเดิมไม่กระทบ
+  - ตรวจสอบ: ปรับเทสต์ `font_spacing_is_normal_expanded_or_condensed_up_to_1584_pt` (ก้าว 0.1, ขอบล่าง/บน, ค่าที่ไม่ใช่ตัวเลข, สิบครั้งได้ 1.0) ผ่าน; `cargo clippy -p doc4me-ui-egui --all-targets -- -D warnings` และ `cargo fmt --check` ผ่าน
 - **หน้าต่าง About ไม่มีลิงก์ซอร์สโค้ดแล้ว และระบุชื่อผู้พัฒนา Chatrawichai Chanprom (veevie55)** (`crates/ui-egui/src/dialogs.rs`: แท็บ About; `crates/ui-egui/src/i18n/*.tsv`)
   - เหตุผล: เจ้าของโครงการสั่งให้เอาลิงก์ `Source code: github.com/chatraweechai/doc4me` ออกจากหน้าต่างเกี่ยวกับ Doc4Me และใส่ชื่อผู้พัฒนาแทน
   - รายละเอียด: เอาข้อความลิงก์ออกจาก 90 แค็ตตาล็อก แล้วเพิ่มแถวชื่อผู้พัฒนา (ค่าเท่ากันทุกภาษา เพราะเป็นชื่อเฉพาะ) แต่ละแค็ตตาล็อกจึงยังมี 3,034 คีย์เท่าเดิม การตรวจ `untranslated_interface_text` กำหนดให้ข้อความที่แสดงทุกบรรทัดผ่าน `tl!` จึงเพิ่มแถวแทนการแสดงสตริงดิบ
@@ -718,6 +672,49 @@
   - ตรวจสอบ: คำนวณผลรวมถ่วงน้ำหนักจากตารางใน `docs/readiness.md` ซ้ำได้ 91.27% / 93.15% ตรงกับรายงาน; ไม่ได้รัน readiness ใหม่
 
 ### แก้ไข
+
+- **ฟอนต์ที่ไม่รู้จักกลับไปใช้ฟอนต์ของระบบก่อนฟอนต์ที่ฝัง (Arial/Times New Roman บน Windows, Helvetica Neue บน macOS) ส่วน Calibri/Cambria ใช้ Carlito/Caladea ก่อนเสมอ** (`crates/fonts/src/word.rs`: รายการ `SANS`, `SERIF`, `CALIBRI`, `CAMBRIA`)
+  - เหตุผล: หลังฝัง Carlito/Caladea (ในรุ่นนี้) สองฟอนต์นี้มีทุกเครื่อง และอยู่หัวรายการตัวแทนทั่วไป log ของ Windows run 43005431349 จึงเปลี่ยนเป็น "Arial Narrow=Carlito", "Univers=Carlito", "Garamond=Caladea" ทั้งที่ PDF ของ Word ใช้ Arial (govuk-017/018) และ Times New Roman (zenodo-114) ตามพฤติกรรมเดิมก่อนฝังฟอนต์
+  - พฤติกรรม: ลำดับใหม่ให้ผลเหมือนก่อนฝังฟอนต์ทุกแพลตฟอร์ม (Windows: Arial/Times New Roman, macOS: Helvetica Neue/Times New Roman, Linux: Carlito/Caladea) ยกเว้น Calibri/Cambria ที่ตอนนี้ใช้ตัวเทียบขนาด Carlito/Caladea ได้บน macOS ด้วย
+  - ตรวจสอบ: เทสต์ใหม่ `unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins` และปรับเทสต์เดิม 2 ตัวที่ยืนยันลำดับเก่าของ Garamond; `cargo test -p doc4me-fonts` ผ่าน 73 รายการ; วัดคลังบน Linux ก่อน/หลัง ผลเท่ากันทุกเอกสาร; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลบน Windows ต้องวัดใหม่
+
+- **ตัดบรรทัดได้หลังยัติภังค์ระหว่างตัวเลข เช่นเบอร์โทร "98173-" | "4097" หรือช่วงปี "2010-" | "2015"** (`crates/layout/src/para.rs`: `digit_hyphen_breaks`)
+  - เหตุผล: กฎ UAX #14 (LB25, `HY × NU`) ถือว่า "-" หน้าตัวเลขเป็นเครื่องหมายลบจึงไม่ให้ตัด แต่ Word ตัดหลังยัติภังค์ที่มีตัวเลขทั้งสองข้าง (zenodo-012 หน้า 3: Word ขึ้นบรรทัดใหม่ที่ "4097;")
+  - พฤติกรรม: เพิ่มจุดตัดเฉพาะ "-" (U+002D) ที่มีเลขอารบิกทั้งหน้าและหลัง เครื่องหมายลบหน้าตัวเลข (-5), ยัติภังค์ระหว่างตัวอักษร และ en dash ไม่เปลี่ยน
+  - ผลต่อผู้ใช้และความเข้ากันได้: เบอร์โทร ช่วงตัวเลขและวันที่ที่อยู่ท้ายบรรทัดจะตัดเหมือน Word แทนที่จะยกทั้งก้อนไปบรรทัดใหม่ ไฟล์ไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `a_hyphen_between_digits_is_a_break_opportunity` (ตรวจแล้วว่าล้มเมื่อไม่มีการแก้); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ไม่มีเอกสารใดแย่ลง, zenodo-012 จุดต่างแรกเลื่อนจากหน้า 3 ไปหน้า 5; `cargo xtask ci` ผ่านครบ 6 ขั้น (รอบแรกเทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ได้ 24.2 เท่าเกินเกณฑ์ 24 เล็กน้อยตอนรันขนาน ข้อความในเทสต์ไม่มีตัวเลข ผ่านในรอบถัดไป)
+
+- **section แบบต่อเนื่อง (continuous) เริ่มใต้วัตถุลอยที่ข้อความต้องหลบในหน้านั้น ไม่ใช่ในช่องว่างเหนือวัตถุ** (`crates/layout/src/lib.rs`: การเริ่ม section ต่อเนื่อง)
+  - เหตุผล: zenodo-153 มี section แรกเป็นย่อหน้าว่างที่ anchor กล่องข้อความกว้างเต็มบรรทัด (wrap square) ต่ำลงไป 39pt Word เริ่ม section ที่สอง (2 คอลัมน์) ใต้กล่อง แต่ Doc4Me เริ่มใต้บรรทัดสุดท้ายแล้วใส่ข้อความลงในช่องว่างเหนือกล่อง ข้อความจึงขึ้นไปทับชื่อเรื่อง
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ขึ้น section ต่อเนื่อง (มักเปลี่ยนจำนวนคอลัมน์) ใต้รูปหรือกล่องข้อความที่ตัดข้อความ จะไม่มีข้อความแทรกเหนือวัตถุอีก ไฟล์ไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `a_continuous_section_starts_below_the_objects_text_wraps_around` (ตรวจแล้วว่าล้มเมื่อไม่มีการแก้: B อยู่ที่ 105.6pt เหนือกล่องที่ 152–212pt); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ไม่มีเอกสารใดแย่ลง, zenodo-153 หน้า 1 ตรงกับ Word แล้ว (จุดต่างแรกเลื่อนไปหน้า 2); `cargo xtask ci` ผ่านครบ 6 ขั้น
+
+- **เลขหน้าที่ตั้งให้เริ่มที่ 0 (`w:pgNumType w:start="0"`) เริ่มที่ 0 จริง** (`crates/layout/src/lib.rs`: `PageBuilder::new_page`, การเริ่มเลขหน้าใหม่ของ section)
+  - เหตุผล: เดิมใช้ `saturating_sub(1)` ก่อนขึ้นหน้าใหม่ ค่า 0 จึงกลายเป็น 1 เอกสารที่นับหน้าปกเป็นหน้า 0 (หน้าถัดไปแสดง "1") จึงแสดงเลขหน้าเกินไป 1 ทุกหน้า และหน้าคู่/คี่สำหรับหัว/ท้ายกระดาษสลับกัน
+  - ผลต่อผู้ใช้และความเข้ากันได้: เลขหน้าในหัว/ท้ายกระดาษ ฟิลด์ PAGE และการเลือกหัว/ท้ายกระดาษหน้าคู่/คี่ตรงกับ Word สำหรับเอกสารที่เริ่มนับที่ 0; การตั้งค่าเริ่มอื่นไม่เปลี่ยน ไฟล์ไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `page_numbers_can_restart_at_zero` (0, 1, 2 และ 5, 6, 7); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: ตำแหน่งตัดหน้าไม่ตรง 129 → 126 (govuk-032, zenodo-097, zenodo-147 ผ่าน; govuk-054, zenodo-096, zenodo-140 จุดต่างแรกเลื่อนไปหน้าหลัง), ไม่มีเอกสารใดแย่ลง; `cargo xtask ci` ผ่านครบ 6 ขั้น
+
+- **เอกสารโหมดความเข้ากันได้ต่ำกว่า 15 ตัด space-before ของย่อหน้าแรกที่หัวหน้าใหม่หลัง page break ที่จบย่อหน้าก่อน** (`crates/layout/src/lib.rs`: `PageBuilder::after_break`, `place_para`)
+  - เหตุผล: Word 2010 และเก่ากว่าไม่ใส่ space-before ให้ย่อหน้าแรกของหน้าที่เริ่มเพราะ page break ส่วน Word 2013 ขึ้นไป (โหมด 15) ใส่ตามปกติ ในคลัง govuk-034 และ govuk-047 (โหมด 14) ตรงกับ Word เมื่อตัด ส่วน govuk-046 (โหมด 15) ตรงกับ Word เมื่อคงไว้ (ลองแบบไม่แยกโหมดแล้ว govuk-046 ไม่ผ่านใหม่ จึงจำกัดตามโหมด)
+  - ผลต่อผู้ใช้และความเข้ากันได้: เฉพาะเอกสาร Word 2010 และเก่ากว่าที่มีหัวข้อมี space-before ตามหลัง page break จะเริ่มหน้าสูงขึ้นเท่า Word; เอกสารโหมด 15 ไม่เปลี่ยน ไฟล์ไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `space_before_after_a_page_break_follows_the_compatibility_mode`; วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 40 → 39 (govuk-047 ผ่าน, govuk-034 16 → 15 หน้า เทียบ Word 14), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าคงเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น
+
+- **เอกสาร Word 2010 (โหมดความเข้ากันได้ 14) ไม่ขึ้นบรรทัดว่างที่หัวหน้าใหม่หลัง page break ที่จบย่อหน้า** (`crates/layout/src/lib.rs`, `crates/doc/src/lib.rs` เอกสารประกอบ `split_page_break_mark`)
+  - เหตุผล: เดิมเอกสารโหมด 14 หรือต่ำกว่าส่ง paragraph mark หลัง page break ไปหน้าใหม่ (เลียนแบบ Word 2010) แต่ PDF ของ Word สำหรับเอกสารโหมด 14 ในคลังไม่มีบรรทัดว่างนั้น (govuk-034 หน้า 5 ของ Doc4Me เริ่มต่ำกว่า Word 40pt) ตอนนี้ส่ง mark ไปหน้าใหม่เฉพาะเอกสารที่ระบุ `w:splitPgBreakAndParaMark`
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสาร .docx/.doc รุ่นเก่าที่มี page break ท้ายย่อหน้าจะไม่มีบรรทัดว่างที่หัวหน้า ตรงกับ Word ปัจจุบัน; การบันทึกไม่เปลี่ยน
+  - ตรวจสอบ: เพิ่มกรณีโหมด 14 ในเทสต์ `a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page`; วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 42 → 40 (govuk-043, govuk-045, govuk-054 ผ่าน), zenodo-065 จุดต่างแรกเลื่อนจากหน้า 3 ไปหน้า 5, ตำแหน่งตัดหน้าไม่ตรงคงเดิม 129; zenodo-095 เปลี่ยนจากผ่านเป็น 9 หน้า (Word 10) บน Linux ซึ่งเท่ากับผลบน Windows ก่อนแก้ (เอกสารใช้ฟอนต์ Gotham ที่ไม่มีทั้งสองเครื่อง); `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์วัดเวลา `a_long_unbreakable_word_lays_out_in_linear_time` ล้มตอนรันขนานหนึ่งรอบ: ได้ 17–24 เท่าทั้งก่อนและหลังการแก้รอบนี้และก่อนฝังฟอนต์ (เกณฑ์ 24) จึงเป็นความผันผวนของเครื่อง ผ่านในรอบเต็มถัดไป)
+  - ข้อจำกัดที่ทราบ: govuk-034 ยังเกิน 1 หน้า เพราะ Word ตัด space-before ของย่อหน้าแรกที่หัวหน้าหลัง page break ในเอกสารนี้ แต่ Doc4Me ไม่ตัด (ยังไม่แก้ เพราะมีหลักฐานจากเอกสารเดียว)
+
+- **Helvetica / Arial Nova ใช้ Arial และ Times ใช้ Times New Roman เมื่อเครื่องไม่มีฟอนต์ที่ขอ** (`crates/fonts/src/word.rs`: รายการ `ARIAL`, `TIMES`)
+  - เหตุผล: รายการตัวแทนของ Helvetica/Arial Nova และ Times ไม่มี Arial และ Times New Roman เอง บน Windows ที่มีฟอนต์ Microsoft แต่ไม่มี Liberation จึงตกไปใช้ Source Sans 3 และ Source Serif 4 ซึ่งกว้างกว่า (รายการฟอนต์ที่ต้องแทนจาก run 42987830938 บน Windows: govuk-006, govuk-020, govuk-060, zenodo-156 "Times=Source Serif 4"; govuk-052, govuk-054, govuk-072, zenodo-006, zenodo-012, zenodo-017, zenodo-068 "Helvetica=Source Sans 3"; zenodo-081 "Arial Nova=Source Sans 3") ขณะที่ PDF อ้างอิงของ Word ใช้ Times/Helvetica จริง ซึ่งกว้างเท่า Times New Roman/Arial
+  - ผลต่อผู้ใช้และความเข้ากันได้: บน Windows เอกสารที่ขอ Helvetica, Arial Nova หรือ Times จะแสดงด้วย Arial/Times New Roman ตามที่ Word ทำ บน Linux ยังใช้ Liberation (ตัวเทียบขนาด) เหมือนเดิม ไฟล์เอกสารไม่เปลี่ยน
+  - ตรวจสอบ: เทสต์ใหม่ `helvetica_and_times_try_the_windows_fonts_with_their_widths_first`; `cargo test -p doc4me-fonts` ผ่าน 71 รายการ; `cargo xtask ci` ผ่านครบ 6 ขั้น; ผลต่อตัวเลข readiness ต้องวัดบน Windows (Linux ไม่เปลี่ยนเพราะมี Liberation)
+- **ฟอนต์ธีม `majorBidi` / `minorBidi` / `majorEastAsia` / `minorEastAsia` ใช้ฟอนต์ complex script และ East Asian ของธีม ไม่ใช่ฟอนต์ Latin** (`crates/docx/src/read/props.rs`: `theme_font`, `ThemeFontSet`, `apply_theme_languages`; `crates/docx/src/read/mod.rs`: `read_theme`, `read_theme_languages`)
+  - เหตุผล: เดิม `theme_font` ดูแค่คำนำหน้า major/minor แล้วคืนฟอนต์ Latin ของธีมทุกกรณี ตาม ECMA-376 §17.18.96 `majorBidi` คือฟอนต์ `a:cs` ของธีม และถ้าว่างให้ใช้ฟอนต์รายสคริปต์ (`a:font script="Arab"` ฯลฯ) ของสคริปต์ตามภาษาใน `w:themeFontLang` (`w:bidi`, `w:eastAsia`) เช่น zenodo-114 ใช้ `w:asciiTheme="majorBidi"` กับธีมที่ `a:cs` ว่างและ ar-SA → Arab → Times New Roman ซึ่ง Word วาดเป็น Times New Roman แต่ Doc4Me วาดเป็น Calibri Light
+  - พฤติกรรม: อ่าน `a:cs`, `a:ea` และ `a:font script=…` ของ `a:majorFont`/`a:minorFont` (ไม่เกิน 64 รายการ, ชื่อไม่เกิน 255 ไบต์) และอ่าน `w:themeFontLang` ก่อนสไตล์; ถ้าธีมไม่ให้ฟอนต์สำหรับสคริปต์นั้น ยังใช้ฟอนต์ Latin เหมือนเดิม
+  - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ใช้ฟอนต์ธีม Bidi/East Asian กับข้อความ Latin จะแสดงด้วยฟอนต์ที่ Word ใช้ ไม่กระทบเอกสารที่ใช้ `majorHAnsi`/`minorHAnsi`; การบันทึก .docx ไม่เปลี่ยน (เขียนชื่อฟอนต์ที่อ่านได้เหมือนการอ่านฟอนต์ธีมแบบเดิม)
+  - ตรวจสอบ: เทสต์ใหม่ `bidi_and_east_asian_theme_fonts_follow_the_theme_language` (ภาษา Arabic/Japanese/Hebrew, typeface ตรงของธีม และกรณีไม่มีภาษาธีม); วัดคลัง 222 เอกสารบน Linux ก่อน/หลัง: จำนวนหน้าไม่ตรง 44 → 42 (zenodo-030 และ zenodo-161 ผ่าน, zenodo-114 81 → 75 หน้า เทียบ Word 71), ไม่มีเอกสารใดแย่ลง, ตำแหน่งตัดหน้าคงเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น
+  - ข้อจำกัดที่ทราบ: `w:cstheme` และ `w:eastAsiaTheme` (ฟอนต์ของข้อความ complex script/East Asian เอง) ยังไม่ถูกอ่าน; zenodo-083 เปลี่ยนจาก 32 เป็น 30 หน้า (Word 31) ยังไม่ผ่านเหมือนเดิม
 - **ข้อความในเซลล์ตารางไม่ถูกบังคับให้ตรงกับ document grid เมื่อเอกสารไม่ได้เปิด `w:adjustLineHeightInTable`** (`crates/layout/src/table.rs`: `layout_cell`; `crates/doc/src/lib.rs`: `Settings::adjust_line_height_in_table`; `crates/docx/src/read/mod.rs`: อ่าน `w:adjustLineHeightInTable`)
   - เหตุผล: เอกสารที่มี `w:docGrid w:type="lines"` เช่น zenodo-103 ทำให้ Doc4Me ปัดความสูงบรรทัดในตารางขึ้นเป็นทวีคูณของระยะ grid (1.5 บรรทัดกลายเป็น 24.45pt ทั้งที่ Word ได้ 18.12pt) ตารางภาคผนวกยาวจึงบวมจาก 29 หน้าของ Word เป็น 36 หน้า ส่วนเอกสารที่เปิด flag นี้ (เช่น zenodo-006, zenodo-087) ยังปัดตาม grid เหมือนเดิม
   - ผลต่อผู้ใช้และความเข้ากันได้: เอกสารที่ไม่มี document grid หรือไม่มีตารางไม่เปลี่ยน; เอกสาร grid ที่มีตารางแต่ไม่มี flag จะจัดหน้าใกล้ Word ขึ้น; flag ถูกเก็บและเขียนกลับตอนบันทึก .docx (ตรวจรอบ zenodo-006) ไฟล์ .docx เดิมเปิดและบันทึกได้เหมือนเดิม
