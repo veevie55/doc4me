@@ -15,13 +15,13 @@
 
 ### ความปลอดภัย (port จาก WordCraft)
 - รอบ 3 ชุด 1–25 อยู่ใน 1.1.3 (ดู CHANGELOG `[1.1.3]` › ความปลอดภัย); ตรวจ `cargo clippy --workspace --all-targets --exclude doc4me-web -- -D warnings` ผ่านหลังชุด 25
-- ยังเหลือ: `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก), ส่วนตาราง ODT ของ `560565cd`
+- port WordCraft: ครบแล้วทุกส่วนที่ใช้กับ Doc4Me (หลัง 1.1.3, ยังไม่ออกรุ่น): `b2734c28` (undo ใช้ style sheet/list ร่วมกัน), `1350f62b` (AccessKit focus guard), `ef35d79c` (control channel/MCP ปฏิเสธคำสั่งที่ทิ้งงานที่ยังไม่บันทึก; ไม่พอร์ตส่วนหลายเอกสาร) และเพดานตารางซ้อนของ `560565cd`; ส่วน ODT ของ `560565cd` ไม่ต้องพอร์ต (ตัวอ่าน ODT ของ Doc4Me มีงบ `text:s` ของเนื้อหาอยู่แล้ว และไม่อ่านหัว/ท้ายกระดาษ) — commit ที่เหลือของ WordCraft ตามบันทึกสำรวจ 2026-11-09 ด้านล่างยังไม่ได้ replay
 - แก้แล้ว (หลัง 1.1.3, ยังไม่ออกรุ่น): จำกัดความลึกตารางซ้อนที่ 18 ชั้นเมื่อแทรก/วาง (`MAX_TABLE_DEPTH` ใน `crates/doc/src/table.rs`)
 - วิธี port: 3-way merge รายไฟล์ด้วย `git merge-file` (ours = doc4me, base/theirs = WordCraft ก่อน/หลัง commit หลัง sed wordcraft→doc4me) ใน worktree แยก แล้วแก้ conflict โดยถือฝั่ง Doc4Me และเติมเทสต์; ถ้าโครงสร้างต่างมากให้เขียนใหม่ตามเจตนาของ commit
 
 ### งานถัดไป
 1. Pagination (มิติเดียวที่ยังไม่ 100% เมื่อไม่นับ deferred) — วิเคราะห์บน Windows เพราะ Linux ไม่มีฟอนต์ Windows หลายตัว
-2. port WordCraft ที่เหลือ (เพดานตารางซ้อนและ `ef35d79c` ส่วนที่ใช้ได้ทำแล้ว; `b2734c28` และ `1350f62b` ทำแล้ว; เหลือส่วนตาราง ODT ของ `560565cd`)
+2. replay commit WordCraft ช่วงที่เหลือตามลำดับ dependency (ดูบันทึกสำรวจ 2026-11-09 ด้านล่าง; รายการที่ค้างเฉพาะเจาะจงของรอบนี้ทำครบแล้ว)
 3. ให้เจ้าของภาษาตรวจทาน 26 แค็ตตาล็อกฉบับร่าง AI; รองรับ shaping/RTL ใน UI
 
 ## บันทึกก่อนออก 1.1.3 (ข้อมูลเก่า; ตัวเลขล่าสุดอยู่ด้านบน)
