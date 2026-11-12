@@ -22,7 +22,7 @@ description: |-
   and writes .docx, opens .odt, .rtf, .html, .md and .txt, and exports PDF.
   Includes doc4me-cli, a headless converter and command runner.
 
-# The binaries link only glibc and libgcc_s directly. Windowing (X11/Wayland, xkbcommon) and the
+# The desktop binary also links libstdc++ and ALSA for local Dictate. Windowing and the
 # GPU (Vulkan, EGL/GL) are loaded at runtime, so they are dependencies/recommendations here
 # rather than ELF NEEDED entries.
 overrides:
@@ -30,6 +30,8 @@ overrides:
     depends:
       - libc6 (>= 2.35)
       - libgcc-s1
+      - libstdc++6
+      - libasound2
       - libxkbcommon0
       - libvulkan1 | libegl1
     recommends:
@@ -46,6 +48,10 @@ overrides:
       - xdg-desktop-portal
   rpm:
     depends:
+      - glibc >= 2.35
+      - libgcc
+      - libstdc++
+      - alsa-lib
       - libxkbcommon
       - (vulkan-loader or libglvnd-egl)
     recommends:

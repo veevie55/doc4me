@@ -995,7 +995,7 @@ fn layout_blocks(
                 push_para(&mut items, story, &path, &pl, (0, pl.lines.len()), (0.0, y + lead), width, bx);
                 // Pictures, shapes and text boxes: drawn, their areas and text boxes' text.
                 if !p.objects.is_empty() {
-                    let at = ObjFrame { page: frame, col: (0.0, width), para_y: y, table_chr: table.map(|t| &t.chr) };
+                    let at = ObjFrame { page: frame, col: (0.0, width), para_y: y, table_chr: table.map(|t| &t.chr), body_page: None };
                     let (back, front) = place_objects(ctx, story, &path, p, &pl, (0, pl.lines.len()), (0.0, y + lead), &at, &floats, depth);
                     let at = behind.min(items.len());
                     behind += back.len();
@@ -2770,6 +2770,8 @@ struct ObjFrame<'a> {
     para_y: f32,
     /// A table's character formatting under the paragraph's (see `left_out_objects`).
     table_chr: Option<&'a CharProps>,
+    /// The numbered page of a body paragraph paginated across explicit page/column breaks.
+    body_page: Option<u32>,
 }
 
 /// The pictures, shapes and text boxes in lines `l0..l1` of paragraph `p` (story `story`, at
@@ -2797,18 +2799,23 @@ fn place_objects(
     let Some(fl) = pl.lines.get(l0) else { return (behind, front) };
     // Objects left out of the layout (hidden, or deleted in the final text) aren't placed.
     let left_out = left_out_objects(ctx.doc, p, at.table_chr, ctx.opts.show_hidden, ctx.hide_deleted);
-    // A floating object belongs to its paragraph, not to its line: Word puts it on the page the
-    // paragraph starts on (a cover page is a paragraph holding a page break and then the text
-    // box with the title; the box stays on the cover). So the paragraph's first piece places
-    // every floating object, whichever of its lines holds the anchor, and later pieces none;
-    // inline objects go with their own line.
+    // Most floats belong to the paragraph's first piece, whichever line holds the anchor.
+    // Paragraph-relative objects in front of/behind text instead follow an explicit break
+    // before their anchor (govuk-001, zenodo-097). They belong to that segment's first piece,
+    // even if the anchor line wraps onto a later page. Page-relative cover art stays put.
+    // Inline objects go with their own line. Boxes and web/outline views don't paginate here.
     let first = l0 == 0;
-    for li in 0..pl.lines.len() {
+    let mut segment = 0;
+    for (li, line) in pl.lines.iter().enumerate() {
         let in_piece = (l0..l1).contains(&li);
-        if !in_piece && !first {
+        let segment_first = l0 == segment;
+        let after_break = segment > 0 && at.body_page.is_some();
+        if matches!(line.end, para::LineEnd::PageBreak | para::LineEnd::ColumnBreak) {
+            segment = li + 1;
+        }
+        if !in_piece && !first && !segment_first {
             continue;
         }
-        let Some(line) = pl.lines.get(li) else { continue };
         for k in line.c0..line.c1 {
             let Some(c) = pl.clusters.get(k) else { continue };
             let para::ClKind::Object(oi) = c.kind else { continue };
@@ -2818,11 +2825,14 @@ fn place_objects(
             let Some(obj) = p.objects.get(oi) else { continue };
             let Some((w, h, float)) = obj.frame() else { continue };
             let floating = float.wrap != Wrap::Inline;
-            if if floating { !first } else { !in_piece } {
+            let follows_break = after_break && float.v_rel == Anchor::Paragraph && matches!(float.wrap, Wrap::InFrontOfText | Wrap::BehindText);
+            let float_first = if follows_break { segment_first } else { first };
+            if (floating && !float_first) || (!floating && !in_piece) {
                 continue;
             }
             let rect = if floating {
-                floats.get(&oi).copied().unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float))
+                let placed = if follows_break { None } else { floats.get(&oi).copied() };
+                placed.unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float))
             } else {
                 let cx = x + line.cl_left(k).unwrap_or(0.0);
                 display::inline_rect(Some(obj), cx, y + (line.baseline - fl.top), c.adv, c.obj_h)
@@ -2865,11 +2875,16 @@ fn place_objects(
                     .collect(),
                 _ => text_box.map(|id| (id, rect)).into_iter().collect(),
             };
+            let saved_page = ctx.fields.page;
+            if follows_break && let Some(page) = at.body_page {
+                ctx.fields.page = page;
+            }
             for (id, rect) in boxes {
                 let items = textbox::box_items(ctx, id, rect, depth);
                 let layer = if float.wrap == Wrap::BehindText { &mut behind } else { &mut front };
                 layer.extend(items);
             }
+            ctx.fields.page = saved_page;
         }
     }
     (behind, front)
@@ -3202,9 +3217,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         // Pictures, shapes and text boxes in these lines (web view: floats placed by this piece).
         let at = ObjFrame {
             page: Some(PageFrame { sect: pb.sect, origin: (0.0, 0.0) }),
-            col: (x, width),
+            col: (pb.col_x(), width),
             para_y: if pb.web { y } else { anchor_y },
             table_chr: None,
+            body_page: (!pb.web).then_some(pb.number),
         };
         let (behind, front) = place_objects(ctx, StoryRef::Body, &[block as u32], p, &pl, (l0, l1), (x, y), &at, &float_rects, 0);
         items.extend(front);
@@ -3271,6 +3287,9 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             }
             _ if l0 < n => pb.advance(block, body_top),
             _ => {}
+        }
+        if !pb.web && matches!(forced_break, Some(LineEnd::PageBreak | LineEnd::ColumnBreak)) {
+            anchor_y = pb.y;
         }
     }
     if ends_on_break {
@@ -3349,7 +3368,7 @@ fn place_outline_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block:
     let y = pb.y + pl.lines.first().map(|f| f.top.max(0.0)).unwrap_or(0.0);
     let mut items = Vec::new();
     push_para(&mut items, StoryRef::Body, &[block as u32], &pl, (0, l1), (x, y), width, BorderBox::default());
-    let at = ObjFrame { page: Some(PageFrame { sect: pb.sect, origin: (0.0, 0.0) }), col: (x, width), para_y: y, table_chr: None };
+    let at = ObjFrame { page: Some(PageFrame { sect: pb.sect, origin: (0.0, 0.0) }), col: (x, width), para_y: y, table_chr: None, body_page: None };
     let (behind, front) = place_objects(ctx, StoryRef::Body, &[block as u32], &q, &pl, (0, l1), (x, y), &at, &HashMap::new(), 0);
     items.extend(front);
     let children = level < outline::BODY && outline::has_children(&o.levels, block);

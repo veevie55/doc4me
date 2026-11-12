@@ -1,17 +1,9 @@
-# Builds the Doc4Me Windows x64 installer (MSI) and portable zip.
-# Run it from the Actions tab (workflow_dispatch), by pushing a `v*` tag (also publishes a
-# GitHub Release). A push to main doesn't build it (the owner asked, 2026-11-03: build from the
-# Actions tab when wanted). A workflow_dispatch run on main with `release` ticked
-# also publishes a Release and creates its tag, v<version in Cargo.toml>, at the built commit
-# (for sessions that can't push tags). With `commit` set, the run builds that earlier commit of
-# main instead and, with `release`, releases it as the version in its own Cargo.toml, not as the
-# latest release; its tag has to exist at that commit unless its workflow files are main's
-# (GitHub won't let GITHUB_TOKEN create it otherwise). Third-party actions are pinned to commit SHAs.
+# Build Windows x64 only when the user chooses Run workflow.
+# An explicit release checkbox is required to publish; pushes and tags never start it.
+# The optional commit input selects an earlier main commit, with that commit's version.
 name: Windows x64 installer
 
 on:
-  push:
-    tags: ["v*"]
   workflow_dispatch:
     inputs:
       release:
@@ -27,13 +19,13 @@ permissions:
   contents: read
 
 concurrency:
-  # By event too, so a push to main doesn't cancel a release started from the Actions tab, and by
-  # commit, so earlier commits can be built and released side by side.
+  # Earlier commits can be built independently. A new manual request never cancels an active run.
   group: windows-x64-installer-${{ github.ref }}-${{ github.event_name }}-${{ inputs.commit }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   build:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 90
     outputs:
@@ -121,7 +113,7 @@ jobs:
           if ! git diff --quiet "$COMMIT" "$GITHUB_SHA" -- .github/workflows; then
             echo "::error::tag $tag is missing, and GITHUB_TOKEN may not create it at $COMMIT, whose workflow files differ from main's"
             echo "Push it from a clone, then run this again: git tag -a $tag $COMMIT -m \"Doc4Me $VERSION\" && git push origin $tag"
-            echo "(The tag push also starts that commit's own workflow, which builds it and, when it has a release job, releases it.)"
+            echo "(After creating the tag, use Run workflow explicitly; tag pushes do not start builds.)"
             exit 1
           fi
 
@@ -193,7 +185,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    if: startsWith(github.ref, 'refs/tags/v') || (github.event_name == 'workflow_dispatch' && inputs.release)
+    if: github.event_name == 'workflow_dispatch' && inputs.release
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -210,7 +202,7 @@ jobs:
           persist-credentials: false
           sparse-checkout: CHANGELOG.md
           sparse-checkout-cone-mode: false
-      # A tag push releases that tag. A manual run on main's head releases its version as a new
+      # An explicitly requested release on main releases the built version as a new
       # tag at that commit; it stops if the tag exists, so it never moves or reuses one. An
       # earlier commit's run also takes a tag that is at that very commit: pushed from a clone,
       # or made below by a run that stopped before releasing. A tag elsewhere stops it.
@@ -256,7 +248,7 @@ jobs:
         run: |
           if ! gh api -X POST "repos/$GITHUB_REPOSITORY/git/refs" -f ref="refs/tags/$TAG" -f sha="$COMMIT" > /dev/null 2> "$RUNNER_TEMP/ref.err"; then
             echo "::error::could not create tag $TAG at $COMMIT: $(cat "$RUNNER_TEMP/ref.err")"
-            echo "Push the tag from a clone instead (that tag push builds and releases it): git tag -a $TAG $COMMIT -m \"Doc4Me $VERSION\" && git push origin $TAG"
+            echo "Push the tag from a clone, then choose Run workflow explicitly: git tag -a $TAG $COMMIT -m \"Doc4Me $VERSION\" && git push origin $TAG"
             exit 1
           fi
       - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0

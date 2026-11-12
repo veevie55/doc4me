@@ -1,0 +1,83 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build. No push/tag/PR/schedule/workflow triggers.
+name: Build BSD (FreeBSD)
+run-name: 'Build BSD (FreeBSD) · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build BSD (FreeBSD)\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build inside a native FreeBSD VM
+        uses: vmactions/freebsd-vm@811efaaac0668df8bfb8308c3ec997b5ab50037b # v1, pinned
+        with:
+          release: '14.5'
+          arch: x86_64
+          mem: 6144
+          sync: rsync
+          envs: DOC4ME_BUILD_SHA
+          cache-after-prepare: true
+          prepare: |
+            pkg install -y bash git ca_root_nss rust llvm cmake ninja pkgconf \
+              alsa-lib libxkbcommon libX11 libXcursor libXrandr libXi libXinerama libglvnd vulkan-loader
+          run: |
+            bash -euo pipefail <<'DOC4ME_BUILD'
+            export CARGO_BUILD_JOBS=2
+            clang_lib=$(find /usr/local -type f -name 'libclang.so*' -print -quit)
+            test -n "$clang_lib"
+            export LIBCLANG_PATH="$(dirname "$clang_lib")"
+            cargo build --release --locked -p doc4me -p doc4me-cli
+            . packaging/env.sh
+            name="doc4me-$VERSION-freebsd-x86_64"
+            stage="$CARGO_TARGET_DIR/bsd-package/$name"
+            mkdir -p "$stage/bin"
+            cp target/release/doc4me target/release/doc4me-cli "$stage/bin/"
+            copy_docs "$stage"
+            for doc in README.en.md ATTRIBUTION.md; do
+              if [ -f "$doc" ]; then cp "$doc" "$stage/"; fi
+            done
+            "$stage/bin/doc4me-cli" --version
+            file "$stage/bin/doc4me" "$stage/bin/doc4me-cli" > "$DIST/BINARY_INFO.txt"
+            tar -C "$CARGO_TARGET_DIR/bsd-package" -czf "$DIST/$name.tar.gz" "$name"
+            sha256 -q "$DIST/$name.tar.gz" > "$DIST/$name.tar.gz.sha256"
+            # Copy only the deliverables back, not the large Cargo cache and object files.
+            rm -rf target
+            DOC4ME_BUILD
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-freebsd-x86_64-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

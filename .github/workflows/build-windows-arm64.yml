@@ -1,0 +1,71 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build. No push/tag/PR/schedule/workflow triggers.
+name: Build Windows ARM64
+run-name: 'Build Windows ARM64 · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build Windows ARM64\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Rust and the ARM64 target
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: aarch64-pc-windows-msvc
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: windows-arm64
+
+      - name: Install WiX and verify the cross compiler
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.UI.wixext/5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2
+          if (-not (Get-Command ninja -ErrorAction SilentlyContinue)) { choco install ninja -y --no-progress }
+          ninja --version
+          clang-cl --version
+
+      - name: Build MSI and portable ZIP
+        shell: pwsh
+        run: pwsh packaging/windows/package.ps1 -Arch arm64
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-windows-arm64-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

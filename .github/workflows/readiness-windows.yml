@@ -1,5 +1,5 @@
 # Measures the readiness percentage on Windows (windows-latest) for the owner's record: downloads
-# the 222-document corpus, runs `cargo xtask readiness --corpus` with Doc4Me's release CLI, and
+# the 220-document corpus, runs `cargo xtask readiness --corpus` with Doc4Me's release CLI, and
 # commits the regenerated docs/readiness.md to main with [skip ci]. Run it from the Actions tab
 # (workflow_dispatch) only, so it doesn't use runner minutes on every push.
 name: Readiness (Windows)
@@ -16,6 +16,7 @@ concurrency:
 
 jobs:
   measure:
+    if: github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     timeout-minutes: 240
     steps:

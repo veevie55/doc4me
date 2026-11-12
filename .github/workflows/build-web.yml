@@ -1,0 +1,73 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build. No push/tag/PR/schedule/workflow triggers.
+name: Build Web App
+run-name: 'Build Web App · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build Web App\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Rust and the WebAssembly target
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: web
+
+      - name: Install pinned Trunk
+        run: |
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/trunk.tar.gz" \
+            https://github.com/trunk-rs/trunk/releases/download/v0.22.1/trunk-x86_64-unknown-linux-gnu.tar.gz
+          printf '2ab8d548fd5ed9cda50906f61fd8654204e7893bd52ebbfd90533862b7d71ee1  %s\n' "$RUNNER_TEMP/trunk.tar.gz" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/doc4me-tools"
+          tar -xzf "$RUNNER_TEMP/trunk.tar.gz" -C "$RUNNER_TEMP/doc4me-tools" trunk
+          printf '%s\n' "$RUNNER_TEMP/doc4me-tools" >> "$GITHUB_PATH"
+
+      - name: Build the static Web App ZIP
+        env:
+          CARGO_NET_OFFLINE: 'false'
+        run: |
+          (cd apps/doc4me-web && trunk build --release --locked)
+          packaging/web/package.sh --skip-build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-web-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

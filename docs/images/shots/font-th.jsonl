@@ -5,19 +5,19 @@
 {"method": "text.insert", "params": {"text": "Doc4Me ภาษาไทย", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Normal"}}
-{"method": "text.insert", "params": {"text": "Doc4Me 1.1.0 มีหน้าจอภาษาไทยครบทุกเมนู และใช้ฟอนต์สารบรรณ (Sarabun) ทั้งในเมนูและในเอกสาร ตัวอักษรไทยกับอังกฤษจึงเข้ากันทั้งหน้า: The quick brown fox jumps over the lazy dog. ๐๑๒๓๔๕๖๗๘๙", "raw": true}}
+{"method": "text.insert", "params": {"text": "Doc4Me 1.1.3 มีหน้าจอภาษาไทยครบทุกเมนู และใช้ฟอนต์สารบรรณ (Sarabun) ทั้งในเมนูและในเอกสาร ตัวอักษรไทยกับอังกฤษจึงเข้ากันทั้งหน้า: The quick brown fox jumps over the lazy dog. ๐๑๒๓๔๕๖๗๘๙", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Heading 1"}}
 {"method": "text.insert", "params": {"text": "ระยะบรรทัดแบบ Word บน Windows", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Normal"}}
-{"method": "text.insert", "params": {"text": "ระยะบรรทัดแบบหนึ่งเท่าวัดจากค่าของฟอนต์แบบเดียวกับ Word บน Windows เอกสารเดียวกันจึงมีจำนวนบรรทัดและจำนวนหน้าเท่ากัน ไม่ว่าจะเปิดด้วยโปรแกรมใด", "raw": true}}
+{"method": "text.insert", "params": {"text": "ระยะบรรทัดแบบหนึ่งเท่าใช้เมตริกของฟอนต์แบบ Word บน Windows ช่วยให้เอกสารใกล้ต้นฉบับ การตัดคำ ฟอนต์ทดแทนและตารางยังอาจทำให้ตำแหน่งแบ่งหน้าต่างกัน", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Heading 1"}}
 {"method": "text.insert", "params": {"text": "TH Sarabun New ขนาดเท่าต้นฉบับ", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Normal"}}
-{"method": "text.insert", "params": {"text": "เครื่องที่ไม่มีฟอนต์ TH Sarabun New หรือฟอนต์ตระกูลเดียวกัน จะวาดด้วยสารบรรณที่ย่อให้สูงเท่าต้นฉบับ และใช้ความกว้างกับระยะบรรทัดของต้นฉบับ บรรทัดจึงตัดตรงกับเครื่องที่มีฟอนต์จริง", "raw": true}}
+{"method": "text.insert", "params": {"text": "เครื่องที่ไม่มีฟอนต์ TH Sarabun New หรือฟอนต์ตระกูลเดียวกัน จะวาดด้วยสารบรรณที่ย่อให้สูงเท่าต้นฉบับ และใช้ความกว้างกับระยะบรรทัดของต้นฉบับ ช่วยรักษารูปแบบเมื่อเปิดบนเครื่องที่ไม่มีฟอนต์ต้นฉบับ", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Heading 1"}}
 {"method": "text.insert", "params": {"text": "ตรวจตัวสะกดและเลขลำดับไทย", "raw": true}}

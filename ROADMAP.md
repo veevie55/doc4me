@@ -2,13 +2,15 @@
 
 **Stage: alpha** · latest official readiness is **92.7%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43051188273, 2026-11-11; report commit `5292abd` measures source `bd2d2d6`, all 220 documents); the report says **94.5% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (181/220 page counts, 99/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. Doc4Me 1.1.3 is released from this state.
 
-> **Last reviewed:** 2026-11-11 · **Last updated:** 2026-11-11 · **Change:** minor (latest official Windows report 43051188273: 92.7% / 94.5% without 22 deferred; 181/220 pages, 99/220 boundaries, languages 95/95, dialogs 216/228, shortcuts 276/280 with 4 deferred, platforms 5/5. Report commit `5292abd` measures source `bd2d2d6`. Release 1.1.3.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
 [`docs/target-app-parity.md`](docs/target-app-parity.md), the work list is
 [`docs/gaps.md`](docs/gaps.md), and milestones and the current focus are in
 [`docs/roadmap.md`](docs/roadmap.md).
+
+**งานหลัง 1.1.3:** แก้การวางวัตถุใน `govuk-001` และ `zenodo-097` ที่จุดยึดอยู่หลังตัวแบ่งหน้าในย่อหน้าเดียวกัน; อยู่ใต้ `[Unreleased]` และยังไม่นับเป็นคะแนน readiness เพิ่มจนกว่าจะวัดบน Windows
 
 ## Headline numbers (2026-11-11)
 
@@ -21,7 +23,7 @@ agent control. This page is the summary; the assessment is
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,487 test attributes · 233,735 lines of Rust (`cargo xtask stats`, 2026-11-11 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,493 test attributes · 233,872 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
 | Releases | Doc4Me v1.1.3 (re-released 2026-11-11 from the latest code; the first v1.1.3 of 2026-11-10 was deleted), the only GitHub Release on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases): the earlier v1.0.0–v1.1.2 releases and tags no longer exist there. Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -162,6 +164,8 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-12 | Workflow build แยก Windows ARM64, macOS, Linux, FreeBSD และ Web App รับ source ref และรันด้วยมือเท่านั้น; ปิด tag triggers เดิมทุกไฟล์; README ไทย/อังกฤษและภาพจริง 8 ภาพตรงกับ 1.1.3; actionlint และการตรวจ manual-only ผ่าน ไม่ได้สั่ง build หรือออก Release; ผู้ใช้สั่งทำงานต่อถึง readiness 100% โดยไม่นับ deferred |
+| 2026-11-12 | วัตถุอิงย่อหน้าที่อยู่หน้าหรือหลังข้อความตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด (`govuk-001`, `zenodo-097`); เพิ่ม regression 6 ตัวและผ่านเทสต์ layout 304 ตัว อยู่ใต้ `[Unreleased]`; CI ผ่านครบ 6 ขั้น; Linux ขอบเขตหน้า 94 → 95/220, จำนวนหน้า 181/220 เท่าเดิม; รอผล Windows ก่อนเปลี่ยนคะแนนทางการ |
 | 2026-11-10 | Released Doc4Me v1.1.3. Interface catalogs for 22 more languages (all 95 culture rows now have one; AI drafts awaiting native review; RTL/Indic ones warn before use). WordCraft security port round 3, batches 9–25: import budgets (fonts, links, ODT spaces, Markdown tables), PDF link schemes, CSS/RTF font-name escaping, case-folded DOCX part names, bounded text-box and picture-alpha layout work, page parameters that saturate. Windows run 42836913553 (source `1352238`, report `8fc9173`): 92.2% / 94.1% without 22 deferred; languages 95/95, pages 174/222, boundaries 95/222. |
 | 2026-11-11 | Deleted Doc4Me v1.1.3 and released it again from the latest code: nested tables capped at 18 levels, control channel and MCP refuse to discard unsaved work without `force`, undo steps share the style sheet and list definitions, AccessKit focus guard, table text no longer snapped to the document grid unless `w:adjustLineHeightInTable` is set (zenodo-103 matches Word's 29 pages), Font spacing ▲▼ arrows (0.5 pt), About window names the developer (Chatrawichai Chanprom, veevie55) instead of linking the source. Windows run 42961322752 (source `9abf2d6`, report `1df7aae`): 92.2% / 94.1% without 22 deferred; pages 175/222, boundaries 95/222. |
 | 2026-11-11 | Deleted Doc4Me v1.1.3 again and released it from the latest code: theme fonts, Helvetica/Times substitution, bundled OFL metric-compatible fonts (Carlito, Caladea, Arimo, Tinos, Cousine) used after the platform's own fallbacks, mode-14 page-break mark, space before after a page break in mode < 15, page numbering from 0, continuous sections below floats, digit-hyphen line breaks, grid in tables, Font spacing ▲▼ at 0.1 pt, readiness font diagnostics. zenodo-104 and govuk-003 excluded (reference PDFs not made from their .docx), corpus 220. Windows run 43051188273 (source `bd2d2d6`, report `5292abd`): 92.7% / 94.5% without 22 deferred; pages 181/220, boundaries 99/220. |
@@ -281,6 +285,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |
 | 2026-11-10 | minor | Headline, By dimension, Languages, Upcoming, Releases and progress log brought up to run 42836913553 (92.2% / 94.1%, languages 95/95) and release v1.1.3 |
 | 2026-11-11 | minor | Headline numbers, Releases and progress log brought up to run 42961322752 (92.2% / 94.1%, pages 175/222) and the re-released v1.1.3 |
 | 2026-11-11 | minor | Headline numbers, stats (2,487 tests, 233,735 lines) and progress log brought up to run 43051188273 (92.7% / 94.5%, pages 181/220, boundaries 99/220, corpus 220 after two exclusions) and the re-released v1.1.3 |

@@ -1,0 +1,71 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build. No push/tag/PR/schedule/workflow triggers.
+name: Build macOS
+run-name: 'Build macOS · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+      arch:
+        description: 'macOS architecture'
+        required: true
+        type: choice
+        default: universal
+        options:
+          - universal
+          - aarch64
+          - x86_64
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build macOS\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Rust and both macOS targets
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: aarch64-apple-darwin, x86_64-apple-darwin
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: macos-${{ inputs.arch }}
+
+      # No signing credentials are passed to selected commits. The package is ad-hoc signed.
+      - name: Build DMG and CLI ZIP
+        env:
+          MAC_ARCH: ${{ inputs.arch }}
+        run: packaging/macos/package.sh --arch "$MAC_ARCH"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-macos-${{ inputs.arch }}-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

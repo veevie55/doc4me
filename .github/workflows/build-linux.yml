@@ -1,0 +1,80 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build. No push/tag/PR/schedule/workflow triggers.
+name: Build Linux
+run-name: 'Build Linux · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build Linux\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install native build and packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libclang-dev \
+            libasound2-dev libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev \
+            libxrandr-dev libxi-dev libgl1-mesa-dev libssl-dev desktop-file-utils appstream zsync
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: linux-x86_64
+
+      - name: Install pinned packaging tools
+        run: |
+          mkdir -p "$RUNNER_TEMP/doc4me-tools"
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/nfpm.tar.gz" \
+            https://github.com/goreleaser/nfpm/releases/download/v2.49.0/nfpm_2.49.0_Linux_x86_64.tar.gz
+          printf '2afaa5ffb5e3493402e31e7c67a5a1fb42133e3f66fc315ca0051934125561c7  %s\n' "$RUNNER_TEMP/nfpm.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/nfpm.tar.gz" -C "$RUNNER_TEMP/doc4me-tools" nfpm
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/doc4me-tools/appimagetool" \
+            https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage
+          printf 'ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  %s\n' "$RUNNER_TEMP/doc4me-tools/appimagetool" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/doc4me-tools/appimagetool"
+          printf '%s\n' "$RUNNER_TEMP/doc4me-tools" >> "$GITHUB_PATH"
+          printf 'APPIMAGETOOL=%s\n' "$RUNNER_TEMP/doc4me-tools/appimagetool" >> "$GITHUB_ENV"
+
+      - name: Build AppImage, DEB, RPM, and tar archive
+        run: packaging/linux/package.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-linux-x86_64-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

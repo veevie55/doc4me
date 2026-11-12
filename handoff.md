@@ -1,4 +1,40 @@
-# Handoff: Doc4Me 1.1.3 (ออกใหม่ 2026-11-11 จาก `552a0b6`) · readiness ล่าสุด **92.7% / 94.5% without 22 deferred** (Windows run [43051188273](https://github.com/veevie55/doc4me/actions/runs/43051188273), source `bd2d2d6`, คลัง 220 เอกสาร) · ห้ามออก Release ถัดไปจนกว่าผู้ใช้จะสั่ง
+# Handoff: งาน pagination หลัง 1.1.3 · 2026-11-12 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
+
+ผู้ใช้สั่งรอบนี้: อ่าน handoff และทำงานที่ค้างต่อใน `veevie55/doc4me`; ทำต่อด้าน pagination ตามลำดับงานล่าสุด ไม่เปลี่ยนเกณฑ์หรือรายการ excluded/deferred
+
+## คำสั่งและสถานะล่าสุดของรอบนี้
+
+- ผู้ใช้สั่งสร้าง workflow build แยก Windows ARM64, macOS, Linux, BSD และ Web App เลือกโค้ดล่าสุดหรือ commit ได้ ห้าม workflow เริ่มเองถ้าไม่ได้สั่ง และแก้ README ไทย/อังกฤษพร้อมภาพตาม 1.1.3
+- จากนั้นผู้ใช้สั่ง **เมื่อเสร็จ ให้ทำงานค้างต่อจน readiness 100% โดยไม่รวม deferred**; เป้าหมายยังไม่ถึง ต้องทำต่อหลังบันทึกงาน workflow/README ห้ามเพิ่ม excluded/deferred หรือเปลี่ยนเครื่องวัดเพื่อให้ได้คะแนน
+- สร้าง `build-{windows-arm64,macos,linux,bsd,web}.yml` แยกกัน รับ `ref` (default main), macOS เลือก arch ได้; BSD คือ FreeBSD 14.5 x86_64 ไม่ได้อ้างว่าครบทุก BSD; Artifacts 14 วัน + SOURCE_COMMIT.txt
+- Definitions ปัจจุบันครบ 8 ไฟล์มีแต่ `workflow_dispatch` และทุก job มี manual event guard; ลบ combined ARM64/macOS เก่าและลบ tag trigger ของ x64; release ของ x64 ต้องติ๊กเอง ไม่ได้สั่ง build ทั้งห้า ไม่สร้าง tag/Release หรือ deploy Web App
+- `actionlint` 1.7.12 และการตรวจ manual-only/ref/permissions/shell syntax ผ่าน; nFPM 2.49.0 สร้าง DEB/RPM metadata จาก fixtures ผ่าน เพิ่ม ALSA/libstdc++ dependency ตาม `ldd` ของ desktop binary
+- README สองภาษาอัปเดตจริง (ลิงก์ Releases เดิมยังชี้ upstream ตามคำสั่งถาวร), ภาพเดิม 6 ภาพสร้างใหม่ + About 2 ภาษา 2 ภาพ; สคริปต์ใน docs/images/shots, ดูครบทุกภาพแล้ว และ assets 141 ไฟล์มี attribution ครบ
+- ภาพสร้างได้โดยใช้ `VK_ICD_FILENAMES=/usr/lib/chromium/vk_swiftshader_icd.json`, `WGPU_BACKEND=vulkan`, `XDG_RUNTIME_DIR=/workspace/work/xdg` กับ `target/debug/examples/ui_shot`; ไม่ต้องลง Mesa เพิ่มในเครื่องนี้ ดิสก์ 8 GB เคยเต็มจน sandbox เริ่มไม่ได้ จึงลบเฉพาะ test executables และ PDF ชั่วคราวใน target (auto-review อนุมัติ cleanup) ไม่มีข้อมูลผู้ใช้หาย
+- คะแนนทางการยังเป็น Windows run 43051188273 attempt 1: 92.7% / 94.5% ไม่นับ 22 deferred, pages 181/220, boundaries 99/220; ผล Linux รอบนี้ไม่แทนคะแนนทางการ
+
+## รอบ 2026-11-12: วัตถุอิงย่อหน้าหลังตัวแบ่งหน้า/คอลัมน์
+
+- แก้ `place_objects` และฐานตำแหน่งส่วนต่อใน `crates/layout/src/lib.rs`: วัตถุ `InFrontOfText`/`BehindText` ที่อิงแนวตั้งกับ `Paragraph` และจุดยึดอยู่หลังตัวแบ่งหน้า/คอลัมน์ที่มองเห็น ให้วางในหน้า/คอลัมน์แรกของส่วนหลังตัวแบ่ง ใช้จุดเริ่มส่วนต่อเป็นฐาน และวางครั้งเดียว แม้จุดยึดจริงไหลไปหน้าหลัง; ฟิลด์ `PAGE` ในกล่องข้อความคำนวณจากเลขหน้าปลายทาง
+- จำกัดการเปลี่ยนพฤติกรรมไว้ที่เนื้อหาในมุมมองแบ่งหน้า; วัตถุอิงหน้ากระดาษ (เทสต์ปกเดิม), วัตถุที่ข้อความต้องหลบ, ตาราง, หัว/ท้ายกระดาษ, กล่องข้อความ, เว็บ และเค้าร่างคงพฤติกรรมเดิม ไม่แก้โมเดลหรือรูปแบบบันทึก
+- เพิ่ม regression 6 ตัว: `paragraph_relative_art_follows_explicit_page_breaks` (หน้า/หลังข้อความ, หลายตัวแบ่ง), `paragraph_relative_art_follows_an_explicit_column_break`, `paragraph_relative_art_stays_on_its_segments_first_page_when_text_wraps`, `a_hidden_page_break_does_not_move_paragraph_relative_art`, `a_text_box_after_a_page_break_uses_its_destination_page_number` (เริ่มเลขหน้าจาก 0/7); `deferred_art_uses_the_column_origin_with_mirrored_indents` (พิกัดจากคอลัมน์จริง); ชุด layout ผ่าน 304 ตัวใน `cargo xtask ci`
+- ดาวน์โหลดคลังครบ 440 ไฟล์ (220 DOCX + 220 PDF) และตรวจ SHA-256 ตรง manifest ทั้งหมด; สแกน OOXML ของย่อหน้าเนื้อหา พบกรณีที่เข้าข่าย 2 เอกสาร: `govuk-001` ย่อหน้า 4 และ `zenodo-097` ย่อหน้า 448
+- ดู PDF ที่สร้างจริงเทียบ PDF อ้างอิง: `govuk-001` กรอบและชื่อ “Document explainer” อยู่หน้า 2 แล้ว; `zenodo-097` ย้ายรูปร่างไปหน้า 60 แล้ว แต่ยังมีปัญหาเดิมเรื่องลำดับซ้อน (`wp:relativeHeight`): รูปสี่เหลี่ยมสีขาวบังสีเขียว เพราะโมเดล `Float` ยังไม่เก็บลำดับซ้อน ต้องแก้แยกพร้อมทดสอบการอ่าน/เขียนและคำสั่งจัดลำดับวัตถุ
+  - หลักฐาน `zenodo-097`: สีเขียวมี `relativeHeight="251660288"` สูงกว่าสีขาว `251659264`, ทั้งสอง `behindDoc="0"` แต่ XML เรียงสีเขียวก่อนสีขาว; `anchor_float` ไม่อ่านค่านี้และ writer สร้างใหม่ด้วย `self.z`; `arrange.bringForward`/`arrange.sendBackward` ปัจจุบันเปลี่ยนเฉพาะ wrap ต้องออกแบบการเก็บ/จัดชั้นให้สอดคล้องกันก่อนแก้
+- `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm), native ผ่าน 2,484 ตัว รวม layout 304 ตัว; เทียบ Linux แล้ว: เปิด/round-trip/เสถียร 220/220 ทั้งสองชุด, จำนวนหน้า 181/220 เท่าเดิม, ขอบเขตหน้า 94 → 95/220 (`govuk-001` ผ่านเพิ่ม), ไม่ถดถอย; ยังรอวัด Windows ห้ามใช้ผล Linux แทนคะแนนทางการ
+- สภาพแวดล้อมรอบนี้เริ่มว่าง ไม่มี Rust: ติดตั้ง Rust 1.99.1 + rustfmt/clippy/wasm target ใน `/workspace/work`; CMake/libclang และ ALSA dev เป็น dependency เฉพาะเครื่องทดสอบ ไม่แก้ dependency ของโครงการ มีดิสก์ 8 GB จึงปิด debuginfo/incremental สำหรับการตรวจ
+- `storytold/craftrules` ตอบ 404 ทั้ง connector และ HTTPS; `veevie55/wordcraft` ตอบ 404 ผ่าน connector จึงยัง replay upstream ไม่ได้; ไม่ได้ข้ามการตรวจโค้ดใน Doc4Me
+
+### งานถัดไป
+
+1. ตรวจผล Windows ของโค้ดรอบนี้และบันทึกคะแนนสองค่า โดยไม่ออก Release; คะแนนทางการเดิมยังเป็น 92.7% / 94.5% ไม่นับ 22 deferred (181/220 pages, 99/220 boundaries), run 43051188273 attempt 1
+2. ลำดับซ้อนของรูปลอย `wp:relativeHeight` ใน `zenodo-097` (มีหลักฐาน PDF ด้านบน); กรณีวัตถุที่ข้อความต้องหลบหลังตัวแบ่ง ต้องจัดบรรทัดส่วนต่อใหม่ก่อนขยายกฎ
+3. Pagination อื่นตามรายการเดิม: govuk-034, govuk-026, govuk-037, zenodo-114, zenodo-023; ฟอนต์ใน `.docx` ต้องตรวจ line metrics ก่อนใช้; zenodo-149 ขาดตัวเทียบฟอนต์ตรงขนาด
+4. replay WordCraft เมื่อเข้าถึงต้นทางได้, ทบทวนภาษาโดยเจ้าของภาษา และหลักฐานอุปกรณ์/บริการของ 22 deferred
+
+## ประวัติเมื่อจบการออก 1.1.3 (2026-11-11)
+
+### ภาพรวมเดิม: Doc4Me 1.1.3 (ออกใหม่ 2026-11-11 จาก `552a0b6`) · readiness ล่าสุด **92.7% / 94.5% without 22 deferred** (Windows run [43051188273](https://github.com/veevie55/doc4me/actions/runs/43051188273), source `bd2d2d6`, คลัง 220 เอกสาร) · ห้ามออก Release ถัดไปจนกว่าผู้ใช้จะสั่ง
 
 อัปเดต: 2026-11-11 · fork `veevie55/doc4me` · branch `main`; คำสั่งล่าสุดของผู้ใช้: "ตั้ง zenodo-104 และ govuk-003 (PDF อ้างอิงไม่ตรงกับไฟล์ .docx) เป็น excluded ตรวจ readiness อีกครั้ง แก้ไขเนื้อหาทุกไฟล์ตามโค้ดล่าสุด ออกเวอร์ชัน 1.1.3 ใหม่จากโค้ดล่าสุด บันทึก handoff และยุติการทำงานทั้งหมด" — ทำครบแล้ว และยุติงานทั้งหมด
 

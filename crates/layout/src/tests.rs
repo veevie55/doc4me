@@ -2720,9 +2720,7 @@ fn float_follows_its_paragraph_to_the_next_page() {
     assert!(para.lines[0].left >= 144.0, "text wraps beside it: {}", para.lines[0].left);
 }
 
-/// A floating object belongs to its paragraph, not to the line holding its anchor: Word draws
-/// it on the page the paragraph starts on. A Word cover page is one paragraph holding a page
-/// break and then the page-anchored text box with the title; the box stays on the cover.
+/// Page-relative cover art stays on the paragraph's first page even after a page break.
 #[test]
 fn a_float_anchored_after_a_page_break_stays_on_its_paragraph_s_first_page() {
     let mut d = Document::from_text(&format!("{}\nAfter the cover", doc4me_doc::para::PAGE_BREAK));
@@ -2733,6 +2731,126 @@ fn a_float_anchored_after_a_page_break_stays_on_its_paragraph_s_first_page() {
     assert_eq!(on_cover.len(), 1, "the shape is drawn on the cover: {on_cover:?}");
     assert!((on_cover[0].y - 300.0).abs() < 0.5, "{:?}", on_cover[0]);
     assert!(shapes(&l.pages[1].items).is_empty(), "and not again on page two");
+}
+
+/// Paragraph-relative non-wrapping objects after a page break belong to the new page, at
+/// offsets from its paragraph continuation (govuk-001's explainer and zenodo-097's back cover).
+#[test]
+fn paragraph_relative_art_follows_explicit_page_breaks() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText] {
+        let mut d = Document::from_text(&format!("Before{PAGE_BREAK}Middle{PAGE_BREAK}After\nNext"));
+        let f = Float { wrap, h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 15.0, ..Default::default() };
+        // Insert backwards so the byte offsets still refer to the original text.
+        for (off, w) in [(14, 33.0), (7, 22.0), (0, 11.0)] {
+            d.insert_object(&Pos::body(0, off), rect_shape(w, 10.0, f.clone()), &Default::default()).unwrap();
+        }
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 3);
+        for (page, w) in l.pages.iter().zip([11.0, 22.0, 33.0]) {
+            let rs = shapes(&page.items);
+            assert_eq!(rs.len(), 1, "each segment places its own art once: {rs:?}");
+            assert!((rs[0].w - w).abs() < 0.01, "{rs:?}");
+            assert!((rs[0].y - 87.0).abs() < 0.01, "offset from the continuation's top: {rs:?}");
+        }
+    }
+}
+
+#[test]
+fn paragraph_relative_art_follows_an_explicit_column_break() {
+    use doc4me_doc::para::{Anchor, COLUMN_BREAK, Float, Wrap};
+    let mut d = Document::from_text(&format!("First{COLUMN_BREAK}Second"));
+    d.last_section.columns.count = 2;
+    let f = Float { wrap: Wrap::BehindText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 5.0, y: 12.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 6), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    let rs = shapes(&l.pages[0].items);
+    assert_eq!(rs.len(), 1);
+    let col = d.last_section.column_boxes()[1].0;
+    assert!((rs[0].x - (72.0 + col + 5.0)).abs() < 0.01, "in the second column: {rs:?}");
+    assert!((rs[0].y - 84.0).abs() < 0.01, "{rs:?}");
+}
+
+#[test]
+fn paragraph_relative_art_stays_on_its_segments_first_page_when_text_wraps() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let text = format!("Before{PAGE_BREAK}{}", "continued text ".repeat(100));
+    let mut d = Document::from_text(&text);
+    d.last_section.page_h = 240.0;
+    d.last_section.margin_bottom = 72.0;
+    let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, y: 7.0, ..Default::default() };
+    let off = text.len();
+    d.insert_object(&Pos::body(0, off), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert!(l.page_of(&Pos::body(0, off)).unwrap() > 1, "the anchor line is on a later page");
+    for (i, page) in l.pages.iter().enumerate() {
+        let rs = shapes(&page.items);
+        assert_eq!(rs.len(), usize::from(i == 1), "art belongs to segment start, page {i}: {rs:?}");
+        if let Some(r) = rs.first() {
+            assert!((r.y - 79.0).abs() < 0.01, "{r:?}");
+        }
+    }
+}
+
+#[test]
+fn a_hidden_page_break_does_not_move_paragraph_relative_art() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut d = Document::from_text(&format!("A{PAGE_BREAK}B"));
+    d.format_range(&Pos::body(0, 1), &Pos::body(0, 2), &|c| c.hidden = Some(true)).unwrap();
+    let f = Float { wrap: Wrap::BehindText, v_rel: Anchor::Paragraph, y: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 2), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    let rs = shapes(&l.pages[0].items);
+    assert_eq!(rs.len(), 1);
+    assert!((rs[0].y - 81.0).abs() < 0.01, "{rs:?}");
+}
+
+#[test]
+fn deferred_art_uses_the_column_origin_with_mirrored_indents() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut d = Document::from_text(&format!("Before{PAGE_BREAK}After"));
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.mirror_indents = Some(true);
+        p.indent_left = Some(36.0);
+        p.indent_right = Some(12.0);
+    })
+    .unwrap();
+    let f = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 5.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 7), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let rs = shapes(&l.pages[1].items);
+    assert_eq!(rs.len(), 1);
+    assert!((rs[0].x - 77.0).abs() < 0.01, "relative to the column, not the mirrored text origin: {rs:?}");
+}
+
+#[test]
+fn a_text_box_after_a_page_break_uses_its_destination_page_number() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    for start in [0, 7] {
+        let mut d = Document::from_text(&format!("Before{PAGE_BREAK}"));
+        d.last_section.page_num_start = Some(start);
+        let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, ..Default::default() };
+        let id = text_box_at(&mut d, &Pos::body(0, 7), "", 100.0, 40.0, f);
+        let p = d.para_mut(StoryRef::Part(id), &Path::top(0)).unwrap();
+        p.insert_object(
+            0,
+            InlineObject::Field { instr: "PAGE".into(), result: "stale".into(), locked: false, code: false, form: None },
+            &Default::default(),
+        )
+        .unwrap();
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 2);
+        let shown: Vec<String> = l.pages[1]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { story: StoryRef::Part(s), para, .. } = it { (*s == id).then_some(para) } else { None })
+            .flat_map(|para| para.shown.iter().map(|s| s.1.clone()))
+            .collect();
+        assert_eq!(shown, [format!("{}", start + 1)], "the box evaluates PAGE on its own page");
+    }
 }
 
 #[test]
