@@ -2,7 +2,7 @@
 
 **Stage: alpha** · latest official readiness is **92.7%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43194683237, 2026-11-12; report commit `67d6323` measures source `a466dff`, all 220 documents); the report says **94.6% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (182/220 page counts, 100/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release remains Doc4Me 1.1.3; subsequent source changes are Unreleased.
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43194683237 on `a466dff`, report `67d6323`: 92.7% / 94.6% without 22 deferred; Unicode fallback confirmed; contextual spacing before a same-style in-flow table fixes govuk-034 on Linux, pending Windows) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (alignment tabs no longer add text descent to a pictures-only line; Linux corpus pages 184/220, boundaries 97/220 without regressions; official Windows remains run 43194683237 on `a466dff`, report `67d6323`, 94.6% without 22 deferred; new measurement pending) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -12,7 +12,7 @@ agent control. This page is the summary; the assessment is
 
 **งานหลัง 1.1.3:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ใต้ `[Unreleased]`; Windows run 43194683237 วัดโค้ด `a466dff` แล้ว ได้ 94.6% ไม่นับ deferred
 
-**งานต่อ 2026-11-12:** Windows run 43194683237 ยืนยันการแก้ Unicode sans fallback แล้ว คะแนนยัง 94.6% ไม่นับ deferred; แก้ contextual spacing หลังหัวข้อก่อนตารางที่ย่อหน้าแรกมี style เดียวกัน ทำให้ `govuk-034` ตรงทั้ง 14 หน้าและขอบเขตทุกหน้า; Linux คลัง 220 ฉบับ: จำนวนหน้า 182 → 183/220 ขอบเขตหน้า 95 → 96/220 ไม่มีกรณีถดถอย CI ผ่านครบ 6 ขั้น (native 2,496 ผ่าน) รอวัดการแก้ spacing บน Windows เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
+**งานต่อ 2026-11-12:** Unicode fix ยืนยันแล้วบน Windows (94.6% ไม่นับ 22 deferred); แก้ contextual spacing ก่อนตาราง (`govuk-034`: 14 หน้า) และ alignment Tab ในบรรทัดรูปภาพ (`zenodo-156`: 2 หน้า) จนทั้งสองฉบับผ่านขอบเขตทุกหน้าบน Linux; คลังรวมจำนวนหน้า 184/220 ขอบเขตหน้า 97/220 ไม่มีกรณีถดถอย CI ผ่านครบ 6 ขั้น (native 2,497 ผ่าน) รอ Windows วัดโค้ดใหม่ เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
 
 ## Headline numbers (2026-11-12)
 
@@ -25,7 +25,7 @@ agent control. This page is the summary; the assessment is
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,505 test attributes · 234,280 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,506 test attributes · 234,305 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
 | Releases | Doc4Me v1.1.3 (re-released 2026-11-11 from the latest code; the first v1.1.3 of 2026-11-10 was deleted), the only GitHub Release on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases): the earlier v1.0.0–v1.1.2 releases and tags no longer exist there. Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -144,7 +144,7 @@ proofed by Doc4Me. Word lists 30 interface languages and proofing tools for abou
 
 Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadmap.md)):
 
-0. Raise the measured no-deferred readiness score to 100%, keeping deferred rows excluded and transparently reported: Windows run 43194683237 passes 182/220 page counts, 100/220 page-boundary checks, 216/228 dialogs (12 deferred), 276/280 shortcuts (4 deferred) and 95/95 catalog-key language checks; platforms pass 5/5. Every non-deferred check outside pagination passes. The report measures source `a466dff` and records 22 deferred rows. Prioritize pagination (it is the only dimension below 100% without deferred rows), native-speaker review of the AI-drafted catalogs, and verification of subsequent WordCraft changes once upstream access is available (the table nesting limit and listed security ports have already landed)
+0. Raise the measured no-deferred readiness score to 100%, keeping deferred rows excluded and transparently reported: Windows run 43194683237 passes 182/220 page counts, 100/220 page-boundary checks, 216/228 dialogs (12 deferred), 276/280 shortcuts (4 deferred) and 95/95 catalog-key language checks; platforms pass 5/5. Every non-deferred check outside pagination passes. The report measures source `a466dff` and records 22 deferred rows. Prioritize pagination (it is the only dimension below 100% without deferred rows), native-speaker review of the AI-drafted catalogs, and verification of subsequent WordCraft changes against the now-accessible storytold/wordcraft snapshot `07f97737` (the table nesting limit and listed security ports have already landed)
    ([results](docs/readiness.md),
    [plan](docs/roadmap.md#path-to-100-measured-readiness)).
 1. Review relevant upstream WordCraft changes before duplicating work; assess individual patches
@@ -166,6 +166,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-12 | Tabs aligning inline pictures no longer add the text font’s descent below a pictures-only line. zenodo-156 matches 2 pages and all page boundaries; Linux corpus pages 184/220 and boundaries 97/220, no regressions. CI all six steps pass, native 2,497; Windows measurement pending. Source/reference contradiction in zenodo-023 documented without changing corpus criteria or exclusions. |
 | 2026-11-12 | Contextual spacing before a same-style in-flow table (body and nested cells): govuk-034 now matches 14 pages and all boundaries; Linux corpus pages 183/220, boundaries 96/220, no regressions. CI passes 6/6 (native 2,496); Windows measurement pending. Previous Unicode fix confirmed by Windows run 43194683237, report 67d6323, at 94.6% without 22 deferred. No criteria/exclusion/deferred or Release changes. |
 | 2026-11-12 | Windows run 43190908818 (`c030b15`, report `383646e`) passes 182/220 page counts and 100/220 boundaries: 94.6% without 22 deferred. Unicode sans fallback fix adds one regression; CI all 6 steps pass, native 2,494; Linux corpus unchanged with no regressions. Reference metadata audited for the 38 page-count failures; no criteria/exclusion changes and no Release. |
 | 2026-11-12 | Workflow build แยก Windows ARM64, macOS, Linux, FreeBSD และ Web App รับ source ref และรันด้วยมือเท่านั้น; ปิด tag triggers เดิมทุกไฟล์; README ไทย/อังกฤษและภาพจริง 8 ภาพตรงกับ 1.1.3; actionlint และการตรวจ manual-only ผ่าน ไม่ได้สั่ง build หรือออก Release; ผู้ใช้สั่งทำงานต่อถึง readiness 100% โดยไม่นับ deferred |
@@ -289,6 +290,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
 | 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
 | 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
 | 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |

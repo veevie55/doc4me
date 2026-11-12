@@ -2319,6 +2319,30 @@ fn line_spacing_does_not_scale_pictures() {
 }
 
 #[test]
+fn alignment_tabs_between_inline_pictures_do_not_add_text_descent() {
+    use doc4me_doc::props::LineSpacing;
+
+    let mut d = Document::from_text("\t\t");
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    p.insert_object(0, picture(100.0, 40.0, Default::default()), &Default::default()).unwrap();
+    p.insert_object(p.text.len(), picture(60.0, 20.0, Default::default()), &Default::default()).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let line = &para.lines[0];
+    assert!((line.height - 40.0).abs() < 0.01, "alignment tabs don't add descent below the logos: {line:?}");
+    assert!((line.baseline - line.top - 40.0).abs() < 0.01);
+
+    // An actual letter following the same tabs still needs its font's descent.
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.insert_text(p.text.len(), "y", &Default::default()).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let (line, desc) = (&para.lines[0], para.styles[0].descent);
+    assert!((line.height - (40.0 + desc)).abs() < 0.01, "text below the baseline keeps its room: {line:?}");
+}
+
+#[test]
 fn multiple_line_spacing_adds_its_leading_below_the_text() {
     use doc4me_doc::props::LineSpacing;
     // (spacing, expected baseline below the line top as a share of the ascent)

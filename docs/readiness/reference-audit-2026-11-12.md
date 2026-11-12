@@ -57,3 +57,17 @@
 
 - `govuk-034` แก้ในกฎ contextual spacing ก่อนตารางที่ย่อหน้าแรกมี style เดียวกัน: Linux เหลือ 14 หน้าตรงกับ PDF และขอบเขตทุกหน้าผ่าน; คลังรวมเป็น 183/220 จำนวนหน้าและ 96/220 ขอบเขต โดยไม่มีกรณีถดถอย ตารางข้างบนเก็บหลักฐานก่อนแก้นี้ (38 failures); หลังแก้เหลือ 37 Linux page-count failures ต้องรอ Windows วัดรอบใหม่โดยไม่เปลี่ยน manifest/เกณฑ์
 - `zenodo-025` มีหน้าสามว่างบน Linux แต่ผ่านจำนวนหน้าบน Windows run 43194683237 จึงไม่แก้ด้วยกฎตัดย่อหน้าว่างท้ายเอกสารทิ้ง; ต้องแยกความต่างของฟอนต์/แพลตฟอร์มจากบั๊กทั่วไป
+
+- `zenodo-156` สืบได้ว่าท้ายกระดาษมีรูปภาพสองรูปคั่นด้วย Tab; Tab เคยเพิ่ม descent ของฟอนต์ให้บรรทัดรูปภาพ 2.56 pt ทำให้แถวตารางไม่พอที่ด้านล่างหน้า แก้ที่กฎ baseline แล้ว Linux ได้ 2 หน้าและขอบเขตทุกหน้าตรง PDF คลังรวม 184/220 จำนวนหน้าและ97/220 ขอบเขต โดยไม่มีกรณีถดถอย เหลือ36 Linux page-count failures; รอวัด Windows
+
+## zenodo-023 source and reference content
+
+ตรวจไฟล์จาก manifest เดิมโดยไม่แก้ไฟล์หรือเกณฑ์:
+
+- DOCX SHA-256 `292a6ac33a5b147fbda2ec3b5dc42d6409f4ed6440e2d20b3201c2b83b566ce8`; PDF SHA-256 `f511d8d0abdf738a33909c99b33884e2f444f4b2d73b2adf286057eba5b4d284`
+- `word/document.xml` section สุดท้ายอ้าง `headerReference type=default r:id=rId21` และ `footerReference type=default r:id=rId22`; relationships ชี้ `header2.xml`/`footer2.xml` ซึ่งไม่มีข้อความและไม่มี field instruction ทั้งคู่ (เป็น explicit references จึงไม่ใช่การปล่อยให้สืบทอดส่วนก่อนหน้า)
+- แต่ PDF อ้างอิงหน้า52 มีข้อความที่ `pdftotext` อ่านได้: “First Indigenous and local knowledge dialogue workshop for the IPBES assessment on the sustainable use of wild species” และเลข “1”
+- Windows run43194683237 ตรวจพบตรงกัน: Doc4Me first=None/last=None ขณะที่ PDF first=first/last=1 การวาดทับด้วยรูปภาพทำให้มองไม่เห็นข้อความไม่ได้ทำให้ข้อมูลต้นทางที่ว่างมีข้อความขึ้นมา
+- ต้อง export ด้วย Word จาก DOCX ที่ SHA-256 ตรงกัน เพื่อยืนยันว่าควรซ่อมคู่ input/reference อย่างไร; ไม่ควรแก้ exporter ให้สร้างข้อความจาก section อื่นเพียงเพื่อให้ตรง PDF และไม่เพิ่ม excluded/deferred หรือผ่อนเกณฑ์ ผู้ใช้ได้รับคำถามขอ URL/พาธของ Word export นี้แล้ว ยังไม่ได้รับคำตอบ
+
+ฟอนต์ของ zenodo-149 เป็นอีกเงื่อนไขที่ต้องยืนยัน: DOCX ไม่มีไฟล์ฝังใน `word/fonts/`; PDF มี Arial Nova Cond Light/Italic และ Arial Narrow/Bold แบบ subset ซึ่งไม่ใช่ฟอนต์ที่ติดตั้งใน Windows runner ไม่เพิ่มฟอนต์ proprietary ลง assets และไม่ป้อนฟอนต์จาก reference PDF เข้าเครื่องวัดเพื่ออ้างว่าผ่าน

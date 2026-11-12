@@ -2330,7 +2330,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let (mut asc, mut desc) = (0.0f32, 0.0f32);
         // The tallest picture on the line (it sits on the baseline).
         let mut obj_asc = 0.0f32;
-        // Whether anything but pictures (text, spaces, an equation) is on the line.
+        // Whether anything but pictures (text, spaces, an equation) is on the line. Alignment
+        // tabs have no ink below the baseline and don't add descent to a pictures-only line.
         let mut text = false;
         let mut any = false;
         let dropped = pl.drop_cap.map_or(0, |d| d.0);
@@ -2357,7 +2358,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                         (st.ascent, st.descent)
                     }
                 } else {
-                    text = true;
+                    text |= c.kind != ClKind::Tab;
                     // `obj_h` is set on text clusters only under ruby text, which the line grows to fit.
                     ((st.ascent + st.shift.max(0.0)).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
                 };
