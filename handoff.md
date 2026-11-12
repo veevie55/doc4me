@@ -1,5 +1,18 @@
 # Handoff: งาน pagination หลัง 1.1.3 · 2026-11-12 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
 
+## สถานะล่าสุดหลัง Windows วัด `c030b15` และแก้ Unicode fallback · 2026-11-12
+
+- เป้าหมายผู้ใช้ **100% ไม่นับ deferred ยังไม่สำเร็จ**; เกณฑ์เดิม, 220 เอกสาร, 22 deferred และ 24 excluded ไม่เปลี่ยน ไม่มี tag/Release และเวอร์ชันยัง 1.1.3; โค้ดใหม่อยู่ Unreleased
+- โค้ดรอบลำดับซ้อน/Continuous section commit `c030b1520c22ff77607aef376c7b87a7ee5642c6` push `main` แล้ว Windows run [43190908818](https://github.com/veevie55/doc4me/actions/runs/43190908818) **success**; report commit `383646e`: **92.7% overall / 94.6% ไม่นับ 22 deferred**, จำนวนหน้า **182/220**, ขอบเขตหน้า **100/220**; เดิม 94.5%, 181/220, 99/220 ทุก dimension นอก pagination ผ่าน 100% เมื่อไม่นับ deferred
+- แก้ `crates/fonts/src/word.rs`: คำว่า Unicode เคยเข้า `contains("code")` แล้วเลือก Courier New/Liberation Mono; ให้ Arial Unicode MS ลองกลุ่ม Arial และ Unicode sans ไม่เป็น monospace เว้นแต่ชื่อมี Mono จริง ฟอนต์ Code จริงยังใช้กฎเดิม เก็บต้นฉบับเมื่อติดตั้งและเก็บชื่อใน DOCX; ไม่เพิ่ม assets/proprietary fonts
+- เพิ่ม regression 1 ตัว ครอบคลุมชื่อ Unicode/Code/Mono และ Regular/Bold/Italic/Bold Italic; `cargo xtask ci` ผ่าน **6/6** (native **2,494 passed**, **1 ignored** เดิม, assets 141, layers และ wasm 16 crates); log `/workspace/work/ci-unicode.log`; stats **2,503 test attributes / 234,207 Rust lines**, CLI ยัง 729 คำสั่ง
+- เทียบ Linux ก่อน/หลัง Unicode fix ด้วย CLI แยกจาก `c030b15`: เปิด/round-trip/เสถียร 220/220, จำนวนหน้า 182/220, ขอบเขตหน้า 95/220 เท่าเดิม **ไม่มีแถวใดถดถอย**; diagnostics เปลี่ยน Arial Unicode MS จาก Liberation Mono เป็น Liberation Sans ห้ามเอาผล Linux แทนรายงาน Windows
+- เพิ่ม [reference audit](docs/readiness/reference-audit-2026-11-12.md) ของ 38 Linux page-count failures: 30 มี cached Pages เท่ากับ PDF; govuk-026 มี cache=4 และ Doc4Me=4 แต่ PDF=7, วันที่ DOCX 2025/PDF 2012 ต้องตรวจคู่ฉบับ; cache/วันที่ไม่พิสูจน์คนละรุ่นและห้ามใช้เพิ่ม excluded หรือให้ผ่าน จำเป็นต้อง export Word ใหม่จาก DOCX SHA-256 เดิม
+- ขั้นถัดไป: push Unicode fix แล้ว dispatch Windows readiness จาก `main`, ตรวจ source SHA/run/report จริง และปรับสถานะจากผลวัด; pagination ที่เหลือยังต้องแก้ตามหลักฐาน (`govuk-034`, `govuk-026`, TOC `govuk-037`, `zenodo-114/023`, embedded font line metrics และ Arial Nova Cond Light/Narrow ของ `zenodo-149`) ห้ามเปลี่ยนเครื่องวัดเพื่อให้ 100%
+- ถามผู้ใช้แบบ optional ว่ามี Windows/runner พร้อม Arial Nova Cond Light และ Arial Narrow หรือไม่ ยังไม่มีคำตอบ; hosted runner ไม่มีฟอนต์เหล่านี้ ไม่ควรอ้างว่าเทียบต้นฉบับแล้ว WordCraft/craftrules ตอบ 404; native-speaker review ยังต้องใช้ผู้ตรวจจริง สถานะนี้ไม่เปลี่ยน deferred
+
+### บันทึกรอบก่อน Unicode fix (รักษาเป็นประวัติ)
+
 ## งาน Codex ต่อจาก `e65459b` · 2026-11-12 · เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
 
 คำสั่งผู้ใช้: อ่าน handoff แล้วทำงานค้างต่อให้เสร็จและ readiness 100% โดยไม่รวม deferred; คงเกณฑ์เดิมและ 22 deferred/24 excluded ไว้ ห้ามออก Release จนกว่าผู้ใช้สั่ง

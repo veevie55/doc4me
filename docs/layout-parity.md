@@ -1,8 +1,8 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (preserve DOCX floating-drawing stacking order and a standalone page break before an empty continuous-section end; Windows readiness remains 92.7% / 94.5% without 22 deferred, pending a new measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43190908818 on `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220, boundaries 100/220; fix Unicode sans fallback; font change awaits Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
-On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 181/220 and 99/220.
+On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 182/220 and 100/220.
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -11,11 +11,11 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 43051188273,
-source `bd2d2d6`, report commit `5292abd`) matches Word's page count for 181/220 documents and every
-page's first and last word for 99/220. The current code can use DOCX `w:altName` fonts when the
+most of Word's layout rules; the latest official Windows corpus measurement (run 43190908818,
+source `c030b15`, report commit `383646e`) matches Word's page count for 182/220 documents and every
+page's first and last word for 100/220. The current code can use DOCX `w:altName` fonts when the
 primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions.
-Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 181/220 and 99/220. In run 42334133340, govuk-005
+Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 182/220 and 100/220. In run 42334133340, govuk-005
 matched Word's 36 pages but failed page 12: Doc4Me starts with “do”, Word starts with “yes”,
 and both end with “account”. This is now recorded by the first/last-word diagnostic. Windows
 font diagnostics captured substitutions but did not establish a safe broad fix; MS Gothic did
@@ -96,10 +96,14 @@ still needed.
 | Font picker with many installed fonts | fixed freezes (#233) | instant | issue #31, #59 |
 | Large real-world documents (500+ pages, many pictures) | not measured | | gap |
 
+
+**Unicode fallback (2026-11-12, Unreleased):** Arial Unicode MS now follows Arial substitutes, and Unicode sans names no longer match the Code monospace heuristic. Installed originals and requested DOCX family names are preserved. CI passes all six steps; the Linux corpus stays at 182/220 page counts and 95/220 boundaries without regressions. Windows remeasurement is pending. [Reference metadata audit](readiness/reference-audit-2026-11-12.md) documents the 38 remaining Linux page-count failures; cached Pages and file dates do not establish Word layout or justify an exclusion.
+
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
 | 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |

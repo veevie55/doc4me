@@ -104,7 +104,7 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "aptos narrow" => APTOS_NARROW,
         "aptos serif" => APTOS_SERIF,
         "palatino linotype" | "book antiqua" | "palatino" => PALATINO,
-        "arial" | "helvetica" | "arial nova" => ARIAL,
+        "arial" | "helvetica" | "arial nova" | "arial unicode ms" => ARIAL,
         "times new roman" | "times" => TIMES,
         "courier new" | "courier" | "consolas" | "lucida console" | "cascadia code" | "cascadia mono" => MONO,
         "symbol" | "wingdings" | "segoe ui symbol" | "webdings" => SYMBOL,
@@ -115,7 +115,7 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "calibri" | "calibri light" => CALIBRI,
         "cambria" | "cambria math" => CAMBRIA,
         "garamond" | "constantia" | "baskerville old face" | "century" | "century schoolbook" | "bookman old style" | "sitka text" | "sitka" => SERIF,
-        _ if f.contains("mono") || f.contains("code") => MONO,
+        _ if f.contains("mono") || (f.contains("code") && !f.contains("unicode")) => MONO,
         _ if f.contains("serif") && !f.contains("sans") => SERIF,
         _ => SANS,
     }
@@ -689,6 +689,28 @@ mod tests {
         // The open metric-compatible faces come right after, for machines without Microsoft's.
         assert_eq!(substitutes("Helvetica").get(1), Some(&"Liberation Sans"));
         assert_eq!(substitutes("Times").get(1), Some(&"Liberation Serif"));
+    }
+
+    #[test]
+    fn unicode_sans_names_do_not_select_a_monospace_substitute() {
+        // Unicode contains "code", but says nothing about equal-width letters. In particular,
+        // Arial Unicode MS's Latin text should use Arial's proportional stand-ins when absent.
+        let mono = substitutes("Cascadia Code");
+        for family in ["Arial Unicode MS", "Lucida Sans Unicode", "Missing Unicode Sans"] {
+            assert_ne!(substitutes(family), mono, "{family}");
+        }
+        assert_eq!(substitutes("Missing Source Code"), mono);
+        assert_eq!(substitutes("Missing Unicode Mono"), mono);
+        for (bold, italic) in [(false, false), (true, false), (false, true), (true, true)] {
+            let unicode = resolve("Arial Unicode MS", bold, italic);
+            if !FontDb::global().has_family("Arial Unicode MS") {
+                let arial = resolve("Arial", bold, italic);
+                assert_eq!(unicode.face.id(), arial.face.id());
+                assert_eq!((unicode.synth_bold, unicode.synth_italic), (arial.synth_bold, arial.synth_italic));
+            }
+            let width = |text| crate::shape(&unicode.face, text, &[], |c| c).iter().map(|g| i64::from(g.x_advance)).sum::<i64>();
+            assert!(width("iiii") < width("WWWW"), "proportional Latin widths: {bold}/{italic}");
+        }
     }
 
     #[test]

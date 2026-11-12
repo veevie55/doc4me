@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (preserve DOCX floating-drawing stacking order and a standalone page break before an empty continuous-section end; Windows readiness remains 92.7% / 94.5% without 22 deferred, pending a new measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43190908818 on `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220, boundaries 100/220; fix Unicode sans fallback; font change awaits Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -9,10 +9,10 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (latest official Windows run 43051188273 on source
-`bd2d2d6`, report commit `5292abd`): all 220 documents open and remain stable and preserve measured
+with Word on real-world files. What is checked (latest official Windows run 43190908818 on source
+`c030b15`, report commit `383646e`): all 220 documents open and remain stable and preserve measured
 structure through save and reopen, 181 match Word's page count, and the separate page-boundary check
-passes 99/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
+passes 100/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
 measures page counts and endpoints rather than pixel-perfect formatting. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
@@ -168,10 +168,14 @@ Preservation is separate from field evaluation. Native Word reopening and
 refresh, full schema validation and company documents remain untested. Synthetic checks do not
 raise readiness estimates. No Word-derived files are fixtures.
 
+
+**Unicode fallback (2026-11-12, Unreleased):** Arial Unicode MS now follows Arial substitutes, and Unicode sans names no longer match the Code monospace heuristic. Installed originals and requested DOCX family names are preserved. CI passes all six steps; the Linux corpus stays at 182/220 page counts and 95/220 boundaries without regressions. Windows remeasurement is pending. [Reference metadata audit](readiness/reference-audit-2026-11-12.md) documents the 38 remaining Linux page-count failures; cached Pages and file dates do not establish Word layout or justify an exclusion.
+
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
 | 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
 | 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |

@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (preserve DOCX floating-drawing stacking order and a standalone page break before an empty continuous-section end; Windows readiness remains 92.7% / 94.5% without 22 deferred, pending a new measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43190908818 on `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220, boundaries 100/220; fix Unicode sans fallback; font change awaits Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -75,10 +75,10 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **92.7%** in the latest official Windows report (run 43051188273, source
-`bd2d2d6`, report commit `5292abd`; ribbon 503/503, dialogs 216/228, pages 181/220, boundaries
-99/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
-7.3 points short of 100% overall. That report says 94.5% without its 22 deferred rows, 5.5 points
+2026-10-25 report, and **92.7%** in the latest official Windows report (run 43190908818, source
+`c030b15`, report commit `383646e`; ribbon 503/503, dialogs 216/228, pages 182/220, boundaries
+100/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
+7.3 points short of 100% overall. That report says 94.6% without its 22 deferred rows, 5.4 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
 check as pass after run 42262956358 built and verified the MSI and portable ZIP. The source TSVs
 map 95/95 language rows and the dialog TSV/source maps 216/228 rows (12 deferred; 7 excluded),
@@ -119,9 +119,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43051188273 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43190908818 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (181/220 page-count and 99/220
+the remaining measured area without deferred rows is pagination (182/220 page-count and 100/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
@@ -154,6 +154,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
 | 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
