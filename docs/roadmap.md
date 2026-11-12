@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (alignment tabs no longer add text descent to a pictures-only line; Linux corpus pages 184/220, boundaries 97/220 without regressions; official Windows remains run 43194683237 on `a466dff`, report `67d6323`, 94.6% without 22 deferred; new measurement pending) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Word punctuation and physical-page break rules ported from upstream; Linux corpus unchanged at 184/220 pages and 97/220 boundaries, no regressions; official Windows run 43245507907 on `e9b354b`, report `e2e212f`: 94.8% without 22 deferred; latest source awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -8,7 +8,7 @@ Opus 5.5 agent wall-clock.
 
 ## Current focus (toward beta, ~150–230 h)
 
-งานล่าสุด 2026-11-12: รักษาลำดับซ้อนของวัตถุลอย `wp:relativeHeight` รวมข้อความในกล่องและการเลือก; Bring Forward/Send Backward ย้ายหนึ่งชั้นโดยไม่เปลี่ยน wrapping; ตัวแบ่งหน้าล้วนก่อนย่อหน้าว่างปิดส่วนที่ส่วนถัดไปเป็นแบบ Continuous ต้องวางบรรทัดให้พอก่อนแบ่งหน้า เทียบ Linux ครบ 220 ฉบับแล้ว: จำนวนหน้า 181 → 182/220 ขอบเขตหน้า 95/220 คงเดิม ไม่ถดถอย; รอ Windows ก่อนอ้างคะแนนที่เพิ่มขึ้น เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
+งานล่าสุด 2026-11-12: รักษาลำดับซ้อนของวัตถุลอย `wp:relativeHeight` รวมข้อความในกล่องและการเลือก; Bring Forward/Send Backward ย้ายหนึ่งชั้นโดยไม่เปลี่ยน wrapping; ตัวแบ่งหน้าล้วนก่อนย่อหน้าว่างปิดส่วนที่ส่วนถัดไปเป็นแบบ Continuous ต้องวางบรรทัดให้พอก่อนแบ่งหน้า เทียบ Linux ครบ 220 ฉบับแล้ว: จำนวนหน้า 181 → 184/220 ขอบเขตหน้า 95/220 คงเดิม ไม่ถดถอย; รอ Windows ก่อนอ้างคะแนนที่เพิ่มขึ้น เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
 
 1. **Review relevant upstream WordCraft changes before duplicating work.** Check individual patches
    against the remaining gaps (including Hebrew RTL, IME behavior and locale coverage); the upstream
@@ -75,10 +75,10 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **92.7%** in the latest official Windows report (run 43194683237, source
-`a466dff`, report commit `67d6323`; ribbon 503/503, dialogs 216/228, pages 182/220, boundaries
-100/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
-7.3 points short of 100% overall. That report says 94.6% without its 22 deferred rows, 5.4 points
+2026-10-25 report, and **92.9%** in the latest official Windows report (run 43245507907, source
+`e9b354b`, report commit `e2e212f`; ribbon 503/503, dialogs 216/228, pages 184/220, boundaries
+102/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
+7.1 points short of 100% overall. That report says 94.8% without its 22 deferred rows, 5.2 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
 check as pass after run 42262956358 built and verified the MSI and portable ZIP. The source TSVs
 map 95/95 language rows and the dialog TSV/source maps 216/228 rows (12 deferred; 7 excluded),
@@ -119,9 +119,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43194683237 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43245507907 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (182/220 page-count and 100/220
+the remaining measured area without deferred rows is pagination (184/220 page-count and 102/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
@@ -154,6 +154,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
 | 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
 | 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
 | 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |

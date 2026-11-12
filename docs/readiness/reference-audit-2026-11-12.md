@@ -71,3 +71,7 @@
 - ต้อง export ด้วย Word จาก DOCX ที่ SHA-256 ตรงกัน เพื่อยืนยันว่าควรซ่อมคู่ input/reference อย่างไร; ไม่ควรแก้ exporter ให้สร้างข้อความจาก section อื่นเพียงเพื่อให้ตรง PDF และไม่เพิ่ม excluded/deferred หรือผ่อนเกณฑ์ ผู้ใช้ได้รับคำถามขอ URL/พาธของ Word export นี้แล้ว ยังไม่ได้รับคำตอบ
 
 ฟอนต์ของ zenodo-149 เป็นอีกเงื่อนไขที่ต้องยืนยัน: DOCX ไม่มีไฟล์ฝังใน `word/fonts/`; PDF มี Arial Nova Cond Light/Italic และ Arial Narrow/Bold แบบ subset ซึ่งไม่ใช่ฟอนต์ที่ติดตั้งใน Windows runner ไม่เพิ่มฟอนต์ proprietary ลง assets และไม่ป้อนฟอนต์จาก reference PDF เข้าเครื่องวัดเพื่ออ้างว่าผ่าน
+
+## Windows follow-up
+
+Windows run [43245507907](https://github.com/veevie55/doc4me/actions/runs/43245507907), source `e9b354b`, report `e2e212f` ยืนยันว่า govuk-034 และ zenodo-156 ผ่านเพิ่มทั้งจำนวนหน้าและขอบเขตทุกหน้า รวม184/220จำนวนหน้าและ102/220ขอบเขต,94.8%ไม่นับ22deferred ไม่มีกรณีถดถอยจากa466dff ยังมี36page-count failures/118boundary failures; หลักฐานzenodo-023และข้อกำหนดฟอนต์ยังต้องยืนยันตามข้างต้น เกณฑ์/manifestเดิมไม่เปลี่ยน

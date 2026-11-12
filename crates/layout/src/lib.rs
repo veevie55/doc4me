@@ -1915,6 +1915,10 @@ impl PageBuilder<'_> {
     fn at_top(&self) -> bool {
         self.y <= self.top + 0.01
     }
+    /// A continuous section can have its own column top partway down an existing page.
+    fn at_page_top(&self) -> bool {
+        self.col == 0 && self.pages.last().is_none_or(|p| self.y <= p.body.y + 0.01)
+    }
     /// Move to the next column or page.
     fn advance(&mut self, block: usize, body_top: f32) {
         if self.col + 1 < self.cols.len() {
@@ -3004,7 +3008,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     let mut anchor_y = guess;
     let spot = |pb: &PageBuilder| (pb.pages.len(), pb.col);
     let placed_at = spot(pb);
-    if pl.rp.page_break_before && !pb.at_top() && !pb.web {
+    if pl.rp.page_break_before && !pb.at_page_top() && !pb.web {
         pb.new_page(block, body_top);
     }
     // Contextual spacing: no space between paragraphs of the same style when either asks for it.

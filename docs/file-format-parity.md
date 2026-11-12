@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (alignment tabs no longer add text descent to a pictures-only line; Linux corpus pages 184/220, boundaries 97/220 without regressions; official Windows remains run 43194683237 on `a466dff`, report `67d6323`, 94.6% without 22 deferred; new measurement pending) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Word punctuation and physical-page break rules ported from upstream; Linux corpus unchanged at 184/220 pages and 97/220 boundaries, no regressions; official Windows run 43245507907 on `e9b354b`, report `e2e212f`: 94.8% without 22 deferred; latest source awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -9,10 +9,10 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (latest official Windows run 43194683237 on source
-`a466dff`, report commit `67d6323`): all 220 documents open and remain stable and preserve measured
+with Word on real-world files. What is checked (latest official Windows run 43245507907 on source
+`e9b354b`, report commit `e2e212f`): all 220 documents open and remain stable and preserve measured
 structure through save and reopen, 181 match Word's page count, and the separate page-boundary check
-passes 100/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
+passes 102/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
 measures page counts and endpoints rather than pixel-perfect formatting. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
@@ -169,18 +169,21 @@ refresh, full schema validation and company documents remain untested. Synthetic
 raise readiness estimates. No Word-derived files are fixtures.
 
 
-**Unicode fallback (2026-11-12, Unreleased):** Arial Unicode MS now follows Arial substitutes, and Unicode sans names no longer match the Code monospace heuristic. Installed originals and requested DOCX family names are preserved. CI passes all six steps; the Linux corpus stays at 182/220 page counts and 95/220 boundaries without regressions. Windows run 43194683237 confirms the fallback correction with unchanged corpus results (182/220 pages, 100/220 boundaries). [Reference metadata audit](readiness/reference-audit-2026-11-12.md) documents the 38 remaining Linux page-count failures; cached Pages and file dates do not establish Word layout or justify an exclusion.
 
 
-**Contextual spacing before tables (2026-11-12, Unreleased):** a paragraph requesting contextual spacing drops its space after when the first paragraph in the following in-flow table has the same style. This applies in the body and nested cells; differing styles, ordinary spacing and floating tables keep their existing behavior. Linux govuk-034 now matches all 14 pages and every page boundary; full corpus pages 183/220 and boundaries 96/220, no regressions. Windows measurement is pending.
 
 
-**Pictures aligned with tabs (2026-11-12, Unreleased):** tabs do not add text descent below an otherwise pictures-only line. Actual text retains its descent. This corrects zenodo-156’s footer height and keeps the body’s table on two pages; both page count and boundaries now match Word on Linux. Corpus pages 184/220 and boundaries 97/220, no regressions; Windows measurement pending. [Reference audit](readiness/reference-audit-2026-11-12.md#zenodo-023-source-and-reference-content) records the final-page header/footer contradiction that still needs a fresh Word export.
+
+
+**Word break rules (2026-11-12, Unreleased):** a full stop and immediately following opening parenthesis stay together when wrapping; a page break before applies at the top of a continuous section partway down a page, while an actual page top adds no blank page. [Upstream review](readiness/upstream-layout-review-2026-11-12.md) records the selected ports and rejected superscript experiment. Linux corpus remains 184/220 page counts and 97/220 boundaries, without regressions; latest source awaits Windows measurement.
+
+Windows run 43245507907 on `e9b354b` confirms the preceding stacking, Unicode fallback and spacing changes at 94.8% without 22 deferred (184/220 page counts, 102/220 boundaries); govuk-034 and zenodo-156 both gained page-count and boundary passes without regressions. New punctuation/continuous-section break rules await Windows remeasurement.
 
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
 | 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
 | 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
 | 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |

@@ -13,6 +13,39 @@ fn lines_of(l: &DocLayout) -> usize {
 }
 
 #[test]
+fn a_full_stop_and_adjacent_open_parenthesis_wrap_as_one_word() {
+    for (text, first) in [("Prefix 2023.(Example)", "Prefix"), ("Prefix 2023. (Example)", "Prefix 2023.")] {
+        let mut d = Document::new();
+        d.last_section.page_w = 244.0;
+        let props = doc4me_doc::CharProps { font: Some("Source Sans 3".into()), size: Some(12.0), ..Default::default() };
+        d.body = vec![doc4me_doc::para_block(Paragraph::with_text(text, props))];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        assert_eq!(para.lines.len(), 2, "{text}: {:?}", para.lines);
+        let line = &para.lines[0];
+        assert_eq!(text.get(line.start..line.stop).unwrap().trim(), first);
+    }
+}
+
+#[test]
+fn page_break_before_applies_at_a_continuous_sections_top_mid_page() {
+    for (start, break_before, expected) in
+        [(SectionStart::Continuous, false, 1), (SectionStart::Continuous, true, 2), (SectionStart::NextPage, true, 2)]
+    {
+        let mut d = Document::from_text("Before\nAfter");
+        d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().section = Some(Box::new(SectionProps::default()));
+        d.last_section.start = start;
+        d.para_mut(StoryRef::Body, &Path::top(1)).unwrap().props.page_break_before = Some(break_before);
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), expected, "{start:?}, break={break_before}");
+        assert_eq!(l.caret(&Pos::body(1, 0)).unwrap().page, expected - 1);
+    }
+    let mut d = Document::from_text("First");
+    d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().props.page_break_before = Some(true);
+    assert_eq!(lay(&d).pages.len(), 1, "a break before at the actual page top adds no blank page");
+}
+
+#[test]
 fn empty_doc_has_one_page() {
     let d = Document::new();
     let l = lay(&d);

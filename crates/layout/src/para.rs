@@ -1658,6 +1658,8 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         found.sort_unstable();
         found.dedup();
     }
+    // Word keeps "2023.(Example" together, unlike UAX #14's break after the full stop.
+    found.retain(|&i| !(text.get(..i).is_some_and(|t| t.ends_with('.')) && text.get(i..).is_some_and(|t| t.starts_with('('))));
     // Asian typography: kinsoku and breaking Latin words anywhere.
     crate::kinsoku::apply(&text, &mut found, rp.kinsoku, rp.word_wrap, &env.doc.settings.kinsoku);
     let opps: std::collections::HashSet<usize> = found.into_iter().filter_map(to_para).collect();

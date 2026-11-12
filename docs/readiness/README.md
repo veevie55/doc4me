@@ -49,9 +49,9 @@ investigation; the generated report remains capped at 40 failures per set.
   is deferred only until the owner requests it; Windows arm64 was requested and attempted in
   November 2026 and is now recorded as `pass` in `manual.tsv` after run 42262956358 built and
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
-  canceled before it could measure the updated row. Latest Windows run 43194683237 completed
-  on `a466dff`; the generated report was committed as `67d6323` (92.7% overall,
-  94.6% without the 22 deferred rows; pages 182/220, boundaries 100/220). Each row's note
+  canceled before it could measure the updated row. Latest Windows run 43245507907 completed
+  on `e9b354b`; the generated report was committed as `e2e212f` (92.9% overall,
+  94.8% without the 22 deferred rows; pages 184/220, boundaries 102/220). Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the
