@@ -1012,6 +1012,12 @@ fn layout_blocks(
                 if depth > 8 {
                     continue;
                 }
+                if t.props.float.is_none()
+                    && let Some((style, true)) = &prev_style
+                    && table_starts_with_style(ctx, t, style)
+                {
+                    y -= prev_after;
+                }
                 let tl = table::layout_table(ctx, story, t, &path, width, depth + 1);
                 let (tx, ty) = match t.props.float {
                     // A floating table stands at its own position and takes no room; the text
@@ -3534,8 +3540,21 @@ fn row_keeps_with_next(ctx: &mut Ctx, row: &doc4me_doc::Row) -> bool {
 /// above any real table (three ordinary header rows over some 5,000 pages).
 const MAX_HEADER_ITEMS: usize = 500_000;
 
+/// The first cell's first paragraph is adjacent to the paragraph before an in-flow table for
+/// contextual spacing (it need not request contextual spacing itself).
+fn table_starts_with_style(ctx: &mut Ctx, t: &doc4me_doc::Table, style: &str) -> bool {
+    let first = t.rows.first().and_then(|r| r.cells.first()).and_then(|c| c.blocks.first());
+    matches!(first.map(|b| &**b), Some(Block::Para(p)) if ctx.resolved(p).style == style)
+}
+
 fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block: usize, body_top: f32) {
-    pb.prev = None;
+    if let Some((style, true, after, _)) = pb.prev.take()
+        && !pb.at_top()
+        && t.props.float.is_none()
+        && table_starts_with_style(ctx, t, &style)
+    {
+        pb.y -= after;
+    }
     let width = pb.col_w();
     let mut tl = table::layout_table(ctx, StoryRef::Body, t, &[block as u32], width, 1);
     if let Some(f) = t.props.float.filter(|_| !pb.web) {

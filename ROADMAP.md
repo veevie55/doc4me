@@ -1,8 +1,8 @@
 # Doc4Me roadmap
 
-**Stage: alpha** · latest official readiness is **92.7%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43190908818, 2026-11-12; report commit `383646e` measures source `c030b15`, all 220 documents); the report says **94.6% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (182/220 page counts, 100/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release remains Doc4Me 1.1.3; subsequent source changes are Unreleased.
+**Stage: alpha** · latest official readiness is **92.7%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43194683237, 2026-11-12; report commit `67d6323` measures source `a466dff`, all 220 documents); the report says **94.6% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (182/220 page counts, 100/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release remains Doc4Me 1.1.3; subsequent source changes are Unreleased.
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43190908818 on `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220, boundaries 100/220; fix Unicode sans fallback; font change awaits Windows remeasurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Windows run 43194683237 on `a466dff`, report `67d6323`: 92.7% / 94.6% without 22 deferred; Unicode fallback confirmed; contextual spacing before a same-style in-flow table fixes govuk-034 on Linux, pending Windows) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -10,9 +10,9 @@ agent control. This page is the summary; the assessment is
 [`docs/gaps.md`](docs/gaps.md), and milestones and the current focus are in
 [`docs/roadmap.md`](docs/roadmap.md).
 
-**งานหลัง 1.1.3:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ใต้ `[Unreleased]`; Windows run 43190908818 วัดโค้ด `c030b15` แล้ว ได้ 94.6% ไม่นับ deferred
+**งานหลัง 1.1.3:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ใต้ `[Unreleased]`; Windows run 43194683237 วัดโค้ด `a466dff` แล้ว ได้ 94.6% ไม่นับ deferred
 
-**งานต่อ 2026-11-12:** แก้ Arial Unicode MS/Lucida Sans Unicode ที่ถูก heuristic คำว่า Code เลือก monospace; CI ผ่าน 6 ขั้น (native 2,494 ผ่าน), เทียบ Linux 220 ฉบับไม่ถดถอย จำนวนหน้า 182/220 และขอบเขตหน้า 95/220 คงเดิม; รอ Windows วัดการแก้ฟอนต์ ตรวจข้อมูลอ้างอิง 38 ฉบับใน [reference audit](docs/readiness/reference-audit-2026-11-12.md) โดยไม่เปลี่ยนเกณฑ์ เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
+**งานต่อ 2026-11-12:** Windows run 43194683237 ยืนยันการแก้ Unicode sans fallback แล้ว คะแนนยัง 94.6% ไม่นับ deferred; แก้ contextual spacing หลังหัวข้อก่อนตารางที่ย่อหน้าแรกมี style เดียวกัน ทำให้ `govuk-034` ตรงทั้ง 14 หน้าและขอบเขตทุกหน้า; Linux คลัง 220 ฉบับ: จำนวนหน้า 182 → 183/220 ขอบเขตหน้า 95 → 96/220 ไม่มีกรณีถดถอย CI ผ่านครบ 6 ขั้น (native 2,496 ผ่าน) รอวัดการแก้ spacing บน Windows เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
 
 ## Headline numbers (2026-11-12)
 
@@ -20,12 +20,12 @@ agent control. This page is the summary; the assessment is
 |---|---|---|
 | Ribbon/menu catalog coverage | **503 / 503 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md), 2026-11-11) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
-| **Ready for real work** (full target) | **92.7%** | latest official Windows report: run 43190908818, source `c030b15`, report commit `383646e`, all 220 corpus documents; 94.6% without 22 deferred rows. Ribbon 503/503, dialogs 216/228 (12 deferred; all non-deferred pass), pages 182/220, boundaries 100/220, languages 95/95 catalog-key checks, shortcuts 276/280 (4 deferred; all non-deferred pass), and platforms 5/5. |
+| **Ready for real work** (full target) | **92.7%** | latest official Windows report: run 43194683237, source `a466dff`, report commit `67d6323`, all 220 corpus documents; 94.6% without 22 deferred rows. Ribbon 503/503, dialogs 216/228 (12 deferred; all non-deferred pass), pages 182/220, boundaries 100/220, languages 95/95 catalog-key checks, shortcuts 276/280 (4 deferred; all non-deferred pass), and platforms 5/5. |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,503 test attributes · 234,207 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,505 test attributes · 234,280 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
 | Releases | Doc4Me v1.1.3 (re-released 2026-11-11 from the latest code; the first v1.1.3 of 2026-11-10 was deleted), the only GitHub Release on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases): the earlier v1.0.0–v1.1.2 releases and tags no longer exist there. Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -53,7 +53,7 @@ the two partial ones (real-world .docx, printing) complete, roughly.
 ## By dimension
 
 Parity is the earlier estimate; Measured is the latest official Windows `cargo xtask readiness`
-report (run 43190908818 on source `c030b15`, report commit `383646e`, 2026-11-12), which counts only
+report (run 43194683237 on source `a466dff`, report commit `67d6323`, 2026-11-12), which counts only
 what its check sets cover ([`docs/readiness/README.md`](docs/readiness/README.md)). File formats, for
 one, checks that real-world documents open and keep their text and make-up, not their formatting.
 The current TSVs map 95/95 language rows and the dialog source maps 216/228 rows (12 deferred; 7
@@ -61,15 +61,15 @@ excluded); both counts match the report.
 
 | Dimension | Parity | Measured | Hours to full | Doc |
 |---|---|---|---|---|
-| Features (depth) | 68% | 97.4% (run 43190908818: ribbon 503/503, dialogs 216/228; 12 deferred, 7 excluded; 100% without deferred) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
+| Features (depth) | 68% | 97.4% (run 43194683237: ribbon 503/503, dialogs 216/228; 12 deferred, 7 excluded; 100% without deferred) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
 | UI/UX fidelity | 65% | 98.6% (shortcuts 276/280; 4 deferred, 100% excluding them) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
 | File formats | 60% | 100.0% (open 220/220, save and reopen 220/220) | 185–300 | [file-format-parity.md](docs/file-format-parity.md) |
 | Layout and pagination fidelity | 55% | 64.1% (page count 182/220, page boundaries 100/220) | 90–145 | [layout-parity.md](docs/layout-parity.md) |
 | Hardware | 40% | 37.5% (3/8; 5 owner-deferred) | 20–40 | [hardware-parity.md](docs/hardware-parity.md) |
-| Localization | 27% | 100.0% (official run 43190908818: 95/95; catalog key presence only, not translation quality) | 75–120 + native review | [localization-parity.md](docs/localization-parity.md) |
+| Localization | 27% | 100.0% (official run 43194683237: 95/95; catalog key presence only, not translation quality) | 75–120 + native review | [localization-parity.md](docs/localization-parity.md) |
 | Performance | 75% | 100.0% (6/6) | 10–20 | [layout-parity.md](docs/layout-parity.md#performance) |
 | Stability | 50% | 100.0% (corpus 220/220; hand checks 5/5) | 25–45 | [gaps.md](docs/gaps.md) (#3) |
-| Platforms | 95% (beyond Word on Linux, BSD, web) | 100.0% (5/5 in official run 43190908818; ARM64 `plat-002` passed in run 42262956358) | 5–10 | this page |
+| Platforms | 95% (beyond Word on Linux, BSD, web) | 100.0% (5/5 in official run 43194683237; ARM64 `plat-002` passed in run 42262956358) | 5–10 | this page |
 | Ecosystem and plugins | Microsoft's systems (VBA, Office add-ins, OneDrive, co-authoring) out of scope since 2026-10-25; open replacements in place: macros, Doc4Me add-in catalog, synced folders (Nextcloud, Syncthing) | 83.3% (5/6; one deferred) | — | [gaps.md](docs/gaps.md) (#22) |
 | AI features | beyond Word for external agents (MCP, CLI); no in-app AI provider (out of scope since 2026-10-25) | — (not weighted) | — | [gaps.md](docs/gaps.md) (#25) |
 
@@ -144,7 +144,7 @@ proofed by Doc4Me. Word lists 30 interface languages and proofing tools for abou
 
 Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadmap.md)):
 
-0. Raise the measured no-deferred readiness score to 100%, keeping deferred rows excluded and transparently reported: Windows run 43190908818 passes 182/220 page counts, 100/220 page-boundary checks, 216/228 dialogs (12 deferred), 276/280 shortcuts (4 deferred) and 95/95 catalog-key language checks; platforms pass 5/5. Every non-deferred check outside pagination passes. The report measures source `c030b15` and records 22 deferred rows. Prioritize pagination (it is the only dimension below 100% without deferred rows), native-speaker review of the AI-drafted catalogs, and verification of subsequent WordCraft changes once upstream access is available (the table nesting limit and listed security ports have already landed)
+0. Raise the measured no-deferred readiness score to 100%, keeping deferred rows excluded and transparently reported: Windows run 43194683237 passes 182/220 page counts, 100/220 page-boundary checks, 216/228 dialogs (12 deferred), 276/280 shortcuts (4 deferred) and 95/95 catalog-key language checks; platforms pass 5/5. Every non-deferred check outside pagination passes. The report measures source `a466dff` and records 22 deferred rows. Prioritize pagination (it is the only dimension below 100% without deferred rows), native-speaker review of the AI-drafted catalogs, and verification of subsequent WordCraft changes once upstream access is available (the table nesting limit and listed security ports have already landed)
    ([results](docs/readiness.md),
    [plan](docs/roadmap.md#path-to-100-measured-readiness)).
 1. Review relevant upstream WordCraft changes before duplicating work; assess individual patches
@@ -166,6 +166,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-12 | Contextual spacing before a same-style in-flow table (body and nested cells): govuk-034 now matches 14 pages and all boundaries; Linux corpus pages 183/220, boundaries 96/220, no regressions. CI passes 6/6 (native 2,496); Windows measurement pending. Previous Unicode fix confirmed by Windows run 43194683237, report 67d6323, at 94.6% without 22 deferred. No criteria/exclusion/deferred or Release changes. |
 | 2026-11-12 | Windows run 43190908818 (`c030b15`, report `383646e`) passes 182/220 page counts and 100/220 boundaries: 94.6% without 22 deferred. Unicode sans fallback fix adds one regression; CI all 6 steps pass, native 2,494; Linux corpus unchanged with no regressions. Reference metadata audited for the 38 page-count failures; no criteria/exclusion changes and no Release. |
 | 2026-11-12 | Workflow build แยก Windows ARM64, macOS, Linux, FreeBSD และ Web App รับ source ref และรันด้วยมือเท่านั้น; ปิด tag triggers เดิมทุกไฟล์; README ไทย/อังกฤษและภาพจริง 8 ภาพตรงกับ 1.1.3; actionlint และการตรวจ manual-only ผ่าน ไม่ได้สั่ง build หรือออก Release; ผู้ใช้สั่งทำงานต่อถึง readiness 100% โดยไม่นับ deferred |
 | 2026-11-12 | วัตถุอิงย่อหน้าที่อยู่หน้าหรือหลังข้อความตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด (`govuk-001`, `zenodo-097`); เพิ่ม regression 6 ตัวและผ่านเทสต์ layout 304 ตัว อยู่ใต้ `[Unreleased]`; CI ผ่านครบ 6 ขั้น; Linux ขอบเขตหน้า 94 → 95/220, จำนวนหน้า 181/220 เท่าเดิม; รอผล Windows ก่อนเปลี่ยนคะแนนทางการ |
@@ -288,6 +289,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
 | 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
 | 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |

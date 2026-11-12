@@ -27,10 +27,16 @@
 
 ### แก้ไข
 
+- **Contextual spacing จากหัวข้อถึงย่อหน้าแรกในตารางที่มี style เดียวกัน** (`crates/layout/src/lib.rs`)
+  - เดิมเว้น `spaceAfter` ของหัวข้อไว้เสมอเมื่อบล็อกถัดไปเป็นตาราง แม้หัวข้อเปิด contextual spacing และย่อหน้าแรกในเซลล์แรกมี style เดียวกัน ทำให้ `govuk-034` มีช่องว่างเกิน 10 pt และเนื้อหาช่วงท้ายไหลเป็น 15 หน้าแทน 14
+  - ระงับช่องว่างนี้ก่อนตารางในเนื้อหาและตารางซ้อนภายในเซลล์ตาม style ที่ resolve แล้ว; ถ้าคนละ style, ไม่ได้เปิด contextual spacing หรือเป็นตารางลอย ใช้พฤติกรรมเดิม ไม่เปลี่ยนโมเดล/รูปแบบ DOCX/ชื่อฟอนต์/เวอร์ชันและไม่มี asset ใหม่
+  - ตรวจสอบ: regression 2 ตัวครอบคลุม pagination ของหัวข้อกับตาราง, คนละ style, ปิด contextual spacing และพิกัดตารางซ้อน; `cargo xtask ci` ผ่านครบ 6 ขั้น (native 2,496 ผ่าน, ignored 1 เดิม; layout 310, assets 141 และ wasm 16 crates)
+  - เทียบ Linux ครบ 220 ฉบับ: `govuk-034` ตรงทั้งจำนวนหน้า 14 หน้าและขอบเขตทุกหน้า; จำนวนหน้าตรง 182 → 183/220 ขอบเขตหน้า 95 → 96/220 เปิด/round-trip/เสถียร 220/220 ไม่มีกรณีถดถอย; รอวัด spacing บน Windows ส่วน Windows run 43194683237 (`a466dff`, report `67d6323`) ยืนยัน Unicode fix ก่อนหน้านี้แล้วที่ 94.6% ไม่นับ 22 deferred เกณฑ์/รายการ excluded/deferred เดิมคงไว้ ไม่ออก Release
+
 - **ฟอนต์ที่มีคำว่า Unicode ไม่ถูกตีความเป็นฟอนต์เขียนโค้ด** (`crates/fonts/src/word.rs`)
   - เดิม heuristic `contains("code")` จับคำว่า `Unicode` ด้วย ทำให้ฟอนต์ที่ขาด เช่น Arial Unicode MS และ Lucida Sans Unicode ใช้ Courier New/Liberation Mono แทน และเปลี่ยนความกว้างของข้อความ Latin โดยไม่ตั้งใจ
   - ยกเว้นคำว่า Unicode จาก heuristic นี้และให้ Arial Unicode MS ลอง Arial/ตัวแทนในกลุ่มเดียวกันก่อน; ฟอนต์ที่มี Mono หรือชื่อฟอนต์ Code จริงยังใช้ตัวแทน monospace; ถ้ามีฟอนต์ต้นฉบับติดตั้งอยู่ยังใช้ต้นฉบับตามเดิม เก็บชื่อฟอนต์ที่เอกสารขอไว้ ไม่เพิ่มฟอนต์หรือ asset และไม่อ้างว่าตัวแทนครบทุก glyph/ตรงเมตริก Unicode ทั้งหมด
-  - ตรวจสอบ: regression ครอบคลุม Unicode sans, Code/Mono, หน้า Regular/Bold/Italic/Bold Italic และความกว้าง `iiii` ที่แคบกว่า `WWWW`; `cargo xtask ci` ผ่านครบ 6 ขั้น (native 2,494 ผ่าน, ignored 1, assets 141, wasm 16 crates); Linux เทียบ 220 ฉบับไม่ถดถอย เปิด/round-trip/เสถียร 220/220 จำนวนหน้า 182/220 ขอบเขตหน้า 95/220 คงเดิม รอ Windows วัดการแก้ฟอนต์; รอบ Windows ก่อนการแก้ฟอนต์ run 43190908818 วัด `c030b15` แล้วได้ 92.7% / 94.6% ไม่นับ 22 deferred จำนวนหน้า 182/220 ขอบเขตหน้า 100/220 (report `383646e`)
+  - ตรวจสอบ: regression ครอบคลุม Unicode sans, Code/Mono, หน้า Regular/Bold/Italic/Bold Italic และความกว้าง `iiii` ที่แคบกว่า `WWWW`; `cargo xtask ci` ผ่านครบ 6 ขั้น (native 2,494 ผ่าน, ignored 1, assets 141, wasm 16 crates); Linux เทียบ 220 ฉบับไม่ถดถอย เปิด/round-trip/เสถียร 220/220 จำนวนหน้า 182/220 ขอบเขตหน้า 95/220 คงเดิม Windows run 43194683237 วัดการแก้ฟอนต์ `a466dff` แล้วผลทั้งห้าชุดตรวจไม่เปลี่ยน (report `67d6323`), Arial Unicode MS ใช้ Arial แทน Courier New; รอบ Windows ก่อนการแก้ฟอนต์ run 43190908818 วัด `c030b15` แล้วได้ 92.7% / 94.6% ไม่นับ 22 deferred จำนวนหน้า 182/220 ขอบเขตหน้า 100/220 (report `383646e`)
   - เพิ่มรายงาน [`reference-audit-2026-11-12.md`](docs/readiness/reference-audit-2026-11-12.md) ตรวจค่า Pages ที่ค้างใน DOCX และวันที่ของคู่ PDF สำหรับ 38 ฉบับที่จำนวนหน้ายังไม่ผ่าน; ข้อมูล cache อาจล้าสมัยและใช้ช่วยจัดลำดับตรวจบน Word เท่านั้น ไม่เปลี่ยนเกณฑ์/รายการ excluded/deferred
 
 - **รักษาลำดับซ้อนของวัตถุลอยและจัดลำดับทีละชั้นได้จริง** (`crates/doc/src/para.rs`, DOCX reader/writer, `crates/layout/src/lib.rs`, `crates/engine/src/cmd/objects.rs`)

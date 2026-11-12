@@ -3106,6 +3106,60 @@ fn list_items_are_counted_once_when_laid_out_again() {
 }
 
 #[test]
+fn contextual_space_after_a_heading_does_not_push_a_same_style_table_to_the_next_page() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+
+    for (contextual, cell_style, expected_pages) in [(true, "Normal", 1), (false, "Normal", 2), (true, "Other", 2)] {
+        let mut d = Document::from_text("Heading");
+        let heading = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        heading.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        heading.props.space_after = Some(20.0);
+        heading.props.contextual_spacing = Some(contextual);
+        let page = &mut d.last_section;
+        page.page_h = 100.0;
+        page.margin_top = 10.0;
+        page.margin_bottom = 10.0;
+        let mut t = Table::new(1, 1, 200.0);
+        t.props.cell_margins = Some([0.0; 4]);
+        t.rows[0].props.height = Some(60.0);
+        t.rows[0].props.height_rule = HeightRule::Exact;
+        let mut cell = Paragraph::with_text("Table text", Default::default());
+        cell.props.style = Some(cell_style.into());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        d.body.push(std::sync::Arc::new(Block::Table(t)));
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), expected_pages, "contextual={contextual}, cell={cell_style}");
+        let cell_pos = Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 };
+        assert_eq!(l.caret(&cell_pos).unwrap().page, expected_pages - 1);
+    }
+}
+
+#[test]
+fn contextual_spacing_reaches_an_in_flow_nested_table() {
+    use doc4me_doc::props::LineSpacing;
+
+    let gap = |contextual| {
+        let mut heading = Paragraph::with_text("Heading", Default::default());
+        heading.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        heading.props.space_after = Some(20.0);
+        heading.props.contextual_spacing = Some(contextual);
+        let mut inner = Table::new(1, 1, 180.0);
+        inner.props.cell_margins = Some([0.0; 4]);
+        let mut outer = Table::new(1, 1, 200.0);
+        outer.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(heading), std::sync::Arc::new(Block::Table(inner))];
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(Block::Table(outer))];
+        let l = lay(&d);
+        let pos = |path| Pos { story: StoryRef::Body, path: Path(path), off: 0 };
+        l.caret(&pos(vec![0, 0, 0, 1, 0, 0, 0])).unwrap().top - l.caret(&pos(vec![0, 0, 0, 0])).unwrap().top
+    };
+    let (with_context, without_context) = (gap(true), gap(false));
+    assert!((without_context - with_context - 20.0).abs() < 0.5, "contextual={with_context}, ordinary={without_context}");
+}
+
+#[test]
 fn contextual_spacing_suppresses_trailing_space_between_cell_paragraphs() {
     use doc4me_doc::props::LineSpacing;
 
