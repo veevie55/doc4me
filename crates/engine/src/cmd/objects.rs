@@ -314,8 +314,8 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"preset"?: "topLeft|topCenter|topRight|middleLeft|middleCenter|middleRight|bottomLeft|bottomCenter|bottomRight", "x"?: pt, "y"?: pt}"#)
         .when(has_movable),
-        CommandSpec::new("arrange.bringForward", "Bring Forward", "Layout › Arrange", |s, _| with_float(s, |f| f.wrap = Wrap::InFrontOfText)).when(has_movable),
-        CommandSpec::new("arrange.sendBackward", "Send Backward", "Layout › Arrange", |s, _| with_float(s, |f| f.wrap = Wrap::BehindText)).when(has_movable),
+        CommandSpec::new("arrange.bringForward", "Bring Forward", "Layout › Arrange", |s, _| reorder(s, true)).when(has_floating),
+        CommandSpec::new("arrange.sendBackward", "Send Backward", "Layout › Arrange", |s, _| reorder(s, false)).when(has_floating),
         CommandSpec::new("arrange.align", "Align", "Layout › Arrange", |s, v| {
             let h = p::str(v, "value").unwrap_or("center").to_string();
             let tw = super::page::sect(s).text_width();
@@ -1258,6 +1258,44 @@ fn with_float(s: &mut Session, f: impl Fn(&mut Float)) -> CmdResult {
     })
 }
 
+/// Move one position in the selected drawing's page/story/box layer. Renumber that layer so even
+/// duplicate values and u32::MAX have room to move, without changing text wrapping or anchors.
+fn reorder(s: &mut Session, forward: bool) -> CmdResult {
+    let (pos, object) = selected(s).ok_or_else(|| CmdError::Disabled("no object selected".into()))?;
+    let (_, _, float) = object.frame().ok_or_else(|| CmdError::Disabled("no floating object selected".into()))?;
+    let behind = float.wrap == Wrap::BehindText;
+    let hits = s.layout().object_index();
+    let page = hits.object(&pos, 0).map(|hit| hit.page).ok_or_else(|| CmdError::Failed("object is not laid out".into()))?;
+    let container = pos.path.0.split_last().map(|(_, parent)| parent);
+    let mut peers = Vec::new();
+    for path in s.doc.para_paths(pos.story) {
+        if path.0.split_last().map(|(_, parent)| parent) != container {
+            continue;
+        }
+        let Some(para) = s.doc.para(pos.story, &path) else { continue };
+        for off in para.object_offsets() {
+            let at = Pos { story: pos.story, path: path.clone(), off };
+            let Some((_, _, f)) = para.object_at(off).and_then(InlineObject::frame) else { continue };
+            if f.wrap != Wrap::Inline && (f.wrap == Wrap::BehindText) == behind && hits.object(&at, 0).map(|hit| hit.page) == Some(page) {
+                peers.push((at, f.z_order));
+            }
+        }
+    }
+    peers.sort_by_key(|(_, z)| *z);
+    let Some(index) = peers.iter().position(|(at, _)| *at == pos) else { return Err(CmdError::Failed("object is not laid out".into())) };
+    let target = if forward { index.saturating_add(1).min(peers.len().saturating_sub(1)) } else { index.saturating_sub(1) };
+    if index == target {
+        return Ok(json!({"object": object}));
+    }
+    peers.swap(index, target);
+    for (rank, (at, _)) in peers.into_iter().enumerate() {
+        let z = u32::try_from(rank).map_err(|_| CmdError::Failed("too many floating objects".into()))?;
+        edit_float(s, &at, |f| f.z_order = z)?;
+    }
+    let object = s.doc.para_at(&pos).and_then(|para| para.object_at(pos.off));
+    Ok(json!({"object": object}))
+}
+
 fn size(s: &mut Session, v: &Value) -> CmdResult {
     let (_, o) = selected(s).ok_or_else(|| CmdError::Disabled("no object".into()))?;
     let (w0, h0) = obj_size(&o);
@@ -1844,6 +1882,104 @@ fn objects_list(s: &mut Session, _: &Value) -> CmdResult {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn arranging_moves_one_layer_without_changing_wrapping_and_undo_restores_it() {
+        use doc4me_doc::para::{Anchor, ShapeKind};
+        for wrap in [Wrap::Square, Wrap::BehindText, Wrap::InFrontOfText] {
+            let mut doc = doc4me_doc::Document::from_text("one\ntwo\nthree\nother page");
+            doc.para_mut(StoryRef::Body, &doc4me_doc::Path::top(3)).unwrap().props.page_break_before = Some(true);
+            for (block, z_order) in [u32::MAX, u32::MAX, 0, 42].into_iter().enumerate() {
+                let object = InlineObject::Shape {
+                    kind: ShapeKind::Rectangle,
+                    w: 30.0,
+                    h: 20.0,
+                    fill: Some(Rgb::WHITE),
+                    stroke: None,
+                    stroke_width: 0.0,
+                    float: Float { wrap, z_order, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 300.0, y: 400.0, ..Default::default() },
+                    story: None,
+                    freeform: None,
+                    effects: Default::default(),
+                    extra: Default::default(),
+                };
+                doc.insert_object(&Pos::body(block, 0), object, &Default::default()).unwrap();
+            }
+            let mut s = Session::new(doc);
+            let pos = Pos::body(0, 0);
+            s.sel = Selection { anchor: pos.clone(), focus: Pos::body(0, 3) };
+            let before = s.doc.clone();
+            let area = s.layout().object(&pos, 0).unwrap().rect;
+            s.run("arrange.bringForward", &json!({})).unwrap();
+            assert_eq!(s.layout().object_at(0, 310.0, 410.0, 0.0).unwrap().pos(), pos);
+            assert_eq!(s.layout().object(&pos, 0).unwrap().rect, area);
+            for block in 0..4 {
+                let original = before.para_at(&Pos::body(block, 0)).unwrap().object_at(0).unwrap();
+                let mut changed = s.doc.para_at(&Pos::body(block, 0)).unwrap().object_at(0).unwrap().clone();
+                if block != 3 {
+                    changed.float_mut().unwrap().z_order = original.frame().unwrap().2.z_order;
+                }
+                assert_eq!(&changed, original, "only the current page's order changes");
+            }
+            s.run("edit.undo", &json!({})).unwrap();
+            assert_eq!(s.doc.para_at(&pos).unwrap().object_at(0), before.para_at(&pos).unwrap().object_at(0));
+            s.run("edit.redo", &json!({})).unwrap();
+            assert_eq!(s.layout().object_at(0, 310.0, 410.0, 0.0).unwrap().pos(), pos);
+            s.run("arrange.sendBackward", &json!({})).unwrap();
+            assert_eq!(s.layout().object_at(0, 310.0, 410.0, 0.0).unwrap().pos(), Pos::body(1, 0));
+            let bytes = doc4me_docx::write(&s.doc).unwrap();
+            let mut reopened = Session::new(doc4me_docx::read(&bytes).unwrap());
+            assert_eq!(reopened.layout().object_at(0, 310.0, 410.0, 0.0).unwrap().pos(), Pos::body(1, 0));
+        }
+    }
+
+    #[test]
+    fn arranging_in_a_header_keeps_the_body_and_text_layers_separate() {
+        let mut s = Session::new(doc4me_doc::Document::new());
+        s.run("insert.editHeader", &json!({})).unwrap();
+        let story = s.sel.focus.story;
+        let mut positions = Vec::new();
+        for wrap in ["behindText", "inFrontOfText", "inFrontOfText"] {
+            s.run("insert.shape", &json!({"kind":"rectangle"})).unwrap();
+            s.run("arrange.wrap", &json!({"wrap":wrap})).unwrap();
+            positions.push(selected(&s).unwrap().0);
+            s.run("select.collapse", &json!({"end":true})).unwrap();
+        }
+        let at = positions[1].clone();
+        s.sel = Selection { anchor: at.clone(), focus: Pos { off: at.off + 3, ..at } };
+        s.run("arrange.bringForward", &json!({})).unwrap();
+        let order: Vec<_> = positions.iter().map(|pos| s.doc.para_at(pos).unwrap().object_at(pos.off).unwrap().frame().unwrap().2.z_order).collect();
+        assert_eq!(order, [0, 1, 0]);
+        assert_eq!(selected(&s).unwrap().0.story, story);
+        assert_eq!(s.doc.para_at(&positions[0]).unwrap().object_at(positions[0].off).unwrap().frame().unwrap().2.wrap, Wrap::BehindText);
+        edit_float(&mut s, &positions[1], |f| f.z_order = u32::MAX).unwrap();
+        s.run("arrange.bringForward", &json!({})).unwrap();
+        assert_eq!(selected(&s).unwrap().1.frame().unwrap().2.z_order, u32::MAX, "already topmost: preserve the stored order");
+    }
+
+    #[test]
+    fn arranging_body_drawings_does_not_renumber_a_table_cells_layer() {
+        use doc4me_doc::{Block, Paragraph, Path, Table, para_block};
+        let mut s = Session::new(doc4me_doc::Document::from_text("one\ntwo"));
+        for block in 0..2 {
+            s.sel = Selection::caret(Pos::body(block, 0));
+            s.run("insert.shape", &json!({"kind":"rectangle"})).unwrap();
+            s.run("arrange.wrap", &json!({"wrap":"inFrontOfText"})).unwrap();
+        }
+        let mut object = selected(&s).unwrap().1;
+        object.float_mut().unwrap().z_order = u32::MAX;
+        let mut paragraph = Paragraph::with_text("cell", Default::default());
+        paragraph.insert_object(0, object, &Default::default()).unwrap();
+        let mut table = Table::new(1, 1, 200.0);
+        table.rows[0].cells[0].blocks = vec![para_block(paragraph)];
+        s.doc.insert_block(StoryRef::Body, &Path::top(2), Block::Table(table)).unwrap();
+        s.sel = Selection { anchor: Pos::body(0, 0), focus: Pos::body(0, 3) };
+        s.run("arrange.bringForward", &json!({})).unwrap();
+        assert_eq!(s.doc.para_at(&Pos::body(0, 0)).unwrap().object_at(0).unwrap().frame().unwrap().2.z_order, 1);
+        assert_eq!(s.doc.para_at(&Pos::body(1, 0)).unwrap().object_at(0).unwrap().frame().unwrap().2.z_order, 0);
+        let cell = s.doc.para(StoryRef::Body, &Path(vec![2, 0, 0, 0])).unwrap();
+        assert_eq!(cell.object_at(0).unwrap().frame().unwrap().2.z_order, u32::MAX);
+    }
 
     fn png(w: u32, h: u32) -> Vec<u8> {
         let img = image::RgbaImage::from_fn(w, h, |x, y| {

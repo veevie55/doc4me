@@ -1,5 +1,42 @@
 # Handoff: งาน pagination หลัง 1.1.3 · 2026-11-12 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
 
+## งาน Codex ต่อจาก `e65459b` · 2026-11-12 · เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
+
+คำสั่งผู้ใช้: อ่าน handoff แล้วทำงานค้างต่อให้เสร็จและ readiness 100% โดยไม่รวม deferred; คงเกณฑ์เดิมและ 22 deferred/24 excluded ไว้ ห้ามออก Release จนกว่าผู้ใช้สั่ง
+
+### ทำแล้วในโค้ดรอบนี้
+
+- เก็บ `wp:anchor/@relativeHeight` เป็น `Float.z_order: u32` ตลอด DOCX/JSON; ค่า XML ผิดรูปแบบ/ล้นช่วงใช้ 0, JSON เก่า default 0; writer ไม่สร้าง z ใหม่ตามลำดับ XML อีก
+- แยก floating drawing layers ระหว่างจัดหน้าแล้วเรียงแบบ stable ตามชั้นหน้า/หลังข้อความและ z; รูปร่าง กล่องข้อความและ hit area อยู่ด้วยกัน จัดลำดับข้ามย่อหน้าได้; ภายในเซลล์ตาราง/หัวท้าย/กล่องมีกรอบวาดของตัวเอง ไม่เพิ่ม variant สาธารณะของ `Placed`
+- Bring Forward/Send Backward ย้ายหนึ่งตำแหน่งในหน้า/story/กรอบเดียวกัน โดยไม่เปลี่ยน wrapping/พิกัด; จัดการค่า z ซ้ำ/เต็มช่วง, ไม่เปลี่ยนวัตถุบนหน้าอื่นหรือในอีกเซลล์, อยู่บนสุด/ล่างสุดแล้วเป็น no-op; undo/redo และ DOCX reopen มีเทสต์
+- `govuk-037`: ตัวแบ่งหน้าล้วนก่อนย่อหน้าว่างปิด section ซึ่ง section ถัดไปเป็น Continuous ต้องวางบรรทัดให้พอก่อนแบ่งหน้า จึงรักษาหน้าว่างหน้า 2; ตรวจตามโครงสร้าง ไม่ใช้ ID เอกสาร/`lastRenderedPageBreak`/ขนาดฟอนต์ตายตัว กรณีทั่วไปและ NextPage คงกฎเดิม
+- เพิ่ม regression 9 ตัว: JSON 1, DOCX UInt/round-trip 1, Arrange 3, layout 4; สถิติซอร์ส `cargo xtask stats`: 2,502 test attributes, 234,185 บรรทัด Rust; CLI ยัง 729 คำสั่ง
+- `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy -D warnings, native test 2,493 ผ่าน รวม layout 308, assets 141 ไฟล์, layers และ wasm 16 crates); ผล CI บนซอร์สสุดท้ายอยู่ใน `/workspace/work/ci-final.log`
+
+### หลักฐานการเทียบจริง
+
+- ดาวน์โหลดและตรวจ SHA-256 ครบ 440 ไฟล์ (220 DOCX + 220 PDF); เทียบ CLI จาก `e65459b` กับ working tree นี้บน Linux เครื่อง/โปรไฟล์/ฟอนต์เดียวกัน ผ่าน `readiness --corpus --dry-run --jobs 2 --diagnostics --cli ...`
+- เปิด/round-trip/เสถียร 220/220 ทั้งสองรอบ; จำนวนหน้า **181 → 182/220** (`govuk-037`: 78 → 79); ขอบเขตหน้า **95/220 คงเดิม**; ไม่มีแถวใดในห้าชุดตรวจถดถอย
+- `zenodo-097` หน้า 60: ภาพ Poppler สูงสุด 900 px หลังแก้มี SHA-256 `e4fd683b2b494e19dcfffc182e2508c69113890f01d231b12ab07bac5a200774` ตรงกับภาพ PDF อ้างอิง; ก่อนแก้เป็น `11a7e36d422dd6dd75e2b8073e66bf47d3fc05fa5b52430202f3e872dce03928` (พื้นขาวบังแถบเขียว) ไม่ commit ภาพ/PDF อ้างอิง
+- Windows run [43180980471](https://github.com/veevie55/doc4me/actions/runs/43180980471), source `e65459b`, attempt 1: ไม่ได้เริ่มวัด; job `measure` จบ cancelled และ run failure หลัง 15 นาที: **“The job was not acquired by Runner of type hosted even after multiple attempts”** ไม่มีรายงานใหม่
+- คะแนนทางการยังเป็น **92.7% / 94.5% ไม่นับ 22 deferred** จาก Windows run 43051188273 (`bd2d2d6`); `docs/readiness.md` ไม่ถูกเขียนทับด้วยผล Linux ไม่มี tag/Release หรือ platform build อื่นในรอบนี้
+
+### งานที่ยังต้องต่อ
+
+1. หลัง push โค้ดรอบนี้ รัน Windows readiness บน `main` อีกครั้งและตรวจผลจริง; workflow เป็น manual-only อยู่แล้ว รักษาเกณฑ์/TSV/excluded/deferred เดิม
+2. Pagination ยังไม่ครบ: Linux ยังไม่ผ่านจำนวนหน้า 38/220 และขอบเขตหน้า 125/220; `govuk-037` ยังต่างที่ TOC หน้า 4 ลงท้าย 62 แทน 63 และหน้าหลัง ๆ แม้จำนวนหน้าตรงแล้ว
+3. ห้ามแก้ด้วยการเรียก `references.updateFields` ทั้งชุดก่อน export โดยไม่ตรวจ: ทดลองเฉพาะไฟล์ชั่วคราวของ `govuk-037` แล้ว TOC ถูกสร้างใหม่จนรวมเป็น 80 หน้า (อ้างอิง 79)
+4. คงงาน govuk-034, govuk-026 (ยัง 4 vs 7 หน้า), zenodo-114, zenodo-023, embedded-font line metrics และ zenodo-149/ฟอนต์ Arial Nova Cond Light ตามลำดับเดิม; พบเพิ่มว่า heuristic `family.contains("code")` จัด `Arial Unicode MS` เป็น monospace เพราะคำว่า Unicode มี code อยู่ ต้องตรวจแยกพร้อมเทสต์ฟอนต์และเทียบคลัง/Windows
+5. WordCraft/craftrules ยังเข้าไม่ได้: connector ตอบ 404 สำหรับ `veevie55/wordcraft` และ `storytold/craftrules`; ไม่อ้างว่า replay แล้ว; การทบทวนภาษาโดยเจ้าของภาษายังไม่เสร็จ ส่วน 22 deferred ไม่อยู่ในเป้ารอบนี้
+
+### ข้อควรระวังเมื่อทำซ้ำ
+
+- เคยทดลองกฎ “ย่อหน้าที่มีเพียง page break ต้องเผื่อบรรทัดเสมอ” และการไม่แบ่งแถว Exact; ชุดทดลองรวมถดถอย govuk-002/046, zenodo-048/141 (178/220 pages, 94/220 boundaries) จึงถอนกฎกว้างและการเปลี่ยน Exact ทั้งหมด แล้วเทียบครบใหม่จนไม่ถดถอย ห้ามนำผลชุดทดลองมาเป็นผลสุดท้าย
+- ใช้ target แยกระหว่าง baseline worktree กับต้นงานจริง อย่าใช้แคช Cargo ร่วมกัน: เคยอ้าง model เก่าหลังสลับ worktree แก้โดยบังคับ rebuild และเก็บ CLI เป็นไฟล์แยกก่อนเทียบ
+- เครื่องนี้เริ่มไม่มี Rust; ติดตั้ง 1.99.1/rustfmt/clippy/wasm target ใน `/workspace/work`, CMake จาก pip และ ALSA dev จาก Debian เฉพาะ workspace ต้องให้ `libasound.so -> libasound.so.2.0.0` ชี้ถึงไลบรารีจริง; ไม่เปลี่ยน dependencies โครงการ ปิด debuginfo/incremental เพราะดิสก์ 8 GB; ลบเฉพาะ PDF/ผลแปลงและ test executables เก่าภายใน target เพื่อคืนพื้นที่
+
+## บันทึกรอบก่อนหน้า
+
 ผู้ใช้สั่งรอบนี้: อ่าน handoff และทำงานที่ค้างต่อใน `veevie55/doc4me`; ทำต่อด้าน pagination ตามลำดับงานล่าสุด ไม่เปลี่ยนเกณฑ์หรือรายการ excluded/deferred
 
 ## คำสั่งและสถานะล่าสุดของรอบนี้

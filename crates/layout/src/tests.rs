@@ -2879,6 +2879,75 @@ fn floats_in_headers_and_table_cells_are_drawn() {
 }
 
 #[test]
+fn floating_drawings_stack_across_paragraphs_and_hit_the_topmost() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText, Wrap::Square] {
+        let mut doc = Document::from_text("first\nsecond\nthird");
+        for (block, z_order) in [30, 10, 20].into_iter().enumerate() {
+            let float = Float { wrap, z_order, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 300.0, y: 400.0, ..Default::default() };
+            doc.insert_object(&Pos::body(block, 0), rect_shape(30.0 + block as f32, 20.0, float), &Default::default()).unwrap();
+        }
+        let layout = lay(&doc);
+        let page = &layout.pages[0];
+        let widths: Vec<_> = shapes(&page.items).iter().map(|r| r.w).collect();
+        assert_eq!(widths, [31.0, 32.0, 30.0], "higher relativeHeight is above lower values: {wrap:?}");
+        let top = layout.object_at(0, 310.0, 410.0, 0.0).unwrap();
+        assert_eq!(top.pos(), Pos::body(0, 0));
+        let shape = page.items.iter().position(|item| matches!(item, Placed::Shape { .. })).unwrap();
+        let text = page.items.iter().rposition(|item| matches!(item, Placed::Lines { story: StoryRef::Body, .. })).unwrap();
+        assert_eq!(shape < text, wrap == Wrap::BehindText, "front layers paint above all body paragraphs");
+    }
+}
+
+#[test]
+fn floating_text_boxes_keep_their_text_with_their_layer_in_body_and_header() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText] {
+        let mut doc = Document::from_text("first\nsecond");
+        let mut ids = Vec::new();
+        for (block, z_order) in [u32::MAX, 0].into_iter().enumerate() {
+            let float = Float { wrap, z_order, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 100.0, y: 100.0, ..Default::default() };
+            ids.push(text_box_at(&mut doc, &Pos::body(block, 0), "box", 100.0, 40.0, float));
+        }
+        for in_header in [false, true] {
+            let mut d = doc.clone();
+            if in_header {
+                let header = d.add_part(doc4me_doc::PartKind::Header, d.body.clone());
+                d.body = Document::from_text("body").body;
+                d.last_section.headers.default = Some(header);
+            }
+            let l = lay(&d);
+            let items = if in_header { &l.pages[0].header } else { &l.pages[0].items };
+            let text: Vec<_> = items
+                .iter()
+                .filter_map(|item| match item {
+                    Placed::Lines { story: StoryRef::Part(id), .. } if ids.contains(id) => Some(*id),
+                    _ => None,
+                })
+                .collect();
+            assert_eq!(text, [ids[1], ids[0]], "box text follows its shape's order");
+            let lower_text = items.iter().position(|item| matches!(item, Placed::Lines { story: StoryRef::Part(id), .. } if *id == ids[1])).unwrap();
+            let upper_shape = items.iter().rposition(|item| matches!(item, Placed::Shape { .. })).unwrap();
+            assert!(lower_text < upper_shape, "a lower box's text cannot cover the upper box");
+        }
+    }
+}
+
+#[test]
+fn equal_stacking_values_keep_source_order_after_a_page_break() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut doc = Document::from_text(&format!("before{PAGE_BREAK}after"));
+    for off in [7, 10] {
+        let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, ..Default::default() };
+        doc.insert_object(&Pos::body(0, off), rect_shape(off as f32, 20.0, f), &Default::default()).unwrap();
+    }
+    let l = lay(&doc);
+    assert_eq!(l.pages.len(), 2);
+    assert!(shapes(&l.pages[0].items).is_empty());
+    assert_eq!(shapes(&l.pages[1].items).iter().map(|r| r.w).collect::<Vec<_>>(), [7.0, 10.0]);
+}
+
+#[test]
 fn wrap_area_uses_each_distance() {
     use doc4me_doc::para::{Float, Wrap};
     let f = Float { wrap: Wrap::Square, dist: 9.0, dist_top: 0.0, dist_bottom: 4.0, ..Default::default() };
@@ -3216,6 +3285,44 @@ fn a_page_break_at_the_bottom_of_a_full_page_leaves_no_blank_page() {
     assert_eq!(l.pages.len(), 2, "pages: {}", l.pages.len());
     let last_on_2 = l.pages[1].items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [27]));
     assert!(last_on_2, "the text after the break is on page 2");
+}
+
+#[test]
+fn a_standalone_break_before_an_empty_continuous_section_end_needs_its_line() {
+    use doc4me_doc::props::LineSpacing;
+    for next_section in [None, Some(SectionStart::Continuous), Some(SectionStart::NextPage)] {
+        let mut d = Document::from_text(if next_section.is_some() { "Fill\n\u{000C}\n\nAfter" } else { "Fill\n\u{000C}\nAfter" });
+        d.last_section.page_h = 300.0;
+        d.last_section.margin_top = 20.0;
+        d.last_section.margin_bottom = 20.0;
+        let before = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        before.props.line_spacing = Some(LineSpacing::Exactly(241.0));
+        before.props.space_after = Some(0.0);
+        let paragraph = d.para_mut(StoryRef::Body, &Path::top(1)).unwrap();
+        paragraph.props.space_before = Some(0.0);
+        paragraph.props.space_after = Some(0.0);
+        paragraph.mark.size = Some(26.0);
+        d.format_range(&Pos::body(1, 0), &Pos::body(1, 1), &|c| c.size = Some(26.0)).unwrap();
+        if let Some(start) = next_section {
+            let first = SectionProps { start: SectionStart::Continuous, ..d.last_section.clone() };
+            let end = d.para_mut(StoryRef::Body, &Path::top(2)).unwrap();
+            end.mark.size = Some(26.0);
+            end.section = Some(Box::new(first));
+            d.last_section.start = start;
+        }
+        let l = lay(&d);
+        let blank = next_section == Some(SectionStart::Continuous);
+        assert_eq!(l.pages.len(), if blank { 3 } else { 2 }, "{next_section:?}");
+        if blank {
+            let page = &l.pages[1];
+            assert!(page.items.iter().any(|item| matches!(item, Placed::Lines { path, .. } if path.0 == [1])));
+            assert!(
+                display::page_display(&d, page, &Default::default())
+                    .iter()
+                    .all(|draw| !matches!(draw, display::Draw::Glyphs { text, .. } if text.chars().any(char::is_alphanumeric)))
+            );
+        }
+    }
 }
 
 #[test]

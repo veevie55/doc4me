@@ -2,7 +2,7 @@
 
 **Stage: alpha** · latest official readiness is **92.7%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43051188273, 2026-11-11; report commit `5292abd` measures source `bd2d2d6`, all 220 documents); the report says **94.5% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (181/220 page counts, 99/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. Doc4Me 1.1.3 is released from this state.
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (preserve DOCX floating-drawing stacking order and a standalone page break before an empty continuous-section end; Windows readiness remains 92.7% / 94.5% without 22 deferred, pending a new measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -11,6 +11,8 @@ agent control. This page is the summary; the assessment is
 [`docs/roadmap.md`](docs/roadmap.md).
 
 **งานหลัง 1.1.3:** แก้การวางวัตถุใน `govuk-001` และ `zenodo-097` ที่จุดยึดอยู่หลังตัวแบ่งหน้าในย่อหน้าเดียวกัน; อยู่ใต้ `[Unreleased]` และยังไม่นับเป็นคะแนน readiness เพิ่มจนกว่าจะวัดบน Windows
+
+**งานต่อ 2026-11-12:** เก็บและวาด `wp:relativeHeight` พร้อมคำสั่งจัดลำดับวัตถุที่ไม่เปลี่ยน wrapping และแก้ตัวแบ่งหน้าล้วนก่อนย่อหน้าว่างปิดส่วนที่ส่วนถัดไปเป็นแบบ Continuous; เทียบ Linux ครบ 220 ฉบับ: จำนวนหน้า 181 → 182/220, ขอบเขตหน้า 95/220 คงเดิม และไม่ถดถอย; รอ Windows ก่อนปรับตัวเลขทางการ เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ
 
 ## Headline numbers (2026-11-11)
 
@@ -23,7 +25,7 @@ agent control. This page is the summary; the assessment is
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,493 test attributes · 233,872 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,502 test attributes · 234,185 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
 | Releases | Doc4Me v1.1.3 (re-released 2026-11-11 from the latest code; the first v1.1.3 of 2026-11-10 was deleted), the only GitHub Release on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases): the earlier v1.0.0–v1.1.2 releases and tags no longer exist there. Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -61,12 +63,12 @@ excluded); both counts match the report.
 |---|---|---|---|---|
 | Features (depth) | 68% | 97.4% (run 43051188273: ribbon 503/503, dialogs 216/228; 12 deferred, 7 excluded; 100% without deferred) | 210–335 | [target-app-parity.md](docs/target-app-parity.md#feature-areas) |
 | UI/UX fidelity | 65% | 98.6% (shortcuts 276/280; 4 deferred, 100% excluding them) | 65–100 | [ui-parity.md](docs/ui-parity.md) · [typing-parity.md](docs/typing-parity.md) |
-| File formats | 60% | 100.0% (open 222/222, save and reopen 222/222) | 185–300 | [file-format-parity.md](docs/file-format-parity.md) |
+| File formats | 60% | 100.0% (open 220/220, save and reopen 220/220) | 185–300 | [file-format-parity.md](docs/file-format-parity.md) |
 | Layout and pagination fidelity | 55% | 63.6% (page count 181/220, page boundaries 99/220) | 90–145 | [layout-parity.md](docs/layout-parity.md) |
 | Hardware | 40% | 37.5% (3/8; 5 owner-deferred) | 20–40 | [hardware-parity.md](docs/hardware-parity.md) |
 | Localization | 27% | 100.0% (official run 43051188273: 95/95; catalog key presence only, not translation quality) | 75–120 + native review | [localization-parity.md](docs/localization-parity.md) |
 | Performance | 75% | 100.0% (6/6) | 10–20 | [layout-parity.md](docs/layout-parity.md#performance) |
-| Stability | 50% | 100.0% (corpus 222/222; hand checks 5/5) | 25–45 | [gaps.md](docs/gaps.md) (#3) |
+| Stability | 50% | 100.0% (corpus 220/220; hand checks 5/5) | 25–45 | [gaps.md](docs/gaps.md) (#3) |
 | Platforms | 95% (beyond Word on Linux, BSD, web) | 100.0% (5/5 in official run 43051188273; ARM64 `plat-002` passed in run 42262956358) | 5–10 | this page |
 | Ecosystem and plugins | Microsoft's systems (VBA, Office add-ins, OneDrive, co-authoring) out of scope since 2026-10-25; open replacements in place: macros, Doc4Me add-in catalog, synced folders (Nextcloud, Syncthing) | 83.3% (5/6; one deferred) | — | [gaps.md](docs/gaps.md) (#22) |
 | AI features | beyond Word for external agents (MCP, CLI); no in-app AI provider (out of scope since 2026-10-25) | — (not weighted) | — | [gaps.md](docs/gaps.md) (#25) |
@@ -285,6 +287,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |
 | 2026-11-10 | minor | Headline, By dimension, Languages, Upcoming, Releases and progress log brought up to run 42836913553 (92.2% / 94.1%, languages 95/95) and release v1.1.3 |
 | 2026-11-11 | minor | Headline numbers, Releases and progress log brought up to run 42961322752 (92.2% / 94.1%, pages 175/222) and the re-released v1.1.3 |

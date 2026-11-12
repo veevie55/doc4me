@@ -1068,7 +1068,6 @@ impl Writer<'_> {
         } else {
             let d = emu(float.dist.clamp(0.0, 1584.0));
             let (dt, db) = (emu(float.dist_top.clamp(0.0, 1584.0)), emu(float.dist_bottom.clamp(0.0, 1584.0)));
-            self.z += 1;
             let behind = if float.wrap == Wrap::BehindText { "1" } else { "0" };
             w.open(
                 "wp:anchor",
@@ -1078,7 +1077,7 @@ impl Writer<'_> {
                     ("distL", &d),
                     ("distR", &d),
                     ("simplePos", "0"),
-                    ("relativeHeight", &self.z.to_string()),
+                    ("relativeHeight", &float.z_order.to_string()),
                     ("behindDoc", behind),
                     ("locked", "0"),
                     ("layoutInCell", "1"),

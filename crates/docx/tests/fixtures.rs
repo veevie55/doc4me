@@ -1570,6 +1570,25 @@ fn anchored_wsp(name: &str, cx: u32, cy: u32, sppr: &str, style: &str, extra: &s
     )
 }
 
+#[test]
+fn anchored_drawing_stacking_order_survives_docx_round_trips() {
+    for value in ["0", "251660288", "4294967295", " 123 ", "-1", "4294967296", "invalid"] {
+        let body = format!(
+            "<w:p>{}</w:p>",
+            anchored_wsp("stack", 127000, 127000, r#"<a:prstGeom prst="rect"/>"#, "", "")
+                .replace("relativeHeight=\"1\"", &format!("relativeHeight=\"{value}\""))
+        );
+        let expected = value.trim().parse::<u32>().unwrap_or(0);
+        let original = read_body(&body);
+        let roundtrip = doc4me_docx::read(&doc4me_docx::write(&original).unwrap()).unwrap();
+        for doc in [&original, &roundtrip] {
+            let float = doc.body[0].as_para().unwrap().objects[0].frame().unwrap().2;
+            assert_eq!(float.z_order, expected, "{value}");
+            assert_eq!(float.wrap, Wrap::InFrontOfText);
+        }
+    }
+}
+
 /// #611: diagrams drawn with Word's shapes were mostly missing. Connectors and boxes take their
 /// outline and fill from the theme through their style references, or name preset and scheme
 /// colours; all of these are read, with line widths and arrowheads.

@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (preserve DOCX floating-drawing stacking order and a standalone page break before an empty continuous-section end; Windows readiness remains 92.7% / 94.5% without 22 deferred, pending a new measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 181/220 and 99/220.
 
@@ -30,7 +30,11 @@ still needed.
 
 **งานหลัง 1.1.3 (2026-11-12):** วัตถุ `InFrontOfText`/`BehindText` ที่อิงแนวตั้งกับย่อหน้าและมีจุดยึดอยู่หลังตัวแบ่งหน้า/คอลัมน์ในเนื้อหา จะวางบนหน้า/คอลัมน์แรกของส่วนย่อหน้าหลังตัวแบ่งนั้น และคำนวณระยะจากจุดเริ่มส่วนต่อ วัตถุที่อิงหน้ากระดาษ เช่น งานปก ยังคงพฤติกรรมเดิม; กรณีที่ข้อความต้องหลบวัตถุยังต้องวิเคราะห์การจัดบรรทัดใหม่ก่อนขยายกฎนี้ เทสต์ครอบคลุมหลายตัวแบ่งในย่อหน้าเดียว การไหลข้ามหน้า ตัวแบ่งที่ซ่อนอยู่ และฟิลด์ `PAGE` ในกล่องข้อความที่ใช้เลขหน้าปลายทาง (รวมเริ่มนับจาก 0/7)
 
+ผลเทียบ Linux ก่อน/หลังรอบนี้ (220 ฉบับ, SHA-256 ตรง manifest ทั้ง 440 ไฟล์): เปิด/round-trip/เสถียร 220/220; จำนวนหน้า 181 → 182/220 โดย `govuk-037` เพิ่มจาก 78 เป็น 79 ตรง Word; ขอบเขตหน้า 95/220 คงเดิม ไม่พบการถดถอยทั้งห้าชุดตรวจ หน้า 60 ของ `zenodo-097` ที่เรนเดอร์ด้วย Poppler สูงสุด 900 px มี SHA-256 ตรงกับภาพจาก PDF อ้างอิง แถบสีเขียวจึงไม่ถูกพื้นสีขาวบังแล้ว ผลนี้ไม่แทนคะแนนทางการบน Windows
+
 ## Checklist
+
+**ลำดับซ้อนและตัวแบ่งหน้าก่อน section (2026-11-12):** อ่าน/เขียน `wp:relativeHeight` และเรียงวัตถุข้ามย่อหน้าตามค่าที่อ่าน ภายในชั้นหน้า/หลังข้อความ โดยข้อความในกล่องและ hit area อยู่กับรูปร่าง; ค่าซ้ำรักษาลำดับเอกสาร คำสั่ง Bring Forward/Send Backward ย้ายทีละหนึ่งตำแหน่งโดยไม่เปลี่ยน wrapping และแยกกรอบวาดของแต่ละเซลล์ตาราง ตัวแบ่งหน้าล้วนก่อนย่อหน้าว่างปิดส่วนที่ส่วนถัดไปเป็นแบบ Continuous ต้องวางบรรทัดให้พอก่อนแบ่งหน้า (`govuk-037`); กรณีทั่วไปและส่วนที่เริ่มหน้าใหม่คงกฎเดิม Windows run [43180980471](https://github.com/veevie55/doc4me/actions/runs/43180980471) ของซอร์สเดิม `e65459b` ล้มก่อนเริ่มวัด เพราะ GitHub จัดหา hosted runner ไม่ได้ จึงไม่มีคะแนนใหม่จาก run นี้
 
 ✅ matches Word as far as our tests show · 🟡 implemented, differs or untested against Word · ❌ missing
 
@@ -96,6 +100,7 @@ still needed.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
 | 2026-11-12 | minor | แก้วัตถุที่อิงตำแหน่งย่อหน้าและอยู่หน้าหรือหลังข้อความให้ตามตัวแบ่งหน้า/คอลัมน์ก่อนจุดยึด; ผล Windows ล่าสุดยังเป็น run 43051188273 (92.7% / 94.5% ไม่นับ 22 deferred), รอวัดโค้ดรอบนี้ |
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
 | 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |

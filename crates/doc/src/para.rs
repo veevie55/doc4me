@@ -173,6 +173,9 @@ impl FloatAlign {
 #[serde(default, rename_all = "camelCase")]
 pub struct Float {
     pub wrap: Wrap,
+    /// Stacking order within the front/behind-text layer (`wp:anchor/@relativeHeight`).
+    /// Larger values paint above smaller ones; ties keep document order.
+    pub z_order: u32,
     /// The sides text wraps on (Square, Tight and Through).
     #[serde(skip_serializing_if = "WrapText::is_both")]
     pub wrap_text: WrapText,

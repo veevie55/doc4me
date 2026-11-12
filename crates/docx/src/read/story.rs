@@ -1593,7 +1593,7 @@ fn web_video(blip: &El) -> Option<std::sync::Arc<doc4me_doc::video::WebVideo>> {
 }
 
 fn anchor_float(c: &El) -> Float {
-    let mut f = Float { wrap: Wrap::Square, ..Float::default() };
+    let mut f = Float { wrap: Wrap::Square, z_order: c.attr("relativeHeight").and_then(|v| v.trim().parse().ok()).unwrap_or(0), ..Float::default() };
     let behind = on_off_attr(c, "behindDoc");
     for k in c.els() {
         match k.name.as_str() {

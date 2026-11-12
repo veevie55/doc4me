@@ -526,3 +526,14 @@ fn deleting_across_many_lone_control_markers_is_not_quadratic() {
     assert_eq!(d.plain_text(StoryRef::Body), "befter");
     assert!(t.elapsed().as_secs_f32() < 2.0, "{:?}", t.elapsed());
 }
+#[test]
+fn drawing_stacking_order_survives_json_and_defaults_for_older_documents() {
+    use crate::para::{Float, Wrap};
+    let old: Float = serde_json::from_str(r#"{"wrap":"inFrontOfText"}"#).unwrap();
+    assert_eq!(old.z_order, 0);
+    for z_order in [0, 251_660_288, u32::MAX] {
+        let original = Float { z_order, wrap: Wrap::BehindText, ..Default::default() };
+        let restored: Float = serde_json::from_str(&serde_json::to_string(&original).unwrap()).unwrap();
+        assert_eq!(restored, original);
+    }
+}
