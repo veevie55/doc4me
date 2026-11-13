@@ -76,3 +76,7 @@
 ## Windows follow-up
 
 Windows run [43245507907](https://github.com/veevie55/doc4me/actions/runs/43245507907), source `e9b354b`, report `e2e212f` ยืนยันว่า govuk-034 และ zenodo-156 ผ่านเพิ่มทั้งจำนวนหน้าและขอบเขตทุกหน้า รวม184/220จำนวนหน้าและ102/220ขอบเขต,94.8%ไม่นับ22deferred ไม่มีกรณีถดถอยจากa466dff ยังมี36page-count failures/118boundary failures; หลักฐานzenodo-023และข้อกำหนดฟอนต์ยังต้องยืนยันตามข้างต้น เกณฑ์/manifestเดิมไม่เปลี่ยน
+
+## Latest Windows confirmation · 2026-11-13
+
+Run [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851), source `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred, 188/220 pages and 108/220 boundaries; no newly failing document in five sets against `da21a99`. There are still 32 page-count and 112 boundary failures. zenodo-023 exact-source re-export and zenodo-149 font prerequisites remain unresolved; no TSV, reference or check rule changed. zenodo-114's blank-page/Arabic-fallback investigation is documented in [the margin audit](margin-leading-2026-11-12.md#zenodo-114-count-agreement-can-hide-two-separate-offsets), rather than classifying that pair as invalid.

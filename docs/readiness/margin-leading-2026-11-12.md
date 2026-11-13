@@ -2,7 +2,7 @@
 
 Source changes are Unreleased. The fixed ruler remains 220 included documents, 22 deferred rows and 24 excluded rows. No source DOCX, reference PDF, comparator, TSV, dependency, asset or version changed.
 
-The prior Windows run [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246) measured `da21a99` (report `d6cd2fb`): **92.9% overall / 94.8% without deferred**, **184/220 pages, 102/220 boundaries**. Its five corpus failure sets are identical to run 43245507907 on `e9b354b`. The new source still needs Windows measurement; Linux results below are not a replacement official score.
+The prior Windows run [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246) measured `da21a99` (report `d6cd2fb`): **92.9% overall / 94.8% without deferred**, **184/220 pages, 102/220 boundaries**. Its five corpus failure sets are identical to run 43245507907 on `e9b354b`. Windows later measured the new source as recorded below; Linux results are a separate environment.
 
 ## Rules and evidence
 
@@ -26,6 +26,20 @@ No document that passed a set becomes failing in that set. This does not claim e
 Full `RUST_TEST_THREADS=1 taskset -c 0 cargo xtask ci`: **6/6**, **2,505 native passed**, one originally ignored, layout 319, assets 141, wasm 16 crates. Six new test attributes; stats **2,514 attributes / 234,769 Rust lines**; CLI registry **729**. CPU pinning retains the existing timing assertions and follows the prior arc's documented proof benchmark variability. No test threshold was reduced.
 
 Evidence in the execution workspace: `ci-leading-blank.log`, `corpus-leading-blank.log`, baseline `corpus-upstream-refined.log`, `leading-blank-cli`, and `zenodo-093-blank.pdf`. Reference files and rendered PNGs are not committed.
+
+## Windows confirmation · 2026-11-13
+
+Run [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851), source `92025e8`, report `c098032`: **93.2% overall / 95.1% without 22 deferred**, **188/220 page counts, 108/220 boundaries**. Against `da21a99`, all five sets have no newly failing document: four page-count gains (zenodo-004, -011, -070, -168) and six boundary gains (govuk-019, zenodo-042, -058, -065, -093, -162). Open/round-trip/stability stay 220/220. The actual measurement source and report header agree. Windows still has **32 page-count and 112 boundary failures**; 100% is not reached.
+
+The final source was rechecked with full CI: 2,505 native passed, one originally ignored; six steps passed. Tests run single-threaded on CPU 0 through `/workspace/work/cargo-test-cpu0.sh` (the xtask launcher keeps normal compiler affinity), with unchanged timing assertions. Command: `RUST_TEST_THREADS=1 CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER=/workspace/work/cargo-test-cpu0.sh cargo xtask ci`; log `ci-windows-92025-docs.log`. This workspace helper is not shipped.
+
+### zenodo-114: count agreement can hide two separate offsets
+
+Linux reaches 71 pages but Windows reaches 70, against the reference's 71. The reference has a genuinely blank physical page 8; its quote is on page 9 at baselines 326.47 / 372.43 / 418.51 pt. Our quote is on physical page 8 at 326.35 / 372.35 / 418.34 pt. The source has `mirrorMargins`, a single-column `nextColumn` section start and a restart at page number 1. A mirrored-restart parity rule needs a discriminating Word probe; this is an actual layout investigation, not evidence of a bad reference.
+
+At the biography, Linux falls back to Noto Naskh Arabic for the Arabic name and its first line is taller. Later lines are roughly 14.4 pt below the reference, pushing the final `man` onto another page. That extra page compensates for the missing blank in Linux's page count. The reference uses Times New Roman for that line. Word probes should vary mirror margins, starts 0/1/2, next-page/next-column/odd/even starts, first-page stories and SECTIONPAGES. Do not force a blank or suppress text by document id merely to pass.
+
+The [justification review](justification-review-2026-11-13.md) records the additional experiments that were withdrawn.
 
 ## Rejected experiments and limits
 

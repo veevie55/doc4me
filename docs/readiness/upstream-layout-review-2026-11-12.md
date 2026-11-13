@@ -21,3 +21,7 @@ Default parallel CI failed the existing `proof_text_walks_the_runs_once` timing 
 ## Margin and picture follow-up
 
 The preceding two break-rule ports were confirmed by Windows run [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246) on `da21a99` (report `d6cd2fb`), unchanged from `e9b354b` in all five corpus sets. Subsequent review of `627ded32` (margin leading) and `dc388cfa` (picture lines) is recorded in [the follow-up audit](margin-leading-2026-11-12.md), including header wrapping, the blank-paragraph Keep with next case, deliberate scope limits and six regressions. That source needs its own Windows measurement.
+
+## Windows confirmation and further review · 2026-11-13
+
+Windows run 43333680851 on `92025e8` (report `c098032`) confirms the margin/picture/header/blank-line arc at 95.1% without deferred, 188/220 pages and 108/220 boundaries. The subsequent [justification review](justification-review-2026-11-13.md) tested and withdrew four `88d936c3` variants; the published implementation and tests remain unchanged.
