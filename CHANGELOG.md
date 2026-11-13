@@ -27,6 +27,14 @@
 
 ### แก้ไข
 
+- **วางข้อความและรูปภาพตาม Word ที่ขอบล่างและหัวกระดาษ** (`crates/layout/src/{lib,para,table}.rs`; หลักกฎ leading จาก WordCraft [`627ded32`](https://github.com/storytold/wordcraft/commit/627ded32c7ea5a03d5bf81038c21553fab8bdbcf), [`dc388cfa`](https://github.com/storytold/wordcraft/commit/dc388cfaab0c05f7e1569273ee6ca435854e1700))
+  - บรรทัด Multiple อนุญาตให้ leading ท้ายบรรทัดอยู่ใน margin เมื่อข้อความยังพอดี; มี footnote หรือ footer สูงล้ำ margin ยังต้องเก็บกล่องบรรทัดเต็ม ไม่ใช้ clamp กับขอบเขตที่อาจกลับด้านจาก input
+  - บรรทัดรูปภาพนอกเซลล์และไม่มี document grid เพิ่มเฉพาะสัดส่วนความสูงฟอนต์จาก multiple spacing ไม่ขยายรูปภาพ ช่องว่าง/tab/ตัวแบ่งบรรทัดไม่สร้าง descent ปลอม รูปเล็กจบที่ขอบล่างฟอนต์; ข้อความจริง/สมการยังมี descent เซลล์ตาราง, At least, Exactly และกริดคงกฎเดิมจนยืนยันแยก
+  - Keep with next ที่ลงท้ายด้วยย่อหน้าว่างธรรมดาใช้เกณฑ์การพอดีเดียวกับการวางจริง; ถ้าถัดไปเป็นข้อความยังต้องมีบรรทัดเริ่มต้นเต็มกล่อง ไม่ใช้กฎผ่อนกว้างที่ทำ zenodo-043 ถดถอย
+  - ข้อความหลบ contour ของภาพหัวกระดาษ โดยเลือก first/even/default และ linked references ตามหน้าจริง เก็บผลหนึ่งครั้งต่อหน้า ไม่สแกนเนื้อหาทั้งเอกสารต่อย่อหน้า และคืน counters/fields/grid/งบ text-box หลังวัด; ย่อหน้าที่ต่อจากหน้าก่อนหลบภาพหัวกระดาษเต็มคอลัมน์โดยยังมี overflow fallback สำหรับบรรทัดใหญ่เกินหน้า หลีกเลี่ยงลูปไม่จบ ขอบเขต reflow ข้างภาพที่กินเพียงบางความกว้างในย่อหน้าต่อยังเปิดอยู่
+  - ตรวจสอบ: เพิ่ม 6 regressions (หลายค่า spacing, ข้อความ/whitespace/รูปเล็ก, คงพฤติกรรมเซลล์, footer/footnote, first/even/default headers, continuations, oversized line และ Keep with next แบบว่าง/มีข้อความ); `RUST_TEST_THREADS=1 taskset -c 0 cargo xtask ci` ผ่าน 6/6, native 2,505, ignored 1 เดิม, layout 319, assets 141, wasm 16 crates ไม่ลด assertion/เพิ่ม ignored ผล Linux 220 ฉบับ: หน้า 184→189, ขอบเขต 97→103; open/round-trip/stability 220/220 และไม่มีเอกสารที่เคยผ่านกลับไม่ผ่านทั้งห้าชุด ตรวจภาพ zenodo-093 หน้า 11 เทียบ reference แล้ว
+  - ไม่เปลี่ยนรูปแบบ DOCX/JSON, เลขเวอร์ชัน, การติดตั้ง, แค็ตตาล็อกภาษาไทย, ฟอนต์/asset หรือเกณฑ์ 220 เอกสาร/22 deferred/24 excluded `Line.text_desc` เป็นข้อมูล layout ชั่วคราว; คะแนนใหม่ต้องยืนยันบน Windows ก่อนอ้าง readiness ดู [audit](docs/readiness/margin-leading-2026-11-12.md)
+
 - **กฎตัดบรรทัดและแบ่งหน้าของ Word ที่ต้น Continuous section** (`crates/layout/src/para.rs`, `crates/layout/src/lib.rs`; พอร์ตจาก WordCraft [`5c0a62a7`](https://github.com/storytold/wordcraft/commit/5c0a62a7), [`7830333c`](https://github.com/storytold/wordcraft/commit/7830333c))
   - จุดที่ติดกับวงเล็บเปิด เช่น `2023.(Example` จะไปบรรทัดใหม่ด้วยกันตาม Word; ถ้ามีช่องว่างคั่นยังตัดที่ช่องว่างได้ตามเดิม
   - `pageBreakBefore` ใช้ตำแหน่งต้นหน้าจริง แทนต้นคอลัมน์/section: หาก Continuous section เริ่มกลางหน้าแล้วหัวข้อแรกสั่งแบ่งหน้าก่อน ต้องขึ้นหน้าใหม่; ที่ต้นหน้าจริงไม่เพิ่มหน้าว่าง ไม่เปลี่ยนโมเดล/รูปแบบไฟล์/เวอร์ชันหรือ assets

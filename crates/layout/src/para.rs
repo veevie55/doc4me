@@ -109,6 +109,8 @@ pub struct Line {
     pub top: f32,
     pub height: f32,
     pub baseline: f32,
+    /// Descent below the baseline without the leading added by line spacing.
+    pub text_desc: f32,
     /// Cluster index range.
     pub c0: usize,
     pub c1: usize,
@@ -166,6 +168,15 @@ impl VisCl {
 pub const PARA_MARK_WIDTH: f32 = 5.0;
 
 impl Line {
+    /// Height needed at a page margin: multiple spacing's trailing leading may extend below
+    /// it while the glyphs fit. Callers keep full boxes above notes and an intrusive footer.
+    pub(crate) fn fit_height(&self, spacing: LineSpacing, margin_leading: bool) -> f32 {
+        match spacing {
+            LineSpacing::Multiple(m) if m > 1.0 && margin_leading => (self.baseline - self.top + self.text_desc).max(0.0).min(self.height.max(0.0)),
+            _ => self.height,
+        }
+    }
+
     /// Left edge of cluster `k` (a paragraph cluster index on this line).
     pub fn cl_left(&self, k: usize) -> Option<f32> {
         let i = k.checked_sub(self.c0)?;
@@ -2329,11 +2340,12 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let _ = pending_tab;
 
         // Vertical metrics.
+        let picture_spacing = env.table.is_none() && grid.is_none() && matches!(rp.line_spacing, LineSpacing::Multiple(_));
         let (mut asc, mut desc) = (0.0f32, 0.0f32);
         // The tallest picture on the line (it sits on the baseline).
         let mut obj_asc = 0.0f32;
-        // Whether anything but pictures (text, spaces, an equation) is on the line. Alignment
-        // tabs have no ink below the baseline and don't add descent to a pictures-only line.
+        // Whether text or an equation needs descent below the baseline. Outside table cells,
+        // spaces, alignment tabs and break markers don't add descent to a pictures-only line.
         let mut text = false;
         let mut any = false;
         let dropped = pl.drop_cap.map_or(0, |d| d.0);
@@ -2360,7 +2372,11 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                         (st.ascent, st.descent)
                     }
                 } else {
-                    text |= c.kind != ClKind::Tab;
+                    text |= if picture_spacing {
+                        !matches!(c.kind, ClKind::Space | ClKind::Tab | ClKind::LineBreak | ClKind::PageBreak | ClKind::ColumnBreak)
+                    } else {
+                        c.kind != ClKind::Tab
+                    };
                     // `obj_h` is set on text clusters only under ruby text, which the line grows to fit.
                     ((st.ascent + st.shift.max(0.0)).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
                 };
@@ -2397,11 +2413,10 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 desc = desc.max(st.descent);
             }
         }
-        // Line spacing scales the text's height, never a picture's: a line is at least as tall
-        // as its tallest picture, plus the descent below the baseline when text shares the line.
-        // A line of only pictures is as tall as the tallest: Word's PDFs of the readiness corpus
-        // put the next line right below the picture in body text (zenodo-075, govuk-035), a
-        // header (zenodo-156, 0.2pt) and a footer (zenodo-060, to the 0.5pt measured).
+        // Multiple spacing adds its share of the font's height to a picture line; it never
+        // scales the picture itself (WordCraft dc388cfa, measured in Word). Text beside the
+        // picture also keeps its descent. Table cells retain their existing measurement until
+        // the corresponding table-line behavior is verified separately.
         let natural = asc + desc;
         let below = if text { desc } else { 0.0 };
         let pictures = if obj_asc > asc { obj_asc + below } else { 0.0 };
@@ -2409,6 +2424,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let (height, centred) = match (rp.line_spacing, grid) {
             (LineSpacing::Multiple(m), Some(g)) => ((g.snap_height(natural) * m).max(g.snap_height(pictures)), true),
             (LineSpacing::AtLeast(v), Some(g)) => (g.snap_height(natural.max(pictures)).max(v), true),
+            (LineSpacing::Multiple(m), None) if env.table.is_none() => ((natural * m).max(pictures + (m - 1.0).max(0.0) * natural), false),
             (LineSpacing::Multiple(m), None) => ((natural * m).max(pictures), false),
             (LineSpacing::AtLeast(v), None) => (natural.max(pictures).max(v), false),
             (LineSpacing::Exactly(v), _) => (v, false),
@@ -2416,6 +2432,12 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let baseline = if centred {
             let up = asc.max(obj_asc);
             top + ((height - up - desc) / 2.0).max(0.0) + up
+        } else if picture_spacing
+            && !text
+            && obj_asc > 0.0
+            && let LineSpacing::Multiple(m) = rp.line_spacing
+        {
+            top + (natural * m.min(1.0)).max(obj_asc)
         } else {
             top + baseline_offset(rp.line_spacing, asc, height, desc).max(obj_asc.min(height - below))
         };
@@ -2510,6 +2532,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             top,
             height,
             baseline,
+            text_desc: if picture_spacing && !text && obj_asc > 0.0 { 0.0 } else { desc },
             c0,
             c1,
             xs,
@@ -2556,6 +2579,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     top,
                     height: h,
                     baseline: top + if grid.is_some() { h - desc } else { baseline_offset(rp.line_spacing, asc, h, desc) },
+                    text_desc: desc,
                     c0: n,
                     c1: n,
                     xs: vec![x0],
@@ -2693,6 +2717,18 @@ fn baseline_offset(spacing: LineSpacing, asc: f32, height: f32, desc: f32) -> f3
         LineSpacing::Multiple(m) => asc * m.min(1.0),
         LineSpacing::AtLeast(_) | LineSpacing::Exactly(_) => height - desc,
     }
+}
+
+/// Vertical room before a continued paragraph's line when header drawings cover the full
+/// column. This does not rebreak continued text beside partial-width drawings.
+pub(crate) fn full_width_wrap_top(exclusions: &[Exclusion], mut top: f32, height: f32, width: f32) -> f32 {
+    for _ in 0..50 {
+        match row_spans(exclusions, top, height, 0.0, width) {
+            Err(below) if below > top => top = below,
+            _ => break,
+        }
+    }
+    top
 }
 
 /// The spans of a row at `top` (about `h` tall) between `lo` and `hi` that text can use around

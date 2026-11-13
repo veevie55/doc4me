@@ -604,12 +604,12 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                         natural_length(&probe).clamp(4.0, TURNED_MAX)
                     }
                 };
-                let BoxLayout { items, height, floats_bottom } = layout_box(ctx, story, &cell.blocks, &cpath, len, text, depth, None);
+                let BoxLayout { items, height, floats_bottom, .. } = layout_box(ctx, story, &cell.blocks, &cpath, len, text, depth, None);
                 let across = height.max(floats_bottom);
                 turned = Some(Turned { turn, len, across, snap, region, ci, top: margins[0] + band_t });
                 (items, len)
             } else {
-                let BoxLayout { mut items, height, floats_bottom } = layout_cell(ctx, story, cell, &cpath, cw, text, depth);
+                let BoxLayout { mut items, height, floats_bottom, .. } = layout_cell(ctx, story, cell, &cpath, cw, text, depth);
                 for it in &mut items {
                     it.translate(x0 + margins[1], margins[0] + band_t);
                 }

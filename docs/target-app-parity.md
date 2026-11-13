@@ -1,6 +1,6 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Word punctuation and physical-page break rules ported from upstream; Linux corpus unchanged at 184/220 pages and 97/220 boundaries, no regressions; official Windows run 43245507907 on `e9b354b`, report `e2e212f`: 94.8% without 22 deferred; latest source awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (M14/G4 margin leading, picture spacing, header wrapping and blank-line Keep with next; Linux 189/220 pages and 103/220 boundaries, no newly failing documents in five sets; CI 6/6, native 2,505; official Windows run 43252905246, source `da21a99`, report `d6cd2fb`: 94.8% without 22 deferred; new layout awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -9,21 +9,21 @@ summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklist
 [`hardware-parity.md`](hardware-parity.md) and [`localization-parity.md`](localization-parity.md).
 The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 
-## Headline (latest readiness measured on Windows 2026-11-07; feature estimates retain their pre-fork baseline)
+## Headline (latest readiness measured on Windows 2026-11-12; feature estimates retain their pre-fork baseline)
 
 | Number | Value | Kind |
 |---|---|---|
-| Ribbon/menu catalog coverage | **503 / 503 (100%)** | **measured** in Windows run 43245507907; matches the checked-in `parity-checklist.md` and the live registry. |
+| Ribbon/menu catalog coverage | **503 / 503 (100%)** | **measured** in Windows run 43252905246; matches the checked-in `parity-checklist.md` and the live registry. |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **92.9%** | **latest official measurement**: Windows run 43245507907, source `e9b354b`, report commit `e2e212f` ([readiness.md](readiness.md)); all 220 documents, 94.8% without 22 deferred checks. |
+| **Ready for real work** (full target) | **92.9%** | **latest official measurement**: Windows run 43252905246, source `da21a99`, report commit `d6cd2fb` ([readiness.md](readiness.md)); all 220 documents, 94.8% without 22 deferred checks. |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
 | Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
-| Commands | 727 registered engine command specs (+ `ui.*` commands in the front end) | verified by `doc4me-cli commands --json`, 2026-11-07 |
-| Tests | 2,071 standalone test attributes | measured with ripgrep over crates, apps and xtask, excluding comments and literal examples, 2026-11-07 |
-| Code | 216,629 lines of Rust in crates, apps and xtask | measured with wc -l over .rs files in the current working tree, 2026-11-07 |
+| Commands | 729 registered command specs | measured with `doc4me-cli commands --json`, 2026-11-12 |
+| Tests | 2,514 source test attributes; 2,505 native tests passed, 1 originally ignored | measured with `cargo xtask stats` and full CI, 2026-11-12 |
+| Code | 234,769 lines of Rust in crates, apps and xtask | measured with `cargo xtask stats`, 2026-11-12 |
 
 **Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
 
@@ -50,8 +50,8 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 - Word's file formats, ribbon, dialogs and keyboard shortcuts from Microsoft's public documentation
   and our knowledge of Word for Windows and Mac (Microsoft 365). Windows-only features (PDF Reflow
   open, Works/WordPerfect import) are counted, because a Word user on Windows expects them.
-- The latest official Windows readiness report (run 43245507907, source e9b354b, report commit
-  e2e212f) measures all 220 corpus documents; the xtask diagnostic prints the exact first/last-word
+- The latest official Windows readiness report (run 43252905246, source da21a99, report commit
+  d6cd2fb) measures all 220 corpus documents; the xtask diagnostic prints the exact first/last-word
   pairs for each failing page. See [handoff.md](../handoff.md).
 - **Not done this pass:** opening the corpus in Word and Doc4Me side by side for direct UI/page
   comparison. The readiness harness compares Doc4Me output with the saved Word-made PDFs; it does
@@ -123,7 +123,7 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 
 ### Full target (ready for real work): 92.9% latest official measurement
 
-Measured 2026-11-12 on Windows (run 43245507907, source `e9b354b`, report commit `e2e212f`; see
+Measured 2026-11-12 on Windows (run 43252905246, source `da21a99`, report commit `d6cd2fb`; see
 [readiness.md](readiness.md), check sets and rules in [readiness/README.md](readiness/README.md)):
 the weights of the dimension table over fixed pass/fail check sets and all 220 real-world documents.
 The report says 94.8% excluding 22 deferred rows; every dimension except pagination is at 100% without deferred rows. ARM64 `plat-002` passes after run 42262956358
@@ -206,7 +206,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | Dimension | Weight | Parity | Hours to full | Doc | Evidence |
 |---|---|---|---|---|---|
 | Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
-| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 43245507907 confirms all 220 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 43252905246 confirms all 220 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
 | Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); column balancing and full compatibility-mode coverage remain gaps; footnote continuation (#352) and document grid (#391) are implemented. |
 | UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, and the latest official Windows shortcut result of 276/280 with 4 deferred (all non-deferred rows pass); 60 modal dialogs against Word's ~100; keyboard/ribbon customization is present |
 | Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
@@ -268,6 +268,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
 | 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
 | 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
 | 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |

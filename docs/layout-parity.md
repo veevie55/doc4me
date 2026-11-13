@@ -1,6 +1,6 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (Word punctuation and physical-page break rules ported from upstream; Linux corpus unchanged at 184/220 pages and 97/220 boundaries, no regressions; official Windows run 43245507907 on `e9b354b`, report `e2e212f`: 94.8% without 22 deferred; latest source awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (M14/G4 margin leading, picture spacing, header wrapping and blank-line Keep with next; Linux 189/220 pages and 103/220 boundaries, no newly failing documents in five sets; CI 6/6, native 2,505; official Windows run 43252905246, source `da21a99`, report `d6cd2fb`: 94.8% without 22 deferred; new layout awaits Windows measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 184/220 and 102/220.
 
@@ -11,8 +11,8 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 43245507907,
-source `e9b354b`, report commit `e2e212f`) matches Word's page count for 184/220 documents and every
+most of Word's layout rules; the latest official Windows corpus measurement (run 43252905246,
+source `da21a99`, report commit `d6cd2fb`) matches Word's page count for 184/220 documents and every
 page's first and last word for 102/220. The current code can use DOCX `w:altName` fonts when the
 primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions.
 Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 184/220 and 102/220. In run 42334133340, govuk-005
@@ -102,14 +102,16 @@ still needed.
 
 
 
-**Word break rules (2026-11-12, Unreleased):** a full stop and immediately following opening parenthesis stay together when wrapping; a page break before applies at the top of a continuous section partway down a page, while an actual page top adds no blank page. [Upstream review](readiness/upstream-layout-review-2026-11-12.md) records the selected ports and rejected superscript experiment. Linux corpus remains 184/220 page counts and 97/220 boundaries, without regressions; latest source awaits Windows measurement.
 
-Windows run 43245507907 on `e9b354b` confirms the preceding stacking, Unicode fallback and spacing changes at 94.8% without 22 deferred (184/220 page counts, 102/220 boundaries); govuk-034 and zenodo-156 both gained page-count and boundary passes without regressions. New punctuation/continuous-section break rules await Windows remeasurement.
+**Margin leading and header wrapping (2026-11-12, Unreleased):** [The layout audit](readiness/margin-leading-2026-11-12.md) records bottom-margin text fit, font-leading for ungridded picture lines outside table cells, header contours and full-width continuation clearance, and Keep with next for a final plain blank paragraph. Linux corpus pages 184→189/220, boundaries 97→103/220; all 220 open, round-trip and remain stable, with no newly failing document in five sets. Six new regressions and CI 6/6 (2,505 native). Table picture metrics, explicit spacing and grid metrics retain their previous rules. Partial-width header reflow of a continued paragraph remains open. DOCX/JSON formats, assets and version are unchanged.
+
+The preceding punctuation and continuous-section page-break ports were confirmed by Windows run [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246) on `da21a99`: 184/220 pages, 102/220 boundaries, 94.8% without 22 deferred, unchanged in all five corpus sets from `e9b354b`. The new layout arc awaits Windows measurement.
 
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
 | 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
 | 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
 | 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |

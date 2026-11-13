@@ -2336,9 +2336,10 @@ fn line_spacing_does_not_scale_pictures() {
     let l = lay(&d);
     let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
     let line = &para.lines[0];
-    // Word: a line of only pictures is as tall as the tallest one, not scaled by the spacing and
-    // with no descent below it in body text (readiness corpus: zenodo-075, govuk-035).
-    assert!((line.height - 144.0).abs() < 0.01, "line {} for a 144pt picture", line.height);
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    // Word's measured picture line keeps the picture's size and adds only the font's share
+    // of the multiple spacing (dc388cfa); it has no text descent below the picture.
+    assert!((line.height - (144.0 + 0.15 * natural)).abs() < 0.01, "line {} for a 144pt picture", line.height);
     assert!((line.baseline - line.top - 144.0).abs() < 0.01, "the picture stands on the baseline");
     // With text on the line, the text's descent stays below the picture.
     if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
@@ -2348,7 +2349,7 @@ fn line_spacing_does_not_scale_pictures() {
     let l = lay(&d);
     let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
     let (line, desc) = (&para.lines[0], para.styles[0].descent);
-    assert!((line.height - (144.0 + desc)).abs() < 0.01, "line {} for a 144pt picture and text (descent {desc})", line.height);
+    assert!((line.height - (144.0 + desc + 0.15 * natural)).abs() < 0.01, "line {} for a 144pt picture and text (descent {desc})", line.height);
 }
 
 #[test]
@@ -2363,7 +2364,8 @@ fn alignment_tabs_between_inline_pictures_do_not_add_text_descent() {
     let l = lay(&d);
     let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
     let line = &para.lines[0];
-    assert!((line.height - 40.0).abs() < 0.01, "alignment tabs don't add descent below the logos: {line:?}");
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    assert!((line.height - (40.0 + 0.15 * natural)).abs() < 0.01, "alignment tabs don't add descent below the logos: {line:?}");
     assert!((line.baseline - line.top - 40.0).abs() < 0.01);
 
     // An actual letter following the same tabs still needs its font's descent.
@@ -2372,7 +2374,55 @@ fn alignment_tabs_between_inline_pictures_do_not_add_text_descent() {
     let l = lay(&d);
     let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
     let (line, desc) = (&para.lines[0], para.styles[0].descent);
-    assert!((line.height - (40.0 + desc)).abs() < 0.01, "text below the baseline keeps its room: {line:?}");
+    assert!((line.height - (40.0 + desc + 0.15 * natural)).abs() < 0.01, "text below the baseline keeps its room: {line:?}");
+}
+
+#[test]
+fn picture_line_leading_uses_the_font_and_whitespace_takes_no_descent_outside_cells() {
+    use doc4me_doc::props::LineSpacing;
+
+    for multiple in [1.0, 1.15, 1.5, 2.0] {
+        for lead in ["", "   ", "\t", "Text "] {
+            let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+            let mut p = doc4me_doc::Paragraph::with_text(lead, props.clone());
+            p.mark = props.clone();
+            p.props.line_spacing = Some(LineSpacing::Multiple(multiple));
+            p.insert_object(p.len(), picture(40.0, 30.0, Default::default()), &props).unwrap();
+            let mut d = Document::new();
+            d.body = vec![doc4me_doc::para_block(p)];
+            let l = lay(&d);
+            let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+            let st = &para.styles[0];
+            let natural = st.ascent + st.descent;
+            let desc = if lead == "Text " { st.descent } else { 0.0 };
+            assert!((para.lines[0].height - (30.0 + desc + (multiple - 1.0) * natural)).abs() < 0.01, "{multiple}, {lead:?}");
+            assert!((para.lines[0].baseline - para.lines[0].top - 30.0).abs() < 0.01);
+            assert!((para.lines[0].text_desc - desc).abs() < 0.01);
+
+            // Keep the existing table-cell measurement while the table-specific rule awaits
+            // its own Word comparison: neither the font-leading nor whitespace change leaks in.
+            let mut table = doc4me_doc::Table::new(1, 1, 468.0);
+            table.rows[0].cells[0].blocks = d.body.clone();
+            d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(table))];
+            let l = lay(&d);
+            let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+            let desc = if lead.is_empty() || lead == "\t" { 0.0 } else { para.styles[0].descent };
+            assert!((para.lines[0].height - (30.0 + desc)).abs() < 0.01, "table: {multiple}, {lead:?}");
+        }
+        // A picture shorter than the font ends at the font's bottom, without adding descent.
+        let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("", props.clone());
+        p.mark = props.clone();
+        p.props.line_spacing = Some(LineSpacing::Multiple(multiple));
+        p.insert_object(0, picture(40.0, 6.0, Default::default()), &props).unwrap();
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+        let natural = para.styles[0].ascent + para.styles[0].descent;
+        assert!((para.lines[0].height - natural * multiple).abs() < 0.01);
+        assert!((para.lines[0].baseline - para.lines[0].top - natural).abs() < 0.01);
+    }
 }
 
 #[test]

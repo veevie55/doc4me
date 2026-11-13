@@ -633,6 +633,10 @@ struct Ctx<'a> {
     uses_totals: bool,
     /// Whether to note `uses_totals` now (off while laying out headers and footers).
     track_totals: bool,
+    /// Section/header selection and header wrap areas, shared by all body paragraphs on a page.
+    sections: Vec<(usize, &'a SectionProps)>,
+    heads: Vec<HeaderSet>,
+    header_wraps: HashMap<(usize, u32, bool), Arc<Vec<WrapArea>>>,
 }
 
 impl Ctx<'_> {
@@ -1051,7 +1055,7 @@ fn layout_blocks(
     }
     let floats_bottom = float_tables.iter().map(|r| r.bottom()).fold(0.0, f32::max);
     ctx.hide_deleted = outer_hide;
-    BoxLayout { items: stack_objects(items, layers), height: y.max(0.0), floats_bottom }
+    BoxLayout { items: stack_objects(items, layers), height: y.max(0.0), floats_bottom, wraps: excl }
 }
 
 /// A laid-out box: items relative to its top-left, the height of its text flow, and where its
@@ -1060,6 +1064,7 @@ struct BoxLayout {
     items: Vec<Placed>,
     height: f32,
     floats_bottom: f32,
+    wraps: Vec<WrapArea>,
 }
 
 /// Where floating table `tl` goes in a box `width` wide whose next paragraph starts at `y`, and
@@ -2003,6 +2008,7 @@ fn layout_pass(
         v.sort_by_key(|(a, ..)| *a);
         v
     });
+    let sections = doc.sections();
     let mut ctx = Ctx {
         doc,
         cache,
@@ -2028,9 +2034,12 @@ fn layout_pass(
         grid: para::Grid::default(),
         uses_totals: false,
         track_totals: true,
+        sections: sections.clone(),
+        heads: Vec::new(),
+        header_wraps: HashMap::new(),
     };
-    let sections = doc.sections();
     let (all_heads, all_feet) = (linked_all(&sections, |s| s.headers), linked_all(&sections, |s| s.footers));
+    ctx.heads = all_heads.clone();
     let web = matches!(opts.view, ViewMode::Web | ViewMode::Draft | ViewMode::Outline);
     let read = opts.view == ViewMode::Read;
     let reflow = web || read;
@@ -2572,6 +2581,67 @@ fn foot_top_for(ctx: &mut Ctx, sect: &SectionProps, footer: Option<u32>) -> f32 
     sect.page_h - sect.footer - h
 }
 
+/// Wrapping drawings in a header also keep the body clear of their contour. Keep the layout
+/// once per page, without advancing the body's lists, equation numbers or text-box budget.
+fn header_wrap_areas(ctx: &mut Ctx, pb: &PageBuilder) -> Arc<Vec<WrapArea>> {
+    if pb.web || ctx.opts.view == ViewMode::Read {
+        return Arc::default();
+    }
+    let Some(page) = pb.pages.last() else { return Arc::default() };
+    let first = pb.pages.iter().rev().nth(1).is_none_or(|prev| prev.section != page.section);
+    let key = (page.section, page.number, first);
+    if let Some(areas) = ctx.header_wraps.get(&key) {
+        return areas.clone();
+    }
+    let Some((_, sect)) = ctx.sections.get(page.section).copied() else { return Arc::default() };
+    if sect.text_direction.is_turned() {
+        return Arc::default();
+    }
+    let set = ctx.heads.get(page.section).copied().unwrap_or_default();
+    let id = if sect.title_page && first {
+        set.first
+    } else if ctx.doc.settings.even_odd_headers && page.number % 2 == 0 {
+        set.even.or(set.default)
+    } else {
+        set.default
+    };
+    if id.is_none_or(|id| !ctx.doc.parts.contains_key(&id)) {
+        return Arc::default();
+    }
+    let mut areas = Vec::new();
+    if let Some(id) = id
+        && let Some(part) = ctx.doc.parts.get(&id)
+    {
+        let blocks = part.blocks.clone();
+        let x = sect.margin_left + sect.gutter;
+        let frame = PageFrame { sect, origin: (x, sect.header) };
+        let counters = std::mem::take(&mut ctx.counters);
+        let boxes = std::mem::take(&mut ctx.boxes);
+        let chains = std::mem::take(&mut ctx.chains);
+        let grid = std::mem::take(&mut ctx.grid);
+        let fields = ctx.fields.clone();
+        let eq_count = ctx.eq_count;
+        let track = std::mem::replace(&mut ctx.track_totals, false);
+        ctx.fields.page = page.number;
+        ctx.fields.page_format = sect.page_num_format;
+        areas = layout_box(ctx, StoryRef::Part(id), &blocks, &[], sect.text_width(), None, 0, Some(frame)).wraps;
+        ctx.counters = counters;
+        ctx.boxes = boxes;
+        ctx.chains = chains;
+        ctx.grid = grid;
+        ctx.fields = fields;
+        ctx.eq_count = eq_count;
+        ctx.track_totals = track;
+        for (r, _, _, _) in &mut areas {
+            r.x += x;
+            r.y += sect.header;
+        }
+    }
+    let areas = Arc::new(areas);
+    ctx.header_wraps.insert(key, areas.clone());
+    areas
+}
+
 /// Where a box of laid-out items sits on its page, for floating objects positioned relative to
 /// the page or its margins.
 #[derive(Clone, Copy)]
@@ -2774,7 +2844,8 @@ fn anchor_floats(
             }
         }
     }
-    let rel = rel_exclusions(&pb.excl, col_x, y0 + band);
+    let mut rel = rel_exclusions(&pb.excl, col_x, y0 + band);
+    rel.extend(rel_exclusions(&header_wrap_areas(ctx, pb), col_x, y0 + band));
     (rects, ctx.para_labelled(p, width, None, &rel, label.clone()))
 }
 
@@ -3060,10 +3131,12 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // Keep with next only ties the paragraph's last line to the next one's start: one that may
     // break across pages (see `may_split`) keeps just its last lines with it, below.
     let mut keep_tail = None;
+    let keep_leading = pl.rp.keep_next && pb.bottom >= pb.sect.page_h - pb.sect.margin_bottom - 0.01 && pb.notes.is_empty() && !has_notes(ctx.doc, p);
     if pl.rp.keep_next && !pl.rp.keep_lines && may_split(&pl) && !breaks(&pl) {
-        keep_tail = Some(keep_next_need(ctx, block, width, pl.rp.space_after));
+        keep_tail = Some(keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading));
     } else if (pl.rp.keep_lines || pl.rp.keep_next) && !breaks(&pl) {
-        let need = bx.top + pl.height + bx.bottom + if pl.rp.keep_next { keep_next_need(ctx, block, width, pl.rp.space_after) } else { 0.0 };
+        let need =
+            bx.top + pl.height + bx.bottom + if pl.rp.keep_next { keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading) } else { 0.0 };
         // (Against the whole column: balanced columns grow to hold it.)
         if pb.y + need > pb.bottom && !pb.at_top() && need <= pb.uncapped_bottom() - pb.top {
             pb.advance(block, body_top);
@@ -3100,11 +3173,24 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             q.section.is_some() && q.text.is_empty() && q.objects.is_empty() && !next_section_starts_page(ctx.doc, block.saturating_add(1))
         });
     while l0 < n {
+        // A continued paragraph keeps its breaks but clears a full-width header here. Keep
+        // this in the leading, not pb.y: an oversized first line still needs at_top()'s
+        // overflow fallback to make progress on a page whose header takes room.
+        let header_lead = if l0 > 0
+            && pb.at_top()
+            && let Some(line) = pl.lines.get(l0)
+        {
+            let areas = header_wrap_areas(ctx, pb);
+            let rel = rel_exclusions(&areas, pb.col_x(), 0.0);
+            (para::full_width_wrap_top(&rel, pb.y, line.height, pb.col_w()) - pb.y).max(0.0)
+        } else {
+            0.0
+        };
         // How many lines fit?
         let Some(first) = pl.lines.get(l0) else { break };
         // A paragraph's first line may start below its top (pushed down by a floating object),
         // and starts below its top border.
-        let lead = if l0 == 0 { first.top.max(0.0) + bx.top } else { 0.0 };
+        let lead = if l0 == 0 { first.top.max(0.0) + bx.top } else { header_lead };
         let mut l1 = l0;
         let mut forced_break = None;
         let mut new_notes: Vec<NoteBox> = Vec::new();
@@ -3133,7 +3219,12 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
                 - new_notes.iter().map(|n| n.h).sum::<f32>()
                 - if pb.notes.is_empty() && !new_notes.is_empty() { pb.seps.sep_h(false) } else { 0.0 }
                 - extra;
-            let bottom = pb.y + lead + (l.top + l.height - first.top);
+            // Word lets multiple spacing's extra leading run into the bottom margin while
+            // the text still fits. Footnotes and a footer extending above that margin instead
+            // keep the whole line clear (WordCraft 627ded32; corpus zenodo-114).
+            let at_margin = pb.bottom >= pb.sect.page_h - pb.sect.margin_bottom - 0.01;
+            let fit_h = l.fit_height(pl.rp.line_spacing, at_margin && pb.notes.is_empty() && new_notes.is_empty() && line_notes.is_empty());
+            let bottom = pb.y + lead + (l.top + fit_h - first.top);
             // Notes too long for the rest of the page continue on the next one: the line still
             // fits if the notes before its last one, and that one's first line, fit below it.
             // The notes then take the rest of the page.
@@ -3212,7 +3303,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             && !pb.at_top()
             && let (Some(first), Some(last)) = (pl.lines.get(l0), pl.lines.get(n - 1))
         {
-            let lead = if l0 == 0 { first.top.max(0.0) + bx.top } else { 0.0 };
+            let lead = if l0 == 0 { first.top.max(0.0) + bx.top } else { header_lead };
             let end = pb.y + lead + (last.top + last.height - first.top) + bx.bottom;
             let take = if pl.rp.widow_control { 2 } else { 1 };
             let carried: f32 = pl.lines.iter().skip(n.saturating_sub(take)).map(|l| l.height).sum();
@@ -3453,13 +3544,14 @@ fn mirror_shift(rp: &doc4me_doc::resolve::ResolvedPara, number: u32, web: bool) 
 /// after them — its first line, or its first two with widow control (Word won't leave one there)
 /// — or a table's first row. Between paragraphs, the larger of the space after and the space
 /// before, as they are placed; `after` is the space after block `block`.
-fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32) -> f32 {
+fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margin_leading: bool) -> f32 {
     let mut need = 0.0;
     let mut after = after.max(0.0);
     for b in block + 1..block + 9 {
         match ctx.doc.body.get(b).map(|b| &**b) {
             Some(Block::Para(p)) => {
                 let pl = lookahead_para(ctx, p, width);
+                margin_leading &= !has_notes(ctx.doc, p);
                 // A page break (before it or in it) ends what has to stand on this page.
                 if pl.rp.page_break_before || pl.lines.iter().any(|l| matches!(l.end, para::LineEnd::PageBreak | para::LineEnd::ColumnBreak)) {
                     break;
@@ -3473,7 +3565,12 @@ fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32) -> f32 {
                     continue;
                 }
                 let lines = if pl.rp.widow_control && pl.lines.len() >= 2 { 2 } else { 1 };
-                need += gap + pl.lines.iter().take(lines).map(|l| l.height).sum::<f32>();
+                // Text needs its complete starting line boxes for Keep with next. A plain
+                // empty paragraph instead keeps its mark here while trailing leading may
+                // enter the margin, just as when it is placed (Word reference zenodo-093).
+                let blank = p.text.is_empty() && p.objects.is_empty() && pl.rp.borders.is_none() && pl.rp.shading.is_none();
+                let trailing = pl.lines.get(lines - 1).map_or(0.0, |l| l.height - l.fit_height(pl.rp.line_spacing, margin_leading && blank));
+                need += gap + pl.lines.iter().take(lines).map(|l| l.height).sum::<f32>() - trailing;
                 break;
             }
             Some(Block::Table(t)) => {

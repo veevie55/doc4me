@@ -17,3 +17,7 @@
 ## CI timing and isolation
 
 Default parallel CI failed the existing `proof_text_walks_the_runs_once` timing assertion at ratio 33.6 (limit 32). That function and its test were unchanged. Isolated execution also varied around the limit; CPU 0-pinned single-thread runs passed at 30.4, 30.4, 28.8. The complete final gate passed with `RUST_TEST_THREADS=1 taskset -c 0 cargo xtask ci`: all 6 steps, native 2,499 passed / 1 originally ignored. No assertion threshold or test was disabled. Failed evidence remains in `/workspace/work/ci-upstream-refined-parallel-failed.log`, with isolated/pinned samples in `proof-linear-{isolated,pinned}.log`.
+
+## Margin and picture follow-up
+
+The preceding two break-rule ports were confirmed by Windows run [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246) on `da21a99` (report `d6cd2fb`), unchanged from `e9b354b` in all five corpus sets. Subsequent review of `627ded32` (margin leading) and `dc388cfa` (picture lines) is recorded in [the follow-up audit](margin-leading-2026-11-12.md), including header wrapping, the blank-paragraph Keep with next case, deliberate scope limits and six regressions. That source needs its own Windows measurement.

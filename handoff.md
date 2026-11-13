@@ -1,6 +1,19 @@
 # Handoff: งาน pagination หลัง 1.1.3 · 2026-11-12 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
 
-## สถานะล่าสุด: พอร์ตกฎ break จาก upstream · 2026-11-12
+## สถานะล่าสุด: margin leading / picture lines / header wrapping · 2026-11-13
+
+- **ยังไม่ถึง 100% ไม่นับ deferred**; ไม่เปลี่ยนเกณฑ์ 220 เอกสาร / 22 deferred / 24 excluded ไม่ออก tag/Release เวอร์ชันยัง 1.1.3 โค้ดใหม่เป็น Unreleased
+- ทางการล่าสุด Windows [43252905246](https://github.com/veevie55/doc4me/actions/runs/43252905246), source `da21a99`, report `d6cd2fb`: **92.9% overall / 94.8% ไม่นับ deferred**, **184/220 pages / 102/220 boundaries**; เทียบ run43245507907 แล้วทั้งห้าชุด corpus เหมือนเดิมทุก failure row ทุกมิตินอกจาก pagination ผ่าน100%เมื่อไม่รวมdeferred
+- รอบนี้แก้ trailing leading ที่ margin โดยไม่เบียด footnote/footer, เพิ่ม font-leading ของรูปภาพนอกเซลล์/กริดและไม่นับ whitespace เป็น descent, ส่ง contour ภาพหัวกระดาษไปยัง body (first/even/default/linked), หลบภาพเต็มคอลัมน์ใน continuation โดยคง overflow fallback และแก้ Keep with next ที่ผูกกับย่อหน้าว่าง ดู [audit](docs/readiness/margin-leading-2026-11-12.md)
+- Linux ครบ220: pages **184→189**, boundaries **97→103**; open/round-trip/stability220/220 ไม่มีเอกสารที่เคยผ่านกลับไม่ผ่านทั้งห้าชุด เพิ่มpages zenodo-004/011/070/114/168 และboundaries govuk-019, zenodo-042/058/065/096/162; ยังเหลือ31/117 failures
+- `RUST_TEST_THREADS=1 taskset -c 0 cargo xtask ci` **6/6**, native **2,505 passed**, ignored1เดิม, layout319, assets141, wasm16 ไม่ลดassertionหรือเพิ่มignored; logs `/workspace/work/ci-leading-blank.log`, `/workspace/work/corpus-leading-blank.log`; stats **2,514 test attributes / 234,769 Rust lines**, CLI729
+- ทดลอง complete-start paragraph restriction และการ trim Keep with next ของข้อความทั่วไปแล้วถอนทั้งหมด; กฎท้ายเซลล์/explicit spacing/กริดคงเดิม และ partial-width header reflow ในย่อหน้า continuation ยังเปิดอยู่ ห้ามนำผลทดลองที่มี regression มาอ้างเป็นผลสุดท้าย
+- zenodo-023 explicit header2/footer2 ว่าง, ไม่มี evenAndOddHeaders/titlePg มาชดเชย แต่ referenceหน้า52มีข้อความ/เลข1; zenodo-149ไม่มีembeddedfont แต่referenceใช้ArialNovaCondLight/Narrowที่runnerไม่มี คำถามขอWordexport SHAตรงกันและข้อมูลfontsยังไม่มีคำตอบ ไม่เพิ่มproprietaryasset/ป้อนsubsetจากPDF/แก้เครื่องวัดเพื่อให้ผ่าน
+- **ขั้นถัดไป:** หลังcommit/pushmain รัน `readiness-windows.yml` อีกครั้ง ตรวจsource/reportจริง เทียบทั้งห้าชุดกับrun43252905246 แล้วอัปเดตผลทางการ คงเป้า100%และข้อจำกัดที่ยังเหลือไว้ตามจริง
+
+## บันทึกก่อนรอบนี้
+
+## สถานะรอบก่อน: พอร์ตกฎ break จาก upstream · 2026-11-12
 
 - **ยังไม่ถึงเป้าหมาย 100% ไม่นับ deferred**; คงเกณฑ์เดิม 220 เอกสาร / 22 deferred / 24 excluded ไม่มี tag หรือ Release เวอร์ชัน 1.1.3 โค้ดใหม่อยู่ Unreleased
 - ผลทางการล่าสุด: Windows [43245507907](https://github.com/veevie55/doc4me/actions/runs/43245507907), source `e9b354b`, report `e2e212f`: **92.9% overall / 94.8% ไม่นับ deferred**, pages **184/220**, boundaries **102/220**; ทุก dimension นอกจาก pagination ผ่าน 100% เมื่อไม่นับ deferred ต้องตรวจซอร์สที่รายงานวัดจริง

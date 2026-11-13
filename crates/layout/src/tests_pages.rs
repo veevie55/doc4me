@@ -54,6 +54,248 @@ fn mirrored_margins_put_the_inside_margin_toward_the_binding() {
 }
 
 #[test]
+fn multiple_spacing_can_put_leading_in_the_margin_but_not_in_a_tall_footer() {
+    for multiple in [1.15, 1.5, 2.0] {
+        for footer in [false, true] {
+            let (d, desc) = leading_probe(multiple, footer);
+            let l = lay(&d);
+            let Some(Placed::Lines { para, l0, l1, .. }) =
+                l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+            else {
+                panic!("missing body lines")
+            };
+            assert_eq!(l1 - l0, if footer { 2 } else { 4 }, "multiple={multiple}, footer={footer}");
+            assert!((para.lines[*l0].text_desc - desc).abs() < 0.01, "the stored descent agrees with the font's metrics");
+        }
+    }
+}
+
+fn leading_probe(multiple: f32, footer: bool) -> (Document, f32) {
+    use doc4me_doc::props::LineSpacing;
+
+    let family = "Source Sans 3";
+    let face = doc4me_fonts::word::resolve(family, false, false);
+    let (asc, desc) = doc4me_fonts::word::single_line(family, &face.face, face.substituted, 12.0);
+    let natural = (asc + desc) as f32;
+    let props = CharProps { font: Some(family.into()), size: Some(12.0), ..Default::default() };
+    let mut p = Paragraph::with_text(&"Several words wrap onto many lines of a long paragraph. ".repeat(60), props.clone());
+    p.mark = props;
+    p.props.line_spacing = Some(LineSpacing::Multiple(multiple));
+    p.props.space_before = Some(0.0);
+    p.props.space_after = Some(0.0);
+    p.props.widow_control = Some(false);
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::para_block(p)];
+    d.last_section.page_w = 240.0;
+    d.last_section.margin_left = 20.0;
+    d.last_section.margin_right = 20.0;
+    d.last_section.margin_top = 20.0;
+    d.last_section.margin_bottom = 20.0;
+    // Four lines' text fits, but four complete line boxes do not.
+    d.last_section.page_h = 40.0 + natural * (3.0 * multiple + 1.0) + 0.5;
+    if footer {
+        // Leave room for a third line's text but only two whole line boxes. The footer must
+        // keep the extra leading out, unlike an otherwise empty bottom margin.
+        let delta = natural * (multiple + 1.0) / 2.0 + 0.5;
+        let mut p = Paragraph::with_text("Footer", CharProps { font: Some(family.into()), size: Some(8.0), ..Default::default() });
+        p.props.line_spacing = Some(LineSpacing::Exactly(delta + 10.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        let id = d.add_part(PartKind::Footer, vec![doc4me_doc::para_block(p)]);
+        d.last_section.footers.default = Some(id);
+        d.last_section.footer = 10.0;
+    }
+    (d, desc as f32)
+}
+
+#[test]
+fn multiple_spacing_keeps_the_complete_line_clear_of_footnotes() {
+    use doc4me_doc::para::{InlineObject, NoteKind};
+    use doc4me_doc::props::LineSpacing;
+
+    for before in (0..=18).step_by(3) {
+        let (mut d, _) = leading_probe(2.0, false);
+        let mut note = Paragraph::with_text("Note", CharProps { font: Some("Source Sans 3".into()), size: Some(6.0), ..Default::default() });
+        note.props.line_spacing = Some(LineSpacing::Exactly(8.0));
+        note.props.space_before = Some(0.0);
+        note.props.space_after = Some(0.0);
+        let id = d.add_part(PartKind::Footnote, vec![doc4me_doc::para_block(note)]);
+        d.insert_object(&Pos::body(0, 0), InlineObject::NoteRef { kind: NoteKind::Footnote, id, custom: String::new() }, &Default::default())
+            .unwrap();
+        d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().props.space_before = Some(before as f32);
+        let l = lay(&d);
+        let page = &l.pages[0];
+        let separator =
+            page.items.iter().find_map(|it| if let Placed::Rule { y0, y1, .. } = it { (*y0 == *y1).then_some(*y0) } else { None }).unwrap();
+        let Some(Placed::Lines { para, y, l0, l1, .. }) = page.items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+        else {
+            panic!("missing body lines")
+        };
+        let bottom = y + para.lines[l1 - 1].top + para.lines[l1 - 1].height - para.lines[*l0].top;
+        assert!(bottom <= separator + 0.01, "before {before}: full line ends at {bottom}, separator {separator}");
+    }
+}
+
+#[test]
+fn header_drawings_wrap_body_starts_and_continuations_on_first_even_and_default_pages() {
+    use doc4me_doc::para::Wrap;
+
+    for continued in [false, true] {
+        for wrap in [Wrap::Tight, Wrap::BehindText, Wrap::InFrontOfText] {
+            let mut d = Document::new();
+            let mut p = Paragraph::with_text("Body line", CharProps { font: Some("Arial".into()), size: Some(12.0), ..Default::default() });
+            p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(18.0));
+            p.props.space_before = Some(0.0);
+            p.props.space_after = Some(0.0);
+            p.props.widow_control = Some(false);
+            if continued {
+                let props = p.runs[0].props.clone();
+                p = Paragraph { props: p.props, ..Paragraph::with_text(&vec!["Body line"; 160].join("\n"), props) };
+                d.body = vec![para_block(p)];
+            } else {
+                d.body = (0..160).map(|_| para_block(p.clone())).collect();
+            }
+            add_wrapping_headers(&mut d, wrap);
+            let l = lay(&d);
+            assert!(l.pages.len() >= 3);
+            for (i, page) in l.pages.iter().enumerate() {
+                let y = page
+                    .items
+                    .iter()
+                    .find_map(|it| match it {
+                        Placed::Lines { story: StoryRef::Body, y, .. } => Some(*y),
+                        _ => None,
+                    })
+                    .unwrap();
+                let want = if wrap == Wrap::Tight {
+                    if i == 0 {
+                        108.0
+                    } else if i % 2 == 1 {
+                        96.0
+                    } else {
+                        84.0
+                    }
+                } else {
+                    72.0
+                };
+                assert!((y - want).abs() < 0.01, "continued={continued}, {wrap:?}, page {}: {y}, want {want}", i + 1);
+            }
+        }
+    }
+}
+
+fn add_wrapping_headers(d: &mut Document, wrap: doc4me_doc::para::Wrap) {
+    use doc4me_doc::para::{Anchor, Float, ShapeKind};
+
+    let mut add = |height| {
+        let mut p = Paragraph { mark: CharProps { font: Some("Arial".into()), size: Some(8.0), ..Default::default() }, ..Default::default() };
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(10.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        let float = Float { wrap, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 72.0, y: 60.0, ..Default::default() };
+        p.insert_object(
+            0,
+            InlineObject::Shape {
+                kind: ShapeKind::Rectangle,
+                w: 468.0,
+                h: height,
+                fill: None,
+                stroke: None,
+                stroke_width: 0.0,
+                float,
+                story: None,
+                freeform: None,
+                effects: Default::default(),
+                extra: Default::default(),
+            },
+            &Default::default(),
+        )
+        .unwrap();
+        d.add_part(PartKind::Header, vec![para_block(p)])
+    };
+    let (default, even, first) = (add(24.0), add(36.0), add(48.0));
+    d.last_section.headers = doc4me_doc::section::HeaderSet { default: Some(default), even: Some(even), first: Some(first) };
+    d.last_section.title_page = true;
+    d.settings.even_odd_headers = true;
+}
+
+#[test]
+fn a_header_clearance_still_allows_an_oversized_continued_line_to_make_progress() {
+    use doc4me_doc::para::{ShapeKind, Wrap};
+
+    let mut d = Document::new();
+    let mut p = Paragraph::with_text("First\u{000C}", Default::default());
+    p.props.widow_control = Some(false);
+    p.insert_object(
+        p.len(),
+        InlineObject::Shape {
+            kind: ShapeKind::Rectangle,
+            w: 100.0,
+            h: 1000.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 0.0,
+            float: Default::default(),
+            story: None,
+            freeform: None,
+            effects: Default::default(),
+            extra: Default::default(),
+        },
+        &Default::default(),
+    )
+    .unwrap();
+    d.body = vec![para_block(p)];
+    add_wrapping_headers(&mut d, Wrap::Tight);
+    assert_eq!(lay(&d).pages.len(), 2, "the line overflows once instead of advancing forever below the header");
+}
+
+#[test]
+fn keep_with_next_uses_the_same_margin_fit_as_the_following_blank_line() {
+    use doc4me_doc::props::LineSpacing;
+
+    let family = "Arial";
+    let face = doc4me_fonts::word::resolve(family, false, false);
+    let (asc, desc) = doc4me_fonts::word::single_line(family, &face.face, face.substituted, 12.0);
+    let natural = (asc + desc) as f32;
+    let props = CharProps { font: Some(family.into()), size: Some(12.0), ..Default::default() };
+    let make = |text: &str| {
+        let mut p = Paragraph::with_text(text, props.clone());
+        p.mark = props.clone();
+        p.props.line_spacing = Some(LineSpacing::Multiple(1.5));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p
+    };
+    for next_text in ["", "A nonempty next paragraph"] {
+        let mut filler = make("Filler");
+        filler.props.line_spacing = Some(LineSpacing::Exactly(40.0));
+        let mut heading = make("Heading");
+        heading.props.keep_next = Some(true);
+        let blank = make(next_text);
+        let following = make("Following paragraph");
+        let mut d = Document::new();
+        d.body = vec![para_block(filler), para_block(heading), para_block(blank), para_block(following)];
+        d.last_section.page_h = 40.0 + 40.0 + 2.5 * natural + 0.25;
+        d.last_section.margin_top = 20.0;
+        d.last_section.margin_bottom = 20.0;
+        let l = lay(&d);
+        let page_of = |block| {
+            l.pages
+                .iter()
+                .position(|page| {
+                    page.items.iter().any(|it| {
+                        matches!(it,
+            Placed::Lines { story: StoryRef::Body, path, .. } if *path == Path::top(block))
+                    })
+                })
+                .unwrap()
+        };
+        let kept_page = usize::from(!next_text.is_empty());
+        assert_eq!((page_of(1), page_of(2), page_of(3)), (kept_page, kept_page, 1), "{next_text:?}");
+    }
+}
+
+#[test]
 fn a_tall_footer_pushes_the_body_up() {
     // #453: an eight-line footer reaches far above the 72pt bottom margin.
     let mut d = Document::from_text(&"Body line\n".repeat(60));
