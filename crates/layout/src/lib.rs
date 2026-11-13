@@ -3082,7 +3082,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     if pl.rp.page_break_before && !pb.at_page_top() && !pb.web {
         pb.new_page(block, body_top);
     }
-    // Contextual spacing: no space between paragraphs of the same style when either asks for it.
+    // Contextual spacing subtracts each paragraph's own side from the same-style gap.
     let mut before = pl.rp.space_before;
     // In documents laid out as Word 2010 and earlier did (compatibility mode below 15), the first
     // paragraph after a page break that ended the paragraph before drops its space before at the
@@ -3111,6 +3111,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         if style == pl.rp.style {
             if ctxl {
                 pb.y -= after;
+                if !ctx.doc.settings.add_para_spacing {
+                    before = (before - after.max(0.0)).max(before.min(0.0));
+                }
+                after = 0.0;
             }
             if pl.rp.contextual_spacing {
                 before = 0.0;
@@ -3118,7 +3122,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         }
         // Word (since 2007) puts the larger of the space after and the space before between two
         // paragraphs, unless the document asks for both (Don't use HTML paragraph auto spacing).
-        if !ctx.doc.settings.add_para_spacing && !(style == pl.rp.style && ctxl) {
+        if !ctx.doc.settings.add_para_spacing {
             before = (before - after.max(0.0)).max(before.min(0.0));
         }
     }

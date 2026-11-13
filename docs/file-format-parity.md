@@ -1,6 +1,6 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (Windows run 43333680851 confirms source `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred, 188/220 pages and 108/220 boundaries, no newly failing documents in five sets; CI 6/6 / native 2,505; Mac justification experiments withdrawn after zenodo-165 regressions) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (body contextual spacing subtracts the preceding paragraph’s after-space from the merged gap; three regressions; CI 6/6 / native 2,508; Linux 189/220 pages and 103/220 boundaries unchanged in all five sets; latest Windows source `92025e8` remains 95.1% without deferred, new source awaits measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
 share of a typical real-world file's content and formatting that survives (read: shows correctly;
@@ -180,10 +180,13 @@ raise readiness estimates. No Word-derived files are fixtures.
 
 The [justification review](readiness/justification-review-2026-11-13.md) records four rejected Mac-measured spacing trials. None of that code or its experimental test was retained; the published layout source remains `92025e8`. Native Windows probes are needed before changing those limits.
 
+**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 103/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. Latest confirmed Windows readiness is still 95.1% without deferred on `92025e8`; this source awaits measurement.
+
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
 | 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
 | 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
 | 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |

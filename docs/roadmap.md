@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (Windows run 43333680851 confirms source `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred, 188/220 pages and 108/220 boundaries, no newly failing documents in five sets; CI 6/6 / native 2,505; Mac justification experiments withdrawn after zenodo-165 regressions) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (body contextual spacing subtracts the preceding paragraph’s after-space from the merged gap; three regressions; CI 6/6 / native 2,508; Linux 189/220 pages and 103/220 boundaries unchanged in all five sets; latest Windows source `92025e8` remains 95.1% without deferred, new source awaits measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
 [`gaps.md`](gaps.md); the numbers are in [`target-app-parity.md`](target-app-parity.md). Hours are
@@ -8,7 +8,7 @@ Opus 5.5 agent wall-clock.
 
 ## Current focus (toward beta, ~150–230 h)
 
-งานล่าสุด 2026-11-13: Windows run 43333680851 ยืนยัน source `92025e8` ที่ **95.1% ไม่นับ deferred** จำนวนหน้าผ่าน 188/220 และขอบเขตหน้าผ่าน 108/220 เพิ่มจาก 184/102 โดยไม่มีเอกสารที่เคยผ่านกลับไม่ผ่านในห้าชุดตรวจ ชุดแก้ไขครอบคลุม leading ที่ขอบล่าง รูปภาพ หัวกระดาษ และ Keep with next กับย่อหน้าว่าง การทดลอง justification เพิ่มเติมถอนแล้วหลัง zenodo-165 ถดถอย เป้าหมาย 100% ยังไม่สำเร็จ ดู [layout audit](readiness/margin-leading-2026-11-12.md) และ [spacing review](readiness/justification-review-2026-11-13.md)
+งานล่าสุด 2026-11-13: แก้ body contextual spacing ให้ลบ space after จากช่องว่างที่รวมแล้ว ตามตัวอย่าง ECMA-376 17.3.1.9; คง additive spacing และขอบเขตตาราง/หัวกระดาษเดิม CI 6/6, native 2,508 และ Linux ทั้งห้าชุดตรวจตรง baseline ทุกแถว (189/220 page counts, 103/220 boundaries) รอผล Windows ของโค้ดใหม่นี้ คะแนนทางการก่อนชุดนี้ยัง 95.1% ไม่นับ deferred ดู [spacing audit](readiness/contextual-spacing-2026-11-13.md)
 
 1. **Review relevant upstream WordCraft changes before duplicating work.** Check individual patches
    against the remaining gaps (including Hebrew RTL, IME behavior and locale coverage); the upstream
@@ -154,6 +154,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
 | 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
 | 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
 | 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |

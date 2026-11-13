@@ -1,6 +1,17 @@
 # Handoff: งาน pagination หลัง 1.1.3 · 2026-11-13 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
 
-## สถานะล่าสุด: Windows ยืนยัน 95.1% ไม่นับ deferred · 2026-11-13
+## สถานะล่าสุด: body contextual spacing · 2026-11-13
+
+**ขอบเขตเพิ่มจากผู้ใช้:** ตรวจคำสั่งตารางทั้งหมด โดยเน้นเพิ่ม/ลบ/เปลี่ยนเส้นขอบ เลือกทั้งแถว/คอลัมน์ ซ้ำหัวตาราง แยกตาราง และคัดลอกวัตถุที่ไม่ใช่ข้อความ (กล่องข้อความ รูปภาพ รูปร่าง ตาราง ฯลฯ) ให้ตรวจการทำงานจริง เพิ่ม regression และแก้บั๊กที่พบ งานนี้กำลังเริ่มและยังไม่ประกาศว่าผ่านครบ
+
+- เป้าหมาย **100% ไม่นับ deferred ยังไม่สำเร็จ**; คะแนนทางการยัง **95.1%** จาก Windows source `92025e8` / report `c098032` / run 43333680851 (188/220 pages, 108/220 boundaries)
+- รอบนี้แก้เฉพาะ body ตาม ECMA-376 §17.3.1.9: after 10 / before 12 และ previous contextual เหลือช่องว่าง 2 pt แทน 12 pt คง additive option และกฎตาราง/หัวกระดาษเดิม ดู [audit](docs/readiness/contextual-spacing-2026-11-13.md)
+- เพิ่ม 3 regressions; CI 6/6, native 2,508, ignored 1 เดิม, layout 322, assets 141, wasm 16; stats 2,517 test attributes / 234,851 Rust lines / CLI 729
+- Linux ครบ 220 ฉบับตรง baseline ทุกแถวในห้าชุดตรวจ: 189/220 pages, 103/220 boundaries, open/round-trip/stability 220/220; logs `ci-contextual-body.log`, `corpus-contextual-body.log`, `contextual-body-tests.log` อยู่ `/workspace/work/` CLI ที่ตรึงซอร์สนี้คือ `contextual-body-cli`
+- ถอน trial ที่เปลี่ยน box spacing ด้วย หลัง govuk-020/zenodo-067 ทำ page-count passes เหลือ 187 และ boundaries 102; patch/log เก็บใน workspace ไม่เพิ่มข้อยกเว้นหรือเปลี่ยน TSV
+- **ขั้นถัดไป:** push main แล้ววัด Windows; ตรวจ run/source/report จริงและเทียบห้าชุดก่อนอ้างคะแนนใหม่ จากนั้นทำ pagination ต่อ พร้อม Word/font/reference prerequisites ด้านล่าง ไม่ออก tag/Release
+
+## ผล Windows ก่อนชุด contextual spacing · 2026-11-13
 
 - **ยังไม่ครบ 100%**; คง 220 เอกสาร / 22 deferred / 24 excluded เวอร์ชัน 1.1.3 โค้ดใหม่อยู่ Unreleased ไม่มี tag/Release
 - ผลทางการ [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851), source `92025e8`, report `c098032`: **93.2% overall / 95.1% ไม่นับ deferred**, **188/220 page counts / 108/220 boundaries** จาก 184/102 ที่ source `da21a99` ทั้งห้าชุดตรวจไม่มีเอกสารที่เคยผ่านกลับไม่ผ่าน; open/round-trip/stability 220/220 ทุก dimension อื่นผ่าน 100% เมื่อไม่นับ deferred

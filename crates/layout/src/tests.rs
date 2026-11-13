@@ -3298,6 +3298,84 @@ fn contextual_spacing_suppresses_trailing_space_between_cell_paragraphs() {
     assert!((without_context - with_context - 8.0).abs() < 0.5, "contextual {with_context}, ordinary {without_context}");
 }
 
+fn body_spacing_probe(props: &[ParaProps], additive: bool) -> Vec<f32> {
+    let mut d = Document::new();
+    d.settings.add_para_spacing = additive;
+    d.body = props
+        .iter()
+        .map(|props| {
+            let mut p = Paragraph::with_text("Spacing probe", doc4me_doc::CharProps { size: Some(12.0), ..Default::default() });
+            p.props = props.clone();
+            doc4me_doc::para_block(p)
+        })
+        .collect();
+    let l = lay(&d);
+    let baselines: Vec<_> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            Placed::Lines { para, y, .. } => Some(y + para.lines[0].baseline),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(baselines.len(), props.len());
+    baselines.windows(2).map(|pair| pair[1] - pair[0] - 24.0).collect()
+}
+
+#[test]
+fn contextual_spacing_subtracts_each_paragraphs_own_side_of_the_merged_gap() {
+    let plain = ParaProps {
+        space_before: Some(0.0),
+        space_after: Some(0.0),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    // ECMA-376 17.3.1.9's worked example leaves max(10, 12) - 10 = 2 pt.
+    // The one-sided cases distinguish the preceding paragraph's flag from this one's.
+    for (after, before, first, second, different, expected) in [
+        (10.0, 12.0, true, false, false, 2.0),
+        (12.0, 8.0, true, false, false, 0.0),
+        (12.0, 8.0, false, true, false, 12.0),
+        (12.0, 8.0, true, true, false, 0.0),
+        (12.0, 8.0, false, false, false, 12.0),
+        (12.0, 8.0, true, true, true, 12.0),
+    ] {
+        let a = ParaProps { space_after: Some(after), contextual_spacing: Some(first), ..plain.clone() };
+        let b = ParaProps { style: different.then(|| "Other".into()), space_before: Some(before), contextual_spacing: Some(second), ..plain.clone() };
+        let gap = body_spacing_probe(&[a, b], false)[0];
+        assert!((gap - expected).abs() < 0.01, "{after}/{before} {first}/{second} different={different}: {gap}");
+    }
+}
+
+#[test]
+fn merged_paragraph_spacing_keeps_the_additive_compatibility_option() {
+    let plain = ParaProps {
+        space_before: Some(0.0),
+        space_after: Some(0.0),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    for (first, second, expected) in [(false, false, 20.0), (true, false, 8.0), (false, true, 12.0), (true, true, 0.0)] {
+        let a = ParaProps { space_after: Some(12.0), contextual_spacing: Some(first), ..plain.clone() };
+        let b = ParaProps { space_before: Some(8.0), contextual_spacing: Some(second), ..plain.clone() };
+        let gap = body_spacing_probe(&[a, b], true)[0];
+        assert!((gap - expected).abs() < 0.01, "{first}/{second}: {gap}");
+    }
+}
+
+#[test]
+fn contextual_spacing_drops_every_internal_gap_in_a_four_paragraph_run() {
+    let props = ParaProps {
+        space_before: Some(6.0),
+        space_after: Some(6.0),
+        contextual_spacing: Some(true),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    let gaps = body_spacing_probe(&[props.clone(), props.clone(), props.clone(), props.clone()], false);
+    assert!(gaps.iter().all(|gap| gap.abs() < 0.01), "{gaps:?}");
+}
+
 #[test]
 fn list_items_beside_a_float_in_a_cell_are_counted_once() {
     use doc4me_doc::para::{Anchor, Float, Wrap};

@@ -27,6 +27,13 @@
 
 ### แก้ไข
 
+- **Contextual spacing ในเนื้อหาลบระยะหลังจากช่องว่างที่รวมแล้ว** (`crates/layout/src/lib.rs`, `crates/layout/src/tests.rs`; อ้างอิง ECMA-376 §17.3.1.9 และ WordCraft [`8e0f42e4`](https://github.com/storytold/wordcraft/commit/8e0f42e4bc3afe0995cce4ee773c0aa7be076911))
+  - เมื่อย่อหน้าก่อนเปิด contextual และมี space after 10 pt ส่วนย่อหน้าถัดไปสไตล์เดียวกันมี space before 12 pt ช่องว่างเหลือ max(10,12)−10 = 2 pt แทน 12 pt เดิม; แยกธงแต่ละย่อหน้า และคง `doNotUseHTMLParagraphAutoSpacing` แบบบวกทั้งสองระยะ
+  - จำกัดการแก้ที่เนื้อหา: ถอนการทดลองรวมระยะในตาราง/หัวกระดาษหลัง govuk-020 และ zenodo-067 ถดถอย ไม่เพิ่มข้อยกเว้นรายเอกสาร ไม่เปลี่ยนเกณฑ์หรือจำนวน corpus/deferred/excluded
+  - ตรวจบั๊ก/ความปลอดภัย: ใช้ตัวเลขที่ผ่าน resolver เดิม คงการจัดการระยะติดลบและการวาง float ใหม่ตามตำแหน่งจริง ไม่มีโมเดล/format/asset/ฟอนต์/เวอร์ชันใหม่ ไฟล์ DOCX เดิมและการติดตั้งใช้ได้ตามเดิม แค็ตตาล็อกภาษาไทยคงเดิม
+  - เพิ่ม 3 regressions สำหรับธงด้านเดียว/สองด้าน สไตล์ต่างกัน additive spacing และย่อหน้า 4 ตัวต่อกัน; focused spacing 12/12 ผ่าน; `RUST_TEST_THREADS=1 CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER=/workspace/work/cargo-test-cpu0.sh cargo xtask ci` ผ่าน 6/6, native 2,508 (ignored 1 เดิม), layout 322, assets 141, wasm 16 ไม่ลด threshold
+  - Linux ครบ 220 ฉบับ: 189/220 page counts, 103/220 boundaries, open/round-trip/stability 220/220 ทุกแถวทั้งห้าชุดตรวจตรง baseline; คะแนน Windows ทางการยัง 95.1% ไม่นับ deferred ที่ `92025e8` จนกว่าจะวัดซอร์สใหม่นี้ ดู [audit](docs/readiness/contextual-spacing-2026-11-13.md)
+
 - **วางข้อความและรูปภาพตาม Word ที่ขอบล่างและหัวกระดาษ** (`crates/layout/src/{lib,para,table}.rs`; หลักกฎ leading จาก WordCraft [`627ded32`](https://github.com/storytold/wordcraft/commit/627ded32c7ea5a03d5bf81038c21553fab8bdbcf), [`dc388cfa`](https://github.com/storytold/wordcraft/commit/dc388cfaab0c05f7e1569273ee6ca435854e1700))
   - บรรทัด Multiple อนุญาตให้ leading ท้ายบรรทัดอยู่ใน margin เมื่อข้อความยังพอดี; มี footnote หรือ footer สูงล้ำ margin ยังต้องเก็บกล่องบรรทัดเต็ม ไม่ใช้ clamp กับขอบเขตที่อาจกลับด้านจาก input
   - บรรทัดรูปภาพนอกเซลล์และไม่มี document grid เพิ่มเฉพาะสัดส่วนความสูงฟอนต์จาก multiple spacing ไม่ขยายรูปภาพ ช่องว่าง/tab/ตัวแบ่งบรรทัดไม่สร้าง descent ปลอม รูปเล็กจบที่ขอบล่างฟอนต์; ข้อความจริง/สมการยังมี descent เซลล์ตาราง, At least, Exactly และกริดคงกฎเดิมจนยืนยันแยก

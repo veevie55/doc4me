@@ -2,7 +2,7 @@
 
 **Stage: alpha** · latest official readiness is **93.2%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43333680851, 2026-11-13; report commit `c098032` measures source `92025e8`, all 220 documents); the report says **95.1% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (188/220 page counts, 108/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release remains Doc4Me 1.1.3; subsequent source changes are Unreleased.
 
-> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (Windows run 43333680851 confirms source `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred, 188/220 pages and 108/220 boundaries, no newly failing documents in five sets; CI 6/6 / native 2,505; Mac justification experiments withdrawn after zenodo-165 regressions) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (body contextual spacing subtracts the preceding paragraph’s after-space from the merged gap; three regressions; CI 6/6 / native 2,508; Linux 189/220 pages and 103/220 boundaries unchanged in all five sets; latest Windows source `92025e8` remains 95.1% without deferred, new source awaits measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -12,7 +12,7 @@ agent control. This page is the summary; the assessment is
 
 **งานหลัง 1.1.3:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ใต้ `[Unreleased]`; Windows run 43333680851 วัดโค้ด `92025e8` แล้ว ได้ 95.1% ไม่นับ deferred
 
-**งานต่อ 2026-11-13:** Windows ยืนยันชุด leading/รูปภาพ/หัวกระดาษ/Keep with next แล้วที่ 95.1% ไม่นับ deferred (188/220 pages, 108/220 boundaries; จาก 184/102) ไม่มีกรณีที่เคยผ่านกลับไม่ผ่านในห้าชุดตรวจ CI 6/6, native 2,505; การทดลองขอบเขตย่อช่องว่างจาก Word for Mac ทั้งสี่แบบถอนหลัง zenodo-165 ถดถอย ดู [layout audit](docs/readiness/margin-leading-2026-11-12.md), [spacing review](docs/readiness/justification-review-2026-11-13.md) และ [reference audit](docs/readiness/reference-audit-2026-11-12.md) เป้าหมาย 100% ยังไม่สำเร็จ
+**งานต่อ 2026-11-13:** แก้ contextual spacing เฉพาะเนื้อหาตาม ECMA-376: ช่องว่าง max(10,12)−10 เหลือ 2 pt แทน 12 pt; คงตัวเลือก additive spacing และพฤติกรรมตาราง/หัวกระดาษเดิม CI 6/6, native 2,508; Linux ครบ 220 ฉบับตรง baseline ทุกแถวทั้งห้าชุดตรวจ (189 pages / 103 boundaries) รอวัด Windows สำหรับโค้ดชุดนี้ คะแนนทางการยัง **95.1% ไม่นับ deferred** ที่ source `92025e8` เป้าหมาย 100% ยังไม่สำเร็จ ดู [spacing audit](docs/readiness/contextual-spacing-2026-11-13.md)
 
 ## Headline numbers (2026-11-13)
 
@@ -166,6 +166,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-13 | Body contextual spacing subtracts the preceding after-space from the merged gap; three regressions, CI 6/6 / native 2,508. Linux 189/220 pages, 103/220 boundaries, all five failure sets unchanged. Full box-spacing trial withdrawn after govuk-020 and zenodo-067 regressed. Windows measurement pending; latest confirmed score remains 95.1% without deferred. |
 | 2026-11-13 | Windows run 43333680851 on `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred. Pages 184→188/220, boundaries 102→108/220, no newly failing documents in five sets. Full CI repeated, native 2,505. Four Word-for-Mac justification trials were withdrawn after zenodo-165 regressions; no criteria or row-status changes. |
 | 2026-11-13 | M14/G4 margin leading, picture spacing, header contours and Keep with next for blank paragraphs; Linux pages 184→189/220 and boundaries 97→103/220, no newly failing documents in five sets. Six new regressions, full CI 6/6 (native 2,505); Windows source da21a99 confirms the preceding break-rule arc at 94.8% without deferred; new measurement pending. |
 | 2026-11-12 | Port two Word break rules from storytold/wordcraft (now accessible): period/open-parenthesis wrapping and pageBreakBefore at the mid-page top of a continuous section. CI 6/6, native 2,499; Linux corpus 184/220 pages and 97/220 boundaries unchanged, no regressions. Withdraw half-point superscript experiment after one corpus regression; upstream/reference audits preserve the fixed ruler. |
@@ -293,6 +294,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
 | 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
 | 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
 | 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
