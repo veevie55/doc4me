@@ -173,7 +173,7 @@ fn offsets(t: &Table) -> Vec<f32> {
 }
 
 /// The rows of the vertically merged group cell `c` of row `r` belongs to (just `r` when none).
-fn vgroup(t: &Table, r: usize, c: usize) -> (usize, usize) {
+pub(super) fn vgroup(t: &Table, r: usize, c: usize) -> (usize, usize) {
     let g = t.grid_col(r, c);
     let starts_at = |row: usize| t.cell_at_grid(row, g).filter(|&ci| t.grid_col(row, ci) == g).and_then(|ci| t.rows.get(row)?.cells.get(ci));
     let Some(cell) = starts_at(r) else { return (r, r) };

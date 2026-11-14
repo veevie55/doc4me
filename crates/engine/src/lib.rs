@@ -33,7 +33,8 @@ pub use io::Password;
 pub use keymap::KeyMap;
 pub use ribbon::RibbonLayout;
 pub use session::{
-    ColumnBlock, EditSnapshot, FindState, MathEdit, PasteMode, Prefs, ReadLayout, ReadPageColor, Selection, Session, ViewState, set_system_locale,
+    ColumnBlock, EditSnapshot, FindState, MathEdit, PasteMode, Prefs, ReadLayout, ReadPageColor, Selection, Session, TableSelection, ViewState,
+    set_system_locale,
 };
 
 #[derive(Debug, thiserror::Error, Clone, PartialEq)]
@@ -181,6 +182,8 @@ mod tests_fonts;
 mod tests_forms;
 #[cfg(test)]
 mod tests_frames;
+#[cfg(test)]
+mod tests_tables;
 #[cfg(test)]
 mod tests_typing;
 #[cfg(test)]

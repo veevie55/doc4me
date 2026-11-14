@@ -2410,11 +2410,54 @@ fn table_design(app: &mut WordApp, ui: &mut Ui) {
                 ("No Border", "none"),
                 ("Top Border", "top"),
                 ("Bottom Border", "bottom"),
+                ("Left Border", "left"),
+                ("Right Border", "right"),
             ] {
-                mi(ui, app, l, "table.borders", json!({"kind": k}));
+                let mut params = crate::table_pen::border_params(app);
+                params["kind"] = json!(k);
+                mi(ui, app, l, "table.borders", params);
             }
+            ui.menu_button(tl!("Inside Borders"), |ui| {
+                for (label, kind) in [("Horizontal", "insideHorizontal"), ("Vertical", "insideVertical")] {
+                    let mut params = crate::table_pen::border_params(app);
+                    params["kind"] = json!(kind);
+                    mi(ui, app, label, "table.borders", params);
+                }
+            });
+            ui.separator();
+            ui.menu_button(tl!("Style"), |ui| {
+                for (label, style) in [
+                    ("Single", "single"),
+                    ("Double", "double"),
+                    ("Dotted", "dotted"),
+                    ("Dashed", "dashed"),
+                    ("Thick", "thick"),
+                    ("Triple", "triple"),
+                    ("Dash Dot", "dotDash"),
+                    ("Wave", "wave"),
+                ] {
+                    let mut params = crate::table_pen::border_params(app);
+                    params["style"] = json!(style);
+                    mi(ui, app, label, "table.borders", params);
+                }
+            });
+            ui.menu_button(tl!("Width:"), |ui| {
+                for (label, width) in
+                    [("0.25 pt", 0.25), ("0.5 pt", 0.5), ("1 pt", 1.0), ("1.5 pt", 1.5), ("2 pt", 2.0), ("3 pt", 3.0), ("6 pt", 6.0)]
+                {
+                    let mut params = crate::table_pen::border_params(app);
+                    params["width"] = json!(width);
+                    mi(ui, app, label, "table.borders", params);
+                }
+            });
+            ui.menu_button(tl!("Color"), |ui| {
+                let theme = app.session.doc.settings.theme_colors.clone();
+                let params = crate::table_pen::border_params(app);
+                crate::colors::menu(ui, app, &theme, Target::at("table.borders", params, "/color"));
+            });
         });
-        big(ui, app, "borderPainter", "Border\nPainter", "table.borderPainter", json!({}), false);
+        let painting = app.canvas.table_tool == Some(crate::table_pen::TableTool::Paint);
+        big(ui, app, "borderPainter", "Border\nPainter", "table.borderPainter", json!({}), painting);
     });
 }
 
@@ -2490,6 +2533,7 @@ fn table_layout(app: &mut WordApp, ui: &mut Ui) {
             menu_button(ui, app, "selectTable", Some("Select"), "Select", false, "table.selectTable", |ui, app| {
                 mi(ui, app, "Select Cell", "table.selectCell", json!({}));
                 mi(ui, app, "Select Row", "table.selectRow", json!({}));
+                mi(ui, app, "Column", "table.selectColumn", json!({}));
                 mi(ui, app, "Select Table", "table.selectTable", json!({}));
             });
             let g = app.session.view.table_gridlines;

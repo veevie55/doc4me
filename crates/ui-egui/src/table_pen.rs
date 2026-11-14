@@ -17,6 +17,7 @@ use crate::theme::Tokens;
 pub enum TableTool {
     Draw,
     Erase,
+    Paint,
 }
 
 impl TableTool {
@@ -24,6 +25,7 @@ impl TableTool {
         match self {
             TableTool::Draw => "table.draw",
             TableTool::Erase => "table.eraser",
+            TableTool::Paint => "table.borderPainter",
         }
     }
 }
@@ -42,6 +44,7 @@ pub fn toggle(app: &mut WordApp, id: &str, p: &Value) -> Option<Result<Value, St
     let tool = match id {
         "table.draw" => TableTool::Draw,
         "table.eraser" => TableTool::Erase,
+        "table.borderPainter" if p.as_object().is_some_and(|o| o.keys().all(|k| k == "on")) => TableTool::Paint,
         _ => return None,
     };
     if p.get("page").is_some() {
@@ -55,6 +58,7 @@ pub fn toggle(app: &mut WordApp, id: &str, p: &Value) -> Option<Result<Value, St
         app.status(match tool {
             TableTool::Draw => tl!("Drag a rectangle to draw a table, or a line across cells to split them. Esc stops."),
             TableTool::Erase => tl!("Click a border between two cells to merge them. Esc stops."),
+            TableTool::Paint => tl!("Border Painter"),
         });
     }
     Some(Ok(json!({"tool": app.canvas.table_tool.map(TableTool::id)})))
@@ -111,6 +115,15 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect]
             json!({"page": st.page, "x0": st.from.0, "y0": st.from.1, "x1": st.to.0, "y1": st.to.1})
         }
         TableTool::Erase => json!({"page": st.page, "x": st.to.0, "y": st.to.1}),
+        TableTool::Paint => {
+            let mut p = border_params(app);
+            p["page"] = json!(st.page);
+            p["x0"] = json!(st.from.0);
+            p["y0"] = json!(st.from.1);
+            p["x1"] = json!(st.to.0);
+            p["y1"] = json!(st.to.1);
+            p
+        }
     };
     if let Err(e) = app.run(tool.id(), params) {
         app.status(e);
@@ -174,12 +187,39 @@ pub fn paint(app: &WordApp, painter: &egui::Painter, t: &Tokens, layout: &DocLay
                 painter.line_segment([a, b], Stroke::new(3.0, t.red));
             }
         }
+        (TableTool::Paint, Some(st)) => {
+            if let (Some(a), Some(b)) = (to_screen(st.page, st.from.0, st.from.1), to_screen(st.page, st.to.0, st.to.1)) {
+                painter.line_segment([a, b], ink);
+            }
+        }
         _ => {}
     }
     if let Some(p) = hover.filter(|p| pages.iter().any(|r| r.contains(*p))) {
         let r = Rect::from_min_size(p + vec2(8.0, 6.0), vec2(16.0, 16.0));
-        let icon = if tool == TableTool::Draw { "pencil" } else { "eraser" };
+        let icon = if tool == TableTool::Erase { "eraser" } else { "pencil" };
         crate::icons::paint(painter, r, icon, t.icon, t.accent);
+    }
+}
+
+pub(crate) fn border_params(app: &WordApp) -> Value {
+    let b = app.canvas.table_border;
+    json!({"kind":"all", "scope":"selection", "style":b.style.ooxml(), "width":b.width,
+        "color":b.color.map(|c|format!("{:02X}{:02X}{:02X}",c.0,c.1,c.2))})
+}
+
+pub(crate) fn remember(app: &mut WordApp, id: &str, v: &Value) {
+    if !matches!(id, "table.borders" | "table.borderPainter") {
+        return;
+    }
+    let b = &mut app.canvas.table_border;
+    if let Some(style) = v.get("style").and_then(Value::as_str) {
+        b.style = doc4me_doc::props::BorderStyle::from_ooxml(style);
+    }
+    if let Some(width) = v.get("width").and_then(Value::as_f64).filter(|w| w.is_finite()) {
+        b.width = (width as f32).clamp(0.25, 6.0);
+    }
+    if let Some(color) = v.get("color") {
+        b.color = color.as_str().and_then(doc4me_doc::Rgb::parse);
     }
 }
 
@@ -218,6 +258,24 @@ mod tests {
         a.run("table.eraser", json!({"on": true})).unwrap();
         assert_eq!(a.canvas.table_tool, Some(TableTool::Erase));
         a.run("table.deleteRow", json!({})).unwrap();
+        assert_eq!(a.canvas.table_tool, None);
+    }
+
+    #[test]
+    fn border_painter_remembers_style_width_and_color_and_coordinates_reach_the_engine() {
+        let mut a = WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::new()), crate::Services::default());
+        a.run("insert.table", json!({"rows":2,"cols":2})).unwrap();
+        a.run("table.borders", json!({"style":"triple","width":2,"color":"123456"})).unwrap();
+        assert_eq!(border_params(&a)["style"], "triple");
+        assert_eq!(border_params(&a)["width"].as_f64(), Some(2.0));
+        assert_eq!(border_params(&a)["color"], "123456");
+        assert!(a.run("table.borders", json!({"style":"invalid","width":5})).is_err());
+        assert_eq!(border_params(&a)["width"].as_f64(), Some(2.0));
+        assert_eq!(a.run("table.borderPainter", json!({})).unwrap()["tool"], "table.borderPainter");
+        assert_eq!(a.canvas.table_tool, Some(TableTool::Paint));
+        assert!(a.run("table.borderPainter", json!({"page":0,"x0":1,"y0":1,"x1":1,"y1":1})).is_err());
+        assert_eq!(a.canvas.table_tool, Some(TableTool::Paint));
+        assert_eq!(a.run("table.borderPainter", json!({})).unwrap()["tool"], Value::Null);
         assert_eq!(a.canvas.table_tool, None);
     }
 }

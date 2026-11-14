@@ -111,6 +111,17 @@ fn extend_to(s: &mut Session, to: Pos) {
 
 /// Run a command with the column block in mind (called by `Session::run` for every command).
 pub(crate) fn dispatch(s: &mut Session, id: &str, mutates: bool, run: fn(&mut Session, &Value) -> CmdResult, v: &Value) -> CmdResult {
+    if matches!(id, "format.changeCase" | "format.thaiDigits" | "format.arabicDigits" | "format.clear" | "format.resetChar")
+        && let Some(ranges) = s.table_text_ranges()
+        && let Some(sel) = s.table_selection.take()
+    {
+        for (a, b) in ranges.into_iter().rev() {
+            s.sel = Selection { anchor: a, focus: b };
+            run(s, v)?;
+        }
+        s.sel.focus.story = sel.story;
+        return super::table::set_cell_selection(s, &sel.table, sel.cells.clone(), sel.whole_table);
+    }
     // Extend mode (F8): caret movement and clicks extend the selection; an edit ends the mode.
     if s.extend_mode && mutates {
         s.extend_mode = false;
@@ -176,13 +187,10 @@ pub(crate) fn dispatch(s: &mut Session, id: &str, mutates: bool, run: fn(&mut Se
 /// Copy: one paragraph per block row (formatting kept); the plain text joins rows with newlines.
 fn copy(s: &mut Session, segs: &[(Pos, Pos)]) -> CmdResult {
     let mut blocks = Vec::new();
-    let mut parts = std::collections::BTreeMap::new();
     let mut rows = Vec::new();
     for (a, b) in segs {
         let (a, b) = (s.doc.clamp(a), s.doc.clamp(b));
         let frag = if a.path == b.path && a.story == b.story && a != b { s.doc.copy_range(&a, &b) } else { Fragment::default() };
-        // Text boxes in a row keep their stories (keyed by this document's part ids).
-        parts.extend(frag.parts);
         let mut para = frag
             .blocks
             .into_iter()
@@ -196,7 +204,7 @@ fn copy(s: &mut Session, segs: &[(Pos, Pos)]) -> CmdResult {
         blocks.push(Block::Para(para));
     }
     s.clipboard_text = rows.join("\n");
-    s.clipboard = Some(Fragment { blocks, parts });
+    s.clipboard = Some(s.doc.blocks_fragment(blocks));
     s.clipboard_doc = Some(s.document_id());
     Ok(json!({"text": s.clipboard_text}))
 }

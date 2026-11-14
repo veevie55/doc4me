@@ -130,6 +130,9 @@ fn paste_special(s: &mut Session, v: &Value) -> CmdResult {
 /// Replace the selection with `frag`, marking it as an insertion under Track Changes.
 pub fn insert(s: &mut Session, mut frag: Fragment) -> Result<(), CmdError> {
     super::controls::prepare_edit(s)?;
+    if frag.blocks.len() == 1 && matches!(frag.blocks.first(), Some(Block::Table(_))) {
+        super::table::prepare_replacement(s)?;
+    }
     let at = delete_selection(s)?;
     let track = s.doc.settings.track_changes;
     let mut rid = None;
@@ -242,5 +245,5 @@ fn adopt(s: &mut Session, src: Document) -> Fragment {
     }
     // Text box stories the imported shapes show; pasting gives each a new story of its own.
     let parts = src.parts.into_iter().filter(|(_, p)| p.kind == doc4me_doc::PartKind::TextBox).collect();
-    Fragment { blocks, parts }
+    Fragment { blocks, parts, ..Default::default() }
 }

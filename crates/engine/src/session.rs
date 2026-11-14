@@ -40,6 +40,17 @@ impl Selection {
     }
 }
 
+/// A table's explicitly selected cells. The stream endpoints alone cannot represent an empty
+/// cell or a column without including the intervening cells in other columns.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct TableSelection {
+    pub sel: Selection,
+    pub story: StoryRef,
+    pub table: Path,
+    pub cells: std::collections::BTreeSet<(usize, usize)>,
+    pub whole_table: bool,
+}
+
 /// A column (block) selection: the same x range on every line between two corners.
 #[derive(Clone, Debug, PartialEq)]
 pub struct ColumnBlock {
@@ -260,6 +271,7 @@ struct Undo {
     label: String,
     doc: Document,
     sel: Selection,
+    table_selection: Option<Arc<TableSelection>>,
     /// Formatting waiting at the caret (Bold with nothing selected), so Undo takes it back too.
     pending: Option<CharProps>,
 }
@@ -271,6 +283,7 @@ struct Undo {
 pub struct EditSnapshot {
     doc: Document,
     sel: Selection,
+    table_selection: Option<Arc<TableSelection>>,
     history_len: usize,
     /// `Session::undo_evicted` when the snapshot was taken.
     evicted: u64,
@@ -410,6 +423,8 @@ pub struct Session {
     pub also_selected: Vec<Pos>,
     /// Column (block) selection, if one was made (see [`Session::column_segments`]).
     pub column: Option<ColumnBlock>,
+    /// Cell selection made by Table Layout › Select, valid while its endpoints still match.
+    pub table_selection: Option<Arc<TableSelection>>,
     /// Column selection mode (Ctrl+Shift+F8): caret movement extends the block.
     pub column_mode: bool,
     /// Extend mode (F8): caret movement and clicks extend the selection until Esc or an edit.
@@ -641,6 +656,7 @@ impl Session {
             math_latex: false,
             math_normal_text: false,
             also_selected: Vec::new(),
+            table_selection: None,
             prefs: Prefs::default(),
             keymap: crate::KeyMap::default(),
             ribbon: crate::RibbonLayout::default(),
@@ -754,6 +770,43 @@ impl Session {
     /// moved since the block was made).
     pub fn column_segments(&self) -> Option<&[(Pos, Pos)]> {
         self.column.as_ref().filter(|c| c.sel == self.sel).map(|c| c.segments.as_slice())
+    }
+
+    /// Explicit cells selected in the current table, including empty cells.
+    pub fn selected_table_cells(&self) -> Option<&TableSelection> {
+        self.table_selection.as_deref().filter(|t| t.sel == self.sel && self.doc.table(t.story, &t.table).is_some())
+    }
+
+    /// Complete paragraph ranges inside explicitly selected cells, also for an empty cell.
+    pub(crate) fn table_text_ranges(&self) -> Option<Vec<(Pos, Pos)>> {
+        let sel = self.selected_table_cells()?;
+        let prefix = sel.table.0.len();
+        Some(
+            self.doc
+                .para_paths(sel.story)
+                .into_iter()
+                .filter_map(|path| {
+                    if !path.0.starts_with(&sel.table.0) {
+                        return None;
+                    }
+                    let (Some(r), Some(c)) = (path.0.get(prefix), path.0.get(prefix + 1)) else { return None };
+                    if !sel.cells.contains(&(*r as usize, *c as usize)) {
+                        return None;
+                    }
+                    let len = self.doc.para(sel.story, &path)?.len();
+                    let a = Pos { story: sel.story, path, off: 0 };
+                    Some((a.clone(), Pos { off: len, ..a }))
+                })
+                .collect(),
+        )
+    }
+
+    pub(crate) fn selected_paragraph_paths(&self) -> Vec<Path> {
+        if let Some(ranges) = self.table_text_ranges() {
+            return ranges.into_iter().map(|(a, _)| a.path).collect();
+        }
+        let (a, b) = self.sel.ordered();
+        self.doc.para_paths_in(&a, &b)
     }
 
     /// Document revision (bumped by every change).
@@ -894,7 +947,13 @@ impl Session {
             return;
         }
         self.typing_open = label == "Typing";
-        self.history.push(Arc::new(Undo { label: label.to_string(), doc: self.doc.clone(), sel: self.sel.clone(), pending: self.pending.clone() }));
+        self.history.push(Arc::new(Undo {
+            label: label.to_string(),
+            doc: self.doc.clone(),
+            sel: self.sel.clone(),
+            table_selection: self.table_selection.clone(),
+            pending: self.pending.clone(),
+        }));
         if self.history.len() > MAX_UNDO {
             self.history.remove(0);
             self.undo_evicted += 1;
@@ -904,7 +963,7 @@ impl Session {
     /// Record `doc`/`sel` as their own undo step after the fact and close the typing group, so
     /// Undo right after an automatic change (AutoFormat, AutoCorrect) reverts only that change.
     pub fn push_undo(&mut self, label: &str, doc: Document, sel: Selection) {
-        self.history.push(Arc::new(Undo { label: label.to_string(), doc, sel, pending: self.pending.clone() }));
+        self.history.push(Arc::new(Undo { label: label.to_string(), doc, sel, table_selection: None, pending: self.pending.clone() }));
         if self.history.len() > MAX_UNDO {
             self.history.remove(0);
             self.undo_evicted += 1;
@@ -964,6 +1023,7 @@ impl Session {
             label: u.label.clone(),
             doc: std::mem::replace(&mut self.doc, u.doc),
             sel: std::mem::replace(&mut self.sel, u.sel),
+            table_selection: std::mem::replace(&mut self.table_selection, u.table_selection),
             pending: std::mem::replace(&mut self.pending, u.pending),
         };
         self.redo.push(Arc::new(cur));
@@ -982,6 +1042,7 @@ impl Session {
             label: u.label.clone(),
             doc: std::mem::replace(&mut self.doc, u.doc),
             sel: std::mem::replace(&mut self.sel, u.sel),
+            table_selection: std::mem::replace(&mut self.table_selection, u.table_selection),
             pending: std::mem::replace(&mut self.pending, u.pending),
         };
         self.history.push(Arc::new(cur));
@@ -1006,6 +1067,7 @@ impl Session {
         self.pending = None;
         self.also_selected.clear();
         self.column = None;
+        self.table_selection = None;
         self.column_mode = false;
         self.extend_mode = false;
         self.link_back.clear();
@@ -1096,6 +1158,7 @@ impl Session {
             also_selected: _,
             // Column selection, like `sel`'s shape: valid only while `sel` matches it.
             column: _,
+            table_selection,
             column_mode: _,
             extend_mode: _,
             // Hyperlink history, like the caret history: not part of the document.
@@ -1109,6 +1172,7 @@ impl Session {
         EditSnapshot {
             doc: doc.clone(),
             sel: sel.clone(),
+            table_selection: table_selection.clone(),
             history_len: history.len(),
             evicted: *undo_evicted,
             head,
@@ -1123,7 +1187,7 @@ impl Session {
     /// selection or undo/redo (undo steps the limit pushed out meanwhile come back). The layout
     /// is recomputed.
     pub fn restore(&mut self, snap: EditSnapshot) {
-        let EditSnapshot { doc, sel, history_len, evicted, head, redo, typing_open, join_next, dirty } = snap;
+        let EditSnapshot { doc, sel, table_selection, history_len, evicted, head, redo, typing_open, join_next, dirty } = snap;
         let gone = usize::try_from(self.undo_evicted.saturating_sub(evicted)).unwrap_or(usize::MAX);
         if gone > 0 {
             let back = gone.min(head.len());
@@ -1133,6 +1197,7 @@ impl Session {
         self.doc = doc;
         self.sel = sel;
         self.also_selected.clear();
+        self.table_selection = table_selection;
         self.history.truncate(history_len);
         self.redo = redo;
         self.typing_open = typing_open;
@@ -1223,6 +1288,7 @@ impl Session {
                 self.typing_open,
                 self.undo_evicted,
                 self.column.clone(),
+                self.table_selection.clone(),
             ))
         } else {
             None
@@ -1242,7 +1308,9 @@ impl Session {
             self.typing_open = false;
         }
         // Only the paste right after a tracked cut makes it a move.
-        if (spec.mutates || matches!(id, "edit.undo" | "edit.redo")) && !matches!(id, "edit.cut" | "edit.paste" | "edit.pasteSpecial") {
+        if (spec.mutates || id.starts_with("table.firstCell") || id.starts_with("table.lastCell"))
+            && !matches!(id, "edit.cut" | "edit.paste" | "edit.pasteSpecial")
+        {
             self.pending_move = None;
         }
         // Floating shape navigation ends with Esc, a caret move or an edit.
@@ -1282,7 +1350,7 @@ impl Session {
         }
         match &result {
             Ok(_) if spec.mutates && only_read => {
-                if let Some((_, _, h, r, t, ev, _)) = before_doc {
+                if let Some((_, _, h, r, t, ev, ..)) = before_doc {
                     self.history = h;
                     self.redo = r;
                     self.typing_open = t;
@@ -1324,9 +1392,15 @@ impl Session {
                 if !matches!(id, "select.addObject" | "arrange.ungroup") && (spec.mutates || self.sel != sel_before) {
                     self.also_selected.clear();
                 }
+                if !id.starts_with("table.select")
+                    && !matches!(id, "edit.undo" | "edit.redo")
+                    && ((self.sel != sel_before && self.selected_table_cells().is_none()) || id.starts_with("caret.") || id.starts_with("select."))
+                {
+                    self.table_selection = None;
+                }
             }
             Err(e) => {
-                if let Some((d, s, h, r, t, ev, c)) = before_doc {
+                if let Some((d, s, h, r, t, ev, c, table)) = before_doc {
                     self.doc = d;
                     self.sel = s;
                     self.history = h;
@@ -1335,6 +1409,7 @@ impl Session {
                     // The steps the command pushed out are back, so they no longer count as gone.
                     self.undo_evicted = ev;
                     self.column = c;
+                    self.table_selection = table;
                 }
                 self.status = e.to_string();
             }
@@ -1371,6 +1446,9 @@ impl Session {
 
     /// Selected plain text.
     pub fn selected_text(&self) -> String {
+        if let Some(ranges) = self.table_text_ranges() {
+            return ranges.into_iter().filter_map(|(a, _)| self.doc.para(a.story, &a.path).map(|p| p.plain_text())).collect::<Vec<_>>().join("\n");
+        }
         let (a, b) = self.sel.ordered();
         self.doc.copy_range(&a, &b).plain_text()
     }

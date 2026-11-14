@@ -162,6 +162,9 @@ pub fn sel_result(s: &Session) -> CmdResult {
 
 /// Delete the selection (respecting track changes); returns the collapsed position.
 pub fn delete_selection(s: &mut Session) -> Result<Pos, CmdError> {
+    if let Some(at) = table::clear_selection(s)? {
+        return Ok(at);
+    }
     let (a, b) = s.sel.ordered();
     if a == b {
         return Ok(a);

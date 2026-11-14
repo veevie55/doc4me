@@ -794,6 +794,9 @@ impl WordApp {
         }
         let document = self.session.document_id();
         let r = self.session.run(id, &params).map_err(|e| e.to_string());
+        if r.is_ok() {
+            table_pen::remember(self, id, &params);
+        }
         // When the document has been replaced (not when Open only showed its picker), a pending
         // "Save changes?" and AutoSave's go-ahead were both about the old one.
         if self.session.document_id() != document {

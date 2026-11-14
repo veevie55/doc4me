@@ -2,6 +2,8 @@
 //! Doc4Me can edit also keep their model ([`crate::chart::ChartSpec`],
 //! [`crate::smart_art::SmartArtSpec`]); the rest are shown, not edited.
 
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 use crate::para::ShapeKind;
@@ -133,4 +135,75 @@ pub enum PathSeg {
     Line(f32, f32),
     Cubic(f32, f32, f32, f32, f32, f32),
     Close,
+}
+
+/// Internal part-graph metadata shared by the document clipboard and DOCX I/O.
+pub const EMBEDDED_PARTS: &str = "doc4me:embedded.parts";
+pub const MAX_EMBEDDED_PARTS: usize = 4096;
+pub const MAX_EMBEDDED_RELS: usize = 1024;
+
+/// One part an embedded object needs: its content type and its own relationships (internal
+/// targets are part names).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct EmbeddedPart {
+    pub content_type: String,
+    pub rels: Vec<EmbeddedRef>,
+}
+
+/// The parts kept for embedded objects, by part name (see [`EMBEDDED_PARTS`]). Stored as text:
+/// `P\tpart\tcontent type` per part, then `R\tpart\tid\ttype\ttarget\tI|E` per relationship of
+/// that part (`E`: `target` is an external URL).
+#[derive(Clone, Debug, Default, PartialEq)]
+pub struct EmbeddedManifest {
+    pub parts: BTreeMap<String, EmbeddedPart>,
+}
+
+/// Can `s` be a field of a manifest line?
+pub fn manifest_field_ok(s: &str) -> bool {
+    !s.is_empty() && !s.contains(['\t', '\r', '\n'])
+}
+
+impl EmbeddedManifest {
+    pub fn parse(bytes: &[u8]) -> EmbeddedManifest {
+        let mut m = EmbeddedManifest::default();
+        for line in String::from_utf8_lossy(bytes).lines() {
+            let f: Vec<&str> = line.split('\t').collect();
+            match f.as_slice() {
+                ["P", part, ct] if m.parts.len() < MAX_EMBEDDED_PARTS => {
+                    m.parts.entry((*part).to_string()).or_insert_with(|| EmbeddedPart { content_type: (*ct).to_string(), rels: Vec::new() });
+                }
+                ["R", part, id, kind, target, mode] => {
+                    if let Some(p) = m.parts.get_mut(*part)
+                        && p.rels.len() < MAX_EMBEDDED_RELS
+                        && !p.rels.iter().any(|r| r.id == *id)
+                    {
+                        p.rels.push(EmbeddedRef {
+                            id: (*id).to_string(),
+                            kind: (*kind).to_string(),
+                            target: (*target).to_string(),
+                            external: *mode == "E",
+                        });
+                    }
+                }
+                _ => {}
+            }
+        }
+        m
+    }
+
+    pub fn to_bytes(&self) -> Vec<u8> {
+        let mut s = String::new();
+        for (part, p) in &self.parts {
+            if !manifest_field_ok(part) || !manifest_field_ok(&p.content_type) {
+                continue;
+            }
+            s.push_str(&format!("P\t{part}\t{}\n", p.content_type));
+        }
+        for (part, p) in &self.parts {
+            for r in p.rels.iter().filter(|r| [&r.id, &r.kind, &r.target].iter().all(|f| manifest_field_ok(f))) {
+                s.push_str(&format!("R\t{part}\t{}\t{}\t{}\t{}\n", r.id, r.kind, r.target, if r.external { "E" } else { "I" }));
+            }
+        }
+        s.into_bytes()
+    }
 }

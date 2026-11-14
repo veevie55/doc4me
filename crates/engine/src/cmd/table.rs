@@ -1,6 +1,6 @@
 //! Table Design and Table Layout tabs.
 
-use doc4me_doc::props::{Align, Border, BorderStyle, Borders, HeightRule, Rgb, TextDirection, VAlign};
+use doc4me_doc::props::{Align, Border, BorderStyle, Borders, CharProps, HeightRule, Rgb, TextDirection, VAlign};
 use doc4me_doc::{Block, Paragraph, Path, Pos, StoryRef, Table, para_block};
 use serde_json::{Value, json};
 
@@ -8,7 +8,7 @@ use super::sel_result;
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
 fn in_table(s: &Session) -> Option<&'static str> {
-    if s.sel.focus.path.cell().is_some() { None } else { Some("the cursor isn't in a table") }
+    if cell(s).is_ok() { None } else { Some("the cursor isn't in a table") }
 }
 
 pub fn specs() -> Vec<CommandSpec> {
@@ -26,25 +26,9 @@ pub fn specs() -> Vec<CommandSpec> {
         t(CommandSpec::new("table.deleteRow", "Delete Rows", "Table Layout › Rows & Columns › Delete", del_row)),
         t(CommandSpec::new("table.deleteColumn", "Delete Columns", "Table Layout › Rows & Columns › Delete", del_col)),
         t(CommandSpec::new("table.deleteTable", "Delete Table", "Table Layout › Rows & Columns › Delete", del_table)),
-        t(CommandSpec::new("table.deleteCells", "Delete Cells", "Table Layout › Rows & Columns › Delete", |s, _| {
-            let (tp, r, c) = cell(s)?;
-            let story = s.sel.focus.story;
-            let t = s.doc.table_mut(story, &tp)?;
-            if let Some(row) = t.rows.get_mut(r)
-                && row.cells.len() > 1
-                && c < row.cells.len()
-            {
-                row.cells.remove(c);
-            }
-            fix_caret(s, &tp, r, 0)
-        })),
+        t(CommandSpec::new("table.deleteCells", "Delete Cells", "Table Layout › Rows & Columns › Delete", delete_cells)),
         t(CommandSpec::new("table.merge", "Merge Cells", "Table Layout › Merge", merge)),
-        t(CommandSpec::new("table.split", "Split Cells", "Table Layout › Merge", |s, v| {
-            let n = p::u64(v, "columns").unwrap_or(2).clamp(1, 63) as usize;
-            let (tp, r, c) = cell(s)?;
-            s.doc.table_mut(s.sel.focus.story, &tp)?.split_cell(r, c, n);
-            fix_caret(s, &tp, r, c)
-        })
+        t(CommandSpec::new("table.split", "Split Cells", "Table Layout › Merge", split_cells)
         .params(r#"{"columns"?: n}"#)),
         t(CommandSpec::new("table.splitTable", "Split Table", "Table Layout › Merge", split_table)),
         t(CommandSpec::new("table.style", "Table Styles", "Table Design › Table Styles", |s, v| {
@@ -74,7 +58,7 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"color": "RRGGBB" | null}"#)),
         t(CommandSpec::new("table.borders", "Borders", "Table Design › Borders", borders)
-            .params(r#"{"kind": "all|outside|inside|none|top|bottom|left|right", "width"?: pt, "color"?: "RRGGBB"}"#)),
+            .params(r#"{"kind": "all|outside|inside|insideHorizontal|insideVertical|none|top|bottom|left|right", "style"?: "single|double|dotted|dashed|thick|triple|dotDash|wave|none", "width"?: pt, "color"?: "RRGGBB", "scope"?: "selection|table"} (an explicit cell selection is respected; without one the legacy default is the whole table)"#)),
         t(CommandSpec::new("table.cellAlign", "Alignment", "Table Layout › Alignment", |s, v| {
             let (h, va) = match p::str(v, "value").unwrap_or("topLeft") {
                 "topLeft" => (Align::Left, VAlign::Top),
@@ -102,22 +86,8 @@ pub fn specs() -> Vec<CommandSpec> {
         t(CommandSpec::new("table.textDirection", "Text Direction", "Table Layout › Alignment", text_direction)
             .params(r#"{"value"?: "horizontal|down|up"} (default: the next direction after the caret cell's, like Word's button)"#)),
         t(CommandSpec::new("table.autofit", "AutoFit", "Table Layout › Cell Size", autofit).params(r#"{"mode": "contents|window|fixed"}"#)),
-        t(CommandSpec::new("table.distributeColumns", "Distribute Columns", "Table Layout › Cell Size", |s, _| {
-            with_table(s, |t| {
-                let total: f32 = t.grid.iter().sum();
-                let n = t.grid.len().max(1) as f32;
-                t.grid.iter_mut().for_each(|g| *g = total / n);
-                sync_cell_widths(t);
-            })
-        })),
-        t(CommandSpec::new("table.distributeRows", "Distribute Rows", "Table Layout › Cell Size", |s, _| {
-            with_table(s, |t| {
-                let h = t.rows.iter().filter_map(|r| r.props.height).fold(0.0f32, f32::max).max(18.0);
-                for r in &mut t.rows {
-                    r.props.height = Some(h);
-                }
-            })
-        })),
+        t(CommandSpec::new("table.distributeColumns", "Distribute Columns", "Table Layout › Cell Size", distribute_columns)),
+        t(CommandSpec::new("table.distributeRows", "Distribute Rows", "Table Layout › Cell Size", distribute_rows)),
         t(CommandSpec::new("table.columnWidth", "Table Column Width", "Table Layout › Cell Size", |s, v| {
             let w = p::req_f32(v, "width")?.clamp(6.0, 1584.0);
             let cells = selected_cells(s);
@@ -145,15 +115,8 @@ pub fn specs() -> Vec<CommandSpec> {
             })
         })
         .params(r#"{"height": pt, "rule"?: "atLeast|exact"} (every row the selection covers, the caret's without one)"#)),
-        t(CommandSpec::new("table.repeatHeader", "Repeat Header Rows", "Table Layout › Data", |s, v| {
-            let (_, r, _) = cell(s)?;
-            let on = p::bool(v, "value");
-            with_table(s, |t| {
-                if let Some(row) = t.rows.get_mut(r) {
-                    row.props.header = on.unwrap_or(!row.props.header);
-                }
-            })
-        })),
+        t(CommandSpec::new("table.repeatHeader", "Repeat Header Rows", "Table Layout › Data", repeat_header)
+            .params(r#"{"value"?: bool} (selected rows; repeated headers must form a prefix at the table's start)"#)),
         // Table Properties › Alt Text: the title (`w:tblCaption`) and description (`w:tblDescription`).
         t(CommandSpec::new("table.altText", "Alt Text", "Table Layout › Table › Properties", |s, v| {
             let (title, text) = (p::str(v, "title"), p::str(v, "text"));
@@ -185,6 +148,7 @@ pub fn specs() -> Vec<CommandSpec> {
             select_cells(s, &tp, Some((r, None)))
         })
         .pure()),
+        t(CommandSpec::new("table.selectColumn", "Column", "Table Layout › Table › Select", select_column).pure()),
         t(CommandSpec::new("table.selectCell", "Select Cell", "Table Layout › Table › Select", |s, _| {
             let (tp, r, c) = cell(s)?;
             select_cells(s, &tp, Some((r, Some(c))))
@@ -236,13 +200,14 @@ fn autofit(s: &mut Session, v: &Value) -> CmdResult {
                 sync_cell_widths(t);
             })
         }
-        _ => with_table(s, |t| {
+        "window" => with_table(s, |t| {
             t.props.fixed = false;
             t.props.width_pct = Some(100.0);
             let n = t.grid.len().max(1) as f32;
             t.grid.iter_mut().for_each(|g| *g = tw / n);
             sync_cell_widths(t);
         }),
+        x => Err(CmdError::Params(format!("unknown AutoFit mode `{x}`"))),
     }
 }
 
@@ -267,9 +232,7 @@ pub(crate) fn sync_cell_widths(t: &mut Table) {
 /// goes, so the layout doesn't scale the column back.
 /// Give every grid column the `cells` (row, cell) pairs touch the width `w`.
 fn set_column_widths(t: &mut Table, cells: &[(usize, usize)], w: f32) {
-    let mut cols: Vec<usize> = cells.iter().map(|&(r, c)| t.grid_col(r, c)).collect();
-    cols.sort_unstable();
-    cols.dedup();
+    let cols = grid_columns(t, cells);
     let mut any = false;
     for g in cols {
         if let Some(x) = t.grid.get_mut(g) {
@@ -282,6 +245,70 @@ fn set_column_widths(t: &mut Table, cells: &[(usize, usize)], w: f32) {
         t.props.width_pct = None;
         sync_cell_widths(t);
     }
+}
+
+fn grid_columns(t: &Table, cells: &[(usize, usize)]) -> std::collections::BTreeSet<usize> {
+    cells
+        .iter()
+        .flat_map(|&(r, c)| {
+            let g = t.grid_col(r, c);
+            let span = t.rows.get(r).and_then(|r| r.cells.get(c)).map_or(0, doc4me_doc::Cell::span);
+            g..g.saturating_add(span).min(t.grid.len())
+        })
+        .collect()
+}
+
+fn distribute_columns(s: &mut Session, _: &Value) -> CmdResult {
+    let (tp, _, _) = cell(s)?;
+    let t = s.doc.table(s.sel.focus.story, &tp).ok_or_else(|| CmdError::Disabled("no table".into()))?;
+    let cols =
+        if s.selected_table_cells().is_some() || !s.sel.is_collapsed() { grid_columns(t, &selected_cells(s)) } else { (0..t.grid.len()).collect() };
+    with_table(s, |t| {
+        let total: f32 = cols.iter().filter_map(|c| t.grid.get(*c)).sum();
+        let width = total / cols.len().max(1) as f32;
+        for c in cols {
+            if let Some(w) = t.grid.get_mut(c) {
+                *w = width;
+            }
+        }
+        sync_cell_widths(t);
+    })
+}
+
+fn distribute_rows(s: &mut Session, _: &Value) -> CmdResult {
+    let (tp, _, _) = cell(s)?;
+    let story = s.sel.focus.story;
+    let t = s.doc.table(story, &tp).ok_or_else(|| CmdError::Disabled("no table".into()))?;
+    let rows: std::collections::BTreeSet<_> = if s.selected_table_cells().is_some() || !s.sel.is_collapsed() {
+        selected_cells(s).into_iter().map(|(r, _)| r).collect()
+    } else {
+        (0..t.rows.len()).collect()
+    };
+    let mut heights = std::collections::BTreeMap::<usize, f32>::new();
+    for page in &s.layout().pages {
+        let mut local = std::collections::BTreeMap::<usize, f32>::new();
+        for it in page.items.iter().chain(&page.header).chain(&page.footer) {
+            if let doc4me_layout::Placed::Cell { rect, table, story: st, row, .. } = it
+                && *st == story
+                && *table == tp
+                && rows.contains(row)
+            {
+                local.entry(*row).and_modify(|h| *h = h.min(rect.h)).or_insert(rect.h);
+            }
+        }
+        for (r, h) in local {
+            *heights.entry(r).or_default() += h;
+        }
+    }
+    let h = heights.values().copied().fold(18.0f32, f32::max).clamp(1.0, 1584.0);
+    with_table(s, |t| {
+        for r in rows {
+            if let Some(row) = t.rows.get_mut(r) {
+                row.props.height = Some(h);
+                row.props.height_rule = HeightRule::AtLeast;
+            }
+        }
+    })
 }
 
 fn set_column_width(t: &mut Table, r: usize, c: usize, w: f32) {
@@ -531,10 +558,16 @@ fn positioning(s: &mut Session, v: &Value) -> CmdResult {
 }
 
 fn cell(s: &Session) -> Result<(Path, usize, usize), CmdError> {
-    s.sel.focus.path.cell().ok_or_else(|| CmdError::Disabled("the cursor isn't in a table".into()))
+    let at = s
+        .sel
+        .focus
+        .path
+        .cell()
+        .filter(|(tp, r, c)| s.doc.table(s.sel.focus.story, tp).and_then(|t| t.rows.get(*r)).and_then(|r| r.cells.get(*c)).is_some());
+    at.ok_or_else(|| CmdError::Disabled("the cursor isn't in a table".into()))
 }
 
-fn with_table(s: &mut Session, f: impl Fn(&mut Table)) -> CmdResult {
+fn with_table(s: &mut Session, f: impl FnOnce(&mut Table)) -> CmdResult {
     let (tp, _, _) = cell(s)?;
     let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
     f(t);
@@ -544,20 +577,50 @@ fn with_table(s: &mut Session, f: impl Fn(&mut Table)) -> CmdResult {
 
 /// Selected cells: (row, cell) pairs covered by the selection (at least the caret's cell).
 fn selected_cells(s: &Session) -> Vec<(usize, usize)> {
+    if let Some(sel) = s.selected_table_cells() {
+        return sel.cells.iter().copied().collect();
+    }
     let (a, b) = s.sel.ordered();
     let (Some((ta, ra, ca)), Some((tb, rb, cb))) = (a.path.cell(), b.path.cell()) else { return Vec::new() };
-    if ta != tb {
+    if a.story != b.story || ta != tb {
         return vec![(rb, cb)];
     }
+    let Some(t) = s.doc.table(b.story, &tb) else { return Vec::new() };
     let (r0, r1) = (ra.min(rb), ra.max(rb));
     let (c0, c1) = (ca.min(cb), ca.max(cb));
     let mut v = Vec::new();
-    for r in r0..=r1 {
-        for c in c0..=c1 {
+    for (r, row) in t.rows.iter().enumerate().take(r1.saturating_add(1)).skip(r0) {
+        for c in c0..row.cells.len().min(c1.saturating_add(1)) {
             v.push((r, c));
         }
     }
     v
+}
+
+/// Keyboard row/column selection retains its direction, while formatting uses cell geometry.
+pub(crate) fn capture_cell_selection(s: &mut Session) {
+    s.table_selection = None;
+    let (a, b) = s.sel.ordered();
+    let (Some((ta, ra, ca)), Some((tb, rb, cb))) = (a.path.cell(), b.path.cell()) else { return };
+    if a.story != b.story || ta != tb {
+        return;
+    }
+    let Some(t) = s.doc.table(a.story, &ta) else { return };
+    let ga = t.grid_col(ra, ca);
+    let gb = t.grid_col(rb, cb);
+    let end_a = ga.saturating_add(t.rows.get(ra).and_then(|r| r.cells.get(ca)).map_or(0, doc4me_doc::Cell::span));
+    let end_b = gb.saturating_add(t.rows.get(rb).and_then(|r| r.cells.get(cb)).map_or(0, doc4me_doc::Cell::span));
+    let (left, right) = (ga.min(gb), end_a.max(end_b));
+    let mut cells = std::collections::BTreeSet::new();
+    for (r, row) in t.rows.iter().enumerate().take(rb.saturating_add(1)).skip(ra) {
+        for (c, cell) in row.cells.iter().enumerate() {
+            let g = t.grid_col(r, c);
+            if g < right && g.saturating_add(cell.span()) > left {
+                cells.insert((r, c));
+            }
+        }
+    }
+    s.table_selection = Some(std::sync::Arc::new(crate::TableSelection { sel: s.sel.clone(), story: a.story, table: ta, cells, whole_table: false }));
 }
 
 fn with_cells(s: &mut Session, f: impl Fn(&mut doc4me_doc::Cell)) -> CmdResult {
@@ -601,6 +664,7 @@ pub(crate) fn touch_cells(s: &mut Session, tp: &Path) -> Result<(), CmdError> {
 }
 
 fn fix_caret(s: &mut Session, tp: &Path, r: usize, c: usize) -> CmdResult {
+    s.table_selection = None;
     let story = s.sel.focus.story;
     let Some(t) = s.doc.table(story, tp) else {
         s.sel = Selection::caret(s.doc.clamp(&Pos { story, path: tp.clone(), off: 0 }));
@@ -617,12 +681,17 @@ fn fix_caret(s: &mut Session, tp: &Path, r: usize, c: usize) -> CmdResult {
 fn row(s: &mut Session, below: bool) -> CmdResult {
     let (tp, r, c) = cell(s)?;
     let cells = selected_cells(s);
-    let n = cells.iter().map(|x| x.0).collect::<std::collections::BTreeSet<_>>().len().max(1);
+    let rows: std::collections::BTreeSet<_> = cells.iter().map(|x| x.0).collect();
+    let n = rows.len().max(1);
+    let at = if below { rows.last().copied().unwrap_or(r).saturating_add(1) } else { rows.first().copied().unwrap_or(r) };
     let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
-    for _ in 0..n {
-        t.insert_row(if below { r + 1 } else { r }, r);
+    if n > doc4me_doc::table::MAX_ROWS.saturating_sub(t.rows.len()) {
+        return Err(CmdError::Params("too many table rows".into()));
     }
-    fix_caret(s, &tp, if below { r + 1 } else { r }, c)
+    for _ in 0..n {
+        t.insert_row(at, r);
+    }
+    fix_caret(s, &tp, at, c)
 }
 
 /// `table.insertRows`: `count` rows above (or below) the cursor's row, like it.
@@ -633,11 +702,16 @@ fn insert_rows(s: &mut Session, v: &Value) -> CmdResult {
     };
     let below = p::bool(v, "below").unwrap_or(false);
     let (tp, r, c) = cell(s)?;
+    let rows: std::collections::BTreeSet<_> = selected_cells(s).into_iter().map(|x| x.0).collect();
+    let at = if below { rows.last().copied().unwrap_or(r).saturating_add(1) } else { rows.first().copied().unwrap_or(r) };
     let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
-    for _ in 0..n {
-        t.insert_row(if below { r + 1 } else { r }, r);
+    if n as usize > doc4me_doc::table::MAX_ROWS.saturating_sub(t.rows.len()) {
+        return Err(CmdError::Params("too many table rows".into()));
     }
-    fix_caret(s, &tp, if below { r + 1 } else { r }, c)
+    for _ in 0..n {
+        t.insert_row(at, r);
+    }
+    fix_caret(s, &tp, at, c)
 }
 
 /// `table.insertCells`. Shift cells down: as in Word, the cells of the cursor's column from its
@@ -650,6 +724,9 @@ fn insert_cells(s: &mut Session, v: &Value) -> CmdResult {
             let (tp, r, c) = cell(s)?;
             let story = s.sel.focus.story;
             let t = s.doc.table_mut(story, &tp)?;
+            if t.rows.len() >= doc4me_doc::table::MAX_ROWS {
+                return Err(CmdError::Params("too many table rows".into()));
+            }
             let last = t.rows.len().saturating_sub(1);
             t.insert_row(last + 1, last);
             for i in (r + 1..t.rows.len()).rev() {
@@ -670,18 +747,49 @@ fn insert_cells(s: &mut Session, v: &Value) -> CmdResult {
 
 fn col(s: &mut Session, right: bool) -> CmdResult {
     let (tp, r, c) = cell(s)?;
+    let cells = selected_cells(s);
+    let explicit = s.selected_table_cells().is_some() || !s.sel.is_collapsed();
     let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
-    let g = t.grid_col(r, c);
-    let span = t.rows.get(r).and_then(|x| x.cells.get(c)).map(|x| x.span()).unwrap_or(1);
-    t.insert_col(if right { g + span } else { g });
+    let cols = grid_columns(t, &cells);
+    let g = cols.first().copied().unwrap_or_else(|| t.grid_col(r, c));
+    let at = if right { cols.last().copied().unwrap_or(g).saturating_add(1) } else { g };
+    let n = if explicit { cols.len().max(1) } else { 1 };
+    if n > doc4me_doc::table::MAX_COLS.saturating_sub(t.grid.len()) {
+        return Err(CmdError::Params("too many table columns".into()));
+    }
+    let before: f32 = t.grid.iter().sum();
+    for _ in 0..n {
+        t.insert_col(at);
+    }
     // Keep the table within its width: shrink all columns proportionally.
     let total: f32 = t.grid.iter().sum();
-    let before: f32 = total - t.grid.get(if right { g + span } else { g }).copied().unwrap_or(0.0);
     if before > 0.0 {
         let k = before / total;
         t.grid.iter_mut().for_each(|w| *w *= k);
     }
-    fix_caret(s, &tp, r, if right { c + 1 } else { c })
+    sync_cell_widths(t);
+    let caret = t.cell_at_grid(r, at).unwrap_or(c);
+    fix_caret(s, &tp, r, caret)
+}
+
+fn delete_cells(s: &mut Session, _: &Value) -> CmdResult {
+    let (tp, r, c) = cell(s)?;
+    let cells = selected_cells(s);
+    let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
+    for (rr, cc) in cells.into_iter().rev() {
+        if let Some(row) = t.rows.get_mut(rr)
+            && cc < row.cells.len()
+        {
+            let span = row.cells.remove(cc).span();
+            row.props.grid_after = row.props.grid_after.saturating_add(span as u32).min(doc4me_doc::table::MAX_COLS as u32);
+        }
+    }
+    t.rows.retain(|r| !r.cells.is_empty());
+    if t.rows.is_empty() {
+        return remove_table(s, &tp);
+    }
+    sync_cell_widths(t);
+    fix_caret(s, &tp, r, c)
 }
 
 fn del_row(s: &mut Session, _: &Value) -> CmdResult {
@@ -724,16 +832,21 @@ fn del_col(s: &mut Session, _: &Value) -> CmdResult {
     }
     // Rows left without cells are dropped; if that was every row, no table is left.
     if t.rows.is_empty() {
-        return del_table(s, &Value::Null);
+        return remove_table(s, &tp);
     }
     fix_caret(s, &tp, r, c.saturating_sub(1))
 }
 
 fn del_table(s: &mut Session, _: &Value) -> CmdResult {
     let (tp, _, _) = cell(s)?;
+    remove_table(s, &tp)
+}
+
+fn remove_table(s: &mut Session, tp: &Path) -> CmdResult {
     let story = s.sel.focus.story;
-    s.doc.remove_block(story, &tp)?;
-    s.sel = Selection::caret(s.doc.clamp(&Pos { story, path: tp, off: 0 }));
+    s.doc.remove_block(story, tp)?;
+    s.table_selection = None;
+    s.sel = Selection::caret(s.doc.clamp(&Pos { story, path: tp.clone(), off: 0 }));
     sel_result(s)
 }
 
@@ -746,12 +859,58 @@ fn merge(s: &mut Session, _: &Value) -> CmdResult {
     let story = s.sel.focus.story;
     let (r0, r1) = (cells.iter().map(|x| x.0).min().unwrap_or(0), cells.iter().map(|x| x.0).max().unwrap_or(0));
     let t = s.doc.table_mut(story, &tp)?;
-    let c0 = cells.iter().map(|x| x.1).min().unwrap_or(0);
-    let c1 = cells.iter().map(|x| x.1).max().unwrap_or(0);
-    let g0 = t.grid_col(r0, c0);
-    let g1 = t.grid_col(r0, c1) + t.rows.get(r0).and_then(|r| r.cells.get(c1)).map(|c| c.span()).unwrap_or(1) - 1;
+    let cols = grid_columns(t, &cells);
+    let g0 = cols.first().copied().unwrap_or(0);
+    let g1 = cols.last().copied().unwrap_or(g0);
+    for r in r0..=r1 {
+        for g in g0..=g1 {
+            if let Some(c) = t.cell_at_grid(r, g)
+                && !cells.contains(&(r, c))
+            {
+                return Err(CmdError::Params("select a rectangle of complete cells to merge".into()));
+            }
+        }
+    }
+    let c0 = t.cell_at_grid(r0, g0).unwrap_or(0);
     t.merge(r0, r1, g0, g1);
     fix_caret(s, &tp, r0, c0)
+}
+
+fn split_cells(s: &mut Session, v: &Value) -> CmdResult {
+    let n = p::u64(v, "columns").unwrap_or(2).clamp(1, doc4me_doc::table::MAX_COLS as u64) as usize;
+    let (tp, r, c) = cell(s)?;
+    if selected_cells(s).len() > 1 {
+        return Err(CmdError::Disabled("select one cell to split".into()));
+    }
+    let t = s.doc.table_mut(s.sel.focus.story, &tp)?;
+    let g = t.grid_col(r, c);
+    let span = t.rows.get(r).and_then(|row| row.cells.get(c)).map_or(1, doc4me_doc::Cell::span);
+    let (r0, r1) = super::table_draw::vgroup(t, r, c);
+    let merged = t.rows.get(r).and_then(|row| row.cells.get(c)).is_some_and(|c| c.props.vmerge != doc4me_doc::props::VMerge::None);
+    if merged {
+        for rr in r0..=r1 {
+            let cell = t.cell_at_grid(rr, g).and_then(|cc| t.rows.get(rr).and_then(|row| row.cells.get(cc)));
+            if cell.is_none_or(|cell| cell.span() != span || (rr == r0 && cell.props.vmerge != doc4me_doc::props::VMerge::Restart)) {
+                return Err(CmdError::Disabled("repair the inconsistent vertical merge before splitting it".into()));
+            }
+        }
+    }
+    for rr in r0..=r1 {
+        let cc = t.cell_at_grid(rr, g).ok_or_else(|| CmdError::Failed("the merged cell has no grid column".into()))?;
+        let count = t.rows.get(rr).map_or(0, |row| row.cells.len());
+        t.split_cell(rr, cc, n);
+        if t.rows.get(rr).is_none_or(|row| row.cells.len() != count.saturating_add(n.saturating_sub(1))) {
+            return Err(CmdError::Params("too many table grid columns for an equal split".into()));
+        }
+        if merged && let Some(row) = t.rows.get_mut(rr) {
+            for cell in row.cells.iter_mut().skip(cc).take(n) {
+                cell.props.vmerge = if rr == r0 { doc4me_doc::props::VMerge::Restart } else { doc4me_doc::props::VMerge::Continue };
+            }
+        }
+    }
+    sync_cell_widths(t);
+    let caret = t.cell_at_grid(r0, g).unwrap_or(c);
+    fix_caret(s, &tp, r0, caret)
 }
 
 fn split_table(s: &mut Session, _: &Value) -> CmdResult {
@@ -761,6 +920,9 @@ fn split_table(s: &mut Session, _: &Value) -> CmdResult {
     }
     let story = s.sel.focus.story;
     let t = s.doc.table_mut(story, &tp)?;
+    if t.rows.get(r).is_some_and(|row| row.cells.iter().any(|c| c.props.vmerge == doc4me_doc::props::VMerge::Continue)) {
+        return Err(CmdError::Disabled("split the vertically merged cells before splitting the table".into()));
+    }
     let tail_rows = t.rows.split_off(r);
     // Content controls closing after the table now close after its second part.
     let close = std::mem::take(&mut t.controls.close);
@@ -773,13 +935,118 @@ fn split_table(s: &mut Session, _: &Value) -> CmdResult {
     sel_result(s)
 }
 
+fn repeat_header(s: &mut Session, v: &Value) -> CmdResult {
+    let (tp, _, _) = cell(s)?;
+    let rows: std::collections::BTreeSet<_> = selected_cells(s).into_iter().map(|(r, _)| r).collect();
+    let t = s.doc.table(s.sel.focus.story, &tp).ok_or_else(|| CmdError::Disabled("no table".into()))?;
+    let first = rows.first().copied().ok_or_else(|| CmdError::Disabled("no rows selected".into()))?;
+    let on = p::bool(v, "value").unwrap_or(!rows.iter().all(|r| t.rows.get(*r).is_some_and(|r| r.props.header)));
+    if on && t.rows.iter().take(first).any(|r| !r.props.header) {
+        return Err(CmdError::Disabled("repeat the first row and consecutive rows beneath it".into()));
+    }
+    with_table(s, |t| {
+        for (r, row) in t.rows.iter_mut().enumerate() {
+            if rows.contains(&r) || (!on && r >= first) {
+                row.props.header = on;
+            }
+        }
+    })
+}
+
+pub(crate) fn paint_border(s: &mut Session, v: &Value) -> CmdResult {
+    if !["page", "x0", "y0", "x1", "y1"].iter().any(|k| v.get(k).is_some()) {
+        return borders(s, v);
+    }
+    let page = p::u64(v, "page").and_then(|n| usize::try_from(n).ok()).ok_or_else(|| CmdError::Params("`page` is required".into()))?;
+    let (x0, y0, x1, y1) = (p::req_f32(v, "x0")?, p::req_f32(v, "y0")?, p::req_f32(v, "x1")?, p::req_f32(v, "y1")?);
+    let (dx, dy) = ((x1 - x0).abs(), (y1 - y0).abs());
+    let click = dx < 3.0 && dy < 3.0;
+    let horizontal = dx >= dy;
+    if !click && dx.min(dy) > 3.0 {
+        return Err(CmdError::Params("paint a horizontal or vertical border".into()));
+    }
+    let layout = s.layout();
+    let pg = layout.pages.get(page).ok_or_else(|| CmdError::Params(format!("no page {page}")))?;
+    let mut hits = Vec::new();
+    for it in pg.items.iter().chain(&pg.header).chain(&pg.footer) {
+        let doc4me_layout::Placed::Cell { rect, table, story, row, cell, covered: false, .. } = it else { continue };
+        for (side, at, a, b) in [
+            (0, rect.y, rect.x, rect.right()),
+            (1, rect.right(), rect.y, rect.bottom()),
+            (2, rect.bottom(), rect.x, rect.right()),
+            (3, rect.x, rect.y, rect.bottom()),
+        ] {
+            let h = side % 2 == 0;
+            let (line, lo, hi) = if h { ((y0 + y1) / 2.0, x0.min(x1), x0.max(x1)) } else { ((x0 + x1) / 2.0, y0.min(y1), y0.max(y1)) };
+            let distance = (at - line).abs();
+            let overlaps = if click { lo >= a - 3.0 && hi <= b + 3.0 } else { hi.min(b) - lo.max(a) > 0.5 };
+            if (click || h == horizontal) && distance <= 3.0 && overlaps {
+                hits.push((distance, table.clone(), *story, *row, *cell, side));
+                if hits.len() > 4096 {
+                    return Err(CmdError::Params("paint a shorter border stroke".into()));
+                }
+            }
+        }
+    }
+    hits.sort_by(|a, b| a.0.total_cmp(&b.0).then_with(|| b.1.0.len().cmp(&a.1.0.len())));
+    let (_, table, story, _, _, _) = hits.first().cloned().ok_or_else(|| CmdError::Failed("no table border within 3 pt of the stroke".into()))?;
+    if click {
+        hits.truncate(1);
+    }
+    let saved = (s.sel.clone(), s.table_selection.clone());
+    let mut count = 0;
+    for (_, tp, st, row, cell, side) in hits {
+        if tp != table || st != story {
+            continue;
+        }
+        s.sel.focus.story = story;
+        set_cell_selection(s, &tp, std::collections::BTreeSet::from([(row, cell)]), false)?;
+        let mut params = v.clone();
+        params["kind"] = json!(["top", "right", "bottom", "left"].get(side).copied().unwrap_or("top"));
+        params["scope"] = json!("selection");
+        borders(s, &params)?;
+        count += 1;
+    }
+    (s.sel, s.table_selection) = saved;
+    Ok(json!({"paintedEdges":count}))
+}
+
 fn borders(s: &mut Session, v: &Value) -> CmdResult {
     let kind = p::str(v, "kind").unwrap_or("all");
-    let w = p::f32(v, "width").unwrap_or(0.5).clamp(0.25, 6.0);
-    let color = p::str(v, "color").and_then(Rgb::parse);
-    let b = Border { style: BorderStyle::Single, width: w, color, space: 0.0 };
+    if !["all", "outside", "inside", "insideHorizontal", "insideVertical", "none", "top", "bottom", "left", "right"].contains(&kind) {
+        return Err(CmdError::Params(format!("unknown border kind `{kind}`")));
+    }
+    let style = p::str(v, "style").unwrap_or("single");
+    if !["single", "double", "dotted", "dashed", "thick", "triple", "dotDash", "wave", "none", "nil"].contains(&style) {
+        return Err(CmdError::Params(format!("unknown border style `{style}`")));
+    }
+    let scope = p::str(v, "scope");
+    if scope.is_some_and(|v| !["selection", "table"].contains(&v)) {
+        return Err(CmdError::Params("border scope must be selection or table".into()));
+    }
     let none = Border { style: BorderStyle::None, width: 0.0, color: None, space: 0.0 };
+    let style = BorderStyle::from_ooxml(style);
+    let b = if style == BorderStyle::None {
+        none
+    } else {
+        Border { style, width: p::f32(v, "width").unwrap_or(0.5).clamp(0.25, 6.0), color: p::str(v, "color").and_then(Rgb::parse), space: 0.0 }
+    };
+    let whole = scope == Some("table")
+        || s.selected_table_cells().is_some_and(|t| t.whole_table)
+        || (scope.is_none() && s.selected_table_cells().is_none() && s.sel.is_collapsed());
+    let cells = selected_cells(s).into_iter().collect();
     with_table(s, |t| {
+        // DOCX left/right are logical start/end in a mirrored table. Commands and pointer
+        // coordinates name the visible edge on the page.
+        let kind = match (kind, t.props.bidi_visual) {
+            ("left", true) => "right",
+            ("right", true) => "left",
+            _ => kind,
+        };
+        if !whole {
+            selection_borders(t, &cells, kind, b, none);
+            return;
+        }
         let mut cur = t.props.borders.unwrap_or_default();
         match kind {
             "all" => cur = Borders::all(b),
@@ -789,19 +1056,19 @@ fn borders(s: &mut Session, v: &Value) -> CmdResult {
                 cur.bottom = Some(b);
                 cur.left = Some(b);
                 cur.right = Some(b);
-                // The cleared inside sides must not fall back to the table style (Word writes nil).
                 cur.between = Some(none);
                 cur.inside_v = Some(none);
             }
             "inside" => {
                 cur.between = Some(b);
                 cur.inside_v = Some(b);
-                // The cleared outer sides must not fall back to the table style (Word writes nil).
                 cur.top = Some(none);
                 cur.bottom = Some(none);
                 cur.left = Some(none);
                 cur.right = Some(none);
             }
+            "insideHorizontal" => cur.between = Some(b),
+            "insideVertical" => cur.inside_v = Some(b),
             "top" => cur.top = Some(b),
             "bottom" => cur.bottom = Some(b),
             "left" => cur.left = Some(b),
@@ -809,12 +1076,88 @@ fn borders(s: &mut Session, v: &Value) -> CmdResult {
             _ => {}
         }
         t.props.borders = Some(cur);
-        for r in &mut t.rows {
-            for c in &mut r.cells {
+        if ["all", "none", "outside", "inside"].contains(&kind) {
+            for c in t.rows.iter_mut().flat_map(|r| &mut r.cells) {
                 c.props.borders = None;
             }
+        } else {
+            let all = t.rows.iter().enumerate().flat_map(|(r, row)| (0..row.cells.len()).map(move |c| (r, c))).collect();
+            selection_borders(t, &all, kind, b, none);
         }
     })
+}
+
+fn set_border_edge(borders: &mut Borders, side: usize, border: Border) {
+    match side {
+        0 => borders.top = Some(border),
+        1 => borders.right = Some(border),
+        2 => borders.bottom = Some(border),
+        3 => borders.left = Some(border),
+        _ => {}
+    }
+}
+
+/// Update selected edges and the other side of each shared edge. Other cell edges retain their
+/// direct formatting, and an explicit nil on both sides prevents style borders reappearing.
+fn selection_borders(t: &mut Table, cells: &std::collections::BTreeSet<(usize, usize)>, kind: &str, b: Border, none: Border) {
+    let (Some(&(r0, _)), Some(&(r1, _))) = (cells.first(), cells.last()) else { return };
+    let mut g0 = t.grid.len();
+    let mut g1 = 0;
+    for &(r, c) in cells {
+        let start = t.grid_col(r, c);
+        g0 = g0.min(start);
+        g1 = g1.max(start.saturating_add(t.rows.get(r).and_then(|r| r.cells.get(c)).map_or(1, doc4me_doc::Cell::span)));
+    }
+    for &(r, c) in cells {
+        let Some(cell) = t.rows.get(r).and_then(|r| r.cells.get(c)) else { continue };
+        let left = t.grid_col(r, c);
+        let right = left.saturating_add(cell.span());
+        let outer = [r == r0, right == g1, r == r1, left == g0];
+        for (side, outside) in outer.into_iter().enumerate() {
+            let edge = match kind {
+                "all" => Some(b),
+                "none" => Some(none),
+                "outside" => Some(if outside { b } else { none }),
+                "inside" => Some(if outside { none } else { b }),
+                "insideHorizontal" if side.is_multiple_of(2) && !outside => Some(b),
+                "insideVertical" if !side.is_multiple_of(2) && !outside => Some(b),
+                "top" if side == 0 && outside => Some(b),
+                "right" if side == 1 && outside => Some(b),
+                "bottom" if side == 2 && outside => Some(b),
+                "left" if side == 3 && outside => Some(b),
+                _ => None,
+            };
+            let Some(edge) = edge else { continue };
+            let mut neighbours = Vec::new();
+            if side == 1 || side == 3 {
+                let g = if side == 1 { Some(right) } else { left.checked_sub(1) };
+                if let Some(cc) = g.and_then(|g| t.cell_at_grid(r, g)) {
+                    neighbours.push((r, cc));
+                }
+            } else {
+                let rr = if side == 0 { r.checked_sub(1) } else { r.checked_add(1) };
+                if let Some(rr) = rr {
+                    for g in left..right.min(t.grid.len()) {
+                        if let Some(cc) = t.cell_at_grid(rr, g)
+                            && neighbours.last() != Some(&(rr, cc))
+                        {
+                            neighbours.push((rr, cc));
+                        }
+                    }
+                }
+            }
+            if let Some(cell) = t.rows.get_mut(r).and_then(|r| r.cells.get_mut(c)) {
+                set_border_edge(cell.props.borders.get_or_insert_with(Borders::default), side, edge);
+            }
+            for (rr, cc) in neighbours {
+                if !cells.contains(&(rr, cc))
+                    && let Some(cell) = t.rows.get_mut(rr).and_then(|r| r.cells.get_mut(cc))
+                {
+                    set_border_edge(cell.props.borders.get_or_insert_with(Borders::default), (side + 2) % 4, edge);
+                }
+            }
+        }
+    }
 }
 
 fn cell_text(c: &doc4me_doc::Cell) -> String {
@@ -822,21 +1165,55 @@ fn cell_text(c: &doc4me_doc::Cell) -> String {
 }
 
 fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
-    let col = p::u64(v, "column").unwrap_or(0) as usize;
+    let col = usize::try_from(p::u64(v, "column").unwrap_or(0)).map_err(|_| CmdError::Params("column is outside the table".into()))?;
     let desc = p::bool(v, "descending").unwrap_or(false);
     let header = p::bool(v, "header");
+    let (tp, _, _) = cell(s)?;
+    let t = s.doc.table(s.sel.focus.story, &tp).ok_or_else(|| CmdError::Disabled("no table".into()))?;
+    if col >= t.grid.len() {
+        return Err(CmdError::Params("column is outside the table".into()));
+    }
+    let selected: std::collections::BTreeSet<_> = selected_cells(s).into_iter().map(|(r, _)| r).collect();
+    let range = if s.selected_table_cells().is_some() || !s.sel.is_collapsed() {
+        (selected.first().copied().unwrap_or(0), selected.last().copied().unwrap_or(0).saturating_add(1))
+    } else {
+        (0, t.rows.len())
+    };
+    if t.rows.iter().take(range.1).skip(range.0).flat_map(|r| &r.cells).any(|c| c.props.vmerge != doc4me_doc::props::VMerge::None) {
+        return Err(CmdError::Disabled("split vertically merged cells before sorting their rows".into()));
+    }
     with_table(s, |t| {
-        let skip = usize::from(header.unwrap_or(t.rows.first().is_some_and(|r| r.props.header)));
-        let Some(body) = t.rows.get_mut(skip..) else { return };
+        let prefix = t.rows.iter().take_while(|r| r.props.header).count();
+        let skip = match header {
+            Some(false) => 0,
+            Some(true) => prefix.max(1),
+            None => prefix,
+        };
+        let start = range.0.max(skip).min(range.1);
+        let Some(body) = t.rows.get_mut(start..range.1) else { return };
+        let header_flags: Vec<_> = body.iter().map(|r| r.props.header).collect();
+        let key = |row: &doc4me_doc::Row| {
+            let mut g = row.props.grid_before as usize;
+            for cell in &row.cells {
+                if col >= g && col < g.saturating_add(cell.span()) {
+                    return cell_text(cell);
+                }
+                g = g.saturating_add(cell.span());
+            }
+            String::new()
+        };
         body.sort_by(|a, b| {
-            let ka = a.cells.get(col).map(cell_text).unwrap_or_default();
-            let kb = b.cells.get(col).map(cell_text).unwrap_or_default();
+            let ka = key(a);
+            let kb = key(b);
             let o = match (ka.trim().replace(',', "").parse::<f64>(), kb.trim().replace(',', "").parse::<f64>()) {
                 (Ok(x), Ok(y)) => x.total_cmp(&y),
                 _ => ka.to_lowercase().cmp(&kb.to_lowercase()),
             };
             if desc { o.reverse() } else { o }
         });
+        for (row, header) in body.iter_mut().zip(header_flags) {
+            row.props.header = header;
+        }
     })
 }
 
@@ -845,20 +1222,49 @@ fn to_text(s: &mut Session, v: &Value) -> CmdResult {
     let sep = match p::str(v, "separator").unwrap_or("tab") {
         "comma" => ",",
         "paragraph" => "\n",
-        _ => "\t",
+        "tab" => "\t",
+        x => return Err(CmdError::Params(format!("unknown separator `{x}`"))),
     };
     let story = s.sel.focus.story;
     let t = s.doc.table(story, &tp).cloned().ok_or_else(|| CmdError::Failed("no table".into()))?;
-    s.doc.remove_block(story, &tp)?;
-    let mut i = tp.last();
-    for row in &t.rows {
-        let text: Vec<String> = row.cells.iter().map(cell_text).collect();
-        for line in text.join(sep).split('\n') {
-            s.doc.insert_block(story, &tp.with_last(i), Block::Para(Paragraph::with_text(line, Default::default())))?;
-            i += 1;
-        }
+    let wrapped = |w: &doc4me_doc::ControlWrap| !w.open.is_empty() || w.close != 0;
+    if wrapped(&t.controls) || t.rows.iter().any(|r| wrapped(&r.controls) || r.cells.iter().any(|c| wrapped(&c.controls))) {
+        return Err(CmdError::Disabled("remove the enclosing content control before converting this table".into()));
     }
-    s.sel = Selection::caret(Pos { story, path: tp, off: 0 });
+    let mut out = Vec::new();
+    for row in &t.rows {
+        let mut row_blocks = Vec::new();
+        for (c, cell) in row.cells.iter().enumerate() {
+            let mut blocks: Vec<Block> = cell.blocks.iter().map(|b| (**b).clone()).collect();
+            if blocks.is_empty() {
+                blocks.push(Block::Para(Paragraph::new()));
+            }
+            if c > 0 && sep != "\n" {
+                if let Some(Block::Para(left)) = row_blocks.last_mut() {
+                    left.insert_text(left.len(), sep, &CharProps::default())?;
+                    if matches!(blocks.first(), Some(Block::Para(_)))
+                        && let Block::Para(right) = blocks.remove(0)
+                    {
+                        left.append(right);
+                    }
+                } else {
+                    row_blocks.push(Block::Para(Paragraph::with_text(sep, CharProps::default())));
+                }
+            }
+            row_blocks.extend(blocks);
+        }
+        out.extend(row_blocks);
+    }
+    if out.is_empty() {
+        out.push(Block::Para(Paragraph::new()));
+    }
+    let blocks = s.doc.container_mut(story, &tp)?;
+    if tp.last() >= blocks.len() {
+        return Err(CmdError::Disabled("the table is gone".into()));
+    }
+    blocks.splice(tp.last()..tp.last() + 1, out.into_iter().map(std::sync::Arc::new));
+    s.sel = Selection::caret(s.doc.clamp(&Pos { story, path: tp, off: 0 }));
+    s.table_selection = None;
     sel_result(s)
 }
 
@@ -866,6 +1272,12 @@ fn to_text(s: &mut Session, v: &Value) -> CmdResult {
 fn formula(s: &mut Session, v: &Value) -> CmdResult {
     let (tp, r, c) = cell(s)?;
     let f = p::str(v, "formula").unwrap_or("=SUM(ABOVE)").to_ascii_uppercase();
+    let valid = ["SUM", "AVERAGE", "COUNT", "MAX", "MIN", "PRODUCT"]
+        .iter()
+        .any(|name| ["ABOVE", "LEFT"].iter().any(|direction| f == format!("={name}({direction})")));
+    if !valid {
+        return Err(CmdError::Params("use SUM, AVERAGE, COUNT, MAX, MIN or PRODUCT with ABOVE or LEFT".into()));
+    }
     let t = s.doc.table(s.sel.focus.story, &tp).cloned().ok_or_else(|| CmdError::Failed("no table".into()))?;
     let nums: Vec<f64> = if f.contains("LEFT") {
         t.rows
@@ -875,7 +1287,10 @@ fn formula(s: &mut Session, v: &Value) -> CmdResult {
     } else {
         t.rows.iter().take(r).filter_map(|row| row.cells.get(c)).filter_map(|x| cell_text(x).trim().replace([',', '$'], "").parse().ok()).collect()
     };
-    let val = if f.starts_with("=AVERAGE") {
+    let nums: Vec<f64> = nums.into_iter().filter(|n| n.is_finite()).collect();
+    let val = if nums.is_empty() {
+        0.0
+    } else if f.starts_with("=AVERAGE") {
         if nums.is_empty() { 0.0 } else { nums.iter().sum::<f64>() / nums.len() as f64 }
     } else if f.starts_with("=COUNT") {
         nums.len() as f64
@@ -888,6 +1303,9 @@ fn formula(s: &mut Session, v: &Value) -> CmdResult {
     } else {
         nums.iter().sum()
     };
+    if !val.is_finite() {
+        return Err(CmdError::Failed("the formula result is outside the numeric range".into()));
+    }
     let text = if val.fract() == 0.0 && val.abs() < 1e15 { format!("{}", val as i64) } else { format!("{val:.2}") };
     let props = s.typing_props();
     let at = s.sel.focus.clone();
@@ -903,59 +1321,243 @@ fn formula(s: &mut Session, v: &Value) -> CmdResult {
 fn select_cells(s: &mut Session, tp: &Path, which: Option<(usize, Option<usize>)>) -> CmdResult {
     let story = s.sel.focus.story;
     let Some(t) = s.doc.table(story, tp) else { return sel_result(s) };
-    let (r0, r1, c0, c1) = match which {
-        None => (0, t.rows.len().saturating_sub(1), 0, usize::MAX),
-        Some((r, None)) => (r, r, 0, usize::MAX),
-        Some((r, Some(c))) => (r, r, c, c),
+    let cells = t
+        .rows
+        .iter()
+        .enumerate()
+        .flat_map(|(r, row)| {
+            row.cells
+                .iter()
+                .enumerate()
+                .filter_map(move |(c, _)| which.is_none_or(|(rr, cc)| r == rr && cc.is_none_or(|cc| c == cc)).then_some((r, c)))
+        })
+        .collect();
+    set_cell_selection(s, tp, cells, which.is_none())
+}
+
+fn select_column(s: &mut Session, _: &Value) -> CmdResult {
+    let (tp, r, c) = cell(s)?;
+    let t = s.doc.table(s.sel.focus.story, &tp).ok_or_else(|| CmdError::Disabled("no table".into()))?;
+    let start = t.grid_col(r, c);
+    let stop = start.saturating_add(t.rows.get(r).and_then(|r| r.cells.get(c)).map_or(1, doc4me_doc::Cell::span));
+    let mut cells = std::collections::BTreeSet::new();
+    for (r, row) in t.rows.iter().enumerate() {
+        for (c, cl) in row.cells.iter().enumerate() {
+            let left = t.grid_col(r, c);
+            if left < stop && left.saturating_add(cl.span()) > start {
+                cells.insert((r, c));
+            }
+        }
+    }
+    set_cell_selection(s, &tp, cells, false)
+}
+
+pub(crate) fn set_cell_selection(s: &mut Session, tp: &Path, cells: std::collections::BTreeSet<(usize, usize)>, whole: bool) -> CmdResult {
+    let story = s.sel.focus.story;
+    let (Some(&(r0, c0)), Some(&(r1, c1))) = (cells.first(), cells.last()) else {
+        return Err(CmdError::Disabled("the table has no cells".into()));
     };
-    let last_c = t.rows.get(r1).map(|x| x.cells.len().saturating_sub(1)).unwrap_or(0).min(c1);
-    let mut a = tp.0.clone();
-    a.extend([r0 as u32, c0 as u32, 0]);
-    let mut b = tp.0.clone();
-    b.extend([r1 as u32, last_c as u32]);
-    let end_path = s.doc.para_paths(story).into_iter().rfind(|q| q.0.starts_with(&b)).unwrap_or_else(|| {
-        let mut x = b.clone();
-        x.push(0);
-        Path(x)
-    });
-    let off = s.doc.para(story, &end_path).map(|x| x.len()).unwrap_or(0);
-    s.sel = Selection { anchor: Pos { story, path: Path(a), off: 0 }, focus: Pos { story, path: end_path, off } };
+    let mut first = tp.0.clone();
+    first.extend([r0 as u32, c0 as u32]);
+    let mut last = tp.0.clone();
+    last.extend([r1 as u32, c1 as u32]);
+    let paths = s.doc.para_paths(story);
+    let a = paths.iter().find(|p| p.0.starts_with(&first)).cloned().ok_or_else(|| CmdError::Failed("the first cell has no paragraph".into()))?;
+    let b = paths.iter().rfind(|p| p.0.starts_with(&last)).cloned().ok_or_else(|| CmdError::Failed("the last cell has no paragraph".into()))?;
+    let off = s.doc.para(story, &b).map_or(0, Paragraph::len);
+    s.sel = Selection { anchor: Pos { story, path: a, off: 0 }, focus: Pos { story, path: b, off } };
+    s.column = None;
+    s.table_selection = Some(std::sync::Arc::new(crate::TableSelection { sel: s.sel.clone(), story, table: tp.clone(), cells, whole_table: whole }));
     sel_result(s)
 }
 
+/// Copy the selected cells as a table, rather than flattening their paragraphs into text.
+pub(crate) fn copy_selection(s: &Session) -> Result<Option<doc4me_doc::edit::Fragment>, CmdError> {
+    let Some(sel) = s.selected_table_cells() else { return Ok(None) };
+    let source = s.doc.table(sel.story, &sel.table).ok_or_else(|| CmdError::Disabled("no table selected".into()))?;
+    let mut copied = source.clone();
+    if !sel.whole_table {
+        let mut start = source.grid.len();
+        let mut stop = 0;
+        for &(r, c) in &sel.cells {
+            if let Some(cell) = source.rows.get(r).and_then(|r| r.cells.get(c)) {
+                let g = source.grid_col(r, c);
+                start = start.min(g);
+                stop = stop.max(g.saturating_add(cell.span()).min(source.grid.len()));
+            }
+        }
+        let grid =
+            source.grid.get(start..stop).filter(|g| !g.is_empty()).ok_or_else(|| CmdError::Failed("the selection has no grid columns".into()))?;
+        copied.grid = grid.to_vec();
+        copied.rows.clear();
+        for (r, row) in source.rows.iter().enumerate() {
+            let mut out = row.clone();
+            out.cells = row
+                .cells
+                .iter()
+                .enumerate()
+                .filter(|(c, _)| sel.cells.contains(&(r, *c)))
+                .map(|(c, cell)| {
+                    let mut copied = cell.clone();
+                    let g = source.grid_col(r, c);
+                    let previous_selected =
+                        r.checked_sub(1).and_then(|rr| source.cell_at_grid(rr, g).map(|cc| sel.cells.contains(&(rr, cc)))).unwrap_or(false);
+                    if cell.props.vmerge == doc4me_doc::props::VMerge::Continue && !previous_selected {
+                        for rr in (0..r).rev() {
+                            let origin = source.cell_at_grid(rr, g).and_then(|cc| source.rows.get(rr).and_then(|r| r.cells.get(cc)));
+                            let Some(origin) = origin else { break };
+                            if origin.props.vmerge == doc4me_doc::props::VMerge::Restart {
+                                copied.blocks = origin.blocks.clone();
+                                break;
+                            }
+                            if origin.props.vmerge != doc4me_doc::props::VMerge::Continue {
+                                break;
+                            }
+                        }
+                        copied.props.vmerge = doc4me_doc::props::VMerge::Restart;
+                    }
+                    copied
+                })
+                .collect();
+            let Some((first, _)) = row.cells.iter().enumerate().find(|(c, _)| sel.cells.contains(&(r, *c))) else { continue };
+            let last = row.cells.iter().enumerate().rfind(|(c, _)| sel.cells.contains(&(r, *c))).map_or(first, |(c, _)| c);
+            out.props.grid_before = source.grid_col(r, first).saturating_sub(start) as u32;
+            let end = source.grid_col(r, last).saturating_add(row.cells.get(last).map_or(1, doc4me_doc::Cell::span));
+            out.props.grid_after = stop.saturating_sub(end) as u32;
+            copied.rows.push(out);
+        }
+        copied.props.width_pct = None;
+        copied.props.width = Some(copied.grid.iter().sum());
+    }
+    Ok(Some(s.doc.blocks_fragment(vec![Block::Table(copied)])))
+}
+
+/// Delete cell contents without joining adjacent cells or flattening the table.
+pub(crate) fn clear_selection(s: &mut Session) -> Result<Option<Pos>, CmdError> {
+    if s.selected_table_cells().is_none() {
+        return Ok(None);
+    }
+    let Some(sel) = s.table_selection.clone() else { return Ok(None) };
+    let prefix = sel.table.0.len();
+    let mut ranges = std::collections::BTreeMap::new();
+    let mut paragraphs = Vec::new();
+    for path in s.doc.para_paths(sel.story) {
+        if !path.0.starts_with(&sel.table.0) {
+            continue;
+        }
+        let pair = path.0.get(prefix).zip(path.0.get(prefix + 1)).map(|(&r, &c)| (r as usize, c as usize));
+        if let Some(pair) = pair.filter(|p| sel.cells.contains(p)) {
+            let a = Pos { story: sel.story, path: path.clone(), off: 0 };
+            let b = Pos { off: s.doc.para(sel.story, &path).map_or(0, Paragraph::len), ..a.clone() };
+            ranges.entry(pair).and_modify(|r: &mut (Pos, Pos)| r.1 = b.clone()).or_insert((a.clone(), b.clone()));
+            paragraphs.push((a, b));
+        }
+    }
+    for (a, b) in ranges.values() {
+        super::controls::check_delete(s, a, b)?;
+    }
+    if s.doc.settings.track_changes {
+        for (a, b) in paragraphs.iter().rev() {
+            super::track_delete(s, a, b)?;
+        }
+    } else {
+        let t = s.doc.table_mut(sel.story, &sel.table)?;
+        for &(r, c) in &sel.cells {
+            if let Some(cell) = t.rows.get_mut(r).and_then(|r| r.cells.get_mut(c)) {
+                let mut empty = Paragraph::new();
+                if let Some(p) = cell.blocks.iter().find_map(|b| b.as_para()) {
+                    empty.props = p.props.clone();
+                    empty.mark = p.mark.clone();
+                }
+                cell.blocks = vec![para_block(empty)];
+            }
+        }
+    }
+    let mut path = sel.table.0.clone();
+    let (r, c) = sel.cells.first().copied().ok_or_else(|| CmdError::Disabled("no cells selected".into()))?;
+    path.extend([r as u32, c as u32, 0]);
+    let at = s.doc.clamp(&Pos { story: sel.story, path: Path(path), off: 0 });
+    s.sel = Selection::caret(at.clone());
+    s.table_selection = None;
+    Ok(Some(at))
+}
+
+pub(crate) fn remove_selected_table(s: &mut Session) -> Result<Option<Pos>, CmdError> {
+    let Some(sel) = s.selected_table_cells().filter(|t| t.whole_table).cloned() else { return Ok(None) };
+    super::controls::check_delete(s, &sel.sel.anchor, &sel.sel.focus)?;
+    s.doc.remove_block(sel.story, &sel.table)?;
+    let at = s.doc.clamp(&Pos { story: sel.story, path: sel.table, off: 0 });
+    s.sel = Selection::caret(at.clone());
+    s.table_selection = None;
+    Ok(Some(at))
+}
+
+pub(crate) fn prepare_replacement(s: &mut Session) -> Result<(), CmdError> {
+    let Some(sel) = s.selected_table_cells().filter(|t| t.whole_table).cloned() else { return Ok(()) };
+    super::controls::check_delete(s, &sel.sel.anchor, &sel.sel.focus)?;
+    let blocks = s.doc.container_mut(sel.story, &sel.table)?;
+    let block = blocks.get_mut(sel.table.last()).ok_or_else(|| CmdError::Disabled("the selected table is gone".into()))?;
+    *block = para_block(Paragraph::new());
+    s.sel = Selection::caret(Pos { story: sel.story, path: sel.table, off: 0 });
+    s.table_selection = None;
+    Ok(())
+}
+
 fn from_text(s: &mut Session, v: &Value) -> CmdResult {
-    let sep = if p::str(v, "separator") == Some("comma") { ',' } else { '\t' };
+    let sep = match p::str(v, "separator").unwrap_or("tab") {
+        "tab" => '\t',
+        "comma" => ',',
+        x => return Err(CmdError::Params(format!("unknown separator `{x}`"))),
+    };
     let (a, b) = s.sel.ordered();
     if a.path.parent() != b.path.parent() || a.story != b.story {
         return Err(CmdError::Failed("select paragraphs to convert".into()));
     }
-    let lines: Vec<String> =
-        (a.path.last()..=b.path.last()).filter_map(|i| s.doc.para(a.story, &a.path.with_last(i)).map(|p| p.plain_text())).collect();
-    // Refuse rather than drop content: a table between the paragraphs would be removed with them.
-    if lines.len() != b.path.last() - a.path.last() + 1 {
-        return Err(CmdError::Failed("select only paragraphs to convert".into()));
+    let count = b.path.last().saturating_sub(a.path.last()).saturating_add(1);
+    if count > doc4me_doc::table::MAX_ROWS {
+        return Err(CmdError::Failed("too many rows to convert to a table".into()));
     }
-    let cols = lines.iter().map(|l| l.split(sep).count()).max().unwrap_or(1);
-    // A table has at most 63 columns; a longer row would lose its last fields.
-    if cols > 63 {
+    let mut paragraphs = Vec::new();
+    for i in a.path.last()..=b.path.last() {
+        let p = s.doc.para(a.story, &a.path.with_last(i)).ok_or_else(|| CmdError::Failed("select only paragraphs to convert".into()))?;
+        if p.section.is_some() {
+            return Err(CmdError::Disabled("convert paragraphs within a single section".into()));
+        }
+        paragraphs.push(p.clone());
+    }
+    let cols = paragraphs.iter().map(|p| p.text.chars().filter(|c| *c == sep).count().saturating_add(1)).max().unwrap_or(1);
+    if cols > doc4me_doc::table::MAX_COLS {
         return Err(CmdError::Failed("a table can have at most 63 columns".into()));
     }
     let width = super::page::sect(s).text_width();
-    let mut t = Table::new(lines.len().max(1), cols, width);
-    for (r, l) in lines.iter().enumerate() {
-        for (c, txt) in l.split(sep).enumerate() {
-            if let Some(cl) = t.rows.get_mut(r).and_then(|row| row.cells.get_mut(c)) {
-                cl.blocks = vec![para_block(Paragraph::with_text(txt.trim(), Default::default()))];
+    let mut t = Table::new(paragraphs.len().max(1), cols, width);
+    for (r, mut p) in paragraphs.into_iter().enumerate() {
+        let mut c = 0;
+        while let Some(at) = p.text.find(sep) {
+            let mut tail = p.split_off(at)?;
+            tail.delete(0, sep.len_utf8())?;
+            if let Some(cell) = t.rows.get_mut(r).and_then(|r| r.cells.get_mut(c)) {
+                cell.blocks = vec![para_block(p)];
             }
+            p = tail;
+            c += 1;
+        }
+        if let Some(cell) = t.rows.get_mut(r).and_then(|r| r.cells.get_mut(c)) {
+            cell.blocks = vec![para_block(p)];
         }
     }
-    for i in (a.path.last()..=b.path.last()).rev() {
-        s.doc.remove_block(a.story, &a.path.with_last(i))?;
-    }
-    s.doc.insert_block(a.story, &a.path, Block::Table(t))?;
+    let blocks = s.doc.container_mut(a.story, &a.path)?;
+    let end = b
+        .path
+        .last()
+        .checked_add(1)
+        .filter(|end| *end <= blocks.len())
+        .ok_or_else(|| CmdError::Failed("selection is outside the document".into()))?;
+    blocks.splice(a.path.last()..end, [std::sync::Arc::new(Block::Table(t))]);
     let mut first = a.path.0.clone();
     first.extend([0, 0, 0]);
     s.sel = Selection::caret(Pos { story: a.story, path: Path(first), off: 0 });
+    s.table_selection = None;
     sel_result(s)
 }
 

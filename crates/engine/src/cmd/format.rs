@@ -175,6 +175,9 @@ fn target(s: &Session) -> Option<(Pos, Pos)> {
 
 /// The non-empty rows of a column selection, if one is active.
 fn column_rows(s: &Session) -> Option<Vec<(Pos, Pos)>> {
+    if let Some(ranges) = s.table_text_ranges() {
+        return Some(ranges);
+    }
     let segs = s.column_segments()?;
     let rows: Vec<(Pos, Pos)> = segs
         .iter()
@@ -192,6 +195,11 @@ pub fn apply(s: &mut Session, f: &dyn Fn(&mut CharProps)) -> CmdResult {
     if let Some(rows) = column_rows(s) {
         for (a, b) in rows {
             s.doc.format_range(&a, &b, f)?;
+            if s.selected_table_cells().is_some() {
+                let para = s.doc.para_mut(a.story, &a.path)?;
+                f(&mut para.mark);
+                para.touch();
+            }
         }
         return sel_result(s);
     }
@@ -226,6 +234,9 @@ fn resolved(s: &Session) -> Vec<ResolvedChar> {
                 if r.end > a.off && r.start < b.off {
                     out.push(s.doc.styles.resolve_char(p.props.style.as_deref(), c));
                 }
+            }
+            if p.is_empty() {
+                out.push(s.doc.styles.resolve_char(p.props.style.as_deref(), &p.mark));
             }
             if out.len() > 10_000 {
                 break;

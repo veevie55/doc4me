@@ -655,25 +655,31 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
             match stroke {
                 Stroke::Dotted => st = st.with_dashes(0.0, [w, w * 2.0]),
                 Stroke::Dashed => st = st.with_dashes(0.0, [w * 4.0, w * 2.0]),
+                Stroke::DotDash => st = st.with_dashes(0.0, [w * 4.0, w * 2.0, w, w * 2.0]),
                 _ => {}
             }
-            let line = |ctx: &mut RenderContext, dy: f64| {
+            let (dx, dy) = ((*x1 - *x0) as f64, (*y1 - *y0) as f64);
+            let len = dx.hypot(dy).max(1e-3);
+            let (nx, ny) = (-dy / len, dx / len);
+            let line = |ctx: &mut RenderContext, offset: f64| {
                 let mut p = BezPath::new();
-                p.move_to((*x0 as f64, *y0 as f64 + dy));
-                p.line_to((*x1 as f64, *y1 as f64 + dy));
+                p.move_to((*x0 as f64 + nx * offset, *y0 as f64 + ny * offset));
+                p.line_to((*x1 as f64 + nx * offset, *y1 as f64 + ny * offset));
                 ctx.stroke_path(&p);
             };
             if *stroke == Stroke::Wave {
-                let (a, b) = ((*x0).min(*x1) as f64, (*x0).max(*x1) as f64);
                 let amp = (w * 1.2).max(0.8);
-                let p = wave_path(a, b, *y0 as f64, amp);
+                let p = Affine::new([dx / len, dy / len, nx, ny, *x0 as f64, *y0 as f64]) * wave_path(0.0, len, 0.0, amp);
                 ctx.set_stroke(kurbo::Stroke::new(w * 0.8));
                 ctx.stroke_path(&p);
                 return;
             }
-            if *stroke == Stroke::Double {
+            if matches!(stroke, Stroke::Double | Stroke::Triple) {
                 ctx.set_stroke(kurbo::Stroke::new(w * 0.6));
                 line(ctx, -w * 0.9);
+                if *stroke == Stroke::Triple {
+                    line(ctx, 0.0);
+                }
                 line(ctx, w * 0.9);
                 return;
             }
@@ -1041,6 +1047,58 @@ pub fn render_area(doc: &Document, page: &Page, x: f32, y: f32, w: f32, h: f32, 
 mod tests {
     use super::*;
     use doc4me_layout::{LayoutCache, LayoutOptions, layout};
+
+    #[test]
+    fn table_border_patterns_are_distinct_in_both_directions() {
+        use doc4me_doc::props::{Border, BorderStyle, Borders};
+        use doc4me_doc::{Block, Table};
+        let mut images = std::collections::BTreeSet::new();
+        for style in [
+            BorderStyle::Single,
+            BorderStyle::Double,
+            BorderStyle::Dotted,
+            BorderStyle::Dashed,
+            BorderStyle::Thick,
+            BorderStyle::Triple,
+            BorderStyle::DotDash,
+            BorderStyle::Wave,
+        ] {
+            let mut d = Document::new();
+            let mut t = Table::new(1, 1, 100.0);
+            t.rows[0].props.height = Some(100.0);
+            t.props.borders = Some(Borders::all(Border { style, width: 0.75, color: Some(Rgb(0, 0, 0)), space: 0.0 }));
+            d.body.insert(0, Arc::new(Block::Table(t)));
+            let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+            let r = l.pages[0]
+                .items
+                .iter()
+                .find_map(|it| match it {
+                    doc4me_layout::Placed::Cell { rect, .. } => Some(*rect),
+                    _ => None,
+                })
+                .unwrap();
+            let image = render_area(&d, &l.pages[0], r.x - 5.0, r.y - 5.0, 110.0, 110.0, 8.0, &RenderOptions::default());
+            assert!(images.insert(image.to_png()), "{style:?} duplicates another border pattern");
+            if matches!(style, BorderStyle::Double | BorderStyle::Triple) {
+                let count = |horizontal: bool| {
+                    let mut bands = 0;
+                    let mut previous = false;
+                    for n in 16..64 {
+                        let (x, y) = if horizontal { (400, n) } else { (n, 400) };
+                        let ink = image.pixel(x, y)[0] < 128;
+                        if ink && !previous {
+                            bands += 1;
+                        }
+                        previous = ink;
+                    }
+                    bands
+                };
+                let expected = if style == BorderStyle::Double { 2 } else { 3 };
+                assert_eq!(count(true), expected, "horizontal {style:?}");
+                assert_eq!(count(false), expected, "vertical {style:?}");
+            }
+        }
+    }
 
     #[test]
     fn renders_text_dark_pixels() {

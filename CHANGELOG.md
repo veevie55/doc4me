@@ -11,6 +11,28 @@
 
 ## [Unreleased]
 
+### เพิ่ม · ตรวจตารางและ rich clipboard (2026-11-14)
+
+- เพิ่ม `table.selectColumn` และ explicit cell selection ใน Session/Undo/UI รวมเซลล์ว่าง จัดรูปแบบและลบเฉพาะเซลล์ที่เลือก; เมทริกซ์ตรวจคำสั่งตารางครบ 53 คำสั่งอยู่ใน `docs/readiness/table-clipboard-audit-2026-11-13.md`
+- เพิ่มเส้นขอบเลือกขอบ/รูปแบบ 8 แบบ/ความกว้าง/สี และปากกาเส้นขอบตามพิกัดจริงใน engine/UI; ใช้คำแปลเดิมตามบริบทเส้นขอบและชื่อคอลัมน์ที่มีครบในแคตตาล็อก
+
+### แก้ไข · ตารางและวัตถุที่คัดลอก (2026-11-14)
+
+- แก้ Triple/Dash Dot ที่เคยวาดซ้ำแบบอื่น เส้นคู่/คลื่นแนวตั้ง และขอบซ้าย/ขวาของตาราง RTL ทั้ง raster/PDF; nil ร่วมสองด้านลบเส้นที่สืบทอดโดยไม่ทำขอบอื่นหาย
+- แก้เพิ่ม/ลบแถวและคอลัมน์ให้ตรงช่วงเลือก กระจายขนาดจากกริด/ความสูงจริง แยกเซลล์ขนาดเท่ากันและรักษารูปแบบ/vertical merge/grid omissions; ซ้ำหัวตารางหลายแถว รักษาหัวและแถวนอกช่วง sort; แยกตารางมี bounds guard และ Undo
+- คัดลอกตารางเป็น TableBlock และคัดลอก/ตัดทุกวัตถุที่เลือก เก็บ image bytes, styles, numbering, textbox/note stories และ original chart/SmartArt/OLE dependency graphs ใน `doc::clipboard`; remap ชื่อ/id ชนกันอย่างไม่เขียนทับปลายทาง วางได้หลังปิดต้นฉบับ สำเนาแก้แยกกันได้
+- แปลง table/text รักษารูปภาพและ direct character formatting; ไม่มีการเปลี่ยน schema DOCX/เวอร์ชัน/installer/assets ฟอนต์เดิม และรองรับข้อความไทย มี serde defaults สำหรับ fragment เดิม
+
+### ความปลอดภัย · clipboard (2026-11-14)
+
+- ปฏิเสธพารามิเตอร์/พิกัด/ทรัพยากรที่หายแบบ atomic; แก้ story id overflow; cap definitions/parts/imported bytes และคิด payload รูป/กล่อง/embedded XML ในงบ history ไม่เปิดหรือเรียกใช้ OLE/external relationships
+- ตรวจ `cargo xtask ci` ผ่าน 6/6: 2,543 native, ignored 1 เดิม, assets 141, wasm 16 crates; เพิ่ม 32 engine + 1 raster + 2 UI regressions รวมการ save/reopen DOCX และ cross-document collisions ภาพ UI ตรวจด้วย headless ui_shot เกณฑ์ readiness/deferred/excluded คงเดิม
+
+### ข้อจำกัดที่ทราบ · งานตรวจตาราง (2026-11-14)
+
+- rich clipboard ภายใน Doc4Me; ยังไม่อ้างการโอนวัตถุผ่าน system clipboard ไปทุกโปรแกรมหรือ Word ink ที่ reader ไม่รองรับ ไม่ sort กลุ่ม vertical merge/ไม่ split table ผ่าน continuation และไม่แปลง table ที่หุ้ม structural content control จนกว่าจะแยกหรือนำ wrapper ออก
+- readiness ล่าสุด 95.1% ไม่นับ deferred บน Windows source6127a73; งานตารางรอวัดซอร์สใหม่ ไม่อ้าง 100% หรือเปลี่ยน ruler
+
 ### เพิ่ม
 
 - **Workflow build แยก 5 แพลตฟอร์ม รันด้วยมือและเลือกซอร์สได้** (`.github/workflows/build-windows-arm64.yml`, `build-macos.yml`, `build-linux.yml`, `build-bsd.yml`, `build-web.yml`)

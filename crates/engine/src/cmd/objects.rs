@@ -553,6 +553,9 @@ fn link_text_box(s: &mut Session, v: &Value) -> CmdResult {
 /// The selection when it is exactly one picture, shape or text box (its U+FFFC), rather than
 /// text: what clicking an object selects.
 pub fn object_selection(s: &Session) -> Option<(Pos, &InlineObject)> {
+    if s.selected_table_cells().is_some() {
+        return None;
+    }
     let (a, b) = s.sel.ordered();
     if a.story != b.story || a.path != b.path || b.off != a.off + doc4me_doc::para::OBJ.len_utf8() {
         return None;

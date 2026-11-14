@@ -1001,7 +1001,11 @@ impl Exporter<'_> {
                 s.set_stroke(Some(stroke(w, Some(StrokeDash { array: vec![w * 4.0, w * 2.0], offset: 0.0 }), LineCap::Butt)));
                 seg(s, 0.0, 0.0);
             }
-            LineStyle::Double => {
+            LineStyle::DotDash => {
+                s.set_stroke(Some(stroke(w, Some(StrokeDash { array: vec![w * 4.0, w * 2.0, w, w * 2.0], offset: 0.0 }), LineCap::Butt)));
+                seg(s, 0.0, 0.0);
+            }
+            LineStyle::Double | LineStyle::Triple => {
                 // Two thinner lines either side of the centre line.
                 let (dx, dy) = (x1 - x0, y1 - y0);
                 let len = (dx * dx + dy * dy).sqrt().max(1e-3);
@@ -1009,19 +1013,29 @@ impl Exporter<'_> {
                 s.set_stroke(Some(stroke(w * 0.6, None, LineCap::Butt)));
                 seg(s, nx, ny);
                 seg(s, -nx, -ny);
+                if style == LineStyle::Triple {
+                    seg(s, 0.0, 0.0);
+                }
             }
             LineStyle::Wave => {
-                let (a, b) = (x0.min(x1), x0.max(x1));
+                let (dx, dy) = (x1 - x0, y1 - y0);
+                let len = dx.hypot(dy).max(1e-3);
+                let point = |along: f32, across: f32| (x0 + (dx * along - dy * across) / len, y0 + (dy * along + dx * across) / len);
                 let amp = (w * 1.2).max(0.8);
                 let step = amp * 2.0;
                 let mut pb = PathBuilder::new();
-                pb.move_to(a, y0);
-                let mut x = a;
+                pb.move_to(x0, y0);
+                let mut x = 0.0;
                 let mut up = true;
-                while x < b && x - a < 20_000.0 {
-                    let nx = (x + step).min(b);
-                    pb.quad_to((x + nx) / 2.0, if up { y0 - amp } else { y0 + amp }, nx, y0);
-                    x = nx;
+                while x < len && x < 20_000.0 {
+                    let next = (x + step).min(len);
+                    if next <= x {
+                        break;
+                    }
+                    let (cx, cy) = point((x + next) / 2.0, if up { -amp } else { amp });
+                    let (ex, ey) = point(next, 0.0);
+                    pb.quad_to(cx, cy, ex, ey);
+                    x = next;
                     up = !up;
                 }
                 s.set_stroke(Some(stroke(w * 0.8, None, LineCap::Round)));

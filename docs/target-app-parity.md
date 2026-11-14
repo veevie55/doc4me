@@ -1,6 +1,9 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (body contextual spacing subtracts the preceding paragraph’s after-space from the merged gap; three regressions; CI 6/6 / native 2,508; Linux 189/220 pages and 103/220 boundaries unchanged in all five sets; latest Windows source `92025e8` remains 95.1% without deferred, new source awaits measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+
+**Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
+
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
 summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
@@ -13,7 +16,7 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 
 | Number | Value | Kind |
 |---|---|---|
-| Ribbon/menu catalog coverage | **503 / 503 (100%)** | **measured** in Windows run 43333680851; matches the checked-in `parity-checklist.md` and the live registry. |
+| Ribbon/menu catalog coverage | **504 / 504 (100%)** | **measured** in Windows run 43333680851; matches the checked-in `parity-checklist.md` and the live registry. |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
 | **Ready for real work** (full target) | **93.2%** | **latest official measurement**: Windows run 43333680851, source `92025e8`, report commit `c098032` ([readiness.md](readiness.md)); all 220 documents, 95.1% without 22 deferred checks. |
@@ -21,9 +24,9 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
 | Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
-| Commands | 729 registered command specs | measured with `doc4me-cli commands --json`, 2026-11-12 |
-| Tests | 2,514 source test attributes; 2,505 native tests passed, 1 originally ignored | measured with `cargo xtask stats` and full CI, 2026-11-12 |
-| Code | 234,769 lines of Rust in crates, apps and xtask | measured with `cargo xtask stats`, 2026-11-12 |
+| Commands | 730 registered command specs | measured with CLI, 2026-11-14 |
+| Tests | 2,552 source attributes; 2,543 native passed, 1 originally ignored | stats and full CI, 2026-11-14 |
+| Code | 237,580 Rust lines | cargo xtask stats, 2026-11-14 |
 
 **Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
 
@@ -268,6 +271,7 @@ can be used without committing Word output.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |
 | 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
 | 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
 | 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |

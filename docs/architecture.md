@@ -1,6 +1,9 @@
 # Doc4Me architecture
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (current source metrics, 3 active CI workflows, Windows readiness run 42274814600; previously: `plan/architecture.md` is local-only) · **Target:** Microsoft Word (Microsoft 365) for Windows (manual Word comparison was on Word for Mac 16.113.4 through 2026-10-21; the Windows corpus readiness run now measures the current source, not a manual Word comparison)
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+
+**Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
+
 
 The latest official Windows readiness report measured source ed4284d; the current working tree also contains an unmeasured xtask boundary-word diagnostic. The structure metrics below count the current working tree as of 2026-11-07.
 The generated report is commit 29e6672. The longer design notes in
@@ -9,7 +12,7 @@ committed, current summary. Rules for working in the code are in [`AGENTS.md`](.
 
 ## Layers
 
-216,629 Rust source lines across
+237,580 Rust source lines across
 20 workspace packages (including apps and `xtask`) against the dependency rules:
 a crate may only depend on crates in lower layers, and nothing below L6 depends on egui, eframe,
 winit or rfd.
@@ -54,7 +57,7 @@ winit or rfd.
 
 ## Testing and gates
 
-- 2,071
+- 2,543 native tests passed (2,552 source test attributes), covering
   input, `.doc`, formats, typing parity (`engine/src/tests_typing.rs`), bidi, i18n catalogs, UI
   interaction (egui_kittest), MCP acceptance; `hostile_params_never_panic` runs every command with
   junk params.
@@ -71,5 +74,6 @@ winit or rfd.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |
 | 2026-10-10 | minor | `proof`: proofing languages (English, Polish), affix engine, Polish patterns; layout and engine route each run by its language |
 | 2026-10-10 | major | First committed architecture doc, from the crates' sources and `AGENTS.md` |

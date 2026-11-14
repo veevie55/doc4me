@@ -2,7 +2,10 @@
 
 **Stage: alpha** · latest official readiness is **93.2%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43333680851, 2026-11-13; report commit `c098032` measures source `92025e8`, all 220 documents); the report says **95.1% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 503/503, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining gap is pagination (188/220 page counts, 108/220 page boundaries). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release remains Doc4Me 1.1.3; subsequent source changes are Unreleased.
 
-> **Last reviewed:** 2026-11-13 · **Last updated:** 2026-11-13 · **Change:** minor (body contextual spacing subtracts the preceding paragraph’s after-space from the merged gap; three regressions; CI 6/6 / native 2,508; Linux 189/220 pages and 103/220 boundaries unchanged in all five sets; latest Windows source `92025e8` remains 95.1% without deferred, new source awaits measurement) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+
+**Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](docs/readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
+
 
 Doc4Me aims for complete parity with Microsoft Word, then goes further on speed, openness and
 agent control. This page is the summary; the assessment is
@@ -18,14 +21,14 @@ agent control. This page is the summary; the assessment is
 
 | Number | Value | Kind |
 |---|---|---|
-| Ribbon/menu catalog coverage | **503 / 503 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md), 2026-11-11) |
+| Ribbon/menu catalog coverage | **504 / 504 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md), 2026-11-11) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
 | **Ready for real work** (full target) | **93.2%** | latest official Windows report: run 43333680851, source `92025e8`, report commit `c098032`, all 220 corpus documents; 95.1% without 22 deferred rows. Ribbon 503/503, dialogs 216/228 (12 deferred; all non-deferred pass), pages 188/220, boundaries 108/220, languages 95/95 catalog-key checks, shortcuts 276/280 (4 deferred; all non-deferred pass), and platforms 5/5. |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 729 registered command specs (doc4me-cli commands --json) · 2,514 test attributes · 234,769 lines of Rust (`cargo xtask stats`, 2026-11-12 working tree) | measured source files in crates, apps and xtask; test count excludes comments and literal examples; command count verified by CLI |
+| Commands / tests / code | 730 command specs · 2,552 test attributes · 237,580 Rust lines | measured by CLI and cargo xtask stats, 2026-11-14 |
 | Releases | Doc4Me v1.1.3 (re-released 2026-11-11 from the latest code; the first v1.1.3 of 2026-11-10 was deleted), the only GitHub Release on the fork [`veevie55/doc4me`](https://github.com/veevie55/doc4me/releases): the earlier v1.0.0–v1.1.2 releases and tags no longer exist there. Windows MSI and portable zip, x64, unsigned, built by GitHub Actions (WordCraft, upstream, last shipped v0.4.0 on every platform) | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -118,7 +121,7 @@ See [localization-parity.md](docs/localization-parity.md) for the catalog audit.
 
 The table lists the twelve key languages plus Thai, which is tracked separately for its proofing and font work.
 
-| Interface language | Code | Registered catalog | Parsed unique keys / values exactly equal to English source |
+| Interface language | Code | 237,580 Rust lines | cargo xtask stats, 2026-11-14 |
 |---|---|---|---|
 | English | en | source | 3,034 source keys |
 | Simplified Chinese | zh-hans | yes | 3,034 / 77 |
@@ -166,6 +169,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-14 | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |
 | 2026-11-13 | Body contextual spacing subtracts the preceding after-space from the merged gap; three regressions, CI 6/6 / native 2,508. Linux 189/220 pages, 103/220 boundaries, all five failure sets unchanged. Full box-spacing trial withdrawn after govuk-020 and zenodo-067 regressed. Windows measurement pending; latest confirmed score remains 95.1% without deferred. |
 | 2026-11-13 | Windows run 43333680851 on `92025e8`, report `c098032`: 93.2% overall / 95.1% without 22 deferred. Pages 184→188/220, boundaries 102→108/220, no newly failing documents in five sets. Full CI repeated, native 2,505. Four Word-for-Mac justification trials were withdrawn after zenodo-165 regressions; no criteria or row-status changes. |
 | 2026-11-13 | M14/G4 margin leading, picture spacing, header contours and Keep with next for blank paragraphs; Linux pages 184→189/220 and boundaries 97→103/220, no newly failing documents in five sets. Six new regressions, full CI 6/6 (native 2,505); Windows source da21a99 confirms the preceding break-rule arc at 94.8% without deferred; new measurement pending. |
@@ -294,6 +298,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |
 | 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
 | 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
 | 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |

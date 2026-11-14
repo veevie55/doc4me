@@ -19,9 +19,35 @@ pub struct Fragment {
     /// gives each box a new story made from these.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub parts: BTreeMap<u32, Part>,
+    /// Referenced picture bytes survive closing the source document. Shared until edited.
+    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
+    pub media: BTreeMap<String, Arc<Vec<u8>>>,
+    /// Original package graphs used by copied charts, diagrams and OLE objects.
+    #[serde(skip)]
+    pub passthrough: BTreeMap<String, Arc<Vec<u8>>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub styles: Option<Arc<crate::styles::StyleSheet>>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub numbering: Option<Arc<crate::numbering::Numbering>>,
 }
 
 impl Fragment {
+    /// Conservative retained-content estimate for bounded clipboard history. The live clipboard
+    /// may hold a larger item; the history must also charge shared images and object stories.
+    pub fn retained_bytes(&self, limit: usize) -> usize {
+        let mut bytes = self.media.values().chain(self.passthrough.values()).fold(0usize, |n, b| n.saturating_add(b.len()));
+        if bytes > limit {
+            return bytes;
+        }
+        for b in self.blocks.iter().chain(self.parts.values().flat_map(|p| p.blocks.iter().map(|b| &**b))) {
+            bytes = bytes.saturating_add(block_cost(b));
+            if bytes > limit {
+                return bytes;
+            }
+        }
+        bytes.saturating_add(serialized_len(&self.styles)).saturating_add(serialized_len(&self.numbering)).saturating_mul(2)
+    }
+
     pub fn plain_text(&self) -> String {
         let mut d = Document::new();
         d.body = self.blocks.iter().cloned().map(Arc::new).collect();
@@ -125,7 +151,26 @@ fn block_cost(b: &Block) -> usize {
             .len()
             .saturating_mul(std::mem::size_of::<crate::para::Run>())
             .saturating_add(p.objects.len().saturating_mul(std::mem::size_of::<InlineObject>()));
-        let objects = p.objects.iter().fold(0usize, |n, o| n.saturating_add(serialized_len(o)));
+        let mut objects = p.objects.iter().fold(0usize, |n, o| n.saturating_add(serialized_len(o)));
+        // Original package markup is intentionally skipped by JSON serialization.
+        let mut todo: Vec<_> = p.objects.iter().collect();
+        while let Some(o) = todo.pop() {
+            let embedded = match o {
+                InlineObject::Image { ole, .. } => ole.as_deref(),
+                InlineObject::Graphic { graphic, .. } => graphic.source.as_deref(),
+                InlineObject::Group { children, .. } => {
+                    todo.extend(children.iter().map(|c| &c.obj));
+                    None
+                }
+                _ => None,
+            };
+            if let Some(e) = embedded {
+                objects = objects.saturating_add(e.xml.len());
+                for r in &e.refs {
+                    objects = objects.saturating_add(r.id.len()).saturating_add(r.kind.len()).saturating_add(r.target.len());
+                }
+            }
+        }
         cost = cost.saturating_add(p.text.len()).saturating_add(items).saturating_add(objects);
     });
     cost
@@ -137,6 +182,9 @@ fn serialized_len<T: serde::Serialize>(v: &T) -> usize {
     impl std::io::Write for Count {
         fn write(&mut self, b: &[u8]) -> std::io::Result<usize> {
             self.0 = self.0.saturating_add(b.len());
+            if self.0 > MAX_PASTED_BOX_BYTES {
+                return Err(std::io::Error::other("clipboard content exceeds the size budget"));
+            }
             Ok(b.len())
         }
         fn flush(&mut self) -> std::io::Result<()> {
@@ -144,8 +192,7 @@ fn serialized_len<T: serde::Serialize>(v: &T) -> usize {
         }
     }
     let mut c = Count(0);
-    let _ = serde_json::to_writer(&mut c, v);
-    c.0
+    if serde_json::to_writer(&mut c, v).is_err() { usize::MAX } else { c.0 }
 }
 
 /// Call `f` on every paragraph of a block, in document order, however deep its tables nest. The
@@ -242,6 +289,13 @@ fn restyle_block(b: &mut Block, from: &str, to: &Option<String>, depth: usize) -
 /// Text box story ids of a paragraph's shapes.
 fn box_ids(p: &Paragraph) -> impl Iterator<Item = u32> + '_ {
     p.objects.iter().flat_map(InlineObject::text_boxes)
+}
+
+fn referenced_parts(p: &Paragraph) -> impl Iterator<Item = u32> + '_ {
+    box_ids(p).chain(p.objects.iter().filter_map(|o| match o {
+        InlineObject::NoteRef { id, .. } => Some(*id),
+        _ => None,
+    }))
 }
 
 impl Document {
@@ -562,34 +616,42 @@ impl Document {
 
     /// Copy `a..b` into a fragment (with copies of the text boxes in it).
     pub fn copy_range(&self, a: &Pos, b: &Pos) -> Fragment {
-        let mut blocks = self.copy_blocks(a, b);
+        self.blocks_fragment(self.copy_blocks(a, b))
+    }
+
+    /// Copy complete blocks with the text-box stories they reference, including nested boxes.
+    /// This also supports rectangular cell selections and separately selected drawings.
+    pub fn blocks_fragment(&self, mut blocks: Vec<Block>) -> Fragment {
         // Half a content control (one marker without the other) isn't copied.
         crate::control::balance_blocks(&mut blocks);
-        let parts = self.text_box_parts(&blocks);
-        Fragment { blocks, parts }
+        let parts = self.fragment_parts(&blocks);
+        let media = crate::clipboard::copied_media(self, &blocks, &parts);
+        let passthrough = crate::clipboard::copied_embedded(self, &blocks, &parts);
+        Fragment { blocks, parts, media, passthrough, styles: Some(self.styles.clone()), numbering: Some(self.numbering.clone()) }
     }
 
     /// The whole body as a fragment (with its text boxes), to insert into another document.
     pub fn body_fragment(&self) -> Fragment {
         let blocks: Vec<Block> = self.body.iter().map(|b| (**b).clone()).collect();
-        let parts = self.text_box_parts(&blocks);
-        Fragment { blocks, parts }
+        self.blocks_fragment(blocks)
     }
 
-    /// Copies of the text box stories shapes in `blocks` show, nested boxes included.
-    fn text_box_parts(&self, blocks: &[Block]) -> BTreeMap<u32, Part> {
+    /// Copies of referenced text boxes and notes, including their nested stories.
+    fn fragment_parts(&self, blocks: &[Block]) -> BTreeMap<u32, Part> {
         let mut out = BTreeMap::new();
         let mut todo = Vec::new();
         for b in blocks {
-            each_para(b, 0, &mut |p| todo.extend(box_ids(p)));
+            each_para(b, 0, &mut |p| todo.extend(referenced_parts(p)));
         }
         while let Some(id) = todo.pop() {
             if out.contains_key(&id) {
                 continue;
             }
-            let Some(part) = self.parts.get(&id).filter(|p| p.kind == PartKind::TextBox) else { continue };
+            let Some(part) = self.parts.get(&id).filter(|p| matches!(p.kind, PartKind::TextBox | PartKind::Footnote | PartKind::Endnote)) else {
+                continue;
+            };
             for b in &part.blocks {
-                each_para(b, 0, &mut |p| todo.extend(box_ids(p)));
+                each_para(b, 0, &mut |p| todo.extend(referenced_parts(p)));
             }
             out.insert(id, part.clone());
         }
@@ -637,25 +699,56 @@ impl Document {
         out
     }
 
-    /// Give every text box in `blocks` a new story of its own, copied from `parts` (or, for a
-    /// fragment without them, from this document's text box of that id). A box whose story can't
-    /// be found keeps no story rather than showing an unrelated one.
-    fn adopt_text_boxes(&mut self, blocks: &mut [Block], parts: &BTreeMap<u32, Part>, depth: usize, budget: &mut BoxBudget) {
+    /// Give copied boxes and notes independent stories. Captured fragments never fall back to
+    /// an unrelated story with the same id in the destination.
+    fn adopt_parts(&mut self, blocks: &mut [Block], parts: &BTreeMap<u32, Part>, fallback: bool, depth: usize, budget: &mut BoxBudget) -> Result<()> {
         let mut any = false;
         for b in blocks.iter() {
-            each_para(b, 0, &mut |p| any |= box_ids(p).next().is_some());
+            each_para(b, 0, &mut |p| any |= referenced_parts(p).next().is_some());
         }
         if !any {
-            return;
+            return Ok(());
         }
+        let mut error = None;
         for b in blocks.iter_mut() {
             each_para_mut(b, 0, &mut |p| {
+                if error.is_some() {
+                    return;
+                }
                 let mut changed = false;
-                for o in p.objects.iter_mut() {
+                for o in &mut p.objects {
                     for story in o.text_box_slots() {
                         if let Some(old) = *story {
-                            *story = self.adopt_text_box(old, parts, depth, budget);
-                            changed = true;
+                            match self.adopt_part(old, PartKind::TextBox, parts, fallback, depth, budget) {
+                                Ok(id) => {
+                                    *story = id;
+                                    changed = true;
+                                }
+                                Err(e) => {
+                                    error = Some(e);
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                    if let InlineObject::NoteRef { id, kind, .. } = o {
+                        let part_kind = match kind {
+                            crate::para::NoteKind::Footnote => PartKind::Footnote,
+                            crate::para::NoteKind::Endnote => PartKind::Endnote,
+                        };
+                        match self.adopt_part(*id, part_kind, parts, fallback, depth, budget) {
+                            Ok(Some(new)) => {
+                                *id = new;
+                                changed = true;
+                            }
+                            Ok(None) => {
+                                error = Some(DocError::Invalid("a copied note is missing or exceeds the paste limit".into()));
+                                return;
+                            }
+                            Err(e) => {
+                                error = Some(e);
+                                return;
+                            }
                         }
                     }
                 }
@@ -663,52 +756,62 @@ impl Document {
                     p.touch();
                 }
             });
+            if let Some(e) = error.take() {
+                return Err(e);
+            }
         }
+        Ok(())
     }
 
-    /// A new text box story copied from `old`; its own boxes get new stories too. Blocks without
-    /// text boxes are shared with the source (copy-on-write), the others copied. A box showing a
-    /// story it is inside, or past the paste's budget, gets none (CWE-400).
-    fn adopt_text_box(&mut self, old: u32, parts: &BTreeMap<u32, Part>, depth: usize, budget: &mut BoxBudget) -> Option<u32> {
+    fn adopt_part(
+        &mut self,
+        old: u32,
+        kind: PartKind,
+        parts: &BTreeMap<u32, Part>,
+        fallback: bool,
+        depth: usize,
+        budget: &mut BoxBudget,
+    ) -> Result<Option<u32>> {
         if depth >= MAX_BOX_DEPTH || budget.active.contains(&old) {
-            return None;
+            return Ok(None);
         }
         if budget.stories == 0 {
             budget.skipped = budget.skipped.saturating_add(1);
-            return None;
+            return Ok(None);
         }
-        let src = parts.get(&old).or_else(|| self.parts.get(&old).filter(|p| p.kind == PartKind::TextBox))?;
-        // Charge the whole story before copying any of it. Its cost is worked out once per paste
-        // (that walks its payloads), however many boxes show it.
+        let src = parts.get(&old).or_else(|| if fallback { self.parts.get(&old) } else { None }).filter(|p| p.kind == kind);
+        let Some(src) = src else { return Ok(None) };
         let cost = *budget.costs.entry(old).or_insert_with(|| src.blocks.iter().fold(0usize, |a, b| a.saturating_add(block_cost(b))));
         let Some(left) = budget.bytes.checked_sub(cost) else {
             budget.skipped = budget.skipped.saturating_add(1);
-            return None;
+            return Ok(None);
         };
         budget.bytes = left;
         budget.stories -= 1;
         let src_blocks = src.blocks.clone();
-        // The copy keeps its text direction and alignment, not its link (a copy stands alone).
         let body = crate::TextBody { next: None, ..src.body };
         budget.active.push(old);
-        let mut blocks: Blocks = Vec::with_capacity(src_blocks.len());
-        for b in src_blocks {
-            let mut boxes = false;
-            each_para(&b, 0, &mut |p| boxes |= box_ids(p).next().is_some());
-            if boxes {
-                let mut copy = (*b).clone();
-                self.adopt_text_boxes(std::slice::from_mut(&mut copy), parts, depth + 1, budget);
-                blocks.push(Arc::new(copy));
-            } else {
-                blocks.push(b);
+        let result = (|| -> Result<Blocks> {
+            let mut blocks = Vec::with_capacity(src_blocks.len());
+            for b in src_blocks {
+                let mut refs = false;
+                each_para(&b, 0, &mut |p| refs |= referenced_parts(p).next().is_some());
+                if refs {
+                    let mut copy = (*b).clone();
+                    self.adopt_parts(std::slice::from_mut(&mut copy), parts, fallback, depth + 1, budget)?;
+                    blocks.push(Arc::new(copy));
+                } else {
+                    blocks.push(b);
+                }
             }
-        }
+            Ok(blocks)
+        })();
         budget.active.pop();
-        let id = self.add_part(PartKind::TextBox, blocks);
+        let id = self.add_part(kind, result?);
         if let Some(p) = self.parts.get_mut(&id) {
             p.body = body;
         }
-        Some(id)
+        Ok(Some(id))
     }
 
     /// Insert a fragment at `pos`; returns the position after the pasted content.
@@ -725,11 +828,29 @@ impl Document {
         if self.para_at(pos).is_none() {
             return Err(DocError::BadPath(pos.path.to_string()));
         }
+        if self.para_at(pos).is_some_and(|p| pos.off > p.len() || !p.text.is_char_boundary(pos.off)) {
+            return Err(DocError::BadOffset(pos.off));
+        }
         // Pasted text boxes get stories of their own (never shared with the copy's source).
         let mut budget = BoxBudget::new();
-        self.adopt_text_boxes(&mut blocks, &frag.parts, 0, &mut budget);
+        let resources = (self.media.clone(), self.passthrough.clone(), self.styles.clone(), self.numbering.clone(), self.parts.clone());
+        let parts = crate::clipboard::adopt(self, &mut blocks, frag)?;
+        if let Err(e) = self.adopt_parts(&mut blocks, &parts, frag.styles.is_none(), 0, &mut budget) {
+            (self.media, self.passthrough, self.styles, self.numbering, self.parts) = resources;
+            return Err(e);
+        }
         if budget.skipped > 0 {
             log::warn!("paste: {} text boxes were left empty: their stories were past the paste's limit", budget.skipped);
+        }
+        // A table pasted at a paragraph's start stands before it. Splitting at offset zero
+        // would leave a new blank paragraph above the table (also in an empty document).
+        if pos.off == 0
+            && blocks.len() == 1
+            && matches!(blocks.first(), Some(Block::Table(_)))
+            && let Some(table) = blocks.pop()
+        {
+            self.insert_block(pos.story, &pos.path, table)?;
+            return Ok(Pos { path: pos.path.with_last(pos.path.last().saturating_add(1)), off: 0, ..pos.clone() });
         }
         // Single paragraph: inline insert keeping runs.
         if blocks.len() == 1
@@ -1023,7 +1144,7 @@ mod tests {
         }
         let mut parts = BTreeMap::new();
         parts.insert(1, crate::Part { kind: PartKind::TextBox, blocks: story, body: Default::default() });
-        Fragment { blocks: vec![Block::Para(p)], parts }
+        Fragment { blocks: vec![Block::Para(p)], parts, ..Default::default() }
     }
 
     #[test]
@@ -1098,7 +1219,7 @@ mod tests {
         let mut blocks = vec![Block::Para(p)];
         let mut d = doc(&["x"]);
         let mut budget = BoxBudget { bytes: 50_000, ..BoxBudget::new() };
-        d.adopt_text_boxes(&mut blocks, &parts, 0, &mut budget);
+        d.adopt_parts(&mut blocks, &parts, true, 0, &mut budget).unwrap();
         let Some(Block::Para(p)) = blocks.first() else { panic!() };
         let got: Vec<Option<u32>> = p.objects.iter().map(|o| if let InlineObject::Shape { story, .. } = o { *story } else { None }).collect();
         assert_eq!(got.iter().map(Option::is_some).collect::<Vec<_>>(), [false, true, false, true], "{got:?}");

@@ -517,6 +517,7 @@ fn select_cell(s: &mut Session, story: StoryRef, tpath: &Path, r: usize, c: usiz
 const CELL_JUMP: &str = r#"{"extend"?: bool (select from the selection's start to that cell)}"#;
 
 fn cell_jump(s: &mut Session, v: &Value, in_row: bool, first: bool) -> CmdResult {
+    s.table_selection = None;
     let Some((tpath, r, c)) = s.sel.focus.path.cell() else { return sel_result(s) };
     let story = s.sel.focus.story;
     let Some(t) = s.doc.table(story, &tpath) else { return sel_result(s) };
@@ -524,8 +525,10 @@ fn cell_jump(s: &mut Session, v: &Value, in_row: bool, first: bool) -> CmdResult
         let n = t.rows.get(r).map(|x| x.cells.len()).unwrap_or(1);
         (r, if first { 0 } else { n.saturating_sub(1) })
     } else {
-        let rows: Vec<usize> = (0..t.rows.len()).filter(|&i| t.rows.get(i).is_some_and(|x| x.cells.len() > c)).collect();
-        (if first { rows.first() } else { rows.last() }.copied().unwrap_or(r), c)
+        let g = t.grid_col(r, c);
+        let rows: Vec<usize> = (0..t.rows.len()).filter(|&i| t.cell_at_grid(i, g).is_some()).collect();
+        let rr = if first { rows.first() } else { rows.last() }.copied().unwrap_or(r);
+        (rr, t.cell_at_grid(rr, g).unwrap_or(c))
     };
     let mut path = tpath.0.clone();
     path.extend([nr as u32, nc as u32, 0]);
@@ -541,6 +544,7 @@ fn cell_jump(s: &mut Session, v: &Value, in_row: bool, first: bool) -> CmdResult
             let off = s.doc.para(story, &last).map_or(0, |x| x.len());
             Pos { story, path: last, off }
         };
+        super::table::capture_cell_selection(s);
         return sel_result(s);
     }
     s.sel = Selection::caret(to);
@@ -582,7 +586,7 @@ fn backspace(s: &mut Session, v: &Value) -> CmdResult {
 fn backspace_inner(s: &mut Session, _: &Value) -> CmdResult {
     s.goal_x = None;
     s.pending = None;
-    if !s.sel.is_collapsed() {
+    if !s.sel.is_collapsed() || s.selected_table_cells().is_some() {
         delete_selection(s)?;
         return sel_result(s);
     }
@@ -659,7 +663,7 @@ fn delete(s: &mut Session, v: &Value) -> CmdResult {
 fn delete_inner(s: &mut Session, _: &Value) -> CmdResult {
     s.goal_x = None;
     s.pending = None;
-    if !s.sel.is_collapsed() {
+    if !s.sel.is_collapsed() || s.selected_table_cells().is_some() {
         delete_selection(s)?;
         return sel_result(s);
     }
@@ -704,7 +708,7 @@ fn delete_inner(s: &mut Session, _: &Value) -> CmdResult {
 }
 
 fn delete_word_back(s: &mut Session, v: &Value) -> CmdResult {
-    if !s.sel.is_collapsed() {
+    if !s.sel.is_collapsed() || s.selected_table_cells().is_some() {
         return backspace(s, v);
     }
     let f = s.sel.focus.clone();
@@ -720,7 +724,7 @@ fn delete_word_back(s: &mut Session, v: &Value) -> CmdResult {
 }
 
 fn delete_word_fwd(s: &mut Session, v: &Value) -> CmdResult {
-    if !s.sel.is_collapsed() {
+    if !s.sel.is_collapsed() || s.selected_table_cells().is_some() {
         return delete(s, v);
     }
     let f = s.sel.focus.clone();

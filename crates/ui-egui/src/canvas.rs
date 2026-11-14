@@ -121,6 +121,8 @@ pub struct CanvasState {
     pub(crate) pasted: bool,
     /// Draw Table or Eraser is on (`table_pen`): presses draw instead of moving the caret.
     pub table_tool: Option<crate::table_pen::TableTool>,
+    /// Current table-border pen used by the style menu and Border Painter.
+    pub table_border: doc4me_doc::props::Border,
     /// The Draw Table stroke (or eraser press) in progress.
     pub(crate) table_stroke: Option<crate::table_pen::PenStroke>,
     /// A table border or the table's resize handle being dragged (`table_resize`).
@@ -214,6 +216,7 @@ impl Default for CanvasState {
             balloon_h: 0.0,
             balloon_rects: Vec::new(),
             table_tool: None,
+            table_border: doc4me_doc::props::Border { style: doc4me_doc::props::BorderStyle::Single, width: 0.5, color: None, space: 0.0 },
             table_stroke: None,
             table_resize: None,
             link_from: None,
@@ -729,6 +732,33 @@ fn drawing_grid_step(spacing: f32, scale: f32) -> f32 {
     step
 }
 
+fn selected_table_rects(session: &doc4me_engine::Session, layout: &DocLayout) -> Vec<(usize, doc4me_geom::Rect)> {
+    let Some(sel) = session.selected_table_cells() else { return Vec::new() };
+    let mut out = Vec::new();
+    for (page, p) in layout.pages.iter().enumerate() {
+        for item in p.items.iter().chain(&p.header).chain(&p.footer) {
+            if let Placed::Cell { rect, story, table, row, cell, covered, .. } = item
+                && *story == sel.story
+                && *table == sel.table
+                && sel.cells.contains(&(*row, *cell))
+            {
+                if *covered && let Some(t) = session.doc.table(*story, table) {
+                    let g = t.grid_col(*row, *cell);
+                    let origin = (0..*row).rev().find_map(|r| {
+                        let c = t.cell_at_grid(r, g)?;
+                        (t.rows.get(r)?.cells.get(c)?.props.vmerge == doc4me_doc::props::VMerge::Restart).then_some((r, c))
+                    });
+                    if origin.is_some_and(|o| sel.cells.contains(&o)) {
+                        continue;
+                    }
+                }
+                out.push((page, *rect));
+            }
+        }
+    }
+    out
+}
+
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     let full = ui.available_rect_before_wrap();
@@ -958,6 +988,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         origin = ui.min_rect().min - viewport.min.to_vec2();
         let content = Rect::from_min_size(ui.min_rect().min, geo.size);
         let resp = ui.allocate_rect(content, Sense::click_and_drag());
+        if resp.clicked() || resp.drag_started() {
+            app.session.table_selection = None;
+        }
         if let Some(tr) = scroll_target {
             ui.scroll_to_rect(Rect::from_min_size(ui.min_rect().min + tr.min.to_vec2(), tr.size()), None);
         }
@@ -1148,23 +1181,26 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             }
         }
         // Selection (a selected object shows its frame instead).
-        if !app.session.sel.is_collapsed() && crate::objects::selected(app).is_none() {
+        if app.session.selected_table_cells().is_some() || (!app.session.sel.is_collapsed() && crate::objects::selected(app).is_none()) {
             // A column selection highlights each row's piece.
             let pieces: Vec<(Pos, Pos)> = match app.session.column_segments() {
                 Some(segs) => segs.to_vec(),
                 None => vec![app.session.sel.ordered()],
             };
+            let selected: Vec<_> = if app.session.selected_table_cells().is_some() {
+                selected_table_rects(&app.session, &layout)
+            } else {
+                pieces.iter().flat_map(|(a, b)| layout.selection_rects(&app.session.doc, a, b, app.session.page_hint)).collect()
+            };
             let mut first: Option<Rect> = None;
-            for (a, b) in &pieces {
-                for (pi, r) in layout.selection_rects(&app.session.doc, a, b, app.session.page_hint) {
-                    if let Some(pr) = rects.get(pi) {
-                        let scale = layout.pages.get(pi).map_or(geo.scale, |page| page_screen_scale(*pr, page, geo.scale));
-                        let sr = Rect::from_min_size(pos2(pr.min.x + r.x * scale, pr.min.y + r.y * scale), vec2(r.w * scale, r.h * scale));
-                        painter.rect_filled(sr, 0.0, t.selection);
-                        // Track the topmost rect: the mini toolbar anchors on the selection's first line.
-                        if first.is_none_or(|f| sr.min.y < f.min.y) {
-                            first = Some(sr);
-                        }
+            for (pi, r) in selected {
+                if let Some(pr) = rects.get(pi) {
+                    let scale = layout.pages.get(pi).map_or(geo.scale, |page| page_screen_scale(*pr, page, geo.scale));
+                    let sr = Rect::from_min_size(pos2(pr.min.x + r.x * scale, pr.min.y + r.y * scale), vec2(r.w * scale, r.h * scale));
+                    painter.rect_filled(sr, 0.0, t.selection);
+                    // Track the topmost rect: the mini toolbar anchors on the selection's first line.
+                    if first.is_none_or(|f| sr.min.y < f.min.y) {
+                        first = Some(sr);
                     }
                 }
             }
@@ -1244,7 +1280,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 [pos2(x.round() + 0.5, y0), pos2(x.round() + 0.5, y1)]
             };
             // The caret glides and fades like Word's (`caret_glide`).
-            let shown = app.session.sel.is_collapsed() && focused;
+            let shown = app.session.sel.is_collapsed() && app.session.selected_table_cells().is_none() && focused;
             let look = crate::caret_glide::look(app, ui, content_origin, &geo, bar, shown, since, on);
             if shown && look.opacity > 0.0 {
                 painter.line_segment(look.bar, Stroke::new(1.5, caret_color.gamma_multiply(look.opacity)));
@@ -2735,6 +2771,27 @@ fn is_followable_link(url: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn table_selection_highlights_only_the_selected_column_even_when_cells_are_empty_or_merged() {
+        use doc4me_doc::{Block, Document, Path, Pos, StoryRef, Table};
+        let mut d = Document::new();
+        let mut t = Table::new(3, 3, 300.0);
+        t.merge(0, 1, 1, 1);
+        d.body.insert(0, std::sync::Arc::new(Block::Table(t)));
+        let mut session = doc4me_engine::Session::new(d);
+        session.sel = doc4me_engine::Selection::caret(Pos { story: StoryRef::Body, path: Path(vec![0, 2, 1, 0]), off: 0 });
+        session.run("table.selectColumn", &serde_json::json!({})).unwrap();
+        let layout = session.layout();
+        let rects = selected_table_rects(&session, &layout);
+        assert_eq!(rects.len(), 2, "the continuation must not shade the merged cell twice");
+        assert!(rects.iter().all(|(_, r)| (r.w - 100.0).abs() < 0.1));
+        let x = rects[0].1.x;
+        assert!(rects.iter().all(|(_, r)| (r.x - x).abs() < 0.1));
+        session.run("table.selectCell", &serde_json::json!({})).unwrap();
+        assert!(session.sel.is_collapsed());
+        assert_eq!(selected_table_rects(&session, &layout).len(), 1, "an empty selected cell still has a highlight");
+    }
 
     /// Typing in a paragraph redraws only that paragraph's band of the page; a change the band
     /// can't hold (a new header) or that covers most of the page draws it all.

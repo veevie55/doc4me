@@ -17,7 +17,9 @@ pub enum Stroke {
     Solid,
     Dotted,
     Dashed,
+    DotDash,
     Double,
+    Triple,
     Wave,
 }
 
@@ -496,8 +498,10 @@ fn change_bars(doc: &Document, page: &Page, m: &MarkupOptions, alpha: f32, out: 
 fn border_stroke(s: BorderStyle) -> Stroke {
     match s {
         BorderStyle::Dotted => Stroke::Dotted,
-        BorderStyle::Dashed | BorderStyle::DotDash => Stroke::Dashed,
-        BorderStyle::Double | BorderStyle::Triple => Stroke::Double,
+        BorderStyle::Dashed => Stroke::Dashed,
+        BorderStyle::DotDash => Stroke::DotDash,
+        BorderStyle::Double => Stroke::Double,
+        BorderStyle::Triple => Stroke::Triple,
         BorderStyle::Wave => Stroke::Wave,
         _ => Stroke::Solid,
     }

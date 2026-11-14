@@ -57,84 +57,14 @@ pub const VBA_RELATED: &str = "doc4me:vbaProject.related";
 /// Most parts we carry along with a macro project.
 pub const MAX_VBA_RELATED: usize = 64;
 
-/// `Document::passthrough` key listing the parts that objects read from a file refer to (charts,
-/// SmartArt diagrams, OLE objects: see `doc4me_doc::graphic::Embedded`), with their content
-/// types and own relationships, as [`EmbeddedManifest`] lines. Each part's bytes are kept under its
-/// part name. Not a package part: Doc4Me's own bookkeeping.
-pub const EMBEDDED_PARTS: &str = "doc4me:embedded.parts";
 /// Custom XML roots kept by the package (P) or main document (D): `owner\ttype\tpart`.
 /// Their opaque bytes and related parts use the same bounded manifest as embedded objects.
 pub const CUSTOM_XML_ROOTS: &str = "doc4me:customXml.roots";
 /// The original `word/settings.xml` when it holds settings the model doesn't (merged into on
 /// save by `write::settings_merge`). Not a package part: Doc4Me's own bookkeeping.
 pub const SETTINGS_ORIG: &str = "doc4me:settings.orig";
-/// Most parts we carry along for a file's embedded objects.
-pub const MAX_EMBEDDED_PARTS: usize = 4096;
-/// Most relationships we keep for one such part.
-pub const MAX_EMBEDDED_RELS: usize = 1024;
 /// Longest markup we keep for one embedded object.
 pub const MAX_EMBEDDED_XML: usize = 1024 * 1024;
-
-/// One part an embedded object needs: its content type and its own relationships (internal
-/// targets are part names).
-#[derive(Clone, Debug, Default)]
-pub struct EmbeddedPart {
-    pub content_type: String,
-    pub rels: Vec<Rel>,
-}
-
-/// The parts kept for embedded objects, by part name (see [`EMBEDDED_PARTS`]). Stored as text:
-/// `P\tpart\tcontent type` per part, then `R\tpart\tid\ttype\ttarget\tI|E` per relationship of
-/// that part (`E`: `target` is an external URL).
-#[derive(Clone, Debug, Default)]
-pub struct EmbeddedManifest {
-    pub parts: BTreeMap<String, EmbeddedPart>,
-}
-
-/// Can `s` be a field of a manifest line?
-pub fn manifest_field_ok(s: &str) -> bool {
-    !s.is_empty() && !s.contains(['\t', '\r', '\n'])
-}
-
-impl EmbeddedManifest {
-    pub fn parse(bytes: &[u8]) -> EmbeddedManifest {
-        let mut m = EmbeddedManifest::default();
-        for line in String::from_utf8_lossy(bytes).lines() {
-            let f: Vec<&str> = line.split('\t').collect();
-            match f.as_slice() {
-                ["P", part, ct] if m.parts.len() < MAX_EMBEDDED_PARTS => {
-                    m.parts.entry((*part).to_string()).or_insert_with(|| EmbeddedPart { content_type: (*ct).to_string(), rels: Vec::new() });
-                }
-                ["R", part, id, kind, target, mode] => {
-                    if let Some(p) = m.parts.get_mut(*part)
-                        && p.rels.len() < MAX_EMBEDDED_RELS
-                        && !p.rels.iter().any(|r| r.id == *id)
-                    {
-                        p.rels.push(Rel { id: (*id).to_string(), kind: (*kind).to_string(), target: (*target).to_string(), external: *mode == "E" });
-                    }
-                }
-                _ => {}
-            }
-        }
-        m
-    }
-
-    pub fn to_bytes(&self) -> Vec<u8> {
-        let mut s = String::new();
-        for (part, p) in &self.parts {
-            if !manifest_field_ok(part) || !manifest_field_ok(&p.content_type) {
-                continue;
-            }
-            s.push_str(&format!("P\t{part}\t{}\n", p.content_type));
-        }
-        for (part, p) in &self.parts {
-            for r in p.rels.iter().filter(|r| [&r.id, &r.kind, &r.target].iter().all(|f| manifest_field_ok(f))) {
-                s.push_str(&format!("R\t{part}\t{}\t{}\t{}\t{}\n", r.id, r.kind, r.target, if r.external { "E" } else { "I" }));
-            }
-        }
-        s.into_bytes()
-    }
-}
 
 /// Does relationship type `t` end with `suffix` (ignoring the transitional/strict prefix)?
 pub fn rel_is(t: &str, full: &str) -> bool {
@@ -356,14 +286,9 @@ impl ContentTypes {
     }
 }
 
-#[derive(Clone, Debug)]
-pub struct Rel {
-    pub id: String,
-    pub kind: String,
-    /// Package path (internal) or URL (external).
-    pub target: String,
-    pub external: bool,
-}
+pub use doc4me_doc::graphic::{EMBEDDED_PARTS, EmbeddedManifest, EmbeddedPart, MAX_EMBEDDED_PARTS, MAX_EMBEDDED_RELS, manifest_field_ok};
+
+pub type Rel = doc4me_doc::graphic::EmbeddedRef;
 
 #[derive(Clone, Debug, Default)]
 pub struct Rels {

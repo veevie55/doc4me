@@ -8,7 +8,7 @@ use super::{delete_selection, find_pattern, pos_json, sel_result};
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
 fn has_sel(s: &Session) -> Option<&'static str> {
-    if s.sel.is_collapsed() { Some("nothing is selected") } else { None }
+    if s.sel.is_collapsed() && s.selected_table_cells().is_none() { Some("nothing is selected") } else { None }
 }
 
 pub fn specs() -> Vec<CommandSpec> {
@@ -150,10 +150,36 @@ pub fn specs() -> Vec<CommandSpec> {
 
 fn copy(s: &mut Session, _: &Value) -> CmdResult {
     let (a, b) = s.sel.ordered();
-    if a == b {
-        return Ok(json!({"text": ""}));
-    }
-    let f = s.doc.copy_range(&a, &b);
+    let mut picked = super::objects::picked_objects(s);
+    let f = if let Some(f) = super::table::copy_selection(s)? {
+        f
+    } else if picked.len() > 1 {
+        picked.sort();
+        let mut blocks = Vec::new();
+        let mut previous = None;
+        for pos in picked {
+            let end = Pos { off: pos.off.saturating_add(doc4me_doc::para::OBJ.len_utf8()), ..pos.clone() };
+            let f = s.doc.copy_range(&pos, &end);
+            for block in f.blocks {
+                let Block::Para(mut p) = block else { continue };
+                p.section = None;
+                if previous.as_ref() == Some(&(pos.story, pos.path.clone()))
+                    && let Some(Block::Para(last)) = blocks.last_mut()
+                {
+                    last.append(p);
+                } else {
+                    blocks.push(Block::Para(p));
+                }
+                previous = Some((pos.story, pos.path.clone()));
+            }
+        }
+        s.doc.blocks_fragment(blocks)
+    } else {
+        if a == b {
+            return Ok(json!({"text": ""}));
+        }
+        s.doc.copy_range(&a, &b)
+    };
     s.clipboard_text = f.plain_text();
     s.clip_history.push(&f, &s.clipboard_text);
     s.clipboard = Some(f);
@@ -162,7 +188,32 @@ fn copy(s: &mut Session, _: &Value) -> CmdResult {
 }
 
 fn cut(s: &mut Session, v: &Value) -> CmdResult {
+    let mut picked = super::objects::picked_objects(s);
     let r = copy(s, v)?;
+    if picked.len() > 1 {
+        picked.sort();
+        for pos in &picked {
+            let end = Pos { off: pos.off.saturating_add(doc4me_doc::para::OBJ.len_utf8()), ..pos.clone() };
+            super::controls::check_delete(s, pos, &end)?;
+        }
+        for pos in picked.iter().rev() {
+            let end = Pos { off: pos.off.saturating_add(doc4me_doc::para::OBJ.len_utf8()), ..pos.clone() };
+            if s.doc.settings.track_changes {
+                super::track_delete(s, pos, &end)?;
+            } else {
+                s.doc.delete_range(pos, &end)?;
+            }
+        }
+        if let Some(first) = picked.first() {
+            s.sel = Selection::caret(s.doc.clamp(first));
+        }
+        super::controls::restore_placeholder(s)?;
+        return Ok(r);
+    }
+    if super::table::remove_selected_table(s)?.is_some() {
+        super::controls::restore_placeholder(s)?;
+        return Ok(r);
+    }
     // A tracked cut of a paragraph or sentence may become a move when pasted.
     if !super::moves::cut_tracked(s)? {
         delete_selection(s)?;
@@ -346,9 +397,7 @@ impl ClipHistory {
     }
 
     fn push(&mut self, f: &Fragment, text: &str) {
-        // Text plus per-paragraph overhead; pictures are references into the document.
-        let paras = text.matches('\n').count().saturating_add(f.blocks.len()).saturating_add(f.parts.len()).saturating_add(1);
-        let bytes = text.len().saturating_mul(2).saturating_add(paras.saturating_mul(256));
+        let bytes = f.retained_bytes(CLIP_ITEM_BYTES).saturating_add(text.len().saturating_mul(2));
         if bytes > CLIP_ITEM_BYTES || f.blocks.is_empty() {
             return;
         }

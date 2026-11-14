@@ -1,3 +1,12 @@
+# Handoff · table/clipboard audit · 2026-11-14
+
+**Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](docs/readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
+
+- Source work is ready for Windows measurement after main push. Logs: `/workspace/work/ci-table-audit-eighth.log`; UI `/workspace/work/table-ui-column.png`; command matrix in the audit.
+- เป้าหมาย 100% ยังไม่สำเร็จ ต้องตรวจ pagination และ prerequisites เดิมด้านล่างต่อ ไม่ปรับ ruler หรืออ้าง static command coverage ว่าเป็น readiness 100%
+
+---
+
 # Handoff: งาน pagination หลัง 1.1.3 · 2026-11-13 · ห้ามออก Release จนกว่าผู้ใช้สั่ง
 
 ## สถานะล่าสุด: body contextual spacing · 2026-11-13

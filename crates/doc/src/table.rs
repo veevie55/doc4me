@@ -313,19 +313,6 @@ impl Table {
         if n <= 1 {
             return;
         }
-        if span >= n {
-            let Some(row) = self.rows.get_mut(r) else { return };
-            let Some(cell) = row.cells.get_mut(c) else { return };
-            let w = cell.props.width.map(|w| w / n as f32);
-            cell.props.width = w;
-            cell.props.span = (span - (n - 1)) as u32;
-            for k in 1..n {
-                let mut nc = Cell::empty();
-                nc.props.width = w;
-                row.cells.insert(c + k, nc);
-            }
-            return;
-        }
         let g = self.grid_col(r, c);
         let mut end = g.saturating_add(span);
         // A grid narrower than the row (a damaged file) gets the columns the cell needs.
@@ -376,6 +363,12 @@ impl Table {
                             && let Some(cell) = self.rows.get_mut(rr).and_then(|row| row.cells.get_mut(ci))
                         {
                             cell.props.span = cell.props.span.max(1).saturating_add(1);
+                        } else if let Some(row) = self.rows.get_mut(rr) {
+                            if j < row.props.grid_before as usize {
+                                row.props.grid_before = row.props.grid_before.saturating_add(1).min(MAX_COLS as u32);
+                            } else if row.props.grid_after > 0 {
+                                row.props.grid_after = row.props.grid_after.saturating_add(1).min(MAX_COLS as u32);
+                            }
                         }
                     }
                     end += 1;
@@ -389,6 +382,7 @@ impl Table {
         let grid = self.grid.clone();
         let width = |a: usize, b: usize| grid.get(a..b).map(|x| x.iter().sum::<f32>());
         let Some(row) = self.rows.get_mut(r) else { return };
+        let Some(props) = row.cells.get(c).map(|c| c.props.clone()) else { return };
         let mut a = g;
         let mut parts = Vec::with_capacity(lines.len() + 1);
         for &b in lines.iter().chain(std::iter::once(&end)) {
@@ -405,6 +399,7 @@ impl Table {
                 }
             } else {
                 let mut nc = Cell::empty();
+                nc.props = props.clone();
                 nc.props.span = (b - a) as u32;
                 nc.props.width = width(a, b);
                 row.cells.insert((c + k).min(row.cells.len()), nc);

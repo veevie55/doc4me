@@ -14,6 +14,7 @@ pub mod bidi;
 pub mod cfb_guard;
 pub mod chart;
 mod cjk_numbers;
+mod clipboard;
 pub mod cluster;
 pub mod connector;
 pub mod control;
@@ -1272,7 +1273,11 @@ impl Document {
 
     /// Allocate a new part id and insert the part.
     pub fn add_part(&mut self, kind: PartKind, blocks: Blocks) -> u32 {
-        let id = self.parts.keys().next_back().map(|k| k + 1).unwrap_or(1);
+        let id = self.parts.keys().next_back().and_then(|k| k.checked_add(1)).unwrap_or_else(|| {
+            // JSON may supply u32::MAX as an existing story id. Find a gap without wrapping
+            // over a live story; at most len + 1 candidates can be occupied.
+            (1..).take(self.parts.len().saturating_add(1)).find(|id| !self.parts.contains_key(id)).unwrap_or(0)
+        });
         let mut part = Part { kind, blocks, body: TextBody::default() };
         if part.blocks.is_empty() {
             part.blocks.push(para_block(Paragraph::new()));
