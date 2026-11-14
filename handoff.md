@@ -1,3 +1,32 @@
+# Handoff · Windows verified; workspace unavailable · 2026-11-14
+
+- **เป้าหมาย 100% ไม่นับ deferred ยังไม่สำเร็จ** ผลทางการ [Windows run 43541894863](https://github.com/veevie55/doc4me/actions/runs/43541894863) วัด source `97e1d6f` สำเร็จ; bot report commit `7a38383`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**, pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220** และ ribbon **504/504**
+- เทียบ logs job `132284115156` กับ baseline job `131944058994` (source `6127a73`) ผ่าน GitHub connector แล้ว: ทั้งห้าชุดตรวจตรงกันทุก document id และเหตุผล ไม่ใช่แค่ยอดรวม; ยังไม่ผ่าน pages 32 และ boundaries 112 ไม่แก้ ruler/น้ำหนัก/TSV/220 included/22 deferred/24 excluded
+- ชุดหลักตาราง/clipboard commit `97e1d6ffe5bd6612414f4206719a34cd130a25c2` push main แล้ว: audit 53 commands, registry 730, regressions ใหม่ 32 engine + 1 raster + 2 UI; full CI 6/6, native 2,543, ignored 1 เดิม, assets 141, wasm 16 ดู [เมทริกซ์และข้อจำกัด](docs/readiness/table-clipboard-audit-2026-11-13.md)
+- ไม่มี tag/Release ในงานนี้
+
+## งานที่ค้างใน workspace หลัง source ที่วัด
+
+Workspace `/workspace/work/doc4me` ขาดการเชื่อมต่อระหว่าง CI รอบสุดท้าย เครื่องมือคืน **No usable execution environment is available** แม้ environment-status provider ยังแสดง running/connected ไม่สามารถอ่านไฟล์หรือยืนยันผลรอบล่าสุดต่อได้ จึงยังไม่ push โค้ดสองจุดด้านล่าง
+
+1. **Mini toolbar ทับเมนูเส้นขอบ:** เปลี่ยน `crates/ui-egui/src/mini_toolbar.rs` จาก `Order::Tooltip` เป็น `Order::Middle` ให้ popup อยู่ด้านบน แก้แล้วใน working tree; CI ผ่านครบ 6 ขั้นที่ `/workspace/work/ci-table-menu-final.log` และตรวจภาพเมนู/PDF แล้ว เมนูอ่านครบ จำนวนคำเลือกคอลัมน์ถูกเป็น 4/15 PDF ภาษาไทย valid 1 หน้า
+2. **Distribute Rows นับหัวตารางซ้ำตามจำนวนหน้า:** probe ตาราง 20 แถวที่ตั้ง 50 pt + Repeat Header ทำให้ความสูงกลายเป็น 101 pt หลัง distribute พบและแก้ใน working tree แล้ว: `cmd/table.rs::distribute_rows` เก็บ prefix header rows และใช้ความสูงสูงสุดแทนผลรวมสำหรับ header ที่ปรากฏหลายหน้า ส่วน body fragments ยังรวมตามเดิม เพิ่ม assertion h < 60 ใน regression หลายหัวตาราง/หลายหน้าเดิมใน `tests_tables.rs`
+3. Dirty files ก่อนขาดการเชื่อมต่อ: `CHANGELOG.md`, `mini_toolbar.rs`, `cmd/table.rs`, `tests_tables.rs` ผล **CI ล่าสุดของข้อ 2 ยังยืนยันไม่ได้**: log `/workspace/work/ci-table-header-final.log`, exec session `35317` ต้องอ่านผลก่อน commit/push ห้ามถือว่าเริ่มรันแล้วเท่ากับผ่าน และห้ามผ่อนเทสต์
+4. เมื่อ workspace กลับมา: ตรวจ git status/logs และเก็บการแก้ที่มีอยู่; ตรวจ full CI, รัน fixed header probe และ UI screenshot หากจำเป็น; บันทึกผลจริงใน CHANGELOG/audit/progress docs แล้ว commit/push main ตาม AGENTS.md/CLAUDE.md งานสองจุดเป็น UI/edit commands ไม่เปลี่ยนตัวจัดหน้าเอกสารตั้งต้น แต่ต้องแยกจาก source `97e1d6f` ที่ Windows วัดจริง
+5. สคริปต์ `/workspace/work/update_table_audit_docs.py` และ `finalize_tables.sh` **ทำงานสำเร็จและ commit 97e1d6f แล้ว ห้ามรันซ้ำ**; `final_measurement_docs.py` ยังไม่ทำงาน ต้องปรับข้อมูลให้ตรงผลจริงและข้อ 2 ก่อนใช้
+
+## หลักฐานใน workspace
+
+- `ci-table-audit-eighth.log`: source ชุดหลักผ่านทั้ง 6 ขั้น
+- `table-ui-menu-fixed.log`, `table-ui-borders-menu.png`: ตรวจเมนูหลังแก้ layer แล้ว
+- `table-audit-final.pdf`, `table-final-pdf.png`: PDF ภาษาไทยพร้อมเส้นคู่ทั้งสองแนว ตรวจด้วย Poppler
+- `table-audit-plan.md`: รายละเอียด state/คำสั่ง/paths ต่อเนื่อง
+- Windows logs สามารถดึงใหม่ผ่าน GitHub job ids ด้านบนได้ ข้อมูลเปรียบเทียบไม่พึ่งไฟล์ workspace อย่างเดียว
+
+ยังต้องทำ pagination และ Word/font/reference prerequisites เดิมต่อเพื่อเป้าหมาย 100% ข้อความด้านล่างเป็นบันทึกก่อนผล Windows รอบนี้
+
+---
+
 # Handoff · table/clipboard audit · 2026-11-14
 
 **Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](docs/readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
