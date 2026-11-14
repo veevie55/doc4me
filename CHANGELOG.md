@@ -6,25 +6,26 @@
 กติกา (`CLAUDE.md` ข้อ 3):
 
 - ทุกการเปลี่ยนแปลงโค้ด build packaging asset หรือเวอร์ชัน ต้องบันทึกใต้ `## [Unreleased]` ใน commit เดียวกัน
-- ก่อน push tag `vX.Y.Z` ให้ย้ายรายการไปเป็น `## [X.Y.Z] - YYYY-MM-DD`
+- ก่อน push tag `vX.Y.Z` ให้ย้ายรายการไปเป็น `## [X.Y.Z] - YYYY-MM-DD` ที่ตรงกับเวอร์ชันใน `Cargo.toml`
 - workflow `windows-x64-installer.yml` นำเนื้อหาใต้หัวข้อนั้นไปเป็นบันทึกของ GitHub Release
+- ทุก Release ต้องรวมรายละเอียดรุ่นปัจจุบันและทุกรุ่นก่อนหน้าถึงรุ่นแรก เรียงจากใหม่ไปเก่า รวมถึงเมื่ออัปเดต Release ที่มีอยู่แล้ว
 
 ## [Unreleased]
 
 ### เปลี่ยนแปลง
 
-- **บันทึก GitHub Release แบบสะสมทุกเวอร์ชัน** (`tools/release_notes.py`, `.github/workflows/windows-x64-installer.yml`, `AGENTS.md`): Release แสดงรายละเอียดรุ่นปัจจุบันและทุกรุ่นก่อนหน้าเรียงจากใหม่ไปเก่า; เมื่อเกินข้อจำกัด GitHub จะเก็บหัวข้อและสรุปรายการระดับบนของทุกรุ่นพร้อมลิงก์ไป Changelog เต็ม ปรับใช้กับ Release v1.1.4 ที่เผยแพร่แล้วด้วย ไม่กระทบ binary, tag หรือ readiness; ตรวจสร้างโน้ตจำลอง 1.1.4, ลำดับรุ่นและขนาดโน้ตแล้ว
-- **เร่งการสร้างข้อความ proofing ASCII** (`crates/layout/src/para.rs`): หลีกเลี่ยง UTF-8 scalar decoding ในเส้นทางข้อความ ASCII ซึ่ง run lengths และ proof offsets นับเป็น byte อยู่แล้ว; Unicode path คงเดิม. แก้ linearity probe `proof_text_walks_the_runs_once` ที่ล้มซ้ำด้วย 35.2× ให้ผ่านที่ 29.0× (เกณฑ์ <32×); เพิ่มความทนต่อเอกสาร ASCII ที่มีการจัดรูปแบบรายอักขระโดยไม่เปลี่ยนข้อความ/การพิสูจน์อักษร
-
-### การเผยแพร่ย้อนหลังและผลตรวจ
-
-- เผยแพร่ 1.1.4 จาก af59bac สำเร็จ พร้อม MSI/portable ZIP และคงเป็น Latest; เผยแพร่รุ่นเก่า 1.1.1 จาก b867d5b และ 1.1.2 จาก 861e994 สำเร็จ มี MSI/ZIP ทั้งคู่ บันทึก Release 1.1.1 รวมรายละเอียดเดิมของ 1.0.0, 1.1.0 และ 1.1.1 ครบ ตรวจ tag SHA, assets และ Latest ผ่าน API โดยไม่ย้าย tag หรือแก้ประวัติ changelog ของรุ่นที่ออกแล้ว
-
-### แก้ไข · ค่าเริ่มต้นตำแหน่งตารางลอย
-
-- แก้ DOCX reader ให้ `w:tblpPr` ที่ละ `w:vertAnchor` ใช้ margin ตาม MS-OE376 §2.1.163 แทน paragraph; ค่า explicit text/page/margin ยังใช้ตามไฟล์ ป้องกันตารางที่จัดชิดล่างถูกวางก่อนจุด anchor แทนขอบล่างพื้นที่ข้อความ ไม่เปลี่ยนรูปแบบไฟล์หรือฟอนต์ เพิ่ม fixture ที่ตรวจการอ่านและ round-trip ทั้งค่าที่ละและระบุไว้ fixture ผ่านทั้ง 4 กรณีและ round-trip; เทียบ Linux ครบ 220 ฉบับกับ CLI 1.1.4 ก่อนแก้ ผลทั้งห้าชุดตรงกันทุกแถว (pages 189/220, boundaries 103/220, open/round-trip/stability 220/220) ตำแหน่งตารางใน zenodo-157 ถูกต้องขึ้น แต่ยัง 6 หน้าเทียบอ้างอิง 7 จึงไม่อ้างคะแนน readiness เพิ่ม full CI ผ่าน 6/6, native 2,544 ผ่าน / ignored 1 เดิม, assets 141, wasm 16; ยังรอ Windows วัดซอร์สที่นำขึ้น main
+- ยังไม่มี
 
 ## [1.1.4] - 2026-11-14
+
+### อัปเดต Release จากโค้ดล่าสุด (2026-11-14)
+
+- อัปเดต tag และ assets ของ Release v1.1.4 ให้ชี้ไปยัง commit ล่าสุดบน `main`; สร้าง MSI/portable ZIP ใหม่จากซอร์สนั้นและคง release URL/ID เดิม; บันทึก Release สะสมรายละเอียดจาก v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0 ตามลำดับใหม่ไปเก่า ตามกฎ release notes ใน `AGENTS.md`
+- เร่งการสร้างข้อความ proofing ASCII ใน `crates/layout/src/para.rs`: หลีกเลี่ยง UTF-8 scalar decoding ในเส้นทาง ASCII ซึ่ง run lengths และ proof offsets นับเป็น byte อยู่แล้ว; Unicode path คงเดิม; linearity probe ผ่านที่ 29.0× (เกณฑ์ <32×) โดยไม่เปลี่ยนข้อความหรือผล proofing
+- แก้ DOCX reader ให้ `w:tblpPr` ที่ละ `w:vertAnchor` ใช้ margin ตาม MS-OE376 §2.1.163 แทน paragraph; ค่า explicit text/page/margin ยังใช้ตามไฟล์ ป้องกันตารางชิดล่างถูกวางก่อนจุด anchor; fixture ตรวจการอ่านและ round-trip ผ่าน 4 กรณี โดยไม่เปลี่ยนรูปแบบไฟล์หรือฟอนต์
+- readiness renderer แสดง non-passing rows ครบ ไม่ตัดที่ 40; เพิ่ม blocker assessment ภาษาอังกฤษ/ไทยครบทุก 144 layout failures โดยระบุผลที่วัดได้, font substitution ที่พบ และสาเหตุที่ยืนยันได้หรือยังแยกไม่ได้โดยไม่เปลี่ยนเกณฑ์/TSV/exclusion; workflow สร้าง Thai companion จากรายงาน Windows ทางการ
+- CI และ Windows readiness ใช้ผลจริงใน run และ commit ที่อ้างใน [handoff](handoff.md) และ [readiness](docs/readiness.md); คง 220 corpus rows, 22 deferred, 24 excluded และเกณฑ์เดิม
+
 
 ### ความปลอดภัยของ dependencies
 
@@ -34,12 +35,12 @@
 ### เวอร์ชันและการเผยแพร่
 
 - เตรียม 1.1.4 จาก main ล่าสุดตามคำสั่งผู้ใช้ รวมงานตาราง/clipboard และการจัดหน้าในบันทึกด้านล่าง ปรับ workspace version และ lockfile พร้อมแพตช์ dependencies ด้านความปลอดภัยตามรายการด้านบน; installer ใช้ UpgradeCode เดิมและไม่เปลี่ยนไฟล์ผู้ใช้
-- คะแนน Windows ที่ตรวจจริงยังเป็น 95.1% ไม่นับ deferred (source 97e1d6f, run 43541894863) ไม่อ้างว่าครบ 100%; ข้อความ “ไม่มี Release” ในบันทึกรอบก่อนเป็นสถานะก่อนคำสั่งให้ออก 1.1.4
+- ผลทางการล่าสุด Windows run 43609090751 วัด source 8797e66: 93.2% รวม / 95.1% ไม่นับ deferred; pages 188/220, boundaries 108/220. เป้าหมาย 100% ยังไม่สำเร็จ; ข้อความ “ไม่มี Release” ในบันทึกรอบก่อนเป็นสถานะก่อนคำสั่งให้ออก 1.1.4
 - ผลตรวจซอร์ส 1.1.4 หลังแพตช์: `cargo xtask ci` ผ่าน 6/6 (native 2,543 ผ่าน, ignored 1 เดิม; assets 141; wasm 16), `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65 และ `cargo audit` exit 0 พร้อมคำเตือน unmaintained 5 รายการตามข้างต้น; CLI แสดง 1.1.4; ขั้นเผยแพร่ใช้ Windows x64 workflow บน main ด้วย release=true และต้องตรวจ run SHA และ tag ให้ตรงกันก่อนรายงานว่าเผยแพร่สำเร็จ
 
 ### ตรวจยืนยัน · Windows readiness (2026-11-14)
 
-- Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ
+- Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43609090751, source 8797e66, report ddcf7f0: 93.2% overall / 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ
 
 ### แก้ไข · กระจายแถวกับหัวตารางซ้ำ (2026-11-14)
 
@@ -69,7 +70,7 @@
 ### ข้อจำกัดที่ทราบ · งานตรวจตาราง (2026-11-14)
 
 - rich clipboard ภายใน Doc4Me; ยังไม่อ้างการโอนวัตถุผ่าน system clipboard ไปทุกโปรแกรมหรือ Word ink ที่ reader ไม่รองรับ ไม่ sort กลุ่ม vertical merge/ไม่ split table ผ่าน continuation และไม่แปลง table ที่หุ้ม structural content control จนกว่าจะแยกหรือนำ wrapper ออก
-- readiness ล่าสุด 95.1% ไม่นับ deferred บน Windows source6127a73; งานตารางรอวัดซอร์สใหม่ ไม่อ้าง 100% หรือเปลี่ยน ruler
+- readiness ล่าสุด 95.1% ไม่นับ deferred บน Windows source 8797e66 (run 43609090751); งานตารางรวมอยู่ในการวัดแล้ว ไม่อ้าง 100% หรือเปลี่ยน ruler
 
 ### เพิ่ม
 

@@ -1,10 +1,12 @@
 # Readiness check sets
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
-reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md). The plan that
+reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
 uses the number is in [`../roadmap.md`](../roadmap.md#path-to-100-measured-readiness). Pass
 `--diagnostics` on a full corpus run to print every corpus failure ID and reason to stdout for
-investigation; the generated report remains capped at 40 failures per set.
+investigation. The generated report lists every non-passing row; per-item blocker assessments are
+published in [English](blockers-2026-11-14.md) and [Thai](blockers-2026-11-14.th.md). Those
+assessments distinguish measured facts from causes that are still unverified.
 
 ## Rules
 
@@ -49,9 +51,9 @@ investigation; the generated report remains capped at 40 failures per set.
   is deferred only until the owner requests it; Windows arm64 was requested and attempted in
   November 2026 and is now recorded as `pass` in `manual.tsv` after run 42262956358 built and
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
-  canceled before it could measure the updated row. Latest Windows run 43245507907 completed
-  on `e9b354b`; the generated report was committed as `e2e212f` (92.9% overall,
-  94.8% without the 22 deferred rows; pages 184/220, boundaries 102/220). Each row's note
+  canceled before it could measure the updated row. Latest Windows run 43609090751 measured
+  source `8797e66`; the generated report was committed as `ddcf7f0` (93.2% overall,
+  95.1% without the 22 deferred rows; pages 188/220, boundaries 108/220). Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the

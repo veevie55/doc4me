@@ -81,6 +81,10 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Font-resolution diagnostic failed for $id" }
           }
 
+      - name: Render Thai readiness report
+        shell: bash
+        run: python tools/readiness_th.py
+
       - name: Summary
         shell: pwsh
         run: |
@@ -92,7 +96,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/readiness.md
+          git add docs/readiness.md docs/readiness.th.md
           if git diff --cached --quiet; then
             echo "docs/readiness.md unchanged"
             exit 0

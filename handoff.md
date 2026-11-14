@@ -1,5 +1,19 @@
 # Current handoff · 2026-11-14
 
+CI `cargo xtask ci` passes 6/6 on the current change set (fmt, clippy, workspace tests, assets, dependency layers, wasm). The readiness report generator now lists every non-passing row rather than the first 40; added bilingual blocker assessments for all 144 current layout failures and a Thai companion report generated from the official Windows summary. The explanations record measured differences and whether cause is verified; criteria, TSV rows, weights, 220-document corpus, 22 deferred and 24 excluded are unchanged.
+
+Latest official Windows measurement: [run 43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751), source `8797e66`, report `ddcf7f0`: **93.2% overall / 95.1% without deferred**, pages **188/220**, boundaries **108/220**. The remaining non-deferred failures are 32 page-count and 112 page-boundary checks; exact-match readiness is still below 100%. New Windows measurement is queued after this documentation/code commit.
+
+Release v1.1.4 is the latest release; this task refreshes its tag/assets from current `main` and keeps cumulative notes ordered v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0. The release workflow has an explicit update-existing-release path that checks the tag commit, replaces MSI/ZIP assets and cumulative notes, and preserves the release identity. The previous 1.1.1, 1.1.2 and 1.1.3 releases remain restored.
+
+---
+
+## Previous handoff snapshot · before the bilingual blocker update
+
+Historical status below is retained for context; the current status and next actions are in the preface above.
+
+
+
 CI `cargo xtask ci` ผ่าน 6/6 ที่ `8797e66`; การเร่ง `proof_text` ทำให้ timing probe ผ่านที่ 29.0× (เกณฑ์ <32×). Commit นี้ถูก push ขึ้น `main`; การวัด Windows หลัง push ใช้ run [43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751) บน source `8797e66` และสร้างรายงาน `ddcf7f0` โดย readiness **93.2% รวม / 95.1% เมื่อตัด deferred ออก**, pages **188/220**, boundaries **108/220** — ไม่ดีขึ้นจากรอบก่อน เป้าหมาย 100% ยังไม่สำเร็จ; ปัญหาที่ไม่ deferred ที่เหลืออยู่ใน pagination (32 page-count และ 112 page-boundary failures) โดยคงเกณฑ์ 220 เอกสาร / 22 deferred / 24 excluded
 
 สถานะ Release: v1.1.4 ยังคงเป็น Latest และ notes ผ่าน API verification มีหกหัวข้อเรียง 1.1.4 → 1.1.3 → 1.1.2 → 1.1.1 → 1.1.0 → 1.0.0. คืน Release v1.1.1, v1.1.2 และ v1.1.3 พร้อม MSI/ZIP ของ Windows x64 แล้ว; notes เรียงรุ่นจากใหม่ไปเก่า: v1.1.1 มี 1.1.1/1.1.0/1.0.0, v1.1.2 มี 1.1.2/1.1.1/1.1.0/1.0.0, v1.1.3 มี 1.1.3/1.1.2/1.1.1/1.1.0/1.0.0. Release workflow รุ่นปัจจุบันใช้ `tools/release_notes.py` สร้าง notes สะสมทุกครั้ง; `AGENTS.md` ระบุกฎเดียวกัน และเมื่อเกินขนาด GitHub จะสรุปแต่ละหัวข้อพร้อมลิงก์รายละเอียดเต็ม

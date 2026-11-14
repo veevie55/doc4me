@@ -1,9 +1,6 @@
 # Deferred readiness: active work and verification
 
-Reviewed 2026-11-07. The owner explicitly resumed all deferred work. The 22 rows remain
-incomplete until implementation and the stated verification succeed. Original TSV notes that
-say “skip until asked” describe the scheduling history, not the current blocker. No row is
-marked passing by this plan. The last official measurement remains Windows run 43051188273.
+Reviewed 2026-11-14. This plan documents the recorded prerequisites and evidence for the 22 deferred rows. They remain not passing in the overall score and are omitted only from the separately displayed without-deferred score; no status, criteria or exclusion changed here. The latest official measurement is Windows run 43609090751 (source `8797e66`, report `ddcf7f0`).
 
 ## Dialogs (12)
 

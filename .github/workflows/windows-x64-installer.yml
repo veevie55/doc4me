@@ -10,6 +10,10 @@ on:
         description: "Publish a GitHub Release and tag v<version in Cargo.toml> (main only)"
         type: boolean
         default: false
+      update_release:
+        description: "Update an existing GitHub Release's assets and cumulative notes (its tag must match the selected commit)"
+        type: boolean
+        default: false
       commit:
         description: "Build this earlier commit of main instead (its full 40-character SHA); with release, release it as the version in its Cargo.toml (its tag must exist unless its workflow files are main's)"
         type: string
@@ -95,7 +99,7 @@ jobs:
       # and 41379967784). Such a commit's tag must be pushed from a clone first, so a release run
       # stops here, before building, when that tag is missing.
       - name: Check the earlier commit's tag
-        if: inputs.commit != '' && inputs.release
+        if: inputs.commit != '' && (inputs.release || inputs.update_release)
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
@@ -185,7 +189,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    if: github.event_name == 'workflow_dispatch' && inputs.release
+    if: github.event_name == 'workflow_dispatch' && (inputs.release || inputs.update_release)
     needs: build
     runs-on: ubuntu-latest
     permissions:
@@ -194,6 +198,7 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       COMMIT: ${{ inputs.commit }}
       VERSION: ${{ needs.build.outputs.version }}
+      UPDATE_RELEASE: ${{ inputs.update_release }}
     steps:
       # The release notes are cumulative: this version first, then every earlier released version.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -271,7 +276,12 @@ jobs:
             echo "::warning::CHANGELOG.md has no section for $TAG; using generated notes"
             notes=(--generate-notes)
           fi
-          if [ -n "$COMMIT" ]; then
+          if [ "$UPDATE_RELEASE" = "true" ]; then
+            # Keep the existing release URL and ID, replacing the two installer assets and notes.
+            # The tag is checked above and must already point at the exact source commit.
+            gh release upload "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file "$RUNNER_TEMP/notes.md" --latest
+          elif [ -n "$COMMIT" ]; then
             # An earlier version: its tag exists now, and it doesn't become the latest release.
             gh release create "$TAG" dist/* --repo "$GITHUB_REPOSITORY" --verify-tag --latest=false --title "Doc4Me $TAG" "${notes[@]}"
           else
