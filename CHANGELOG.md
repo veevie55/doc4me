@@ -35,12 +35,12 @@
 ### เวอร์ชันและการเผยแพร่
 
 - เตรียม 1.1.4 จาก main ล่าสุดตามคำสั่งผู้ใช้ รวมงานตาราง/clipboard และการจัดหน้าในบันทึกด้านล่าง ปรับ workspace version และ lockfile พร้อมแพตช์ dependencies ด้านความปลอดภัยตามรายการด้านบน; installer ใช้ UpgradeCode เดิมและไม่เปลี่ยนไฟล์ผู้ใช้
-- ผลทางการล่าสุด Windows run 43609090751 วัด source 8797e66: 93.2% รวม / 95.1% ไม่นับ deferred; pages 188/220, boundaries 108/220. เป้าหมาย 100% ยังไม่สำเร็จ; ข้อความ “ไม่มี Release” ในบันทึกรอบก่อนเป็นสถานะก่อนคำสั่งให้ออก 1.1.4
+- ผลทางการล่าสุด Windows run 43619305678 วัด source 4ecc270: 93.2% รวม / 95.1% ไม่นับ deferred; pages 188/220, boundaries 108/220. เป้าหมาย 100% ยังไม่สำเร็จ; ข้อความ “ไม่มี Release” ในบันทึกรอบก่อนเป็นสถานะก่อนคำสั่งให้ออก 1.1.4
 - ผลตรวจซอร์ส 1.1.4 หลังแพตช์: `cargo xtask ci` ผ่าน 6/6 (native 2,543 ผ่าน, ignored 1 เดิม; assets 141; wasm 16), `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65 และ `cargo audit` exit 0 พร้อมคำเตือน unmaintained 5 รายการตามข้างต้น; CLI แสดง 1.1.4; ขั้นเผยแพร่ใช้ Windows x64 workflow บน main ด้วย release=true และต้องตรวจ run SHA และ tag ให้ตรงกันก่อนรายงานว่าเผยแพร่สำเร็จ
 
 ### ตรวจยืนยัน · Windows readiness (2026-11-14)
 
-- Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43609090751, source 8797e66, report ddcf7f0: 93.2% overall / 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ
+- Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43619305678, source 4ecc270, report 162704b: 93.2% overall / 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ
 
 ### แก้ไข · กระจายแถวกับหัวตารางซ้ำ (2026-11-14)
 
@@ -70,7 +70,7 @@
 ### ข้อจำกัดที่ทราบ · งานตรวจตาราง (2026-11-14)
 
 - rich clipboard ภายใน Doc4Me; ยังไม่อ้างการโอนวัตถุผ่าน system clipboard ไปทุกโปรแกรมหรือ Word ink ที่ reader ไม่รองรับ ไม่ sort กลุ่ม vertical merge/ไม่ split table ผ่าน continuation และไม่แปลง table ที่หุ้ม structural content control จนกว่าจะแยกหรือนำ wrapper ออก
-- readiness ล่าสุด 95.1% ไม่นับ deferred บน Windows source 8797e66 (run 43609090751); งานตารางรวมอยู่ในการวัดแล้ว ไม่อ้าง 100% หรือเปลี่ยน ruler
+- readiness ล่าสุด 95.1% ไม่นับ deferred บน Windows source 4ecc270 (run 43619305678); งานตารางรวมอยู่ในการวัดแล้ว ไม่อ้าง 100% หรือเปลี่ยน ruler
 
 ### เพิ่ม
 

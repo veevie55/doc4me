@@ -1,11 +1,11 @@
 # Layout and pagination parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `8797e66` (run 43609090751), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751), source `8797e66`, report `ddcf7f0`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
-On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 188/220 and 108/220 (run 43609090751).
+On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 188/220 and 108/220 (run 43619305678).
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -14,8 +14,8 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 43609090751,
-source `8797e66`, report commit `ddcf7f0`) matches Word's page count for 188/220 documents and every
+most of Word's layout rules; the latest official Windows corpus measurement (run 43619305678,
+source `4ecc270`, report commit `162704b`) matches Word's page count for 188/220 documents and every
 page's first and last word for 108/220. The current code can use DOCX `w:altName` fonts when the
 primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions.
 Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 188/220 and 108/220. In run 42334133340, govuk-005
@@ -110,7 +110,7 @@ still needed.
 
 The [justification review](readiness/justification-review-2026-11-13.md) records four rejected Mac-measured spacing trials. None of that code or its experimental test was retained; that audit measured layout source `92025e8`; v1.1.4 includes the later source. Native Windows probes are needed before changing those limits.
 
-**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 103/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. The later official run 43609090751 measured source `8797e66`: 95.1% without deferred, 188/220 pages and 108/220 boundaries.
+**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 103/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. The later official run 43619305678 measured source `4ecc270`: 95.1% without deferred, 188/220 pages and 108/220 boundaries.
 
 ## Revision history
 

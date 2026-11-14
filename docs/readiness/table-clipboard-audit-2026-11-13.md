@@ -54,6 +54,6 @@
 
 ## Windows verification · 2026-11-14
 
-**Windows verification · 2026-11-14:** วัด source `8797e66` แล้วใน [run 43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751) / report `ddcf7f0` (รวมการแก้งานตาราง): **95.1% ไม่นับ deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability 220/220 ผลห้าชุดตรวจ ตรง baseline ทุกแถวและเหตุผล ตรวจคำสั่งตารางครบ 53 คำสั่ง พร้อม rich clipboard; แก้ชั้นแถบจัดรูปแบบให้เมนู popup อยู่ด้านบน ตรวจภาพ UI/PDF และ CI 6/6, native 2,543 อีกครั้ง เป้าหมาย 100% ยังไม่สำเร็จ คงเกณฑ์ 220 / 22 deferred / 24 excluded ไม่มี tag/Release
+**Windows verification · 2026-11-14:** วัด source `4ecc270` แล้วใน [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678) / report `162704b` (รวมการแก้งานตาราง): **95.1% ไม่นับ deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability 220/220 ผลห้าชุดตรวจ ตรง baseline ทุกแถวและเหตุผล ตรวจคำสั่งตารางครบ 53 คำสั่ง พร้อม rich clipboard; แก้ชั้นแถบจัดรูปแบบให้เมนู popup อยู่ด้านบน ตรวจภาพ UI/PDF และ CI 6/6, native 2,543 อีกครั้ง เป้าหมาย 100% ยังไม่สำเร็จ คงเกณฑ์ 220 / 22 deferred / 24 excluded ไม่มี tag/Release
 
 Popup layer and repeated-header distribution corrections: `mini_toolbar.rs` now uses the window layer below popup menus. The final screenshot shows every border menu item above the mini toolbar; exported Thai table PDF has one valid Letter page. CI repeated: all six steps, 2,543 native, one originally ignored, assets 141, wasm 16.

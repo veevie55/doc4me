@@ -1,11 +1,11 @@
 # Doc4Me architecture
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `8797e66` (run 43609090751), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751), source `8797e66`, report `ddcf7f0`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
-The latest official Windows readiness report is run 43609090751, source `8797e66`, report commit `ddcf7f0`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
+The latest official Windows readiness report is run 43619305678, source `4ecc270`, report commit `162704b`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
 `plan/architecture.md` are gitignored and local to the original author's machine; this file is the
 committed, current summary. Rules for working in the code are in [`AGENTS.md`](../AGENTS.md).
 

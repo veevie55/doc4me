@@ -19,4 +19,4 @@ An initial trial also changed ordinary/contextual gaps inside `layout_blocks` (c
 The legacy `allowSpaceOfSameStyleInTable` prerequisite was reviewed separately ([bfacaf36](https://github.com/storytold/wordcraft/commit/bfacaf36274750171db9ed0d597c349baf5515e6)). Only govuk-010 has the enabled flag below mode 15 in this corpus, and it has no contextual-spacing declaration. That setting and the inferred end-of-cell Normal-style rule were not added in this arc.
 
 
-**Superseded by the later official measurement:** Windows run 43609090751 on source `8797e66` records 93.2% overall / 95.1% without 22 deferred rows, 188/220 page counts and 108/220 page boundaries. Per-row current reasons are in [English](blockers-2026-11-14.md) and [Thai](blockers-2026-11-14.th.md); criteria and row statuses are unchanged.
+**Superseded by the later official measurement:** Windows run 43619305678 on source `4ecc270` records 93.2% overall / 95.1% without 22 deferred rows, 188/220 page counts and 108/220 page boundaries. Per-row current reasons are in [English](blockers-2026-11-14.md) and [Thai](blockers-2026-11-14.th.md); criteria and row statuses are unchanged.

@@ -1,8 +1,8 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `8797e66` (run 43609090751), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43609090751](https://github.com/veevie55/doc4me/actions/runs/43609090751), source `8797e66`, report `ddcf7f0`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
@@ -78,8 +78,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **93.2%** in the latest official Windows report (run 43609090751, source
-`8797e66`, report commit `ddcf7f0`; ribbon 503/503, dialogs 216/228, pages 188/220, boundaries
+2026-10-25 report, and **93.2%** in the latest official Windows report (run 43619305678, source
+`4ecc270`, report commit `162704b`; ribbon 503/503, dialogs 216/228, pages 188/220, boundaries
 108/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
 6.8 points short of 100% overall. That report says 95.1% without its 22 deferred rows, 4.9 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
@@ -122,7 +122,7 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43609090751 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43619305678 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
 the remaining measured area without deferred rows is pagination (188/220 page-count and 108/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
