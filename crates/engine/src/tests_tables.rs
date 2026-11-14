@@ -264,6 +264,9 @@ fn multiple_header_rows_repeat_in_layout_and_sort_preserves_all_of_them() {
             );
         }
     }
+    focus(&mut s, 0, 0);
+    run(&mut s, "table.distributeRows", json!({}));
+    assert!(table(&s).rows.iter().all(|r| r.props.height.is_some_and(|h| h < 60.0)), "repeated headers must not multiply the distribution height");
     focus(&mut s, 4, 0);
     run(&mut s, "table.sort", json!({"column":0,"descending":true}));
     assert_eq!(cell_text(table(&s), 0, 0), label(0, 0));

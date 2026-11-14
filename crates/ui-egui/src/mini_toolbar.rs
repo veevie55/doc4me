@@ -101,7 +101,7 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context, selection: Rect, viewport: R
     // pinned to the selection, so moving it would lose the association.
     // Draw the bar pinned above the selection. egui stops a click at the topmost widget, so a
     // click on the bar never reaches the document underneath.
-    let _area = egui::Area::new(egui::Id::new("wc_mini_toolbar")).order(Order::Tooltip).interactable(true).fixed_pos(bar.min);
+    let _area = egui::Area::new(egui::Id::new("wc_mini_toolbar")).order(Order::Middle).interactable(true).fixed_pos(bar.min);
     _area.show(ctx, |ui| {
         ui.set_clip_rect(bar);
         let painter = ui.painter();

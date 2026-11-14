@@ -284,6 +284,7 @@ fn distribute_rows(s: &mut Session, _: &Value) -> CmdResult {
     } else {
         (0..t.rows.len()).collect()
     };
+    let headers: std::collections::BTreeSet<_> = t.rows.iter().enumerate().take_while(|(_, r)| r.props.header).map(|(r, _)| r).collect();
     let mut heights = std::collections::BTreeMap::<usize, f32>::new();
     for page in &s.layout().pages {
         let mut local = std::collections::BTreeMap::<usize, f32>::new();
@@ -297,7 +298,12 @@ fn distribute_rows(s: &mut Session, _: &Value) -> CmdResult {
             }
         }
         for (r, h) in local {
-            *heights.entry(r).or_default() += h;
+            let height = heights.entry(r).or_default();
+            if headers.contains(&r) {
+                *height = height.max(h);
+            } else {
+                *height += h;
+            }
         }
     }
     let h = heights.values().copied().fold(18.0f32, f32::max).clamp(1.0, 1584.0);

@@ -11,6 +11,18 @@
 
 ## [Unreleased]
 
+### ตรวจยืนยัน · Windows readiness (2026-11-14)
+
+- Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ
+
+### แก้ไข · กระจายแถวกับหัวตารางซ้ำ (2026-11-14)
+
+- ไม่นับความสูงหัวตารางซ้ำหลายครั้งตามจำนวนหน้าใน `table.distributeRows`; probe ตาราง 20 แถวที่ตั้งความสูง 50 pt เคยกลายเป็น 101 pt หลังสั่งกระจายแถว เพิ่ม regression ในกรณีหัวตารางหลายแถวและหลายหน้า โดยไม่เปลี่ยนตัวจัดหน้า corpus หรือเกณฑ์ readiness
+
+### แก้ไข · ลำดับเมนูเส้นขอบ (2026-11-14)
+
+- แถบจัดรูปแบบลอยใช้ชั้นหน้าต่างเหนือเอกสารและใต้ popup ใน `mini_toolbar.rs` เพื่อให้เลือกเมนูเส้นขอบและเมนูอื่นได้ครบ ภาพ headless พบว่าชั้น Tooltip เดิมวาดทับรายการเมนู ไม่มีการเปลี่ยนโครงสร้าง DOCX หรือการจัดหน้า; ตรวจภาพเมนูและ PDF ภาษาไทย 1 หน้า; `cargo xtask ci` ผ่าน 6/6, native 2,543, ignored 1 เดิม, assets 141, wasm 16
+
 ### เพิ่ม · ตรวจตารางและ rich clipboard (2026-11-14)
 
 - เพิ่ม `table.selectColumn` และ explicit cell selection ใน Session/Undo/UI รวมเซลล์ว่าง จัดรูปแบบและลบเฉพาะเซลล์ที่เลือก; เมทริกซ์ตรวจคำสั่งตารางครบ 53 คำสั่งอยู่ใน `docs/readiness/table-clipboard-audit-2026-11-13.md`

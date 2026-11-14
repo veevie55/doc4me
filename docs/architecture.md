@@ -1,8 +1,8 @@
 # Doc4Me architecture
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
-**Table/clipboard audit · 2026-11-14:** ตรวจคำสั่งตารางครบ 53 คำสั่ง เพิ่มการเลือกคอลัมน์/เซลล์ว่าง เส้นขอบ 8 แบบและปากกาเส้นขอบ แก้หัวตารางหลายแถว การรวม/แยก/ขนาด/ช่วงเลือก และ rich clipboard ข้ามเอกสาร รวมรูป กล่องข้อความ กลุ่มวัตถุ แผนภูมิ SmartArt และ OLE พร้อมทรัพยากรที่อ้างอิง ดู [audit](readiness/table-clipboard-audit-2026-11-13.md) ผล CI ผ่าน 6/6; native 2,543, ignored 1 เดิม ไม่มี tag/Release คะแนน Windows ล่าสุดของ body source `6127a73` / report `527a832` / run 43442685451 ยัง **95.1% ไม่นับ deferred**; รอวัดซอร์สงานตาราง ไม่เปลี่ยนเกณฑ์ 220 / 22 deferred / 24 excluded
+**Windows verification · 2026-11-14:** วัดซอร์สงานตาราง `97e1d6f` แล้วใน [run 43541894863](https://github.com/veevie55/doc4me/actions/runs/43541894863) / report `7a38383`: **95.1% ไม่นับ deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability 220/220 ผลห้าชุดตรวจ ตรง baseline ทุกแถวและเหตุผล ตรวจคำสั่งตารางครบ 53 คำสั่ง พร้อม rich clipboard; แก้ชั้นแถบจัดรูปแบบให้เมนู popup อยู่ด้านบน ตรวจภาพ UI/PDF และ CI 6/6, native 2,543 อีกครั้ง เป้าหมาย 100% ยังไม่สำเร็จ คงเกณฑ์ 220 / 22 deferred / 24 excluded ไม่มี tag/Release
 
 
 The latest official Windows readiness report measured source ed4284d; the current working tree also contains an unmeasured xtask boundary-word diagnostic. The structure metrics below count the current working tree as of 2026-11-07.
@@ -12,7 +12,7 @@ committed, current summary. Rules for working in the code are in [`AGENTS.md`](.
 
 ## Layers
 
-237,580 Rust source lines across
+237,589 Rust source lines across
 20 workspace packages (including apps and `xtask`) against the dependency rules:
 a crate may only depend on crates in lower layers, and nothing below L6 depends on egui, eframe,
 winit or rfd.
@@ -74,6 +74,7 @@ winit or rfd.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |
 | 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |
 | 2026-10-10 | minor | `proof`: proofing languages (English, Polish), affix engine, Polish patterns; layout and engine route each run by its language |
 | 2026-10-10 | major | First committed architecture doc, from the crates' sources and `AGENTS.md` |
