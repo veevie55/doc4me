@@ -1,3 +1,11 @@
+# Current handoff · 2026-11-14
+
+Floating-table default vertical anchor corrected; CI 6/6, 2,544 native passed; Linux corpus maps unchanged (189 pages / 103 boundaries). Releases 1.1.1, 1.1.2 and 1.1.4 published; latest official Windows readiness remains 95.1% without deferred.
+
+Release 1.1.1 รวมบันทึก 1.0.0/1.1.0/1.1.1 ครบ ตรวจ tag และ MSI/ZIP ของทั้งสองรุ่นเก่าแล้ว Latest ยัง 1.1.4. Anchor fix ผ่าน focused fixture และ full CI `/workspace/work/ci-floating-anchor-resumed.log`; ก่อน/หลัง Linux ครบ 220 ฉบับผลห้าชุดตรงทุก ID/reason. ต้องวัด Windows หลัง push นี้; เป้าหมาย 100% ยังไม่สำเร็จ คง corpus 220 / deferred 22 / excluded 24 และ prerequisites เดิม ห้ามอ้างคะแนนเพิ่มจากการแก้นี้ก่อนวัดจริง
+
+---
+
 # Release 1.1.4 · prepared and verified source · 2026-11-14
 
 ผู้ใช้สั่งให้ออก 1.1.4 จากโค้ดล่าสุดหลัง push main แล้ว และทำ readiness ต่อจน 100% ไม่นับ deferred จึงอนุญาต tag/Release 1.1.4 แล้ว ไม่ต้องถามซ้ำ ต้องตรวจ full CI, language audit รวม ignored และ cargo audit ก่อน release workflow ห้ามเปลี่ยน main ระหว่าง release run

@@ -47,6 +47,29 @@ fn read_body(body: &str) -> Document {
     doc4me_docx::read(&docx(body, &[], &[])).unwrap()
 }
 
+/// Word's defaults differ from the standard's page anchors (MS-OE376 §2.1.163).
+#[test]
+fn floating_table_omitted_vertical_anchor_uses_margins_not_its_paragraph() {
+    for (attrs, h, v) in [
+        ("", Anchor::Column, Anchor::Margin),
+        (r#"w:vertAnchor="text""#, Anchor::Column, Anchor::Paragraph),
+        (r#"w:vertAnchor="page" w:horzAnchor="margin""#, Anchor::Margin, Anchor::Page),
+        (r#"w:vertAnchor="margin" w:horzAnchor="page""#, Anchor::Page, Anchor::Margin),
+    ] {
+        let d = read_body(&format!(
+            r#"<w:tbl><w:tblPr><w:tblpPr w:leftFromText="180" w:tblpYSpec="bottom" {attrs}/></w:tblPr>
+            <w:tblGrid><w:gridCol w:w="2000"/></w:tblGrid>
+            <w:tr><w:tc><w:p><w:r><w:t>floating</w:t></w:r></w:p></w:tc></w:tr></w:tbl>"#
+        ));
+        let Block::Table(t) = &*d.body[0] else { panic!("expected a table") };
+        let f = t.props.float.unwrap();
+        assert_eq!((f.h_rel, f.v_rel, f.v_align), (h, v, Some(FloatAlign::End)), "{attrs}");
+        let back = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
+        let Block::Table(t) = &*back.body[0] else { panic!("expected a table") };
+        assert_eq!(t.props.float, Some(f), "explicit anchors survive saving: {attrs}");
+    }
+}
+
 #[test]
 fn font_table_alt_names_drive_substitution_and_survive_docx_round_trip() {
     let fonts = format!(r#"<w:fonts {W_NS}><w:font w:name="Missing Family"><w:altName w:val="Source Sans 3"/></w:font></w:fonts>"#);

@@ -815,15 +815,18 @@ fn table_float(e: &El) -> TableFloat {
     use doc4me_doc::para::{Anchor, FloatAlign};
     let pt = |n: &str| e.attr(n).and_then(|v| measure(v, 20.0)).map(|v| v.clamp(-31_680.0, 31_680.0)).unwrap_or(0.0);
     let dist = |n: &str| pt(n).clamp(0.0, 1584.0);
-    let rel = |n: &str, text: Anchor| match e.attr(n) {
+    let rel = |n: &str, text: Anchor, default: Anchor| match e.attr(n) {
         Some("page") => Anchor::Page,
         Some("margin") => Anchor::Margin,
-        _ => text,
+        Some("text") => text,
+        _ => default,
     };
     let align = |n: &str| e.attr(n).and_then(FloatAlign::from_ooxml);
     TableFloat {
-        h_rel: rel("w:horzAnchor", Anchor::Column),
-        v_rel: rel("w:vertAnchor", Anchor::Paragraph),
+        // Word's defaults are text horizontally and margin vertically (MS-OE376 §2.1.163).
+        // An explicit vertical "text" anchor remains relative to the paragraph.
+        h_rel: rel("w:horzAnchor", Anchor::Column, Anchor::Column),
+        v_rel: rel("w:vertAnchor", Anchor::Paragraph, Anchor::Margin),
         x: pt("w:tblpX"),
         y: pt("w:tblpY"),
         h_align: align("w:tblpXSpec"),

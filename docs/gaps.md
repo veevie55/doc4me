@@ -1,6 +1,8 @@
 # Where Doc4Me falls short of Word
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** minor (Floating-table default vertical anchor corrected; CI 6/6, 2,544 native passed; Linux corpus maps unchanged (189 pages / 103 boundaries). Releases 1.1.1, 1.1.2 and 1.1.4 published; latest official Windows readiness remains 95.1% without deferred.)
+
+**2026-11-14 update:** Floating-table default vertical anchor corrected; CI 6/6, 2,544 native passed; Linux corpus maps unchanged (189 pages / 103 boundaries). Releases 1.1.1, 1.1.2 and 1.1.4 published; latest official Windows readiness remains 95.1% without deferred. See [anchor audit](readiness/floating-table-anchor-2026-11-14.md). Earlier release-status paragraphs below describe their original measurement dates.
 
 **Windows verification · 2026-11-14:** วัดซอร์สงานตาราง `97e1d6f` แล้วใน [run 43541894863](https://github.com/veevie55/doc4me/actions/runs/43541894863) / report `7a38383`: **95.1% ไม่นับ deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability 220/220 ผลห้าชุดตรวจ ตรง baseline ทุกแถวและเหตุผล ตรวจคำสั่งตารางครบ 53 คำสั่ง พร้อม rich clipboard; แก้ชั้นแถบจัดรูปแบบให้เมนู popup อยู่ด้านบน ตรวจภาพ UI/PDF และ CI 6/6, native 2,543 อีกครั้ง เป้าหมาย 100% ยังไม่สำเร็จ คงเกณฑ์ 220 / 22 deferred / 24 excluded ไม่มี tag/Release
 
