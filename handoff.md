@@ -1,8 +1,10 @@
 # Current handoff · 2026-11-14
 
-Floating-table default vertical anchor corrected; CI 6/6, 2,544 native passed; Linux corpus maps unchanged (189 pages / 103 boundaries). Releases 1.1.1, 1.1.2 and 1.1.4 published; latest official Windows readiness remains 95.1% without deferred.
+Floating-table default vertical anchor corrected; CI 6/6, 2,544 native passed; Linux corpus maps unchanged (189 pages / 103 boundaries). Releases 1.1.1, 1.1.2, 1.1.3 and 1.1.4 are published; v1.1.4 release notes are being amended to include every prior version newest first, and the workflow now enforces cumulative notes for future releases. Latest official Windows readiness remains 95.1% without deferred.
 
-Release 1.1.1 รวมบันทึก 1.0.0/1.1.0/1.1.1 ครบ ตรวจ tag และ MSI/ZIP ของทั้งสองรุ่นเก่าแล้ว Latest ยัง 1.1.4. Anchor fix ผ่าน focused fixture และ full CI `/workspace/work/ci-floating-anchor-resumed.log`; ก่อน/หลัง Linux ครบ 220 ฉบับผลห้าชุดตรงทุก ID/reason. ต้องวัด Windows หลัง push นี้; เป้าหมาย 100% ยังไม่สำเร็จ คง corpus 220 / deferred 22 / excluded 24 และ prerequisites เดิม ห้ามอ้างคะแนนเพิ่มจากการแก้นี้ก่อนวัดจริง
+Release notes were updated on GitHub v1.1.4 and API-verified: six sections 1.1.4 → 1.1.3 → 1.1.2 → 1.1.1 → 1.1.0 → 1.0.0; cumulative body 109,183 bytes. `tools/release_notes.py` and the Windows release workflow carry the same descending-order rule forward. A follow-up local full CI initially hit disk exhaustion (duplicate target caches); after cleaning generated caches, clippy passed and 321 layout tests passed, with one timing probe failing repeatedly. An ASCII byte/run fast path in `proof_text` made that probe pass at 29.0× (<32×); the full CI is being rerun. It is not yet pushed or remeasured on Windows.
+
+Release 1.1.1 รวมบันทึก 1.0.0/1.1.0/1.1.1 ครบ; ตรวจ tag และ MSI/ZIP ของ 1.1.1, 1.1.2, 1.1.3 แล้ว และ Latest ยัง 1.1.4. Anchor fix ผ่าน focused fixture และ full CI `/workspace/work/ci-floating-anchor-resumed.log`; ก่อน/หลัง Linux ครบ 220 ฉบับผลห้าชุดตรงทุก ID/reason. Windows readiness หลัง push main `811c6e1` วัดแล้วใน run 43575932814 (report bot commit `9bf64b4`): 93.2% overall / 95.1% ไม่นับ deferred, 188/220 pages และ 108/220 boundaries. เป้าหมาย 100% ยังไม่สำเร็จ; คง corpus 220 / deferred 22 / excluded 24 และ prerequisites เดิม
 
 ---
 

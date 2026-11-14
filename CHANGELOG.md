@@ -11,6 +11,11 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง
+
+- **บันทึก GitHub Release แบบสะสมทุกเวอร์ชัน** (`tools/release_notes.py`, `.github/workflows/windows-x64-installer.yml`, `AGENTS.md`): Release แสดงรายละเอียดรุ่นปัจจุบันและทุกรุ่นก่อนหน้าเรียงจากใหม่ไปเก่า; เมื่อเกินข้อจำกัด GitHub จะเก็บหัวข้อและสรุปรายการระดับบนของทุกรุ่นพร้อมลิงก์ไป Changelog เต็ม ปรับใช้กับ Release v1.1.4 ที่เผยแพร่แล้วด้วย ไม่กระทบ binary, tag หรือ readiness; ตรวจสร้างโน้ตจำลอง 1.1.4, ลำดับรุ่นและขนาดโน้ตแล้ว
+- **เร่งการสร้างข้อความ proofing ASCII** (`crates/layout/src/para.rs`): หลีกเลี่ยง UTF-8 scalar decoding ในเส้นทางข้อความ ASCII ซึ่ง run lengths และ proof offsets นับเป็น byte อยู่แล้ว; Unicode path คงเดิม. แก้ linearity probe `proof_text_walks_the_runs_once` ที่ล้มซ้ำด้วย 35.2× ให้ผ่านที่ 29.0× (เกณฑ์ <32×); เพิ่มความทนต่อเอกสาร ASCII ที่มีการจัดรูปแบบรายอักขระโดยไม่เปลี่ยนข้อความ/การพิสูจน์อักษร
+
 ### การเผยแพร่ย้อนหลังและผลตรวจ
 
 - เผยแพร่ 1.1.4 จาก af59bac สำเร็จ พร้อม MSI/portable ZIP และคงเป็น Latest; เผยแพร่รุ่นเก่า 1.1.1 จาก b867d5b และ 1.1.2 จาก 861e994 สำเร็จ มี MSI/ZIP ทั้งคู่ บันทึก Release 1.1.1 รวมรายละเอียดเดิมของ 1.0.0, 1.1.0 และ 1.1.1 ครบ ตรวจ tag SHA, assets และ Latest ผ่าน API โดยไม่ย้าย tag หรือแก้ประวัติ changelog ของรุ่นที่ออกแล้ว

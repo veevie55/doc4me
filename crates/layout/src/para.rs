@@ -3138,6 +3138,25 @@ fn proof_issues(p: &Paragraph, runs: &[ProofRun], opts: &crate::ProofOptions) ->
 /// U+0001 bytes (neither words nor spaces).
 pub fn proof_text(p: &doc4me_doc::Paragraph) -> String {
     let mut out = String::with_capacity(p.text.len());
+    // ASCII is byte-aligned: proofing offsets and run lengths already use UTF-8 bytes. Avoid
+    // decoding each scalar when the common case can walk text and runs with one byte iterator.
+    if p.text.is_ascii() {
+        let mut runs = p.runs.iter();
+        let mut run = runs.next();
+        let mut end = run.map_or(0, |r| r.len);
+        for (i, b) in p.text.bytes().enumerate() {
+            while run.is_some() && i >= end {
+                run = runs.next();
+                end = end.saturating_add(run.map_or(0, |r| r.len));
+            }
+            if run.map_or(p.mark.del.is_some(), |r| r.props.del.is_some()) {
+                out.push('\u{1}');
+            } else {
+                out.push(char::from(b));
+            }
+        }
+        return out;
+    }
     // The run holding each character ([`Paragraph::props_of_char`]), found by walking the runs
     // along with the text rather than from the first run for every character.
     let mut runs = p.runs.iter();

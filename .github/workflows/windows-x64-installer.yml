@@ -195,12 +195,13 @@ jobs:
       COMMIT: ${{ inputs.commit }}
       VERSION: ${{ needs.build.outputs.version }}
     steps:
-      # Only CHANGELOG.md is needed: the release notes, from the commit the run is on, which has
-      # the section of every version released before it.
+      # The release notes are cumulative: this version first, then every earlier released version.
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           persist-credentials: false
-          sparse-checkout: CHANGELOG.md
+          sparse-checkout: |
+            CHANGELOG.md
+            tools/release_notes.py
           sparse-checkout-cone-mode: false
       # An explicitly requested release on main releases the built version as a new
       # tag at that commit; it stops if the tag exists, so it never moves or reuses one. An
@@ -255,49 +256,13 @@ jobs:
         with:
           name: doc4me-windows-x64
           path: dist
-      # The notes are the tag's "## [X.Y.Z]" section of CHANGELOG.md (without the link
-      # definitions at the end of the file); without one, GitHub's generated notes. A release
-      # takes at most 125,000 characters (counted here in UTF-8 bytes, never fewer): longer notes
-      # keep the headings and each entry's first line, and link to the full section.
+      # Include this version and every previous release, newest first. If the full cumulative
+      # changelog exceeds GitHub's limit, keep every release and its top-level entries, and link
+      # each version to its full changelog section.
       - name: Write the release notes
         run: |
-          python3 - <<'PY'
-          import os, pathlib, re
-
-          tag = os.environ["TAG"]
-          src = pathlib.Path("CHANGELOG.md")
-          lines = src.read_text(encoding="utf-8").split("\n") if src.is_file() else []
-          head = f"## [{tag[1:]}]"
-          notes, found = [], False
-          for line in lines:
-              if line.startswith("## ["):
-                  if found:
-                      break
-                  found = line.startswith(head)
-              elif found and not re.match(r"\[[^\]]+\]: ", line):
-                  notes.append(line)
-          text = "\n".join(notes).strip("\n")
-
-          limit = 125_000
-          if len(text.encode()) > limit:
-              url = "{}/{}/blob/{}/CHANGELOG.md".format(
-                  os.environ["GITHUB_SERVER_URL"], os.environ["GITHUB_REPOSITORY"], os.environ["GITHUB_SHA"])
-              tail = ("\n\n---\n\nบันทึกฉบับเต็มยาวเกินที่ GitHub Release รับได้ (125,000 ตัวอักษร) "
-                      f"ที่นี่จึงมีเฉพาะบรรทัดแรกของแต่ละรายการ รายละเอียดทั้งหมดอยู่ในหัวข้อ `[{tag[1:]}]` ของ [CHANGELOG.md]({url})")
-              kept = []
-              for line in notes:
-                  if line[:1] in (" ", "\t"):
-                      continue
-                  if not line.strip() and kept and not kept[-1].strip():
-                      continue
-                  kept.append(line)
-              while kept and len(("\n".join(kept).strip("\n") + tail).encode()) > limit:
-                  kept.pop()
-              text = "\n".join(kept).strip("\n") + tail
-              print(f"::warning::the notes for {tag} are too long for a release; it gets each entry's first line")
-
-          pathlib.Path(os.environ["RUNNER_TEMP"], "notes.md").write_text(text + "\n" if text else "", encoding="utf-8")
-          PY
+          python3 tools/release_notes.py "$TAG" "$RUNNER_TEMP/notes.md" \
+            --repo "$GITHUB_REPOSITORY" --server "$GITHUB_SERVER_URL" --commit "$GITHUB_SHA"
       - name: Publish GitHub Release
         run: |
           if grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md"; then

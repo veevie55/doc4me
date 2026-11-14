@@ -66,6 +66,8 @@ Progress docs follow [`craftrules/standards/progress-docs.md`](https://github.co
 
 Every change to code, build, packaging, assets or the version also gets a detailed entry under `## [Unreleased]` in [`CHANGELOG.md`](CHANGELOG.md), in the same commit (what changed, why, where, the effect on users and compatibility, and how it was checked). Before a `v*` tag, move those entries under `## [x.y.z] - YYYY-MM-DD`: the release job publishes that section as the release notes. See `CLAUDE.md` rule 3.
 
+**Cumulative release notes:** every GitHub Release must include its own changelog section followed by every earlier released version, in descending version order, through the first release. Keep all version headings and their details; when the cumulative text exceeds GitHub's 125,000-byte limit, include each version's headings and top-level entry summaries with a link to that version's full `CHANGELOG.md` section. The Windows release workflow enforces this with [`tools/release_notes.py`](tools/release_notes.py). Apply the same rule when editing an existing Release.
+
 ## Contributor credits (About window)
 
 - About ▸ Contributors/Models are compiled into the binary from `contributors/contributors.json`
