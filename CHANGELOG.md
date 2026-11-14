@@ -11,6 +11,19 @@
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-11-14
+
+### ความปลอดภัยของ dependencies
+
+- อัปเดต rustix 1.1.5 → 1.1.6 แก้ RUSTSEC-2026-0486 (xattr กับ buffer ว่าง) และ async-executor 1.14.0 → 1.14.1 เพื่อใช้รุ่นที่ไม่ถูกถอน พร้อม lockfile resolution ของ dependencies ที่เกี่ยวข้อง
+- cargo-audit 0.23.0 หลังแพตช์สำเร็จ ยังมี 5 คำเตือน unmaintained ที่ไม่มี fixed upgrade: rustybuzz, ttf-parser, zbus_names, zvariant, zvariant_derive ไม่ปิดหรือ ignore advisory; CI และ language audit หลังอัปเดตผ่านตามผลด้านล่าง
+
+### เวอร์ชันและการเผยแพร่
+
+- เตรียม 1.1.4 จาก main ล่าสุดตามคำสั่งผู้ใช้ รวมงานตาราง/clipboard และการจัดหน้าในบันทึกด้านล่าง ปรับ workspace version และ lockfile พร้อมแพตช์ dependencies ด้านความปลอดภัยตามรายการด้านบน; installer ใช้ UpgradeCode เดิมและไม่เปลี่ยนไฟล์ผู้ใช้
+- คะแนน Windows ที่ตรวจจริงยังเป็น 95.1% ไม่นับ deferred (source 97e1d6f, run 43541894863) ไม่อ้างว่าครบ 100%; ข้อความ “ไม่มี Release” ในบันทึกรอบก่อนเป็นสถานะก่อนคำสั่งให้ออก 1.1.4
+- ผลตรวจซอร์ส 1.1.4 หลังแพตช์: `cargo xtask ci` ผ่าน 6/6 (native 2,543 ผ่าน, ignored 1 เดิม; assets 141; wasm 16), `cargo test -p doc4me-ui-egui i18n -- --include-ignored` ผ่าน 65/65 และ `cargo audit` exit 0 พร้อมคำเตือน unmaintained 5 รายการตามข้างต้น; CLI แสดง 1.1.4; ขั้นเผยแพร่ใช้ Windows x64 workflow บน main ด้วย release=true และต้องตรวจ run SHA และ tag ให้ตรงกันก่อนรายงานว่าเผยแพร่สำเร็จ
+
 ### ตรวจยืนยัน · Windows readiness (2026-11-14)
 
 - Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. ไม่แก้ benchmark inputs/TSV/น้ำหนัก/deferred/excluded; เป้าหมาย 100% ยังไม่สำเร็จ

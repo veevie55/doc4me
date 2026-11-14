@@ -1,8 +1,18 @@
+# Release 1.1.4 · prepared and verified source · 2026-11-14
+
+ผู้ใช้สั่งให้ออก 1.1.4 จากโค้ดล่าสุดหลัง push main แล้ว และทำ readiness ต่อจน 100% ไม่นับ deferred จึงอนุญาต tag/Release 1.1.4 แล้ว ไม่ต้องถามซ้ำ ต้องตรวจ full CI, language audit รวม ignored และ cargo audit ก่อน release workflow ห้ามเปลี่ยน main ระหว่าง release run
+
+ตรวจ release gates แล้ว: full CI 6/6, native 2,543 ผ่าน / ignored 1 เดิม, assets 141, wasm 16; language audit รวม ignored ผ่าน 65/65; cargo-audit 0.23.0 exit 0 หลังอัปเดต rustix 1.1.6 และ async-executor 1.14.1 ยังมี 5 unmaintained warnings ที่ไม่มี fixed upgrade ไม่มีการปิด advisory CLI แสดง 1.1.4 ขั้นถัดไป push commit นี้ แล้ว dispatch Windows x64 บน main ด้วย release=true (ไม่ใส่ commit input ซึ่งใช้สำหรับรุ่นเก่า) ตรวจ head SHA/tag/Release assets จริงก่อนอ้างว่าเผยแพร่แล้ว logs: `/workspace/work/{ci-1.1.4-patched,lang-audit-1.1.4,audit-1.1.4-patched}.log`
+
+สองจุดที่ค้างปิดแล้วใน main99c4b5f: popup layering และหัวตารางซ้ำใน distributeRows; CI ผ่าน 6/6, probe 101 → 51 pt เป้าหมาย readiness 100% ยังไม่สำเร็จ ผลล่าสุดและ prerequisites ด้านล่างยังใช้ได้
+
+---
+
 # Handoff · table/clipboard + Windows verification · 2026-11-14
 
 **Windows verification · 2026-11-14:** วัดซอร์สงานตาราง `97e1d6f` แล้วใน [run 43541894863](https://github.com/veevie55/doc4me/actions/runs/43541894863) / report `7a38383`: **95.1% ไม่นับ deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability 220/220 ผลห้าชุดตรวจ ตรง baseline ทุกแถวและเหตุผล ตรวจคำสั่งตารางครบ 53 คำสั่ง พร้อม rich clipboard; แก้ชั้นแถบจัดรูปแบบให้เมนู popup อยู่ด้านบน ตรวจภาพ UI/PDF และ CI 6/6, native 2,543 อีกครั้ง เป้าหมาย 100% ยังไม่สำเร็จ คงเกณฑ์ 220 / 22 deferred / 24 excluded ไม่มี tag/Release
 
-- สองจุดแก้ที่ค้างเสร็จแล้ว: เมนู popup อยู่เหนือ mini toolbar และกระจายแถวไม่นับหัวตารางซ้ำตามจำนวนหน้า; probe 50 pt ที่เคยเป็น 101 pt เหลือ 50.5 pt พร้อม regression และ full CI ผ่าน
+- สองจุดแก้ที่ค้างเสร็จแล้ว: เมนู popup อยู่เหนือ mini toolbar และกระจายแถวไม่นับหัวตารางซ้ำตามจำนวนหน้า; probe 50 pt ที่เคยเป็น 101 pt เหลือ 51 pt พร้อม regression และ full CI ผ่าน
 - Code arc pushed at `97e1d6f`; Windows measured this engine source. The subsequent popup layer and repeated-header distribution fixes affect UI/edit commands only; full CI passed again in `/workspace/work/ci-table-resume-final.log`. No initial-document pagination/layout change follows the measured source.
 - เกณฑ์ที่ยังไม่ผ่าน: page counts 32/220 และ page boundaries 112/220 ต้องทำ pagination ต่อ พร้อม Word/font/reference prerequisites เดิมด้านล่าง ไม่อ้างว่า command coverage ทำให้ readiness 100%
 - หลักฐาน: `docs/readiness/table-clipboard-audit-2026-11-13.md`; logs/UI/PDF ใน `/workspace/work/`; registry 730 commands / ribbon 504/504 / tests 2,552 attributes; ไม่ออก Release
