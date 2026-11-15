@@ -31,8 +31,8 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Arial; zenodo-114: Garamond in Times New Roman). Carlito and Caladea, bundled on the desktop
     // since 1.1.3, come after them, so they stand in only where neither is installed (Linux), as
     // before they were bundled.
-    const SANS: &[&str] = &["Source Sans 3", "Arimo", "Inter", "Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans"];
-    const SERIF: &[&str] = &["Source Serif 4", "Tinos", "Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif"];
+    const SANS: &[&str] = &["Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
+    const SERIF: &[&str] = &["Times New Roman", "Caladea", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     // Calibri and Cambria themselves: their metric-compatible stand-ins first, wherever.
     const CALIBRI: &[&str] = &["Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
     const CAMBRIA: &[&str] = &["Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
@@ -47,7 +47,6 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     const SYMBOL: &[&str] = &["Noto Sans Symbols", "Noto Sans Symbols 2", "Source Sans 3", "Apple Symbols", "Segoe UI Symbol", "DejaVu Sans"];
     const CJK_SANS: &[&str] = &["Noto Sans CJK SC", "BIZ UDPGothic", "NanumGothic", "Doc4MeHangul", "Source Sans 3"];
     const CJK_SERIF: &[&str] = &["Shippori Mincho", "BIZ UDMincho", "Noto Sans CJK SC", "Source Serif 4"];
-    const OVERPASS: &[&str] = &["Overpass", "Arimo", "Source Sans 3"];
     // Verdana: DejaVu Sans (Bitstream Vera's design) sets English text 1.2% narrower in regular
     // and 0.2% wider in bold, and breaks 60% / 74% of lines at the same word (measured against
     // Microsoft's core-fonts Verdana); Carlito, the old fallback, was 21% narrower and broke none.
@@ -84,12 +83,14 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Thai document fonts (TH Sarabun New / PSK and the other national fonts, the Windows UPC
     // families, Google's Thai families): the bundled Sarabun draws them.
     const THAI: &[&str] = &["Sarabun"];
+    // Overpass is available in variable weights in the pinned corpus font input; unknown platform
+    // builds fall back to the closest bundled office sans fonts.
     // Aptos, Word's default font since 2023: Intos (bundled) has its advances, kerning and
     // vertical metrics, as Intos Display, Narrow and Serif have Aptos Display's, Narrow's and
     // Serif's (Display is bundled; Narrow and Serif are used when installed).
-    const APTOS: &[&str] = &["Intos", "Carlito", "Source Sans 3", "Arimo", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans"];
-    const APTOS_DISPLAY: &[&str] = &["Intos Display", "Intos", "Carlito", "Source Sans 3", "Arimo", "Arial", "Liberation Sans"];
-    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Intos", "Carlito", "Source Sans 3", "Arimo", "Arial", "Liberation Sans"];
+    const APTOS: &[&str] = &["Intos", "Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
+    const APTOS_DISPLAY: &[&str] = &["Intos Display", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
+    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
     const APTOS_SERIF: &[&str] =
         &["Intos Serif", "Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     let f = family.to_ascii_lowercase();
@@ -107,7 +108,6 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "aptos display" => APTOS_DISPLAY,
         "aptos narrow" => APTOS_NARROW,
         "aptos serif" => APTOS_SERIF,
-        "overpass" | "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => OVERPASS,
         "palatino linotype" | "book antiqua" | "palatino" => PALATINO,
         "arial"
         | "arialmt"

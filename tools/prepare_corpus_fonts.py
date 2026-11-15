@@ -72,6 +72,26 @@ def fetch(root: Path, family_dir: str, name: str, source: str, expected: str) ->
         path.write_bytes(data)
 
 
+def verify_manifest_fonts(root: Path) -> None:
+    """Verify every declared file before the build script embeds it."""
+    for line in (root / "fonts" / "manifest.txt").read_text(encoding="utf-8").splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        fields = [part.strip() for part in line.split("|")]
+        if len(fields) < 8:
+            raise RuntimeError(f"malformed craft-fonts manifest row: {line}")
+        family, style, relative, _scripts, license_id, license_path, expected, _source = fields[:8]
+        font_path = root / relative
+        actual = hashlib.sha256(font_path.read_bytes()).hexdigest()
+        if actual != expected:
+            raise RuntimeError(f"SHA-256 mismatch for {family} {style}: expected {expected}, got {actual}")
+        if license_id.startswith("OFL"):
+            notice = root / license_path
+            if not notice.is_file() or b"SIL OPEN FONT LICENSE" not in notice.read_bytes()[:4096]:
+                raise RuntimeError(f"missing or invalid OFL notice for {family} {style}: {license_path}")
+
+
 def main() -> int:
     if len(sys.argv) != 2:
         raise RuntimeError("usage: prepare_corpus_fonts.py <craft-fonts-checkout>")
@@ -91,6 +111,7 @@ def main() -> int:
         if row not in existing:
             existing.append(row)
     manifest.write_text("\n".join(existing) + "\n", encoding="utf-8", newline="\n")
+    verify_manifest_fonts(root)
     print(f"Prepared pinned OFL Overpass and Noto Sans Ethiopic in {root}")
     return 0
 

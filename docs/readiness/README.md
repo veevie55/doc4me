@@ -51,9 +51,10 @@ assessments distinguish measured facts from causes that are still unverified.
   is deferred only until the owner requests it; Windows arm64 was requested and attempted in
   November 2026 and is now recorded as `pass` in `manual.tsv` after run 42262956358 built and
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
-  canceled before it could measure the updated row. Latest Windows run 43619305678 measured
-  source `4ecc270`; the generated report was committed as `162704b` (93.2% overall,
-  95.1% without the 22 deferred rows; pages 188/220, boundaries 108/220). Each row's note
+  canceled before it could measure the updated row. Latest completed Windows run 43685803781 measured
+  source `b347e18`; the generated report was committed as `1801653` (92.8% overall,
+  94.7% without the 22 deferred rows; pages 186/220, boundaries 99/220). A fresh run of the
+  current font-loading changes is pending. Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the

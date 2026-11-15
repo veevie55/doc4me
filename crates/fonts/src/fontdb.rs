@@ -934,13 +934,26 @@ fn style_italic(style: &str) -> bool {
 }
 
 impl FontDb {
+    fn load_open_corpus_family(&self, family: &str) {
+        let wanted = crate::CRAFT_FONTS.iter().filter(|f| f.family.eq_ignore_ascii_case(family));
+        let mut files: Vec<Vec<u8>> = Vec::new();
+        for font in wanted {
+            if !files.iter().any(|bytes| std::ptr::eq(bytes.as_slice(), font.bytes)) {
+                files.push(font.bytes.to_vec());
+            }
+        }
+        if !files.is_empty() {
+            self.add_fonts(files);
+        }
+    }
+
     /// A database holding the bundled fonts, then the craft-fonts Japanese faces (Mincho first,
     /// so they are the fallback for Japanese text after the requested and bundled fonts), then the
     /// craft-fonts Simplified Chinese faces, for the ideographs the Japanese fonts lack (both empty
     /// without `CRAFT_FONTS_DIR`), whose system font scan reads `font_dirs`.
     pub fn with_font_dirs(font_dirs: Vec<std::path::PathBuf>) -> Self {
         let mut faces = Vec::new();
-        let craft = crate::CRAFT_FONTS.iter().map(|f| f.bytes);
+        let craft = crate::japanese_document_fonts().into_iter().chain(crate::chinese_fonts()).map(|f| f.bytes);
         for data in BUNDLED.iter().chain(DESKTOP_BUNDLED).copied().chain(craft) {
             for f in enumerate_faces(data, MAX_FILE_FACES) {
                 if let Some(mut face) = make_face(FontBytes::Static(data), f.index, f.family, f.style, f.legacy, f.coords) {
@@ -1253,6 +1266,10 @@ impl FontDb {
         if let Some(f) = self.find(family, style) {
             return f;
         }
+        self.load_open_corpus_family(family);
+        if let Some(f) = self.find(family, style) {
+            return f;
+        }
         // Look again even when this load added nothing: another thread may have just loaded it.
         #[cfg(not(target_arch = "wasm32"))]
         {
@@ -1351,6 +1368,9 @@ impl FontDb {
     /// names both count.
     pub fn has_family(&self, family: &str) -> bool {
         if self.is_loaded(family) {
+            return true;
+        }
+        if crate::CRAFT_FONTS.iter().any(|f| f.family.eq_ignore_ascii_case(family)) {
             return true;
         }
         #[cfg(not(target_arch = "wasm32"))]
