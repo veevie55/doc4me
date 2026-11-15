@@ -1,0 +1,90 @@
+# Manual build only. This produces downloadable artifacts; it never publishes a Release.
+name: Build Windows x86
+run-name: 'Build Windows x86 · ${{ inputs.ref }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          printf '### Build Windows x86\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Install Rust and the x86 target
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: i686-pc-windows-msvc
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: windows-x86
+
+      - name: Install WiX v5, Ninja and extensions
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.UI.wixext/5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2
+          if (-not (Get-Command ninja -ErrorAction SilentlyContinue)) { choco install ninja -y --no-progress }
+          ninja --version
+
+      - name: Configure x86 MSVC and build MSI + portable ZIP
+        shell: pwsh
+        run: |
+          $vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+          if (-not (Test-Path $vswhere)) { throw 'vswhere.exe was not found on the Windows runner' }
+          $vs = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $vs) { throw 'Visual Studio C++ x86/x64 build tools were not found' }
+          $vcvars = Join-Path $vs 'VC\Auxiliary\Build\vcvarsall.bat'
+          if (-not (Test-Path $vcvars)) { throw 'vcvarsall.bat was not found in the Visual Studio installation' }
+          $setup = Join-Path $env:RUNNER_TEMP 'vcvars-x86.cmd'
+          @('@echo off', "call `"$vcvars`" amd64_x86", 'if errorlevel 1 exit /b 1', 'set') | Set-Content -Path $setup -Encoding ascii
+          $environment = & $env:ComSpec /d /c $setup
+          if ($LASTEXITCODE -ne 0) { throw 'could not configure the x64-hosted x86 MSVC toolchain' }
+          foreach ($line in $environment) {
+            $equals = $line.IndexOf('=')
+            if ($equals -gt 0) {
+              [Environment]::SetEnvironmentVariable($line.Substring(0, $equals), $line.Substring($equals + 1), 'Process')
+            }
+          }
+          if ($env:VSCMD_ARG_TGT_ARCH -ne 'x86') { throw "MSVC target is '$env:VSCMD_ARG_TGT_ARCH', expected x86" }
+          $env:CMAKE_GENERATOR = 'Ninja'
+          if (-not (Get-Command cl -ErrorAction SilentlyContinue)) { throw 'cl.exe was not found after setting the x86 MSVC environment' }
+          Write-Output "Building for MSVC target $env:VSCMD_ARG_TGT_ARCH with the Ninja CMake generator"
+          pwsh packaging/windows/package.ps1 -Arch x86
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-windows-x86-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

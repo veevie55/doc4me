@@ -19,6 +19,8 @@ upload artifacts; they do not deploy the Web App or publish GitHub Releases.
 
 | Workflow | Runner / target | Artifacts |
 |---|---|---|
+| [Build Windows x86](../.github/workflows/build-windows-x86.yml) | Windows x64; x64-hosted x86 MSVC toolchain | 32-bit x86 MSI, portable ZIP (also runs on compatible 64-bit Windows) |
+| [Build Windows x64](../.github/workflows/build-windows-x64.yml) | Windows x64; native x86_64 MSVC | 64-bit MSI, portable ZIP |
 | [Build Windows ARM64](../.github/workflows/build-windows-arm64.yml) | Windows x64 runner, cross-compiled to ARM64 MSVC | MSI, portable ZIP |
 | [Build macOS](../.github/workflows/build-macos.yml) | macOS; Apple Silicon, Intel, or universal | DMG, CLI ZIP |
 | [Build Linux](../.github/workflows/build-linux.yml) | Ubuntu 22.04; x86_64, glibc 2.35+ | AppImage and zsync, DEB, RPM, tar.gz |
@@ -29,7 +31,7 @@ The selected revision supplies its own source, lockfile, assets, version, and pa
 An older revision must support the selected target and packaging interface. Selecting an old
 source revision through **ref** does not run its historical workflow definition.
 
-These five jobs have read-only repository permissions and do not receive signing credentials.
+These seven platform-build jobs have read-only repository permissions and do not receive signing credentials.
 Third-party actions are pinned to commits. Linux packaging tools (nFPM 2.49.0 and appimagetool
 1.9.1) and Trunk 0.22.1 are pinned and their downloads checked against SHA-256 digests.
 Windows ARM64 packages are unsigned. macOS packages use ad-hoc signing and are not notarized;
@@ -47,9 +49,11 @@ The workflow does not publish to GitHub Pages or another hosting service.
 ## Windows x64 and explicit GitHub Releases
 
 The existing [Windows x64 installer](../.github/workflows/windows-x64-installer.yml) is also
-manual-only. With **release** left off, it builds MSI and portable ZIP artifacts. Its optional
+manual-only. The x86 and x64 platform-build workflows above only upload unsigned artifacts; the
+x64 installer workflow can publish a Release when explicitly requested. With **release** left off,
+it builds MSI and portable ZIP artifacts. Its optional
 **commit** input accepts a full 40-character SHA that is an ancestor of the run's `main` commit;
-leave it empty to build the run's current source. Unlike the five workflows above, this field
+leave it empty to build the run's current source. Unlike the seven platform-build workflows above, this field
 is named **commit** and accepts a full main-history SHA, not a branch name. To refresh an existing release, explicitly enable **update_release**; the workflow verifies that the existing tag points to the selected source, rebuilds the MSI/ZIP, and replaces the cumulative notes while keeping the release ID and URL.
 
 Publishing a new version is a separate, explicit decision:
@@ -93,6 +97,7 @@ Local packaging commands are unchanged:
 ```sh
 # On the matching host, with that platform's build tools installed:
 pwsh packaging/windows/package.ps1 -Arch x64
+pwsh packaging/windows/package.ps1 -Arch x86
 pwsh packaging/windows/package.ps1 -Arch arm64
 packaging/macos/package.sh --arch universal
 packaging/linux/package.sh
@@ -107,4 +112,5 @@ remain the owner's chosen upstream URLs.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows; both build MSI and portable ZIP from a selected ref and include source commit provenance. x86 uses the x64-hosted x86 MSVC toolchain. Neither workflow publishes a Release. |
 | 2026-11-12 | minor | Five independent manual build workflows with selected source refs, commit provenance and artifacts; removed automatic tag triggers from the existing workflows; documented explicit x64 releases and platform limits. |

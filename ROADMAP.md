@@ -6,6 +6,8 @@
 
 **2026-11-14 update:** The complete readiness report now lists all 144 non-passing layout rows with English and Thai blocker assessments. Windows run 43619305678 reports 93.2% overall / 95.1% without 22 deferred rows (source `4ecc270`); exact page count passes 188/220 and page boundaries 108/220. The criteria and 220/22/24 corpus/deferred/excluded counts are unchanged. The floating-table anchor correction is included in the refreshed v1.1.4 source. Earlier dated progress entries below retain their historical results.
 
+**2026-11-15 update:** Added separate manual Windows x86 and x64 build workflows. Each builds MSI and portable ZIP from a selected ref, records the source commit, and uploads artifacts for 14 days. They do not publish Releases; v1.1.4 and the official readiness report are unchanged.
+
 **Windows verification · 2026-11-14:** [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; 188/220 page counts, 108/220 page boundaries; 144 layout failures มี blocker ภาษาอังกฤษ/ไทยครบทุกแถว. เกณฑ์ 220 corpus / 22 deferred / 24 excluded ไม่เปลี่ยน และ readiness 100% ยังไม่ถึง.
 
 
@@ -31,7 +33,7 @@ agent control. This page is the summary; the assessment is
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
 | Commands / tests / code | 730 command specs · 2,552 test attributes · 237,589 Rust lines | measured by CLI and cargo xtask stats, 2026-11-14 |
-| Releases | Doc4Me v1.1.4 (Latest), refreshed from current main with cumulative notes v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0; Windows x64 MSI and portable ZIP. Earlier 1.1.1–1.1.3 releases restored. WordCraft upstream last shipped v0.4.0 on every platform | measured |
+| Releases | Doc4Me v1.1.4 (Latest), refreshed from current main with cumulative notes v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0; Windows x64 MSI and portable ZIP. Separate manual artifact workflows now build Windows x86 and x64 packages from a chosen ref. Earlier 1.1.1–1.1.3 releases restored. WordCraft upstream last shipped v0.4.0 on every platform | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
 #145: ~4.5k lines in ~10 h; layout fidelity PRs run 5–10× slower per line). The earlier "≈120–150 h

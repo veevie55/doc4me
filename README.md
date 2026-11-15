@@ -30,7 +30,7 @@ Doc4Me เป็นโปรแกรมประมวลผลคำแบบ�
 [Releases](https://github.com/veevie55/doc4me/releases) ไฟล์เหล่านี้ยังไม่ได้ลงลายเซ็นดิจิทัล
 Windows SmartScreen จึงอาจถามก่อนเปิด ตัวติดตั้ง MSI ติดตั้งทับ Doc4Me เวอร์ชันก่อนหน้าได้
 
-Windows ARM64, macOS, Linux, FreeBSD และ Web App มี workflow แยกสำหรับสร้างไฟล์จากซอร์สที่คุณเลือก
+Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App มี workflow แยกสำหรับสร้างไฟล์จากซอร์สที่คุณเลือก
 หรือ build บนเครื่องจาก [`packaging/`](packaging/) ได้
 
 ### Build ด้วย GitHub Actions
@@ -41,6 +41,8 @@ Windows ARM64, macOS, Linux, FreeBSD และ Web App มี workflow แยก
 
 | Workflow | เป้าหมาย | ไฟล์ที่ดาวน์โหลดจาก Artifacts |
 |---|---|---|
+| [Build Windows x86](.github/workflows/build-windows-x86.yml) | แอป Windows x86 32 บิต (i686 MSVC; ใช้บน Windows 64 บิตที่รองรับได้ด้วย) | MSI และ portable ZIP |
+| [Build Windows x64](.github/workflows/build-windows-x64.yml) | Windows 64 บิต (x86_64 MSVC) | MSI และ portable ZIP |
 | [Build Windows ARM64](.github/workflows/build-windows-arm64.yml) | Windows ARM64 | MSI และ portable ZIP |
 | [Build macOS](.github/workflows/build-macos.yml) | Universal (Apple Silicon + Intel), หรือเลือกสถาปัตยกรรมเดียว | DMG และ CLI ZIP |
 | [Build Linux](.github/workflows/build-linux.yml) | x86_64, glibc 2.35 ขึ้นไป | AppImage, DEB, RPM และ tar.gz |
@@ -48,11 +50,11 @@ Windows ARM64, macOS, Linux, FreeBSD และ Web App มี workflow แยก
 | [Build Web App](.github/workflows/build-web.yml) | เบราว์เซอร์ที่รองรับ WebAssembly | ZIP ของเว็บแบบ static |
 
 **ทุก workflow เริ่มได้จากคำสั่ง Run workflow เท่านั้น** การ push โค้ดหรือ tag ไม่เริ่ม build, deploy หรือออก Release
-ไฟล์ build ของทั้งห้า workflow อยู่ใน **Artifacts** ของ run นั้น 14 วัน พร้อม `SOURCE_COMMIT.txt` ระบุ commit ที่ใช้จริง
+ไฟล์ build ของ workflow สร้างแพ็กเกจทั้งเจ็ดรายการอยู่ใน **Artifacts** ของ run นั้น 14 วัน พร้อม `SOURCE_COMMIT.txt` ระบุ commit ที่ใช้จริง
 Windows ARM64 ยังไม่ลงลายเซ็นดิจิทัล และ macOS ลงลายเซ็นแบบ ad-hoc โดยยังไม่ notarize
 Web App ต้องแตก ZIP แล้วให้บริการผ่าน HTTP(S); ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
 
-[Windows x64 installer](.github/workflows/windows-x64-installer.yml) ยังคงแยกต่างหากและรันด้วยมือเช่นกัน
+[Windows x64 installer](.github/workflows/windows-x64-installer.yml) ยังคงแยกต่างหากและรันด้วยมือเช่นกัน เป็น workflow เดียวในกลุ่มนี้ที่ออก GitHub Release ได้
 ช่อง **commit** ของ workflow นี้รับ SHA เต็ม 40 ตัวของ commit บน `main`; ติ๊ก **release** เฉพาะเมื่อต้องการเผยแพร่ Release
 รายละเอียดและข้อกำหนดของแต่ละแพลตฟอร์มอยู่ที่ [docs/releasing.md](docs/releasing.md)
 

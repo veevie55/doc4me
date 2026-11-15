@@ -1,6 +1,6 @@
 # Doc4Me architecture
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added manual Windows x86 and x64 artifact workflows; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
 
 **Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
@@ -63,16 +63,17 @@ winit or rfd.
 - `cargo xtask ci`: fmt, clippy `-D warnings`, tests, asset attribution, layering, wasm build.
 - `cargo xtask parity` regenerates [`parity-checklist.md`](parity-checklist.md); a test keeps the
   catalog percentage above a floor that only rises.
-- GitHub Actions has three active workflows: `windows-x64-installer.yml` builds the Windows x64
-  MSI and portable zip on `v*` tags or manual dispatch; `platform-windows-arm64-readiness.yml`
-  checks ARM64 packages on manual dispatch; and `readiness-windows.yml` measures the full corpus
-  and updates the generated report on manual dispatch. The installer runs `doc4me-cli --version`
-  but no fmt, clippy or tests, so run `cargo xtask ci` before pushing. See [`releasing.md`](releasing.md).
+- GitHub Actions includes manual Windows x86 and x64 package workflows that upload MSI/portable ZIP
+  artifacts for a selected source ref, plus Windows ARM64, macOS, Linux, FreeBSD and Web App builds.
+  The separate `windows-x64-installer.yml` can publish a Release only when explicitly requested;
+  `readiness-windows.yml` measures the corpus and updates the generated report. Run `cargo xtask ci`
+  before pushing. See [`releasing.md`](releasing.md).
 
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-15 | minor | Added separate manual Windows x86 and x64 artifact workflows, with source SHA provenance; corrected the current workflow inventory. |
 | 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |
 | 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source `8797e66` in run 43609090751: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table changes are included in this measurement. |
 | 2026-10-10 | minor | `proof`: proofing languages (English, Polish), affix engine, Polish patterns; layout and engine route each run by its language |

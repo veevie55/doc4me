@@ -18,7 +18,7 @@ Windows x64 builds (an MSI installer and a portable zip) are on the
 [Releases](https://github.com/veevie55/doc4me/releases) page. They are not code-signed yet, so
 Windows SmartScreen may ask before it runs them. The MSI installs over earlier Doc4Me versions.
 
-Windows ARM64, macOS, Linux, FreeBSD, and the Web App have separate workflows to build the source you choose.
+Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD, and the Web App have separate workflows to build the source you choose.
 Local packaging scripts are in [`packaging/`](packaging/).
 
 ### Build with GitHub Actions
@@ -29,6 +29,8 @@ Keep **Use workflow from: main** to use the current build instructions. Set **re
 
 | Workflow | Target | Files under the run's Artifacts |
 |---|---|---|
+| [Build Windows x86](.github/workflows/build-windows-x86.yml) | 32-bit x86 Windows app (i686 MSVC; also runs on compatible 64-bit Windows) | MSI and portable ZIP |
+| [Build Windows x64](.github/workflows/build-windows-x64.yml) | 64-bit Windows (x86_64 MSVC) | MSI and portable ZIP |
 | [Build Windows ARM64](.github/workflows/build-windows-arm64.yml) | Windows ARM64 | MSI and portable ZIP |
 | [Build macOS](.github/workflows/build-macos.yml) | Universal (Apple Silicon + Intel), or one architecture | DMG and CLI ZIP |
 | [Build Linux](.github/workflows/build-linux.yml) | x86_64, glibc 2.35 or newer | AppImage, DEB, RPM, and tar.gz |
@@ -36,12 +38,12 @@ Keep **Use workflow from: main** to use the current build instructions. Set **re
 | [Build Web App](.github/workflows/build-web.yml) | Browsers with WebAssembly | Static web app ZIP |
 
 **Every workflow starts only when someone chooses Run workflow.** Pushing code or tags does not start a build,
-deploy a site, or publish a release. These five workflows keep their files in the run's **Artifacts** for 14 days,
+deploy a site, or publish a release. These seven platform-build workflows keep their files in the run's **Artifacts** for 14 days,
 with `SOURCE_COMMIT.txt` recording the actual source commit. Windows ARM64 is unsigned; macOS uses ad-hoc
 signing without notarization. Extract the Web App ZIP and serve it over HTTP(S); see the
 [hosting instructions](packaging/web/README.md).
 
-The separate [Windows x64 installer](.github/workflows/windows-x64-installer.yml) is also manual.
+The separate [Windows x64 installer](.github/workflows/windows-x64-installer.yml) is also manual and is the only workflow that can publish a Release.
 Its **commit** field accepts an earlier `main` commit's full 40-character SHA; enable **release** only when
 you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.md) for platform requirements.
 

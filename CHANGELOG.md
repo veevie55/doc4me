@@ -14,6 +14,8 @@
 
 ### เปลี่ยนแปลง
 
+- เพิ่ม workflow แบบ manual สำหรับ build Windows x86 และ x64 (`.github/workflows/build-windows-x86.yml`, `build-windows-x64.yml`): รับ branch/tag/SHA ที่เลือก, สร้าง MSI และ portable ZIP, บันทึก source SHA ใน `SOURCE_COMMIT.txt` และเก็บ artifact 14 วัน; ให้สิทธิ์ `contents: read`, ไม่ส่ง signing secrets และไม่ออก Release. x86 ใช้ i686 MSVC บน runner x64 พร้อม CMake/Ninja; README ไทย/อังกฤษ, วิธีเผยแพร่, architecture และ roadmap อธิบาย target/artifact ให้ตรงกัน
+- ตรวจสอบ: `actionlint` ผ่านสำหรับ workflow ใหม่ทั้งสองไฟล์; `cargo xtask ci` ผ่านครบ 6 ขั้นบน Linux; การ build Windows x86/x64 จริงยังต้องสั่ง Run workflow บน GitHub Actions เพื่อยืนยัน compiler/installer บน runner Windows
 - ปรับ README ไทย/อังกฤษ เอกสารสถานะและการเผยแพร่ให้ตรงกับ Doc4Me 1.1.4 และผล readiness Windows ทางการล่าสุดที่วัด source `4ecc270` (run 43619305678): 93.2% รวม / 95.1% เมื่อตัด 22 deferred, pages 188/220 และ boundaries 108/220; เกณฑ์และรายการ deferred/excluded คงเดิม
 - สร้างภาพประกอบ README ทั้งชุดใหม่จากแอปจริงด้วยสคริปต์ `ui_shot` เมื่อ build สำเร็จ; ปรับ caption และ attribution ของภาพ About ให้ระบุ v1.1.4; ภาพไม่ผ่านการแต่งและไม่มี asset จากผลิตภัณฑ์อื่น
 - ตรวจสอบ: สคริปต์ `ui_shot` สำเร็จทั้ง 13 ภาพ, ตรวจไฟล์ PNG ทั้ง 13 ไฟล์และเปิดดูภาพ, `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm), `git diff --check` ผ่าน
