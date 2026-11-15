@@ -14,6 +14,7 @@
 
 ### เปลี่ยนแปลง
 
+- เพิ่ม `.github/workflows/build-web-pages.yml` สำหรับ build WebAssembly site จาก ref ที่เลือกและ deploy ไป `https://veevie55.github.io/doc4me/` ด้วย Pages environment; ทำงาน manual จาก workflow definition บน `main` เท่านั้น, จำกัด permission `pages:write`/`id-token:write` ไว้ที่ deploy job, pin GitHub Actions และ Trunk, เก็บ source SHA ในเว็บ และตรวจ output ผ่าน packaging script. Build Web App ZIP เดิมยังเป็น artifact-only; README, release และ hosting docs ระบุขั้นตอนเดียวกัน ตรวจ YAML ด้วย PyYAML และ `actionlint v1.7.12` ผ่าน; ยังไม่ได้สั่ง workflow เพื่อไม่ deploy ทับเว็บไซต์ก่อนผู้ใช้เริ่ม run เอง.
 - ปรับ `crates/fonts/src/word.rs` ให้ชื่อฟอนต์ทดแทนใน 32 รายการ corpus-pages เลือกฟอนต์ OFL ที่ฝัง/ดาวน์โหลดได้ก่อนฟอนต์ระบบกรรมสิทธิ์ เพิ่ม alias สำหรับ CJK, Indic, สัญลักษณ์, Overpass และตระกูลฟอนต์จาก corpus; เพิ่ม `tools/prepare_corpus_fonts.py` ซึ่ง pin Google Fonts revision และตรวจ SHA-256 ของ Overpass/Noto Sans Ethiopic ก่อนเติม manifest ของ craft-fonts โดยไม่เก็บไฟล์ฟอนต์ใหม่ใน repo
 - จำกัดผลต่อเอกสารอื่น: ฟอนต์จาก craft-fonts ที่เพิ่มเพื่อ corpus จะโหลดเมื่อเอกสารขอ family นั้นเท่านั้น และคงลำดับ fallback generic เดิม; สคริปต์เตรียม build ตรวจ SHA-256 ของทุกไฟล์ที่ประกาศใน manifest และตรวจว่าฟอนต์ OFL มี notice ประกอบ
 - Windows x86, x64, ARM64, x64 installer และ readiness workflow checkout craft-fonts ที่ pin revision เดียวกัน บังคับใช้ฟอนต์ชุดนี้และบรรจุ license OFL ในแพ็กเกจ เพื่อให้การวัด readiness ใช้ฐานฟอนต์เดียวกับ release; อัปเดต blocker assessment ไทย/อังกฤษโดยไม่เปลี่ยนเกณฑ์/exclusion/deferred

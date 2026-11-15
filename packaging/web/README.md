@@ -12,6 +12,16 @@ static site in `doc4me-web-<version>/`:
 
 There is no server-side code. Upload the folder's contents anywhere that serves static files.
 
+## GitHub Pages
+
+The repository also has a manual [Build Web App on GitHub Pages](../../.github/workflows/build-web-pages.yml)
+workflow. In GitHub Actions, choose **Use workflow from: main**, start that workflow, and set `ref`
+to `main` or another branch, tag, or commit to publish. A successful run replaces the public site at
+[https://veevie55.github.io/doc4me/](https://veevie55.github.io/doc4me/). The workflow builds the same
+relative-URL site and keeps a `SOURCE_COMMIT.txt` file with the deployed source SHA. It does not run
+on pushes or tags; [Build Web App](../../.github/workflows/build-web.yml) remains available for
+downloading a ZIP without publishing it.
+
 ## Any path works
 
 All URLs in `index.html` are relative (`public_url = "./"` in `apps/doc4me-web/Trunk.toml`),

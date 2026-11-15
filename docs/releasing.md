@@ -1,12 +1,13 @@
 # Building and releasing Doc4Me
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (current release is v1.1.4; clarified current source refs and explicit update-existing-release workflow)
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added a manual workflow to publish a selected Web App build to GitHub Pages
 
 ## Build a chosen commit
 
-All current workflows use only `workflow_dispatch`. Every job also checks that the event is
-`workflow_dispatch`. Pushing code or a tag does not start these workflows. The build workflows
-upload artifacts; they do not deploy the Web App or publish GitHub Releases.
+All current workflows use only `workflow_dispatch`. Pushing code or a tag does not start a build,
+deployment, or release. The platform build workflows upload artifacts, the separate Pages workflow
+publishes the selected Web App to GitHub Pages, and only the explicitly requested x64 installer job
+can publish a GitHub Release.
 
 1. Open [Actions](https://github.com/veevie55/doc4me/actions) and choose a workflow.
 2. Choose **Run workflow**, keeping **Use workflow from: main**. This selects the current workflow
@@ -26,6 +27,17 @@ upload artifacts; they do not deploy the Web App or publish GitHub Releases.
 | [Build Linux](../.github/workflows/build-linux.yml) | Ubuntu 22.04; x86_64, glibc 2.35+ | AppImage and zsync, DEB, RPM, tar.gz |
 | [Build BSD (FreeBSD)](../.github/workflows/build-bsd.yml) | Native FreeBSD 14.5 x86_64 VM on a Linux runner | App/CLI tar.gz, SHA-256, binary information |
 | [Build Web App](../.github/workflows/build-web.yml) | Linux; wasm32-unknown-unknown | Static site ZIP |
+
+### GitHub Pages deployment
+
+[Build Web App on GitHub Pages](../.github/workflows/build-web-pages.yml) builds and deploys the selected
+`ref` to [https://veevie55.github.io/doc4me/](https://veevie55.github.io/doc4me/). Start it manually
+from **Use workflow from: main**; the workflow only accepts deployments whose workflow definition is
+running from `main`. It runs the same pinned Trunk build and validates the static output with
+`packaging/web/package.sh --skip-build`, records the source SHA in `SOURCE_COMMIT.txt`, and uploads
+the site artifact to the `github-pages` environment. A successful deployment replaces the current
+Pages site. The ordinary [Build Web App](../.github/workflows/build-web.yml) remains an artifact-only
+build and does not publish anything.
 
 The selected revision supplies its own source, lockfile, assets, version, and packaging scripts.
 An older revision must support the selected target and packaging interface. Selecting an old
@@ -52,9 +64,8 @@ The FreeBSD VM installs Rust, LLVM/libclang, CMake, Ninja, ALSA, and window-syst
 then builds the app and CLI natively. Its archive needs the matching system libraries on the
 destination machine; it is not a statically linked universal BSD binary.
 
-The Web App ZIP must be extracted and served over HTTP(S). See
-[packaging/web/README.md](../packaging/web/README.md) for MIME types, paths, and hosting options.
-The workflow does not publish to GitHub Pages or another hosting service.
+The Web App ZIP can be extracted and served over HTTP(S), or published with the Pages workflow above.
+See [packaging/web/README.md](../packaging/web/README.md) for MIME types, paths, and hosting options.
 
 ## Windows x64 and explicit GitHub Releases
 
@@ -124,4 +135,5 @@ remain the owner's chosen upstream URLs.
 |---|---|---|
 | 2026-11-15 | minor | Windows packages and readiness use a shared pinned OFL font set; the preparation script verifies Google Fonts hashes for Overpass and Noto Sans Ethiopic before embedding and packaging licences. |
 | 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows; both build MSI and portable ZIP from a selected ref and include source commit provenance. x86 uses the x64-hosted x86 MSVC toolchain. Neither workflow publishes a Release. |
+| 2026-11-15 | minor | Added a manual GitHub Pages workflow for the Web App. It builds a selected ref with pinned Trunk, validates the static package, and deploys only from the main workflow definition to the `github-pages` environment. |
 | 2026-11-12 | minor | Five independent manual build workflows with selected source refs, commit provenance and artifacts; removed automatic tag triggers from the existing workflows; documented explicit x64 releases and platform limits. |

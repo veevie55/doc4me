@@ -48,13 +48,15 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 | [Build Linux](.github/workflows/build-linux.yml) | x86_64, glibc 2.35 ขึ้นไป | AppImage, DEB, RPM และ tar.gz |
 | [Build BSD (FreeBSD)](.github/workflows/build-bsd.yml) | FreeBSD 14.5 x86_64 | tar.gz ของโปรแกรมและ CLI |
 | [Build Web App](.github/workflows/build-web.yml) | เบราว์เซอร์ที่รองรับ WebAssembly | ZIP ของเว็บแบบ static |
+| [Build Web App on GitHub Pages](.github/workflows/build-web-pages.yml) | เว็บไซต์สาธารณะของ Doc4Me | deploy ไปที่ [veevie55.github.io/doc4me](https://veevie55.github.io/doc4me/) |
 
 **ทุก workflow เริ่มได้จากคำสั่ง Run workflow เท่านั้น** การ push โค้ดหรือ tag ไม่เริ่ม build, deploy หรือออก Release
 ไฟล์ build ของ workflow สร้างแพ็กเกจทั้งเจ็ดรายการอยู่ใน **Artifacts** ของ run นั้น 14 วัน พร้อม `SOURCE_COMMIT.txt` ระบุ commit ที่ใช้จริง
+workflow Pages ใช้ `ref` ที่เลือกเพื่อ build แล้วแทนที่เว็บไซต์ปัจจุบันเมื่อ deploy สำเร็จ; เลือก **Use workflow from: main** เพื่อใช้ workflow ล่าสุด
 workflow Windows สำหรับแพ็กเกจและ readiness ใช้ชุดฟอนต์ OFL ที่ pin เดียวกัน และตรวจ hash ของฟอนต์เพิ่มเติมก่อน build; ดูรายละเอียด revision และใบอนุญาตใน [docs/releasing.md](docs/releasing.md)
 ผลวัด Windows ล่าสุด (run [43685803781](https://github.com/veevie55/doc4me/actions/runs/43685803781), source `b347e18`): readiness 92.8% รวม /94.7% ไม่รวม 22 deferred, จำนวนหน้า 186/220 และขอบเขตหน้า 99/220; ยังมี page-count 34 รายการและ boundary 121 รายการที่ไม่ผ่าน ตาม [รายงาน](docs/readiness.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).
 Windows ARM64 ยังไม่ลงลายเซ็นดิจิทัล และ macOS ลงลายเซ็นแบบ ad-hoc โดยยังไม่ notarize
-Web App ต้องแตก ZIP แล้วให้บริการผ่าน HTTP(S); ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
+Web App ใช้ ZIP ที่แตกแล้วให้บริการผ่าน HTTP(S) ได้ หรือสั่ง workflow Pages เพื่อเผยแพร่เว็บไซต์; ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
 
 [Windows x64 installer](.github/workflows/windows-x64-installer.yml) ยังคงแยกต่างหากและรันด้วยมือเช่นกัน เป็น workflow เดียวในกลุ่มนี้ที่ออก GitHub Release ได้
 ช่อง **commit** ของ workflow นี้รับ SHA เต็ม 40 ตัวของ commit บน `main`; ติ๊ก **release** เฉพาะเมื่อต้องการเผยแพร่ Release

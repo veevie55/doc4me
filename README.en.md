@@ -36,11 +36,14 @@ Keep **Use workflow from: main** to use the current build instructions. Set **re
 | [Build Linux](.github/workflows/build-linux.yml) | x86_64, glibc 2.35 or newer | AppImage, DEB, RPM, and tar.gz |
 | [Build BSD (FreeBSD)](.github/workflows/build-bsd.yml) | FreeBSD 14.5 x86_64 | App and CLI tar.gz |
 | [Build Web App](.github/workflows/build-web.yml) | Browsers with WebAssembly | Static web app ZIP |
+| [Build Web App on GitHub Pages](.github/workflows/build-web-pages.yml) | Public Doc4Me website | Deploys to [veevie55.github.io/doc4me](https://veevie55.github.io/doc4me/) |
 
 **Every workflow starts only when someone chooses Run workflow.** Pushing code or tags does not start a build,
 deploy a site, or publish a release. These seven platform-build workflows keep their files in the run's **Artifacts** for 14 days,
 with `SOURCE_COMMIT.txt` recording the actual source commit. Windows ARM64 is unsigned; macOS uses ad-hoc
-signing without notarization. Extract the Web App ZIP and serve it over HTTP(S); see the
+signing without notarization. The Pages workflow builds its selected `ref` and replaces the current site
+after a successful manual deployment; choose **Use workflow from: main** for the current workflow definition.
+Extract the Web App ZIP and serve it over HTTP(S); see the
 [hosting instructions](packaging/web/README.md).
 
 Windows package and readiness workflows use the same pinned OFL font set and verify the hashes of
