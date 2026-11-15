@@ -34,8 +34,8 @@ pub struct StyleRun {
     /// The face's glyphs are drawn this much smaller or larger than `size` (1 but for a
     /// substitute standing in for another font, [`StyleRun::fit`]).
     pub glyph_scale: f32,
-    /// The requested font is drawn with a substitute that takes its widths, kerning and line
-    /// spacing (TH Sarabun New with Sarabun; [`doc4me_fonts::word::metric_fit`]).
+    /// Metric adjustments for a substitute: full Thai fitting, or measured Latin advances
+    /// with the substitute's line metrics retained ([`doc4me_fonts::word::metric_fit`]).
     pub fit: Option<doc4me_fonts::word::MetricFit>,
 }
 

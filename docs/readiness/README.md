@@ -1,5 +1,7 @@
 # Readiness check sets
 
+**Page-count follow-up · 2026-11-15 (Linux, Windows remeasurement pending):** [Font/section-marker audit](latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Official Windows readiness above remains unchanged until the next measurement; no criteria, references, exclusions or deferred rows changed.
+
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
 uses the number is in [`../roadmap.md`](../roadmap.md#path-to-100-measured-readiness). Pass

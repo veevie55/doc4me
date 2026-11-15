@@ -1,3 +1,19 @@
+# Current page-count handoff · 2026-11-15
+
+Scope remains the remaining page-count cases only. Read [current font/section-marker audit](docs/readiness/latin-metrics-2026-11-15.md) and its 220-row comparison. Linux prepared-font page-count matches rise **187→189/220** versus source `6d257ac`; only zenodo-095 (9→10, reference 10) and zenodo-149 (40→28, reference 28) change. No previously passing page-count row regresses. This is not a new official Windows readiness score. No corpus/reference, exclusion, deferred row or threshold changes.
+
+Implemented: Roboto condensed for narrow Arial, Montserrat for Gotham with matching weights, original OFL Source Sans Pro direct faces, Overpass Bold 700, measured selected font advances/line metrics, Tahoma bold alias; keep flags on empty section-end markers no longer create a blank page. Tahoma width trial withdrawn because govuk-044 regressed. Nyala U+0020 omitted from fit because source mappings disagree. No proprietary outlines/programs redistributed.
+
+Validation: `cargo xtask ci` **6/6**, native **2,554 pass / 1 existing ignored**; prepared-font tests **83/83**; full 220-document page-count comparison; actionlint. Logs `/workspace/work/font-metrics-ci-final.log`, `/workspace/work/prepared-font-metrics-tests.log`, `/workspace/work/prepared-font-metrics-cli.log`, `/workspace/work/font-metrics-final-comparison.json`. Standard CI uses bundled fonts; separate corpus CLI uses pinned prepared OFL input. Code stats 238,588 Rust lines / 2,563 test attributes (not harness test counts).
+
+ALSA development package installed rootlessly in `/workspace/deps/alsa`, pkg-config 1.2.14 and alsa-sys pass. Source `/workspace/deps/env.sh` for PATH/pkg-config/CMake/bindgen settings. Debug/incremental disabled to fit disk. `target/debug/build` points into `/dev/shm/doc4me-build-latin-metrics` (ephemeral cache); prepared build at `/workspace/work/target-corpus-font-metrics`. Full CI uses `RUST_TEST_THREADS=1` and `CARGO_TARGET_X86_64_UNKNOWN_LINUX_GNU_RUNNER=/workspace/work/cargo-test-cpu0.sh` to stabilize timing, without relaxing limits.
+
+Next: push accepted arc, dispatch official Windows readiness, compare reports, refresh all current readiness summaries and bilingual blockers from the measured report. Workflow now diagnoses fonts for every current page-count failure, plus zenodo-095/149/114. Last completed official report remains **43701689470**, source `fd465e8`, report `2a5a0b0`: **92.9% overall / 94.8% excluding 22 deferred**, pages **188/220**, boundaries **99/220**. Goal 100% is not reached. Continue remaining cases using actual font/layout evidence; no release or Pages deployment is part of this arc.
+
+Earlier entries below are historical snapshots.
+
+---
+
 # Page-count follow-up · 2026-11-15
 
 Current official Windows report is run 43701689470, source `fd465e8`, report `2a5a0b0`: 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Every future measurement must refresh current bilingual Readiness blockers and TSV with the report (`tools/readiness_blockers.py`).

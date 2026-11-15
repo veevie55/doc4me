@@ -3135,12 +3135,16 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // Keep with next only ties the paragraph's last line to the next one's start: one that may
     // break across pages (see `may_split`) keeps just its last lines with it, below.
     let mut keep_tail = None;
-    let keep_leading = pl.rp.keep_next && pb.bottom >= pb.sect.page_h - pb.sect.margin_bottom - 0.01 && pb.notes.is_empty() && !has_notes(ctx.doc, p);
-    if pl.rp.keep_next && !pl.rp.keep_lines && may_split(&pl) && !breaks(&pl) {
+    // A paragraph whose sole purpose is ending a section must not be pulled onto a page of
+    // its own by inherited heading keep flags. The next section starts a new page regardless
+    // (zenodo-149); the marker may remain below this page's last line, as handled below.
+    let section_marker = only_ends_section(ctx.doc, p, block);
+    let keep_next = pl.rp.keep_next && !section_marker;
+    let keep_leading = keep_next && pb.bottom >= pb.sect.page_h - pb.sect.margin_bottom - 0.01 && pb.notes.is_empty() && !has_notes(ctx.doc, p);
+    if keep_next && !pl.rp.keep_lines && may_split(&pl) && !breaks(&pl) {
         keep_tail = Some(keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading));
-    } else if (pl.rp.keep_lines || pl.rp.keep_next) && !breaks(&pl) {
-        let need =
-            bx.top + pl.height + bx.bottom + if pl.rp.keep_next { keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading) } else { 0.0 };
+    } else if !section_marker && (pl.rp.keep_lines || keep_next) && !breaks(&pl) {
+        let need = bx.top + pl.height + bx.bottom + if keep_next { keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading) } else { 0.0 };
         // (Against the whole column: balanced columns grow to hold it.)
         if pb.y + need > pb.bottom && !pb.at_top() && need <= pb.uncapped_bottom() - pb.top {
             pb.advance(block, body_top);

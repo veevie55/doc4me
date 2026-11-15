@@ -48,7 +48,10 @@ check out the pinned [`storytold/craft-fonts`](https://github.com/storytold/craf
 `c1db6d1a8ed772191241c3d185e2104be84d8691`, then run
 [`tools/prepare_corpus_fonts.py`](../tools/prepare_corpus_fonts.py). That helper pins Google Fonts
 revision `cc39c4c2c304bc368c9b7c311ea2bcc6013299fe`, verifies the OFL Overpass, Noto Sans
-Ethiopic and Roboto files by SHA-256, and adds them to that checkout's manifest. `CRAFT_FONTS_REQUIRED=1`
+Ethiopic, Roboto and Montserrat files by SHA-256. Original Source Sans Pro regular/bold/italic/bold-italic
+is pinned separately to official `adobe-fonts/source-sans` revision
+`ce77773581f4d454f0fa985c073bb25c721bfcf5`; its upstream license is saved as `OFL.txt`
+for the package license collector. The helper adds these files to that checkout's manifest. `CRAFT_FONTS_REQUIRED=1`
 requires these build inputs; package scripts copy the upstream OFL notices into the app package.
 The same pinned input is used for Windows readiness so the measurement matches those package
 builds. Other platform workflows continue to use their regular font inputs.

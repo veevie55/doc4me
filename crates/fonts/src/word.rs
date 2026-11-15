@@ -27,8 +27,9 @@ pub struct Resolved {
 /// Times New Roman preserve the common Office metrics.
 fn substitutes(family: &str) -> &'static [&'static str] {
     // An unknown sans or serif family is set in the platform's own (Arial and Times New Roman on
-    // Windows, Helvetica Neue on a Mac), as Word sets it (corpus govuk-017/018: "Arial Narrow" in
-    // Arial; zenodo-114: Garamond in Times New Roman). Carlito and Caladea, bundled on the desktop
+    // Windows, Helvetica Neue on a Mac), as Word sets it (zenodo-114: Garamond in Times
+    // New Roman). Narrow families have a separate condensed open substitute below.
+    // Carlito and Caladea, bundled on the desktop
     // since 1.1.3, come after them, so they stand in only where neither is installed (Linux), as
     // before they were bundled.
     const SANS: &[&str] = &["Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
@@ -40,6 +41,8 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Arial itself first: Helvetica and Arial Nova asked for on Windows, where Arial is installed
     // and they aren't, are set in Arial (Arial was drawn to Helvetica's widths), as Word does;
     // without it they fell through to Source Sans 3, a wider face (corpus govuk-052, zenodo-068).
+    const GOTHAM: &[&str] = &["Montserrat", "Arimo", "Liberation Sans", "Source Sans 3"];
+    const NARROW: &[&str] = &["Roboto", "Arimo", "Liberation Sans", "Source Sans 3"];
     const ARIAL: &[&str] = &["Arimo", "Arial", "Liberation Sans", "Helvetica", "Helvetica Neue", "Source Sans 3"];
     // Times New Roman first for the same reason: "Times" (a Mac font) has its widths, and on
     // Windows fell through to Source Serif 4 (corpus govuk-006, govuk-020).
@@ -109,14 +112,14 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "aptos narrow" => APTOS_NARROW,
         "aptos serif" => APTOS_SERIF,
         "palatino linotype" | "book antiqua" | "palatino" => PALATINO,
+        "gotham" | "gotham book" | "gotham medium" | "gotham bold" => GOTHAM,
+        "arial narrow" | "arial nova cond light" => NARROW,
         "arial"
         | "arialmt"
         | "arial-italicmt"
         | "helvetica"
         | "helvetica neue"
         | "arial nova"
-        | "arial narrow"
-        | "arial nova cond light"
         | "arial unicode ms"
         | "lucida grande"
         | "lucida sans unicode"
@@ -126,9 +129,6 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         | "univers"
         | "apercu"
         | "gill sans mt"
-        | "gotham book"
-        | "gotham medium"
-        | "gotham bold"
         | "segoe ui"
         | "tahoma"
         | "shruti"
@@ -144,7 +144,7 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "stzhongsong" | "simsun" | "batang" | "pmingliu" | "ms gothic" | "ms pgothic" | "malgun gothic semilight" => CJK_SANS,
         "symbol" | "wingdings" | "wingdings 2" | "wingdings 3" | "segoe ui symbol" | "segoe ui emoji" | "webdings" => SYMBOL,
         "verdana" => VERDANA,
-        // Source Sans 3's earlier name (the bundled face is the same design, renamed in 2021).
+        // Source Sans 3 is a fallback for the older family name when its original OFL faces are unavailable.
         "source sans pro" | "source sans pro light" | "source sans pro semibold" => SOURCE_SANS,
         "pt serif" | "eu albertina" | "amasis mt pro medium" | "newsgoth cn bt" | "nexus sans web pro" | "inherit" => CAMBRIA,
         "georgia" => GEORGIA,
@@ -170,9 +170,7 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         "arial"
         | "arialmt"
         | "arial-italicmt"
-        | "arial narrow"
         | "arial nova"
-        | "arial nova cond light"
         | "arial unicode ms"
         | "helvetica"
         | "helvetica neue"
@@ -184,13 +182,11 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         | "univers"
         | "apercu"
         | "gill sans mt"
-        | "gotham book"
-        | "gotham medium"
-        | "gotham bold"
         | "tahoma"
         | "segoe ui"
         | "nexus sans web pro" => Some("Arimo"),
-        "roboto" => Some("Roboto"),
+        "gotham" | "gotham book" | "gotham medium" | "gotham bold" => Some("Montserrat"),
+        "arial narrow" | "arial nova cond light" | "roboto" => Some("Roboto"),
         "overpass" => Some("Overpass"),
         "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => Some("Overpass"),
         "calibri" | "calibri light" | "calibri semibold" | "calibri bold" => Some("Carlito"),
@@ -227,7 +223,8 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         "kartika" => Some("Noto Sans Malayalam"),
         "mangal" | "anjalinewlipi" => Some("Noto Sans Devanagari"),
         "nyala" => Some("Noto Sans Ethiopic"),
-        "source sans pro" | "source sans pro light" | "source sans pro semibold" => Some("Source Sans 3"),
+        "source sans pro" => Some("Source Sans Pro"),
+        "source sans pro light" | "source sans pro semibold" => Some("Source Sans 3"),
         "source serif 4" => Some("Source Serif 4"),
         _ => None,
     }
@@ -390,7 +387,7 @@ fn style_name_for(family: &str, bold: bool, italic: bool) -> String {
             return if bold { "Bold Italic" } else { "Italic" }.to_string();
         }
         if bold {
-            return "ExtraBold".to_string();
+            return "Bold".to_string();
         }
         return "Regular".to_string();
     }
@@ -412,6 +409,9 @@ fn overpass_weight(family: &str) -> Option<f32> {
 /// Windows finds such faces by their full names, so Word draws "Arial Bold" with Arial's bold;
 /// families whose names end in other words ("Calibri Light", "Arial Black") stay as they are.
 pub fn face_name(family: &str) -> Option<(&str, bool, bool)> {
+    if family.eq_ignore_ascii_case("*Tahoma-Bold-4304") {
+        return Some(("Tahoma", true, false));
+    }
     const OVERPASS_STYLES: &[(&str, bool, bool); 4] =
         &[(" extralight", false, false), (" light", false, false), (" semibold", true, false), (" extrabold", true, false)];
     let lower = family.to_ascii_lowercase();
@@ -517,7 +517,28 @@ pub fn resolve(family: &str, bold: bool, italic: bool) -> Resolved {
         }
         return r;
     }
-    let face = db.face(&fam, &style_name_for(&fam, bold, italic));
+    let style = if fam == "Montserrat" && family.to_ascii_lowercase().starts_with("gotham") {
+        let weight = if bold {
+            700
+        } else if family.eq_ignore_ascii_case("Gotham Medium") {
+            500
+        } else {
+            400
+        };
+        format!("{}{{wght:{weight}}}", style_name(bold, italic))
+    } else if fam == "Roboto" && (family.eq_ignore_ascii_case("Arial Narrow") || family.eq_ignore_ascii_case("Arial Nova Cond Light")) {
+        let weight = if bold {
+            700
+        } else if family.eq_ignore_ascii_case("Arial Nova Cond Light") {
+            300
+        } else {
+            400
+        };
+        format!("{}{{wdth:75,wght:{weight}}}", style_name(bold, italic))
+    } else {
+        style_name_for(&fam, bold, italic)
+    };
+    let face = db.face(&fam, &style);
     let r = Resolved { synth_bold: bold && face.weight < 600.0, synth_italic: italic && !face.italic, substituted, face: FaceRef::of(&face) };
     let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
     if cacheable && c.0 == generation {
@@ -622,6 +643,10 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
     match family.trim().to_ascii_lowercase().as_str() {
         "cambria" | "cambria math" => Some((1946.0 / 2048.0, 455.0 / 2048.0)),
         "courier new" | "courier" => Some((1705.0 / 2048.0, 615.0 / 2048.0)),
+        // OS/2 Win metrics observed in the original fonts embedded by Word in govuk-068
+        // (Nyala) and zenodo-095 (Gotham Book/Medium); no outlines or font programs copied.
+        "nyala" => Some((1660.0 / 2048.0, 480.0 / 2048.0)),
+        "gotham book" | "gotham medium" => Some((0.96, 0.24)),
         // Verdana (win 2059 / 430: 1.215 em; DejaVu Sans is 1.164) and Georgia (win 1878 / 449:
         // 1.136 em; Source Serif 4 is 1.371), every style alike.
         "verdana" => Some((2059.0 / 2048.0, 430.0 / 2048.0)),
@@ -674,62 +699,93 @@ pub fn single_line(family: &str, face: &crate::FontFace, substituted: bool, size
     (a * k, d * k)
 }
 
-/// How a substitute stands in for a font a document asks for, so its text keeps that font's size,
-/// widths and line spacing and pages hold what they hold in Word with the real font: TH Sarabun
-/// New and TH SarabunPSK, drawn with the bundled Sarabun when they are not installed. Sarabun's
-/// letters are about 1.47 times as tall as theirs at the same point size, and its widths differ
-/// letter by letter, so its glyphs are scaled to their height
-/// ([`MetricFit::scale`]) and set on their advance widths ([`MetricFit::advance`], with their
-/// kerning, [`MetricFit::kern`]); lines take their line spacing ([`MetricFit::line`]).
+/// Measured adjustments for an open substitute. Selected Latin and Ethiopic fits use
+/// PDF-declared advances and the line returned by `single_line`, with original line metrics
+/// where known. They retain the open face's glyph height; their kerning is not established.
+/// TH Sarabun New/PSK also use measured glyph scales, kerning and line metrics when drawn with
+/// Sarabun, whose letters otherwise appear about 1.47 times as tall at the same point size.
 #[derive(Clone, Copy)]
 pub struct MetricFit {
-    style: &'static crate::thsarabun::ThSarabunStyle,
+    style: Option<&'static crate::thsarabun::ThSarabunStyle>,
+    advances: &'static [(char, u16)],
+    line: (f64, f64),
 }
 
 impl std::fmt::Debug for MetricFit {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("MetricFit").field("thai_scale", &self.style.thai_scale).finish()
+        f.debug_struct("MetricFit").field("line", &self.line).finish()
     }
 }
 
 impl PartialEq for MetricFit {
     fn eq(&self, other: &Self) -> bool {
-        std::ptr::eq(self.style, other.style)
+        let same_style = match (self.style, other.style) {
+            (Some(a), Some(b)) => std::ptr::eq(a, b),
+            (None, None) => true,
+            _ => false,
+        };
+        same_style && std::ptr::eq(self.advances, other.advances) && self.line == other.line
     }
 }
 
 impl MetricFit {
-    /// The substitute's glyph scale: for Thai letters (the height of ก) or Latin ones (of x).
+    /// Glyph scale for the substitute; non-Thai fits retain the selected open face's height.
     pub fn scale(&self, thai: bool) -> f32 {
-        if thai { self.style.thai_scale } else { self.style.latin_scale }
+        self.style.map_or(1.0, |s| if thai { s.thai_scale } else { s.latin_scale })
     }
 
-    /// The advance width of `c` in the original font, in ems; `None` when it has no such character
-    /// (the substitute's own width applies).
+    /// Original advance in ems, where measured; unmeasured characters retain fallback advances.
     pub fn advance(&self, c: char) -> Option<f32> {
-        let a = self.style.advances;
-        a.binary_search_by_key(&c, |e| e.0).ok().and_then(|i| a.get(i)).map(|e| f32::from(e.1) / 1000.0)
+        self.advances.binary_search_by_key(&c, |e| e.0).ok().and_then(|i| self.advances.get(i)).map(|e| f32::from(e.1) / 1000.0)
     }
 
-    /// The original font's kerning between `left` and `right`, in ems (when the run is kerned).
+    /// Measured kerning in ems; PDF advance tables do not establish kerning pairs.
     pub fn kern(&self, left: char, right: char) -> f32 {
+        if self.style.is_none() {
+            return 0.0;
+        }
         let k = crate::thsarabun::KERN;
         k.binary_search_by(|e| (e.0, e.1).cmp(&(left, right))).ok().and_then(|i| k.get(i)).map_or(0.0, |e| f32::from(e.2) / 1000.0)
     }
 
-    /// The original font's line (ascent with the external leading, descent), in ems, measured
-    /// as [`line_metrics`] measures fonts.
+    /// Normalized line metrics, from `single_line` or the complete Thai fit.
     pub fn line(&self) -> (f64, f64) {
-        let (a, d) = crate::thsarabun::LINE;
-        (a / 1000.0, d / 1000.0)
+        self.line
     }
 }
 
-/// The [`MetricFit`] for a requested family drawn with a substitute: `Some` for TH Sarabun New and
-/// TH SarabunPSK (any spacing or case) when they are not installed and resolve to the bundled
-/// Sarabun; `None` otherwise, including when the real font is installed. Other Thai document fonts
-/// are drawn with Sarabun at its own size and widths.
+/// Measured advances for condensed Arial families drawn with Roboto, Gotham Book/Medium with
+/// Montserrat, and Nyala with Noto Sans Ethiopic; active only with the expected substitute.
+/// TH Sarabun New/PSK additionally use their full scale, kerning and line fit with Sarabun.
+/// Other requested families keep the selected face's metrics.
 pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
+    let (family, bold) = if family.eq_ignore_ascii_case("*Tahoma-Bold-4304") { ("Tahoma", true) } else { (family, bold) };
+    let measured = if family.eq_ignore_ascii_case("Arial Nova Cond Light") && !bold {
+        Some(if italic { crate::latin_metrics::NOVA_COND_LIGHT_ITALIC } else { crate::latin_metrics::NOVA_COND_LIGHT_REGULAR })
+    } else if family.eq_ignore_ascii_case("Arial Narrow") && !italic {
+        Some(if bold { crate::latin_metrics::ARIAL_NARROW_BOLD } else { crate::latin_metrics::ARIAL_NARROW_REGULAR })
+    } else if family.eq_ignore_ascii_case("Gotham Book") && !bold && !italic {
+        Some(crate::latin_metrics::GOTHAM_BOOK)
+    } else if family.eq_ignore_ascii_case("Gotham Medium") && !bold && !italic {
+        Some(crate::latin_metrics::GOTHAM_MEDIUM)
+    } else if family.eq_ignore_ascii_case("Nyala") {
+        Some(crate::latin_metrics::NYALA)
+    } else {
+        None
+    };
+    if let Some(advances) = measured {
+        let r = resolve(family, bold, italic);
+        let expected = if family.eq_ignore_ascii_case("Nyala") {
+            "Noto Sans Ethiopic"
+        } else if family.eq_ignore_ascii_case("Gotham Book") || family.eq_ignore_ascii_case("Gotham Medium") {
+            "Montserrat"
+        } else {
+            "Roboto"
+        };
+        if r.substituted && r.face.family == expected {
+            return Some(MetricFit { style: None, advances, line: single_line(family, r.face.get(), true, 1.0) });
+        }
+    }
     // Layout asks for every shaped piece: rule most families out without allocating.
     if !family.trim_start().get(..2).is_some_and(|p| p.eq_ignore_ascii_case("th")) {
         return None;
@@ -748,12 +804,104 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         (false, true) => &crate::thsarabun::ITALIC,
         (true, true) => &crate::thsarabun::BOLD_ITALIC,
     };
-    Some(MetricFit { style })
+    let (a, d) = crate::thsarabun::LINE;
+    Some(MetricFit { style: Some(style), advances: style.advances, line: (a / 1000.0, d / 1000.0) })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn condensed_latin_widths_are_measured_and_do_not_change_fallback_lines() {
+        for advances in [
+            crate::latin_metrics::NOVA_COND_LIGHT_REGULAR,
+            crate::latin_metrics::NOVA_COND_LIGHT_ITALIC,
+            crate::latin_metrics::ARIAL_NARROW_REGULAR,
+            crate::latin_metrics::ARIAL_NARROW_BOLD,
+            crate::latin_metrics::GOTHAM_BOOK,
+            crate::latin_metrics::GOTHAM_MEDIUM,
+        ] {
+            assert!(advances.windows(2).all(|p| p[0].0 < p[1].0));
+            let fit = MetricFit { style: None, advances, line: (1.0, 0.25) };
+            assert!(fit.advance(' ').is_some_and(|w| w > 0.0));
+            assert_eq!(fit.advance('漢'), None);
+            assert_eq!(fit.scale(false), 1.0);
+            assert_eq!(fit.line(), (1.0, 0.25));
+            assert_eq!(fit.kern('A', 'V'), 0.0);
+        }
+        assert!(metric_fit("Arial Nova Cond Light", true, false).is_none());
+        assert!(metric_fit("Arial", false, false).is_none());
+    }
+
+    #[test]
+    fn narrow_substitutes_use_condensed_open_outlines_with_measured_advances() {
+        let db = FontDb::global();
+        if std::env::var_os("CRAFT_FONTS_REQUIRED").is_some() {
+            assert!(db.has_family("Roboto"), "prepared open-font input is required");
+        }
+        if !db.has_family("Roboto") {
+            return;
+        }
+        for (family, bold, italic) in [
+            ("Arial Nova Cond Light", false, false),
+            ("Arial Nova Cond Light", false, true),
+            ("Arial Narrow", false, false),
+            ("Arial Narrow", true, false),
+        ] {
+            let r = resolve(family, bold, italic);
+            assert_eq!(r.face.family, "Roboto");
+            assert!(r.face.style.contains("wdth:75"), "{}", r.face.style);
+            let fit = metric_fit(family, bold, italic).unwrap();
+            assert!(fit.advance('e').is_some());
+            assert_eq!(fit.line(), single_line(family, r.face.get(), true, 1.0));
+        }
+    }
+
+    #[test]
+    fn legacy_tahoma_bold_alias_preserves_weight_and_metric_style() {
+        assert_eq!(face_name("*Tahoma-Bold-4304"), Some(("Tahoma", true, false)));
+        let a = resolve("*Tahoma-Bold-4304", false, false);
+        let b = resolve("Tahoma", true, false);
+        assert_eq!(a.face.style, b.face.style);
+        assert_eq!(metric_fit("*Tahoma-Bold-4304", false, false), metric_fit("Tahoma", true, false));
+    }
+
+    #[test]
+    fn gotham_substitutes_preserve_book_medium_and_bold_weights() {
+        let db = FontDb::global();
+        if std::env::var_os("CRAFT_FONTS_REQUIRED").is_some() {
+            assert!(db.has_family("Montserrat"));
+        }
+        if !db.has_family("Montserrat") {
+            return;
+        }
+        for (family, weight, fitted) in [("Gotham Book", 400.0, true), ("Gotham Medium", 500.0, true), ("Gotham Bold", 700.0, false)] {
+            let r = resolve(family, false, false);
+            assert_eq!(r.face.family, "Montserrat");
+            assert_eq!(r.face.weight, weight);
+            assert!(r.substituted);
+            assert_eq!(metric_fit(family, false, false).is_some(), fitted);
+        }
+    }
+
+    #[test]
+    fn overpass_bold_means_weight_700_instead_of_extrabold_800() {
+        assert_eq!(style_name_for("Overpass", true, false), "Bold");
+        if FontDb::global().has_family("Overpass") {
+            assert_eq!(resolve("Overpass", true, false).face.weight, 700.0);
+        }
+    }
+
+    #[test]
+    fn nyala_fitting_uses_word_metrics_instead_of_the_taller_open_fallback_line() {
+        assert_eq!(requested_line("Nyala"), Some((1660.0 / 2048.0, 480.0 / 2048.0)));
+        if FontDb::global().has_family("Noto Sans Ethiopic") {
+            let fit = metric_fit("Nyala", false, false).unwrap();
+            assert!(fit.advance('ሀ').is_some());
+            assert_eq!(fit.line(), (1660.0 / 2048.0, 480.0 / 2048.0));
+        }
+    }
 
     #[test]
     fn the_line_gap_goes_above_the_ascent() {
@@ -828,14 +976,33 @@ mod tests {
 
     #[test]
     fn corpus_font_substitutions_prefer_bundled_open_stand_ins() {
-        for f in ["Arial Narrow", "Univers", "Gotham Book"] {
-            assert_eq!(substitutes(f).first(), Some(&"Arimo"), "{f}");
-        }
+        assert_eq!(substitutes("Univers").first(), Some(&"Arimo"));
+        assert_eq!(substitutes("Arial Narrow").first(), Some(&"Roboto"));
+        assert_eq!(substitutes("Gotham Book").first(), Some(&"Montserrat"));
         assert_eq!(substitutes("Garamond").first(), Some(&"Tinos"));
         assert_eq!(substitutes("Calibri").first(), Some(&"Carlito"));
         assert_eq!(substitutes("Calibri Light").first(), Some(&"Carlito"));
         assert_eq!(substitutes("Cambria").first(), Some(&"Caladea"));
         assert_eq!(substitutes("Cambria Math").first(), Some(&"Caladea"));
+    }
+
+    #[test]
+    fn freely_licensed_source_sans_pro_uses_its_original_face() {
+        assert_eq!(open_substitute("Source Sans Pro"), Some("Source Sans Pro"));
+        let db = FontDb::global();
+        if std::env::var_os("CRAFT_FONTS_REQUIRED").is_some() {
+            assert!(db.has_family("Source Sans Pro"));
+        }
+        if db.has_family("Source Sans Pro") {
+            for (bold, italic) in [(false, false), (true, false), (false, true), (true, true)] {
+                let r = resolve("Source Sans Pro", bold, italic);
+                assert_eq!(r.face.family, "Source Sans Pro");
+                assert!(!r.substituted);
+                assert_eq!(substitute_for("Source Sans Pro"), None);
+                assert_eq!(r.face.italic, italic);
+                assert_eq!(r.face.weight >= 600.0, bold);
+            }
+        }
     }
 
     #[test]
@@ -855,7 +1022,7 @@ mod tests {
         let db = crate::FontDb::global();
         for (asked, expected) in [
             ("Arial", "Arimo"),
-            ("Arial Narrow", "Arimo"),
+            ("Arial Narrow", "Roboto"),
             ("Arial Unicode MS", "Arimo"),
             ("Calibri", "Carlito"),
             ("Cambria", "Caladea"),
@@ -864,7 +1031,6 @@ mod tests {
             ("TimesNewRomanPSMT", "Tinos"),
             ("Courier", "Cousine"),
             ("PT Serif", "Source Serif 4"),
-            ("Source Sans Pro", "Source Sans 3"),
             ("Verdana", "Inter"),
             ("*Tahoma-Bold-4304", "Arimo"),
         ] {

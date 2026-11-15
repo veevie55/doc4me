@@ -8,6 +8,7 @@
 #![forbid(unsafe_code)]
 
 mod fontdb;
+mod latin_metrics;
 pub mod math;
 mod script;
 // Generated tables: one entry per line would be thousands of lines.

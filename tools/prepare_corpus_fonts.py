@@ -15,6 +15,14 @@ GOOGLE_FONTS_COMMIT = "cc39c4c2c304bc368c9b7c311ea2bcc6013299fe"
 BASE = f"https://raw.githubusercontent.com/google/fonts/{GOOGLE_FONTS_COMMIT}/ofl"
 
 FILES = (
+    ("montserrat-doc4me", "Montserrat-Italic[wght].ttf", "montserrat/Montserrat-Italic%5Bwght%5D.ttf", "51607f316bc020e59f03cbf51543eecffbea501c0b31d73e5b82927c5cca442c"),
+    ("montserrat-doc4me", "Montserrat[wght].ttf", "montserrat/Montserrat%5Bwght%5D.ttf", "0f7b311b2f3279e4eef9b2f968bcdbab6e28f4daeb1f049f4f278a902bcd82f7"),
+    ("montserrat-doc4me", "OFL.txt", "montserrat/OFL.txt", "8b7141c03fa4f8d44e6345d5d4931709290f0f67875e452e95ac1fd3a027802e"),
+    ("source-sans-pro-original", "SourceSansPro-Regular.ttf", "https://raw.githubusercontent.com/adobe-fonts/source-sans/ce77773581f4d454f0fa985c073bb25c721bfcf5/TTF/SourceSansPro-Regular.ttf", "c6f835b6a6d942b196e2607bf73a7b086407ae8dbdc928c23a2fb4893ec383f6"),
+    ("source-sans-pro-original", "SourceSansPro-Bold.ttf", "https://raw.githubusercontent.com/adobe-fonts/source-sans/ce77773581f4d454f0fa985c073bb25c721bfcf5/TTF/SourceSansPro-Bold.ttf", "8d869f2aeac0220984a430120af819fbcb12a88e8ea4ad72aae4c5f6d6a2b985"),
+    ("source-sans-pro-original", "SourceSansPro-It.ttf", "https://raw.githubusercontent.com/adobe-fonts/source-sans/ce77773581f4d454f0fa985c073bb25c721bfcf5/TTF/SourceSansPro-It.ttf", "8fa3fe523cb385c2184e6691821c0431a5189a2a01a708a7b047847e15536b03"),
+    ("source-sans-pro-original", "SourceSansPro-BoldIt.ttf", "https://raw.githubusercontent.com/adobe-fonts/source-sans/ce77773581f4d454f0fa985c073bb25c721bfcf5/TTF/SourceSansPro-BoldIt.ttf", "9cbd037fd721a3eea395675ecabaf10961d76198589a3e71a99a9c73e72ce384"),
+    ("source-sans-pro-original", "OFL.txt", "https://raw.githubusercontent.com/adobe-fonts/source-sans/ce77773581f4d454f0fa985c073bb25c721bfcf5/LICENSE.txt", "e1d1fdcefb57985226c06fa9500d29caacfa2b1f8b8c74db911f13c6cad186a1"),
     ("roboto-doc4me", "Roboto[wdth,wght].ttf", "roboto/Roboto%5Bwdth%2Cwght%5D.ttf", "d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134"),
     ("roboto-doc4me", "Roboto-Italic[wdth,wght].ttf", "roboto/Roboto-Italic%5Bwdth%2Cwght%5D.ttf", "9725a847af6b460ffca162ae66d20dad48b01876137947180b42d7dcd7887182"),
     ("roboto-doc4me", "OFL.txt", "roboto/OFL.txt", "061402327a96aadb0bfb694a960ed289ecd38d383e396243831ab81feb109c41"),
@@ -51,6 +59,12 @@ FILES = (
 )
 
 MANIFEST_ROWS = (
+    "Montserrat | Italic | fonts/montserrat-doc4me/Montserrat-Italic[wght].ttf | Latn | OFL-1.1 | fonts/montserrat-doc4me/OFL.txt | 51607f316bc020e59f03cbf51543eecffbea501c0b31d73e5b82927c5cca442c | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/montserrat",
+    "Montserrat | Regular | fonts/montserrat-doc4me/Montserrat[wght].ttf | Latn | OFL-1.1 | fonts/montserrat-doc4me/OFL.txt | 0f7b311b2f3279e4eef9b2f968bcdbab6e28f4daeb1f049f4f278a902bcd82f7 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/montserrat",
+    "Source Sans Pro | Regular | fonts/source-sans-pro-original/SourceSansPro-Regular.ttf | Latn | OFL-1.1 | fonts/source-sans-pro-original/OFL.txt | c6f835b6a6d942b196e2607bf73a7b086407ae8dbdc928c23a2fb4893ec383f6 | https://github.com/adobe-fonts/source-sans/tree/ce77773581f4d454f0fa985c073bb25c721bfcf5",
+    "Source Sans Pro | Bold | fonts/source-sans-pro-original/SourceSansPro-Bold.ttf | Latn | OFL-1.1 | fonts/source-sans-pro-original/OFL.txt | 8d869f2aeac0220984a430120af819fbcb12a88e8ea4ad72aae4c5f6d6a2b985 | https://github.com/adobe-fonts/source-sans/tree/ce77773581f4d454f0fa985c073bb25c721bfcf5",
+    "Source Sans Pro | Italic | fonts/source-sans-pro-original/SourceSansPro-It.ttf | Latn | OFL-1.1 | fonts/source-sans-pro-original/OFL.txt | 8fa3fe523cb385c2184e6691821c0431a5189a2a01a708a7b047847e15536b03 | https://github.com/adobe-fonts/source-sans/tree/ce77773581f4d454f0fa985c073bb25c721bfcf5",
+    "Source Sans Pro | Bold Italic | fonts/source-sans-pro-original/SourceSansPro-BoldIt.ttf | Latn | OFL-1.1 | fonts/source-sans-pro-original/OFL.txt | 9cbd037fd721a3eea395675ecabaf10961d76198589a3e71a99a9c73e72ce384 | https://github.com/adobe-fonts/source-sans/tree/ce77773581f4d454f0fa985c073bb25c721bfcf5",
     "Roboto | Regular | fonts/roboto-doc4me/Roboto[wdth,wght].ttf | Latn | OFL-1.1 | fonts/roboto-doc4me/OFL.txt | d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/roboto",
     "Roboto | Italic | fonts/roboto-doc4me/Roboto-Italic[wdth,wght].ttf | Latn | OFL-1.1 | fonts/roboto-doc4me/OFL.txt | 9725a847af6b460ffca162ae66d20dad48b01876137947180b42d7dcd7887182 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/roboto",
     "Overpass | Regular | fonts/overpass-doc4me/Overpass[wght].ttf | Latn | OFL-1.1 | fonts/overpass-doc4me/OFL.txt | 970717df17a7f9911dee45f60695d05bfa9d745fa0a11fc5c348371fa21f0073 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/overpass",
@@ -64,7 +78,8 @@ def fetch(root: Path, family_dir: str, name: str, source: str, expected: str) ->
     if path.is_file():
         data = path.read_bytes()
     else:
-        request = urllib.request.Request(f"{BASE}/{source}", headers={"User-Agent": "doc4me-font-build"})
+        url = source if source.startswith("https://") else f"{BASE}/{source}"
+        request = urllib.request.Request(url, headers={"User-Agent": "doc4me-font-build"})
         with urllib.request.urlopen(request, timeout=60) as response:
             data = response.read(8 * 1024 * 1024 + 1)
         if len(data) > 8 * 1024 * 1024:
@@ -117,7 +132,7 @@ def main() -> int:
             existing.append(row)
     manifest.write_text("\n".join(existing) + "\n", encoding="utf-8", newline="\n")
     verify_manifest_fonts(root)
-    print(f"Prepared pinned OFL Overpass, Noto Sans Ethiopic and Roboto in {root}")
+    print(f"Prepared pinned OFL Overpass, Noto Sans Ethiopic, Roboto, Montserrat and original Source Sans Pro in {root}")
     return 0
 
 

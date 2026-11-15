@@ -83,14 +83,19 @@ jobs:
         shell: pwsh
         run: cargo xtask readiness --corpus --jobs 4 --diagnostics
 
-      # Keep this diagnostic read-only: the MS Gothic family is a candidate pagination cause,
-      # but the report alone cannot say whether Windows has it or which fallback Doc4Me resolves.
-      - name: Inspect Windows font resolution for pagination candidates
+      # Diagnose the actual remaining page-count failures plus the verified fixes/platform
+      # comparison. This does not change the corpus, reference documents or readiness criteria.
+      - name: Inspect Windows font resolution for current page-count failures
         shell: pwsh
         run: |
           $cli = Join-Path $env:GITHUB_WORKSPACE 'target/release/doc4me-cli.exe'
-          $ids = @('govuk-005', 'govuk-016', 'govuk-038', 'govuk-046', 'govuk-067', 'zenodo-053', 'zenodo-091', 'zenodo-149')
-          foreach ($id in $ids) {
+          $reportText = Get-Content -Raw docs/readiness.md
+          $pageFailureBody = [regex]::Match($reportText, '(?ms)^### corpus-pages \([^\r\n]+\)\r?\n(?<body>.*?)(?=^#{1,3} |\z)').Groups['body'].Value
+          $ids = @('zenodo-095', 'zenodo-149', 'zenodo-114')
+          foreach ($rowMatch in [regex]::Matches($pageFailureBody, '(?m)^- `([^`]+)`')) {
+            $ids += $rowMatch.Groups[1].Value
+          }
+          foreach ($id in ($ids | Sort-Object -Unique)) {
             $document = Join-Path $env:GITHUB_WORKSPACE "corpus/readiness/$id.docx"
             # A row set to `excluded` in corpus.tsv isn't downloaded: a diagnostic, not a failure.
             if (-not (Test-Path $document)) { Write-Output "--- ${id}: not in the corpus download (excluded?), skipped ---"; continue }
