@@ -47,8 +47,8 @@ The Windows x86/x64/ARM64 artifact workflows, x64 installer, and Windows readine
 check out the pinned [`storytold/craft-fonts`](https://github.com/storytold/craft-fonts) revision
 `c1db6d1a8ed772191241c3d185e2104be84d8691`, then run
 [`tools/prepare_corpus_fonts.py`](../tools/prepare_corpus_fonts.py). That helper pins Google Fonts
-revision `cc39c4c2c304bc368c9b7c311ea2bcc6013299fe`, verifies the OFL Overpass and Noto Sans
-Ethiopic files by SHA-256, and adds them to that checkout's manifest. `CRAFT_FONTS_REQUIRED=1`
+revision `cc39c4c2c304bc368c9b7c311ea2bcc6013299fe`, verifies the OFL Overpass, Noto Sans
+Ethiopic and Roboto files by SHA-256, and adds them to that checkout's manifest. `CRAFT_FONTS_REQUIRED=1`
 requires these build inputs; package scripts copy the upstream OFL notices into the app package.
 The same pinned input is used for Windows readiness so the measurement matches those package
 builds. Other platform workflows continue to use their regular font inputs.

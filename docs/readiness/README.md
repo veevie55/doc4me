@@ -110,3 +110,5 @@ For a local measurement, after `cargo xtask readiness --corpus`, run
 `python tools/readiness_th.py` and `READINESS_RUN_ID=local python tools/readiness_blockers.py`, then
 commit the generated report and blocker files together. The Windows workflow performs both steps
 and records its GitHub run ID automatically.
+
+Page-count-only follow-up: [2026-11-15 font and reference audit](page-count-audit-2026-11-15.md), with exact source/reference hashes and declared/PDF fonts for the 32 currently failing page-count rows. This research does not change the official Windows measurement.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Add the two OFL fonts needed by the Windows pagination corpus to craft-fonts."""
+"""Add the OFL fonts needed by the Windows pagination corpus to craft-fonts."""
 
 from __future__ import annotations
 
@@ -15,6 +15,9 @@ GOOGLE_FONTS_COMMIT = "cc39c4c2c304bc368c9b7c311ea2bcc6013299fe"
 BASE = f"https://raw.githubusercontent.com/google/fonts/{GOOGLE_FONTS_COMMIT}/ofl"
 
 FILES = (
+    ("roboto-doc4me", "Roboto[wdth,wght].ttf", "roboto/Roboto%5Bwdth%2Cwght%5D.ttf", "d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134"),
+    ("roboto-doc4me", "Roboto-Italic[wdth,wght].ttf", "roboto/Roboto-Italic%5Bwdth%2Cwght%5D.ttf", "9725a847af6b460ffca162ae66d20dad48b01876137947180b42d7dcd7887182"),
+    ("roboto-doc4me", "OFL.txt", "roboto/OFL.txt", "061402327a96aadb0bfb694a960ed289ecd38d383e396243831ab81feb109c41"),
     (
         "overpass-doc4me",
         "Overpass[wght].ttf",
@@ -48,6 +51,8 @@ FILES = (
 )
 
 MANIFEST_ROWS = (
+    "Roboto | Regular | fonts/roboto-doc4me/Roboto[wdth,wght].ttf | Latn | OFL-1.1 | fonts/roboto-doc4me/OFL.txt | d7598e12c5dbef095ff8272cfc55da0250bd07fbdecbac8a530b9b277872a134 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/roboto",
+    "Roboto | Italic | fonts/roboto-doc4me/Roboto-Italic[wdth,wght].ttf | Latn | OFL-1.1 | fonts/roboto-doc4me/OFL.txt | 9725a847af6b460ffca162ae66d20dad48b01876137947180b42d7dcd7887182 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/roboto",
     "Overpass | Regular | fonts/overpass-doc4me/Overpass[wght].ttf | Latn | OFL-1.1 | fonts/overpass-doc4me/OFL.txt | 970717df17a7f9911dee45f60695d05bfa9d745fa0a11fc5c348371fa21f0073 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/overpass",
     "Overpass | Italic | fonts/overpass-doc4me/Overpass-Italic[wght].ttf | Latn | OFL-1.1 | fonts/overpass-doc4me/OFL.txt | 3b45ac4193930bbeb491b5c76227afd5991607712f0d16d6bc5d74db6bbd8172 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/overpass",
     "Noto Sans Ethiopic | Regular | fonts/noto-sans-ethiopic-doc4me/NotoSansEthiopic[wdth,wght].ttf | Ethi,Latn | OFL-1.1 | fonts/noto-sans-ethiopic-doc4me/OFL.txt | 0dbccc00b22d180ebd6a4bd8a733918a29e709fa6798023adc3e6cd40da65077 | https://github.com/google/fonts/tree/cc39c4c2c304bc368c9b7c311ea2bcc6013299fe/ofl/notosansethiopic",
@@ -112,7 +117,7 @@ def main() -> int:
             existing.append(row)
     manifest.write_text("\n".join(existing) + "\n", encoding="utf-8", newline="\n")
     verify_manifest_fonts(root)
-    print(f"Prepared pinned OFL Overpass and Noto Sans Ethiopic in {root}")
+    print(f"Prepared pinned OFL Overpass, Noto Sans Ethiopic and Roboto in {root}")
     return 0
 
 

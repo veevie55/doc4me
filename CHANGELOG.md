@@ -12,6 +12,8 @@
 
 ## [Unreleased]
 
+- Page-count follow-up: use the openly licensed original Roboto instead of forcing Arimo; prepare pinned OFL regular/italic variable files with SHA-256 and license checks for Windows corpus/package builds. Add a font-resolution regression and a 32-document font/reference inventory. Validated with 76 font tests, font clippy, assets/layers and a release CLI probing all 32 documents; full CI stops at missing ALSA development metadata in this environment. Roboto resolves directly but zenodo-136 still has 26 pages versus reference 25. No new official page-count pass or reference exclusion is claimed; see `docs/readiness/page-count-audit-2026-11-15.md`.
+
 ### เปลี่ยนแปลง
 
 - เพิ่มกฎและ `tools/readiness_blockers.py` ให้ Windows readiness workflow สร้าง/ปรับ current blocker summary ไทย/อังกฤษและ TSV จาก readiness report ในทุก run, บันทึก run/source และรายการไม่ผ่านจริงทั้ง corpus-pages/corpus-breaks และ commit ไฟล์ blocker พร้อมรายงาน; ปรับ `readiness_th.py` ให้จำนวน failure เป็นค่าจากรายงาน ไม่ใช้ค่าคงที่

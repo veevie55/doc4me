@@ -1,3 +1,13 @@
+# Page-count follow-up · 2026-11-15
+
+Current official Windows report is run 43701689470, source `fd465e8`, report `2a5a0b0`: 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Every future measurement must refresh current bilingual Readiness blockers and TSV with the report (`tools/readiness_blockers.py`).
+
+The new task is restricted to the 32 page-count failures: use openly licensed originals directly; improve open substitutes for commercial originals; replace proven mismatched reference documents, excluding only proven mismatches with no matching source available and recording the reason. See [font/reference audit](docs/readiness/page-count-audit-2026-11-15.md) and its 32-row TSV. Roboto was incorrectly forced to Arimo; the resolver/build input now uses its OFL original. Other commercial substitutions still require metric validation; no new exclusion is justified by this audit. `govuk-026` publisher links the existing pair and its normalized DOCX body-word overlap with the PDF is 1.000. No new official page-count passes are claimed. The release CLI probed all 32 rows on Linux; zenodo-136 uses Roboto directly but remains 26 pages versus 25. Font tests 76/76, font clippy, fmt, assets and layers pass; full CI stops in alsa-sys because the machine lacks ALSA development metadata. Logs: `/workspace/work/page-count-*.log`.
+
+Previous snapshots below are historical.
+
+---
+
 # Current handoff · 2026-11-15
 
 CI `cargo xtask ci` passes 6/6 on the current change set (fmt, clippy, workspace tests, assets, dependency layers, wasm). The readiness report generator now lists every non-passing row rather than the first 40; added bilingual blocker assessments for all 144 current layout failures and a Thai companion report generated from the official Windows summary. The explanations record measured differences and whether cause is verified; criteria, TSV rows, weights, 220-document corpus, 22 deferred and 24 excluded are unchanged.

@@ -129,7 +129,6 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         | "gotham book"
         | "gotham medium"
         | "gotham bold"
-        | "roboto"
         | "segoe ui"
         | "tahoma"
         | "shruti"
@@ -188,10 +187,10 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         | "gotham book"
         | "gotham medium"
         | "gotham bold"
-        | "roboto"
         | "tahoma"
         | "segoe ui"
         | "nexus sans web pro" => Some("Arimo"),
+        "roboto" => Some("Roboto"),
         "overpass" => Some("Overpass"),
         "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => Some("Overpass"),
         "calibri" | "calibri light" | "calibri semibold" | "calibri bold" => Some("Carlito"),
@@ -837,6 +836,18 @@ mod tests {
         assert_eq!(substitutes("Calibri Light").first(), Some(&"Carlito"));
         assert_eq!(substitutes("Cambria").first(), Some(&"Caladea"));
         assert_eq!(substitutes("Cambria Math").first(), Some(&"Caladea"));
+    }
+
+    #[test]
+    fn open_original_roboto_is_not_replaced_with_arimo() {
+        assert_eq!(open_substitute("Roboto"), Some("Roboto"));
+        let db = crate::FontDb::global();
+        if db.has_family("Roboto") {
+            let resolved = resolve("Roboto", false, false);
+            assert_eq!(resolved.face.family, "Roboto");
+            assert!(!resolved.substituted);
+            assert_eq!(substitute_for("Roboto"), None);
+        }
     }
 
     #[test]

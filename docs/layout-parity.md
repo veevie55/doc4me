@@ -166,3 +166,7 @@ The [justification review](readiness/justification-review-2026-11-13.md) records
 | 2026-10-10 | trivial | Long display equations wrap across lines (#326) |
 | 2026-10-10 | trivial | AutoFit Contents measures the text (#44) |
 | 2026-10-10 | major | First version: layout and pagination checklist with evidence from `crates/layout`, PRs and issues |
+
+## Page-count font/reference follow-up · 2026-11-15
+
+[Audit and 32-row inventory](readiness/page-count-audit-2026-11-15.md): fix forced Roboto → Arimo substitution by preparing and using the OFL original. The publisher still links the govuk-026 source/reference pair, whose normalized body-word overlap is 1.000; differing dates/pages alone do not justify exclusion. Commercial-font substitute metric equivalence remains unverified; official readiness remains Windows run 43701689470 until a fresh measurement.
