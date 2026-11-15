@@ -1,15 +1,15 @@
 # ผล readiness ที่วัดได้ (ภาษาไทย)
 
-> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-14 ที่ source commit `4ecc270`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
+> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-15 ที่ source commit `b347e18`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
 
-**Readiness รวม: 93.2%**  
-**เมื่อไม่นับรายการ deferred: 95.1%**
+**Readiness รวม: 92.8%**  
+**เมื่อไม่นับรายการ deferred: 94.7%**
 
 | มิติ | น้ำหนัก | คะแนน | เมื่อไม่นับ deferred | ชุดตรวจ (ผ่าน / ทั้งหมด) |
 |---|---:|---:|---:|---|
 | ฟีเจอร์ | 0.30 | 97.4% | 100.0% | ribbon 504/504; dialogs 216/228 (12 deferred) |
 | รูปแบบไฟล์ | 0.20 | 100.0% | 100.0% | corpus-open 220/220; corpus-roundtrip 220/220 |
-| การจัดหน้าและแบ่งหน้า | 0.15 | 67.3% | 67.3% | corpus-pages 188/220; corpus-breaks 108/220 |
+| การจัดหน้าและแบ่งหน้า | 0.15 | 64.8% | 64.8% | corpus-pages 186/220; corpus-breaks 99/220 |
 | UI/UX | 0.10 | 98.6% | 100.0% | shortcuts 276/280 (4 deferred) |
 | ความเสถียร | 0.10 | 100.0% | 100.0% | corpus-stability 220/220; stability 5/5 |
 | ประสิทธิภาพ | 0.05 | 100.0% | 100.0% | performance 6/6 |
