@@ -1,8 +1,8 @@
 # Doc4Me parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** Windows readiness remeasured in run 43701689470 on source `fd465e8`; 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-15:** ผลทางการจาก [run 43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report `2a5a0b0`: **92.9% รวม / 94.8% ไม่นับ 22 deferred**; pages **188/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
 The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
@@ -12,14 +12,14 @@ summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklist
 [`hardware-parity.md`](hardware-parity.md) and [`localization-parity.md`](localization-parity.md).
 The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 
-## Headline (latest readiness measured on Windows 2026-11-14; feature estimates retain their pre-fork baseline)
+## Headline (latest readiness measured on Windows 2026-11-15; feature estimates retain their pre-fork baseline)
 
 | Number | Value | Kind |
 |---|---|---|
-| Ribbon/menu catalog coverage | **504 / 504 (100%)** | **measured** in Windows run 43619305678; matches the checked-in `parity-checklist.md` and the live registry. |
+| Ribbon/menu catalog coverage | **504 / 504 (100%)** | **measured** in Windows run 43701689470; matches the checked-in `parity-checklist.md` and the live registry. |
 | Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
 | Feature depth (weighted by use, table below) | **~68%** | estimated |
-| **Ready for real work** (full target) | **93.2%** | **latest official measurement**: Windows run 43619305678, source `4ecc270`, report commit `162704b` ([readiness.md](readiness.md)); 93.2% overall, all 220 documents, 95.1% without 22 deferred checks; page counts 188/220, page boundaries 108/220. |
+| **Ready for real work** (full target) | **92.9%** | **latest official measurement**: Windows run 43701689470, source `fd465e8`, report commit `2a5a0b0` ([readiness.md](readiness.md)); 92.9% overall, all 220 documents, 94.8% without 22 deferred checks; page counts 188/220, page boundaries 99/220. |
 | **Mainstream practitioner** | **~55%** | estimated, same method |
 | **Essentials user** | **~63%** | estimated, same method |
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
@@ -53,8 +53,8 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 - Word's file formats, ribbon, dialogs and keyboard shortcuts from Microsoft's public documentation
   and our knowledge of Word for Windows and Mac (Microsoft 365). Windows-only features (PDF Reflow
   open, Works/WordPerfect import) are counted, because a Word user on Windows expects them.
-- The latest official Windows readiness report (run 43619305678, source 4ecc270, report commit
-  162704b) measures all 220 corpus documents; the xtask diagnostic prints the exact first/last-word
+- The latest official Windows readiness report (run 43701689470, source fd465e8, report commit
+  2a5a0b0) measures all 220 corpus documents; the xtask diagnostic prints the exact first/last-word
   pairs for each failing page. See [handoff.md](../handoff.md).
 - **Not done this pass:** opening the corpus in Word and Doc4Me side by side for direct UI/page
   comparison. The readiness harness compares Doc4Me output with the saved Word-made PDFs; it does
@@ -104,7 +104,7 @@ what still stops real work. The stage follows the full number and the core-workf
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **93.2%** (latest official report) | **~600–1,000 h** (70–80% parallelizes) | Pagination and document fidelity, dialog depth, native-speaker review of the AI-drafted catalogs, and owner-deferred hardware/service checks; language translation quality is not measured. |
+| Full target (ready for real work) | **92.9%** (latest official report) | **~600–1,000 h** (70–80% parallelizes) | Pagination and document fidelity, dialog depth, native-speaker review of the AI-drafted catalogs, and owner-deferred hardware/service checks; language translation quality is not measured. |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
@@ -121,15 +121,15 @@ h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 
 | Interaction fidelity | ×0.93 | — | Typing pinned to Word (`tests_typing.rs`), ribbon, keytips, mini-toolbar; 60 modal dialogs, and the latest official Windows shortcut set passes 276/280 rows with 4 deferred; picture/shape handling complaints (#82, #142) |
 | Discoverability and UI clarity | — | ×0.95 | Word-style ribbon a Word user already knows, command search, keytips; some newer pane strings and tooltips terse or untranslated |
 | Stability on real machines | ×0.90 | ×0.90 (launch and install) | Never-crash standard, hostile-param fuzzing, panic guard; but open startup crash on Intel UHD (#170), freezes (#77, #59, #31), Windows writes fail without admin (#218), installer conflicts with other Crafting Apps (#64, #73, #106, #51); 5 days of field history |
-| Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 220 real-world documents open, stay stable and preserve their measured structure through save and reopen. The latest Windows run matches page count on 188/220 and every page's first/last word on 108/220; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
+| Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 220 real-world documents open, stay stable and preserve their measured structure through save and reopen. The latest Windows run matches page count on 188/220 and every page's first/last word on 99/220; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
 | Product | **×0.753** | **×0.787** | |
 
-### Full target (ready for real work): 93.2% latest official measurement
+### Full target (ready for real work): 92.9% latest official measurement
 
-Measured 2026-11-13 on Windows (run 43619305678, source `4ecc270`, report commit `162704b`; see
+Measured 2026-11-15 on Windows (run 43701689470, source `fd465e8`, report commit `2a5a0b0`; see
 [readiness.md](readiness.md), check sets and rules in [readiness/README.md](readiness/README.md)):
 the weights of the dimension table over fixed pass/fail check sets and all 220 real-world documents.
-The report says 95.1% excluding 22 deferred rows; every dimension except pagination is at 100% without deferred rows. ARM64 `plat-002` passes after run 42262956358
+The report says 94.8% excluding 22 deferred rows; every dimension except pagination is at 100% without deferred rows. ARM64 `plat-002` passes after run 42262956358
 built and verified the MSI and portable ZIP. The language component is based on catalog key-row presence, not whether
 values translate English or on translation accuracy. Before the first measurement it was estimated
 as the additive weighted sum over the [dimension table](#by-dimension): **0.30·68 + 0.20·60 + 0.15·55 +
@@ -209,7 +209,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | Dimension | Weight | Parity | Hours to full | Doc | Evidence |
 |---|---|---|---|---|---|
 | Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
-| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 43619305678 confirms all 220 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 43701689470 confirms all 220 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
 | Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); column balancing and full compatibility-mode coverage remain gaps; footnote continuation (#352) and document grid (#391) are implemented. |
 | UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, and the latest official Windows shortcut result of 276/280 with 4 deferred (all non-deferred rows pass); 60 modal dialogs against Word's ~100; keyboard/ribbon customization is present |
 | Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
@@ -221,7 +221,7 @@ Word. Their weighted sum is the **full ready for real work** number.
 | AI features | 0% | beyond Word for external agents | — | [gaps.md](gaps.md) | Beyond Word for external agents (MCP, CLI). No in-app AI provider: out of scope (owner decision, 2026-10-25) |
 
 **Ready for real work ≈ 0.30·68 + 0.20·60 + 0.15·55 + 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 +
-0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 92.2% in the latest official Windows report, with each dimension's measured
+0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 92.9% in the latest official Windows report, with each dimension's measured
 score in [readiness.md](readiness.md)).
 
 ## Methodology

@@ -51,10 +51,9 @@ assessments distinguish measured facts from causes that are still unverified.
   is deferred only until the owner requests it; Windows arm64 was requested and attempted in
   November 2026 and is now recorded as `pass` in `manual.tsv` after run 42262956358 built and
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
-  canceled before it could measure the updated row. Latest completed Windows run 43685803781 measured
-  source `b347e18`; the generated report was committed as `1801653` (92.8% overall,
-  94.7% without the 22 deferred rows; pages 186/220, boundaries 99/220). A fresh run of the
-  current font-loading changes is pending. Each row's note
+  canceled before it could measure the updated row. Latest completed Windows run 43701689470 measured
+  source `fd465e8`; the generated report was committed as `2a5a0b0` (92.9% overall,
+  94.8% without the 22 deferred rows; pages 188/220, boundaries 99/220). Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the
@@ -98,3 +97,16 @@ timeout:
 | `corpus-stability` | no step panicked, was killed or ran out of time |
 
 Without `--corpus` the corpus sets count as not run, so the number stays low until they run.
+
+Every Windows readiness measurement also refreshes the current bilingual blocker assessment and
+`blockers-2026-11-14.tsv` from that run's generated report. The workflow runs
+[`tools/readiness_blockers.py`](../../tools/readiness_blockers.py) and commits the blocker files
+with both readiness reports. The current section of each assessment must match the latest run's
+scores, denominators, failed IDs and observations; older case research stays clearly labeled as
+historical. A readiness report must not be updated while leaving the current blocker assessment
+stale.
+
+For a local measurement, after `cargo xtask readiness --corpus`, run
+`python tools/readiness_th.py` and `READINESS_RUN_ID=local python tools/readiness_blockers.py`, then
+commit the generated report and blocker files together. The Windows workflow performs both steps
+and records its GitHub run ID automatically.

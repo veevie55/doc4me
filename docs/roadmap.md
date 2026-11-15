@@ -1,8 +1,8 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added manual Windows x86/x64 package workflows and documented artifacts; current 1.1.4 release and latest official Windows readiness remain unchanged (source `4ecc270`, run 43619305678), 93.2% overall / 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** readiness remeasured in Windows run 43701689470 on source `fd465e8`; blocker Markdown and TSV refreshed; GitHub Pages workflow documented. Current result is 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-15:** ผลทางการจาก [run 43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report `2a5a0b0`: **92.9% รวม / 94.8% ไม่นับ 22 deferred**; pages **188/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 121 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
@@ -11,7 +11,7 @@ Opus 5.5 agent wall-clock.
 
 ## Current focus (toward beta, ~150–230 h)
 
-งานล่าสุด 2026-11-13: แก้ body contextual spacing ให้ลบ space after จากช่องว่างที่รวมแล้ว ตามตัวอย่าง ECMA-376 17.3.1.9; คง additive spacing และขอบเขตตาราง/หัวกระดาษเดิม CI 6/6, native 2,508 และ Linux ทั้งห้าชุดตรวจตรง baseline ทุกแถว (189/220 page counts, 103/220 boundaries) รอผล Windows ของโค้ดใหม่นี้ คะแนนทางการก่อนชุดนี้ยัง 95.1% ไม่นับ deferred ดู [spacing audit](readiness/contextual-spacing-2026-11-13.md)
+งานล่าสุด 2026-11-13: แก้ body contextual spacing ให้ลบ space after จากช่องว่างที่รวมแล้ว ตามตัวอย่าง ECMA-376 17.3.1.9; คง additive spacing และขอบเขตตาราง/หัวกระดาษเดิม CI 6/6, native 2,508 และ Linux ทั้งห้าชุดตรวจตรง baseline ทุกแถว (189/220 page counts, 103/220 boundaries). ผล Windows ล่าสุด 94.8% ไม่นับ deferred ดู [spacing audit](readiness/contextual-spacing-2026-11-13.md)
 
 1. **Review relevant upstream WordCraft changes before duplicating work.** Check individual patches
    against the remaining gaps (including Hebrew RTL, IME behavior and locale coverage); the upstream
@@ -78,10 +78,10 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **93.2%** in the latest official Windows report (run 43619305678, source
-`4ecc270`, report commit `162704b`; ribbon 503/503, dialogs 216/228, pages 188/220, boundaries
-108/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
-6.8 points short of 100% overall. That report says 95.1% without its 22 deferred rows, 4.9 points
+2026-10-25 report, and **92.9%** in the latest official Windows report (run 43701689470, source
+`fd465e8`, report commit `2a5a0b0`; ribbon 504/504, dialogs 216/228, pages 188/220, boundaries
+99/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
+6.8 points short of 100% overall. That report says 94.8% without its 22 deferred rows, 5.2 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
 check as pass after run 42262956358 built and verified the MSI and portable ZIP. The source TSVs
 map 95/95 language rows and the dialog TSV/source maps 216/228 rows (12 deferred; 7 excluded),
@@ -122,9 +122,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43619305678 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43701689470 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (188/220 page-count and 108/220
+the remaining measured area without deferred rows is pagination (188/220 page-count and 99/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.

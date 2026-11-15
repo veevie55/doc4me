@@ -103,6 +103,10 @@ jobs:
         shell: bash
         run: python tools/readiness_th.py
 
+      - name: Refresh bilingual readiness blockers from this measurement
+        shell: bash
+        run: python tools/readiness_blockers.py
+
       - name: Summary
         shell: pwsh
         run: |
@@ -114,7 +118,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/readiness.md docs/readiness.th.md
+          git add docs/readiness.md docs/readiness.th.md docs/readiness/blockers-2026-11-14.md docs/readiness/blockers-2026-11-14.th.md docs/readiness/blockers-2026-11-14.tsv
           if git diff --cached --quiet; then
             echo "docs/readiness.md unchanged"
             exit 0

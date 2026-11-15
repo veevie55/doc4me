@@ -23,6 +23,10 @@ dimensions = {
     "Localization": "ภาษา", "Platforms": "แพลตฟอร์ม",
     "Ecosystem": "ระบบนิเวศ", "Hardware": "ฮาร์ดแวร์",
 }
+page_match = re.search(r"^### corpus-pages \((\d+) of \d+\)$", source, re.MULTILINE)
+break_match = re.search(r"^### corpus-breaks \((\d+) of \d+\)$", source, re.MULTILINE)
+page_failures = page_match.group(1) if page_match else "0"
+break_failures = break_match.group(1) if break_match else "0"
 rows = []
 for line in source.splitlines():
     m = re.match(r"\| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \| ([^|]+) \|$", line)
@@ -38,7 +42,7 @@ doc = [
     "| มิติ | น้ำหนัก | คะแนน | เมื่อไม่นับ deferred | ชุดตรวจ (ผ่าน / ทั้งหมด) |",
     "|---|---:|---:|---:|---|", *rows, "",
     "## รายการที่ยังไม่ผ่านและเหตุผลรายข้อ", "",
-    "มีรายการ layout ที่ไม่ผ่านจำนวนหน้า 32 รายการ และไม่ผ่านขอบเขตหน้า 112 รายการ รายการครบทุกข้อพร้อมผลที่วัดได้ การตรวจ font substitution และเหตุผลที่ยืนยันได้หรือยังแยกสาเหตุไม่ได้อยู่ใน [อุปสรรค readiness ฉบับภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [ฉบับภาษาอังกฤษ](readiness/blockers-2026-11-14.md)", "",
+    f"มีรายการ corpus-pages ที่ไม่ผ่าน {page_failures} รายการ และ corpus-breaks ที่ไม่ผ่าน {break_failures} รายการ ผลล่าสุดพร้อม observations อยู่ใน [อุปสรรค readiness ฉบับภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [ฉบับภาษาอังกฤษ](readiness/blockers-2026-11-14.md); workflow จะปรับ blockers จากผลวัดทุกครั้ง", "",
     "การยังแยกสาเหตุไม่ได้ไม่ทำให้รายการผ่าน ต้องตรงกับ Word ตามเกณฑ์เดิมก่อนจึงนับผ่าน ไม่มีการลดเกณฑ์หรือเพิ่มข้อยกเว้น", "",
     "## รายการ deferred", "",
     "มี 22 รายการ deferred ซึ่งยังนับเป็นไม่ผ่านในคะแนนรวมและไม่รวมในตัวเลข ‘ไม่นับ deferred’ ตามวิธีคำนวณเดิม รายการและ prerequisite ที่บันทึกไว้ยังคงเดิม ดู [รายงาน readiness ฉบับเต็ม](readiness.md) และ [แผน deferred](readiness/deferred-plan.md)", "",

@@ -1,8 +1,8 @@
 # UI parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** Windows readiness remeasured in run 43701689470 on source `fd465e8`; 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-15:** ผลทางการจาก [run 43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report `2a5a0b0`: **92.9% รวม / 94.8% ไม่นับ 22 deferred**; pages **188/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
 IME composition commit now enters a selected text box before inserting text, preserving the body anchor. Synthetic preedit/commit regression covers Japanese text; actual Windows IME switching remains unverified. Official shortcuts remain 276/280.

@@ -1,8 +1,8 @@
 # File-format parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** Windows readiness remeasured in run 43701689470 on source `fd465e8`; 92.9% overall / 94.8% without 22 deferred; pages 188/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-15:** ผลทางการจาก [run 43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report `2a5a0b0`: **92.9% รวม / 94.8% ไม่นับ 22 deferred**; pages **188/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
@@ -12,10 +12,10 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (latest official Windows run 43619305678 on source
-`4ecc270`, report commit `162704b`): all 220 documents open and remain stable and preserve measured
+with Word on real-world files. What is checked (latest official Windows run 43701689470 on source
+`fd465e8`, report commit `2a5a0b0`): all 220 documents open and remain stable and preserve measured
 structure through save and reopen, 188 match Word's page count, and the separate page-boundary check
-passes 108/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
+passes 99/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
 measures page counts and endpoints rather than pixel-perfect formatting. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
