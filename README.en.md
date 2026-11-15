@@ -43,6 +43,10 @@ with `SOURCE_COMMIT.txt` recording the actual source commit. Windows ARM64 is un
 signing without notarization. Extract the Web App ZIP and serve it over HTTP(S); see the
 [hosting instructions](packaging/web/README.md).
 
+Windows package and readiness workflows use the same pinned OFL font set and verify the hashes of
+additional corpus fonts before building. See [docs/releasing.md](docs/releasing.md) for the pinned
+revisions and licence details.
+
 The separate [Windows x64 installer](.github/workflows/windows-x64-installer.yml) is also manual and is the only workflow that can publish a Release.
 Its **commit** field accepts an earlier `main` commit's full 40-character SHA; enable **release** only when
 you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.md) for platform requirements.

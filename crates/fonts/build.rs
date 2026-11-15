@@ -1,6 +1,8 @@
 //! Optional craft-fonts build input (https://github.com/storytold/craft-fonts, recipe from its
 //! `docs/integration.md`). With `CRAFT_FONTS_DIR=<checkout>` the fonts in its
-//! `fonts/manifest.txt` are embedded as `CRAFT_FONTS`; unset, `CRAFT_FONTS` is empty. Web
+//! `fonts/manifest.txt` are embedded as `CRAFT_FONTS`; unset, `CRAFT_FONTS` is empty. This
+//! manifest includes Japanese and Chinese fallback faces plus the selected corpus-specific
+//! OFL alternatives prepared by `tools/prepare_corpus_fonts.py`. Web
 //! (wasm32) builds embed only the UI face, BIZ UDPGothic Regular, to stay within the web size
 //! budget. With `CRAFT_FONTS_REQUIRED` (releases), a native build also fails when the checkout
 //! has no font for a CJK interface language (Japanese, Simplified Chinese), as an outdated pin

@@ -21,30 +21,33 @@ pub struct Resolved {
     pub substituted: bool,
 }
 
-/// Substitutes to try, in order, for a family that isn't installed. Open fonts that are
-/// metric-compatible come first (Intos ↔ Aptos, bundled; Carlito ↔ Calibri, Caladea ↔ Cambria,
-/// Liberation ↔ Arial / Times New Roman / Courier New), then common system fonts, then our bundled
-/// families.
+/// Substitutes to try, in order, for a family that isn't installed. Bundled open fonts come before
+/// proprietary system fonts, so the same document gets the same freely licensed face on Windows
+/// and Linux. Intos ↔ Aptos, Carlito ↔ Calibri, Caladea ↔ Cambria, Arimo ↔ Arial, and Tinos ↔
+/// Times New Roman preserve the common Office metrics.
 fn substitutes(family: &str) -> &'static [&'static str] {
     // An unknown sans or serif family is set in the platform's own (Arial and Times New Roman on
     // Windows, Helvetica Neue on a Mac), as Word sets it (corpus govuk-017/018: "Arial Narrow" in
     // Arial; zenodo-114: Garamond in Times New Roman). Carlito and Caladea, bundled on the desktop
     // since 1.1.3, come after them, so they stand in only where neither is installed (Linux), as
     // before they were bundled.
-    const SANS: &[&str] = &["Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
-    const SERIF: &[&str] = &["Times New Roman", "Caladea", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
+    const SANS: &[&str] = &["Source Sans 3", "Arimo", "Inter", "Helvetica Neue", "Arial", "Carlito", "Liberation Sans", "Noto Sans", "DejaVu Sans"];
+    const SERIF: &[&str] = &["Source Serif 4", "Tinos", "Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif"];
     // Calibri and Cambria themselves: their metric-compatible stand-ins first, wherever.
     const CALIBRI: &[&str] = &["Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
     const CAMBRIA: &[&str] = &["Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
-    const MONO: &[&str] = &["Courier New", "Liberation Mono", "Menlo", "Consolas", "DejaVu Sans Mono", "JetBrains Mono"];
+    const MONO: &[&str] = &["Cousine", "JetBrains Mono", "Courier New", "Liberation Mono", "Menlo", "Consolas", "DejaVu Sans Mono"];
     // Arial itself first: Helvetica and Arial Nova asked for on Windows, where Arial is installed
     // and they aren't, are set in Arial (Arial was drawn to Helvetica's widths), as Word does;
     // without it they fell through to Source Sans 3, a wider face (corpus govuk-052, zenodo-068).
-    const ARIAL: &[&str] = &["Arial", "Liberation Sans", "Helvetica", "Helvetica Neue", "Arimo", "Source Sans 3"];
+    const ARIAL: &[&str] = &["Arimo", "Arial", "Liberation Sans", "Helvetica", "Helvetica Neue", "Source Sans 3"];
     // Times New Roman first for the same reason: "Times" (a Mac font) has its widths, and on
     // Windows fell through to Source Serif 4 (corpus govuk-006, govuk-020).
-    const TIMES: &[&str] = &["Times New Roman", "Liberation Serif", "Times", "Tinos", "Source Serif 4"];
-    const SYMBOL: &[&str] = &["Apple Symbols", "Segoe UI Symbol", "DejaVu Sans", "Noto Sans Symbols", "Source Sans 3"];
+    const TIMES: &[&str] = &["Tinos", "Times New Roman", "Liberation Serif", "Times", "Source Serif 4"];
+    const SYMBOL: &[&str] = &["Noto Sans Symbols", "Noto Sans Symbols 2", "Source Sans 3", "Apple Symbols", "Segoe UI Symbol", "DejaVu Sans"];
+    const CJK_SANS: &[&str] = &["Noto Sans CJK SC", "BIZ UDPGothic", "NanumGothic", "Doc4MeHangul", "Source Sans 3"];
+    const CJK_SERIF: &[&str] = &["Shippori Mincho", "BIZ UDMincho", "Noto Sans CJK SC", "Source Serif 4"];
+    const OVERPASS: &[&str] = &["Overpass", "Arimo", "Source Sans 3"];
     // Verdana: DejaVu Sans (Bitstream Vera's design) sets English text 1.2% narrower in regular
     // and 0.2% wider in bold, and breaks 60% / 74% of lines at the same word (measured against
     // Microsoft's core-fonts Verdana); Carlito, the old fallback, was 21% narrower and broke none.
@@ -62,6 +65,8 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Palatino Linotype / Book Antiqua: macOS ships the same design as "Palatino"; open
     // look-alikes with matching metrics (TeX Gyre Pagella, URW P052 / Palladio) on Linux.
     const PALATINO: &[&str] = &[
+        "Caladea",
+        "Source Serif 4",
         "Palatino Linotype",
         "Palatino",
         "Book Antiqua",
@@ -69,7 +74,6 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "P052",
         "URW Palladio L",
         "Palladio",
-        "Caladea",
         "Times New Roman",
         "Liberation Serif",
         "Georgia",
@@ -83,9 +87,9 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Aptos, Word's default font since 2023: Intos (bundled) has its advances, kerning and
     // vertical metrics, as Intos Display, Narrow and Serif have Aptos Display's, Narrow's and
     // Serif's (Display is bundled; Narrow and Serif are used when installed).
-    const APTOS: &[&str] = &["Intos", "Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
-    const APTOS_DISPLAY: &[&str] = &["Intos Display", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
-    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
+    const APTOS: &[&str] = &["Intos", "Carlito", "Source Sans 3", "Arimo", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans"];
+    const APTOS_DISPLAY: &[&str] = &["Intos Display", "Intos", "Carlito", "Source Sans 3", "Arimo", "Arial", "Liberation Sans"];
+    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Intos", "Carlito", "Source Sans 3", "Arimo", "Arial", "Liberation Sans"];
     const APTOS_SERIF: &[&str] =
         &["Intos Serif", "Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     let f = family.to_ascii_lowercase();
@@ -103,21 +107,130 @@ fn substitutes(family: &str) -> &'static [&'static str] {
         "aptos display" => APTOS_DISPLAY,
         "aptos narrow" => APTOS_NARROW,
         "aptos serif" => APTOS_SERIF,
+        "overpass" | "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => OVERPASS,
         "palatino linotype" | "book antiqua" | "palatino" => PALATINO,
-        "arial" | "helvetica" | "arial nova" | "arial unicode ms" => ARIAL,
-        "times new roman" | "times" => TIMES,
+        "arial"
+        | "arialmt"
+        | "arial-italicmt"
+        | "helvetica"
+        | "helvetica neue"
+        | "arial nova"
+        | "arial narrow"
+        | "arial nova cond light"
+        | "arial unicode ms"
+        | "lucida grande"
+        | "lucida sans unicode"
+        | "frutiger w01"
+        | "frutigerlt-lightitalic"
+        | "myriad pro"
+        | "univers"
+        | "apercu"
+        | "gill sans mt"
+        | "gotham book"
+        | "gotham medium"
+        | "gotham bold"
+        | "roboto"
+        | "segoe ui"
+        | "tahoma"
+        | "shruti"
+        | "raavi"
+        | "latha"
+        | "kartika"
+        | "mangal"
+        | "anjalinewlipi" => ARIAL,
+        "times new roman" | "times" | "tms rmn" | "timesnewromanpsmt" | "garamond" | "bell mt" | "minion pro" | "minion pro med" | "arno pro"
+        | "bookman old style" | "sitka banner" | "sitka heading" | "sitka text" => TIMES,
         "courier new" | "courier" | "consolas" | "lucida console" | "cascadia code" | "cascadia mono" => MONO,
-        "symbol" | "wingdings" | "segoe ui symbol" | "webdings" => SYMBOL,
+        "ms mincho" | "ms pmincho" => CJK_SERIF,
+        "stzhongsong" | "simsun" | "batang" | "pmingliu" | "ms gothic" | "ms pgothic" | "malgun gothic semilight" => CJK_SANS,
+        "symbol" | "wingdings" | "wingdings 2" | "wingdings 3" | "segoe ui symbol" | "segoe ui emoji" | "webdings" => SYMBOL,
         "verdana" => VERDANA,
         // Source Sans 3's earlier name (the bundled face is the same design, renamed in 2021).
         "source sans pro" | "source sans pro light" | "source sans pro semibold" => SOURCE_SANS,
+        "pt serif" | "eu albertina" | "amasis mt pro medium" | "newsgoth cn bt" | "nexus sans web pro" | "inherit" => CAMBRIA,
         "georgia" => GEORGIA,
         "calibri" | "calibri light" => CALIBRI,
         "cambria" | "cambria math" => CAMBRIA,
-        "garamond" | "constantia" | "baskerville old face" | "century" | "century schoolbook" | "bookman old style" | "sitka text" | "sitka" => SERIF,
+        "constantia" | "baskerville old face" | "century" | "century schoolbook" | "sitka" => SERIF,
         _ if f.contains("mono") || (f.contains("code") && !f.contains("unicode")) => MONO,
         _ if f.contains("serif") && !f.contains("sans") => SERIF,
         _ => SANS,
+    }
+}
+
+/// Open family to use for a requested face when its original is proprietary or unavailable.
+/// These aliases cover the proprietary fonts reported in the pagination corpus, plus fonts which
+/// otherwise happen to be installed on the Windows measurement runner. Exact metric-compatible
+/// open families are preferred; the remaining faces use the closest bundled open design.
+fn open_substitute(family: &str) -> Option<&'static str> {
+    let mut f = family.trim().trim_start_matches('*').to_ascii_lowercase();
+    if f.ends_with("-bold-4304") {
+        f.truncate(f.len().saturating_sub("-bold-4304".len()));
+    }
+    match f.as_str() {
+        "arial"
+        | "arialmt"
+        | "arial-italicmt"
+        | "arial narrow"
+        | "arial nova"
+        | "arial nova cond light"
+        | "arial unicode ms"
+        | "helvetica"
+        | "helvetica neue"
+        | "lucida grande"
+        | "lucida sans unicode"
+        | "frutiger w01"
+        | "frutigerlt-lightitalic"
+        | "myriad pro"
+        | "univers"
+        | "apercu"
+        | "gill sans mt"
+        | "gotham book"
+        | "gotham medium"
+        | "gotham bold"
+        | "roboto"
+        | "tahoma"
+        | "segoe ui"
+        | "nexus sans web pro" => Some("Arimo"),
+        "overpass" => Some("Overpass"),
+        "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => Some("Overpass"),
+        "calibri" | "calibri light" | "calibri semibold" | "calibri bold" => Some("Carlito"),
+        "cambria" | "cambria math" | "eu albertina" | "amasis mt pro medium" | "newsgoth cn bt" | "inherit" => Some("Caladea"),
+        "aptos" | "aptos light" | "aptos semibold" | "aptos extrabold" | "aptos black" => Some("Intos"),
+        "aptos display" => Some("Intos Display"),
+        "aptos narrow" => Some("Intos"),
+        "times new roman"
+        | "times"
+        | "tms rmn"
+        | "timesnewromanpsmt"
+        | "garamond"
+        | "bell mt"
+        | "frutigerlt lightitalic"
+        | "minion pro"
+        | "minion pro med"
+        | "arno pro"
+        | "bookman old style"
+        | "sitka banner"
+        | "sitka heading"
+        | "sitka text" => Some("Tinos"),
+        "pt serif" => Some("Source Serif 4"),
+        "verdana" => Some("Inter"),
+        "courier new" | "courier" => Some("Cousine"),
+        "wingdings" | "wingdings 2" | "wingdings 3" | "symbol" | "webdings" | "segoe ui symbol" | "segoe ui emoji" => Some("Noto Sans Symbols"),
+        "ms mincho" | "ms pmincho" => Some("Shippori Mincho"),
+        "stzhongsong" | "simsun" | "pmingliu" => Some("Noto Sans CJK SC"),
+        "ms gothic" | "ms pgothic" => Some("BIZ UDPGothic"),
+        "batang" => Some("NanumGothic"),
+        "malgun gothic semilight" => Some("NanumGothic"),
+        "shruti" => Some("Noto Sans Gujarati"),
+        "raavi" => Some("Noto Sans Gurmukhi"),
+        "latha" => Some("Noto Sans Tamil"),
+        "kartika" => Some("Noto Sans Malayalam"),
+        "mangal" | "anjalinewlipi" => Some("Noto Sans Devanagari"),
+        "nyala" => Some("Noto Sans Ethiopic"),
+        "source sans pro" | "source sans pro light" | "source sans pro semibold" => Some("Source Sans 3"),
+        "source serif 4" => Some("Source Serif 4"),
+        _ => None,
     }
 }
 
@@ -272,11 +385,43 @@ fn style_name(bold: bool, italic: bool) -> &'static str {
     }
 }
 
+fn style_name_for(family: &str, bold: bool, italic: bool) -> String {
+    if family.eq_ignore_ascii_case("Overpass") {
+        if italic {
+            return if bold { "Bold Italic" } else { "Italic" }.to_string();
+        }
+        if bold {
+            return "ExtraBold".to_string();
+        }
+        return "Regular".to_string();
+    }
+    style_name(bold, italic).to_string()
+}
+
+fn overpass_weight(family: &str) -> Option<f32> {
+    match family.trim().to_ascii_lowercase().as_str() {
+        "overpass extralight" => Some(200.0),
+        "overpass light" => Some(300.0),
+        "overpass semibold" => Some(600.0),
+        "overpass extrabold" => Some(800.0),
+        _ => None,
+    }
+}
+
 /// A face name used as a font name, as documents do ("Arial Bold", "Times New Roman Bold
 /// Italic"): the family and the style it names, when `family` isn't itself an installed family.
 /// Windows finds such faces by their full names, so Word draws "Arial Bold" with Arial's bold;
 /// families whose names end in other words ("Calibri Light", "Arial Black") stay as they are.
 pub fn face_name(family: &str) -> Option<(&str, bool, bool)> {
+    const OVERPASS_STYLES: &[(&str, bool, bool); 4] =
+        &[(" extralight", false, false), (" light", false, false), (" semibold", true, false), (" extrabold", true, false)];
+    let lower = family.to_ascii_lowercase();
+    if lower.starts_with("overpass")
+        && let Some((suffix, bold, italic)) = OVERPASS_STYLES.iter().find(|(suffix, ..)| lower.ends_with(suffix))
+    {
+        let base = family.get(..family.len() - suffix.len())?.trim_end();
+        return Some((base, *bold, *italic));
+    }
     const STYLES: [(&str, bool, bool); 7] = [
         (" bold italic", true, true),
         (" bold oblique", true, true),
@@ -286,7 +431,6 @@ pub fn face_name(family: &str) -> Option<(&str, bool, bool)> {
         (" bold", true, false),
         (" regular", false, false),
     ];
-    let lower = family.to_ascii_lowercase();
     let (suffix, bold, italic) = STYLES.iter().find(|(s, ..)| lower.ends_with(s))?;
     let base = family.get(..family.len() - suffix.len())?.trim_end();
     if base.is_empty() || FontDb::global().has_family(family) {
@@ -302,6 +446,11 @@ pub fn substitute_for(family: &str) -> Option<String> {
         return substitute_for(base);
     }
     let db = FontDb::global();
+    if let Some(open) = open_substitute(family).filter(|name| db.has_family(name))
+        && !open.eq_ignore_ascii_case(family)
+    {
+        return Some(open.to_string());
+    }
     if db.has_family(family) {
         return None;
     }
@@ -337,20 +486,39 @@ pub fn resolve(family: &str, bold: bool, italic: bool) -> Resolved {
         }
     }
     if let Some((base, b, i)) = face_name(family) {
-        let r = resolve(base, bold || b, italic || i);
+        let r = if let Some(weight) = overpass_weight(family) {
+            let base = resolve(base, false, false);
+            let style = if i || italic { format!("Italic{{wght:{weight}}}") } else { format!("Regular{{wght:{weight}}}") };
+            let face = db.face(&base.face.family, &style);
+            Resolved { face: FaceRef::of(&face), substituted: base.substituted, synth_bold: false, synth_italic: false }
+        } else {
+            resolve(base, bold || b, italic || i)
+        };
         let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
         if c.0 == generation {
             c.1.insert(key, r);
         }
         return r;
     }
-    let (fam, substituted) = if db.has_family(family) {
+    let (fam, substituted) = if let Some(open) = open_substitute(family).filter(|name| db.has_family(name)) {
+        (open.to_string(), !open.eq_ignore_ascii_case(family))
+    } else if db.has_family(family) {
         (family.to_string(), false)
     } else {
         let s = substitutes(family).iter().find(|s| db.has_family(s)).copied().unwrap_or(crate::FALLBACK_FAMILY);
         (s.to_string(), true)
     };
-    let face = db.face(&fam, style_name(bold, italic));
+    if let Some(weight) = overpass_weight(family) {
+        let style = if italic { format!("Italic{{wght:{weight}}}") } else { format!("Regular{{wght:{weight}}}") };
+        let face = db.face(&fam, &style);
+        let r = Resolved { synth_bold: false, synth_italic: italic && !face.italic, substituted, face: FaceRef::of(&face) };
+        let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
+        if cacheable && c.0 == generation {
+            c.1.insert(key, r);
+        }
+        return r;
+    }
+    let face = db.face(&fam, &style_name_for(&fam, bold, italic));
     let r = Resolved { synth_bold: bold && face.weight < 600.0, synth_italic: italic && !face.italic, substituted, face: FaceRef::of(&face) };
     let mut c = cache.lock().unwrap_or_else(|e| e.into_inner());
     if cacheable && c.0 == generation {
@@ -660,16 +828,11 @@ mod tests {
     }
 
     #[test]
-    fn unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins() {
-        // Carlito and Caladea are bundled on the desktop, so they are always there: an unknown
-        // family still goes to Arial or Times New Roman first where those are installed, as Word
-        // does, and Calibri and Cambria to their metric-compatible stand-ins first.
+    fn corpus_font_substitutions_prefer_bundled_open_stand_ins() {
         for f in ["Arial Narrow", "Univers", "Gotham Book"] {
-            let s = substitutes(f);
-            assert!(s.iter().position(|x| *x == "Arial") < s.iter().position(|x| *x == "Carlito"), "{f}: {s:?}");
+            assert_eq!(substitutes(f).first(), Some(&"Arimo"), "{f}");
         }
-        let s = substitutes("Garamond");
-        assert!(s.iter().position(|x| *x == "Times New Roman") < s.iter().position(|x| *x == "Caladea"), "{s:?}");
+        assert_eq!(substitutes("Garamond").first(), Some(&"Tinos"));
         assert_eq!(substitutes("Calibri").first(), Some(&"Carlito"));
         assert_eq!(substitutes("Calibri Light").first(), Some(&"Carlito"));
         assert_eq!(substitutes("Cambria").first(), Some(&"Caladea"));
@@ -677,18 +840,71 @@ mod tests {
     }
 
     #[test]
-    fn helvetica_and_times_try_the_windows_fonts_with_their_widths_first() {
-        // On Windows, where Arial and Times New Roman are installed and Helvetica, Arial Nova and
-        // Times aren't, Word sets them in Arial and Times New Roman.
+    fn pagination_corpus_font_aliases_resolve_to_open_faces_when_available() {
+        let db = crate::FontDb::global();
+        for (asked, expected) in [
+            ("Arial", "Arimo"),
+            ("Arial Narrow", "Arimo"),
+            ("Arial Unicode MS", "Arimo"),
+            ("Calibri", "Carlito"),
+            ("Cambria", "Caladea"),
+            ("Aptos", "Intos"),
+            ("Garamond", "Tinos"),
+            ("TimesNewRomanPSMT", "Tinos"),
+            ("Courier", "Cousine"),
+            ("PT Serif", "Source Serif 4"),
+            ("Source Sans Pro", "Source Sans 3"),
+            ("Verdana", "Inter"),
+            ("*Tahoma-Bold-4304", "Arimo"),
+        ] {
+            if db.has_family(expected) {
+                assert_eq!(open_substitute(asked), Some(expected), "{asked}");
+                let resolved = resolve(asked, false, false);
+                assert_eq!(resolved.face.family, expected, "{asked}");
+                assert!(resolved.substituted, "{asked}");
+                assert_eq!(substitute_for(asked).as_deref(), Some(expected), "{asked}");
+            }
+        }
+        for (asked, expected) in [
+            ("Overpass", "Overpass"),
+            ("MS Mincho", "Shippori Mincho"),
+            ("SimSun", "Noto Sans CJK SC"),
+            ("MS Gothic", "BIZ UDPGothic"),
+            ("Batang", "NanumGothic"),
+            ("Wingdings 3", "Noto Sans Symbols"),
+            ("Shruti", "Noto Sans Gujarati"),
+            ("Mangal", "Noto Sans Devanagari"),
+            ("Nyala", "Noto Sans Ethiopic"),
+        ] {
+            if db.has_family(expected) {
+                assert_eq!(open_substitute(asked), Some(expected), "{asked}");
+                let resolved = resolve(asked, false, false);
+                assert_eq!(resolved.face.family, expected, "{asked}");
+                assert_eq!(resolved.substituted, !expected.eq_ignore_ascii_case(asked), "{asked}");
+            }
+        }
+        for (asked, expected_weight) in
+            [("Overpass ExtraLight", 200.0), ("Overpass Light", 300.0), ("Overpass SemiBold", 600.0), ("Overpass ExtraBold", 800.0)]
+        {
+            if db.has_family("Overpass") {
+                let resolved = resolve(asked, false, false);
+                assert_eq!(resolved.face.family, "Overpass", "{asked}");
+                assert_eq!(resolved.face.weight, expected_weight, "{asked}");
+                assert!(!resolved.substituted, "{asked}");
+            }
+        }
+    }
+
+    #[test]
+    fn helvetica_and_times_use_the_open_metric_compatible_fonts_first() {
         for f in ["Helvetica", "helvetica", "Arial Nova"] {
-            assert_eq!(substitutes(f).first(), Some(&"Arial"), "{f}");
+            assert_eq!(substitutes(f).first(), Some(&"Arimo"), "{f}");
         }
         for f in ["Times", "times"] {
-            assert_eq!(substitutes(f).first(), Some(&"Times New Roman"), "{f}");
+            assert_eq!(substitutes(f).first(), Some(&"Tinos"), "{f}");
         }
-        // The open metric-compatible faces come right after, for machines without Microsoft's.
-        assert_eq!(substitutes("Helvetica").get(1), Some(&"Liberation Sans"));
-        assert_eq!(substitutes("Times").get(1), Some(&"Liberation Serif"));
+        assert_eq!(substitutes("Helvetica").get(1), Some(&"Arial"));
+        assert_eq!(substitutes("Times").get(1), Some(&"Times New Roman"));
     }
 
     #[test]
@@ -770,7 +986,7 @@ mod tests {
         // next substitutes; Aptos Mono stays with the monospaced ones.
         assert_eq!(substitutes("Aptos Narrow").first(), Some(&"Intos Narrow"));
         assert_eq!(substitutes("Aptos Serif").first(), Some(&"Intos Serif"));
-        assert_eq!(substitutes("Aptos Mono").first(), Some(&"Courier New"));
+        assert_eq!(substitutes("Aptos Mono").first(), Some(&"Cousine"));
         assert_eq!(requested_line("Aptos Mono"), Some((1923.0 / 2048.0, 577.0 / 2048.0)));
         assert_eq!(requested_line("Aptosx"), None);
     }
@@ -813,12 +1029,10 @@ mod tests {
             let list = substitutes(name);
             let pos = |n: &str| list.iter().position(|x| *x == n);
             assert!(pos("Palatino").is_some() && pos("TeX Gyre Pagella").is_some() && pos("P052").is_some(), "{name}");
-            // All of them come before the generic serif fallbacks (Caladea, Times New Roman).
-            assert!(pos("Palatino") < pos("Caladea") && pos("TeX Gyre Pagella") < pos("Times New Roman"), "{name}");
+            // Free bundled serif faces come before the proprietary platform fonts.
+            assert!(pos("Caladea") < pos("Palatino") && pos("Source Serif 4") < pos("Times New Roman"), "{name}");
         }
-        // Other serif families go to the generic serif list (Times New Roman first, see
-        // `unknown_families_try_the_platform_fonts_before_the_bundled_stand_ins`).
-        assert_eq!(substitutes("Garamond").first(), Some(&"Times New Roman"));
+        assert_eq!(substitutes("Garamond").first(), Some(&"Tinos"));
     }
 
     /// Verdana and Georgia go to the open fonts nearest their widths (DejaVu Sans, Source Serif
@@ -840,7 +1054,7 @@ mod tests {
             assert_eq!(substitutes(name), &["Sarabun"], "{name}");
         }
         // Other families keep their substitutes ("Thai" only in a name like "Noto Sans Thai").
-        assert_eq!(substitutes("Garamond").first(), Some(&"Times New Roman"));
+        assert_eq!(substitutes("Garamond").first(), Some(&"Tinos"));
         assert_ne!(substitutes("Tahoma"), &["Sarabun"]);
         assert_ne!(substitutes("Theinhardt"), &["Sarabun"]);
         // Not installed here, so the request resolves to Sarabun itself (bundled).

@@ -65,10 +65,9 @@ static BUNDLED: &[&[u8]] = &[
 /// More bundled fonts (OFL), on the desktop only (the web build keeps to its size budget):
 /// metric-compatible stand-ins for Word's core fonts, so documents keep Word's line and page
 /// breaks where those aren't installed: Carlito (Calibri), Caladea (Cambria), Arimo (Arial),
-/// Tinos (Times New Roman) and Cousine (Courier New). Each is drawn only when the system hasn't
-/// the family itself. Families documents merely name (Overpass, Open Sans, Roboto…) and today's
-/// variable Gelasio are left out: measured on the corpus, they moved pages away from Word's, whose
-/// author often hadn't the font either, or had a version with other metrics.
+/// Tinos (Times New Roman) and Cousine (Courier New). Corpus alternatives are supplied through
+/// the pinned optional craft-fonts checkout. Each face is selected by Word substitution rules
+/// rather than added here, so unrelated documents keep their current font choices.
 #[cfg(not(target_arch = "wasm32"))]
 static DESKTOP_BUNDLED: &[&[u8]] = &[
     include_bytes!("../../../assets/fonts/Carlito-Regular.ttf"),
@@ -941,7 +940,7 @@ impl FontDb {
     /// without `CRAFT_FONTS_DIR`), whose system font scan reads `font_dirs`.
     pub fn with_font_dirs(font_dirs: Vec<std::path::PathBuf>) -> Self {
         let mut faces = Vec::new();
-        let craft = crate::japanese_document_fonts().into_iter().chain(crate::chinese_fonts()).map(|f| f.bytes);
+        let craft = crate::CRAFT_FONTS.iter().map(|f| f.bytes);
         for data in BUNDLED.iter().chain(DESKTOP_BUNDLED).copied().chain(craft) {
             for f in enumerate_faces(data, MAX_FILE_FACES) {
                 if let Some(mut face) = make_face(FontBytes::Static(data), f.index, f.family, f.style, f.legacy, f.coords) {

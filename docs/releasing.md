@@ -31,6 +31,16 @@ The selected revision supplies its own source, lockfile, assets, version, and pa
 An older revision must support the selected target and packaging interface. Selecting an old
 source revision through **ref** does not run its historical workflow definition.
 
+The Windows x86/x64/ARM64 artifact workflows, x64 installer, and Windows readiness workflow also
+check out the pinned [`storytold/craft-fonts`](https://github.com/storytold/craft-fonts) revision
+`c1db6d1a8ed772191241c3d185e2104be84d8691`, then run
+[`tools/prepare_corpus_fonts.py`](../tools/prepare_corpus_fonts.py). That helper pins Google Fonts
+revision `cc39c4c2c304bc368c9b7c311ea2bcc6013299fe`, verifies the OFL Overpass and Noto Sans
+Ethiopic files by SHA-256, and adds them to that checkout's manifest. `CRAFT_FONTS_REQUIRED=1`
+requires these build inputs; package scripts copy the upstream OFL notices into the app package.
+The same pinned input is used for Windows readiness so the measurement matches those package
+builds. Other platform workflows continue to use their regular font inputs.
+
 These seven platform-build jobs have read-only repository permissions and do not receive signing credentials.
 Third-party actions are pinned to commits. Linux packaging tools (nFPM 2.49.0 and appimagetool
 1.9.1) and Trunk 0.22.1 are pinned and their downloads checked against SHA-256 digests.
@@ -112,5 +122,6 @@ remain the owner's chosen upstream URLs.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-15 | minor | Windows packages and readiness use a shared pinned OFL font set; the preparation script verifies Google Fonts hashes for Overpass and Noto Sans Ethiopic before embedding and packaging licences. |
 | 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows; both build MSI and portable ZIP from a selected ref and include source commit provenance. x86 uses the x64-hosted x86 MSVC toolchain. Neither workflow publishes a Release. |
 | 2026-11-12 | minor | Five independent manual build workflows with selected source refs, commit provenance and artifacts; removed automatic tag triggers from the existing workflows; documented explicit x64 releases and platform limits. |

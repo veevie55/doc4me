@@ -25,6 +25,24 @@ jobs:
           ref: main
           fetch-depth: 1
 
+      - name: Check out the pinned open font set
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: storytold/craft-fonts
+          ref: c1db6d1a8ed772191241c3d185e2104be84d8691
+          path: craft-fonts
+          persist-credentials: false
+
+      - name: Prepare pinned corpus fonts
+        shell: bash
+        run: python tools/prepare_corpus_fonts.py craft-fonts
+
+      - name: Require the open fonts for Windows readiness
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "CRAFT_FONTS_DIR=$env:GITHUB_WORKSPACE\craft-fonts"
+          Add-Content -Path $env:GITHUB_ENV -Value 'CRAFT_FONTS_REQUIRED=1'
+
       - uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
         with:
           toolchain: stable
