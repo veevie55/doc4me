@@ -1,6 +1,6 @@
 # Doc4Me roadmap: milestones and what's next
 
-> **Last reviewed:** 2026-11-14 · **Last updated:** 2026-11-14 · **Change:** readiness failure inventory and Thai report added; latest official Windows source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; page counts 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** reviewed current 1.1.4 source, release and latest official Windows readiness; source `4ecc270` (run 43619305678), 93.2% overall / 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Criteria, corpus membership and exclusions unchanged.
 
 **Windows verification · 2026-11-14:** ผลทางการจาก [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **188/220**, boundaries **108/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 112 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 

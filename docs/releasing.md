@@ -1,6 +1,6 @@
 # Building and releasing Doc4Me
 
-> **Last reviewed:** 2026-11-12 · **Last updated:** 2026-11-12 · **Change:** minor (independent manual builds, selected source refs, and no automatic push/tag triggers)
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (current release is v1.1.4; clarified current source refs and explicit update-existing-release workflow)
 
 ## Build a chosen commit
 
@@ -11,7 +11,7 @@ upload artifacts; they do not deploy the Web App or publish GitHub Releases.
 1. Open [Actions](https://github.com/veevie55/doc4me/actions) and choose a workflow.
 2. Choose **Run workflow**, keeping **Use workflow from: main**. This selects the current workflow
    definition, independently of the source revision to build.
-3. Set **ref** to `main` for current code, `v1.1.3` for the released source, or a branch, tag, or
+3. Set **ref** to `main` for current code, `v1.1.4` for the released source, or a branch, tag, or
    commit SHA from this repository. For macOS, choose `universal`, `aarch64`, or `x86_64` as well.
 4. Start the run explicitly. Download its **Artifacts** when it finishes. They are retained for
    14 days and include `SOURCE_COMMIT.txt`, the resolved 40-character source SHA. The same SHA is
@@ -50,7 +50,7 @@ The existing [Windows x64 installer](../.github/workflows/windows-x64-installer.
 manual-only. With **release** left off, it builds MSI and portable ZIP artifacts. Its optional
 **commit** input accepts a full 40-character SHA that is an ancestor of the run's `main` commit;
 leave it empty to build the run's current source. Unlike the five workflows above, this field
-is named **commit** and accepts a full main-history SHA, not a branch name.
+is named **commit** and accepts a full main-history SHA, not a branch name. To refresh an existing release, explicitly enable **update_release**; the workflow verifies that the existing tag points to the selected source, rebuilds the MSI/ZIP, and replaces the cumulative notes while keeping the release ID and URL.
 
 Publishing a new version is a separate, explicit decision:
 

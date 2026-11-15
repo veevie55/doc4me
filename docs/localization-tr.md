@@ -1,6 +1,6 @@
 # Turkish interface
 
-> **Last reviewed:** 2026-11-06 · **Last updated:** 2026-11-06 · **Change:** minor (Turkish catalog now has 3,031 parsed keys; native-speaker review remains open) · **Target:** Doc4Me 1.1.3
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (checked against Doc4Me 1.1.4; the Turkish catalog has 3,031 parsed keys and native-speaker review remains open) · **Target:** Doc4Me 1.1.4
 
 Choose **File › Options › Interface language › Türkçe**, or follow a Turkish system display language
 (`tr-TR`, `tr-CY`, `tr_TR.UTF-8`). The catalog code is `tr`; `ui.language` with `{"value":"tr"}`

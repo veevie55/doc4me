@@ -1,10 +1,12 @@
-# Current handoff · 2026-11-14
+# Current handoff · 2026-11-15
 
 CI `cargo xtask ci` passes 6/6 on the current change set (fmt, clippy, workspace tests, assets, dependency layers, wasm). The readiness report generator now lists every non-passing row rather than the first 40; added bilingual blocker assessments for all 144 current layout failures and a Thai companion report generated from the official Windows summary. The explanations record measured differences and whether cause is verified; criteria, TSV rows, weights, 220-document corpus, 22 deferred and 24 excluded are unchanged.
 
 Latest official Windows measurement: [run 43619305678](https://github.com/veevie55/doc4me/actions/runs/43619305678), source `4ecc270`, report `162704b`: **93.2% overall / 95.1% without deferred**, pages **188/220**, boundaries **108/220**. The remaining non-deferred failures are 32 page-count and 112 page-boundary checks; exact-match readiness is still below 100%. The Windows measurement completed successfully in run 43619305678; Actions committed the English and Thai reports as `162704b`.
 
-Release v1.1.4 is the latest release; this task refreshes its tag/assets from current `main` and keeps cumulative notes ordered v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0. The release workflow has an explicit update-existing-release path that checks the tag commit, replaces MSI/ZIP assets and cumulative notes, and preserves the release identity. The previous 1.1.1, 1.1.2 and 1.1.3 releases remain restored.
+Release v1.1.4 is the latest release; its tag/assets were refreshed from current `main` and cumulative notes are ordered v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0. The release workflow has an explicit update-existing-release path that checks the tag commit, replaces MSI/ZIP assets and cumulative notes, and preserves the release identity. The previous 1.1.1, 1.1.2 and 1.1.3 releases remain restored.
+
+The documentation and all 13 UI screenshots were refreshed against the shipped v1.1.4 source on 2026-11-15; the historical handoff snapshots below remain unchanged.
 
 ---
 

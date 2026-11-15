@@ -6,17 +6,16 @@ Doc4Me is a clean-room, open-source word processor written in Rust. It aims for 
 with Microsoft Word, then goes further on speed, openness and agent control: every feature is a
 command that scripts and AI agents can run, over a local control channel or MCP.
 
-The current version is **1.1.3**, still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
-The latest recorded Windows measurement (11 November 2026) is **92.7%**, or **94.5% excluding 22 deferred checks**.
-All 220 corpus documents open and round-trip; page counts match for 181/220 and page boundaries for 99/220.
-Pagination and translation quality still have limits; see the [measurement](docs/readiness.md) and [remaining gaps](docs/gaps.md).
+The latest version is **1.1.4**, still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
+The latest official Windows measurement (14 November 2026) is **93.2%**, or **95.1% excluding 22 deferred checks**.
+All 220 corpus documents open and round-trip; page counts match for 188/220 and page boundaries for 108/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
 
 ![Doc4Me with the built-in sample document](docs/images/hero.png)
 
 ## Download
 
 Windows x64 builds (an MSI installer and a portable zip) are on the
-[Releases](https://github.com/chatraweechai/doc4me/releases) page. They are not code-signed yet, so
+[Releases](https://github.com/veevie55/doc4me/releases) page. They are not code-signed yet, so
 Windows SmartScreen may ask before it runs them. The MSI installs over earlier Doc4Me versions.
 
 Windows ARM64, macOS, Linux, FreeBSD, and the Web App have separate workflows to build the source you choose.
@@ -26,7 +25,7 @@ Local packaging scripts are in [`packaging/`](packaging/).
 
 Open this repository's [Actions](https://github.com/veevie55/doc4me/actions), select a workflow, then choose **Run workflow**.
 Keep **Use workflow from: main** to use the current build instructions. Set **ref** to `main` for the latest code,
-`v1.1.3` for the released source, or the branch, tag, or commit SHA you want to build.
+`v1.1.4` for the released source, or the branch, tag, or commit SHA you want to build.
 
 | Workflow | Target | Files under the run's Artifacts |
 |---|---|---|
@@ -60,6 +59,7 @@ you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.m
   LibreTranslate server), Online Pictures (Creative Commons pictures from Openverse, credited),
   Ink Equation and Get Add-ins.
 - Since 1.1.3: the desktop app bundles fonts with the same metrics as Word's core fonts (Carlito for Calibri, Caladea for Cambria, Arimo for Arial, Tinos for Times New Roman, Cousine for Courier New; OFL 1.1), used when the computer lacks the original, so lines and pages break closer to Word.
+- Since 1.1.4: table commands select cells, rows and columns; edit borders; add or remove rows and columns; repeat headers; and split tables. The internal Doc4Me clipboard preserves tables, pictures, shapes, text boxes and other supported objects with their dependencies. See the [table and clipboard audit](docs/readiness/table-clipboard-audit-2026-11-13.md) for coverage and limits.
 - Light and dark themes; in the dark theme the page stays white.
 - `doc4me-cli` converts and edits documents without a window, and `doc4me-cli mcp` serves every
   command to AI agents ([docs/mcp.md](docs/mcp.md)).
@@ -67,7 +67,7 @@ you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.m
 ### Kerning and ligatures
 
 The Font dialog's Advanced page sets "Kerning for fonts", ligatures, and character spacing.
-In 1.1.3, the spacing buttons step by 0.1 pt; these settings are stored in `.docx`. Without them, text gets Word's defaults: no kerning, and no ligatures in Latin text
+Since 1.1.3, the spacing buttons step by 0.1 pt; these settings are stored in `.docx`. Without them, text gets Word's defaults: no kerning, and no ligatures in Latin text
 (complex scripts such as Arabic and Thai always use their font's ligatures).
 
 ![The Advanced page of the Font dialog, with Kerning for fonts and Ligatures](docs/images/font.png)
@@ -76,13 +76,13 @@ In 1.1.3, the spacing buttons step by 0.1 pt; these settings are stored in `.doc
 
 ![Doc4Me in the dark theme](docs/images/dark.png)
 
-### About Doc4Me 1.1.3
+### About Doc4Me 1.1.4
 
 The About dialog shows the version and developer. The screenshots on this page were regenerated from
 the actual app with [`ui_shot`](crates/ui-egui/examples/ui_shot.rs); their scripts are in
 [`docs/images/shots/`](docs/images/shots/).
 
-![The About dialog in Doc4Me 1.1.3](docs/images/about.png)
+![The About dialog in Doc4Me 1.1.4](docs/images/about.png)
 
 ## Build from source
 

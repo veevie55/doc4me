@@ -1,6 +1,6 @@
 # Deferred readiness: active work and verification
 
-Reviewed 2026-11-14. This plan documents the recorded prerequisites and evidence for the 22 deferred rows. They remain not passing in the overall score and are omitted only from the separately displayed without-deferred score; no status, criteria or exclusion changed here. The latest official measurement is Windows run 43619305678 (source `4ecc270`, report `162704b`).
+Reviewed 2026-11-15; the latest official report remains the 2026-11-14 Windows run. This plan documents the recorded prerequisites and evidence for the 22 deferred rows. They remain not passing in the overall score and are omitted only from the separately displayed without-deferred score; no status, criteria or exclusion changed here. The latest official measurement is Windows run 43619305678 (source `4ecc270`, report `162704b`).
 
 ## Dialogs (12)
 

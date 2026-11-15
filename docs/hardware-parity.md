@@ -1,6 +1,6 @@
 # Hardware parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-07 · **Last updated:** 2026-11-07 · **Change:** minor (the current branch adds a scale-aware multi-monitor window-geometry comparison and regression tests; physical Windows multi-monitor verification remains deferred) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (reviewed against Doc4Me 1.1.4 and the latest Windows readiness report; physical device checks remain deferred where listed) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Deferred work was explicitly resumed. Native printing, pressure-sensitive ink and scanner/camera acquisition still have implementation gaps in addition to unavailable physical devices; multi-monitor and microphone checks require physical Windows verification. See [the 22-row completion plan](readiness/deferred-plan.md).
 
