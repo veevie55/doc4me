@@ -7,8 +7,8 @@ Doc4Me เป็นโปรแกรมประมวลผลคำแบบ�
 และการสั่งงานด้วยเอเจนต์ ทุกความสามารถเป็นคำสั่งที่สคริปต์และเอเจนต์ AI เรียกใช้ได้ ผ่านช่องทางควบคุมในเครื่องหรือ MCP
 
 เวอร์ชันล่าสุดคือ **1.1.4** และยังอยู่ในระยะ **alpha** ดูความคืบหน้าที่ [ROADMAP.md](ROADMAP.md)
-ผลวัด Windows ทางการล่าสุด (run 43701689470, source `fd465e8`): **92.9%** หรือ **94.8% เมื่อไม่นับ 22 รายการ deferred**
-คลังเอกสาร 220 ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง 188/220 และขอบเขตหน้าตรง 99/220
+ผลวัด Windows ทางการล่าสุด (run 43727351543, source `f01f7b6`): **93.0%** หรือ **94.9% เมื่อไม่นับ 22 รายการ deferred**
+คลังเอกสาร 220 ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง 190/220 และขอบเขตหน้าตรง 99/220
 ดู [ผลวัด readiness](docs/readiness.md) และ [การประเมิน blocker ภาษาไทย](docs/readiness/blockers-2026-11-14.th.md) สำหรับรายการที่ยังไม่ผ่านและหลักฐาน
 
 ![หน้าจอภาษาไทยของ Doc4Me กับเอกสารภาษาไทย](docs/images/thai.png)
@@ -54,7 +54,7 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 ไฟล์ build ของ workflow สร้างแพ็กเกจทั้งเจ็ดรายการอยู่ใน **Artifacts** ของ run นั้น 14 วัน พร้อม `SOURCE_COMMIT.txt` ระบุ commit ที่ใช้จริง
 workflow Pages ใช้ `ref` ที่เลือกเพื่อ build แล้วแทนที่เว็บไซต์ปัจจุบันเมื่อ deploy สำเร็จ; เลือก **Use workflow from: main** เพื่อใช้ workflow ล่าสุด
 workflow Windows สำหรับแพ็กเกจและ readiness ใช้ชุดฟอนต์ OFL ที่ pin เดียวกัน และตรวจ hash ของฟอนต์เพิ่มเติมก่อน build; ดูรายละเอียด revision และใบอนุญาตใน [docs/releasing.md](docs/releasing.md)
-ผลวัด Windows ล่าสุด (run [43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`): readiness 92.9% รวม /94.8% ไม่รวม 22 deferred, จำนวนหน้า 188/220 และขอบเขตหน้า 99/220; ยังมี page-count 32 รายการและ boundary 121 รายการที่ไม่ผ่าน ตาม [รายงาน](docs/readiness.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).
+ผลวัด Windows ล่าสุด (run [43727351543](https://github.com/veevie55/doc4me/actions/runs/43727351543), source `f01f7b6`): readiness 93.0% รวม /94.9% ไม่รวม 22 deferred, จำนวนหน้า 190/220 และขอบเขตหน้า 99/220; ยังมี page-count 30 รายการและ boundary 121 รายการที่ไม่ผ่าน ตาม [รายงาน](docs/readiness.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).
 Windows ARM64 ยังไม่ลงลายเซ็นดิจิทัล และ macOS ลงลายเซ็นแบบ ad-hoc โดยยังไม่ notarize
 Web App ใช้ ZIP ที่แตกแล้วให้บริการผ่าน HTTP(S) ได้ หรือสั่ง workflow Pages เพื่อเผยแพร่เว็บไซต์; ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
 

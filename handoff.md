@@ -1,3 +1,29 @@
+# Active request: additional page-count matches, then v1.1.4 refresh · 2026-11-15
+
+The user has now explicitly re-authorized publication: improve page counts against reference further, then refresh release 1.1.4 from the latest code. This supersedes the earlier publication cancellation below. Preserve the release URL/ID, replace MSI and portable ZIP only after gates, update v1.1.4 tag to the exact tested main source, and include cumulative six-version notes through 1.0.0. Freeze main during publishing.
+
+Accepted candidate is limited to blank background panels anchored to page/margin: separate natural/minimum fit height from painted insets, keep all content-bearing table and paragraph-anchor pagination rules. Focused tests **6/6**, including content controls and tall 80-row tables under all anchors. Final prepared CLI comparison **189→190/220 on Linux**: only zenodo-136 26→25, other 219 unchanged; no pass regresses. All 440 corpus hashes verified. The broad earlier experiment that moved zenodo-053 59→57 was rejected; accepted code leaves it 59. Cover text/images now on page 1; blue panel height and rule still visually differ from reference, so no pixel/full-boundary equivalence claim.
+
+Current full CI `/workspace/work/page-float-ci-final-guard.log` **passed 6/6**, native **2,555 pass / 1 existing ignored**, assets 141, layers 20, wasm 16; earlier CI processes were superseded/cancelled after source changes and are not final validation. Prepared tests/build/comparison logs `/workspace/work/page-float-{tests,cli}-final-guard.log`, `/workspace/work/page-float-comparison-final.log`; audit `docs/readiness/page-float-2026-11-15.md`. Code stats now 238,639 lines / 2,564 test attributes; native harness count 2,555 confirmed from final CI. No new font/dependency/schema/criterion/reference/exclusion/deferred change.
+
+Next: complete final CI, commit/push to main, dispatch Windows readiness, refresh all current summaries + auto-generated EN/TH blockers and TSV; then move pending changelog entries into existing 1.1.4 section, verify release gates, push prepared source, move tag with exact force-with-lease from old tag 9f8d26f01ed33869fa28985f30137dacf6a15a84, dispatch installer update_release=true commit=full tested SHA, freeze main until success and verify downloaded assets/hash/notes using `/workspace/work/verify_release_refresh.py`.
+
+---
+
+# Publication cancelled by user · 2026-11-15
+
+The user explicitly cancelled publishing v1.1.4. **Do not move the version tag, replace release assets, or run a publishing workflow unless newly requested.** No installer/release workflow was dispatched for this refresh; tag v1.1.4 remains `9f8d26f01ed33869fa28985f30137dacf6a15a84`, and existing release assets were not changed. Changelog pending changes remain Unreleased; the previous released sections are preserved.
+
+Continue the remaining page-count work under the existing scope. Latest official Windows run **43727351543**, source `f01f7b6`, report `4d70b3c`: **93.0% overall / 94.9% without 22 deferred**, pages **190/220**, boundaries **99/220**; open/round-trip/stability **220/220**. Remaining failures: 30 page-count / 121 boundaries; EN/TH blockers and TSV agree. No criteria/reference/exclusion/deferred changes.
+
+Language audit **65/65 pass** and dependency audit **exit 0**, five existing unmaintained warnings (none suppressed), logged in `/workspace/work/release-refresh-{language,audit}.log`. CI was interrupted by an environment reset; the in-progress fresh full run is `/workspace/work/release-refresh-ci-restarted.log` (do not infer completion from the interrupted log). RAM cache was recreated; app/CLI cache directories spill to `/workspace/deps/cargo-spill`.
+
+Read-only investigation while CI rebuilds: `/workspace/work/remaining-page-inventory.json` covers all 30 official page-count failures using the immutable corpus and existing prepared CLI. Linux zenodo-114 has 71 pages versus Windows 70. `govuk-036` differs by a blank second reference page: check even/odd headers with section page-number restart 1. `zenodo-136` starts with a nearly page-high floating background table; source row height 16836 twips exceeds body height, causing `place_table` to choose the in-flow branch. In temporary DOCX copies only, lowering height to 14000 or 12000 twips restores cover text to page 1 and yields 25 instead of 26 pages. No corpus input was edited; a general positioned-table fix still needs implementation and full corpus regression checks. `/workspace/work/remaining-font-line-audit.json` stores numeric original font line metrics; `/workspace/work/windows-font-resolution-43727351543.json` stores sanitized actual Windows substitution diagnostics. Treat DOCX altName diagnostics separately from direct font resolver tests.
+
+Earlier entries below are historical; their release authorizations are superseded by this cancellation.
+
+---
+
 # Current page-count handoff · 2026-11-15
 
 Scope remains the remaining page-count cases only. Read [current font/section-marker audit](docs/readiness/latin-metrics-2026-11-15.md) and its 220-row comparison. Linux prepared-font page-count matches rise **187→189/220** versus source `6d257ac`; only zenodo-095 (9→10, reference 10) and zenodo-149 (40→28, reference 28) change. No previously passing page-count row regresses. This is not a new official Windows readiness score. No corpus/reference, exclusion, deferred row or threshold changes.

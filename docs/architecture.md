@@ -1,13 +1,13 @@
 # Doc4Me architecture
 
-**Page-count follow-up · 2026-11-15 (Linux, Windows remeasurement pending):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Official Windows readiness above remains unchanged until the next measurement; no criteria, references, exclusions or deferred rows changed.
+**Page-count follow-up · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added manual Windows x86 and x64 artifact workflows; latest official Windows run 43701689470, source `fd465e8`, report `2a5a0b0`: 92.9% overall / 94.8% without 22 deferred; page counts 188/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added manual Windows x86 and x64 artifact workflows; latest official Windows run 43727351543, source `f01f7b6`, report `4d70b3c`: 93.0% overall / 94.9% without 22 deferred; page counts 190/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-15:** ผลทางการจาก [run 43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report `2a5a0b0`: **92.9% รวม / 94.8% ไม่นับ 22 deferred**; pages **188/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 32 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-15:** ผลทางการจาก [run 43727351543](https://github.com/veevie55/doc4me/actions/runs/43727351543), source `f01f7b6`, report `4d70b3c`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **190/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 30 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
-The latest official Windows readiness report is run 43701689470, source `fd465e8`, report commit `2a5a0b0`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
+The latest official Windows readiness report is run 43727351543, source `f01f7b6`, report commit `4d70b3c`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
 `plan/architecture.md` are gitignored and local to the original author's machine; this file is the
 committed, current summary. Rules for working in the code are in [`AGENTS.md`](../AGENTS.md).
 
@@ -20,26 +20,26 @@ winit or rfd.
 
 | Layer | Crate | Lines | Job |
 |---|---|---|---|
-| L0 | `geom` | 0.3k | Units (points, twips, EMU, inches, cm), rectangles, measurement parsing |
-| L1 | `doc` | 18.0k | Document model: stories, paragraphs, runs, tables, sections, styles, numbering, fields, notes, comments, revisions, equations (OMML-shaped math tree, linear/LaTeX input); edit primitives; bidi |
-| L1 | `fonts` | 5.5k | Font database (bundled OFL + system fonts), metrics, outlines, shaping with HarfRust, Word font substitution (`word.rs`: Carlito ↔ Calibri, Caladea ↔ Cambria, Liberation ↔ Arial/Times/Courier), OpenType MATH |
-| L1 | `metafile` | 2.9k | Windows Metafile (WMF/EMF) parser to neutral paths and bitmap model |
-| L1 | `proof` | 5.0k | Proofing per language (`ProofLang` from a run's `w:lang`): English (public-domain word list), Polish (installed Hunspell dictionary through a Hunspell-style affix engine) and Thai (common misspellings) spelling and suggestions, rule-based grammar for English and Polish, hyphenation dictionary and Liang patterns (English, Polish) |
-| L2 | `layout` | 21.1k | Shaping runs, line breaking, tabs, lists, tables (row splitting, floating tables), pagination, headers/footers, notes, floating objects and wrap, math layout, fields, hit testing; produces a display list |
-| L2 | `docx` | 24.3k | OOXML WordprocessingML reader and writer (Transitional and Strict namespaces, `.docx/.docm/.dotx/.dotm`), OMML, custom properties, VBA parts preserved |
-| L2 | `docbin` | 5.9k | Word 97-2003 `.doc` reader ([MS-DOC]: FIB, piece table, FKPs, SPRMs, stylesheet, lists, tables, notes, pictures) over a CFB container |
-| L2 | `formats` | 12.5k | TXT, Markdown, HTML, RTF, ODT and LaTeX import/export through a shared intermediate model |
-| L3 | `render` | 2.1k | vello_cpu rasteriser: pages and thumbnails from the display list; PNG/JPEG |
-| L3 | `pdf` | 2.4k | krilla PDF export: font subsets, selectable text, links, outline, tagging |
-| L4 | `engine` | 51.5k | `Session` (document, selection, undo, layout cache, view state), **command registry** (727 registered engine command specs, verified by `doc4me-cli commands --json`), Word feature catalog (`catalog.rs`), samples, file I/O dispatch (`io.rs`), Read Aloud sentence model |
-| L4 | `zotero` | 1.7k | Zotero's word-processor integration protocol answered against a `Session` |
+| L0 | `geom` | 1.0k | Units (points, twips, EMU, inches, cm), rectangles, measurement parsing |
+| L1 | `doc` | 20.5k | Document model: stories, paragraphs, runs, tables, sections, styles, numbering, fields, notes, comments, revisions, equations (OMML-shaped math tree, linear/LaTeX input); edit primitives; bidi |
+| L1 | `fonts` | 7.3k | Font database (bundled OFL + system fonts), metrics, outlines, shaping with HarfRust, Word font substitution (`word.rs`: Carlito ↔ Calibri, Caladea ↔ Cambria, Liberation ↔ Arial/Times/Courier), OpenType MATH |
+| L1 | `metafile` | 3.6k | Windows Metafile (WMF/EMF) parser to neutral paths and bitmap model |
+| L1 | `proof` | 5.1k | Proofing per language (`ProofLang` from a run's `w:lang`): English (public-domain word list), Polish (installed Hunspell dictionary through a Hunspell-style affix engine) and Thai (common misspellings) spelling and suggestions, rule-based grammar for English and Polish, hyphenation dictionary and Liang patterns (English, Polish) |
+| L2 | `layout` | 23.6k | Shaping runs, line breaking, tabs, lists, tables (row splitting, floating tables), pagination, headers/footers, notes, floating objects and wrap, math layout, fields, hit testing; produces a display list |
+| L2 | `docx` | 26.3k | OOXML WordprocessingML reader and writer (Transitional and Strict namespaces, `.docx/.docm/.dotx/.dotm`), OMML, custom properties, VBA parts preserved |
+| L2 | `docbin` | 7.3k | Word 97-2003 `.doc` reader ([MS-DOC]: FIB, piece table, FKPs, SPRMs, stylesheet, lists, tables, notes, pictures) over a CFB container |
+| L2 | `formats` | 14.1k | TXT, Markdown, HTML, RTF, ODT and LaTeX import/export through a shared intermediate model |
+| L3 | `render` | 2.5k | vello_cpu rasteriser: pages and thumbnails from the display list; PNG/JPEG |
+| L3 | `pdf` | 2.6k | krilla PDF export: font subsets, selectable text, links, outline, tagging |
+| L4 | `engine` | 56.6k | `Session` (document, selection, undo, layout cache, view state), **command registry** (727 registered engine command specs, verified by `doc4me-cli commands --json`), Word feature catalog (`catalog.rs`), samples, file I/O dispatch (`io.rs`), Read Aloud sentence model |
+| L4 | `zotero` | 2.1k | Zotero's word-processor integration protocol answered against a `Session` |
 | L4 | `control-key` | 0.1k | Per-window control-port key files shared by the app and the MCP bridge |
-| L5 | `mcp` | 1.2k | MCP server: every command as a tool; headless or bridged to the running app |
-| L6 | `ui-egui` | 54.1k | Word-style front end: ribbon, keytips, mini-toolbar, Backstage, canvas, rulers, panes, dialogs, Equation tab, i18n catalogs, themes, control channel, headless `ui_shot` example |
-| apps | `doc4me` | 3.7k | Desktop app (eframe + wgpu; logging, window geometry, file associations) |
+| L5 | `mcp` | 1.6k | MCP server: every command as a tool; headless or bridged to the running app |
+| L6 | `ui-egui` | 55.8k | Word-style front end: ribbon, keytips, mini-toolbar, Backstage, canvas, rulers, panes, dialogs, Equation tab, i18n catalogs, themes, control channel, headless `ui_shot` example |
+| apps | `doc4me` | 3.9k | Desktop app (eframe + wgpu; logging, window geometry, file associations) |
 | apps | `doc4me-cli` | 0.7k | `convert`, `text`, `inspect`, `run`, `commands`, `parity`, `mcp`, `zotero` |
 | apps | `doc4me-web` | 0.7k | Browser build (eframe web runner, WebGPU with WebGL2 fallback) |
-| xtask | `xtask` | 2.9k | Workspace automation, CI, readiness measurements, reports and development tools |
+| xtask | `xtask` | 3.0k | Workspace automation, CI, readiness measurements, reports and development tools |
 
 ## Data flow
 
@@ -58,7 +58,7 @@ winit or rfd.
 
 ## Testing and gates
 
-- 2,543 native tests passed (2,552 source test attributes), covering
+- 2,555 native tests passed (2,564 source test attributes), covering
   input, `.doc`, formats, typing parity (`engine/src/tests_typing.rs`), bidi, i18n catalogs, UI
   interaction (egui_kittest), MCP acceptance; `hostile_params_never_panic` runs every command with
   junk params.
@@ -75,6 +75,7 @@ winit or rfd.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-15 | minor | Added separate manual Windows x86 and x64 artifact workflows, with source SHA provenance; corrected the current workflow inventory. |
 | 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |
 | 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source `8797e66` in run 43609090751: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table changes are included in this measurement. |

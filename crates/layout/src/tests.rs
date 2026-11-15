@@ -3445,33 +3445,59 @@ fn floating_tables_take_no_room_and_text_wraps_beside_them() {
 }
 
 #[test]
+fn page_sized_floating_table_keeps_cover_text_on_the_same_page() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    for v_rel in [Anchor::Page, Anchor::Margin] {
+        for blank in [true, false] {
+            let mut d = Document::from_text("Cover beside the background panel.");
+            let mut t = Table::new(1, 1, 100.0);
+            t.rows[0].props.height = Some(791.9);
+            t.props.cell_margins = Some([5.0, 5.4, 5.0, 5.4]);
+            if !blank {
+                t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Inside", Default::default()))];
+            }
+            t.props.float =
+                Some(TableFloat { h_rel: Anchor::Page, v_rel, y: if v_rel == Anchor::Margin { -72.0 } else { 0.0 }, ..Default::default() });
+            d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+            let l = lay(&d);
+            let page = usize::from(!blank);
+            assert_eq!(l.pages.len(), page + 1, "{v_rel:?}, blank={blank}: only a blank panel may bleed its insets beyond the page");
+            assert!(l.pages[page].items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, path, .. } if path.0 == [1])));
+        }
+    }
+}
+
+#[test]
 fn a_floating_table_taller_than_a_page_runs_across_pages() {
     use doc4me_doc::para::Anchor;
     use doc4me_doc::props::TableFloat;
-    let mut d = Document::from_text("After the table.");
-    let mut t = Table::new(80, 1, 300.0);
-    for (i, r) in t.rows.iter_mut().enumerate() {
-        r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
-    }
-    t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, x: -30.0, overlap: false, ..Default::default() });
-    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
-    let l = lay(&d);
-    assert!(l.pages.len() >= 2, "{} page(s)", l.pages.len());
-    // Every row is drawn on a page, none past a page's bottom margin, and all from the table's
-    // own left edge.
-    let mut rows = 0;
-    for p in &l.pages {
-        for it in &p.items {
-            if let Placed::Lines { x, y, story: StoryRef::Body, path, .. } = it
-                && path.0.len() > 1
-            {
-                rows += 1;
-                assert!(*y < 792.0 - 72.0, "row drawn at {y}, below the bottom margin");
-                assert!(*x < 72.0, "row text at {x}, not from the table's edge 30pt left of the margin");
+    for v_rel in [Anchor::Paragraph, Anchor::Page, Anchor::Margin] {
+        let mut d = Document::from_text("After the table.");
+        let mut t = Table::new(80, 1, 300.0);
+        for (i, r) in t.rows.iter_mut().enumerate() {
+            r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel, x: -30.0, overlap: false, ..Default::default() });
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "{} page(s)", l.pages.len());
+        // Every row is drawn on a page, none past a page's bottom margin, and all from the table's
+        // own left edge.
+        let mut rows = 0;
+        for p in &l.pages {
+            for it in &p.items {
+                if let Placed::Lines { x, y, story: StoryRef::Body, path, .. } = it
+                    && path.0.len() > 1
+                {
+                    rows += 1;
+                    assert!(*y < 792.0 - 72.0, "row drawn at {y}, below the bottom margin");
+                    assert!(*x < 72.0, "row text at {x}, not from the table's edge 30pt left of the margin");
+                }
             }
         }
+        assert_eq!(rows, 80);
     }
-    assert_eq!(rows, 80);
 }
 
 /// #534: a table placed on the page (`w:tblpPr w:vertAnchor="page"`) whose anchor comes after a

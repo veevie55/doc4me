@@ -22,6 +22,10 @@ pub struct TableLayout {
     /// Table x offset within the column.
     pub x: f32,
     pub width: f32,
+    /// Height for fitting a positioned table: natural cell height or the specified row minimum,
+    /// before the extra cell insets added to minimum-height rows. Painted rows keep their full
+    /// height, including those insets, so a page-sized background can bleed across the edge.
+    pub float_fit_height: f32,
     pub rows: Vec<RowLayout>,
 }
 
@@ -490,6 +494,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     }
     let mut rows: Vec<Vec<CellBox>> = Vec::with_capacity(nrows);
     let mut heights: Vec<f32> = Vec::with_capacity(nrows);
+    let mut float_heights: Vec<f32> = Vec::with_capacity(nrows);
     // Rows Word doesn't show while hidden text isn't shown: the end-of-row mark is hidden and so
     // is everything in the row. They take no room and draw nothing (their cells are still laid
     // out, so list numbers count on as before).
@@ -639,6 +644,11 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         }
         // Word adds the cells' top and bottom margins and border bands to an at-least row height:
         // a 30pt row with 5pt margins and 0.5pt borders is 40.5pt tall even when its text needs less.
+        let float_rh = match (row.props.height, row.props.height_rule) {
+            (Some(h), HeightRule::Exact) if h > 0.0 => h,
+            (Some(h), _) if h > 0.0 => rh.max(h),
+            _ => rh,
+        };
         let rh = match (row.props.height, row.props.height_rule) {
             (Some(h), HeightRule::Exact) if h > 0.0 => h,
             (Some(h), _) if h > 0.0 => rh.max(h + row_insets),
@@ -649,6 +659,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             cells.iter_mut().for_each(|c| c.h = 0.0);
         }
         heights.push(if row_hidden { 0.0 } else { rh.max(4.0) });
+        float_heights.push(if row_hidden { 0.0 } else { float_rh.max(4.0) });
         hidden_rows.push(row_hidden);
         rows.push(cells);
     }
@@ -669,6 +680,9 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 && let Some(last) = heights.get_mut(grow)
             {
                 *last += h - have;
+                if let Some(fit) = float_heights.get_mut(grow) {
+                    *fit += h - have;
+                }
             }
         }
     }
@@ -800,7 +814,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         }
         out.push(RowLayout { height: rh, items });
     }
-    TableLayout { x, width: total, rows: out }
+    TableLayout { x, width: total, float_fit_height: float_heights.iter().sum(), rows: out }
 }
 
 /// Split a row at `cut` (points below the row's top) so the part above fits on this page.

@@ -3671,7 +3671,18 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         // so the edge sits a cell margin further out.
         let legacy = if ctx.doc.settings.compat_mode < 15 { table::first_cell_left_margin(ctx, t) } else { 0.0 };
         let h: f32 = tl.rows.iter().map(|r| r.height).sum();
-        if h <= pb.uncapped_bottom() - pb.top + 0.01 {
+        // A blank page/margin-positioned background can extend through the margins, like a
+        // page-positioned drawing (zenodo-136). Its minimum-height insets may bleed across the
+        // page edge. Content-bearing tables and paragraph anchors retain the body-height limit
+        // and the existing split path, so this cannot clip table text onto a single page.
+        let blank_panel = matches!(f.v_rel, Anchor::Page | Anchor::Margin)
+            && t.rows
+                .iter()
+                .flat_map(|r| &r.cells)
+                .flat_map(|c| &c.blocks)
+                .all(|b| matches!(&**b, Block::Para(p) if p.text.is_empty() && p.objects.is_empty()));
+        let fits = if blank_panel { tl.float_fit_height <= pb.sect.page_h + 0.01 } else { h <= pb.uncapped_bottom() - pb.top + 0.01 };
+        if fits {
             place_floating_table(pb, &tl, &f, legacy, block, body_top);
             return;
         }
