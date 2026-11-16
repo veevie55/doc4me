@@ -7,8 +7,8 @@ with Microsoft Word, then goes further on speed, openness and agent control: eve
 command that scripts and AI agents can run, over a local control channel or MCP.
 
 Doc4Me is still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
-The latest official Windows measurement (run 43880197807) is **93.5%**, or **95.4% excluding 22 deferred checks**.
-All 220 corpus documents open and round-trip; page counts match for 202/220 and page boundaries for 104/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
+The latest official Windows measurement (run 43886112079) is **93.6%**, or **95.5% excluding 22 deferred checks**.
+All 220 corpus documents open and round-trip; page counts match for 203/220 and page boundaries for 104/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
 
 ![Doc4Me with the built-in sample document](docs/images/hero.png)
 
@@ -50,7 +50,7 @@ Windows package and readiness workflows use the same pinned OFL font set and ver
 additional corpus fonts before building. See [docs/releasing.md](docs/releasing.md) for the pinned
 revisions and licence details.
 
-Latest Windows measurement: [run 43880197807](https://github.com/veevie55/doc4me/actions/runs/43880197807); readiness is 93.5% overall / 95.4% without 22 deferred rows, with page counts 202/220 and page boundaries 104/220. There are still 18 page-count and 116 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
+Latest Windows measurement: [run 43886112079](https://github.com/veevie55/doc4me/actions/runs/43886112079); readiness is 93.6% overall / 95.5% without 22 deferred rows, with page counts 203/220 and page boundaries 104/220. There are still 17 page-count and 116 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
 
 No workflow publishes a GitHub Release; the repository owner publishes Releases by hand from the run's Artifacts.
 See [docs/releasing.md](docs/releasing.md) for platform requirements.
