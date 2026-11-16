@@ -1,3 +1,12 @@
+# Status after v1.1.4 refresh #2 · 2026-11-16
+
+- **Release v1.1.4 refreshed** by run 43802874365 (update_release, commit `e5d82d6`): same release ID 445039704; the workflow moved tag v1.1.4 (lightweight now) to `e5d82d6` because this session's git proxy refuses tag pushes (HTTP 403). Assets verified: MSI sha256 `39cd0066…5d41`, ZIP `bd47c746…58ad` match the API digests; `doc4me.exe` embeds build SHA `e5d82d6…`; CLI reports 1.1.4; notes 121,381 bytes, six versions newest-first, include “รอบที่ 2”.
+- **GitHub Pages** redeployed by run 43802877585 from `e5d82d6`; https://veevie55.github.io/doc4me/SOURCE_COMMIT.txt = `e5d82d6…`.
+- **After the release (main only, not in the release):** Garamond widths/line `093eaba` (Linux 197→198), AutoFormat “1. ”→Thai numbered list `2e9a1e8`. Windows readiness run 43804632296 on `093eaba` (Overpass + Garamond) was still running at handoff; its workflow now also rewrites README numbers (`tools/readiness_readme.py`). Refresh live summaries/audits (Overpass, Garamond) from its report.
+- **Open leads:** govuk-053 (Word lets the last body lines reach into a tall footer whose top is set by framed page number + Footer paragraphs with Normal's 12 pt space before; conflicts with `multiple_spacing_can_put_leading_in_the_margin_but_not_in_a_tall_footer` — needs evidence before changing), zenodo-125 (floating figure placement), zenodo-003 (20% justification cap edge), zenodo-069/022 (Word drew Calibri for Overpass).
+
+---
+
 # v1.1.4 refresh #2 + AutoFormat + page counts · 2026-11-16
 
 User authorized (this session): refresh existing release v1.1.4 and redeploy the GitHub Pages Web App from latest code; add AutoFormat (Thai digits) switch beside AutoSave; keep README readiness numbers in sync; continue page counts.
