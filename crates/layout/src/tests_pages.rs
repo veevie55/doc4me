@@ -658,3 +658,33 @@ fn a_wingdings_bullet_keeps_wingdings_line() {
         assert!((with_bullet - calibri).abs() < 0.01, "{bullet:?}: {with_bullet} against Calibri's {calibri}");
     }
 }
+
+/// An empty paragraph that only ends a continuous section takes no room, not even its spacing:
+/// zenodo-125's Normal (Web) section marks with automatic spacing leave 14 pt between the
+/// paragraphs around them in Word's PDF, not 28. The paragraph before keeps its space after.
+#[test]
+fn an_empty_continuous_section_mark_takes_no_room_or_spacing() {
+    let gap = |mark: bool| {
+        let auto = |text: &str| {
+            let mut p = Paragraph::with_text(text, Default::default());
+            p.props.space_before_auto = Some(true);
+            p.props.space_after_auto = Some(true);
+            p
+        };
+        let mut d = Document::from_text("");
+        let mut body = vec![auto("Intro")];
+        if mark {
+            let mut m = Paragraph::with_text("", Default::default());
+            m.section = Some(Box::new(doc4me_doc::SectionProps { start: doc4me_doc::section::SectionStart::Continuous, ..Default::default() }));
+            body.push(m);
+        }
+        body.push(auto("Text"));
+        d.body = body.into_iter().map(para_block).collect();
+        d.last_section.start = doc4me_doc::section::SectionStart::Continuous;
+        let l = lay(&d);
+        let n = d.body.len();
+        let top = |i: usize| l.caret(&Pos { story: StoryRef::Body, path: Path::top(i), off: 0 }).unwrap().top;
+        top(n - 1) - top(0)
+    };
+    assert!((gap(true) - gap(false)).abs() < 0.01, "the mark adds nothing: {} vs {}", gap(true), gap(false));
+}

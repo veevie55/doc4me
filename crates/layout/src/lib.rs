@@ -1488,6 +1488,10 @@ struct PageBuilder<'a> {
     /// The paragraph placed last: its style, whether it has contextual spacing, its space after,
     /// and whether it is a list item with automatic space after.
     prev: Option<(String, bool, f32, PrevList)>,
+    /// The column top is where a continuous section break started new columns below text on
+    /// the page: the paragraph there still collapses its space before with the space after of
+    /// the paragraph before the break (zenodo-125: 14 pt between them in Word's PDF, not 28).
+    continuous_top: bool,
     /// The page was started by a page break that ended the paragraph before (its mark stayed on
     /// the page before): the next paragraph at the top of this page drops its space before.
     after_break: bool,
@@ -2104,6 +2108,7 @@ fn layout_pass(
         carry: Vec::new(),
         orig_bottom: 0.0,
         prev: None,
+        continuous_top: false,
         after_break: false,
         excl: Vec::new(),
         float_tables: Vec::new(),
@@ -2234,6 +2239,7 @@ fn layout_pass(
             pb.top = pb.text_bottom().max(floats_bottom);
             pb.y = pb.top;
             pb.max_y = pb.top;
+            pb.continuous_top = true;
         }
         prev_turn = turn;
         pb.foot_top = foot_top;
@@ -3156,6 +3162,13 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     if pl.rp.page_break_before && !pb.at_page_top() && !pb.web {
         pb.new_page(block, body_top);
     }
+    // An empty paragraph that only ends a continuous section takes no room in Word, not even its
+    // spacing: zenodo-125's 1- and 2-column sections are separated by empty Normal (Web)
+    // paragraphs with automatic spacing, and Word steps the text across them as if they weren't
+    // there (14 pt, not 28). The paragraph before keeps its space after for what follows.
+    let section_mark =
+        p.text.is_empty() && p.objects.is_empty() && p.section.as_deref().is_some_and(|s| s.start == SectionStart::Continuous) && pl.lines.len() == 1;
+    let prev_kept = if section_mark { pb.prev.clone() } else { None };
     // Contextual spacing subtracts each paragraph's own side from the same-style gap.
     let mut before = pl.rp.space_before;
     // In documents laid out as Word 2010 and earlier did (compatibility mode below 15), the first
@@ -3169,8 +3182,9 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     if pl.rp.space_before_auto && block == 0 && pb.pages.len() <= 1 && pb.at_top() {
         before = 0.0;
     }
+    let continuous_top = std::mem::take(&mut pb.continuous_top) && pb.at_top();
     if let Some((style, ctxl, mut after, prev_list)) = pb.prev.take()
-        && !pb.at_top()
+        && (!pb.at_top() || continuous_top)
     {
         // Automatic (HTML) spacing isn't put between the items of a list, as in a web page. The
         // first item after another paragraph keeps its automatic space before: zenodo-083's
@@ -3201,6 +3215,11 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         if !ctx.doc.settings.add_para_spacing {
             before = (before - after.max(0.0)).max(before.min(0.0));
         }
+    }
+    if section_mark {
+        before = 0.0;
+        // (Restored now: a section's end can leave this function before its last line.)
+        pb.prev = prev_kept.clone();
     }
     pb.y += before;
     // A box going on from the paragraph before runs through the space between them.
@@ -3525,6 +3544,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     if bx.bottom > 0.0 {
         pb.y += bx.bottom;
         pb.content_bottom = pb.content_bottom.max(pb.y);
+    }
+    if section_mark {
+        pb.prev = prev_kept;
+        return;
     }
     pb.y += pl.rp.space_after;
     pb.prev = Some((

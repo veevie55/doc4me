@@ -1,5 +1,11 @@
 > **Standing instruction from the owner (2026-11-16):** after finishing work, do **not** publish a GitHub Release or redeploy the GitHub Pages Web App; the owner does both. Commit/push to `main` as CLAUDE.md requires, and stop there.
 
+# Resumed 2026-11-16: the not-yet-analysed group first (owner)
+
+- Owner order: finish the not-yet-analysed group (govuk-053, zenodo-022, -039, -049, -053, -069, -081, -123, -125, -173), then the large/unknown group.
+- Done: zenodo-125 (continuous section marks take no room; spacing collapses at a continuous section's top).
+- Lead, not fixed: zenodo-049 and govuk-053 pass on Linux if multiple-spacing leading may run past the top of a footer that pushes the body up, but WordCraft 627ded32's 38 Word probes say a footer above the margin needs whole line boxes (test `multiple_spacing_can_put_leading_in_the_margin_but_not_in_a_tall_footer`), and zenodo-109 regressed; reverted. zenodo-049's last line ends 0.5 pt above the footer top in Word: look at where Word puts the 1.079 multiple's extra leading.
+
 # PAUSED · 2026-11-16 — page-count work on hold by the owner
 
 - Owner decisions: **zenodo-045 excluded**, **govuk-026 accepted** (`check` = `accepted`: its pagination counts as passing; `xtask/src/readiness.rs` `record_document`). The next Windows readiness run will count 219 documents with govuk-026 passing (last run 43886112079 counted 203/220 before this change).
