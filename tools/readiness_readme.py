@@ -2,8 +2,8 @@
 """Keep the readiness numbers in README.md (Thai) and README.en.md equal to docs/readiness.md.
 
 docs/readiness.th.md is rendered from the same report (tools/readiness_th.py), so all four files
-carry the same run, source commit, scores, page-count and page-boundary results and failure
-counts. The Windows readiness workflow runs this after each measurement; run it by hand after a
+carry the same run, scores, page-count and page-boundary results and failure counts. The READMEs
+name no version number or commit (the owner's choice); the reports keep the measured source commit. The Windows readiness workflow runs this after each measurement; run it by hand after a
 report changes. `--check` changes nothing and exits 1 when a README is out of date.
 
 The run comes from GITHUB_RUN_ID or READINESS_RUN_ID, else from the current blocker inventory's
@@ -41,7 +41,6 @@ def numbers() -> dict[str, str]:
     breaks = require(r"corpus-breaks (\d+)/(\d+)", report, "corpus-breaks")
     return {
         "run": run,
-        "source": require(r"at commit `([0-9a-f]{7,40})`", report, "source commit").group(1),
         "overall": require(r"^\*\*Measured readiness: ([0-9.]+%)\*\*", report, "overall readiness").group(1),
         "ahead": require(r"^\*\*Without the deferred rows: ([0-9.]+%)\*\*", report, "readiness without deferred").group(1),
         "deferred": require(r"Without the deferred rows: [0-9.]+%\*\* — (\d+) rows", report, "deferred row count").group(1),
@@ -57,17 +56,17 @@ def lines(n: dict[str, str]) -> dict[Path, list[tuple[str, str]]]:
     url = f"{REPO_RUNS}/{n['run']}"
     return {
         ROOT / "README.md": [
-            ("ผลวัด Windows ทางการล่าสุด (", f"ผลวัด Windows ทางการล่าสุด (run {n['run']}, source `{n['source']}`): **{n['overall']}** หรือ **{n['ahead']} เมื่อไม่นับ {n['deferred']} รายการ deferred**"),
+            ("ผลวัด Windows ทางการล่าสุด (", f"ผลวัด Windows ทางการล่าสุด (run {n['run']}): **{n['overall']}** หรือ **{n['ahead']} เมื่อไม่นับ {n['deferred']} รายการ deferred**"),
             (f"คลังเอกสาร {n['total']} ไฟล์เปิดและบันทึกกลับได้ครบ", f"คลังเอกสาร {n['total']} ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง {n['pages']}/{n['total']} และขอบเขตหน้าตรง {n['breaks']}/{n['total']}"),
             (
                 "ผลวัด Windows ล่าสุด (run [",
-                f"ผลวัด Windows ล่าสุด (run [{n['run']}]({url}), source `{n['source']}`): readiness {n['overall']} รวม /{n['ahead']} ไม่รวม {n['deferred']} deferred, "
+                f"ผลวัด Windows ล่าสุด (run [{n['run']}]({url})): readiness {n['overall']} รวม /{n['ahead']} ไม่รวม {n['deferred']} deferred, "
                 f"จำนวนหน้า {n['pages']}/{n['total']} และขอบเขตหน้า {n['breaks']}/{n['total']}; ยังมี page-count {n['page_failures']} รายการและ boundary {n['break_failures']} รายการที่ไม่ผ่าน "
                 "ตาม [รายงาน](docs/readiness.th.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).",
             ),
         ],
         ROOT / "README.en.md": [
-            ("The latest official Windows measurement (", f"The latest official Windows measurement (run {n['run']}, source `{n['source']}`) is **{n['overall']}**, or **{n['ahead']} excluding {n['deferred']} deferred checks**."),
+            ("The latest official Windows measurement (", f"The latest official Windows measurement (run {n['run']}) is **{n['overall']}**, or **{n['ahead']} excluding {n['deferred']} deferred checks**."),
             (
                 f"All {n['total']} corpus documents open and round-trip;",
                 f"All {n['total']} corpus documents open and round-trip; page counts match for {n['pages']}/{n['total']} and page boundaries for {n['breaks']}/{n['total']}. "
@@ -75,7 +74,7 @@ def lines(n: dict[str, str]) -> dict[Path, list[tuple[str, str]]]:
             ),
             (
                 "Latest Windows measurement: [run ",
-                f"Latest Windows measurement: [run {n['run']}]({url}), source `{n['source']}`; readiness is {n['overall']} overall / {n['ahead']} without {n['deferred']} deferred rows, "
+                f"Latest Windows measurement: [run {n['run']}]({url}); readiness is {n['overall']} overall / {n['ahead']} without {n['deferred']} deferred rows, "
                 f"with page counts {n['pages']}/{n['total']} and page boundaries {n['breaks']}/{n['total']}. There are still {n['page_failures']} page-count and {n['break_failures']} boundary failures. "
                 "See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).",
             ),

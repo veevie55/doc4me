@@ -3,6 +3,7 @@
 # Status · 2026-11-16 (builds named by commit; pasted lists in Thai digits)
 
 - **Owner instruction:** content, images and workflows no longer refer to version numbers; refer to the commit in use. The About dialog shows **no version and no commit** (owner's later instruction; its `Commit {commit}`/`development build` strings removed from all 90 catalogs); `--version`, MCP `serverInfo.version`, user agent and Windows VERSIONINFO strings show the short commit (`crates/engine/src/build_info.rs`, `dev` without `DOC4ME_BUILD_SHA`). Package files are `doc4me-<commit>-…`; numeric installer fields (MSI, plist, DEB/RPM, AppStream) still use Cargo's version because the formats require numbers. CHANGELOG headings for new releases are `## [<commit>] - date`; released headings stay. `tools/release_notes.py` takes a commit. Historical revision-history rows and the older handoff snapshots below keep their version numbers (history).
+- README.md/README.en.md name **no version number and no commit** (owner's instruction); `tools/readiness_readme.py` no longer writes the source commit there.
 - **GitHub has no Releases and no tags now** (`list_releases`/`list_tags` empty on 2026-11-16; the owner removed them). Local clones may still hold stale `v1.1.3`/`v1.1.4` tags: never push them.
 - AutoFormat: lists pasted from elsewhere (Paste Special HTML/RTF) take Thai digits while the switch is on, keep their format when off (`f101a79`).
 
