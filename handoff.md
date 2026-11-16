@@ -1,3 +1,5 @@
+> **Standing instruction from the owner (2026-11-16):** after finishing work, do **not** publish a GitHub Release or redeploy the GitHub Pages Web App; the owner does both. Commit/push to `main` as CLAUDE.md requires, and stop there.
+
 # Status · 2026-11-16 (after AutoFormat new numbers)
 
 - AutoFormat now also makes new lists and inserted page numbers in Thai digits (`952f3a0`, user chose “all Thai”); CI 6/6 (2,566/1 ignored), language audit incl. ignored 65/65, cargo audit exit 0.
