@@ -331,6 +331,15 @@ impl StyleSheet {
             defaults.overlay(&ParaProps { style: None, ..t.clone() });
         }
         let (mut base, _) = self.para_style_props_over(&style, defaults, CharProps::default());
+        // `w:numId="0"` turning off the list a paragraph style numbers with also turns off the
+        // style's indents: Word puts zenodo-128's Heading 1 paragraphs with numId 0 (style: list
+        // numbering and a 21.6 pt left indent) at the margin. Direct indents still apply.
+        if p.numbering.is_some_and(|n| n.num == 0) && base.numbering.is_some_and(|n| n.num != 0) {
+            base.indent_left = None;
+            base.indent_first = None;
+            base.indent_left_chars = None;
+            base.indent_first_chars = None;
+        }
         let mut direct = p.clone();
         if let (Some(b), Some(d)) = (base.tabs.clone(), direct.tabs.clone()) {
             let mut merged: Vec<TabStop> = b.into_iter().filter(|t| !d.iter().any(|a| (a.pos - t.pos).abs() < 0.5)).collect();
@@ -392,6 +401,26 @@ mod tests {
         assert_eq!(c.font, crate::styles::HEADING_FONT);
         let c2 = s.resolve_char(Some("Heading1"), &CharProps { size: Some(30.0), ..Default::default() });
         assert_eq!(c2.size, 30.0);
+    }
+
+    /// `w:numId="0"` turning off a paragraph style's list also turns off the style's indents
+    /// (zenodo-128: Word puts Heading 1 paragraphs with numId 0 at the margin); direct indents
+    /// still apply, and a paragraph that keeps the list keeps the style's indent.
+    #[test]
+    fn numbering_turned_off_drops_the_styles_indents() {
+        let mut s = StyleSheet::builtin();
+        let mut h = s.get("Heading1").cloned().unwrap();
+        h.para.numbering = Some(NumRef { num: 1, level: 0 });
+        h.para.indent_left = Some(21.6);
+        h.para.indent_first = Some(-3.0);
+        s.upsert(h);
+        let off = Some(NumRef { num: 0, level: 0 });
+        let p = s.resolve_para(&ParaProps { style: Some("Heading1".into()), numbering: off, ..Default::default() });
+        assert_eq!((p.indent_left, p.indent_first), (0.0, 0.0));
+        let direct = s.resolve_para(&ParaProps { style: Some("Heading1".into()), numbering: off, indent_left: Some(10.0), ..Default::default() });
+        assert_eq!(direct.indent_left, 10.0);
+        let listed = s.resolve_para(&ParaProps { style: Some("Heading1".into()), ..Default::default() });
+        assert_eq!(listed.indent_left, 21.6);
     }
 
     #[test]
