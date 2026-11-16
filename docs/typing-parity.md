@@ -106,6 +106,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 | Turn AutoFormat on | every Arabic digit the document shows becomes a Thai digit (0–9 → ๐–๙), in every story (body, headers, footers, notes, text boxes, comments), with the numbers Doc4Me makes (list numbers, page numbers), as one undoable step; Undo takes back the text, not the setting. A protected document keeps its text | `autoformat_turns_shown_and_typed_digits_into_thai_digits`, `autoformat_conversion_is_one_undo_step_and_spares_protected_documents` |
 | Typing digits with AutoFormat on | every typed Arabic digit is a Thai digit, one key at a time or several at once (`text.insert`, `raw` included) | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
 | Turn AutoFormat off | nothing converts back; digits typed afterwards stay Arabic | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
+| "1. " at the start of a paragraph with AutoFormat on | arrives as "๑. " and starts a numbered list numbered in Thai digits (๑. ก. 1.); with AutoFormat off, "๑. " typed by hand stays text | `autoformat_keeps_numbered_lists_starting_in_thai_digits` |
 
 ## Text direction
 
@@ -156,6 +157,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | AutoFormat on: "1. " (typed as "๑. ") still starts a numbered list, in Thai digits |
 | 2026-11-16 | minor | AutoFormat (title bar, beside AutoSave): turning it on converts the document's digits to Thai digits once; typed Arabic digits become Thai digits while it is on; off converts nothing back |
 | 2026-10-25 | trivial | Known gaps: Aptos is drawn with the bundled metric-compatible Intos |
 | 2026-10-11 | minor | Text direction: right-to-left letters typed into an empty paragraph make it right-to-left; existing paragraphs keep theirs (#713) |

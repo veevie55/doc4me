@@ -162,6 +162,8 @@ fn list_autoformat(s: &mut Session) -> Result<bool, CmdError> {
         "=> " => ListKind::BulletChar('\u{21E8}'),
         "1. " => ListKind::Numbered,
         "1) " => ListKind::NumberedParen,
+        // With AutoFormat on, "1. " is typed as "๑. " (`file.autoFormat`): Thai-digit numbering.
+        "\u{0E51}. " if s.prefs.auto_thai_digits => ListKind::ThaiNumbers,
         "a. " => ListKind::LowerLetterDot,
         "a) " => ListKind::LowerLetter,
         "A. " => ListKind::UpperLetter,

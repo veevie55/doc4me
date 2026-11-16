@@ -902,3 +902,21 @@ fn autoformat_conversion_is_one_undo_step_and_spares_protected_documents() {
     assert_eq!((r["value"].clone(), r["converted"].clone(), r["protected"].clone()), (json!(true), json!(0), json!(true)));
     assert_eq!(body_text(&s), ["a 12 b"]);
 }
+
+/// With AutoFormat on, "1. " typed at the start of a paragraph arrives as "๑. " and still starts
+/// a numbered list, numbered in Thai digits; off, "๑. " stays text, as before.
+#[test]
+fn autoformat_keeps_numbered_lists_starting_in_thai_digits() {
+    let mut s = s();
+    run(&mut s, "file.autoFormat", json!({"value": true}));
+    typ(&mut s, "1. Item 2");
+    assert_eq!(paras(&s), [("Item ๒".to_string(), Some(0), true)]);
+    let num = s.doc.body.first().and_then(|b| b.as_para()).and_then(|p| p.props.numbering).map(|n| n.num).unwrap();
+    let aid = s.doc.numbering.num(num).map(|n| n.abstract_id).unwrap();
+    let first = s.doc.numbering.abstracts.iter().find(|a| a.id == aid).and_then(|a| a.levels.first()).map(|l| l.format);
+    assert_eq!(first, Some(doc4me_doc::section::NumFormat::ThaiNumbers));
+
+    let mut s = self::s();
+    typ(&mut s, "\u{0E51}. Item");
+    assert_eq!(paras(&s), [("\u{0E51}. Item".to_string(), None, false)], "off, Thai digits typed by hand stay text");
+}
