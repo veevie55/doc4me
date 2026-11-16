@@ -1,10 +1,10 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (latest official Windows run 43776538181, source `e00daf1`, report `b6e1076`: 93.0% / 94.9% without 22 deferred; 220-document corpus, pages 191/220, boundaries 99/220, languages 95/95; Doc4Me 1.1.4. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (latest official Windows run 43785505707, source `55d0c37`, report `7e50321`: 93.0% / 94.9% without 22 deferred; 220-document corpus, pages 192/220, boundaries 99/220, languages 95/95; Doc4Me 1.1.4. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every culture row of the readiness catalog now has a registered interface catalog: 22 catalogs
 were added in November 2026 as AI-generated drafts (among them Hindi, Arabic, Korean, Persian, Urdu,
-Pashto, Hebrew and the Indic languages), and the latest official Windows run 43776538181 reports 95/95.
+Pashto, Hebrew and the Indic languages), and the latest official Windows run 43785505707 reports 95/95.
 They still need native-speaker review.
 
 Interface languages, script support and proofing per language. How translation works (catalog
@@ -12,8 +12,8 @@ format, adding a language, clean-room rule): `crates/ui-egui/src/i18n/mod.rs`.
 
 **Dimension: ~45% (estimated), 60–100 h to full for the twelve key languages**, mostly
 native-speaker review (human) and right-to-left/shaped interface rendering. This estimate is
-separate from the readiness check: Windows run 43776538181 on source `e00daf1` (report commit
-`b6e1076`) records 95/95 culture rows passing the catalog key-row coverage rule. The check does not
+separate from the readiness check: Windows run 43785505707 on source `55d0c37` (report commit
+`7e50321`) records 95/95 culture rows passing the catalog key-row coverage rule. The check does not
 distinguish translated values from English-identical values and does not assess meaning or
 native-speaker quality. Bundled OFL Noto fallbacks cover every registered script (including a Hangul
 subset). The 19 right-to-left and Indic languages (ar, as, bn, fa, gu, he, hi, kn, kok, ml, mr, ne,
@@ -36,7 +36,7 @@ never picks one. That still prevents claiming interface readiness for them.
   language catalogs, each with the 3,034 interface keys. 26 registered catalogs are AI-generated
   drafts that require native-speaker review (Igbo, Setswana, Wolof, Yoruba and the 22 added in
   November 2026); key presence counts them without measuring their quality. The 95-row readiness
-  catalog maps cultures to these files: Windows run 43776538181 reports 95/95 passing rows.
+  catalog maps cultures to these files: Windows run 43785505707 reports 95/95 passing rows.
   `LANGUAGES` is authoritative for choices and locale matching; `languages.tsv` is the separate
   readiness denominator.
 - `cargo xtask readiness` parses unique catalog keys and compares key sets, not non-English
@@ -147,6 +147,7 @@ allows); all other text is written from the meaning of the English. No Italian p
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
 | 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |

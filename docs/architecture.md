@@ -2,12 +2,12 @@
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** added manual Windows x86 and x64 artifact workflows; latest official Windows run 43776538181, source `e00daf1`, report `b6e1076`: 93.0% overall / 94.9% without 22 deferred; page counts 191/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** added manual Windows x86 and x64 artifact workflows; latest official Windows run 43785505707, source `55d0c37`, report `7e50321`: 93.0% overall / 94.9% without 22 deferred; page counts 192/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181), source `e00daf1`, report `b6e1076`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **191/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 29 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707), source `55d0c37`, report `7e50321`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **192/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 28 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
-The latest official Windows readiness report is run 43776538181, source `e00daf1`, report commit `b6e1076`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
+The latest official Windows readiness report is run 43785505707, source `55d0c37`, report commit `7e50321`. The readiness renderer now lists every failing corpus row and links to the bilingual blocker assessment. Structural code metrics below are a separate snapshot and are not readiness scores. The longer design notes in
 `plan/architecture.md` are gitignored and local to the original author's machine; this file is the
 committed, current summary. Rules for working in the code are in [`AGENTS.md`](../AGENTS.md).
 
@@ -75,6 +75,7 @@ winit or rfd.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
 | 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-15 | minor | Added separate manual Windows x86 and x64 artifact workflows, with source SHA provenance; corrected the current workflow inventory. |

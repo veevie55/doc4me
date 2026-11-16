@@ -1,17 +1,17 @@
 # Layout and pagination parity with Microsoft Word
 
-**Page-number restart follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](readiness/restart-recto-2026-11-16.md): Linux page-count matches 190→191/220, only govuk-036 39→40 (reference40), other219 unchanged; all440 hashes verified. Its page endpoints match37/40, so boundary parity remains incomplete. Full CI 6/6 passed (2,557 native, one existing ignored); fresh Windows confirmation pending; current official scores below are unchanged. No criteria/exclusion/deferred changes.
+**Page-number restart follow-up · 2026-11-16 (Windows confirmed):** [Audit, EN/TH](readiness/restart-recto-2026-11-16.md): Linux page-count matches 190→191/220, only govuk-036 39→40 (reference40), other219 unchanged; all440 hashes verified. Its page endpoints match37/40, so boundary parity remains incomplete. Full CI 6/6 passed (2,557 native, one existing ignored); Windows run 43785505707 (source `55d0c37`, report `7e50321`) confirms 192/220 page counts with only govuk-036 newly matching and no newly failing row in the five corpus sets; boundaries stay 99/220, readiness 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
 **Blank cover panel follow-up · 2026-11-15:** [Audit, EN/TH](readiness/page-float-2026-11-15.md): accepted Linux page-count matches 189→190/220, only zenodo-136 26→25 (reference 25), other 219 counts unchanged; 440 corpus hashes verified. Six focused floating-table tests and full CI 6/6 pass (2,555 native, one existing ignored); Windows run 43776538181 confirms 191/220 page counts and 99/220 boundaries. Official readiness is 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43776538181 on source `e00daf1`; 93.0% overall / 94.9% without 22 deferred; pages 191/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43785505707 on source `55d0c37`; 93.0% overall / 94.9% without 22 deferred; pages 192/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181), source `e00daf1`, report `b6e1076`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **191/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 29 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707), source `55d0c37`, report `7e50321`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **192/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 28 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
-On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 191/220 and 99/220 (run 43776538181).
+On Linux, a section-marker candidate was rejected after comparing all 15 corpus documents whose empty markers would change: page-count passes moved 10/15 → 11/15, but boundary passes fell 5/15 → 4/15. zenodo-053 improved from 59 to Word's 58 pages; zenodo-010 moved its body another 12.65 pt away from the reference and changed its first extracted word from Guuboo to GAWP. The candidate and its unproven global regressions were reverted. Investigate column balancing before changing marker height; official Windows pagination remains 192/220 and 99/220 (run 43785505707).
 
 A document only "opens correctly" if its pages break where Word breaks them: the same lines, the
 same page count, footnotes and pictures on the same pages. This checklist covers line breaking,
@@ -20,11 +20,11 @@ pagination and object placement in `crates/layout`. Typing behaviour is in
 [`file-format-parity.md`](file-format-parity.md).
 
 **Dimension: ~55% (estimated), 90–145 h to full** (the sum of the rows below). The engine implements
-most of Word's layout rules; the latest official Windows corpus measurement (run 43776538181,
-source `e00daf1`, report commit `b6e1076`) matches Word's page count for 191/220 documents and every
+most of Word's layout rules; the latest official Windows corpus measurement (run 43785505707,
+source `55d0c37`, report commit `7e50321`) matches Word's page count for 192/220 documents and every
 page's first and last word for 99/220. The current code can use DOCX `w:altName` fonts when the
 primary family is unavailable, with paragraph, graphic-text and DOCX round-trip regressions.
-Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 191/220 and 99/220. In run 42334133340, govuk-005
+Run 43011248444 had 182/222 pages and 99/222 boundaries before zenodo-104 and govuk-003 (reference PDFs not made from their .docx) were excluded; the latest has 192/220 and 99/220. In run 42334133340, govuk-005
 matched Word's 36 pages but failed page 12: Doc4Me starts with “do”, Word starts with “yes”,
 and both end with “account”. This is now recorded by the first/last-word diagnostic. Windows
 font diagnostics captured substitutions but did not establish a safe broad fix; MS Gothic did
@@ -122,6 +122,7 @@ The [justification review](readiness/justification-review-2026-11-13.md) records
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
 | 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |

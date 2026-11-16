@@ -12,6 +12,10 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง
+
+- ปรับสรุปสถานะ readiness ในเอกสารที่ยังใช้งาน (README ไทย/อังกฤษ, ROADMAP, `docs/gaps.md`, `docs/roadmap.md`, `docs/architecture.md`, parity docs, `docs/readiness/README.md` และ audit `docs/readiness/restart-recto-2026-11-16.md`) ให้ตรงกับผล Windows run 43785505707 ที่วัด source `55d0c37` (report `7e50321`): จำนวนหน้าตรง 191→192/220 โดยมีเพียง govuk-036 ผ่านเพิ่ม ขอบเขตหน้า 99/220 คะแนน 93.0% รวม / 94.9% ไม่นับ 22 deferred เหลือ page-count 28 และ boundary 121 รายการ เหตุผล: เดิมเอกสารเหล่านี้ยังอ้าง run 43776538181 (191/220) และระบุว่า "รอวัด Windows" ซึ่งล้าสมัยแล้ว เป็นการแก้เอกสารเท่านั้น ไม่เปลี่ยนโค้ด เกณฑ์ corpus exclusion หรือ deferred ไม่มีผลกับไฟล์ .docx เดิม การติดตั้งทับ หรือภาษาไทย ตรวจสอบโดยเทียบรายการไม่ผ่านใน `docs/readiness.md` ของ report `b6e1076` กับ `7e50321` ทีละแถว: ต่างกันเพียง govuk-036 ที่หายจาก corpus-pages ไม่มีแถวใหม่ที่ไม่ผ่าน และคงแถวประวัติการแก้ไขเดิมไว้ โดยเพิ่มแถวใหม่ในตาราง revision history ของแต่ละเอกสาร
+
 ### แก้ไข
 
 - แก้ Next Page section ที่ restart เลขหน้า 1 และใช้หัวกระดาษคู่/คี่ให้เว้นหน้าคู่เปล่าก่อนเริ่มส่วนใหม่เมื่อจำเป็น (`crates/layout/src/lib.rs`); แยก `Page::parity_filler` ไม่วาดเนื้อหา/หัว/ท้ายกระดาษบนหน้าที่แทรก และคง First Page stories กับตำแหน่ง footnote ของหน้าจริง ไม่เปลี่ยนรูปแบบ DOCX, ฟอนต์, dependency หรือ restart/section แบบอื่น ตรวจ full CI ผ่าน 6/6 (native 2,557 ผ่าน / ignored 1 เดิม; assets 141; wasm 16) ผล Linux ครบ 220 ฉบับเพิ่ม page-count matches 190→191: govuk-036 39→40 ตรง reference อีก 219 รายการคงเดิม ตรวจ hash 440 ไฟล์แล้ว ไม่เพิ่ม excluded/deferred หรือเปลี่ยนเกณฑ์; ยังไม่ผ่าน page-boundary ทั้งฉบับ (37/40 หน้าตรง) ดู `docs/readiness/restart-recto-2026-11-16.md` สำหรับ regression/CI/Windows และข้อจำกัด ไม่ออก Release ในงานต่อส่วนนี้

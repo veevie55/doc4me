@@ -1,14 +1,14 @@
 # Doc4Me roadmap: milestones and what's next
 
-**Page-number restart follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](readiness/restart-recto-2026-11-16.md): Linux page-count matches 190→191/220, only govuk-036 39→40 (reference40), other219 unchanged; all440 hashes verified. Its page endpoints match37/40, so boundary parity remains incomplete. Full CI 6/6 passed (2,557 native, one existing ignored); fresh Windows confirmation pending; current official scores below are unchanged. No criteria/exclusion/deferred changes.
+**Page-number restart follow-up · 2026-11-16 (Windows confirmed):** [Audit, EN/TH](readiness/restart-recto-2026-11-16.md): Linux page-count matches 190→191/220, only govuk-036 39→40 (reference40), other219 unchanged; all440 hashes verified. Its page endpoints match37/40, so boundary parity remains incomplete. Full CI 6/6 passed (2,557 native, one existing ignored); Windows run 43785505707 (source `55d0c37`, report `7e50321`) confirms 192/220 page counts with only govuk-036 newly matching and no newly failing row in the five corpus sets; boundaries stay 99/220, readiness 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
 **Blank cover panel follow-up · 2026-11-15:** [Audit, EN/TH](readiness/page-float-2026-11-15.md): accepted Linux page-count matches 189→190/220, only zenodo-136 26→25 (reference 25), other 219 counts unchanged; 440 corpus hashes verified. Six focused floating-table tests and full CI 6/6 pass (2,555 native, one existing ignored); Windows run 43776538181 confirms 191/220 page counts and 99/220 boundaries. Official readiness is 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** readiness remeasured in Windows run 43776538181 on source `e00daf1`; blocker Markdown and TSV refreshed; GitHub Pages workflow documented. Current result is 93.0% overall / 94.9% without 22 deferred; pages 191/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** readiness remeasured in Windows run 43785505707 on source `55d0c37`; blocker Markdown and TSV refreshed; GitHub Pages workflow documented. Current result is 93.0% overall / 94.9% without 22 deferred; pages 192/220, boundaries 99/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181), source `e00daf1`, report `b6e1076`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **191/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 29 page-count และ 121 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707), source `55d0c37`, report `7e50321`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **192/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 28 page-count และ 121 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
@@ -84,8 +84,8 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **93.0%** in the latest official Windows report (run 43776538181, source
-`e00daf1`, report commit `b6e1076`; ribbon 504/504, dialogs 216/228, pages 191/220, boundaries
+2026-10-25 report, and **93.0%** in the latest official Windows report (run 43785505707, source
+`55d0c37`, report commit `7e50321`; ribbon 504/504, dialogs 216/228, pages 192/220, boundaries
 99/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
 7.0 points short of 100% overall. That report says 94.9% without its 22 deferred rows, 5.1 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
@@ -128,9 +128,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43776538181 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43785505707 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (191/220 page-count and 99/220
+the remaining measured area without deferred rows is pagination (192/220 page-count and 99/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
@@ -163,6 +163,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
 | 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows from selected refs; outputs include MSI/portable ZIP and source commit provenance. Release remains a separate explicit action. |

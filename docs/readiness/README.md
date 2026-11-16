@@ -1,6 +1,6 @@
 # Readiness check sets
 
-**Current Windows confirmation · 2026-11-16:** Run [43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181), engine `e00daf1`, report `b6e1076`: page counts **191/220**, boundaries **99/220**, readiness **93.0% overall / 94.9% excluding 22 deferred**. The [blank-panel audit, EN/TH](page-float-2026-11-15.md) records zenodo-136 newly matching 25 pages and no newly failing corpus row. CI 6/6, native 2,555 pass / one existing ignored; 440 corpus hashes verified. Current EN/TH blockers and TSV match the report; criteria/exclusions/deferred unchanged.
+**Current Windows confirmation · 2026-11-16:** Run [43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707), engine `55d0c37`, report `7e50321`: page counts **192/220**, boundaries **99/220**, readiness **93.0% overall / 94.9% excluding 22 deferred**. The [restart-recto audit, EN/TH](restart-recto-2026-11-16.md) records govuk-036 newly matching 40 pages; comparing the previous report `b6e1076` with this one, no newly failing row appears in the five corpus sets. CI 6/6, native 2,557 pass / one existing ignored; 440 corpus hashes verified. Current EN/TH blockers and TSV match the report (28 page-count and 121 boundary failures); criteria/exclusions/deferred unchanged.
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
