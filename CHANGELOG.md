@@ -12,6 +12,10 @@
 
 ## [Unreleased]
 
+### แก้ไข
+
+- ใช้ความกว้างตัวอักษรและระยะบรรทัดของ Garamond เมื่อ Tinos หรือ Times New Roman วาดแทน (`crates/fonts/src/latin_metrics.rs` ตาราง `GARAMOND_REGULAR`/`GARAMOND_ITALIC`/`GARAMOND_BOLD`, `crates/fonts/src/word.rs` `metric_fit` และ `requested_line`, สคริปต์ใหม่ `tools/garamond_pdf_metrics.py`) เหตุผล: Garamond แคบกว่า Times และ Word เว้นบรรทัด 1.125 em แต่ Tinos ใช้ 1.150 em ใน zenodo-115 Doc4Me จึงใส่คำได้น้อยกว่า Word ทุกหน้าและได้ 10 หน้าแทน 9 หน้า ค่าความกว้างมาจาก /Widths ที่ Word ประกาศใน PDF ของ zenodo-115 และ zenodo-118 (ตรวจ hash กับ manifest และค่าตรงกันทั้งสองฉบับ) ไม่ได้อ่านหรือคัดลอกโปรแกรมฟอนต์ Bold italic ยังไม่มีค่าที่วัดได้จึงคงเดิม zenodo-114 ซึ่ง Word วาด Garamond ด้วย Times New Roman (ผู้สร้างไม่มีฟอนต์) ไม่เปลี่ยน ผลต่อผู้ใช้: เอกสาร Garamond บนเครื่องที่ไม่มี Garamond แบ่งบรรทัดและหน้าใกล้ Word ขึ้น ไฟล์ .docx เดิมไม่เปลี่ยน ไม่มีผลกับภาษาไทย ตรวจสอบ: assertion เพิ่มใน `substitutes_keep_the_requested_fonts_line`, `doc4me-fonts` ผ่าน 83/83 full CI ผ่าน 6/6 (native 2,564 ผ่าน / ignored 1 เดิม) เทียบ 220 ฉบับบน Linux (hash ครบ 440 ไฟล์) กับ baseline `3668e3c`: จำนวนหน้าตรง 197→198 (zenodo-115 ตรง Word) ขอบเขตหน้าคงที่ 104 zenodo-118 ยังผ่าน ไม่มีรายการที่เคยผ่านกลับมาตก ดู `docs/readiness/garamond-metrics-2026-11-16.md` และ `docs/readiness/garamond-metrics-comparison-2026-11-16.tsv`
+
 ## [1.1.4] - 2026-11-14
 
 ### อัปเดตจากโค้ดล่าสุด · 2026-11-16 รอบที่ 2

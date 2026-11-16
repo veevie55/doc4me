@@ -651,6 +651,10 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
         // 1.136 em; Source Serif 4 is 1.371), every style alike.
         "verdana" => Some((2059.0 / 2048.0, 430.0 / 2048.0)),
         "georgia" => Some((1878.0 / 2048.0, 449.0 / 2048.0)),
+        // Garamond, as Word's PDFs of zenodo-115 and zenodo-118 declare it (ascent 862, descent
+        // 263 per 1000) and step it: 11 pt body lines at 283/240 spacing 14.59 pt apart on
+        // average, 1.125 em of line. Tinos' own hhea line is 1.150 em.
+        "garamond" => Some((0.862, 0.263)),
         // Fonts Word's lists and check boxes draw with, as embedded in Word's own PDFs (OS/2 win
         // ascent / descent; their hhea values are the same and have no line gap). Symbol's bullet
         // is taller than Calibri's or Arial's ascent, so a bulleted line is taller in Word: 20.4 pt
@@ -810,19 +814,28 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         Some(crate::latin_metrics::GOTHAM_MEDIUM)
     } else if family.eq_ignore_ascii_case("Nyala") {
         Some(crate::latin_metrics::NYALA)
+    } else if family.eq_ignore_ascii_case("Garamond") && !(bold && italic) {
+        Some(match (bold, italic) {
+            (true, _) => crate::latin_metrics::GARAMOND_BOLD,
+            (_, true) => crate::latin_metrics::GARAMOND_ITALIC,
+            _ => crate::latin_metrics::GARAMOND_REGULAR,
+        })
     } else {
         None
     };
     if let Some(advances) = measured {
         let r = resolve(family, bold, italic);
-        let expected = if family.eq_ignore_ascii_case("Nyala") {
-            "Noto Sans Ethiopic"
+        let expected: &[&str] = if family.eq_ignore_ascii_case("Nyala") {
+            &["Noto Sans Ethiopic"]
         } else if family.eq_ignore_ascii_case("Gotham Book") || family.eq_ignore_ascii_case("Gotham Medium") {
-            "Montserrat"
+            &["Montserrat"]
+        } else if family.eq_ignore_ascii_case("Garamond") {
+            // Its serif stand-ins: Tinos where only open fonts exist, Times New Roman on Windows.
+            &["Tinos", "Times New Roman"]
         } else {
-            "Roboto"
+            &["Roboto"]
         };
-        if r.substituted && r.face.family == expected {
+        if r.substituted && expected.contains(&r.face.family.as_str()) {
             return Some(MetricFit { style: None, advances, line: single_line(family, r.face.get(), true, 1.0) });
         }
     }
@@ -1163,6 +1176,17 @@ mod tests {
         assert_eq!(covered_fallback_line("Cambria Math", 10.5).map(em), Some(12.31));
         assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
         assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
+        // Garamond keeps Word's 1.125 em line when another face stands in for it, and its measured
+        // widths apply with Tinos or Times New Roman, not with other faces.
+        assert_eq!(em(single_line("Garamond", &r.face, true, 1.0)), 1.125);
+        assert_eq!(metric_fit("Garamond", true, true).map(|f| f.advance(' ')), None, "no bold italic widths were measured");
+        if resolve("Garamond", false, false).face.family == "Tinos" {
+            let fit = metric_fit("Garamond", false, false).expect("Garamond drawn with Tinos takes its widths");
+            assert_eq!(fit.advance(' '), Some(0.25));
+            assert_eq!(fit.advance('\u{10FFFF}'), None);
+            assert_eq!(em(fit.line()), 1.125);
+            assert!(metric_fit("Garamond", false, true).is_some() && metric_fit("Garamond", true, false).is_some());
+        }
         // So do Symbol and Wingdings bullets drawn as standard characters by another face.
         // Overpass, every weight, steps 1.266 em whatever face draws it (13.293 pt at 10.5 pt).
         for name in ["Overpass", "Overpass Light", "overpass extrabold"] {
