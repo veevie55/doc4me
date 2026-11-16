@@ -2212,6 +2212,13 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 slack_until = Some(e);
                 fits = true;
             }
+            // Zero-width marks (bookmarks, field and comment marks) aren't content: what follows
+            // them at the start of a line counts as the line's first item and stays on it, as
+            // Word keeps zenodo-128's 471 pt picture after a bookmark on its paragraph's first line
+            // (in a 468 pt column) instead of leaving an empty line above it.
+            if !fits && j > c0 && (c0..j).all(|k| pl.clusters.get(k).is_some_and(|c| c.kind == ClKind::Marker)) {
+                fits = true;
+            }
             if !fits && j > c0 {
                 // Wrap: back up to the last break opportunity on this line.
                 end = LineEnd::Wrap;

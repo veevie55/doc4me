@@ -1,4 +1,6 @@
-# govuk-026: the reference PDF predates the .docx · 2026-11-16
+# Reference PDFs that don't match their .docx · 2026-11-16
+
+## govuk-026: the reference PDF predates the .docx
 
 **For the owner's decision; no row has been excluded.** govuk-026 fails the page-count check
 (Doc4Me 4 pages, the reference PDF 7). The evidence says the PDF was made from an earlier
@@ -18,3 +20,17 @@ the owner did for govuk-003 and zenodo-104, is the owner's decision.
 
 How checked: `pdfinfo`, `unzip` of the pinned files (hashes match `corpus.tsv`), the `.docx`
 XML (rows, `trHeight`, section properties, styles), and `pdftotext -bbox` of both layouts.
+
+## zenodo-045: the .docx has a section the reference PDF doesn't
+
+**For the owner's decision; not excluded.** zenodo-045 fails the page-count check (Doc4Me 21
+pages after the bookmark fix, the reference PDF 20).
+
+| Evidence | Value |
+|---|---|
+| `.docx` | page 1 holds "E-mail addresses of the authors:" and one line per author (plain paragraphs: no `w:del`, `w:ins` or `w:vanish` anywhere in the file); modified 2025-09-12 |
+| Reference PDF | Word for Microsoft 365, created 2025-09-15; has no e-mail section; every page carries a bioRxiv "This preprint (which was not certified by peer review)…" header (20 times) that the `.docx` doesn't contain |
+| Consequence | Doc4Me's page 1 ends at the e-mail list and the Abstract starts page 2, while the PDF's page 1 runs into the Abstract; every later page boundary is shifted by that |
+
+The PDF was printed from a later edition (e-mails removed, preprint header added). Excluding it
+is the owner's decision.

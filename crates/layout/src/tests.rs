@@ -6017,3 +6017,25 @@ fn wrapping_floats_in_a_cell_stay_inside_the_cell() {
     let front = place(Wrap::InFrontOfText, 400.0);
     assert!((front.x - (text_left + 400.0)).abs() < 0.01, "in front of text keeps its offset: {front:?}");
 }
+
+/// A bookmark isn't content: a picture slightly wider than the column right after one at the
+/// start of a paragraph stays on the paragraph's first line, as Word keeps zenodo-128's 471 pt
+/// pictures after a bookmark in a 468 pt column, instead of leaving an empty line above it.
+#[test]
+fn a_bookmark_before_an_oversized_picture_leaves_no_empty_line() {
+    use doc4me_doc::para::{Float, Wrap};
+    let width = Document::new().last_section.text_width();
+    let lines = |bookmark: bool| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        p.insert_object(0, rect_shape(width + 3.0, 50.0, Float { wrap: Wrap::Inline, ..Default::default() }), &Default::default()).unwrap();
+        if bookmark {
+            p.insert_object(0, InlineObject::BookmarkEnd { name: "b".into() }, &Default::default()).unwrap();
+        }
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let n: usize = l.pages[0].items.iter().map(|it| if let Placed::Lines { para, .. } = it { para.lines.len() } else { 0 }).sum();
+        n
+    };
+    assert_eq!(lines(true), lines(false), "the bookmark adds no line");
+}
