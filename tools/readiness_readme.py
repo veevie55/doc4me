@@ -56,24 +56,24 @@ def lines(n: dict[str, str]) -> dict[Path, list[tuple[str, str]]]:
     url = f"{REPO_RUNS}/{n['run']}"
     return {
         ROOT / "README.md": [
-            ("ผลวัด Windows ทางการล่าสุด (", f"ผลวัด Windows ทางการล่าสุด (run {n['run']}): **{n['overall']}** หรือ **{n['ahead']} เมื่อไม่นับ {n['deferred']} รายการ deferred**"),
-            (f"คลังเอกสาร {n['total']} ไฟล์เปิดและบันทึกกลับได้ครบ", f"คลังเอกสาร {n['total']} ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง {n['pages']}/{n['total']} และขอบเขตหน้าตรง {n['breaks']}/{n['total']}"),
+            (re.escape("ผลวัด Windows ทางการล่าสุด ("), f"ผลวัด Windows ทางการล่าสุด (run {n['run']}): **{n['overall']}** หรือ **{n['ahead']} เมื่อไม่นับ {n['deferred']} รายการ deferred**"),
+            (r"คลังเอกสาร \d+ ไฟล์เปิดและบันทึกกลับได้ครบ", f"คลังเอกสาร {n['total']} ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง {n['pages']}/{n['total']} และขอบเขตหน้าตรง {n['breaks']}/{n['total']}"),
             (
-                "ผลวัด Windows ล่าสุด (run [",
+                re.escape("ผลวัด Windows ล่าสุด (run ["),
                 f"ผลวัด Windows ล่าสุด (run [{n['run']}]({url})): readiness {n['overall']} รวม /{n['ahead']} ไม่รวม {n['deferred']} deferred, "
                 f"จำนวนหน้า {n['pages']}/{n['total']} และขอบเขตหน้า {n['breaks']}/{n['total']}; ยังมี page-count {n['page_failures']} รายการและ boundary {n['break_failures']} รายการที่ไม่ผ่าน "
                 "ตาม [รายงาน](docs/readiness.th.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).",
             ),
         ],
         ROOT / "README.en.md": [
-            ("The latest official Windows measurement (", f"The latest official Windows measurement (run {n['run']}) is **{n['overall']}**, or **{n['ahead']} excluding {n['deferred']} deferred checks**."),
+            (re.escape("The latest official Windows measurement ("), f"The latest official Windows measurement (run {n['run']}) is **{n['overall']}**, or **{n['ahead']} excluding {n['deferred']} deferred checks**."),
             (
-                f"All {n['total']} corpus documents open and round-trip;",
+                r"All \d+ corpus documents open and round-trip;",
                 f"All {n['total']} corpus documents open and round-trip; page counts match for {n['pages']}/{n['total']} and page boundaries for {n['breaks']}/{n['total']}. "
                 "See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.",
             ),
             (
-                "Latest Windows measurement: [run ",
+                re.escape("Latest Windows measurement: [run "),
                 f"Latest Windows measurement: [run {n['run']}]({url}); readiness is {n['overall']} overall / {n['ahead']} without {n['deferred']} deferred rows, "
                 f"with page counts {n['pages']}/{n['total']} and page boundaries {n['breaks']}/{n['total']}. There are still {n['page_failures']} page-count and {n['break_failures']} boundary failures. "
                 "See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).",
@@ -83,11 +83,14 @@ def lines(n: dict[str, str]) -> dict[Path, list[tuple[str, str]]]:
 
 
 def refresh(path: Path, wanted: list[tuple[str, str]]) -> tuple[str, str]:
-    """The file's text before and after replacing each line that starts with a known prefix."""
+    """The file's text before and after replacing each line whose start matches a known pattern.
+
+    Patterns leave the document count open: it changes when the owner excludes a document
+    (zenodo-045 took it from 220 to 219), and the line must still be found to be updated."""
     before = path.read_text(encoding="utf-8")
     out = before.split("\n")
     for prefix, line in wanted:
-        hits = [i for i, l in enumerate(out) if l.startswith(prefix)]
+        hits = [i for i, l in enumerate(out) if re.match(prefix, l)]
         if len(hits) != 1:
             raise ValueError(f"{path.name}: expected one line starting {prefix!r}, found {len(hits)}")
         out[hits[0]] = line

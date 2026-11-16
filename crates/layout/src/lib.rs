@@ -2222,6 +2222,7 @@ fn layout_pass(
                 pb.layers.insert(at.min(pb.layers.len()), Vec::new());
             }
             pb.foot_top = foot_top;
+            pb.after_break = si > 0;
             if !web && matches!(start, SectionStart::EvenPage | SectionStart::OddPage) {
                 let want_even = start == SectionStart::EvenPage;
                 if pb.number.is_multiple_of(2) != want_even {
@@ -3171,11 +3172,11 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     let prev_kept = if section_mark { pb.prev.clone() } else { None };
     // Contextual spacing subtracts each paragraph's own side from the same-style gap.
     let mut before = pl.rp.space_before;
-    // In documents laid out as Word 2010 and earlier did (compatibility mode below 15), the first
-    // paragraph after a page break that ended the paragraph before drops its space before at the
-    // top of the new page; Word 2013 and later keep it (corpus: govuk-034, govuk-047, zenodo-123
-    // in modes 14 and 12 match Word with it dropped, govuk-046 in mode 15 with it kept).
-    if std::mem::take(&mut pb.after_break) && pb.at_top() && ctx.doc.settings.compat_mode < doc4me_doc::COMPAT_MODE_CURRENT {
+    // The first paragraph of a page opened by a page break that ended the paragraph before, or by
+    // a section break, drops its space before at the top of the new page, in every compatibility
+    // mode (corpus: govuk-034, govuk-047, zenodo-123 in modes 14 and 12; zenodo-022, -069, -081,
+    // -102 and govuk-046 in mode 15, whose headings sit at the top margin in Word's PDFs).
+    if std::mem::take(&mut pb.after_break) && pb.at_top() {
         before = 0.0;
     }
     // Automatic (HTML) space before isn't put above the document's first paragraph.
@@ -3761,6 +3762,11 @@ fn table_starts_with_style(ctx: &mut Ctx, t: &doc4me_doc::Table, style: &str) ->
 }
 
 fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block: usize, body_top: f32) {
+    // A table in the flow is the first thing on the page after the break: a paragraph that later
+    // starts another page at its top isn't the page's first after a break.
+    if t.props.float.is_none() {
+        pb.after_break = false;
+    }
     if let Some((style, true, after, _)) = pb.prev.take()
         && !pb.at_top()
         && t.props.float.is_none()

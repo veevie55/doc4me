@@ -2785,10 +2785,10 @@ fn page_numbers_can_restart_at_zero() {
 }
 
 #[test]
-fn space_before_after_a_page_break_follows_the_compatibility_mode() {
+fn space_before_after_a_page_break_is_dropped_in_every_compatibility_mode() {
     // A heading with space before starts the page after a page break that ended the paragraph
-    // before. Word 2010 and earlier (compatibility mode below 15) drop that space at the top of the
-    // new page; Word 2013 and later keep it.
+    // before. Word drops that space at the top of the new page in every compatibility mode
+    // (zenodo-022, -123 and govuk-046's headings after page breaks sit at the top margin).
     let heading_top = |mode: u32| {
         let mut d = Document::new();
         d.settings.compat_mode = mode;
@@ -2806,9 +2806,55 @@ fn space_before_after_a_page_break_follows_the_compatibility_mode() {
     };
     let (b14, c14) = heading_top(14);
     let (b15, c15) = heading_top(doc4me_doc::COMPAT_MODE_CURRENT);
-    assert!((b15 - b14 - 24.0).abs() < 0.01, "mode 15 keeps B's space before, mode 14 drops it: {b14} {b15}");
+    assert!((b15 - b14).abs() < 0.01, "both modes drop B's space before: {b14} {b15}");
+    let top = lay(&Document::new()).pages[0].body.y;
+    assert!((b15 - top).abs() < 0.01, "B starts at the top margin: {b15} vs {top}");
     // Only the first paragraph on the page: C keeps its space before in both.
     assert!(((c15 - b15) - (c14 - b14)).abs() < 0.01, "C's space before is kept: {c14} {c15}");
+}
+
+#[test]
+fn space_before_at_the_top_of_a_next_page_section_is_dropped() {
+    // zenodo-022's annex heading (12pt before) opens a landscape Next Page section; Word puts it
+    // at the top margin, and the document's first paragraph keeps its space before.
+    let mut d = Document::new();
+    let mut first = doc4me_doc::Paragraph::with_text("A", Default::default());
+    first.props.space_before = Some(24.0);
+    let mut sect = d.last_section.clone();
+    sect.start = doc4me_doc::section::SectionStart::NextPage;
+    first.section = Some(Box::new(sect));
+    let mut b = doc4me_doc::Paragraph::with_text("B", Default::default());
+    b.props.space_before = Some(24.0);
+    d.body = vec![doc4me_doc::para_block(first), doc4me_doc::para_block(b)];
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let first_y = |p: &Page| p.items.iter().find_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None });
+    let (a, b) = (first_y(&l.pages[0]).unwrap(), first_y(&l.pages[1]).unwrap());
+    assert!((a - l.pages[0].body.y - 24.0).abs() < 0.01, "the first page keeps it: {a}");
+    assert!((b - l.pages[1].body.y).abs() < 0.01, "the new section's page drops it: {b}");
+}
+
+#[test]
+fn a_superscript_paragraph_mark_keeps_the_full_line_height() {
+    // zenodo-022: empty paragraphs whose mark is superscript are as tall as plain ones in Word.
+    let height = |va: doc4me_doc::props::VertAlign| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        p.mark.vert_align = Some(va);
+        d.body = vec![
+            doc4me_doc::para_block(p.clone()),
+            doc4me_doc::para_block(p),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("x", Default::default())),
+        ];
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        ys[2] - ys[0]
+    };
+    let plain = height(doc4me_doc::props::VertAlign::Baseline);
+    assert!(plain > 20.0, "two lines: {plain}");
+    assert!((height(doc4me_doc::props::VertAlign::Superscript) - plain).abs() < 0.01);
+    assert!((height(doc4me_doc::props::VertAlign::Subscript) - plain).abs() < 0.01);
 }
 
 #[test]

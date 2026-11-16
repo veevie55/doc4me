@@ -1354,7 +1354,16 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         wrap_after: Vec::new(),
         keep_with_next: Vec::new(),
     };
-    let mark_rc = resolve(&p.mark);
+    // A superscript or subscript paragraph mark keeps its full size's line height: Word gives an
+    // empty paragraph whose mark is superscript the same height as one with a plain mark
+    // (zenodo-022: 13 such 11pt Overpass paragraphs under a diagram's text boxes take 13.58pt
+    // each, not the shrunken glyphs' 8.8pt).
+    let mark_rc = match resolve(&p.mark) {
+        rc if rc.vert_align != doc4me_doc::props::VertAlign::Baseline => {
+            Arc::new(ResolvedChar { vert_align: doc4me_doc::props::VertAlign::Baseline, ..(*rc).clone() })
+        }
+        rc => rc,
+    };
     let mark_style = b.style(&mark_rc, None, false);
     let mut has_page_fields = false;
     let mut notes = Vec::new();
