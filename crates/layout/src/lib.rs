@@ -28,7 +28,7 @@ use std::sync::Arc;
 
 use doc4me_doc::numbering::{Counters, Level};
 use doc4me_doc::para::{Anchor, Float, FloatAlign, InlineObject, Wrap, WrapText};
-use doc4me_doc::props::{Border, CharProps, FrameProps, FrameWrap, Rgb, TableFloat, TextDirection};
+use doc4me_doc::props::{Border, CharProps, FrameProps, FrameWrap, HeightRule, Rgb, TableFloat, TextDirection};
 use doc4me_doc::section::{HeaderSet, SectionProps, SectionStart};
 use doc4me_doc::{Block, Blocks, Document, Paragraph, Path, StoryRef};
 use doc4me_geom::{Point, Rect, Spin};
@@ -3921,7 +3921,18 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 if pb.y + cur.height <= pb.bottom + 0.01 {
                     break;
                 }
-                let split = if splittable { table::split_row(cur, pb.bottom - pb.y) } else { None };
+                // A row doesn't start on a page with less room than its minimum height (`w:trHeight`
+                // at least): zenodo-173 moves a 29.45pt row whole with about 28pt left in Word.
+                let min_room = t
+                    .rows
+                    .get(ri)
+                    .filter(|_| rest.is_none())
+                    .and_then(|r| match (r.props.height, r.props.height_rule) {
+                        (Some(h), HeightRule::AtLeast) if h.is_finite() => Some(h),
+                        _ => None,
+                    })
+                    .unwrap_or(0.0);
+                let split = if splittable && pb.bottom - pb.y >= min_room - 0.01 { table::split_row(cur, pb.bottom - pb.y) } else { None };
                 match split {
                     Some((a, b)) => {
                         place(pb, &a);

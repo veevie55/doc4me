@@ -1597,6 +1597,37 @@ fn tall_rows_split_across_pages() {
 }
 
 #[test]
+fn a_row_does_not_split_into_less_room_than_its_minimum_height() {
+    // zenodo-173: a row at least 29.45pt tall moves whole to the next page when about 28pt are
+    // left, though its first lines would fit there. With room for its minimum height it splits.
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let first_page_lines = |min: Option<f32>| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 40.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        let mut cell = doc4me_doc::Paragraph::with_text("one\ntwo\nthree\nfour\nfive\nsix", Default::default());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        cell.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        t.rows[0].props.height = min;
+        t.rows[0].props.height_rule = HeightRule::AtLeast;
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert!(first_page_lines(None) > 0, "without a minimum height the row splits");
+    assert!(first_page_lines(Some(30.0)) > 0, "30pt fit in the 40pt left");
+    assert_eq!(first_page_lines(Some(50.0)), 0, "50pt don't: the row moves whole");
+}
+
+#[test]
 fn repeated_header_is_followed_by_the_next_row_even_when_it_overflows() {
     // A one-column table at the top of a letter page (body 648 pt), then an empty paragraph. Returns
     // the table rows on each page, in order.
