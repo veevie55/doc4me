@@ -838,6 +838,8 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             (_, true) => crate::latin_metrics::GARAMOND_ITALIC,
             _ => crate::latin_metrics::GARAMOND_REGULAR,
         })
+    } else if family.eq_ignore_ascii_case("Tahoma") && !bold && !italic {
+        Some(crate::latin_metrics::TAHOMA_REGULAR)
     } else if family.eq_ignore_ascii_case("Calibri Light") {
         // Calibri Light has no bold: Word emboldens the light face and keeps its widths
         // (zenodo-049's bold italic runs are set with Calibri-LightItalic in Word's PDF).
@@ -863,6 +865,8 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             &["Caladea"]
         } else if family.eq_ignore_ascii_case("Calibri Light") {
             &["Carlito"]
+        } else if family.eq_ignore_ascii_case("Tahoma") {
+            &["Arimo"]
         } else if family.eq_ignore_ascii_case("Garamond") {
             // Its serif stand-ins: Tinos where only open fonts exist, Times New Roman on Windows.
             &["Tinos", "Times New Roman"]
@@ -1216,6 +1220,12 @@ mod tests {
         assert_eq!(covered_fallback_line("Cambria Math", 10.5).map(em), Some(12.31));
         assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
         assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
+        // Tahoma's regular widths apply with Arimo (its space is 0.3125 em, Arimo's 0.278); bold
+        // keeps Arimo Bold's.
+        if resolve("Tahoma", false, false).face.family == "Arimo" {
+            assert_eq!(metric_fit("Tahoma", false, false).and_then(|f| f.advance(' ')), Some(0.313));
+            assert!(metric_fit("Tahoma", true, false).is_none());
+        }
         // Tahoma keeps its own 1.207 em line whatever face draws it (13.277 pt at 11 pt).
         assert_eq!(em(single_line("Tahoma", &r.face, true, 1.0)), 1.207);
         assert_eq!(em(single_line("Tahoma", &r.face, true, 11.0)), 13.277);
