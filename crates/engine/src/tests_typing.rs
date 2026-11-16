@@ -985,3 +985,22 @@ fn autoformat_makes_new_lists_and_page_numbers_in_thai_digits() {
     assert_eq!(page, Some(NumFormat::Decimal));
     assert!(!fields.iter().any(|f| f.contains("ThaiArabic")), "{fields:?}");
 }
+
+/// A numbered list pasted from elsewhere (HTML or RTF) keeps its own number format only while
+/// AutoFormat is off; on, its decimal levels number in Thai digits like the lists made here.
+#[test]
+fn pasted_lists_take_thai_digits_only_with_autoformat_on() {
+    use doc4me_doc::section::NumFormat;
+    let html = "<ol><li>one</li><li>two</li></ol>";
+    let pasted = |on: bool| {
+        let mut s = s();
+        if on {
+            run(&mut s, "file.autoFormat", json!({"value": true}));
+        }
+        run(&mut s, "edit.pasteSpecial", json!({"as": "html", "html": html}));
+        let i = s.doc.body.iter().position(|b| b.as_para().is_some_and(|p| p.text == "one")).expect("pasted list");
+        list_format(&s, i)
+    };
+    assert_eq!(pasted(false), Some(NumFormat::Decimal));
+    assert_eq!(pasted(true), Some(NumFormat::ThaiNumbers));
+}

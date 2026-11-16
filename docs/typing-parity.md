@@ -1,6 +1,6 @@
 # Typing parity with Word
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (AutoFormat Thai digits switch beside AutoSave; previously trivial: Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (AutoFormat on: pasted lists take Thai digits; previously minor: AutoFormat Thai digits switch beside AutoSave; previously trivial: Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
 
 What Word does when you type, observed black-box (same keystrokes typed into Word and
 Doc4Me, results read back paragraph by paragraph) and pinned by tests in
@@ -107,7 +107,8 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 | Typing digits with AutoFormat on | every typed Arabic digit is a Thai digit, one key at a time or several at once (`text.insert`, `raw` included) | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
 | Turn AutoFormat off | nothing converts back; digits typed afterwards stay Arabic | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
 | "1. " at the start of a paragraph with AutoFormat on | arrives as "๑. " and starts a numbered list numbered in Thai digits (๑. ก. 1.); with AutoFormat off, "๑. " typed by hand stays text | `autoformat_keeps_numbered_lists_starting_in_thai_digits` |
-| Make a list or insert a page number with AutoFormat on | the Numbering and Multilevel List buttons, Define New Number Format and Define New Multilevel List make lists numbered in Thai digits (decimal levels become Thai), and an inserted page number shows Thai digits: every section's decimal page numbering turns Thai and page-count, section and sequence fields take `\* ThaiArabic`. Off, they are made as before; lists pasted from elsewhere keep their own numbering | `autoformat_makes_new_lists_and_page_numbers_in_thai_digits` |
+| Make a list or insert a page number with AutoFormat on | the Numbering and Multilevel List buttons, Define New Number Format and Define New Multilevel List make lists numbered in Thai digits (decimal levels become Thai), and an inserted page number shows Thai digits: every section's decimal page numbering turns Thai and page-count, section and sequence fields take `\* ThaiArabic`. Off, they are made as before | `autoformat_makes_new_lists_and_page_numbers_in_thai_digits` |
+| Paste a numbered list from elsewhere (Paste Special: HTML or RTF) | with AutoFormat on, its decimal levels number in Thai digits like the lists made here; off, it keeps the number format it came with | `pasted_lists_take_thai_digits_only_with_autoformat_on` |
 
 ## Text direction
 
@@ -158,6 +159,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | AutoFormat on: lists pasted from elsewhere number in Thai digits; off, they keep their own format |
 | 2026-11-16 | minor | AutoFormat on: new lists and inserted page numbers show Thai digits |
 | 2026-11-16 | minor | AutoFormat on: "1. " (typed as "๑. ") still starts a numbered list, in Thai digits |
 | 2026-11-16 | minor | AutoFormat (title bar, beside AutoSave): turning it on converts the document's digits to Thai digits once; typed Arabic digits become Thai digits while it is on; off converts nothing back |

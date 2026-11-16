@@ -201,12 +201,21 @@ fn adopt(s: &mut Session, src: Document) -> Fragment {
         let ext = key.rsplit_once('.').map(|(_, e)| e).unwrap_or("png");
         media.insert(key.clone(), s.doc.add_media(data.to_vec(), ext));
     }
+    // With AutoFormat on, pasted lists number in Thai digits like the lists made here; off, they
+    // keep the numbering they came with.
+    let thai = |s: &Session, levels: &mut [doc4me_doc::numbering::Level]| {
+        for l in levels {
+            l.format = super::format::auto_num_format(s, l.format);
+        }
+    };
     let next_abs = s.doc.numbering.abstracts.iter().map(|a| a.id.saturating_add(1)).max().unwrap_or(0);
     let mut abs_map = BTreeMap::new();
     for (i, a) in src.numbering.abstracts.iter().enumerate() {
         let id = next_abs.saturating_add(i as u32);
         abs_map.insert(a.id, id);
-        std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.push(doc4me_doc::numbering::AbstractNum { id, ..a.clone() });
+        let mut a = doc4me_doc::numbering::AbstractNum { id, ..a.clone() };
+        thai(s, &mut a.levels);
+        std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.push(a);
     }
     let next_num = s.doc.numbering.nums.iter().map(|n| n.id.saturating_add(1)).max().unwrap_or(1).max(1);
     let mut num_map = BTreeMap::new();
@@ -214,7 +223,11 @@ fn adopt(s: &mut Session, src: Document) -> Fragment {
         let id = next_num.saturating_add(i as u32);
         num_map.insert(n.id, id);
         let abstract_id = abs_map.get(&n.abstract_id).copied().unwrap_or(n.abstract_id);
-        std::sync::Arc::make_mut(&mut s.doc.numbering).nums.push(doc4me_doc::numbering::Num { id, abstract_id, ..n.clone() });
+        let mut n = doc4me_doc::numbering::Num { id, abstract_id, ..n.clone() };
+        for (_, l) in &mut n.level_overrides {
+            l.format = super::format::auto_num_format(s, l.format);
+        }
+        std::sync::Arc::make_mut(&mut s.doc.numbering).nums.push(n);
     }
     for st in &src.styles.styles {
         if s.doc.styles.get(&st.id).is_none() {
