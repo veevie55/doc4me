@@ -961,11 +961,17 @@ impl std::fmt::Debug for MediaIndex {
 }
 
 /// A `w:font` name and its `w:altName`, retained for font substitution during layout and save.
-#[derive(Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FontAlias {
     pub font: String,
     pub alternate: String,
+    /// The font table lists the font with the Macintosh character set (`w:charset="4D"`):
+    /// Word for Windows draws such a font with its `w:altName` (zenodo-022 and zenodo-069 list
+    /// Overpass so, with altName Calibri, and Word's PDFs draw Calibri; zenodo-067 lists it with
+    /// charset 00 and Word's PDF embeds Overpass).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub mac_charset: bool,
 }
 
 /// One thing reading a damaged file repaired: `message` is a fixed English sentence with `{what}`

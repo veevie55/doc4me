@@ -892,7 +892,10 @@ mod font_substitution_tests {
         let equation_font = "Doc4Me Missing Equation Font C351";
         let mut session = Session::new(Document::from_text("Graphic\nEquation"));
         for name in [graphic_font, equation_font] {
-            session.doc.font_aliases.insert(name.to_lowercase(), doc4me_doc::FontAlias { font: name.into(), alternate: "Source Sans 3".into() });
+            session
+                .doc
+                .font_aliases
+                .insert(name.to_lowercase(), doc4me_doc::FontAlias { font: name.into(), alternate: "Source Sans 3".into(), mac_charset: false });
         }
         let graphic = InlineObject::Graphic {
             w: 80.0,

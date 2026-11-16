@@ -2172,7 +2172,10 @@ mod tests {
         let requested = "Doc4Me Missing Math Font B18D";
         assert!(!doc4me_fonts::FontDb::global().has_family(requested));
         let mut aliases = BTreeMap::new();
-        aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+        aliases.insert(
+            requested.to_lowercase(),
+            doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false },
+        );
         let math = Math {
             nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(requested.into()), ..Default::default() })],
             ..Default::default()

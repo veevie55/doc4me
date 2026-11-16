@@ -504,11 +504,14 @@ pub(crate) fn font_for_document<'a>(doc: &'a Document, family: &'a str) -> Cow<'
 
 /// Use a DOCX font-table alternate only when the requested family isn't installed.
 pub(crate) fn font_for_aliases<'a>(aliases: &'a std::collections::BTreeMap<String, doc4me_doc::FontAlias>, family: &'a str) -> Cow<'a, str> {
-    if doc4me_fonts::FontDb::global().has_family(family) {
+    let key = family.trim().to_lowercase();
+    let alias = aliases.get(&key).filter(|alias| !alias.alternate.trim().is_empty());
+    // A font the font table lists with the Macintosh character set is drawn with its alternate
+    // even where it is installed, as Word for Windows does (`FontAlias::mac_charset`).
+    if alias.is_none_or(|a| !a.mac_charset) && doc4me_fonts::FontDb::global().has_family(family) {
         return Cow::Borrowed(family);
     }
-    let key = family.trim().to_lowercase();
-    let Some(alias) = aliases.get(&key).filter(|alias| !alias.alternate.trim().is_empty()) else { return Cow::Borrowed(family) };
+    let Some(alias) = alias else { return Cow::Borrowed(family) };
     Cow::Borrowed(&alias.alternate)
 }
 

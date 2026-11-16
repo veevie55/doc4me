@@ -572,7 +572,8 @@ impl Reader<'_> {
                 continue;
             }
             let key = name.to_lowercase();
-            self.doc.font_aliases.entry(key).or_insert_with(|| doc4me_doc::FontAlias { font: name.into(), alternate: alternate.into() });
+            let mac_charset = font.child_val("w:charset").is_some_and(|c| c.trim().eq_ignore_ascii_case("4D"));
+            self.doc.font_aliases.entry(key).or_insert_with(|| doc4me_doc::FontAlias { font: name.into(), alternate: alternate.into(), mac_charset });
         }
         Ok(())
     }

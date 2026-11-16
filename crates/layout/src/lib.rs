@@ -971,6 +971,12 @@ fn layout_blocks(
                 let ctxl = pl.rp.contextual_spacing;
                 let same = prev_style.as_ref().is_some_and(|(s, c)| *s == pl.rp.style && (*c || ctxl));
                 let mut before = if same && ctxl { 0.0 } else { pl.rp.space_before };
+                // Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below
+                // its last, as in a web page's cells: zenodo-021's cells of single 12 pt lines with
+                // automatic spacing are rows 33 pt apart in Word's PDF, not 61.
+                if table.is_some() && i == first && pl.rp.space_before_auto {
+                    before = 0.0;
+                }
                 if same && ctxl {
                     y -= prev_after;
                 } else if prev_style.is_some() && !ctx.doc.settings.add_para_spacing {
@@ -1015,11 +1021,12 @@ fn layout_blocks(
                 }
                 y += bx.top + pl.height;
                 prev_end = y;
-                y += bx.bottom + pl.rp.space_after;
+                let after = if table.is_some() && i + 1 == range.end && pl.rp.space_after_auto { 0.0 } else { pl.rp.space_after };
+                y += bx.bottom + after;
                 // Keep the actual trailing space: the next paragraph may suppress it when
                 // contextual spacing applies. `same` describes this paragraph and its previous
                 // sibling, not the paragraph that follows it.
-                prev_after = pl.rp.space_after;
+                prev_after = after;
                 prev_style = Some((pl.rp.style.clone(), ctxl));
             }
             Block::Table(t) => {

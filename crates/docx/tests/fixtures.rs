@@ -72,7 +72,9 @@ fn floating_table_omitted_vertical_anchor_uses_margins_not_its_paragraph() {
 
 #[test]
 fn font_table_alt_names_drive_substitution_and_survive_docx_round_trip() {
-    let fonts = format!(r#"<w:fonts {W_NS}><w:font w:name="Missing Family"><w:altName w:val="Source Sans 3"/></w:font></w:fonts>"#);
+    let fonts = format!(
+        r#"<w:fonts {W_NS}><w:font w:name="Missing Family"><w:altName w:val="Source Sans 3"/></w:font><w:font w:name="Mac Family"><w:altName w:val="Calibri"/><w:charset w:val="4D"/></w:font></w:fonts>"#
+    );
     let bytes = docx(
         r#"<w:p><w:r><w:rPr><w:rFonts w:ascii="Missing Family" w:hAnsi="Missing Family"/></w:rPr><w:t>kept</w:t></w:r></w:p>"#,
         &[("rIdFontTable", "fontTable", "fontTable.xml")],
@@ -80,6 +82,9 @@ fn font_table_alt_names_drive_substitution_and_survive_docx_round_trip() {
     );
     let first = doc4me_docx::read(&bytes).unwrap();
     assert_eq!(first.font_aliases.get("missing family").map(|a| (a.font.as_str(), a.alternate.as_str())), Some(("Missing Family", "Source Sans 3")));
+    // The Macintosh character set (`w:charset="4D"`) is kept and saved again.
+    assert_eq!(first.font_aliases.get("missing family").map(|a| a.mac_charset), Some(false));
+    assert_eq!(first.font_aliases.get("mac family").map(|a| a.mac_charset), Some(true));
     let first_run = first.body[0].as_para().unwrap().props_at(0);
     assert_eq!(first_run.font.as_deref(), Some("Missing Family"));
 

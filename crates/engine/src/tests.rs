@@ -5469,7 +5469,9 @@ fn font_substitution_prefers_a_docx_font_table_alt_name() {
     run(&mut s, "text.insert", json!({"text": "Font alias"}));
     run(&mut s, "select.all", json!({}));
     run(&mut s, "format.set", json!({"props": {"font": requested}}));
-    s.doc.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    s.doc
+        .font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
 
     let v = run(&mut s, "file.fontSubstitution", json!({}));
     let row = v["fonts"].as_array().unwrap().iter().find(|f| f["font"] == requested).expect("listed");

@@ -62,14 +62,24 @@ fn document_font_alt_name_is_used_only_when_the_requested_family_is_missing() {
     let mut d = Document::new();
     d.font_aliases.insert(
         "missing font for alt-name test".into(),
-        doc4me_doc::FontAlias { font: "Missing Font for Alt-Name Test".into(), alternate: "Source Sans 3".into() },
+        doc4me_doc::FontAlias { font: "Missing Font for Alt-Name Test".into(), alternate: "Source Sans 3".into(), mac_charset: false },
     );
     let chosen = crate::para::font_for_document(&d, "Missing Font for Alt-Name Test");
     assert_eq!(chosen, "Source Sans 3");
     assert_eq!(doc4me_fonts::word::resolve(&chosen, false, false).face.family, "Source Sans 3");
 
-    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into() });
+    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into(), mac_charset: false });
     assert_eq!(crate::para::font_for_document(&d, "Sarabun"), "Sarabun");
+}
+
+/// A font the font table lists with the Macintosh character set (`w:charset="4D"`) is drawn
+/// with its alternate even where it is installed, as Word for Windows draws zenodo-022's and
+/// zenodo-069's Overpass (charset 4D, altName Calibri) with Calibri.
+#[test]
+fn a_mac_charset_font_is_drawn_with_its_alternate() {
+    let mut d = Document::new();
+    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into(), mac_charset: true });
+    assert_eq!(crate::para::font_for_document(&d, "Sarabun"), "Source Sans 3");
 }
 
 #[test]
@@ -78,7 +88,8 @@ fn paragraph_layout_uses_document_alt_name_and_keeps_the_requested_font() {
     assert!(!doc4me_fonts::FontDb::global().has_family(requested));
     let text = "Paragraph rendered with the alternate family";
     let mut d = Document::from_text(text);
-    d.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    d.font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
     d.format_range(&Pos::body(0, 0), &Pos::body(0, text.len()), &|c| c.font = Some(requested.into())).unwrap();
 
     let l = lay(&d);
@@ -97,7 +108,8 @@ fn equation_layout_uses_document_alt_name_and_keeps_the_requested_font() {
     let requested = "Doc4Me Missing Equation Font A17F";
     assert!(!doc4me_fonts::FontDb::global().has_family(requested));
     let mut d = Document::new();
-    d.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    d.font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
     let math = Math {
         nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(requested.into()), ..Default::default() })],
         ..Default::default()
@@ -6038,4 +6050,39 @@ fn a_bookmark_before_an_oversized_picture_leaves_no_empty_line() {
         n
     };
     assert_eq!(lines(true), lines(false), "the bookmark adds no line");
+}
+
+/// Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below its last
+/// (zenodo-021: Word steps single-line cells with automatic spacing 33 pt apart, not 61); between
+/// two paragraphs of a cell it is.
+#[test]
+fn automatic_spacing_skips_a_cells_first_and_last_paragraph() {
+    let row_gap = |paras: usize, auto: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            row.cells[0].blocks = (0..paras)
+                .map(|k| {
+                    let mut p = doc4me_doc::Paragraph::with_text(&format!("cell {k}"), Default::default());
+                    p.props.space_before_auto = Some(auto);
+                    p.props.space_after_auto = Some(auto);
+                    p.props.space_before = Some(0.0);
+                    p.props.space_after = Some(0.0);
+                    doc4me_doc::para_block(p)
+                })
+                .collect();
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let tops: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        tops
+    };
+    let plain = row_gap(1, false);
+    let auto = row_gap(1, true);
+    assert_eq!(plain.len(), 2, "two rows: {plain:?}");
+    assert!(((auto[1] - auto[0]) - (plain[1] - plain[0])).abs() < 0.01, "no automatic space in single-paragraph cells: {auto:?} vs {plain:?}");
+    let two_plain = row_gap(2, false);
+    let two_auto = row_gap(2, true);
+    assert!(((two_auto[1] - two_auto[0]) - (two_plain[1] - two_plain[0]) - 14.0).abs() < 0.5, "14 pt between a cell's two paragraphs");
 }

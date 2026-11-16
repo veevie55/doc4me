@@ -348,7 +348,8 @@ fn drawing_text_uses_font_table_alt_name_without_rewriting_its_font() {
     let requested = "Doc4Me Missing Graphic Font 7F31";
     assert!(!doc4me_fonts::FontDb::global().has_family(requested));
     let mut doc = Document::new();
-    doc.font_aliases.insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into() });
+    doc.font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
     let item = GraphicItem::Text {
         rect: [0.0, 0.0, 200.0, 30.0],
         text: "Aliased graphic text".into(),

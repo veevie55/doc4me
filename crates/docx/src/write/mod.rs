@@ -753,6 +753,9 @@ fn font_table_xml(doc: &Document) -> Vec<u8> {
     for alias in doc.font_aliases.values() {
         w.open("w:font", &[("w:name", &alias.font)]);
         w.empty("w:altName", &[("w:val", &alias.alternate)]);
+        if alias.mac_charset {
+            w.empty("w:charset", &[("w:val", "4D")]);
+        }
         w.close("w:font");
     }
     w.close("w:fonts");
