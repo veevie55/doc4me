@@ -627,6 +627,9 @@ struct Ctx<'a> {
     alphas: contour::Alphas,
     /// The current section's document grid (body text only: none for headers and footers).
     grid: para::Grid,
+    /// While a table cell's text is laid out: the cell's end (right) margin, which floating
+    /// objects in the cell may reach into ([`float_rect`]).
+    cell_end: Option<f32>,
     /// Whether tracked deletions are left out in the story being laid out
     /// ([`LayoutOptions::hides_deleted`]): the body's, or the story of the [`layout_box`] at work.
     hide_deleted: bool,
@@ -992,7 +995,7 @@ fn layout_blocks(
                     if left_out(oi) {
                         continue;
                     }
-                    let r = float_rect(frame, (0.0, width), y, w, h, float);
+                    let r = float_rect(frame, (0.0, width), y, w, h, float, ctx.cell_end.filter(|_| table.is_some()));
                     let outline = ctx.wrap_outline(o);
                     excl.extend(wrap_area(r, float, outline.as_deref().map(|v| v.as_slice())));
                     floats.insert(oi, r);
@@ -2044,6 +2047,7 @@ fn layout_pass(
         sections: sections.clone(),
         heads: Vec::new(),
         header_wraps: HashMap::new(),
+        cell_end: None,
     };
     let (all_heads, all_feet) = (linked_all(&sections, |s| s.headers), linked_all(&sections, |s| s.footers));
     ctx.heads = all_heads.clone();
@@ -2695,8 +2699,8 @@ fn floating(o: &InlineObject) -> Option<(f32, f32, &Float)> {
 /// Where a floating object goes, in the coordinates of the box `frame` places on the page.
 /// `col` is the column (or cell) left edge and width, `y0` the anchor paragraph's top. Without a
 /// frame (table cells, text boxes, notes) positions relative to the page or margins fall back
-/// to the box itself.
-fn float_rect(frame: Option<PageFrame>, col: (f32, f32), y0: f32, w: f32, h: f32, float: &Float) -> Rect {
+/// to the box itself. `cell_end`: in a table cell, the cell's end margin (see below).
+fn float_rect(frame: Option<PageFrame>, col: (f32, f32), y0: f32, w: f32, h: f32, float: &Float, cell_end: Option<f32>) -> Rect {
     let (w, h) = (w.clamp(1.0, 4000.0), h.clamp(1.0, 4000.0));
     // Each axis: the reference area's start and extent, in page coordinates.
     let page_x = |s: &SectionProps| {
@@ -2718,7 +2722,24 @@ fn float_rect(frame: Option<PageFrame>, col: (f32, f32), y0: f32, w: f32, h: f32
     };
     let hx = frame.and_then(|f| page_x(f.sect).map(|(a, e)| (a - f.origin.0, e))).unwrap_or(col);
     let vy = frame.and_then(|f| page_y(f.sect).map(|(a, e)| (a - f.origin.1, e))).unwrap_or((y0, 0.0));
-    Rect::new(align_in(hx, float.x, w, float.h_align), align_in(vy, float.y, h, float.v_align), w, h)
+    let mut x = align_in(hx, float.x, w, float.h_align);
+    // In a table cell (`cell_end`: how far the cell reaches past `col`'s end, its end margin), Word
+    // keeps a text-wrapping object placed at an offset from the column inside the cell: one that
+    // would run past the cell's edge moves back until its right edge meets it (zenodo-157: Square
+    // pictures 273.6 pt into a 453 pt cell end at the cell's right edge, 523.9 pt, in Word's PDF).
+    // Objects text doesn't wrap around, and ones wider than the cell, keep their offset.
+    let wraps = matches!(float.wrap, Wrap::Square | Wrap::Tight | Wrap::Through | Wrap::TopAndBottom);
+    if let Some(end) = cell_end.filter(|e| e.is_finite())
+        && wraps
+        && float.h_rel == Anchor::Column
+        && float.h_align.is_none()
+    {
+        let right = col.0 + col.1 + end.clamp(0.0, 1584.0);
+        if x + w > right && w <= right - col.0 {
+            x = right - w;
+        }
+    }
+    Rect::new(x, align_in(vy, float.y, h, float.v_align), w, h)
 }
 
 /// Where an object of `size` starts on one axis of `area` (start, extent): at `offset` from the
@@ -2872,7 +2893,7 @@ fn anchor_floats(
             if left_out(oi) {
                 continue;
             }
-            let r = float_rect(Some(frame), (col_x, width), y0, w, h, float);
+            let r = float_rect(Some(frame), (col_x, width), y0, w, h, float, None);
             rects.insert(oi, r);
             let outline = ctx.wrap_outline(o);
             if let Some(area) = wrap_area(r, float, outline.as_deref().map(|v| v.as_slice())) {
@@ -2957,7 +2978,7 @@ fn place_objects(
             }
             let rect = if floating {
                 let placed = if follows_break { None } else { floats.get(&oi).copied() };
-                placed.unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float))
+                placed.unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float, None))
             } else {
                 let cx = x + line.cl_left(k).unwrap_or(0.0);
                 display::inline_rect(Some(obj), cx, y + (line.baseline - fl.top), c.adv, c.obj_h)

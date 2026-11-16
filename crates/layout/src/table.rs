@@ -614,7 +614,9 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 turned = Some(Turned { turn, len, across, snap, region, ci, top: margins[0] + band_t });
                 (items, len)
             } else {
+                let outer_end = ctx.cell_end.replace(margins[3].max(0.0));
                 let BoxLayout { mut items, height, floats_bottom, .. } = layout_cell(ctx, story, cell, &cpath, cw, text, depth);
+                ctx.cell_end = outer_end;
                 for it in &mut items {
                     it.translate(x0 + margins[1], margins[0] + band_t);
                 }

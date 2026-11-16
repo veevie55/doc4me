@@ -5985,3 +5985,35 @@ fn a_word_with_alternating_advances_lays_out_in_linear_time() {
     eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
     assert!(ratio < 24.0, "8x the word took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
 }
+
+/// Word keeps a text-wrapping picture placed at an offset from the column inside its table cell:
+/// one that would run past the cell's right edge moves back until it meets the edge (zenodo-157's
+/// Square pictures end at the cell's edge in Word's PDF). In front of text it keeps its offset.
+#[test]
+fn wrapping_floats_in_a_cell_stay_inside_the_cell() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let place = |wrap: Wrap, x: f32| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 468.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("cell text that wraps around the picture", Default::default());
+        let f = Float { wrap, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 40.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let s = shapes(&l.pages[0].items);
+        assert_eq!(s.len(), 1, "{wrap:?} drawn");
+        s[0]
+    };
+    // The cell's text starts 5.4 pt (its left margin) inside the cell; the cell is 468 pt wide.
+    let text_left = place(Wrap::Square, 0.0).x;
+    let cell_right = text_left - 5.4 + 468.0;
+    for wrap in [Wrap::Square, Wrap::Tight, Wrap::TopAndBottom] {
+        let r = place(wrap, 400.0);
+        assert!((r.x + r.w - cell_right).abs() < 0.01, "{wrap:?} ends at the cell's edge: {r:?}, edge {cell_right}");
+    }
+    let inside = place(Wrap::Square, 300.0);
+    assert!((inside.x - (text_left + 300.0)).abs() < 0.01, "one that fits keeps its offset: {inside:?}");
+    let front = place(Wrap::InFrontOfText, 400.0);
+    assert!((front.x - (text_left + 400.0)).abs() < 0.01, "in front of text keeps its offset: {front:?}");
+}
