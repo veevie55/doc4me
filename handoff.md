@@ -1,5 +1,11 @@
 > **Standing instruction from the owner (2026-11-16):** after finishing work, do **not** publish a GitHub Release or redeploy the GitHub Pages Web App; the owner does both. Commit/push to `main` as CLAUDE.md requires, and stop there.
 
+# PAUSED · 2026-11-16 — page-count work on hold by the owner
+
+- Owner decisions: **zenodo-045 excluded**, **govuk-026 accepted** (`check` = `accepted`: its pagination counts as passing; `xtask/src/readiness.rs` `record_document`). The next Windows readiness run will count 219 documents with govuk-026 passing (last run 43886112079 counted 203/220 before this change).
+- **On hold (owner, 2026-11-16): the remaining page-count failures**, both the large/unknown ones (zenodo-157 cell row re-layout for a picture anchored to a cell's last line; zenodo-128 empty Heading 1 line height; zenodo-114 blank page between vertically centred sections; govuk-038/govuk-067 Tahoma, not reproducible on Linux) and the ones not yet analysed (govuk-053, zenodo-022, -039, -049, -053, -069, -081, -123, -125, -173). Do not resume them unless the owner asks.
+- After this the owner asked for one GitHub Pages Web App deployment from the latest `main`, then to stop. (This overrides the earlier "don't deploy Pages" instruction for this one request only.)
+
 # Page-count work · 2026-11-16 (user: continue until all 220 match)
 
 - Linux prepared-font comparison: CLI built with `CRAFT_FONTS_DIR=/home/user/work/craft-fonts CRAFT_FONTS_REQUIRED=1 CARGO_TARGET_DIR=/home/user/work/target-prepared cargo build --release -p doc4me-cli`; `JOBS=8 python3 /home/user/work/scripts/compare.py <repo> <base-cli> <cand-cli> <outdir> <tsv>`; helpers `drift.py`, `lines.py`, `imgpos.py` (image placements from PDF content streams) in `/home/user/work/scripts`. Latest candidate CLI `/home/user/work/mark-cli` (= `main` layout).

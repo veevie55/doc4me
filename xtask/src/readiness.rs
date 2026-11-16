@@ -584,6 +584,9 @@ fn sets_from_corpus(manifest: &[BTreeMap<String, String>], dir: &Path, cli: &Pat
     let names = ["corpus-open", "corpus-roundtrip", "corpus-pages", "corpus-breaks", "corpus-stability"];
     let mut sets: Vec<SetResult> = names.iter().map(|n| SetResult::new(n)).collect();
     let mut todo = Vec::new();
+    // Rows whose pagination the owner accepted (`check` = `accepted`): see `record_document`.
+    let accepted: std::collections::BTreeSet<String> =
+        manifest.iter().filter(|r| col(r, "check") == "accepted").map(|r| col(r, "id").to_string()).collect();
     for row in manifest {
         let id = col(row, "id");
         let (docx, pdf) = (dir.join(format!("{id}.docx")), dir.join(format!("{id}.pdf")));
@@ -617,14 +620,24 @@ fn sets_from_corpus(manifest: &[BTreeMap<String, String>], dir: &Path, cli: &Pat
     let mut results = results.into_inner().unwrap_or_default();
     results.sort_by(|a, b| a.id.cmp(&b.id));
     for r in &results {
-        for (set, res) in sets.iter_mut().zip([&r.open, &r.roundtrip, &r.pages, &r.breaks, &r.stable]) {
-            match res {
-                Ok(()) => set.pass(),
-                Err(e) => set.fail(&r.id, e.clone()),
-            }
-        }
+        record_document(&mut sets, r, accepted.contains(&r.id));
     }
     (sets, available)
+}
+
+/// Count one document's results into the five corpus sets. `accepted`: the owner accepted the
+/// row's pagination (`check` = `accepted` in `corpus.tsv`, with the decision in `note`), because
+/// the reference PDF was made from another edition while Doc4Me matches the `.docx`'s own saved
+/// layout (govuk-026): its page-count and page-boundary checks pass; opening, round trip and
+/// stability are still measured.
+fn record_document(sets: &mut [SetResult], r: &DocResult, accepted: bool) {
+    for (k, (set, res)) in sets.iter_mut().zip([&r.open, &r.roundtrip, &r.pages, &r.breaks, &r.stable]).enumerate() {
+        match res {
+            _ if accepted && (k == 2 || k == 3) => set.pass(),
+            Ok(()) => set.pass(),
+            Err(e) => set.fail(&r.id, e.clone()),
+        }
+    }
 }
 
 fn check_document(id: &str, docx: &Path, reference: &Path, cli: &Path, work: &Path) -> DocResult {
@@ -942,6 +955,28 @@ pub fn civil_date(days: i64) -> String {
 
 #[cfg(test)]
 mod tests {
+
+    /// A row whose pagination the owner accepted passes its page-count and page-boundary checks;
+    /// the other corpus checks still count what was measured.
+    #[test]
+    fn accepted_rows_pass_pagination_but_not_other_failures() {
+        let r = DocResult {
+            id: "doc-026".into(),
+            open: Ok(()),
+            roundtrip: Err("lost".into()),
+            pages: Err("4 pages, Word 7".into()),
+            breaks: Err("page count differs".into()),
+            stable: Ok(()),
+        };
+        let fresh = || ["corpus-open", "corpus-roundtrip", "corpus-pages", "corpus-breaks", "corpus-stability"].map(SetResult::new);
+        let mut plain = fresh();
+        record_document(&mut plain, &r, false);
+        assert_eq!(plain.iter().map(|s| s.passed).collect::<Vec<_>>(), [1, 0, 0, 0, 1]);
+        let mut accepted = fresh();
+        record_document(&mut accepted, &r, true);
+        assert_eq!(accepted.iter().map(|s| s.passed).collect::<Vec<_>>(), [1, 0, 1, 1, 1]);
+        assert!(accepted.iter().all(|s| s.total == 1));
+    }
     use super::*;
 
     #[test]

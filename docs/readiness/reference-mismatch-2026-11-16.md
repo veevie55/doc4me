@@ -2,7 +2,7 @@
 
 ## govuk-026: the reference PDF predates the .docx
 
-**For the owner's decision; no row has been excluded.** govuk-026 fails the page-count check
+**Owner's decision 2026-11-16: accepted** (`check` = `accepted`: its pagination counts as passing, because Doc4Me matches the `.docx`'s own saved layout). govuk-026 fails the page-count check
 (Doc4Me 4 pages, the reference PDF 7). The evidence says the PDF was made from an earlier
 revision of the form, not from this `.docx`:
 
@@ -23,7 +23,7 @@ XML (rows, `trHeight`, section properties, styles), and `pdftotext -bbox` of bot
 
 ## zenodo-045: the .docx has a section the reference PDF doesn't
 
-**For the owner's decision; not excluded.** zenodo-045 fails the page-count check (Doc4Me 21
+**Owner's decision 2026-11-16: excluded** (`check` = `excluded`). zenodo-045 fails the page-count check (Doc4Me 21
 pages after the bookmark fix, the reference PDF 20).
 
 | Evidence | Value |
