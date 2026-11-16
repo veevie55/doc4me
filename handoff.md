@@ -1,3 +1,13 @@
+# Status · 2026-11-16 (after AutoFormat new numbers)
+
+- AutoFormat now also makes new lists and inserted page numbers in Thai digits (`952f3a0`, user chose “all Thai”); CI 6/6 (2,566/1 ignored), language audit incl. ignored 65/65, cargo audit exit 0.
+- Official Windows: run 43804632296 (`093eaba`, report `15584f5`): pages 199/220, boundaries 104/220, 93.4% / 95.3%; live summaries refreshed.
+- **The owner deleted `.github/workflows/windows-x64-installer.yml` in `247aa7a` and, when asked, chose not to release now.** Do not restore it or publish a release unless newly requested. Published v1.1.4 remains at `e5d82d6` (refresh #2); later main commits (Garamond, AutoFormat list/page-number changes) are not in it.
+- GitHub Pages redeploy dispatched from `952f3a0` (run 43834113425). An earlier dispatch with a mistyped SHA (run 43834072758) was cancelled.
+- Page-count leads unchanged (govuk-053, zenodo-125, zenodo-003, zenodo-069/022 and 15 unanalysed rows).
+
+---
+
 # Status after v1.1.4 refresh #2 · 2026-11-16
 
 - **Release v1.1.4 refreshed** by run 43802874365 (update_release, commit `e5d82d6`): same release ID 445039704; the workflow moved tag v1.1.4 (lightweight now) to `e5d82d6` because this session's git proxy refuses tag pushes (HTTP 403). Assets verified: MSI sha256 `39cd0066…5d41`, ZIP `bd47c746…58ad` match the API digests; `doc4me.exe` embeds build SHA `e5d82d6…`; CLI reports 1.1.4; notes 121,381 bytes, six versions newest-first, include “รอบที่ 2”.
