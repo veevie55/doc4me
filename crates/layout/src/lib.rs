@@ -1495,6 +1495,9 @@ struct PageBuilder<'a> {
     /// The page was started by a page break that ended the paragraph before (its mark stayed on
     /// the page before): the next paragraph at the top of this page drops its space before.
     after_break: bool,
+    /// Where the run of paragraphs that keep with the next, ending at the last one placed, starts:
+    /// (page index, y). On a later page it continues from that page's top.
+    keep_chain: Option<(usize, f32)>,
     /// Wrap areas of floating objects on this page (see [`wrap_area`]).
     excl: Vec<WrapArea>,
     /// Wrap areas of the floating tables on this page, which others may not overlap.
@@ -2110,6 +2113,7 @@ fn layout_pass(
         prev: None,
         continuous_top: false,
         after_break: false,
+        keep_chain: None,
         excl: Vec::new(),
         float_tables: Vec::new(),
         line_no: 0,
@@ -3241,12 +3245,22 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         keep_tail = Some(keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading));
     } else if !section_marker && (pl.rp.keep_lines || keep_next) && !breaks(&pl) {
         let need = bx.top + pl.height + bx.bottom + if keep_next { keep_next_need(ctx, block, width, pl.rp.space_after, keep_leading) } else { 0.0 };
+        // The paragraphs before it that keep with it already stand on this page: moving it on
+        // only helps when the whole run fits on a page. zenodo-128's Heading 1 paragraphs (one
+        // picture each, empty ones between) all keep with the next; Word leaves the run where it
+        // falls rather than move its second picture away from the first.
+        let chain_top = match pb.keep_chain {
+            Some((page, y)) if page == pb.pages.len() => y.min(pb.y),
+            Some(_) => pb.top,
+            None => pb.y,
+        };
         // (Against the whole column: balanced columns grow to hold it.)
-        if pb.y + need > pb.bottom && !pb.at_top() && need <= pb.uncapped_bottom() - pb.top {
+        if pb.y + need > pb.bottom && !pb.at_top() && need + (pb.y - chain_top) <= pb.uncapped_bottom() - pb.top {
             pb.advance(block, body_top);
             pb.y += pl.rp.space_before.min(0.0);
         }
     }
+    pb.keep_chain = if keep_next { Some(pb.keep_chain.unwrap_or((pb.pages.len(), pb.y))) } else { None };
     // A different top only matters when there is something to wrap around.
     if spot(pb) != placed_at || ((pb.y - guess).abs() > 0.01 && !pb.excl.is_empty()) {
         let y0 = pb.y;
@@ -3771,6 +3785,7 @@ fn table_starts_with_style(ctx: &mut Ctx, t: &doc4me_doc::Table, style: &str) ->
 }
 
 fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block: usize, body_top: f32) {
+    pb.keep_chain = None;
     // A table in the flow is the first thing on the page after the break: a paragraph that later
     // starts another page at its top isn't the page's first after a break.
     if t.props.float.is_none() {

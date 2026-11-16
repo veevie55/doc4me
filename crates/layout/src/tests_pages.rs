@@ -733,3 +733,41 @@ fn keep_with_next_counts_a_short_widow_controlled_paragraph_whole() {
     assert_eq!(lines_of(0, 1), 0, "the heading leaves the first page");
     assert_eq!((lines_of(1, 1), lines_of(1, 2)), (1, 3), "and stands with the whole paragraph");
 }
+
+#[test]
+fn a_keep_with_next_run_longer_than_a_page_stays_where_it_falls() {
+    // zenodo-128: Heading 1 paragraphs that all keep with the next (each a 200pt block, empty
+    // ones between). Their run is longer than a page, so Word doesn't move the second block off
+    // the first one's page even though the second, with what follows it, would fit a page.
+    let block = |h: f32| {
+        let mut p = Paragraph::with_text("x", Default::default());
+        p.props.keep_next = Some(true);
+        p.props.keep_lines = Some(true);
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(h));
+        p
+    };
+    let mut d = Document::new();
+    // Page body 600pt: blocks of 200, 20, 20, 200 (520), then 20, 20, 200, ... all keep with next.
+    d.body = vec![
+        para_block(block(200.0)),
+        para_block(block(20.0)),
+        para_block(block(20.0)),
+        para_block(block(200.0)),
+        para_block(block(20.0)),
+        para_block(block(20.0)),
+        para_block(block(200.0)),
+        para_block(block(20.0)),
+        para_block(Paragraph::with_text("end", Default::default())),
+    ];
+    d.last_section.page_h = 600.0 + 144.0;
+    let l = lay(&d);
+    let page_of = |b: usize| {
+        l.pages
+            .iter()
+            .position(|pg| pg.items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, path, .. } if *path == Path::top(b))))
+            .unwrap()
+    };
+    assert_eq!(page_of(3), 0, "the second block stays with the first");
+}
