@@ -6085,4 +6085,29 @@ fn automatic_spacing_skips_a_cells_first_and_last_paragraph() {
     let two_plain = row_gap(2, false);
     let two_auto = row_gap(2, true);
     assert!(((two_auto[1] - two_auto[0]) - (two_plain[1] - two_plain[0]) - 14.0).abs() < 0.5, "14 pt between a cell's two paragraphs");
+    // A cell ending in a hidden empty mark (govuk-068) keeps the space after the paragraph before it.
+    let marked = |auto: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            let mut p = doc4me_doc::Paragraph::with_text("cell", Default::default());
+            p.props.space_after_auto = Some(auto);
+            p.props.space_after = Some(0.0);
+            let mut mark = doc4me_doc::Paragraph::with_text("", Default::default());
+            mark.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(p), doc4me_doc::para_block(mark)];
+            row.cells[0].props.hide_mark = true;
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        ys[1] - ys[0]
+    };
+    assert!(
+        (marked(true) - marked(false) - 14.0).abs() < 0.5,
+        "14 pt after the paragraph before a hidden end mark: {} vs {}",
+        marked(true),
+        marked(false)
+    );
 }

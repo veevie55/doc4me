@@ -974,7 +974,9 @@ fn layout_blocks(
                 // Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below
                 // its last, as in a web page's cells: zenodo-021's cells of single 12 pt lines with
                 // automatic spacing are rows 33 pt apart in Word's PDF, not 61.
-                if table.is_some() && i == first && pl.rp.space_before_auto {
+                // (The cell's own first and last blocks: a cell whose hidden end mark is laid out
+                // apart, govuk-068, keeps the space after the paragraph before that mark.)
+                if table.is_some() && i == 0 && pl.rp.space_before_auto {
                     before = 0.0;
                 }
                 if same && ctxl {
@@ -1021,7 +1023,7 @@ fn layout_blocks(
                 }
                 y += bx.top + pl.height;
                 prev_end = y;
-                let after = if table.is_some() && i + 1 == range.end && pl.rp.space_after_auto { 0.0 } else { pl.rp.space_after };
+                let after = if table.is_some() && i + 1 == blocks.len() && pl.rp.space_after_auto { 0.0 } else { pl.rp.space_after };
                 y += bx.bottom + after;
                 // Keep the actual trailing space: the next paragraph may suppress it when
                 // contextual spacing applies. `same` describes this paragraph and its previous
