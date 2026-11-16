@@ -563,6 +563,30 @@ fn automatic_spacing_skips_list_items_and_the_first_paragraph() {
     assert!((line - height).abs() < 1.0, "no space between list items: {line} for a {height} pt line");
 }
 
+/// The first item of a list keeps its automatic (HTML) space before after a paragraph that isn't
+/// a list item: zenodo-083's bulleted lists start 14 pt below a Heading 4 that has no space
+/// after, in Word's PDF. Between the items there is none.
+#[test]
+fn automatic_spacing_stays_above_a_list_after_another_paragraph() {
+    let mut d = Document::from_text("");
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Bullet);
+    let mut heading = Paragraph::with_text("Popular Algorithms Used:", Default::default());
+    heading.props.space_before = Some(0.0);
+    heading.props.space_after = Some(0.0);
+    let item = |text: &str| {
+        let mut p = Paragraph::with_text(text, Default::default());
+        p.props.space_before_auto = Some(true);
+        p.props.space_after_auto = Some(true);
+        p.props.numbering = Some(doc4me_doc::props::NumRef { num, level: 0 });
+        para_block(p)
+    };
+    d.body = vec![para_block(heading), item("Random Forest"), item("Support Vector Machines")];
+    let l = lay(&d);
+    let top = |i: usize| l.caret(&Pos { story: StoryRef::Body, path: Path::top(i), off: 0 }).unwrap().top;
+    let line = top(2) - top(1);
+    assert!((top(1) - top(0) - line - 14.0).abs() < 0.5, "14 pt above the list: {} vs line {line}", top(1) - top(0));
+}
+
 /// Lines of Cambria Math text step by Cambria's line (1.172 em), as in Word's PDF of zenodo-082,
 /// even where the face drawing it lacks Greek letters and a fallback face draws them; East Asian
 /// letters in the same run keep their fallback face's own line.

@@ -1478,7 +1478,7 @@ struct PageBuilder<'a> {
     /// The previous paragraph: (style, contextual spacing, space after) for contextual spacing.
     /// The paragraph placed last: its style, whether it has contextual spacing, its space after,
     /// and whether it is a list item with automatic space after.
-    prev: Option<(String, bool, f32, bool)>,
+    prev: Option<(String, bool, f32, PrevList)>,
     /// The page was started by a page break that ended the paragraph before (its mark stayed on
     /// the page before): the next paragraph at the top of this page drops its space before.
     after_break: bool,
@@ -2682,6 +2682,14 @@ fn header_wrap_areas(ctx: &mut Ctx, pb: &PageBuilder) -> Arc<Vec<WrapArea>> {
     areas
 }
 
+/// Whether the paragraph before was a list item, and whether its space after is automatic (HTML):
+/// automatic spacing isn't put between the items of a list.
+#[derive(Clone, Copy, Debug)]
+struct PrevList {
+    is_list: bool,
+    after_auto: bool,
+}
+
 /// Where a box of laid-out items sits on its page, for floating objects positioned relative to
 /// the page or its margins.
 #[derive(Clone, Copy)]
@@ -3152,12 +3160,14 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     if pl.rp.space_before_auto && block == 0 && pb.pages.len() <= 1 && pb.at_top() {
         before = 0.0;
     }
-    if let Some((style, ctxl, mut after, list_auto)) = pb.prev.take()
+    if let Some((style, ctxl, mut after, prev_list)) = pb.prev.take()
         && !pb.at_top()
     {
-        // Automatic (HTML) spacing isn't put between the items of a list, as in a web page.
-        if is_list(&pl.rp) && (list_auto || pl.rp.space_before_auto) {
-            if list_auto {
+        // Automatic (HTML) spacing isn't put between the items of a list, as in a web page. The
+        // first item after another paragraph keeps its automatic space before: zenodo-083's
+        // bulleted lists start 14 pt below an Heading 4 with no space after in Word's PDF.
+        if is_list(&pl.rp) && prev_list.is_list {
+            if prev_list.after_auto {
                 pb.y -= after;
                 after = 0.0;
             }
@@ -3508,7 +3518,12 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         pb.content_bottom = pb.content_bottom.max(pb.y);
     }
     pb.y += pl.rp.space_after;
-    pb.prev = Some((pl.rp.style.clone(), pl.rp.contextual_spacing, pl.rp.space_after, is_list(&pl.rp) && pl.rp.space_after_auto));
+    pb.prev = Some((
+        pl.rp.style.clone(),
+        pl.rp.contextual_spacing,
+        pl.rp.space_after,
+        PrevList { is_list: is_list(&pl.rp), after_auto: pl.rp.space_after_auto },
+    ));
 }
 
 /// The border box of body paragraph `p` (block `block`), from the body paragraphs around it.
