@@ -598,3 +598,39 @@ fn cambria_math_lines_keep_cambrias_spacing_over_fallback_letters() {
     let cjk = line_height("Cambria Math", "M 漢字");
     assert!(cjk >= cambria - 0.01, "East Asian line {cjk}");
 }
+
+/// A Wingdings bullet drawn as a standard character (▪ for U+F0A7) by another face keeps
+/// Wingdings's line, which is shorter than Calibri's: Word steps zenodo-156's bulleted 11 pt
+/// Calibri lines 13.44 pt, as if there were no bullet. Decisive where a taller face draws the ▪
+/// (Source Sans 3 from craft-fonts: 14.59 pt without the rule); `covered_fallback_line`'s unit test
+/// pins the rule with the bundled fonts alone.
+#[test]
+fn a_wingdings_bullet_keeps_wingdings_line() {
+    use doc4me_doc::props::LineSpacing;
+
+    let height = |runs: &[(&str, &str)]| {
+        let mut p = Paragraph::with_text("", Default::default());
+        for (font, text) in runs {
+            let props = CharProps { font: Some((*font).into()), size: Some(11.0), ..Default::default() };
+            let at = p.text.len();
+            p.insert_text(at, text, &props).unwrap();
+        }
+        p.mark = CharProps { font: Some("Calibri".into()), size: Some(11.0), ..Default::default() };
+        p.props.line_spacing = Some(LineSpacing::Multiple(1.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        let mut d = Document::new();
+        d.body = vec![para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, l0, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+        else {
+            panic!("missing body lines")
+        };
+        para.lines[*l0].height
+    };
+    let calibri = height(&[("Calibri", "Deux classes")]);
+    for bullet in ["\u{25AA}", "\u{F0A7}", "\u{2022}"] {
+        let with_bullet = height(&[("Wingdings", bullet), ("Calibri", " Deux classes")]);
+        assert!((with_bullet - calibri).abs() < 0.01, "{bullet:?}: {with_bullet} against Calibri's {calibri}");
+    }
+}

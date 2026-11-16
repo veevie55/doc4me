@@ -677,14 +677,20 @@ fn is_cambria_math(family: &str) -> bool {
 
 /// The single line, in points at `size`, of the font a document asks for when a fallback face
 /// draws characters that font has but its stand-in lacks. Word draws them in the requested font,
-/// so the line keeps that font's spacing instead of the fallback face's. Only Cambria and Cambria
-/// Math: Caladea has no Greek or Cyrillic and only some math symbols, and Word's PDFs
-/// (zenodo-082) step their lines by Cambria's line whatever the letters. Other families keep the
-/// fallback face's own line, because which letters their originals hold isn't established here.
+/// so the line keeps that font's spacing instead of the fallback face's. Only these:
+/// - Cambria and Cambria Math: Caladea has no Greek or Cyrillic and only some math symbols, and
+///   Word's PDFs (zenodo-082) step their lines by Cambria's line whatever the letters.
+/// - Symbol, Wingdings and Wingdings 2: their private-use bullets are drawn as standard
+///   characters by whatever face has them, but Word draws them in the symbol font itself. Word
+///   steps zenodo-156's Wingdings-bulleted 11 pt Calibri lines 13.44 pt, Calibri's line, where
+///   Source Sans 3's line for the ▪ made them 14.59 pt.
+///
+/// Other families keep the fallback face's own line, because which letters their originals hold
+/// isn't established here.
 pub fn covered_fallback_line(family: &str, size: f64) -> Option<(f64, f64)> {
     let family = face_name(family).map_or(family, |(base, ..)| base);
     let f = family.trim().to_ascii_lowercase();
-    if f != "cambria" && f != "cambria math" {
+    if !matches!(f.as_str(), "cambria" | "cambria math" | "symbol" | "wingdings" | "wingdings 2") {
         return None;
     }
     requested_line(family).map(|(a, d)| (a * size, d * size))
@@ -1146,7 +1152,11 @@ mod tests {
         assert_eq!(covered_fallback_line("Cambria Math", 10.5).map(em), Some(12.31));
         assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
         assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
-        for other in ["Courier New", "Calibri", "Cambria Mathematics", "Sarabun", ""] {
+        // So do Symbol and Wingdings bullets drawn as standard characters by another face.
+        assert_eq!(covered_fallback_line("Wingdings", 11.0).map(em), Some(12.208));
+        assert_eq!(covered_fallback_line("Symbol", 1.0).map(em), Some(1.225));
+        assert_eq!(covered_fallback_line("wingdings 2", 1.0).map(em), Some(1.054));
+        for other in ["Courier New", "Calibri", "Cambria Mathematics", "Sarabun", "Wingdings 3", "Webdings", ""] {
             assert_eq!(covered_fallback_line(other, 1.0), None, "{other}");
         }
     }
