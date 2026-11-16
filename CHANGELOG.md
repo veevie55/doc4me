@@ -12,6 +12,14 @@
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-11-14
+
+### อัปเดตจากโค้ดล่าสุด · 2026-11-16 รอบที่ 2
+
+- รีเฟรช v1.1.4 อีกครั้งตามคำสั่งผู้ใช้ จากโค้ดล่าสุดบน `main` โดยคงหน้า Release เดิม (URL/ID เดิม) แทนที่ไฟล์ MSI และ ZIP ของ Windows x64 และเผยแพร่ Web App บน GitHub Pages ใหม่จากซอร์สเดียวกัน รวมรายการด้านล่าง: สวิตช์ AutoFormat (รูปแบบอัตโนมัติ) แปลงเลขอารบิกเป็นเลขไทย, การแก้ page count (หน้าว่างก่อนเริ่มเลขหน้าใหม่, ระยะบรรทัด Cambria Math, tab และระยะย่อหน้าในกล่อง, bullet Symbol/Wingdings, ระยะบรรทัด Overpass) และการ sync ตัวเลข readiness ใน README
+- ตรวจก่อนออกรุ่นบนซอร์ส `3668e3c`: full CI (`cargo xtask ci`) ผ่าน 6/6 (native 2,564 ผ่าน / ignored 1 เดิม, assets 141, layers 20, wasm 16), language audit รวม ignored ผ่าน 65/65, `cargo audit` (cargo-audit 0.23.0) exit 0 มีคำเตือน unmaintained 5 รายการเดิม (rustybuzz, ttf-parser, zbus_names, zvariant, zvariant_derive) ไม่ได้ปิด advisory ใด commit ที่ออกรุ่นต่างจาก `3668e3c` เฉพาะ CHANGELOG และ handoff
+- ผล Windows readiness ล่าสุดก่อนออกรุ่น: run [43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956) ที่ engine `df4f160`, report `3fca7cd`: **93.3% รวม / 95.2% ไม่นับ 22 deferred**, จำนวนหน้าตรง **197/220**, ขอบเขตหน้า **103/220** การแก้ Overpass (Linux 196→197) ยังไม่ได้วัดบน Windows ในรอบนี้ จึงไม่อ้างคะแนนใหม่ เกณฑ์ corpus exclusion และ deferred ไม่เปลี่ยน
+
 ### เพิ่ม
 
 - เพิ่มสคริปต์ `tools/readiness_readme.py` และขั้นตอนใน `.github/workflows/readiness-windows.yml` ให้ตัวเลข readiness ใน `README.md` (ไทย) และ `README.en.md` ตรงกับ `docs/readiness.md` และ `docs/readiness.th.md` ทุกครั้งที่วัดบน Windows ตามคำขอของผู้ใช้ (ไม่มี `README.th.md`) สคริปต์อ่าน run, source commit, คะแนนรวม/ไม่นับ deferred, จำนวน deferred, จำนวนหน้าและขอบเขตหน้าที่ตรง และจำนวนรายการที่ไม่ผ่านจากรายงานเดียวกับที่ `readiness_th.py` ใช้ แล้วเขียนบรรทัดตัวเลขใน README ทั้งสองไฟล์ใหม่ workflow commit README ไปพร้อมรายงาน `--check` ไม่แก้ไฟล์และคืนค่า 1 เมื่อ README ไม่ตรง ถ้าหาบรรทัดที่ต้องแก้ไม่เจอหรือ run id ไม่ใช่ตัวเลข สคริปต์จะหยุดพร้อม error แทนการเขียนผิด ตรวจสอบ: รันกับรายงานปัจจุบัน (run 43796305956) แล้วอัปเดต README ทั้งสองไฟล์ จากนั้น `--check` ผ่าน ทดสอบ run id ที่ไม่ใช่ตัวเลข (exit 1) และ argument ผิด (exit 2) และตรวจ YAML ของ workflow ด้วย PyYAML ลิงก์รายงานในบรรทัดล่างของ README ไทยชี้ไป `docs/readiness.th.md` ตามที่ผู้ใช้เปลี่ยนในบรรทัดบน
@@ -37,8 +45,6 @@
 ### ข้อจำกัดที่ทราบ
 
 - สวิตช์ AutoFormat: tooltip ใช้ข้อความ "Convert to Thai Digits" ที่มีคำแปลครบทุกภาษาอยู่แล้ว (ระบบบังคับให้ทุกข้อความใน UI มีครบทุกแค็ตตาล็อก) ยังไม่มีคำอธิบายยาวว่าปิดแล้วไม่แปลงกลับ รายการและเลขหน้าที่สร้างหลังเปิดสวิตช์ยังใช้รูปแบบตัวเลขตามที่กำหนด ไม่ถูกแปลงอัตโนมัติ (การพิมพ์และการเปิดสวิตช์เท่านั้นที่แปลง)
-
-## [1.1.4] - 2026-11-14
 
 ### อัปเดตจากโค้ดล่าสุด · 2026-11-16
 

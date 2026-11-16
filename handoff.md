@@ -1,3 +1,15 @@
+# v1.1.4 refresh #2 + AutoFormat + page counts · 2026-11-16
+
+User authorized (this session): refresh existing release v1.1.4 and redeploy the GitHub Pages Web App from latest code; add AutoFormat (Thai digits) switch beside AutoSave; keep README readiness numbers in sync; continue page counts.
+
+Done: AutoFormat (`file.autoFormat`, `Prefs::auto_thai_digits`, title-bar switch + Alt Z F; Thai label via i18n context `titlebar`; tooltip reuses "Convert to Thai Digits"). Page-count arcs pushed: Cambria Math line (Windows 193), tab/box spacing (Windows 195), Symbol/Wingdings bullets (Windows 197, run 43796305956, report `3fca7cd`, 93.3%/95.2%), Overpass line (Linux 196→197, not yet Windows-measured). `tools/readiness_readme.py` + workflow step keep README.md/README.en.md numbers equal to docs/readiness.md. Gates on `3668e3c`: CI 6/6 (2,564/1 ignored), language audit incl. ignored 65/65, cargo audit exit 0 (5 unmaintained warnings).
+
+Release procedure: CHANGELOG Unreleased moved under `[1.1.4]` (“รอบที่ 2”); push; move tag v1.1.4 to the release commit; dispatch `windows-x64-installer.yml` on main with update_release=true and commit=<full SHA>; dispatch `build-web-pages.yml` with ref=<same SHA>; verify assets/notes/Pages. Then dispatch readiness Windows to measure Overpass.
+
+Open page-count leads: zenodo-003 (justified line needs 20.7% space shrink vs 20% cap; Arimo widths +0.36 pt; Windows uses real Arial — unverified); zenodo-069/022 (Word drew Calibri for Overpass via altName; author lacked the font); govuk-038 now 45 vs 46 on Linux. Working dir `/home/user/work` (CLIs: symbol-cli=df4f160, overpass-cli=3668e3c code; scripts compare/drift/lines/words.py). Disk is tight: delete `target/debug/deps` executables before full CI.
+
+---
+
 # Page-count work · tab and box spacing candidate · 2026-11-16
 
 Pushed after Cambria Math line (`6d4976c`, Windows run 43792165925 dispatched on it): a tab no longer raises a line holding text or an equation; `frame_box` (table cells, text boxes, frames) separates paragraphs by the larger of space after/before unless `add_para_spacing`, as the body already did. See [audit](docs/readiness/tab-box-spacing-2026-11-16.md). Linux vs `6d4976c`: pages **192→194/220** (govuk-068 16→15, zenodo-091 12→11), boundaries stay 102; govuk-046 matches further, zenodo-069 34→33 (Word 24), **zenodo-022 27→28 (Word 20)**; no previously passing row regresses. Full CI 6/6 in one run (2,560 pass / 1 existing ignored).
