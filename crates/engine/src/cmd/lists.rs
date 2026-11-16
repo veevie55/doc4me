@@ -194,8 +194,13 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
             n
         }
         None => {
+            // A new list counts in Thai digits with AutoFormat on (`file.autoFormat`).
+            let mut levels = levels.clone();
+            for l in &mut levels {
+                l.format = super::format::auto_num_format(s, l.format);
+            }
             let aid = s.doc.numbering.abstracts.iter().map(|a| a.id.saturating_add(1)).max().unwrap_or(0);
-            std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.push(AbstractNum { id: aid, name, levels: levels.clone() });
+            std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.push(AbstractNum { id: aid, name, levels });
             let nid = s.doc.numbering.nums.iter().map(|n| n.id.saturating_add(1)).max().unwrap_or(1).max(1);
             std::sync::Arc::make_mut(&mut s.doc.numbering).nums.push(Num { id: nid, abstract_id: aid, ..Default::default() });
             nid

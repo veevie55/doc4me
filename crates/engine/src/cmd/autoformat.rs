@@ -510,7 +510,7 @@ fn styles(s: &mut Session, range: std::ops::Range<usize>, o: &AutoFormatPrefs) -
                 _ if kind.is_bullet() => {
                     Some(s.doc.numbering.find_kind(kind).unwrap_or_else(|| std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind)))
                 }
-                _ if n == 1 => Some(std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind)),
+                _ if n == 1 => Some(super::format::new_list(s, kind)),
                 _ => None,
             };
             if let (true, Some(num)) = (on, num) {

@@ -107,6 +107,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 | Typing digits with AutoFormat on | every typed Arabic digit is a Thai digit, one key at a time or several at once (`text.insert`, `raw` included) | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
 | Turn AutoFormat off | nothing converts back; digits typed afterwards stay Arabic | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
 | "1. " at the start of a paragraph with AutoFormat on | arrives as "๑. " and starts a numbered list numbered in Thai digits (๑. ก. 1.); with AutoFormat off, "๑. " typed by hand stays text | `autoformat_keeps_numbered_lists_starting_in_thai_digits` |
+| Make a list or insert a page number with AutoFormat on | the Numbering and Multilevel List buttons, Define New Number Format and Define New Multilevel List make lists numbered in Thai digits (decimal levels become Thai), and an inserted page number shows Thai digits: every section's decimal page numbering turns Thai and page-count, section and sequence fields take `\* ThaiArabic`. Off, they are made as before; lists pasted from elsewhere keep their own numbering | `autoformat_makes_new_lists_and_page_numbers_in_thai_digits` |
 
 ## Text direction
 
@@ -157,6 +158,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | AutoFormat on: new lists and inserted page numbers show Thai digits |
 | 2026-11-16 | minor | AutoFormat on: "1. " (typed as "๑. ") still starts a numbered list, in Thai digits |
 | 2026-11-16 | minor | AutoFormat (title bar, beside AutoSave): turning it on converts the document's digits to Thai digits once; typed Arabic digits become Thai digits while it is on; off converts nothing back |
 | 2026-10-25 | trivial | Known gaps: Aptos is drawn with the bundled metric-compatible Intos |

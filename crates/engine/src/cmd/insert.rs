@@ -629,6 +629,8 @@ fn page_number(s: &mut Session, v: &Value) -> CmdResult {
         _ => Align::Center,
     };
     let x_of_y = p::str(v, "format").is_some_and(|f| f.contains("of"));
+    // With AutoFormat on, the page numbers show Thai digits.
+    super::format::auto_thai_page_numbers(s);
     let field = InlineObject::Field { instr: "PAGE".into(), result: "1".into(), locked: false, code: false, form: None };
     if position == "current" {
         let props = s.typing_props();
@@ -648,7 +650,7 @@ fn page_number(s: &mut Session, v: &Value) -> CmdResult {
         let end = para.len();
         para.insert_object(
             end,
-            InlineObject::Field { instr: "NUMPAGES".into(), result: "1".into(), locked: false, code: false, form: None },
+            InlineObject::Field { instr: super::format::auto_field_instr(s, "NUMPAGES"), result: "1".into(), locked: false, code: false, form: None },
             &CharProps { bold: Some(true), ..Default::default() },
         )?;
     } else {
@@ -810,6 +812,11 @@ fn field(s: &mut Session, v: &Value) -> CmdResult {
         return Err(CmdError::Params("bad field code".into()));
     }
     let result = p::str(v, "result").unwrap_or("").to_string();
+    // With AutoFormat on, the numbers a number field shows are Thai digits.
+    let instr = super::format::auto_field_instr(s, &instr);
+    if doc4me_layout::fields::field_name(&instr) == "PAGE" {
+        super::format::auto_thai_page_numbers(s);
+    }
     let props = s.typing_props();
     let at = delete_selection(s)?;
     let end = s.doc.insert_object(&at, InlineObject::Field { instr, result, locked: false, code: false, form: None }, &props)?;

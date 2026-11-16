@@ -18,7 +18,9 @@ Four corpus documents ask for Overpass: zenodo-022, zenodo-046, zenodo-067 and z
   - Page counts **196 → 197/220**: **zenodo-067** 12 → 11, and every page boundary now matches (boundaries **103 → 104/220**).
   - **zenodo-069** 33 → 26 pages (Word 24) and **zenodo-022** 28 → 22 pages (Word 20) move closer but still fail: their covers now fit one page, as in Word, while their remaining text is drawn in Overpass where Word drew Calibri (see Evidence).
   - **zenodo-046** (Overpass headings) still matches. No previously passing count or boundary regresses.
-- The Windows readiness runner uses the same pinned variable Overpass, so this change should reach the official measurement too; the next Windows run decides.
+- The Windows readiness runner uses the same pinned variable Overpass.
+
+**Windows confirmation:** [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296) measured engine `093eaba` (this change plus the Garamond metrics), report `15584f5`: page counts **197 → 199/220** with zenodo-067 (count and every boundary) and zenodo-115 newly matching, boundaries **103 → 104/220**, readiness **93.4% / 95.3% without 22 deferred**. Compared row by row with report `3fca7cd`, no row is newly failing.
 
 ## ภาษาไทย
 
@@ -29,3 +31,5 @@ Four corpus documents ask for Overpass: zenodo-022, zenodo-046, zenodo-067 and z
 แก้โดยกำหนดระยะบรรทัดของ Overpass ทุกน้ำหนักเป็น 1.266 em (ascent 0.982 จาก descriptor ที่ Word ฝัง และ descent 0.284 จากระยะบรรทัดที่วัดได้) แม้ฟอนต์ที่ใช้วาดจะชื่อ Overpass ก็ตาม เหมือนที่ทำกับ Aptos และ Cambria Math ไม่เปลี่ยนไฟล์ฟอนต์หรือเกณฑ์ใด
 
 ผลเทียบบน Linux ครบ 220 ฉบับ (hash ครบ 440 ไฟล์): จำนวนหน้าตรง **196 → 197** (zenodo-067 ตรง Word ทุกหน้า) ขอบเขตหน้า **103 → 104** zenodo-069 จาก 33 เหลือ 26 หน้า (Word 24) และ zenodo-022 จาก 28 เหลือ 22 หน้า (Word 20) ใกล้ Word ขึ้นแต่ยังไม่ผ่านด้วยเหตุผลข้างต้น ไม่มีรายการที่เคยผ่านกลับมาตก เครื่อง Windows ใช้ Overpass ชุดเดียวกัน ผลจึงน่าจะถึงคะแนนทางการด้วย ต้องรอยืนยันจากการวัดรอบถัดไป
+
+ผล Windows run 43804632296 (source `093eaba`) ยืนยัน: จำนวนหน้าตรง **199/220** (zenodo-067 และ zenodo-115 ผ่านเพิ่ม) ขอบเขตหน้า **104/220** คะแนน **93.4% / 95.3%** ไม่มีรายการใหม่ที่ไม่ผ่าน

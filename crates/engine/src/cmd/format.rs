@@ -478,6 +478,49 @@ pub(crate) fn auto_format(s: &mut Session, v: &Value) -> CmdResult {
     Ok(json!({"value": on, "converted": converted, "protected": protected && on && !was}))
 }
 
+/// A new list of `kind` for a command that makes one: with AutoFormat on (`file.autoFormat`), its
+/// decimal levels count in Thai digits, as the lists in the document did when it was turned on.
+pub(crate) fn new_list(s: &mut Session, kind: doc4me_doc::ListKind) -> u32 {
+    let thai = s.prefs.auto_thai_digits;
+    let numbering = std::sync::Arc::make_mut(&mut s.doc.numbering);
+    let id = numbering.add_list(kind);
+    if thai && let Some(aid) = numbering.abstract_of(id).map(|a| a.id) {
+        for l in numbering.abstracts.iter_mut().filter(|a| a.id == aid).flat_map(|a| a.levels.iter_mut()) {
+            if let Some(f) = swap_num_format(l.format, true) {
+                l.format = f;
+            }
+        }
+    }
+    id
+}
+
+/// `f` as a list or page number Doc4Me makes shows it: Thai digits for decimal with AutoFormat on.
+pub(crate) fn auto_num_format(s: &Session, f: NumFormat) -> NumFormat {
+    if s.prefs.auto_thai_digits { swap_num_format(f, true).unwrap_or(f) } else { f }
+}
+
+/// A number field's instruction as Doc4Me inserts it: with AutoFormat on, page counts, section
+/// numbers and sequences take Thai digits (`\* ThaiArabic`), and page numbers follow the sections'
+/// page numbering, which [`auto_thai_page_numbers`] makes Thai.
+pub(crate) fn auto_field_instr(s: &Session, instr: &str) -> String {
+    if s.prefs.auto_thai_digits { swap_field_digits(instr, true).unwrap_or_else(|| instr.to_string()) } else { instr.to_string() }
+}
+
+/// With AutoFormat on, every section's decimal page numbering becomes Thai digits, as turning it
+/// on does: called when a page number is inserted, so it shows Thai digits wherever it goes.
+pub(crate) fn auto_thai_page_numbers(s: &mut Session) {
+    if !s.prefs.auto_thai_digits {
+        return;
+    }
+    let ends: Vec<usize> = s.doc.sections().iter().map(|(e, _)| *e).collect();
+    for end in ends {
+        let x = s.doc.section_mut(end);
+        if let Some(f) = swap_num_format(x.page_num_format, true) {
+            x.page_num_format = f;
+        }
+    }
+}
+
 /// Text typed with AutoFormat on (`file.autoFormat`): Arabic digits 0–9 as Thai digits ๐–๙.
 /// Other characters, and every character with AutoFormat off, are unchanged.
 pub(crate) fn typed_digits<'a>(s: &Session, text: &'a str) -> std::borrow::Cow<'a, str> {

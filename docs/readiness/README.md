@@ -1,6 +1,6 @@
 # Readiness check sets
 
-**Current Windows confirmation · 2026-11-16:** Run [43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956), engine `df4f160`, report `3fca7cd`: page counts **197/220**, boundaries **103/220**, readiness **93.3% overall / 95.2% excluding 22 deferred**. Since the previous refresh, Windows runs [43794297193](https://github.com/veevie55/doc4me/actions/runs/43794297193) (tab and box spacing: govuk-068 and zenodo-091 newly match) and 43796305956 ([Symbol/Wingdings bullets](symbol-bullet-line-2026-11-16.md): zenodo-156 and govuk-043 newly match, zenodo-156's boundaries too) were compared row by row with the report before each; no newly failing row appears. Current EN/TH blockers and TSV match the report (23 page-count and 117 boundary failures); criteria/exclusions/deferred unchanged.
+**Current Windows confirmation · 2026-11-16:** Run [43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), engine `093eaba`, report `15584f5`: page counts **199/220**, boundaries **104/220**, readiness **93.4% overall / 95.3% excluding 22 deferred**. Run 43804632296 measured the [Overpass line](overpass-line-2026-11-16.md) and [Garamond metrics](garamond-metrics-2026-11-16.md) changes: zenodo-067 (count and boundaries) and zenodo-115 newly match. Compared row by row with report `3fca7cd`, no row is newly failing. Its workflow also rewrote README.md and README.en.md with the same numbers (`tools/readiness_readme.py`). Current EN/TH blockers and TSV match the report (21 page-count and 116 boundary failures); criteria/exclusions/deferred unchanged.
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
@@ -55,7 +55,7 @@ assessments distinguish measured facts from causes that are still unverified.
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
   canceled before it could measure the updated row. Latest completed Windows run 43701689470 measured
   source `fd465e8`; the generated report was committed as `2a5a0b0` (92.9% overall,
-  94.8% without the 22 deferred rows; pages 188/220, boundaries 103/220). Each row's note
+  94.8% without the 22 deferred rows; pages 188/220, boundaries 104/220). Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the

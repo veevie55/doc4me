@@ -920,3 +920,68 @@ fn autoformat_keeps_numbered_lists_starting_in_thai_digits() {
     typ(&mut s, "\u{0E51}. Item");
     assert_eq!(paras(&s), [("\u{0E51}. Item".to_string(), None, false)], "off, Thai digits typed by hand stay text");
 }
+
+/// The first level's number format of the list paragraph `i` of the body is in.
+fn list_format(s: &Session, i: usize) -> Option<doc4me_doc::section::NumFormat> {
+    let num = s.doc.body.get(i).and_then(|b| b.as_para()).and_then(|p| p.props.numbering).filter(|n| n.num != 0)?.num;
+    s.doc.numbering.level(num, 0).map(|l| l.format)
+}
+
+/// With AutoFormat on, lists and page numbers made after it was turned on show Thai digits too:
+/// the Numbering and Multilevel List buttons, Define New Number Format, Define New Multilevel List,
+/// page numbers and page-count fields. Off, they are made as before.
+#[test]
+fn autoformat_makes_new_lists_and_page_numbers_in_thai_digits() {
+    use doc4me_doc::section::NumFormat;
+
+    let made = |on: bool| {
+        let mut s = s();
+        run(&mut s, "document.setText", json!({"text": "one\ntwo\nthree\nfour\nfive"}));
+        run(&mut s, "file.autoFormat", json!({"value": on}));
+        // Numbering, paragraph by paragraph: the second continues the first's list.
+        run(&mut s, "caret.set", json!({"pos": {"block": 0, "off": 0}}));
+        run(&mut s, "para.numbering", json!({}));
+        run(&mut s, "caret.set", json!({"pos": {"block": 1, "off": 0}}));
+        run(&mut s, "para.numbering", json!({}));
+        let same = s.doc.body.first().and_then(|b| b.as_para()).and_then(|p| p.props.numbering).map(|n| n.num)
+            == s.doc.body.get(1).and_then(|b| b.as_para()).and_then(|p| p.props.numbering).map(|n| n.num);
+        assert!(same, "the second paragraph continues the list (AutoFormat {on})");
+        // Choosing the numbered kind again on the list takes it off, as for any list of that kind.
+        run(&mut s, "caret.set", json!({"pos": {"block": 1, "off": 0}}));
+        run(&mut s, "para.numbering", json!({"kind": "numbered"}));
+        assert_eq!(list_format(&s, 1), None, "the numbered kind matches its own list (AutoFormat {on})");
+        run(&mut s, "caret.set", json!({"pos": {"block": 2, "off": 0}}));
+        run(&mut s, "para.multilevel", json!({}));
+        run(&mut s, "caret.set", json!({"pos": {"block": 3, "off": 0}}));
+        run(&mut s, "para.defineNumber", json!({"format": "decimal", "text": "%1)"}));
+        run(&mut s, "caret.set", json!({"pos": {"block": 4, "off": 0}}));
+        run(&mut s, "list.define", json!({"levels": [{"format": "decimal", "text": "%1."}]}));
+        run(&mut s, "insert.pageNumber", json!({"position": "bottom", "format": "x of y"}));
+        run(&mut s, "caret.set", json!({"pos": {"block": 4, "off": 4}}));
+        run(&mut s, "insert.field", json!({"instr": "SECTIONPAGES"}));
+        let mut fields: Vec<String> = Vec::new();
+        let stories: Vec<StoryRef> = std::iter::once(StoryRef::Body).chain(s.doc.parts.keys().map(|k| StoryRef::Part(*k))).collect();
+        for story in stories {
+            for path in s.doc.para_paths(story) {
+                for o in s.doc.para(story, &path).map(|p| p.objects.clone()).unwrap_or_default() {
+                    if let doc4me_doc::para::InlineObject::Field { instr, .. } = o {
+                        fields.push(instr);
+                    }
+                }
+            }
+        }
+        let page_format = s.doc.sections().first().map(|(_, x)| x.page_num_format);
+        ([list_format(&s, 0), list_format(&s, 2), list_format(&s, 3), list_format(&s, 4)], page_format, fields)
+    };
+    let (lists, page, fields) = made(true);
+    assert_eq!(lists, [Some(NumFormat::ThaiNumbers); 4]);
+    assert_eq!(page, Some(NumFormat::ThaiNumbers), "page numbers follow the section's Thai numbering");
+    assert!(fields.iter().any(|f| f.starts_with("NUMPAGES") && f.contains("ThaiArabic")), "{fields:?}");
+    assert!(fields.iter().any(|f| f.starts_with("SECTIONPAGES") && f.contains("ThaiArabic")), "{fields:?}");
+    assert!(fields.iter().any(|f| f.trim() == "PAGE"), "{fields:?}");
+
+    let (lists, page, fields) = made(false);
+    assert_eq!(lists, [Some(NumFormat::Decimal); 4]);
+    assert_eq!(page, Some(NumFormat::Decimal));
+    assert!(!fields.iter().any(|f| f.contains("ThaiArabic")), "{fields:?}");
+}

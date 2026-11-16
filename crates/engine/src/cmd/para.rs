@@ -462,7 +462,8 @@ fn list(s: &mut Session, v: &Value, default: ListKind) -> CmdResult {
                 (w.format == doc4me_doc::section::NumFormat::Bullet) == (l.format == doc4me_doc::section::NumFormat::Bullet)
                     // A chosen kind matches only its own number format and text: "%1." is
                     // decimal, Thai digits, Thai letters… alike.
-                    && (p::str(v, "kind").is_none() || (w.format == l.format && w.text == l.text))
+                    // With AutoFormat on, the kind's decimal numbers are Thai digits.
+                    && (p::str(v, "kind").is_none() || (super::format::auto_num_format(s, w.format) == l.format && w.text == l.text))
             })
         })
     };
@@ -491,7 +492,7 @@ fn list(s: &mut Session, v: &Value, default: ListKind) -> CmdResult {
             ListKind::Bullet | ListKind::BulletChar(_) => {
                 s.doc.numbering.find_kind(kind).unwrap_or_else(|| std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind))
             }
-            _ => std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind),
+            _ => super::format::new_list(s, kind),
         },
     };
     fmt(s, &|p| {

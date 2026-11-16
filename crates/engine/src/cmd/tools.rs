@@ -608,10 +608,11 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"char": string}"#),
         CommandSpec::new("para.defineNumber", "Define New Number Format", "Home › Paragraph › Numbering", |s, v| {
-            let fmt = doc4me_doc::section::NumFormat::from_ooxml(p::str(v, "format").unwrap_or("decimal"));
+            // With AutoFormat on (`file.autoFormat`), decimal numbers are Thai digits.
+            let fmt = super::format::auto_num_format(s, doc4me_doc::section::NumFormat::from_ooxml(p::str(v, "format").unwrap_or("decimal")));
             let text = p::str(v, "text").unwrap_or("%1.").to_string();
             let start = p::u64(v, "start").unwrap_or(1).min(100_000) as u32;
-            let id = std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(doc4me_doc::ListKind::Numbered);
+            let id = super::format::new_list(s, doc4me_doc::ListKind::Numbered);
             if let Some(a) = s.doc.numbering.abstract_of(id).map(|a| a.id)
                 && let Some(abs) = std::sync::Arc::make_mut(&mut s.doc.numbering).abstracts.iter_mut().find(|x| x.id == a)
                 && let Some(l) = abs.levels.first_mut()

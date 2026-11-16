@@ -21,7 +21,9 @@ Not every document asking for Garamond was laid out with it: Word set **zenodo-1
 - [220-document Linux comparison](garamond-metrics-comparison-2026-11-16.tsv), prepared-font release CLIs, baseline `3668e3c` against this change; all 440 hashes match `corpus.tsv`.
   - Page counts **197 → 198/220**: **zenodo-115** 10 → 9 matches Word. Its first page boundary still differs, so boundaries stay **104/220**.
   - **zenodo-118** (also Garamond) still matches, and **zenodo-114** (Garamond requested, Times New Roman drawn by Word) is unchanged. No other row changes.
-- On the Windows readiness runner Garamond is expected to resolve to Times New Roman (the first serif stand-in there), which the fit also covers; the next Windows run decides.
+- On the Windows readiness runner Garamond is expected to resolve to Times New Roman (the first serif stand-in there), which the fit also covers.
+
+**Windows confirmation:** [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296) measured engine `093eaba` (this change plus the Overpass line), report `15584f5`: zenodo-115 newly matches 9 pages on Windows too; page counts 199/220, boundaries 104/220, readiness 93.4% / 95.3% without deferred; no row newly failing against report `3fca7cd`.
 
 ## ภาษาไทย
 
@@ -30,3 +32,5 @@ Garamond เป็นฟอนต์เชิงพาณิชย์ Doc4Me จ
 แก้โดยดึงความกว้างตัวอักษร Garamond (Regular/Italic/Bold) ที่ Word ประกาศใน /Widths ของ PDF สองฉบับที่ตรวจ hash แล้ว (ไม่อ่านโปรแกรมฟอนต์) มาใช้เมื่อ Tinos หรือ Times New Roman วาดแทน และกำหนดระยะบรรทัด 1.125 em ส่วน zenodo-114 ที่ขอ Garamond แต่ Word วาดด้วย Times New Roman (ผู้สร้างไม่มีฟอนต์) ไม่เปลี่ยนผล
 
 ผลเทียบบน Linux ครบ 220 ฉบับ: จำนวนหน้าตรง **197 → 198** (zenodo-115 ตรง Word) ขอบเขตหน้าคงที่ **104** zenodo-118 ยังผ่าน zenodo-114 ไม่เปลี่ยน ไม่มีรายการที่เคยผ่านกลับมาตก
+
+ผล Windows run 43804632296 (source `093eaba`) ยืนยัน: จำนวนหน้าตรง **199/220** (zenodo-067 และ zenodo-115 ผ่านเพิ่ม) ขอบเขตหน้า **104/220** คะแนน **93.4% / 95.3%** ไม่มีรายการใหม่ที่ไม่ผ่าน
