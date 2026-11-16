@@ -1,8 +1,8 @@
 # UI parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43785505707 on source `55d0c37`; 93.0% overall / 94.9% without 22 deferred; pages 192/220, boundaries 99/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43792165925 on source `6d4976c`; 93.2% overall / 95.1% without 22 deferred; pages 193/220, boundaries 102/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707), source `55d0c37`, report `7e50321`: **93.0% รวม / 94.9% ไม่นับ 22 deferred**; pages **192/220**, boundaries **99/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 28 page-count และ 121 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925), source `6d4976c`, report `5f362a3`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **193/220**, boundaries **102/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 27 page-count และ 118 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
 IME composition commit now enters a selected text box before inserting text, preserving the body anchor. Synthetic preedit/commit regression covers Japanese text; actual Windows IME switching remains unverified. Official shortcuts remain 276/280.
@@ -49,6 +49,7 @@ own (`AGENTS.md`: no Microsoft iconography, ever).
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows run 43792165925, engine 6d4976c, report 5f362a3: 193/220 page counts (zenodo-082 newly matches after the Cambria Math line fix), 102/220 boundaries (zenodo-032/073/082 newly match), 93.2% overall / 95.1% without deferred; no newly failing row versus report 7e50321. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
 | 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |

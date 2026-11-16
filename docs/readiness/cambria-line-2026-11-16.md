@@ -22,7 +22,9 @@ Doc4Me stepped the same lines **26.38 pt**. Caladea, the open stand-in for Cambr
   - Page counts **191 → 192/220**: only **zenodo-082** changes, 6 → 5 pages (Word 5).
   - Page boundaries **99 → 102/220**: **zenodo-032**, **zenodo-073** and **zenodo-082** newly match every page's first and last word. **zenodo-056** (p1 → p2) and **zenodo-057** (p11 → p26) still fail but match further. All five use Cambria Math. No other row changes, and no previously passing count or boundary regresses.
 - zenodo-082 line positions now track Word's: heading 3.4 at 401.91 pt (Word 401.93), equation pitch 18.16 pt (Word 18.12), heading 3.5 at 501.38 pt (Word 501.43).
-- Linux counts differ from Windows on known rows (for example zenodo-114), so this is not a readiness score. The official Windows baseline remains [run 43785505707](https://github.com/veevie55/doc4me/actions/runs/43785505707): 192/220 page counts, 99/220 boundaries.
+- Linux counts differ from Windows on known rows (for example zenodo-114), so the Linux comparison is not a readiness score.
+
+**Windows confirmation:** [run 43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925) measured engine `6d4976c`, report `5f362a3`: page counts **192→193/220** and boundaries **99→102/220**, readiness **93.2% overall / 95.1% without 22 deferred**. A row-by-row comparison of the failure lists in reports `7e50321` and `5f362a3` shows exactly the Linux prediction: zenodo-082 leaves both lists, zenodo-032 and zenodo-073 leave the boundary list, and no row is newly failing. The workflow regenerated the EN/TH reports, blockers and TSV (27 page-count and 118 boundary failures).
 
 ## ภาษาไทย
 
@@ -30,4 +32,4 @@ zenodo-082 เขียนสมการเป็นย่อหน้าธร
 
 แก้โดยให้อักษรที่ฟอนต์สำรองวาดแทนในข้อความ Cambria/Cambria Math ใช้ระยะบรรทัดของ Cambria เฉพาะอักษรที่ไม่ใช่ภาษาเอเชียตะวันออกและไม่ใช่ complex script (รวมภาษาไทย) ฟอนต์อื่นยังคงพฤติกรรมเดิม และให้ Cambria Math ที่ติดตั้งในเครื่องใช้ระยะบรรทัดของ Cambria ตามหลักฐานจาก PDF ของ Word ไม่เปลี่ยนการจัดสมการ OMML ฟอนต์ เอกสาร corpus เกณฑ์ หรือรายการ excluded/deferred
 
-ผลเทียบบน Linux ครบ 220 ฉบับ (ตรวจ hash ครบ 440 ไฟล์): จำนวนหน้าตรง **191 → 192** (เปลี่ยนเฉพาะ zenodo-082 จาก 6 เป็น 5 หน้า) ขอบเขตหน้าตรง **99 → 102** (zenodo-032, zenodo-073, zenodo-082 ผ่านเพิ่ม ส่วน zenodo-056/057 ยังไม่ผ่านแต่ตรงไกลขึ้น) ไม่มีรายการที่เคยผ่านกลับมาตก ทุกฉบับที่เปลี่ยนใช้ Cambria Math เทสต์ใหม่ล้มเมื่อถอดการแก้ออก ต้องรอผลวัด Windows รอบใหม่ก่อนเปลี่ยนคะแนนทางการ
+ผลเทียบบน Linux ครบ 220 ฉบับ (ตรวจ hash ครบ 440 ไฟล์): จำนวนหน้าตรง **191 → 192** (เปลี่ยนเฉพาะ zenodo-082 จาก 6 เป็น 5 หน้า) ขอบเขตหน้าตรง **99 → 102** (zenodo-032, zenodo-073, zenodo-082 ผ่านเพิ่ม ส่วน zenodo-056/057 ยังไม่ผ่านแต่ตรงไกลขึ้น) ไม่มีรายการที่เคยผ่านกลับมาตก ทุกฉบับที่เปลี่ยนใช้ Cambria Math เทสต์ใหม่ล้มเมื่อถอดการแก้ออก ผล Windows run 43792165925 ยืนยันตรงกับผลบน Linux: จำนวนหน้าตรง **193/220** ขอบเขตหน้า **102/220** คะแนน **93.2% / 95.1% ไม่นับ deferred** ไม่มีรายการใหม่ที่ไม่ผ่าน
