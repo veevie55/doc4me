@@ -652,7 +652,8 @@ pub fn visual_order(levels: &[u8]) -> Vec<usize> {
 /// them (`w14:ligatures`), the way Word sets text, since both change widths and so where lines
 /// break. A substitute standing in for another font (`fit`) is never kerned or ligated by its own
 /// tables; that font's widths and kerning apply instead.
-fn run_features(rc: &ResolvedChar, fit: bool, complex: bool) -> Vec<doc4me_fonts::Feature> {
+/// `tnum` turns on the substitute's tabular figures ([`doc4me_fonts::word::MetricFit::tabular_digits`]).
+fn run_features(rc: &ResolvedChar, fit: bool, complex: bool, tnum: bool) -> Vec<doc4me_fonts::Feature> {
     let (liga, clig, hlig, dlig) = if fit { (false, false, false, false) } else { rc.ligature_features() };
     let kern = !fit && rc.kerned();
     // Complex scripts keep the font's own ligatures: Arabic fonts put required forms such as
@@ -660,6 +661,7 @@ fn run_features(rc: &ResolvedChar, fit: bool, complex: bool) -> Vec<doc4me_fonts
     let ligatures = if complex && !fit { &[][..] } else { &[("liga", liga), ("clig", clig), ("hlig", hlig), ("dlig", dlig)][..] };
     std::iter::once(("kern", kern))
         .chain(ligatures.iter().copied())
+        .chain(tnum.then_some(("tnum", true)))
         .filter_map(|(tag, on)| doc4me_fonts::feature(&if on { format!("+{tag}") } else { format!("-{tag}") }))
         .collect()
 }
@@ -885,7 +887,7 @@ impl<'a> Builder<'a> {
             let shape_text = if substituted { mapped.as_str() } else { sub };
             let fit = st.fit;
             let map = |c: char| if upper { c.to_uppercase().next().unwrap_or(c) } else { c };
-            let features = run_features(rc, fit.is_some(), key.complex);
+            let features = run_features(rc, fit.is_some(), key.complex, fit.is_some_and(|f| f.tabular_digits()));
             let shaped = if use_levels {
                 doc4me_fonts::shape_run(&st.face, shape_text, &features, map, key.rtl)
             } else {
@@ -2000,7 +2002,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
     let default_tab = env.doc.settings.default_tab;
     let first_left = rp.indent_left + rp.indent_first;
     // Word 2013+ (compatibility mode 15) fits more text on a justified line by shrinking its
-    // spaces, up to MAX_SPACE_SHRINK of their width; never on lines with tabs.
+    // spaces, as far as `space_shrink_room` allows; never on lines with tabs.
     let shrink_spaces = rp.align == Align::Justify && env.doc.settings.compat_mode >= doc4me_doc::COMPAT_MODE_CURRENT;
     let hanging_at = if rp.indent_first < 0.0 { Some(rp.indent_left) } else { None };
     // Hyphenation Options: the zone, and how many lines in a row may end with a hyphen.
@@ -2133,6 +2135,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let mut j = i;
         let mut pending_tab: Option<(usize, TabStop, f32)> = None; // tab cluster, stop, x where tab started
         let mut space_w = 0.0f32; // width of the spaces so far on this line
+        let mut space_n = 0usize; // and how many there are
         let mut has_tab = false;
         while j < n {
             let Some(c) = pl.clusters.get(j).cloned() else { break };
@@ -2208,7 +2211,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     _ => false,
                 }
             });
-            let shrink = if shrink_spaces && !has_tab { space_w * MAX_SPACE_SHRINK } else { 0.0 };
+            let shrink = if shrink_spaces && !has_tab { space_shrink_room(space_w, space_n) } else { 0.0 };
             let mut fits = absorbs
                 || x + c.adv <= right_edge + shrink + 0.01
                 || c.kind == ClKind::Space
@@ -2262,6 +2265,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             x += c.adv;
             if c.kind == ClKind::Space {
                 space_w += c.adv;
+                space_n += 1;
             }
             // Decimal/center/right tab: shift pending text as it grows.
             if let Some((tj, stop, tx)) = pending_tab {
@@ -2825,11 +2829,26 @@ fn row_spans(exclusions: &[Exclusion], top: f32, h: f32, lo: f32, hi: f32) -> Re
 const HYPHENATION_ZONE: f32 = doc4me_doc::DEFAULT_HYPHENATION_ZONE;
 
 /// How much of their width the spaces of a justified line may give up to fit more text (Word
-/// 2013+, compatibility mode 15).
-const MAX_SPACE_SHRINK: f32 = 0.2;
+/// 2013+, compatibility mode 15). Word's PDFs: zenodo-039 fits a word needing 21.95% of its
+/// 11pt Times New Roman spaces, zenodo-003 one needing 20.7% (12pt), govuk-072 refuses one
+/// needing 23.0% (12pt Arial).
+const MAX_SPACE_SHRINK: f32 = 0.22;
+/// Nor does a space shrink below this width, points: zenodo-165's 8pt Times New Roman (2pt
+/// spaces) refuses words needing 20.6% and 21.4%, so small text gives up at most 20%.
+const MIN_SPACE: f32 = 1.6;
+
+/// How far `n` spaces `width` wide in all may shrink together: [`MAX_SPACE_SHRINK`] of their
+/// width, never below [`MIN_SPACE`] each.
+fn space_shrink_room(width: f32, n: usize) -> f32 {
+    if n == 0 || width <= 0.0 {
+        return 0.0;
+    }
+    let each = width / n as f32;
+    n as f32 * (each * MAX_SPACE_SHRINK).min((each - MIN_SPACE).max(0.0))
+}
 
 /// Take `-slack` (an overflow) out of the line's inner spaces, in proportion to their widths and
-/// never more than [`MAX_SPACE_SHRINK`] of them. Trailing spaces hang and are left alone.
+/// never more than [`space_shrink_room`] allows. Trailing spaces hang and are left alone.
 fn shrink_line_spaces(pl: &ParaLayout, xs: &mut [f32], c0: usize, c1: usize, content_end: f32, slack: f32) {
     let spaces: Vec<(usize, f32)> = (c0..c1)
         .filter_map(|k| {
@@ -2841,7 +2860,7 @@ fn shrink_line_spaces(pl: &ParaLayout, xs: &mut [f32], c0: usize, c1: usize, con
     if total <= 0.0 || !slack.is_finite() {
         return;
     }
-    let ratio = (-slack / total).clamp(0.0, MAX_SPACE_SHRINK);
+    let ratio = (-slack / total).clamp(0.0, (space_shrink_room(total, spaces.len()) / total).max(0.0));
     let mut take = 0.0;
     let mut next = spaces.iter().peekable();
     for k in c0..c1 {
@@ -3219,4 +3238,28 @@ pub fn proof_text(p: &doc4me_doc::Paragraph) -> String {
         }
     }
     out
+}
+
+#[cfg(test)]
+mod space_shrink_tests {
+    use super::space_shrink_room;
+
+    /// The shrink each space may take, as a share of its width.
+    fn share(space: f32) -> f32 {
+        space_shrink_room(space * 16.0, 16) / (space * 16.0)
+    }
+
+    #[test]
+    fn spaces_shrink_up_to_the_measured_limits() {
+        // Word's PDFs: 21.95% of 11pt Times New Roman spaces fits (zenodo-039), 23.0% of 12pt
+        // Arial ones doesn't (govuk-072), and 8pt text gives up at most 20% (zenodo-165).
+        assert!(share(2.75) >= 0.2195);
+        assert!(share(12.0 * 0.2778) < 0.23);
+        assert!((share(2.0) - 0.2).abs() < 1e-4);
+        assert!(share(2.0) < 0.206);
+        // Never below the minimum width, and nothing to give for tiny spaces or none at all.
+        assert_eq!(space_shrink_room(1.0 * 4.0, 4), 0.0);
+        assert_eq!(space_shrink_room(0.0, 0), 0.0);
+        assert_eq!(space_shrink_room(10.0, 0), 0.0);
+    }
 }

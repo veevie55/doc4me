@@ -796,10 +796,25 @@ impl MetricFit {
     pub fn line(&self) -> (f64, f64) {
         self.line
     }
+
+    /// The substitute should be shaped with its tabular figures (`tnum`): Cambria's digits all
+    /// take 554/1000 em (592 bold, 528 italic, 573 bold italic), and Caladea's tabular figures are
+    /// exactly that wide, where its default proportional ones (362-517) would sit in gaps.
+    pub fn tabular_digits(&self) -> bool {
+        [
+            crate::latin_metrics::CAMBRIA_REGULAR,
+            crate::latin_metrics::CAMBRIA_ITALIC,
+            crate::latin_metrics::CAMBRIA_BOLD,
+            crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
+        ]
+        .iter()
+        .any(|t| std::ptr::eq(*t, self.advances))
+    }
 }
 
 /// Measured advances for condensed Arial families drawn with Roboto, Gotham Book/Medium with
-/// Montserrat, and Nyala with Noto Sans Ethiopic; active only with the expected substitute.
+/// Montserrat, Nyala with Noto Sans Ethiopic, Garamond with Tinos or Times New Roman, and Cambria
+/// with Caladea; active only with the expected substitute.
 /// TH Sarabun New/PSK additionally use their full scale, kerning and line fit with Sarabun.
 /// Other requested families keep the selected face's metrics.
 pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
@@ -820,6 +835,13 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             (_, true) => crate::latin_metrics::GARAMOND_ITALIC,
             _ => crate::latin_metrics::GARAMOND_REGULAR,
         })
+    } else if family.eq_ignore_ascii_case("Cambria") {
+        Some(match (bold, italic) {
+            (true, true) => crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
+            (true, false) => crate::latin_metrics::CAMBRIA_BOLD,
+            (false, true) => crate::latin_metrics::CAMBRIA_ITALIC,
+            (false, false) => crate::latin_metrics::CAMBRIA_REGULAR,
+        })
     } else {
         None
     };
@@ -829,6 +851,9 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             &["Noto Sans Ethiopic"]
         } else if family.eq_ignore_ascii_case("Gotham Book") || family.eq_ignore_ascii_case("Gotham Medium") {
             &["Montserrat"]
+        } else if family.eq_ignore_ascii_case("Cambria") {
+            // Only its open stand-in: Windows draws Cambria itself.
+            &["Caladea"]
         } else if family.eq_ignore_ascii_case("Garamond") {
             // Its serif stand-ins: Tinos where only open fonts exist, Times New Roman on Windows.
             &["Tinos", "Times New Roman"]
@@ -874,6 +899,10 @@ mod tests {
             crate::latin_metrics::ARIAL_NARROW_BOLD,
             crate::latin_metrics::GOTHAM_BOOK,
             crate::latin_metrics::GOTHAM_MEDIUM,
+            crate::latin_metrics::CAMBRIA_REGULAR,
+            crate::latin_metrics::CAMBRIA_ITALIC,
+            crate::latin_metrics::CAMBRIA_BOLD,
+            crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
         ] {
             assert!(advances.windows(2).all(|p| p[0].0 < p[1].0));
             let fit = MetricFit { style: None, advances, line: (1.0, 0.25) };
@@ -1187,6 +1216,17 @@ mod tests {
             assert_eq!(em(fit.line()), 1.125);
             assert!(metric_fit("Garamond", false, true).is_some() && metric_fit("Garamond", true, false).is_some());
         }
+        // Cambria's measured widths (and tabular figures) apply with Caladea only.
+        if resolve("Cambria", false, false).face.family == "Caladea" {
+            for (bold, italic, digit) in [(false, false, 0.554), (true, false, 0.592), (false, true, 0.528), (true, true, 0.573)] {
+                let fit = metric_fit("Cambria", bold, italic).expect("Cambria drawn with Caladea takes its widths");
+                assert_eq!(fit.advance('0'), Some(digit));
+                assert!(fit.tabular_digits());
+                assert_eq!(em(fit.line()), 1.172);
+            }
+            assert_eq!(metric_fit("Cambria", false, false).and_then(|f| f.advance('e')), Some(0.488));
+        }
+        assert!(metric_fit("Garamond", false, false).is_none_or(|f| !f.tabular_digits()));
         // So do Symbol and Wingdings bullets drawn as standard characters by another face.
         // Overpass, every weight, steps 1.266 em whatever face draws it (13.293 pt at 10.5 pt).
         for name in ["Overpass", "Overpass Light", "overpass extrabold"] {

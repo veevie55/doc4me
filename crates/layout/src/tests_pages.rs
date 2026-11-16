@@ -688,3 +688,48 @@ fn an_empty_continuous_section_mark_takes_no_room_or_spacing() {
     };
     assert!((gap(true) - gap(false)).abs() < 0.01, "the mark adds nothing: {} vs {}", gap(true), gap(false));
 }
+
+#[test]
+fn keep_with_next_counts_a_short_widow_controlled_paragraph_whole() {
+    // zenodo-090: a Heading 2 (keep with next) above a three-line paragraph with widow control,
+    // which can't leave two lines on each page, so all three have to fit after the heading. Word
+    // takes the heading to the next page; Doc4Me used to count two lines and leave it alone.
+    let mut d = Document::new();
+    let line = |t: &str| {
+        let mut p = Paragraph::with_text(t, Default::default());
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(20.0));
+        p
+    };
+    let mut filler = line("Filler");
+    filler.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(100.0));
+    let mut heading = line("Heading");
+    heading.props.keep_next = Some(true);
+    let mut body =
+        line("one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty");
+    body.props.widow_control = Some(true);
+    d.body = vec![para_block(filler), para_block(heading), para_block(body)];
+    d.last_section.page_h = 100.0 + 20.0 + 45.0 + 40.0;
+    d.last_section.margin_top = 20.0;
+    d.last_section.margin_bottom = 20.0;
+    d.last_section.page_w = 300.0;
+    d.last_section.margin_left = 20.0;
+    d.last_section.margin_right = 20.0;
+    let l = lay(&d);
+    let lines_of = |page: usize, block: usize| -> usize {
+        l.pages.get(page).map_or(0, |pg| {
+            pg.items
+                .iter()
+                .filter_map(|it| match it {
+                    Placed::Lines { story: StoryRef::Body, path, l0, l1, .. } if *path == Path::top(block) => Some(l1 - l0),
+                    _ => None,
+                })
+                .sum()
+        })
+    };
+    let body_lines: usize = (0..l.pages.len()).map(|p| lines_of(p, 2)).sum();
+    assert_eq!(body_lines, 3, "the paragraph has three lines");
+    assert_eq!(lines_of(0, 1), 0, "the heading leaves the first page");
+    assert_eq!((lines_of(1, 1), lines_of(1, 2)), (1, 3), "and stands with the whole paragraph");
+}

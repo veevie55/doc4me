@@ -3677,7 +3677,16 @@ fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margi
                     after = pl.rp.space_after.max(0.0);
                     continue;
                 }
-                let lines = if pl.rp.widow_control && pl.lines.len() >= 2 { 2 } else { 1 };
+                // One that can't break across pages (Keep lines together, or too short to leave
+                // two lines on each page under widow control) needs all of its lines here:
+                // zenodo-090's Heading 2 goes to the next page with its three-line paragraph.
+                let lines = if pl.rp.keep_lines || !may_split(&pl) {
+                    pl.lines.len().max(1)
+                } else if pl.rp.widow_control {
+                    2
+                } else {
+                    1
+                };
                 // Text needs its complete starting line boxes for Keep with next. A plain
                 // empty paragraph instead keeps its mark here while trailing leading may
                 // enter the margin, just as when it is placed (Word reference zenodo-093).
@@ -3799,6 +3808,19 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         // Too tall for a page: Word lets it run across pages like a table in the text, from its
         // own left edge.
         tl.x = float_table_x(pb, tl.width, &f, legacy) - pb.col_x();
+        // It starts at its own place on the page when that is below the text so far: zenodo-053's
+        // activity tables (2411 twips from the page top, longer than a page) begin there in
+        // Word's PDF and run on to the next page, under the floating heading table above them.
+        if f.v_align.is_none() {
+            let top = match f.v_rel {
+                Anchor::Page => Some(f.y),
+                Anchor::Margin => Some(pb.sect.margin_top + f.y),
+                _ => None,
+            };
+            if let Some(top) = top.filter(|t| t.is_finite() && *t > pb.y && *t < pb.bottom) {
+                pb.y = top;
+            }
+        }
     }
     // A table in the text flow starts below the floating objects in its way.
     below_floats(pb, pb.col_x() + tl.x, pb.col_x() + tl.x + tl.width);

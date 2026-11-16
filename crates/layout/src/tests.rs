@@ -3687,6 +3687,31 @@ fn a_floating_table_taller_than_a_page_runs_across_pages() {
     }
 }
 
+#[test]
+fn a_floating_table_taller_than_a_page_starts_at_its_own_offset() {
+    // zenodo-053: an activity table placed 2411 twips from the page top, longer than a page,
+    // begins there in Word's PDF (not at the top margin) and runs on to the next page.
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    for (v_rel, y, top) in [(Anchor::Page, 120.0, 120.0), (Anchor::Margin, 50.0, 122.0)] {
+        let mut d = Document::from_text("After the table.");
+        let mut t = Table::new(80, 1, 300.0);
+        for (i, r) in t.rows.iter_mut().enumerate() {
+            r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel, y, overlap: false, ..Default::default() });
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2);
+        let first = l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { y, story: StoryRef::Body, path, .. } = it { (path.0.len() > 1).then_some(*y) } else { None })
+            .fold(f32::MAX, f32::min);
+        assert!(first >= top - 0.01 && first < top + 20.0, "{v_rel:?}: first row text at {first}, the table starts at {top}");
+    }
+}
+
 /// #534: a table placed on the page (`w:tblpPr w:vertAnchor="page"`) whose anchor comes after a
 /// page full of text goes to the next page with it, like Word, instead of covering that text.
 #[test]
