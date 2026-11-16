@@ -1,17 +1,17 @@
 # ผล readiness ที่วัดได้ (ภาษาไทย)
 
-> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-16 ที่ source commit `61dfe51`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
+> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-16 ที่ source commit `11deeb1`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
 
-**Readiness รวม: 93.6%**  
-**เมื่อไม่นับรายการ deferred: 95.5%**
+**Readiness รวม: 93.9%**  
+**เมื่อไม่นับรายการ deferred: 95.8%**
 
 | มิติ | น้ำหนัก | คะแนน | เมื่อไม่นับ deferred | ชุดตรวจ (ผ่าน / ทั้งหมด) |
 |---|---:|---:|---:|---|
 | ฟีเจอร์ | 0.30 | 97.4% | 100.0% | ribbon 504/504; dialogs 216/228 (12 deferred) |
-| รูปแบบไฟล์ | 0.20 | 100.0% | 100.0% | corpus-open 220/220; corpus-roundtrip 220/220 |
-| การจัดหน้าและแบ่งหน้า | 0.15 | 69.8% | 69.8% | corpus-pages 203/220; corpus-breaks 104/220 |
+| รูปแบบไฟล์ | 0.20 | 100.0% | 100.0% | corpus-open 219/219; corpus-roundtrip 219/219 |
+| การจัดหน้าและแบ่งหน้า | 0.15 | 71.7% | 71.7% | corpus-pages 208/219; corpus-breaks 106/219 |
 | UI/UX | 0.10 | 98.6% | 100.0% | shortcuts 276/280 (4 deferred) |
-| ความเสถียร | 0.10 | 100.0% | 100.0% | corpus-stability 220/220; stability 5/5 |
+| ความเสถียร | 0.10 | 100.0% | 100.0% | corpus-stability 219/219; stability 5/5 |
 | ประสิทธิภาพ | 0.05 | 100.0% | 100.0% | performance 6/6 |
 | ภาษา | 0.04 | 100.0% | 100.0% | languages 95/95 |
 | แพลตฟอร์ม | 0.03 | 100.0% | 100.0% | platforms 5/5 |
@@ -20,7 +20,7 @@
 
 ## รายการที่ยังไม่ผ่านและเหตุผลรายข้อ
 
-มีรายการ corpus-pages ที่ไม่ผ่าน 17 รายการ และ corpus-breaks ที่ไม่ผ่าน 116 รายการ ผลล่าสุดพร้อม observations อยู่ใน [อุปสรรค readiness ฉบับภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [ฉบับภาษาอังกฤษ](readiness/blockers-2026-11-14.md); workflow จะปรับ blockers จากผลวัดทุกครั้ง
+มีรายการ corpus-pages ที่ไม่ผ่าน 11 รายการ และ corpus-breaks ที่ไม่ผ่าน 113 รายการ ผลล่าสุดพร้อม observations อยู่ใน [อุปสรรค readiness ฉบับภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [ฉบับภาษาอังกฤษ](readiness/blockers-2026-11-14.md); workflow จะปรับ blockers จากผลวัดทุกครั้ง
 
 การยังแยกสาเหตุไม่ได้ไม่ทำให้รายการผ่าน ต้องตรงกับ Word ตามเกณฑ์เดิมก่อนจึงนับผ่าน ไม่มีการลดเกณฑ์หรือเพิ่มข้อยกเว้น
 
