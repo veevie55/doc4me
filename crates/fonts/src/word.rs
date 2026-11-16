@@ -813,8 +813,8 @@ impl MetricFit {
 }
 
 /// Measured advances for condensed Arial families drawn with Roboto, Gotham Book/Medium with
-/// Montserrat, Nyala with Noto Sans Ethiopic, Garamond with Tinos or Times New Roman, and Cambria
-/// with Caladea; active only with the expected substitute.
+/// Montserrat, Nyala with Noto Sans Ethiopic, Garamond with Tinos or Times New Roman, Cambria
+/// with Caladea and Calibri Light with Carlito; active only with the expected substitute.
 /// TH Sarabun New/PSK additionally use their full scale, kerning and line fit with Sarabun.
 /// Other requested families keep the selected face's metrics.
 pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
@@ -835,6 +835,10 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             (_, true) => crate::latin_metrics::GARAMOND_ITALIC,
             _ => crate::latin_metrics::GARAMOND_REGULAR,
         })
+    } else if family.eq_ignore_ascii_case("Calibri Light") {
+        // Calibri Light has no bold: Word emboldens the light face and keeps its widths
+        // (zenodo-049's bold italic runs are set with Calibri-LightItalic in Word's PDF).
+        Some(if italic { crate::latin_metrics::CALIBRI_LIGHT_ITALIC } else { crate::latin_metrics::CALIBRI_LIGHT_REGULAR })
     } else if family.eq_ignore_ascii_case("Cambria") {
         Some(match (bold, italic) {
             (true, true) => crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
@@ -854,6 +858,8 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         } else if family.eq_ignore_ascii_case("Cambria") {
             // Only its open stand-in: Windows draws Cambria itself.
             &["Caladea"]
+        } else if family.eq_ignore_ascii_case("Calibri Light") {
+            &["Carlito"]
         } else if family.eq_ignore_ascii_case("Garamond") {
             // Its serif stand-ins: Tinos where only open fonts exist, Times New Roman on Windows.
             &["Tinos", "Times New Roman"]
@@ -903,6 +909,8 @@ mod tests {
             crate::latin_metrics::CAMBRIA_ITALIC,
             crate::latin_metrics::CAMBRIA_BOLD,
             crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
+            crate::latin_metrics::CALIBRI_LIGHT_REGULAR,
+            crate::latin_metrics::CALIBRI_LIGHT_ITALIC,
         ] {
             assert!(advances.windows(2).all(|p| p[0].0 < p[1].0));
             let fit = MetricFit { style: None, advances, line: (1.0, 0.25) };
@@ -1227,6 +1235,13 @@ mod tests {
             assert_eq!(metric_fit("Cambria", false, false).and_then(|f| f.advance('e')), Some(0.488));
         }
         assert!(metric_fit("Garamond", false, false).is_none_or(|f| !f.tabular_digits()));
+        // Calibri Light's narrower widths apply with Carlito, also to (synthetic) bold.
+        if resolve("Calibri Light", false, false).face.family == "Carlito" {
+            assert_eq!(metric_fit("Calibri Light", false, false).and_then(|f| f.advance('A')), Some(0.563));
+            assert!(metric_fit("Calibri Light", false, true).is_some());
+            assert_eq!(metric_fit("Calibri Light", true, true).and_then(|f| f.advance('A')), Some(0.563));
+            assert!(metric_fit("Calibri", false, false).is_none());
+        }
         // So do Symbol and Wingdings bullets drawn as standard characters by another face.
         // Overpass, every weight, steps 1.266 em whatever face draws it (13.293 pt at 10.5 pt).
         for name in ["Overpass", "Overpass Light", "overpass extrabold"] {
