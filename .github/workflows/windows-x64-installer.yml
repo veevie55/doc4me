@@ -249,6 +249,17 @@ jobs:
               if [ "$type" = "tag" ]; then
                 sha=$(gh api "repos/$GITHUB_REPOSITORY/git/tags/$sha" --jq '.object.sha')
               fi
+              if [ -n "$COMMIT" ] && [ "$sha" != "$COMMIT" ] && [ "$UPDATE_RELEASE" = "true" ] && [ "$COMMIT" = "$GITHUB_SHA" ]; then
+                # Refreshing an existing release from the head of main (the commit this run's
+                # workflow files come from): move its tag there, then update that release below.
+                # Any other existing tag elsewhere still stops the run.
+                if ! gh api -X PATCH "repos/$GITHUB_REPOSITORY/git/refs/tags/$tag" -f sha="$COMMIT" -F force=true > /dev/null 2> "$RUNNER_TEMP/move.err"; then
+                  echo "::error::could not move tag $tag from $sha to $COMMIT: $(cat "$RUNNER_TEMP/move.err")"
+                  exit 1
+                fi
+                echo "Moved tag $tag from $sha to $COMMIT to update its release" >> "$GITHUB_STEP_SUMMARY"
+                sha="$COMMIT"
+              fi
               if [ -z "$COMMIT" ] || [ "$sha" != "$COMMIT" ]; then
                 echo "::error::tag $tag already exists (at $sha); set a new version with cargo xtask version set"
                 exit 1
