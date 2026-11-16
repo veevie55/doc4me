@@ -1,7 +1,7 @@
 # Hosting Doc4Me for the web
 
-`doc4me-web-<version>.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a
-static site in `doc4me-web-<version>/`:
+`doc4me-web-<commit>.zip` (from the GitHub release, or `packaging/web/package.sh`) holds a
+static site in `doc4me-web-<commit>/`:
 
 | File | What it is |
 |---|---|

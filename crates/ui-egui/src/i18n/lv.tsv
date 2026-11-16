@@ -733,7 +733,6 @@
 	Detach Template	Atvienot veidni
 	Detect language automatically	Noteikt valodu automātiski
 	Developer	Izstrādātājs
-	development build	izstrādes būvējums
 	Diagonal	Diagonāle
 	Diagonal Dots	Diagonāli punkti
 	Diamond	Rombs
@@ -2727,7 +2726,6 @@
 	Vector AB	Vektors AB
 	Version	Versija
 	Version History	Versiju vēsture
-	Version {version} ({build})	Versija {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versijas tiek glabātas, kamēr dokuments ir atvērts (.docx failam nav versiju).
 	Vertical	Vertikāli
 	Vertical Alignment	Vertikālais līdzinājums

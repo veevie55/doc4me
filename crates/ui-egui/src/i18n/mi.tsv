@@ -731,7 +731,6 @@
 	Detach Template	Wewete Tauira
 	Detect language automatically	Kimi aunoa i te reo
 	Developer	Kaiwhakawhanake
-	development build	hanga whakawhanake
 	Diagonal	Hauroki
 	Diagonal Dots	Ngā Ira Hauroki
 	Diamond	Taimana
@@ -2725,7 +2724,6 @@
 	Vector AB	Pere AB
 	Version	Putanga
 	Version History	Hītori Putanga
-	Version {version} ({build})	Putanga {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Ka puritia ngā putanga i te wā e tuwhera ana te tuhinga (kāore he putanga o tētahi kōnae .docx).
 	Vertical	Poutū
 	Vertical Alignment	Tīaroaro Poutū

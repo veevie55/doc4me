@@ -336,7 +336,6 @@
 	Search for templates	Пошук шаблонів
 	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Щоб документи Word типово відкривалися у Doc4Me: виберіть документ у Finder, оберіть Файл › Отримати інфо, виберіть Doc4Me у розділі «Відкривати за допомогою» і натисніть «Змінити все».
 	Doc4Me is now the default app for Word documents.	Doc4Me тепер типова програма для документів Word.
-	development build	Збірка для розробки
 	Diagonal	Діагональ
 	Diamond	Ромб
 	Dictate	Диктувати
@@ -942,7 +941,6 @@
 	User Name	Ім'я користувача
 	User name:	Ім'я користувача:
 	Version History	Історія версій
-	Version {version} ({build})	Версія {version} ({build})
 	Vertical	Вертикальна
 	Vertical Alignment	Вертикальне вирівнювання
 	View	Вигляд

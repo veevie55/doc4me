@@ -37,6 +37,8 @@ jobs:
         run: |
           commit=$(git rev-parse HEAD)
           printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          # Bake the source commit into the build (crates/engine/src/build_info.rs), as build-web.yml does.
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
           mkdir -p dist/web
           printf '%s\n' "$commit" > dist/web/SOURCE_COMMIT.txt
           printf '### GitHub Pages deployment\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"

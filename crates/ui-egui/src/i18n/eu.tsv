@@ -733,7 +733,6 @@
 	Detach Template	Askatu txantiloia
 	Detect language automatically	Hauteman hizkuntza automatikoki
 	Developer	Garatzailea
-	development build	garapen-konpilazioa
 	Diagonal	Diagonala
 	Diagonal Dots	Puntu diagonalak
 	Diamond	Erronboa
@@ -2727,7 +2726,6 @@
 	Vector AB	AB bektorea
 	Version	Bertsioa
 	Version History	Bertsio-historia
-	Version {version} ({build})	{version} bertsioa ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Bertsioak dokumentua irekita dagoen bitartean gordetzen dira (.docx fitxategi batek ez du bertsiorik).
 	Vertical	Bertikala
 	Vertical Alignment	Lerrokatze bertikala

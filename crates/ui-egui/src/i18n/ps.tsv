@@ -727,7 +727,6 @@
 	Detach Template	کينډۍ جلا کړئ
 	Detect language automatically	ژبه اتومات وپېژنئ
 	Developer	پراختیاکوونکی
-	development build	د پراختیا جوړښت
 	Diagonal	قطري
 	Diagonal Dots	قطري ټکي
 	Diamond	الماس
@@ -2721,7 +2720,6 @@
 	Vector AB	وېکټور AB
 	Version	نسخه
 	Version History	د نسخو تاریخچه
-	Version {version} ({build})	نسخه {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	نسخې تر هغه ساتل کېږي چې سند پرانیستی وي (د .docx فایل نسخې نه لري).
 	Vertical	عمودي
 	Vertical Alignment	عمودي برابرول

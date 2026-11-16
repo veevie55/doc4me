@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # Build and package Doc4Me for Linux (<arch> is x86_64 or aarch64, or riscv64 when cross-compiling):
 #
-#   $DIST/doc4me-<version>-linux-<arch>.AppImage  any distro with glibc >= the build host's
-#   $DIST/doc4me-<version>-linux-<arch>.AppImage.zsync  delta updates (needs zsyncmake)
-#   $DIST/doc4me-<version>-linux-<arch>.deb       Debian, Ubuntu, Mint, Pop!_OS, ...
-#   $DIST/doc4me-<version>-linux-<arch>.rpm       Fedora, openSUSE, RHEL, ...
-#   $DIST/doc4me-<version>-linux-<arch>.tar.gz    plain FHS-style tree (bin/, share/)
+#   $DIST/doc4me-<commit>-linux-<arch>.AppImage  any distro with glibc >= the build host's
+#   $DIST/doc4me-<commit>-linux-<arch>.AppImage.zsync  delta updates (needs zsyncmake)
+#   $DIST/doc4me-<commit>-linux-<arch>.deb       Debian, Ubuntu, Mint, Pop!_OS, ...
+#   $DIST/doc4me-<commit>-linux-<arch>.rpm       Fedora, openSUSE, RHEL, ...
+#   $DIST/doc4me-<commit>-linux-<arch>.tar.gz    plain FHS-style tree (bin/, share/)
 #
 # Usage: packaging/linux/package.sh [--skip-build] [--formats "appimage deb rpm tar"]
 #
@@ -39,9 +39,9 @@ case "$ARCH" in
 esac
 # The project has no mail address yet: set DOC4ME_MAINTAINER to "Name <address>" for real packages.
 export DOC4ME_MAINTAINER="${DOC4ME_MAINTAINER:-Doc4Me contributors <https://github.com/chatraweechai/doc4me/issues>}"
-BASENAME="doc4me-$VERSION-linux-$ARCH"
+BASENAME="doc4me-$COMMIT-linux-$ARCH"
 
-echo "==> Doc4Me $VERSION for Linux $ARCH ($FORMATS)"
+echo "==> Doc4Me $COMMIT for Linux $ARCH ($FORMATS)"
 
 if [ "$SKIP_BUILD" = 0 ]; then
   if [ -n "${CROSS_TARGET:-}" ]; then

@@ -4,8 +4,8 @@
 
 .DESCRIPTION
   Produces, in $env:DIST (default: dist/release):
-    doc4me-<version>-windows-<arch>.msi            per-machine installer (WiX v5)
-    doc4me-<version>-windows-<arch>-portable.zip   doc4me.exe + doc4me-cli.exe
+    doc4me-<commit>-windows-<arch>.msi            per-machine installer (WiX v5)
+    doc4me-<commit>-windows-<arch>-portable.zip   doc4me.exe + doc4me-cli.exe
 
   The binaries link the C runtime statically (+crt-static), so neither the MSI nor the portable
   zip needs the Visual C++ redistributable. Signing is delegated to sign.ps1 (skipped with a
@@ -39,7 +39,8 @@ function Invoke-Native([string] $What, [scriptblock] $Block) {
   if ($LASTEXITCODE -ne 0) { throw "$What failed with exit code $LASTEXITCODE" }
 }
 
-# The version lives in one place: [workspace.package] version in the root Cargo.toml.
+# Builds are named by commit (file names, messages); the version in [workspace.package] of the
+# root Cargo.toml is only for the MSI ProductVersion, which Windows Installer requires to be numeric.
 $Version = $env:DOC4ME_VERSION
 if (-not $Version) {
   $inPkg = $false
@@ -58,9 +59,10 @@ $TargetDir = if ($env:CARGO_TARGET_DIR) { $env:CARGO_TARGET_DIR } else { Join-Pa
 New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 
 if (-not $env:DOC4ME_BUILD_SHA) { $env:DOC4ME_BUILD_SHA = (git -C $Root rev-parse HEAD 2>$null) }
+$Commit = if ($env:DOC4ME_BUILD_SHA -match '^[0-9a-fA-F]{7,64}$') { $env:DOC4ME_BUILD_SHA.Substring(0, [Math]::Min(8, $env:DOC4ME_BUILD_SHA.Length)) } else { 'dev' }
 if (-not $env:DOC4ME_BUILD_DATE) { $env:DOC4ME_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') }
 
-Write-Output "Doc4Me $Version for Windows $Arch ($Target)"
+Write-Output "Doc4Me $Commit for Windows $Arch ($Target)"
 
 if (-not $SkipBuild) {
   # Static CRT: no VC++ redistributable needed. Scoped to the target so host build scripts and
@@ -159,11 +161,11 @@ $rtf = '{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Tahoma;}}\vi
   ($paragraphs -join "\par`r`n") + "\par`r`n}`r`n"
 [System.IO.File]::WriteAllText($LicenseRtf, $rtf, [System.Text.Encoding]::ASCII)
 
-$Msi = Join-Path $Dist "doc4me-$Version-windows-$Arch.msi"
+$Msi = Join-Path $Dist "doc4me-$Commit-windows-$Arch.msi"
 Invoke-Native 'wix build' {
   wix build (Join-Path $PSScriptRoot 'doc4me.wxs') -arch $Arch `
     -ext WixToolset.UI.wixext -ext WixToolset.Util.wixext `
-    -d "Version=$MsiVersion" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\app-icon\doc4me.ico')" `
+    -d "Version=$MsiVersion" -d "Commit=$Commit" -d "BinDir=$Stage" -d "IconPath=$(Join-Path $Root 'assets\app-icon\doc4me.ico')" `
     -d "LicenseRtf=$LicenseRtf" -d "RootDir=$Root" `
     -o $Msi
 }
@@ -172,7 +174,7 @@ Remove-Item -Force -ErrorAction SilentlyContinue ([IO.Path]::ChangeExtension($Ms
 & (Join-Path $PSScriptRoot 'sign.ps1') $Msi
 
 # ---- portable zip ------------------------------------------------------------------------------
-$Portable = Join-Path $TargetDir "windows-package\doc4me-$Version-windows-$Arch-portable"
+$Portable = Join-Path $TargetDir "windows-package\doc4me-$Commit-windows-$Arch-portable"
 Remove-Item -Recurse -Force $Portable -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Portable | Out-Null
 Copy-Item (Join-Path $Stage '*.exe') $Portable
@@ -189,7 +191,7 @@ if ($env:CRAFT_FONTS_DIR) {
     Copy-Item $ofl.FullName (Join-Path $Portable "OFL-$($ofl.Directory.Name).txt")
   }
 }
-$Zip = Join-Path $Dist "doc4me-$Version-windows-$Arch-portable.zip"
+$Zip = Join-Path $Dist "doc4me-$Commit-windows-$Arch-portable.zip"
 Remove-Item -Force $Zip -ErrorAction SilentlyContinue
 Compress-Archive -Path $Portable -DestinationPath $Zip
 

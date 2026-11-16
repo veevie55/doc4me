@@ -189,7 +189,6 @@
 	Delete Style	Stili Sil
 	Delete Table	Tabloyu Sil
 	Design	Tasarım
-	development build	geliştirme derlemesi
 	Diagonal	Çapraz
 	Diamond	Eşkenar Dörtgen
 	Dictate	Dikte Et
@@ -787,7 +786,6 @@ preview	Title	Örnek
 	User Name	Kullanıcı Adı
 	User name:	Kullanıcı adı:
 	Version History	Sürüm Geçmişi
-	Version {version} ({build})	Sürüm {version} ({build})
 	Vertical	Dikey
 	Vertical Alignment	Dikey Hizalama
 	View	Görünüm

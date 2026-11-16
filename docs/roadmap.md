@@ -86,7 +86,7 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 | M11 | Draw and objects | text wrap, text boxes, canvas handles, rotation (#332), ink pens and eraser (#307), contour wrap (#354), lasso, Add Pen, Ink to Shape and Ink Replay (#395) done; grouping (`arrange.group`) and Ink to Math (own recogniser, 2026-10-25) done | 30–50 h |
 | M12 | Formats breadth (PDF, ODT, RTF, HTML, MD, TXT, LaTeX, `.doc` import) | done (first versions); encrypted `.docx` opens and saves (agile encryption); `.doc` write, encrypted `.doc`, minor formats missing | 60–100 h |
 | M13 | Performance budgets | on track (1.4 ms relayout); large real-world documents unmeasured | 10–20 h |
-| M14 | 1.0 polish, packaging, signing | Doc4Me v1.1.4 is Latest with Windows x64 MSI and portable ZIP; cumulative notes include v1.1.4 through v1.0.0 in descending order; v1.1.1, v1.1.2 and v1.1.3 releases restored; WordCraft, upstream, shipped v0.1.0–v0.4.0 on every platform | — |
+| M14 | 1.0 polish, packaging, signing | Builds are named by commit (`--version`, package file names; the About dialog shows neither version nor commit); manual workflows build every platform's packages from a chosen commit; the owner publishes Releases by hand (versioned releases and tags removed from GitHub by 2026-11-16); WordCraft, upstream, shipped builds on every platform | — |
 | M15 | Localization (12 key languages, RTL interface, proofing languages) | Latest report: 95/95 culture rows pass (100%; 26 catalogs are AI drafts awaiting native review, and the 19 RTL/Indic languages warn before use because the interface doesn't shape or mirror them). The check does not validate translated values or quality. English, Polish and Thai proofing, a proofing language per run | 60–100 h |
 | M16 | Right-to-left and East Asian typography | RTL paragraphs done (#207) | 30–45 h |
 
@@ -102,7 +102,7 @@ short, all of them pagination. Current `manual.tsv` has 22 deferred rows and rec
 check as pass after run 42262956358 built and verified the MSI and portable ZIP. The source TSVs
 map 95/95 language rows and the dialog TSV/source maps 216/228 rows (12 deferred; 7 excluded),
 matching the report. Language readiness measures catalog key-row coverage, not translated content
-or accuracy. Doc4Me 1.1.4 is the latest release; the release notes include all earlier versions.
+or accuracy. Builds are named by commit; `CHANGELOG.md` keeps every earlier release's notes.
 The target is **100% ready for real work, measured**
 (raised from 80% to 95% by the owner on 2026-10-25, and to 100% on 2026-10-27): every dimension
 comes from a fixed pass/fail check set, and one command computes the number. Checks may be added,

@@ -5,7 +5,7 @@
   Built by package.ps1:
 
     wix build doc4me.wxs -arch x64 -ext WixToolset.UI.wixext -ext WixToolset.Util.wixext
-      -d Version=1.2.3 -d BinDir=... -d IconPath=... -d LicenseRtf=... -o out.msi
+      -d Version=1.2.3 -d Commit=0123abcd -d BinDir=... -d IconPath=... -d LicenseRtf=... -o out.msi
 
   Per-machine install into Program Files with a Start Menu shortcut. The installer shows the
   standard WiX dialogs: welcome + license, progress, and a finish page.
@@ -24,9 +24,11 @@
       Scope="perMachine"
       Compressed="yes"
       Language="1033">
-    <SummaryInformation Description="Doc4Me word processor" Manufacturer="Doc4Me contributors" />
-    <!-- Same-version upgrades let successive pre-releases of one X.Y.Z replace each other
-         (MSI versions are numeric, so 1.2.3-rc.1 and 1.2.3-rc.2 are both 1.2.3). -->
+    <SummaryInformation Description="Doc4Me word processor (commit $(var.Commit))" Manufacturer="Doc4Me contributors" />
+    <!-- Installed apps (Programs and Features) show the commit the build came from. -->
+    <Property Id="ARPCOMMENTS" Value="Commit $(var.Commit)" />
+    <!-- Builds are named by commit; MSI versions must be numeric, so successive commits usually
+         share one ProductVersion: same-version upgrades let each build replace the one before. -->
     <MajorUpgrade AllowSameVersionUpgrades="yes"
         DowngradeErrorMessage="A newer version of Doc4Me is already installed." />
     <MediaTemplate EmbedCab="yes" CompressionLevel="high" />

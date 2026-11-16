@@ -33,7 +33,7 @@ agent control. This page is the summary; the assessment is
 [`docs/gaps.md`](docs/gaps.md), and milestones and the current focus are in
 [`docs/roadmap.md`](docs/roadmap.md).
 
-**งานหลัง 1.1.3:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ในรายละเอียดรุ่น `[1.1.4]`; Windows run 43804632296 วัดโค้ด `093eaba` แล้ว ได้ 95.3% ไม่นับ deferred
+**งานหลัง commit `552a0b6`:** วัตถุหลังตัวแบ่งหน้า, ลำดับซ้อน `wp:relativeHeight` และตัวแบ่งหน้าก่อน Continuous section อยู่ใน `CHANGELOG.md` (รุ่นที่ build จาก commit `c694538`); Windows run 43804632296 วัดโค้ด `093eaba` แล้ว ได้ 95.3% ไม่นับ deferred
 
 **งานต่อ 2026-11-13:** แก้ contextual spacing เฉพาะเนื้อหาตาม ECMA-376: ช่องว่าง max(10,12)−10 เหลือ 2 pt แทน 12 pt; คงตัวเลือก additive spacing และพฤติกรรมตาราง/หัวกระดาษเดิม CI 6/6, native 2,508; Linux ครบ 220 ฉบับตรง baseline ทุกแถวทั้งห้าชุดตรวจ (189 pages / 103 boundaries) ผล Windows ล่าสุดคือ **94.8% ไม่นับ deferred**; เป้าหมาย 100% ยังไม่สำเร็จ ดู [spacing audit](docs/readiness/contextual-spacing-2026-11-13.md)
 
@@ -49,7 +49,7 @@ agent control. This page is the summary; the assessment is
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
 | Commands / tests / code | 730 command specs · 2,566 test attributes · 238,736 Rust lines | measured by CLI and cargo xtask stats, 2026-11-15 |
-| Releases | Doc4Me v1.1.4 (Latest), refresh from the latest measured engine; cumulative notes v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0; Windows x64 MSI and portable ZIP. Separate manual artifact workflows now build Windows x86 and x64 packages from a chosen ref. Earlier 1.1.1–1.1.3 releases restored. WordCraft upstream last shipped v0.4.0 on every platform | measured |
+| Releases | Builds are named by the commit they come from, not by a version number. No workflow publishes a GitHub Release; the owner publishes Releases by hand (the versioned releases and tags were removed from GitHub by 2026-11-16). Manual workflows build Windows x86/x64/ARM64, macOS, Linux, FreeBSD and Web App packages from a chosen commit, named after it. WordCraft upstream shipped builds on every platform | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
 #145: ~4.5k lines in ~10 h; layout fidelity PRs run 5–10× slower per line). The earlier "≈120–150 h

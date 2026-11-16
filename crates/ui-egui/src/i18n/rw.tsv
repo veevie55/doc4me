@@ -717,7 +717,6 @@
 	Detach Template	Kuramo Inyandikorugero
 	Detect language automatically	Menya ururimi mu buryo bwikora
 	Developer	Iterambere
-	development build	iterambere ryubaka
 	Diagonal	Diagonal
 	Diagonal Dots	Utudomo twa Diagonal
 	Diamond	Diamond
@@ -2711,7 +2710,6 @@
 	Vector AB	Vector AB
 	Version	Inyandiko
 	Version History	Amateka ya verisiyo
-	Version {version} ({build})	Inyandiko {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Imirongo ibikwa mugihe inyandiko ifunguye (dosiye ya .docx idafite verisiyo).
 	Vertical	Uhagaritse
 	Vertical Alignment	Guhuza Vertical

@@ -730,7 +730,6 @@
 	Detach Template	Kople frå mal
 	Detect language automatically	Oppdag språk automatisk
 	Developer	Utviklar
-	development build	utviklingsversjon
 	Diagonal	Diagonal
 	Diagonal Dots	Diagonale prikkar
 	Diamond	Rombe
@@ -2724,7 +2723,6 @@
 	Vector AB	Vektor AB
 	Version	Versjon
 	Version History	Versjonslogg
-	Version {version} ({build})	Versjon {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versjonar blir tekne vare på medan dokumentet er ope (ei .docx-fil har ingen versjonar).
 	Vertical	Loddrett
 	Vertical Alignment	Loddrett justering

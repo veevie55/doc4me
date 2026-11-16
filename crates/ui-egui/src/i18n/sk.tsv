@@ -729,7 +729,6 @@
 	Detach Template	Odpojiť šablónu
 	Detect language automatically	Rozpoznať jazyk automaticky
 	Developer	Vývojár
-	development build	vývojová zostava
 	Diagonal	Uhlopriečka
 	Diagonal Dots	Šikmé bodky
 	Diamond	Kosoštvorec
@@ -2723,7 +2722,6 @@
 	Vector AB	Vektor AB
 	Version	Verzia
 	Version History	História verzií
-	Version {version} ({build})	Verzia {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Verzie sa uchovávajú, kým je dokument otvorený (súbor .docx nemá verzie).
 	Vertical	Zvislo
 	Vertical Alignment	Zvislé zarovnanie

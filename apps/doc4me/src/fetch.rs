@@ -72,7 +72,7 @@ fn args(req: &FetchRequest) -> Vec<String> {
     .map(str::to_string)
     .to_vec();
     a.extend(["--max-filesize".into(), req.max_bytes.to_string()]);
-    a.extend(["--user-agent".into(), format!("Doc4Me/{} (+https://github.com/chatraweechai/doc4me)", env!("CARGO_PKG_VERSION"))]);
+    a.extend(["--user-agent".into(), format!("Doc4Me/{} (+https://github.com/chatraweechai/doc4me)", doc4me_engine::build_info::commit_or_dev())]);
     if let Some((content_type, _)) = &req.body {
         a.extend(["--header".into(), format!("Content-Type: {}", content_type.replace(['\r', '\n'], ""))]);
         a.extend(["--data-binary".into(), "@-".into()]);

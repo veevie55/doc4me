@@ -1,19 +1,28 @@
 # Building and releasing Doc4Me
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** added a manual workflow to publish a selected Web App build to GitHub Pages
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** builds are named by commit instead of a version number; the deleted x64 installer workflow is no longer described (previously: added a manual workflow to publish a selected Web App build to GitHub Pages)
 
 ## Build a chosen commit
 
 All current workflows use only `workflow_dispatch`. Pushing code or a tag does not start a build,
-deployment, or release. The platform build workflows upload artifacts, the separate Pages workflow
-publishes the selected Web App to GitHub Pages, and only the explicitly requested x64 installer job
-can publish a GitHub Release.
+deployment, or release. The platform build workflows upload artifacts and the separate Pages
+workflow publishes the selected Web App to GitHub Pages. No workflow publishes a GitHub Release.
+
+Doc4Me names its builds by the **commit** they were built from, not by a version number. `doc4me --version`, `doc4me-cli --version`, the MCP server's `serverInfo.version`
+and the web user agent show the short commit (8 hex digits, `dev` for a local build without
+`DOC4ME_BUILD_SHA`), and package files are named `doc4me-<commit>-<platform>-<arch>.<ext>`. The About
+dialog shows neither a version number nor a commit.
+Only the numeric fields that installers require keep the `[workspace.package] version` from
+`Cargo.toml`: the MSI ProductVersion, the macOS `CFBundleShortVersionString`/`CFBundleVersion`,
+the DEB/RPM package version, the AppStream release and the numeric Windows file version. The MSI
+records the commit in its summary and in Programs and Features (`ARPCOMMENTS`), and `doc4me.exe`
+carries it as its file and product version strings.
 
 1. Open [Actions](https://github.com/veevie55/doc4me/actions) and choose a workflow.
 2. Choose **Run workflow**, keeping **Use workflow from: main**. This selects the current workflow
    definition, independently of the source revision to build.
-3. Set **ref** to `main` for current code, `v1.1.4` for the released source, or a branch, tag, or
-   commit SHA from this repository. For macOS, choose `universal`, `aarch64`, or `x86_64` as well.
+3. Set **ref** to `main` for current code, or a commit SHA (or branch) from this repository, such
+   as the commit a published build came from. For macOS, choose `universal`, `aarch64`, or `x86_64` as well.
 4. Start the run explicitly. Download its **Artifacts** when it finishes. They are retained for
    14 days and include `SOURCE_COMMIT.txt`, the resolved 40-character source SHA. The same SHA is
    in the run summary and is supplied to the build through `DOC4ME_BUILD_SHA`.
@@ -39,11 +48,12 @@ the site artifact to the `github-pages` environment. A successful deployment rep
 Pages site. The ordinary [Build Web App](../.github/workflows/build-web.yml) remains an artifact-only
 build and does not publish anything.
 
-The selected revision supplies its own source, lockfile, assets, version, and packaging scripts.
+The selected revision supplies its own source, lockfile, assets, and packaging scripts; revisions
+from before the switch to commit names still name their packages by version.
 An older revision must support the selected target and packaging interface. Selecting an old
 source revision through **ref** does not run its historical workflow definition.
 
-The Windows x86/x64/ARM64 artifact workflows, x64 installer, and Windows readiness workflow also
+The Windows x86/x64/ARM64 artifact workflows and the Windows readiness workflow also
 check out the pinned [`storytold/craft-fonts`](https://github.com/storytold/craft-fonts) revision
 `c1db6d1a8ed772191241c3d185e2104be84d8691`, then run
 [`tools/prepare_corpus_fonts.py`](../tools/prepare_corpus_fonts.py). That helper pins Google Fonts
@@ -70,51 +80,34 @@ destination machine; it is not a statically linked universal BSD binary.
 The Web App ZIP can be extracted and served over HTTP(S), or published with the Pages workflow above.
 See [packaging/web/README.md](../packaging/web/README.md) for MIME types, paths, and hosting options.
 
-## Windows x64 and explicit GitHub Releases
+## Publishing a GitHub Release
 
-The existing [Windows x64 installer](../.github/workflows/windows-x64-installer.yml) is also
-manual-only. The x86 and x64 platform-build workflows above only upload unsigned artifacts; the
-x64 installer workflow can publish a Release when explicitly requested. With **release** left off,
-it builds MSI and portable ZIP artifacts. Its optional
-**commit** input accepts a full 40-character SHA that is an ancestor of the run's `main` commit;
-leave it empty to build the run's current source. Unlike the seven platform-build workflows above, this field
-is named **commit** and accepts a full main-history SHA, not a branch name. To refresh an existing release, explicitly enable **update_release**; the workflow verifies that the existing tag points to the selected source, rebuilds the MSI/ZIP, and replaces the cumulative notes while keeping the release ID and URL.
+No workflow publishes a Release; the repository owner publishes Releases by hand. The workflow
+that used to (`windows-x64-installer.yml`) was deleted on 2026-11-16 (commit `247aa7a`). To
+prepare a build for a Release:
 
-Publishing a new version is a separate, explicit decision:
+1. Run `cargo xtask ci`, the normally ignored interface audit
+   (`cargo test -p doc4me-ui-egui i18n -- --include-ignored`), and `cargo audit`; push the source.
+2. Run the platform workflows above with **ref** set to that commit, and download their Artifacts.
+   Each file is named after the commit and `SOURCE_COMMIT.txt` holds its full SHA.
+3. Publish the files as a Release that names the commit. The release notes are the entries under
+   `[Unreleased]` in `CHANGELOG.md`, moved under a heading `## [<commit>] - YYYY-MM-DD` with the
+   short commit. Headings of earlier releases keep their version numbers (history is not edited).
 
-1. Only when a release is requested, set the version with `cargo xtask version set x.y.z` and
-   move the relevant `CHANGELOG.md` entries from `[Unreleased]` under `## [x.y.z] - YYYY-MM-DD`.
-2. Run `cargo xtask ci`, the normally ignored interface audit
-   (`cargo test -p doc4me-ui-egui i18n -- --include-ignored`), and `cargo audit`; push the prepared source.
-3. Choose **Windows x64 installer → Run workflow** on `main`, explicitly enabling **release**.
-   That job creates the version tag and release, or stops if the tag already exists. A tag push
-   alone never starts the current workflow. Ordinary builds do not require a version bump.
+Doc4Me needs no version bump for a build or a Release. `cargo xtask version` remains for the
+numeric installer fields above; change it only when installers must see a higher number.
 
-For an earlier version, provide **commit** and explicitly enable **release**. The workflow checks
-that the existing version tag points to that commit and publishes without marking it as the
-latest release. GitHub can reject tag creation at an older commit whose workflow files differ
-from the default branch. If its tag must be created from a clone, create it first, then start
-**Run workflow** explicitly; creating the tag is not a build or release request.
-
-Do not change `main`, especially its workflows, during a requested release run. GitHub can
-reject a release target whose workflow files change relative to the default branch. Release
-notes come from the version's `CHANGELOG.md` section. Notes over GitHub's size limit retain
-the section headings and each entry's first line, linking to the complete changelog.
-
-Signing remains optional in this x64 workflow. Builds run without signing secrets, then the
-packaging/signing step can receive either `WINDOWS_CERTIFICATE` (base64 PFX) and
-`WINDOWS_CERTIFICATE_PASSWORD`, or the six Azure signing settings (`AZURE_TENANT_ID`,
-`AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_SIGNING_ENDPOINT`, `AZURE_SIGNING_ACCOUNT`,
-`AZURE_CERT_PROFILE`). Missing credentials leave the files unsigned. The build job has
-`contents: read`; only the explicitly requested release job has `contents: write`.
+Signing is optional: `packaging/windows/sign.ps1` signs the MSI when it receives either
+`WINDOWS_CERTIFICATE` (base64 PFX) and `WINDOWS_CERTIFICATE_PASSWORD`, or the six Azure signing
+settings (`AZURE_TENANT_ID`, `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET`, `AZURE_SIGNING_ENDPOINT`,
+`AZURE_SIGNING_ACCOUNT`, `AZURE_CERT_PROFILE`). The platform workflows pass none, so their files
+are unsigned.
 
 ## Readiness and local packaging
 
-[Readiness (Windows)](../.github/workflows/readiness-windows.yml) and
-[Windows ARM64 packaging readiness](../.github/workflows/platform-windows-arm64-readiness.yml)
-remain separate manual checks. The Windows measurement checks out current `main` and commits
-`docs/readiness.md` with the source SHA in its report. Neither check starts after a push, tag,
-or another workflow. Starting a platform build does not start readiness checks.
+[Readiness (Windows)](../.github/workflows/readiness-windows.yml) remains a separate manual
+check. It checks out current `main` and commits `docs/readiness.md` with the source SHA in its
+report. It does not start after a push, tag, or another workflow. Starting a platform build does not start readiness checks.
 
 Local packaging commands are unchanged:
 
@@ -136,6 +129,7 @@ remain the owner's chosen upstream URLs.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Builds are named by commit instead of a version number (`--version`, MCP, user agent, package file names; the About dialog shows neither); Releases are published by hand; removed the deleted x64 installer and ARM64 readiness workflows from this page. |
 | 2026-11-15 | minor | Windows packages and readiness use a shared pinned OFL font set; the preparation script verifies Google Fonts hashes for Overpass and Noto Sans Ethiopic before embedding and packaging licences. |
 | 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows; both build MSI and portable ZIP from a selected ref and include source commit provenance. x86 uses the x64-hosted x86 MSVC toolchain. Neither workflow publishes a Release. |
 | 2026-11-15 | minor | Added a manual GitHub Pages workflow for the Web App. It builds a selected ref with pinned Trunk, validates the static package, and deploys only from the main workflow definition to the `github-pages` environment. |

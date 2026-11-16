@@ -717,7 +717,6 @@
 	Detach Template	Cima Isakhelo
 	Detect language automatically	Khangela ulwimi ngokuzenzekelayo
 	Developer	Umphuhlisi
-	development build	ukwakhiwa kophuhliso
 	Diagonal	Idiagonal
 	Diagonal Dots	Amachaphaza eDiyagonal
 	Diamond	Idayimani
@@ -2711,7 +2710,6 @@
 	Vector AB	IVector AB
 	Version	Inguqulelo
 	Version History	Imbali yenguqulelo
-	Version {version} ({build})	Inguqulelo {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Iinguqulelo zigcinwa ngelixa uxwebhu luvuliwe (ifayile ye.docx ayinazinguqulelo).
 	Vertical	Ngokuthe nkqo
 	Vertical Alignment	Ulungelelwaniso oluthe nkqo

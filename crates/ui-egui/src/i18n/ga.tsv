@@ -730,7 +730,6 @@
 	Detach Template	Dícheangail teimpléad
 	Detect language automatically	Braith an teanga go huathoibríoch
 	Developer	Forbróir
-	development build	leagan forbartha
 	Diagonal	Trasnánach
 	Diagonal Dots	Poncanna trasnánacha
 	Diamond	Muileata
@@ -2724,7 +2723,6 @@
 	Vector AB	Veicteoir AB
 	Version	Leagan
 	Version History	Stair na leaganacha
-	Version {version} ({build})	Leagan {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Coinnítear leaganacha fad atá an doiciméad oscailte (níl leaganacha ag comhad .docx).
 	Vertical	Ingearach
 	Vertical Alignment	Ailíniú ingearach

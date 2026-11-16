@@ -274,7 +274,6 @@
 	Delete Style	Formatvorlage löschen
 	Delete Table	Tabelle löschen
 	Design	Entwurf
-	development build	Entwicklungsbuild
 	Diagonal	Diagonal
 	Diamond	Raute
 	Dictate	Diktieren
@@ -849,7 +848,6 @@
 	User Name	Benutzername
 	User name:	Benutzername:
 	Version History	Versionsverlauf
-	Version {version} ({build})	Version {version} ({build})
 	Vertical	Vertikal
 	Vertical Alignment	Vertikale Ausrichtung
 	View	Ansicht

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Build, sign and (optionally) notarize the macOS release artifacts:
 #
-#   $DIST/doc4me-<version>-macos-<arch>.dmg          Doc4Me.app on a drag-to-Applications DMG
-#   $DIST/doc4me-cli-<version>-macos-<arch>.zip      the headless CLI
+#   $DIST/doc4me-<commit>-macos-<arch>.dmg          Doc4Me.app on a drag-to-Applications DMG
+#   $DIST/doc4me-cli-<commit>-macos-<arch>.zip      the headless CLI
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
 #
@@ -40,8 +40,8 @@ IDENTITY="${MACOS_SIGN_IDENTITY:--}"
 SHORT_VERSION="${VERSION%%-*}"
 WORK="$CARGO_TARGET_DIR/macos-package"
 APP="$WORK/Doc4Me.app"
-DMG="$DIST/doc4me-$VERSION-macos-$ARCH.dmg"
-CLI_ZIP="$DIST/doc4me-cli-$VERSION-macos-$ARCH.zip"
+DMG="$DIST/doc4me-$COMMIT-macos-$ARCH.dmg"
+CLI_ZIP="$DIST/doc4me-cli-$COMMIT-macos-$ARCH.zip"
 
 NOTARIZE=0
 if [ "$IDENTITY" = "-" ]; then
@@ -52,7 +52,7 @@ else
   warn "macOS: APPLE_ID / APPLE_PASSWORD / APPLE_TEAM_ID incomplete; signed but not notarized"
 fi
 
-echo "==> Doc4Me $VERSION for macOS ($ARCH), identity: $IDENTITY, notarize: $NOTARIZE"
+echo "==> Doc4Me $COMMIT for macOS ($ARCH), identity: $IDENTITY, notarize: $NOTARIZE"
 
 # ---- build -------------------------------------------------------------------------------------
 if [ "$SKIP_BUILD" = 0 ]; then
@@ -105,7 +105,7 @@ cp "$WORK/bin/doc4me" "$APP/Contents/MacOS/Doc4Me"
 cp "$ROOT/assets/app-icon/doc4me.icns" "$APP/Contents/Resources/Doc4Me.icns"
 # Licences of the embedded craft-fonts fonts (only when built with CRAFT_FONTS_DIR).
 copy_font_licences "$APP/Contents/Resources"
-sed -e "s/@VERSION@/$VERSION/g" -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
+sed -e "s/@SHORT_VERSION@/$SHORT_VERSION/g" \
   -e "s/@BUILD_SHA@/${DOC4ME_BUILD_SHA:-unknown}/g" \
   "$HERE/Info.plist.in" >"$APP/Contents/Info.plist"
 plutil -lint "$APP/Contents/Info.plist"
@@ -153,7 +153,7 @@ fi
 
 # ---- CLI ---------------------------------------------------------------------------------------
 echo "==> building $CLI_ZIP"
-CLI_DIR="$WORK/doc4me-cli-$VERSION-macos-$ARCH"
+CLI_DIR="$WORK/doc4me-cli-$COMMIT-macos-$ARCH"
 mkdir -p "$CLI_DIR"
 cp "$WORK/bin/doc4me-cli" "$CLI_DIR/"
 copy_docs "$CLI_DIR"

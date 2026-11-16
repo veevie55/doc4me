@@ -3,7 +3,10 @@
 #
 # Exports:
 #   ROOT                    workspace root
-#   VERSION                 [workspace.package] version from Cargo.toml (override: DOC4ME_VERSION)
+#   COMMIT                  short commit (8 hex digits) that names the packages, or `dev`
+#   VERSION                 [workspace.package] version from Cargo.toml (override: DOC4ME_VERSION);
+#                           only for package metadata fields that must be numeric (deb/rpm,
+#                           AppStream, Info.plist); file names and what users see use COMMIT
 #   DIST                    output directory for release artifacts (default: $ROOT/dist/release)
 #   DOC4ME_BUILD_SHA    git commit baked into the binaries (see crates/engine/src/build_info.rs)
 #   DOC4ME_BUILD_DATE   UTC build date, YYYY-MM-DD
@@ -36,6 +39,13 @@ if [ -z "${DOC4ME_BUILD_SHA:-}" ]; then
   DOC4ME_BUILD_SHA="$(git -C "$ROOT" rev-parse HEAD 2>/dev/null || true)"
 fi
 export DOC4ME_BUILD_SHA
+
+# Builds are named by commit, not by version number.
+case "$DOC4ME_BUILD_SHA" in
+  *[!0-9a-fA-F]* | "") COMMIT=dev ;;
+  *) COMMIT="$(printf '%s' "$DOC4ME_BUILD_SHA" | cut -c1-8)" ;;
+esac
+export COMMIT
 export DOC4ME_BUILD_DATE="${DOC4ME_BUILD_DATE:-$(date -u +%Y-%m-%d)}"
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$ROOT/target}"
 

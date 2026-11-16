@@ -727,7 +727,6 @@
 	Detach Template	فصل القالب
 	Detect language automatically	اكتشاف اللغة تلقائيًا
 	Developer	المطور
-	development build	إصدار تطويري
 	Diagonal	قُطري
 	Diagonal Dots	نقاط قُطرية
 	Diamond	معيّن
@@ -2721,7 +2720,6 @@
 	Vector AB	المتجه AB
 	Version	الإصدار
 	Version History	محفوظات الإصدارات
-	Version {version} ({build})	الإصدار {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	يُحتفظ بالإصدارات أثناء فتح المستند (ملف .docx ليس له إصدارات).
 	Vertical	عمودي
 	Vertical Alignment	المحاذاة العمودية

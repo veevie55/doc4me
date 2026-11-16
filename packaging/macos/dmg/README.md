@@ -12,12 +12,12 @@ Finder scripting on CI, nothing extra installed in the signing job).
 | `dmg-layout.DS_Store` | Finder's view settings for the volume: window size, icon size 128, Doc4Me.app at (326, 205), `Applications` at (574, 205), and the background. Goes to `.DS_Store` in the image; named so it isn't mistaken for (or ignored like) a Finder-generated `.DS_Store`. |
 | `generate.py` | Writes `background.tiff` and `dmg-layout.DS_Store` from the SVG and the layout above. |
 
-## The volume name has no version
+## The volume name has no commit
 
-The mounted volume is called `Doc4Me`, not `Doc4Me <version>`. The layout points at the background
+The mounted volume is called `Doc4Me`, not `Doc4Me <commit>`. The layout points at the background
 through an alias that includes the volume name, and Finder resolves it by that name: with a
-versioned name the window keeps its size and icon positions but shows no background (tested).
-The DMG file name (`doc4me-<version>-macos-<arch>.dmg`) still carries the version.
+longer name the window keeps its size and icon positions but shows no background (tested).
+The DMG file name (`doc4me-<commit>-macos-<arch>.dmg`) carries the commit.
 
 ## Rules
 

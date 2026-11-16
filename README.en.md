@@ -6,7 +6,7 @@ Doc4Me is a clean-room, open-source word processor written in Rust. It aims for 
 with Microsoft Word, then goes further on speed, openness and agent control: every feature is a
 command that scripts and AI agents can run, over a local control channel or MCP.
 
-The latest version is **1.1.4**, still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
+Doc4Me names each build by the **commit** it was built from instead of a version number (`doc4me --version` and package file names show the commit). It is still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
 The latest official Windows measurement (run 43804632296, source `093eaba`) is **93.4%**, or **95.3% excluding 22 deferred checks**.
 All 220 corpus documents open and round-trip; page counts match for 199/220 and page boundaries for 104/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
 
@@ -14,9 +14,9 @@ All 220 corpus documents open and round-trip; page counts match for 199/220 and 
 
 ## Download
 
-Windows x64 builds (an MSI installer and a portable zip) are on the
-[Releases](https://github.com/veevie55/doc4me/releases) page. They are not code-signed yet, so
-Windows SmartScreen may ask before it runs them. The MSI installs over earlier Doc4Me versions.
+Releases the repository owner publishes (such as the Windows MSI installer and portable zip) are on the
+[Releases](https://github.com/veevie55/doc4me/releases) page, and the workflows below build them from any commit. They are not code-signed yet, so
+Windows SmartScreen may ask before it runs them. File names carry the commit they were built from (for example `doc4me-<commit>-windows-x64.msi`), and the MSI installs over Doc4Me builds from earlier commits.
 
 Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD, and the Web App have separate workflows to build the source you choose.
 Local packaging scripts are in [`packaging/`](packaging/).
@@ -25,7 +25,7 @@ Local packaging scripts are in [`packaging/`](packaging/).
 
 Open this repository's [Actions](https://github.com/veevie55/doc4me/actions), select a workflow, then choose **Run workflow**.
 Keep **Use workflow from: main** to use the current build instructions. Set **ref** to `main` for the latest code,
-`v1.1.4` for the released source, or the branch, tag, or commit SHA you want to build.
+or the commit SHA you want to build (for example a released build's commit); the files are named after that commit.
 
 | Workflow | Target | Files under the run's Artifacts |
 |---|---|---|
@@ -52,9 +52,8 @@ revisions and licence details.
 
 Latest Windows measurement: [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), source `093eaba`; readiness is 93.4% overall / 95.3% without 22 deferred rows, with page counts 199/220 and page boundaries 104/220. There are still 21 page-count and 116 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
 
-The separate [Windows x64 installer](.github/workflows/windows-x64-installer.yml) is also manual and is the only workflow that can publish a Release.
-Its **commit** field accepts an earlier `main` commit's full 40-character SHA; enable **release** only when
-you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.md) for platform requirements.
+No workflow publishes a GitHub Release; the repository owner publishes Releases by hand from the run's Artifacts, named by the commit they were built from.
+See [docs/releasing.md](docs/releasing.md) for platform requirements.
 
 ## Highlights
 
@@ -65,12 +64,12 @@ you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.m
 - Interface in 91 languages, English, Thai, Russian, Hungarian, Turkish and Italian among them (some are AI-drafted and await native-speaker review; right-to-left and Indic languages warn before use, as the interface doesn't shape them correctly yet). Thai comes
   with dictionary word breaks, a Thai spelling checker, Thai list numbers and line spacing measured
   as Word for Windows measures it; see the [Thai page](README.md).
-- Since 1.1.3: Dictate recognises speech, Thai included, on the computer
+- Since commit [`552a0b6`](https://github.com/veevie55/doc4me/commit/552a0b68d52adf3c92ae0b7a59dd47035853428e): Dictate recognises speech, Thai included, on the computer
   (whisper.cpp; the free speech model is downloaded once); Translate (MyMemory or your own
   LibreTranslate server), Online Pictures (Creative Commons pictures from Openverse, credited),
   Ink Equation and Get Add-ins.
-- Since 1.1.3: the desktop app bundles fonts with the same metrics as Word's core fonts (Carlito for Calibri, Caladea for Cambria, Arimo for Arial, Tinos for Times New Roman, Cousine for Courier New; OFL 1.1), used when the computer lacks the original, so lines and pages break closer to Word.
-- Since 1.1.4: table commands select cells, rows and columns; edit borders; add or remove rows and columns; repeat headers; and split tables. The internal Doc4Me clipboard preserves tables, pictures, shapes, text boxes and other supported objects with their dependencies. See the [table and clipboard audit](docs/readiness/table-clipboard-audit-2026-11-13.md) for coverage and limits.
+- Since commit [`552a0b6`](https://github.com/veevie55/doc4me/commit/552a0b68d52adf3c92ae0b7a59dd47035853428e): the desktop app bundles fonts with the same metrics as Word's core fonts (Carlito for Calibri, Caladea for Cambria, Arimo for Arial, Tinos for Times New Roman, Cousine for Courier New; OFL 1.1), used when the computer lacks the original, so lines and pages break closer to Word.
+- Since commit [`c694538`](https://github.com/veevie55/doc4me/commit/c6945389f50fe548f778a85b578cb842dca4a665): table commands select cells, rows and columns; edit borders; add or remove rows and columns; repeat headers; and split tables. The internal Doc4Me clipboard preserves tables, pictures, shapes, text boxes and other supported objects with their dependencies. See the [table and clipboard audit](docs/readiness/table-clipboard-audit-2026-11-13.md) for coverage and limits.
 - Light and dark themes; in the dark theme the page stays white.
 - `doc4me-cli` converts and edits documents without a window, and `doc4me-cli mcp` serves every
   command to AI agents ([docs/mcp.md](docs/mcp.md)).
@@ -78,7 +77,7 @@ you intend to publish a GitHub Release. See [docs/releasing.md](docs/releasing.m
 ### Kerning and ligatures
 
 The Font dialog's Advanced page sets "Kerning for fonts", ligatures, and character spacing.
-Since 1.1.3, the spacing buttons step by 0.1 pt; these settings are stored in `.docx`. Without them, text gets Word's defaults: no kerning, and no ligatures in Latin text
+Since commit [`552a0b6`](https://github.com/veevie55/doc4me/commit/552a0b68d52adf3c92ae0b7a59dd47035853428e), the spacing buttons step by 0.1 pt; these settings are stored in `.docx`. Without them, text gets Word's defaults: no kerning, and no ligatures in Latin text
 (complex scripts such as Arabic and Thai always use their font's ligatures).
 
 ![The Advanced page of the Font dialog, with Kerning for fonts and Ligatures](docs/images/font.png)
@@ -87,13 +86,13 @@ Since 1.1.3, the spacing buttons step by 0.1 pt; these settings are stored in `.
 
 ![Doc4Me in the dark theme](docs/images/dark.png)
 
-### About Doc4Me 1.1.4
+### About Doc4Me
 
-The About dialog shows the version and developer. The screenshots on this page were regenerated from
+The About dialog shows the app and its developer, with no version number or commit. The screenshots on this page were regenerated from
 the actual app with [`ui_shot`](crates/ui-egui/examples/ui_shot.rs); their scripts are in
 [`docs/images/shots/`](docs/images/shots/).
 
-![The About dialog in Doc4Me 1.1.4](docs/images/about.png)
+![The About dialog in Doc4Me](docs/images/about.png)
 
 ## Build from source
 
@@ -108,7 +107,7 @@ cargo run --release -p doc4me-cli -- convert in.docx out.pdf
 
 Before sending a change, run `cargo xtask ci` (format, clippy, tests, assets, layering and the
 WebAssembly build). How the code is organised: [docs/architecture.md](docs/architecture.md);
-rules for contributors and agents: [AGENTS.md](AGENTS.md); releases:
+rules for contributors and agents: [AGENTS.md](AGENTS.md); builds and releases:
 [docs/releasing.md](docs/releasing.md); what changed: [CHANGELOG.md](CHANGELOG.md).
 
 ## Licence

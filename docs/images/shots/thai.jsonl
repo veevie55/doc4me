@@ -5,7 +5,7 @@
 {"method": "text.insert", "params": {"text": "Doc4Me ภาษาไทย", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Normal"}}
-{"method": "text.insert", "params": {"text": "Doc4Me 1.1.4 มีหน้าจอภาษาไทยครบทุกเมนู และใช้ฟอนต์สารบรรณ (Sarabun) ทั้งในเมนูและในเอกสาร ตัวอักษรไทยกับอังกฤษจึงเข้ากันทั้งหน้า: The quick brown fox jumps over the lazy dog. ๐๑๒๓๔๕๖๗๘๙", "raw": true}}
+{"method": "text.insert", "params": {"text": "Doc4Me มีหน้าจอภาษาไทยครบทุกเมนู และใช้ฟอนต์สารบรรณ (Sarabun) ทั้งในเมนูและในเอกสาร ตัวอักษรไทยกับอังกฤษจึงเข้ากันทั้งหน้า: The quick brown fox jumps over the lazy dog. ๐๑๒๓๔๕๖๗๘๙", "raw": true}}
 {"method": "text.newParagraph"}
 {"method": "styles.apply", "params": {"style": "Heading 1"}}
 {"method": "text.insert", "params": {"text": "ระยะบรรทัดแบบ Word บน Windows", "raw": true}}

@@ -727,7 +727,6 @@
 	Detach Template	টেমপ্লেট বিচ্ছিন্ন করুন
 	Detect language automatically	ভাষা স্বয়ংক্রিয়ভাবে শনাক্ত করুন
 	Developer	ডেভেলপার
-	development build	ডেভেলপমেন্ট বিল্ড
 	Diagonal	কর্ণ
 	Diagonal Dots	কর্ণ বিন্দু
 	Diamond	হীরা
@@ -2721,7 +2720,6 @@
 	Vector AB	ভেক্টর AB
 	Version	সংস্করণ
 	Version History	সংস্করণের ইতিহাস
-	Version {version} ({build})	সংস্করণ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	নথি খোলা থাকা পর্যন্ত সংস্করণ রাখা হয় (.docx ফাইলে সংস্করণ থাকে না)।
 	Vertical	উল্লম্ব
 	Vertical Alignment	উল্লম্ব সারিবদ্ধকরণ

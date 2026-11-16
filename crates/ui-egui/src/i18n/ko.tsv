@@ -727,7 +727,6 @@
 	Detach Template	서식 파일 분리
 	Detect language automatically	자동으로 언어 감지
 	Developer	개발 도구
-	development build	개발 빌드
 	Diagonal	대각선
 	Diagonal Dots	대각선 점
 	Diamond	다이아몬드
@@ -2721,7 +2720,6 @@
 	Vector AB	벡터 AB
 	Version	버전
 	Version History	버전 기록
-	Version {version} ({build})	버전 {version}({build})
 	Versions are kept while the document is open (a .docx file has no versions).	문서가 열려 있는 동안 버전이 유지됩니다(.docx 파일에는 버전이 없음).
 	Vertical	세로
 	Vertical Alignment	세로 맞춤

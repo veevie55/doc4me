@@ -222,11 +222,6 @@ fn app_icon() -> Option<egui::IconData> {
     eframe::icon_data::from_png_bytes(png).map_err(|e| log::warn!("app icon: {e}")).ok()
 }
 
-/// The commit the build came from (short), or `dev`.
-fn build_sha() -> &'static str {
-    option_env!("DOC4ME_BUILD_SHA").map(|s| s.get(..8).unwrap_or(s)).unwrap_or("dev")
-}
-
 fn main() -> eframe::Result {
     // First, so the panic hook and every start-up warning are recorded (`logging`).
     let logger = logging::install();
@@ -251,7 +246,7 @@ fn main() -> eframe::Result {
             }
             "--sample" => sample = true,
             "--version" => {
-                println!("doc4me {} ({})", env!("CARGO_PKG_VERSION"), build_sha());
+                println!("doc4me {}", doc4me_engine::build_info::commit_or_dev());
                 return Ok(());
             }
             _ => files.push(a),
@@ -270,7 +265,7 @@ fn main() -> eframe::Result {
     if let Some(logger) = logger {
         match log_dir().filter(|_| prefs_enabled()) {
             Some(dir) => match logger.attach_dir(&dir) {
-                Ok(path) => log::info!("Doc4Me {} ({}), log file {}", env!("CARGO_PKG_VERSION"), build_sha(), path.display()),
+                Ok(path) => log::info!("Doc4Me {}, log file {}", doc4me_engine::build_info::commit_or_dev(), path.display()),
                 // Standard error only by now (`attach_dir` gave up on the file); unlike `eprintln!`, never panics.
                 Err(e) => log::warn!("no log file: {e}"),
             },

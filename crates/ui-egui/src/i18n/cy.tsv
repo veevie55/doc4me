@@ -730,7 +730,6 @@
 	Detach Template	Datgysylltu templed
 	Detect language automatically	Canfod iaith yn awtomatig
 	Developer	Datblygwr
-	development build	fersiwn datblygu
 	Diagonal	Croeslin
 	Diagonal Dots	Dotiau croeslin
 	Diamond	Diemwnt
@@ -2724,7 +2723,6 @@
 	Vector AB	Fector AB
 	Version	Fersiwn
 	Version History	Hanes fersiynau
-	Version {version} ({build})	Fersiwn {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Cedwir fersiynau tra bo'r ddogfen ar agor (nid oes gan ffeil .docx fersiynau).
 	Vertical	Fertigol
 	Vertical Alignment	Aliniad fertigol

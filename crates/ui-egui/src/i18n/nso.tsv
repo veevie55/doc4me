@@ -717,7 +717,6 @@
 	Detach Template	Kgaola Thempleite
 	Detect language automatically	Lemoga polelo ka go itiragalela
 	Developer	Motšweletši
-	development build	tlhabollo ya go aga
 	Diagonal	Diagonale ka diagonale
 	Diagonal Dots	Marontho a Diagonale
 	Diamond	Taemane
@@ -2711,7 +2710,6 @@
 	Vector AB	Vector ya AB
 	Version	Phetolelo
 	Version History	Histori ya Phetolelo
-	Version {version} ({build})	Phetolelo ya {version} ({build}) .
 	Versions are kept while the document is open (a .docx file has no versions).	Diphetolelo di bolokwa ge tokumente e bulegile (faele ya .docx ga e na diphetolelo).
 	Vertical	E eme thwii
 	Vertical Alignment	Go logaganya ka go Ema

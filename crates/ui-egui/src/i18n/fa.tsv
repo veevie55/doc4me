@@ -727,7 +727,6 @@
 	Detach Template	جدا کردن الگو
 	Detect language automatically	تشخیص خودکار زبان
 	Developer	توسعه‌دهنده
-	development build	نسخهٔ توسعه
 	Diagonal	مورب (قطری)
 	Diagonal Dots	نقطه‌های قطری
 	Diamond	لوزی
@@ -2721,7 +2720,6 @@
 	Vector AB	بردار AB
 	Version	نسخه
 	Version History	تاریخچهٔ نسخه‌ها
-	Version {version} ({build})	نسخهٔ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	نسخه‌ها تا زمانی که سند باز است نگه داشته می‌شوند (فایل .docx نسخه ندارد).
 	Vertical	عمودی
 	Vertical Alignment	تراز عمودی

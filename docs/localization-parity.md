@@ -1,6 +1,6 @@
 # Localization parity with Microsoft Word
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (latest official Windows run 43804632296, source `093eaba`, report `15584f5`: 93.4% / 95.3% without 22 deferred; 220-document corpus, pages 199/220, boundaries 104/220, languages 95/95; Doc4Me 1.1.4. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (latest official Windows run 43804632296, source `093eaba`, report `15584f5`: 93.4% / 95.3% without 22 deferred; 220-document corpus, pages 199/220, boundaries 104/220, languages 95/95. Language key coverage does not measure translation quality.) · **Target:** Microsoft Word (Microsoft 365) for Windows
 
 Every culture row of the readiness catalog now has a registered interface catalog: 22 catalogs
 were added in November 2026 as AI-generated drafts (among them Hindi, Arabic, Korean, Persian, Urdu,

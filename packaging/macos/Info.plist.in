@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Template: packaging/macos/package.sh substitutes @VERSION@ (full, e.g. 0.2.0-rc.1),
-     @SHORT_VERSION@ (numeric X.Y.Z) and @BUILD_SHA@. -->
+<!-- Template: packaging/macos/package.sh substitutes @SHORT_VERSION@ (numeric X.Y.Z, which
+     macOS requires in the two CFBundle version keys) and @BUILD_SHA@ (the commit that names the
+     build). -->
 <plist version="1.0">
 <dict>
   <key>CFBundleDevelopmentRegion</key>
@@ -24,8 +25,6 @@
   <string>@SHORT_VERSION@</string>
   <key>CFBundleVersion</key>
   <string>@SHORT_VERSION@</string>
-  <key>Doc4MeVersion</key>
-  <string>@VERSION@</string>
   <key>Doc4MeBuildCommit</key>
   <string>@BUILD_SHA@</string>
   <key>CFBundleIconFile</key>

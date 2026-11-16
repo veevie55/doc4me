@@ -729,7 +729,6 @@
 	Detach Template	Frakobl skabelon
 	Detect language automatically	Registrer sprog automatisk
 	Developer	Udvikler
-	development build	udviklingsversion
 	Diagonal	Diagonal
 	Diagonal Dots	Diagonale prikker
 	Diamond	Rombe
@@ -2723,7 +2722,6 @@
 	Vector AB	Vektor AB
 	Version	Version
 	Version History	Versionshistorik
-	Version {version} ({build})	Version {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versioner gemmes, mens dokumentet er åbent (en .docx-fil har ingen versioner).
 	Vertical	Lodret
 	Vertical Alignment	Lodret justering

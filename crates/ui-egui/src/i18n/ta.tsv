@@ -727,7 +727,6 @@
 	Detach Template	வார்ப்புருவைப் பிரி
 	Detect language automatically	மொழியைத் தானாகக் கண்டறி
 	Developer	உருவாக்குநர்
-	development build	உருவாக்கப் பதிப்பு
 	Diagonal	மூலைவிட்டம்
 	Diagonal Dots	மூலைவிட்டப் புள்ளிகள்
 	Diamond	வைரம்
@@ -2721,7 +2720,6 @@
 	Vector AB	திசையன் AB
 	Version	பதிப்பு
 	Version History	பதிப்பு வரலாறு
-	Version {version} ({build})	பதிப்பு {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ஆவணம் திறந்திருக்கும் வரை பதிப்புகள் வைக்கப்படும் (.docx கோப்பில் பதிப்புகள் இல்லை).
 	Vertical	செங்குத்து
 	Vertical Alignment	செங்குத்துச் சீரமைப்பு

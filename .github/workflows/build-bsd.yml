@@ -58,7 +58,7 @@ jobs:
             export LIBCLANG_PATH="$(dirname "$clang_lib")"
             cargo build --release --locked -p doc4me -p doc4me-cli
             . packaging/env.sh
-            name="doc4me-$VERSION-freebsd-x86_64"
+            name="doc4me-$COMMIT-freebsd-x86_64"
             stage="$CARGO_TARGET_DIR/bsd-package/$name"
             mkdir -p "$stage/bin"
             cp target/release/doc4me target/release/doc4me-cli "$stage/bin/"

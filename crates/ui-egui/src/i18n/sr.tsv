@@ -378,7 +378,6 @@
 	Design	Дизајн
 	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Да би се Word документи подразумевано отварали у Doc4Me-у: изаберите један у Finder-у, изаберите Датотека › Прикажи информације, под „Отвори помоћу” изаберите Doc4Me, па кликните „Промени све”.
 	Doc4Me is now the default app for Word documents.	Doc4Me је сада подразумевана апликација за Word документе.
-	development build	развојна верзија
 	Diagonal	Дијагонално
 	Diamond	Дијамант
 	Dictate	Диктирање
@@ -979,7 +978,6 @@
 	User Name	Корисничко име
 	User name:	Корисничко име:
 	Version History	Историја верзија
-	Version {version} ({build})	Верзија {version} ({build})
 	Vertical	Усправно
 	Vertical Alignment	Усправно поравнање
 	View	Приказ

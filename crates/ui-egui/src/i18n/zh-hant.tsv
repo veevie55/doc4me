@@ -327,7 +327,6 @@
 	Design	設計
 	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	若要預設以 Doc4Me 開啟 Word 文件：在 Finder 中選取一份文件，選擇「檔案 › 取得資訊」，在「打開檔案的應用程式」中選擇 Doc4Me，然後按一下「全部更改」。
 	Doc4Me is now the default app for Word documents.	Doc4Me 現在是 Word 文件的預設應用程式。
-	development build	開發版本
 	Diagonal	斜向
 	Diamond	菱形
 	Dictate	聽寫
@@ -917,7 +916,6 @@
 	User Name	使用者名稱
 	User name:	使用者名稱：
 	Version History	版本歷程記錄
-	Version {version} ({build})	版本 {version}（{build}）
 	Vertical	垂直
 	Vertical Alignment	垂直對齊方式
 	View	檢視

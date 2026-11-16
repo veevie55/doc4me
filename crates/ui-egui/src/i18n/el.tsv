@@ -731,7 +731,6 @@
 	Detach Template	Αποσύνδεση προτύπου
 	Detect language automatically	Αυτόματος εντοπισμός γλώσσας
 	Developer	Προγραμματιστής
-	development build	έκδοση ανάπτυξης
 	Diagonal	Διαγώνια
 	Diagonal Dots	Διαγώνιες τελείες
 	Diamond	Ρόμβος
@@ -2725,7 +2724,6 @@
 	Vector AB	Διάνυσμα AB
 	Version	Έκδοση
 	Version History	Ιστορικό εκδόσεων
-	Version {version} ({build})	Έκδοση {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Οι εκδόσεις διατηρούνται όσο το έγγραφο είναι ανοιχτό (ένα αρχείο .docx δεν έχει εκδόσεις).
 	Vertical	Κατακόρυφα
 	Vertical Alignment	Κατακόρυφη στοίχιση

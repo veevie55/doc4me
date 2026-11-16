@@ -731,7 +731,6 @@
 	Detach Template	Tenganisha Kiolezo
 	Detect language automatically	Tambua lugha otomatiki
 	Developer	Msanidi Programu
-	development build	toleo la usanidi
 	Diagonal	Mshazari
 	Diagonal Dots	Nukta za Mshazari
 	Diamond	Almasi
@@ -2725,7 +2724,6 @@
 	Vector AB	Vekta AB
 	Version	Toleo
 	Version History	Historia ya Matoleo
-	Version {version} ({build})	Toleo {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Matoleo yanahifadhiwa wakati hati iko wazi (faili ya .docx haina matoleo).
 	Vertical	Wima
 	Vertical Alignment	Upangaji Wima

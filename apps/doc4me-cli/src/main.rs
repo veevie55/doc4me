@@ -394,7 +394,7 @@ fn run(args: &[String]) -> Result<(), Failure> {
             }
             Ok(())
         }
-        "--version" | "-V" => write_stdout(|o| writeln!(o, "doc4me-cli {}", env!("CARGO_PKG_VERSION"))),
+        "--version" | "-V" => write_stdout(|o| writeln!(o, "doc4me-cli {}", doc4me_engine::build_info::commit_or_dev())),
         "" | "help" | "--help" | "-h" => write_stdout(|o| write!(o, "{USAGE}")),
         other => Err(format!("unknown command `{other}`\n\n{USAGE}").into()),
     }

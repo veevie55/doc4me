@@ -729,7 +729,6 @@
 	Detach Template	Detașare șablon
 	Detect language automatically	Detectare automată a limbii
 	Developer	Dezvoltator
-	development build	versiune de dezvoltare
 	Diagonal	Diagonală
 	Diagonal Dots	Puncte diagonale
 	Diamond	Romb
@@ -2723,7 +2722,6 @@
 	Vector AB	Vectorul AB
 	Version	Versiune
 	Version History	Istoric versiuni
-	Version {version} ({build})	Versiunea {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versiunile sunt păstrate cât timp documentul este deschis (un fișier .docx nu are versiuni).
 	Vertical	Vertical
 	Vertical Alignment	Aliniere verticală

@@ -1,6 +1,6 @@
 # Thai interface
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (checked against Doc4Me 1.1.4; the Thai catalog has 3,031 parsed keys and native-speaker review remains open) · **Target:** Doc4Me 1.1.4
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (checked against `main` as of 2026-11-15; the Thai catalog has 3,031 parsed keys and native-speaker review remains open) · **Target:** Doc4Me `main` (builds are named by commit)
 
 Choose **File › Options › Interface language › ไทย**, or follow a Thai system display language
 (`th`, `th-TH`, `th_TH.UTF-8`). The catalog code is `th`; `ui.language` with `{"value":"th"}`

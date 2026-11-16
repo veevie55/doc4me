@@ -1,6 +1,6 @@
 # Hungarian interface
 
-> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (checked against Doc4Me 1.1.4; the Hungarian catalog has 3,031 parsed keys and native-speaker review remains open) · **Target:** Doc4Me 1.1.4
+> **Last reviewed:** 2026-11-15 · **Last updated:** 2026-11-15 · **Change:** minor (checked against `main` as of 2026-11-15; the Hungarian catalog has 3,031 parsed keys and native-speaker review remains open) · **Target:** Doc4Me `main` (builds are named by commit)
 
 Choose **File › Options › Interface language › Magyar**, or follow a Hungarian system display
 language (`hu-HU`, `hu_HU.UTF-8`). The catalog code is `hu`; `ui.language` with `{"value":"hu"}`

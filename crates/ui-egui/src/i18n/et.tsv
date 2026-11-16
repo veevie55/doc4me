@@ -839,7 +839,6 @@
 	User Name	Kasutajanimi
 	User name:	Kasutajanimi:
 	Version History	Versiooniajalugu
-	Version {version} ({build})	Versioon {version} ({build})
 	Vertical	Püstine
 	Vertical Alignment	Püstjoondus
 	View	Vaade
@@ -873,7 +872,6 @@
 	Zoom	Suum
 	Zoom In	Suurenda
 	Zoom Out	Vähenda
-	development build	Arendusversioon
 	lowercase	väiketähed
 	{group} settings	{group}: sätted
 	{key}+Click to follow link	Lingi avamiseks {key}+klõps

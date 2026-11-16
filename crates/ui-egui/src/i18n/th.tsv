@@ -644,7 +644,6 @@
 	Detach Template	เลิกแนบแม่แบบ
 	Detect language automatically	ตรวจหาภาษาโดยอัตโนมัติ
 	Developer	นักพัฒนา
-	development build	รุ่นทดสอบสำหรับการพัฒนา
 	Diagonal	แนวทแยง
 	Diagonal Dots	จุดแนวทแยง
 	Diamond	ข้าวหลามตัด
@@ -2356,7 +2355,6 @@ preview	Title	ชื่อเรื่อง
 	Vector AB	เวกเตอร์ AB
 	Version	เวอร์ชัน
 	Version History	ประวัติเวอร์ชัน
-	Version {version} ({build})	เวอร์ชัน {version} ({build})
 	Vertical	แนวตั้ง
 	Vertical Alignment	การจัดแนวตั้ง
 	Vertical alignment:	การจัดแนวตั้ง:

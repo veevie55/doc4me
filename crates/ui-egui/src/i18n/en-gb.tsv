@@ -725,7 +725,6 @@
 	Detach Template	Detach Template
 	Detect language automatically	Detect language automatically
 	Developer	Developer
-	development build	development build
 	Diagonal	Diagonal
 	Diagonal Dots	Diagonal Dots
 	Diamond	Diamond
@@ -2719,7 +2718,6 @@
 	Vector AB	Vector AB
 	Version	Version
 	Version History	Version History
-	Version {version} ({build})	Version {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versions are kept while the document is open (a .docx file has no versions).
 	Vertical	Vertical
 	Vertical Alignment	Vertical Alignment

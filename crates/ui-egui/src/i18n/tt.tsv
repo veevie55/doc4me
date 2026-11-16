@@ -730,7 +730,6 @@
 	Detach Template	Шаблонны аеру
 	Detect language automatically	Телне автоматик билгеләү
 	Developer	Эшләүче
-	development build	эшләү өчен җыелма
 	Diagonal	Диагональ
 	Diagonal Dots	Диагональ нокталар
 	Diamond	Ромб
@@ -2724,7 +2723,6 @@
 	Vector AB	AB векторы
 	Version	Версия
 	Version History	Версияләр тарихы
-	Version {version} ({build})	Версия {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Документ ачык чакта версияләр саклана (.docx файлында версияләр юк).
 	Vertical	Вертикаль
 	Vertical Alignment	Вертикаль тигезләү

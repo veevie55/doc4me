@@ -727,7 +727,6 @@
 	Detach Template	අච්චුව වෙන් කරන්න
 	Detect language automatically	භාෂාව ස්වයංක්‍රීයව හඳුනා ගන්න
 	Developer	සංවර්ධක
-	development build	සංවර්ධන නිකුතුව
 	Diagonal	විකර්ණය
 	Diagonal Dots	විකර්ණ තිත්
 	Diamond	දියමන්තිය
@@ -2721,7 +2720,6 @@
 	Vector AB	දෛශිකය AB
 	Version	අනුවාදය
 	Version History	අනුවාද ඉතිහාසය
-	Version {version} ({build})	අනුවාදය {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ලේඛනය විවෘතව ඇති තාක් අනුවාද තබා ගනී (.docx ගොනුවකට අනුවාද නැත).
 	Vertical	සිරස්
 	Vertical Alignment	සිරස් පෙළගැස්ම
