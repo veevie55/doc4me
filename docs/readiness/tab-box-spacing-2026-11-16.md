@@ -23,7 +23,9 @@
   - **zenodo-069** moves 34 → 33 pages (Word 24). **zenodo-022 moves 27 → 28 pages (Word 20)**, further from Word: a table row on page 8 now splits differently. That document already differs from page 2, where Doc4Me's page holds 41 words against Word's 286; the cause there is not established. No previously passing count or boundary regresses.
   - Each change was also measured alone. A first version of the tab rule, which also counted line breaks as text, changed only zenodo-091; the final rule counts only text and equations. The box spacing rule alone changed only govuk-046, govuk-068, zenodo-022 and zenodo-069. The combined comparison above uses the final code.
 - zenodo-091 page 1 now tracks Word within 0.3 pt (contents heading 488.89 pt against Word's 488.70). Its first boundary difference is now page 4.
-- These are Linux comparisons, not a readiness score. A Windows readiness run decides the official result.
+- These are Linux comparisons, not a readiness score.
+
+**Windows confirmation:** [run 43794297193](https://github.com/veevie55/doc4me/actions/runs/43794297193) measured engine `02a6aa9`: page counts **193 → 195/220**, with govuk-068 and zenodo-091 newly matching; boundaries stay 102/220. Compared row by row with report `5f362a3`, no row is newly failing.
 
 ## ภาษาไทย
 
@@ -32,3 +34,5 @@ zenodo-091 มีสารบัญอยู่ใต้ตารางหน้
 แก้โดยไม่ให้ tab ทำให้บรรทัดที่มีข้อความสูงขึ้น (บรรทัดที่มีแต่ tab ยังคงความสูงเดิม) และให้เซลล์ ตาราง กล่องข้อความ และ frame ใช้ค่าที่มากกว่าเหมือน body เว้นแต่เอกสารเปิด "Don't use HTML paragraph auto spacing"
 
 ผลเทียบบน Linux ครบ 220 ฉบับ (hash ครบ 440 ไฟล์): จำนวนหน้าตรง **192 → 194** (govuk-068 และ zenodo-091 ตรง Word แล้ว) ขอบเขตหน้าคงที่ **102** govuk-046 ตรงไกลขึ้น zenodo-069 ใกล้ Word ขึ้น แต่ **zenodo-022 ห่างจาก Word เพิ่มอีก 1 หน้า (28 เทียบกับ 20)** เพราะแถวตารางหน้า 8 ตัดต่างไป เอกสารนี้คลาดจาก Word มากอยู่แล้วตั้งแต่หน้า 2 และยังไม่ทราบสาเหตุ ไม่มีรายการที่เคยผ่านกลับมาตก เทสต์ใหม่ทั้งสองล้มบน source เดิม ต้องรอผลวัด Windows ก่อนเปลี่ยนคะแนนทางการ
+
+ผล Windows run 43794297193 ยืนยัน: จำนวนหน้าตรง **195/220** (govuk-068 และ zenodo-091 ผ่านเพิ่ม) ขอบเขตหน้าคงที่ 102/220 ไม่มีรายการใหม่ที่ไม่ผ่าน

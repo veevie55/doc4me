@@ -451,6 +451,43 @@ fn swap_digit(c: char, thai: bool) -> Option<char> {
     }
 }
 
+/// AutoFormat, the title bar's switch beside AutoSave (`file.autoFormat`, `{"value"?: bool}`,
+/// toggling without one). Turning it on converts every Arabic digit the document shows to a Thai
+/// digit, in every story, with the numbers Doc4Me makes (lists, page numbers), as one undoable
+/// step; from then on typed Arabic digits become Thai digits ([`typed_digits`]). Turning it off
+/// converts nothing back: typed digits just stay as typed. A protected document keeps its text;
+/// only typing follows the switch there.
+pub(crate) fn auto_format(s: &mut Session, v: &Value) -> CmdResult {
+    let was = s.prefs.auto_thai_digits;
+    let on = p::bool(v, "value").unwrap_or(!was);
+    let protected = s.doc.settings.protection.is_some();
+    let mut converted = 0usize;
+    if on && !was && !protected {
+        // The switch turns on only once every story converted: a failure leaves it off, with the
+        // document put back by `Session::run`.
+        for story in std::iter::once(StoryRef::Body).chain(s.doc.parts.keys().map(|k| StoryRef::Part(*k))).collect::<Vec<_>>() {
+            let (a, b) = (s.doc.start_of(story), s.doc.end_of(story));
+            converted = converted.saturating_add(map_chars(s, &a, &b, &|c| swap_digit(c, true))?);
+            convert_generated_numbers(s, &a, &b, true)?;
+        }
+    } else {
+        // Nothing in the document changed: no undo step.
+        s.only_read();
+    }
+    s.prefs.auto_thai_digits = on;
+    Ok(json!({"value": on, "converted": converted, "protected": protected && on && !was}))
+}
+
+/// Text typed with AutoFormat on (`file.autoFormat`): Arabic digits 0–9 as Thai digits ๐–๙.
+/// Other characters, and every character with AutoFormat off, are unchanged.
+pub(crate) fn typed_digits<'a>(s: &Session, text: &'a str) -> std::borrow::Cow<'a, str> {
+    if s.prefs.auto_thai_digits && text.chars().any(|c| c.is_ascii_digit()) {
+        std::borrow::Cow::Owned(text.chars().map(|c| swap_digit(c, true).unwrap_or(c)).collect())
+    } else {
+        std::borrow::Cow::Borrowed(text)
+    }
+}
+
 /// Convert to Thai Digits / Convert to Arabic Digits: 0–9 ↔ ๐–๙ in the selection, or in the word
 /// at the insertion point. Each run keeps its formatting and text already deleted is left as it
 /// is; with Track Changes on, each changed stretch becomes a deletion and an insertion. The

@@ -1,6 +1,6 @@
 # Readiness check sets
 
-**Current Windows confirmation · 2026-11-16:** Run [43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925), engine `6d4976c`, report `5f362a3`: page counts **193/220**, boundaries **102/220**, readiness **93.2% overall / 95.1% excluding 22 deferred**. The [Cambria Math line audit, EN/TH](cambria-line-2026-11-16.md) records zenodo-082 newly matching 5 pages; zenodo-032, zenodo-073 and zenodo-082 newly match every page boundary. Comparing the previous report `7e50321` with this one row by row, no newly failing row appears in the five corpus sets. CI 6/6, native 2,558 pass / one existing ignored; 440 corpus hashes verified. Current EN/TH blockers and TSV match the report (27 page-count and 118 boundary failures); criteria/exclusions/deferred unchanged.
+**Current Windows confirmation · 2026-11-16:** Run [43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956), engine `df4f160`, report `3fca7cd`: page counts **197/220**, boundaries **103/220**, readiness **93.3% overall / 95.2% excluding 22 deferred**. Since the previous refresh, Windows runs [43794297193](https://github.com/veevie55/doc4me/actions/runs/43794297193) (tab and box spacing: govuk-068 and zenodo-091 newly match) and 43796305956 ([Symbol/Wingdings bullets](symbol-bullet-line-2026-11-16.md): zenodo-156 and govuk-043 newly match, zenodo-156's boundaries too) were compared row by row with the report before each; no newly failing row appears. Current EN/TH blockers and TSV match the report (23 page-count and 117 boundary failures); criteria/exclusions/deferred unchanged.
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
@@ -55,7 +55,7 @@ assessments distinguish measured facts from causes that are still unverified.
   verified the MSI and portable ZIP. Current source has 22 deferred rows; run 42262955486 was
   canceled before it could measure the updated row. Latest completed Windows run 43701689470 measured
   source `fd465e8`; the generated report was committed as `2a5a0b0` (92.9% overall,
-  94.8% without the 22 deferred rows; pages 188/220, boundaries 102/220). Each row's note
+  94.8% without the 22 deferred rows; pages 188/220, boundaries 103/220). Each row's note
   or evidence says why it is deferred or what it was before. A deferred row counts as not passing in
   the measured number; `readiness.md` also gives the number without the deferred rows (each check
   set's pass rate over its rows that aren't deferred), the target for work that isn't waiting on the

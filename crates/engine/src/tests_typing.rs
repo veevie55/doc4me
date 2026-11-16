@@ -836,3 +836,69 @@ fn typing_after_a_citation_goes_outside_its_field() {
     let inside = Pos { off: f[0].start.off + doc4me_doc::para::OBJ.len_utf8(), ..f[0].start.clone() };
     assert_eq!(s.doc.copy_range(&inside, &f[0].end).plain_text(), "(Smith 2020)");
 }
+
+/// Body text, paragraph by paragraph.
+fn body_text(s: &Session) -> Vec<String> {
+    s.doc.body.iter().filter_map(|b| b.as_para()).map(|p| p.text.clone()).collect()
+}
+
+/// AutoFormat (the title bar's switch beside AutoSave, `file.autoFormat`): on, it converts the
+/// digits the document shows to Thai digits once, in every story, and every Arabic digit typed
+/// afterwards is a Thai digit; off, nothing converts back and typed digits stay Arabic.
+#[test]
+fn autoformat_turns_shown_and_typed_digits_into_thai_digits() {
+    use doc4me_doc::{Paragraph, PartKind, para_block};
+
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": "ปี 2567 ข้อ 10\nราคา 50 บาท"}));
+    let header = s.doc.add_part(PartKind::Header, vec![para_block(Paragraph::with_text("Page 3 of 9", Default::default()))]);
+    s.doc.last_section.headers.default = Some(header);
+    assert!(!s.prefs.auto_thai_digits, "off by default");
+    let undo_steps = s.undo_depth();
+
+    let r = s.run("file.autoFormat", &json!({})).unwrap();
+    assert_eq!(r["value"], json!(true));
+    assert_eq!(r["converted"], json!(10));
+    assert_eq!(body_text(&s), ["ปี ๒๕๖๗ ข้อ ๑๐", "ราคา ๕๐ บาท"]);
+    let header_text = |s: &Session| s.doc.para(StoryRef::Part(header), &doc4me_doc::Path::top(0)).map(|p| p.text.clone());
+    assert_eq!(header_text(&s).as_deref(), Some("Page ๓ of ๙"), "every story converts");
+    assert!(s.prefs.auto_thai_digits);
+
+    // Typed digits are Thai digits, one key at a time or several at once, raw or not.
+    run(&mut s, "caret.docEnd", json!({}));
+    typ(&mut s, " 120");
+    run(&mut s, "text.insert", json!({"text": " 4-5", "raw": true}));
+    assert_eq!(body_text(&s)[1], "ราคา ๕๐ บาท ๑๒๐ ๔-๕");
+
+    // Turning it on again converts nothing more; turning it off converts nothing back and adds no
+    // undo step.
+    run(&mut s, "file.autoFormat", json!({"value": true}));
+    let before_off = s.undo_depth();
+    let r = s.run("file.autoFormat", &json!({})).unwrap();
+    assert_eq!(r["value"], json!(false));
+    assert_eq!(s.undo_depth(), before_off, "switching off changes no text");
+    assert_eq!(body_text(&s)[1], "ราคา ๕๐ บาท ๑๒๐ ๔-๕", "converted digits stay Thai");
+    typ(&mut s, " 78");
+    assert_eq!(body_text(&s)[1], "ราคา ๕๐ บาท ๑๒๐ ๔-๕ 78", "typed digits stay Arabic while it is off");
+    assert!(s.undo_depth() > undo_steps);
+}
+
+/// Undo takes the conversion back as one step and leaves the switch on; a protected document
+/// keeps its text, and only typing follows the switch.
+#[test]
+fn autoformat_conversion_is_one_undo_step_and_spares_protected_documents() {
+    let mut s = s();
+    run(&mut s, "document.setText", json!({"text": "a 12 b"}));
+    run(&mut s, "file.autoFormat", json!({"value": true}));
+    assert_eq!(body_text(&s), ["a ๑๒ b"]);
+    run(&mut s, "edit.undo", json!({}));
+    assert_eq!(body_text(&s), ["a 12 b"]);
+    assert!(s.prefs.auto_thai_digits, "Undo takes back the text, not the setting");
+
+    let mut s = self::s();
+    run(&mut s, "document.setText", json!({"text": "a 12 b"}));
+    run(&mut s, "review.restrict", json!({"mode": "readOnly"}));
+    let r = s.run("file.autoFormat", &json!({"value": true})).unwrap();
+    assert_eq!((r["value"].clone(), r["converted"].clone(), r["protected"].clone()), (json!(true), json!(0), json!(true)));
+    assert_eq!(body_text(&s), ["a 12 b"]);
+}

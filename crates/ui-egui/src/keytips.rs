@@ -595,13 +595,15 @@ pub fn handle_key(app: &mut WordApp, key: egui::Key) -> bool {
                     app.ui.keytip_prefix.clear();
                     return true;
                 };
-                // The title bar: Alt, Z, A switches AutoSave; Alt, B saves under another name or
-                // in another place (Word renames the document there).
+                // The title bar: Alt, Z, A switches AutoSave and Alt, Z, F AutoFormat; Alt, B saves
+                // under another name or in another place (Word renames the document there).
                 if app.ui.keytips == Phase::Tabs && app.ui.keytip_prefix == "Z" {
                     app.ui.keytips = Phase::Off;
                     app.ui.keytip_prefix.clear();
                     if name == "A" {
                         crate::chrome::press_autosave(app);
+                    } else if name == "F" {
+                        crate::chrome::press_autoformat(app);
                     }
                     return true;
                 }
@@ -1235,6 +1237,31 @@ mod tests {
         keys(&mut a, &[Z, A]);
         assert!(!a.autosaves());
         let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    /// Alt, Z, F switches AutoFormat, the title-bar switch beside AutoSave: on, the document's
+    /// digits turn Thai and typed digits follow; off again, nothing converts back.
+    #[test]
+    fn alt_z_f_switches_autoformat() {
+        let mut a = WordApp::new(doc4me_engine::Session::new(doc4me_doc::Document::from_text("Room 12")), crate::Services::default());
+        a.canvas.focused = false;
+        let press = |a: &mut WordApp, ks: &[egui::Key]| {
+            activate(a);
+            for k in ks {
+                assert!(handle_key(a, *k), "{k:?}");
+            }
+        };
+        assert!(!a.session.prefs.auto_thai_digits);
+        press(&mut a, &[egui::Key::Z]);
+        assert_eq!(a.ui.keytips, Phase::Tabs, "Z waits for A or F");
+        handle_key(&mut a, egui::Key::F);
+        assert_eq!(a.ui.keytips, Phase::Off);
+        assert!(a.session.prefs.auto_thai_digits);
+        assert_eq!(a.session.doc.plain_text(doc4me_doc::StoryRef::Body), "Room ๑๒");
+        press(&mut a, &[egui::Key::Z, egui::Key::F]);
+        assert!(!a.session.prefs.auto_thai_digits);
+        assert_eq!(a.session.doc.plain_text(doc4me_doc::StoryRef::Body), "Room ๑๒", "turning it off converts nothing back");
+        assert!(a.prefs().editing.auto_thai_digits == a.session.prefs.auto_thai_digits, "saved with the other preferences");
     }
 
     #[test]

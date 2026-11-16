@@ -130,6 +130,28 @@ pub(crate) fn press_autosave(app: &mut WordApp) {
     }
 }
 
+/// The AutoFormat switch pressed (a click, or Alt, Z, F): typed Arabic digits become Thai digits
+/// while it is on, and turning it on converts the document's digits once (`file.autoFormat`).
+pub(crate) fn press_autoformat(app: &mut WordApp) {
+    if let Err(e) = app.run("file.autoFormat", json!({})) {
+        app.status(e.to_string());
+    }
+}
+
+/// A title-bar switch: a 30 × 16 pill with its knob right when on, dimmed when `blocked`.
+fn title_switch(ui: &mut Ui, t: &Tokens, on: bool, blocked: bool) -> (Rect, egui::Response) {
+    let (r, resp) = ui.allocate_exact_size(vec2(30.0, 16.0), Sense::click());
+    let (fill, stroke, knob_fill) = match (blocked, on) {
+        (true, _) => (t.input.gamma_multiply(0.5), t.border.gamma_multiply(0.7), t.text_dim.gamma_multiply(0.45)),
+        (false, true) => (t.accent, t.accent, t.on_accent),
+        (false, false) => (t.input, t.border_strong, t.text_dim),
+    };
+    ui.painter().rect(r, 8.0, fill, Stroke::new(1.0, stroke), egui::StrokeKind::Inside);
+    let knob = if on { r.max.x - 8.0 } else { r.min.x + 8.0 };
+    ui.painter().circle_filled(pos2(knob, r.center().y), 5.0, knob_fill);
+    (r, resp)
+}
+
 pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
     // macOS: shorter, so the system's traffic lights are centred in it; the tallest controls
@@ -161,15 +183,7 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 let on = app.autosaves();
                 let label = if block.is_some() { t.text_dim.gamma_multiply(0.6) } else { t.text_dim };
                 ui.label(egui::RichText::new(tl!("AutoSave")).font(regular(11.5)).color(label));
-                let (r, resp) = ui.allocate_exact_size(vec2(30.0, 16.0), Sense::click());
-                let (fill, stroke, knob_fill) = match (&block, on) {
-                    (Some(_), _) => (t.input.gamma_multiply(0.5), t.border.gamma_multiply(0.7), t.text_dim.gamma_multiply(0.45)),
-                    (None, true) => (t.accent, t.accent, t.on_accent),
-                    (None, false) => (t.input, t.border_strong, t.text_dim),
-                };
-                ui.painter().rect(r, 8.0, fill, Stroke::new(1.0, stroke), egui::StrokeKind::Inside);
-                let knob = if on { r.max.x - 8.0 } else { r.min.x + 8.0 };
-                ui.painter().circle_filled(pos2(knob, r.center().y), 5.0, knob_fill);
+                let (r, resp) = title_switch(ui, &t, on, block.is_some());
                 let tip = block
                     .as_ref()
                     .map_or_else(|| tl!("AutoSave saves every change to the file (needs a saved document)").to_string(), |b| b.reason());
@@ -179,6 +193,19 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                 }
                 if resp.on_hover_text(tip).clicked() {
                     press_autosave(app);
+                }
+                // AutoFormat switch, beside AutoSave: typed Arabic digits become Thai digits.
+                ui.add_space(8.0);
+                ui.label(egui::RichText::new(crate::i18n::tc("titlebar", "AutoFormat")).font(regular(11.5)).color(t.text_dim));
+                let (r, resp) = title_switch(ui, &t, app.session.prefs.auto_thai_digits, false);
+                // Alt, Z, F: the switch's keytip.
+                if app.ui.keytips == crate::keytips::Phase::Tabs && "ZF".starts_with(app.ui.keytip_prefix.as_str()) {
+                    app.keytip_rects.push((r, "ZF".into()));
+                }
+                // Its tooltip names what it does in every interface language.
+                let tip = tl!("Convert to Thai Digits");
+                if resp.on_hover_text(tip).clicked() {
+                    press_autoformat(app);
                 }
                 ui.add_space(8.0);
                 quick_access(ui, app);

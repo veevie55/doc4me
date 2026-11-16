@@ -111,6 +111,9 @@ fn typing_options(s: &mut Session, text: &str) {
 
 fn insert(s: &mut Session, v: &Value) -> CmdResult {
     let text = p::req_str(v, "text")?;
+    // AutoFormat on: typed Arabic digits are Thai digits, raw or not.
+    let digits = super::format::typed_digits(s, text);
+    let text = digits.as_ref();
     let raw = p::bool(v, "raw").unwrap_or(false);
     typing_options(s, text);
     let t = if raw { None } else { autoformat(s, text) };

@@ -1,10 +1,10 @@
 # File-format parity with Microsoft Word
 
-**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.1% excluding deferred; no criteria, references, exclusions or deferred rows changed.
+**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.2% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43792165925 on source `6d4976c`; 93.2% overall / 95.1% without 22 deferred; pages 193/220, boundaries 102/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43796305956 on source `df4f160`; 93.3% overall / 95.2% without 22 deferred; pages 197/220, boundaries 103/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925), source `6d4976c`, report `5f362a3`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **193/220**, boundaries **102/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 27 page-count และ 118 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956), source `df4f160`, report `3fca7cd`: **93.3% รวม / 95.2% ไม่นับ 22 deferred**; pages **197/220**, boundaries **103/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 23 page-count และ 117 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
 
 Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
@@ -14,10 +14,10 @@ the work items are in [`gaps.md`](gaps.md).
 
 **Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
 gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
-with Word on real-world files. What is checked (latest official Windows run 43792165925 on source
-`6d4976c`, report commit `5f362a3`): all 220 documents open and remain stable and preserve measured
+with Word on real-world files. What is checked (latest official Windows run 43796305956 on source
+`df4f160`, report commit `3fca7cd`): all 220 documents open and remain stable and preserve measured
 structure through save and reopen, 191 match Word's page count, and the separate page-boundary check
-passes 102/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
+passes 103/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
 measures page counts and endpoints rather than pixel-perfect formatting. A text box
 containing a picture previously changed to an image on round-trip; the structure check now passes.
 DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
@@ -181,16 +181,17 @@ raise readiness estimates. No Word-derived files are fixtures.
 
 
 
-**Margin leading and header wrapping (2026-11-12, Unreleased):** [The audit](readiness/margin-leading-2026-11-12.md) records the tested scope. Windows run [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851) on `92025e8` (report `c098032`) confirms **95.1% without deferred**, **188/220 page counts and 108/220 boundaries**, from 184/102. All 220 open, round-trip and remain stable; no newly failing document in five sets. Linux is separately 189/220 pages and 103/220 boundaries. Six regressions and full CI 6/6 (2,505 native) cover the source changes. Table picture metrics, explicit spacing and grid metrics retain their prior rules; partial-width header reflow of a continued paragraph remains open. DOCX/JSON formats, assets and version are unchanged.
+**Margin leading and header wrapping (2026-11-12, Unreleased):** [The audit](readiness/margin-leading-2026-11-12.md) records the tested scope. Windows run [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851) on `92025e8` (report `c098032`) confirms **95.2% without deferred**, **188/220 page counts and 108/220 boundaries**, from 184/102. All 220 open, round-trip and remain stable; no newly failing document in five sets. Linux is separately 189/220 pages and 103/220 boundaries. Six regressions and full CI 6/6 (2,505 native) cover the source changes. Table picture metrics, explicit spacing and grid metrics retain their prior rules; partial-width header reflow of a continued paragraph remains open. DOCX/JSON formats, assets and version are unchanged.
 
 The [justification review](readiness/justification-review-2026-11-13.md) records four rejected Mac-measured spacing trials. None of that code or its experimental test was retained; that audit measured layout source `92025e8`; v1.1.4 includes the later source. Native Windows probes are needed before changing those limits.
 
-**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 103/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. The later official run 43619305678 measured source `4ecc270`: 95.1% without deferred, 188/220 pages and 108/220 boundaries.
+**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 103/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. The later official run 43619305678 measured source `4ecc270`: 95.2% without deferred, 188/220 pages and 108/220 boundaries.
 
 ## Revision history
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows runs 43794297193 (engine 02a6aa9: 195/220 pages, govuk-068 and zenodo-091 newly match) and 43796305956 (engine df4f160, report 3fca7cd: 197/220 pages, 103/220 boundaries, zenodo-156 and govuk-043 newly match), 93.3% overall / 95.2% without deferred; no newly failing row in either. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43792165925, engine 6d4976c, report 5f362a3: 193/220 page counts (zenodo-082 newly matches after the Cambria Math line fix), 102/220 boundaries (zenodo-032/073/082 newly match), 93.2% overall / 95.1% without deferred; no newly failing row versus report 7e50321. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |

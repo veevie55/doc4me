@@ -1,8 +1,10 @@
 # Doc4Me roadmap: milestones and what's next
 
-**Symbol/Wingdings bullet line follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](readiness/symbol-bullet-line-2026-11-16.md): private-use Symbol/Wingdings bullets drawn by another face keep the symbol font's line, as Word draws them in the symbol font. Linux page-count matches 194→196/220 against `02a6aa9` (zenodo-156 3→2, govuk-043 26→24), boundaries 102→103/220; govuk-038 moves 47→45 (Word 46), no previously passing row regresses. The Windows runner has these fonts installed, so its result may not change.
+**Overpass line follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](readiness/overpass-line-2026-11-16.md): Overpass, every weight, steps 1.266 em as the original Word embedded in zenodo-067, not the pinned variable build's 1.536 em win metrics. Linux page-count matches 196→197/220 against `df4f160` (zenodo-067 12→11 with every boundary), boundaries 103→104/220; zenodo-069 33→26 (Word 24), zenodo-022 28→22 (Word 20, Word drew Calibri there); no previously passing row regresses. Windows confirmation pending.
 
-**Tab and box spacing follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](readiness/tab-box-spacing-2026-11-16.md): a tab no longer raises a line of text, and table cells/text boxes/frames separate paragraphs by the larger of space after and before, as the body already does. Linux page-count matches 192→194/220 against `6d4976c` (govuk-068 16→15, zenodo-091 12→11, both now Word's), boundaries stay 102/220; zenodo-022 moves 27→28 (Word 20), no previously passing row regresses. Windows confirmation pending.
+**Symbol/Wingdings bullet line follow-up · 2026-11-16 (Windows confirmed):** [Audit, EN/TH](readiness/symbol-bullet-line-2026-11-16.md): private-use Symbol/Wingdings bullets drawn by another face keep the symbol font's line, as Word draws them in the symbol font. Linux page-count matches 194→196/220 against `02a6aa9` (zenodo-156 3→2, govuk-043 26→24), boundaries 102→103/220; govuk-038 moves 47→45 (Word 46), no previously passing row regresses. Windows run 43796305956 (source `df4f160`, report `3fca7cd`) nevertheless confirms zenodo-156 and govuk-043 newly matching: 197/220 page counts, 103/220 boundaries, 93.3% / 95.2% without deferred, no newly failing row.
+
+**Tab and box spacing follow-up · 2026-11-16 (Windows confirmed):** [Audit, EN/TH](readiness/tab-box-spacing-2026-11-16.md): a tab no longer raises a line of text, and table cells/text boxes/frames separate paragraphs by the larger of space after and before, as the body already does. Linux page-count matches 192→194/220 against `6d4976c` (govuk-068 16→15, zenodo-091 12→11, both now Word's), boundaries stay 102/220; zenodo-022 moves 27→28 (Word 20), no previously passing row regresses. Windows run 43794297193 (source `02a6aa9`) confirms 195/220 page counts with govuk-068 and zenodo-091 newly matching and no newly failing row.
 
 **Cambria Math line follow-up · 2026-11-16 (Windows confirmed):** [Audit, EN/TH](readiness/cambria-line-2026-11-16.md): letters Caladea lacks (Greek) in Cambria/Cambria Math text keep Cambria's 1.172 em line instead of a fallback face's; installed Cambria Math is spaced the same way, as Word's PDF shows. Linux page-count matches 191→192/220 (only zenodo-082 6→5, Word 5) and boundaries 99→102/220 (zenodo-032/073/082); no regressions, all 440 hashes verified. Windows run 43792165925 (source `6d4976c`, report `5f362a3`) confirms 193/220 page counts and 102/220 boundaries, 93.2% overall / 95.1% without 22 deferred; only zenodo-082 (pages and boundaries) and zenodo-032/073 (boundaries) change, with no newly failing row.
 
@@ -10,11 +12,11 @@
 
 **Blank cover panel follow-up · 2026-11-15:** [Audit, EN/TH](readiness/page-float-2026-11-15.md): accepted Linux page-count matches 189→190/220, only zenodo-136 26→25 (reference 25), other 219 counts unchanged; 440 corpus hashes verified. Six focused floating-table tests and full CI 6/6 pass (2,555 native, one existing ignored); Windows run 43776538181 confirms 191/220 page counts and 99/220 boundaries. Official readiness is 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
-**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.1% excluding deferred; no criteria, references, exclusions or deferred rows changed.
+**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.2% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** readiness remeasured in Windows run 43792165925 on source `6d4976c`; blocker Markdown and TSV refreshed; GitHub Pages workflow documented. Current result is 93.2% overall / 95.1% without 22 deferred; pages 193/220, boundaries 102/220. Criteria, corpus membership and exclusions unchanged.
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** readiness remeasured in Windows run 43796305956 on source `df4f160`; blocker Markdown and TSV refreshed; GitHub Pages workflow documented. Current result is 93.3% overall / 95.2% without 22 deferred; pages 197/220, boundaries 103/220. Criteria, corpus membership and exclusions unchanged.
 
-**Windows verification · 2026-11-16:** ผลทางการจาก [run 43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925), source `6d4976c`, report `5f362a3`: **93.2% รวม / 95.1% ไม่นับ 22 deferred**; pages **193/220**, boundaries **102/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 27 page-count และ 118 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956), source `df4f160`, report `3fca7cd`: **93.3% รวม / 95.2% ไม่นับ 22 deferred**; pages **197/220**, boundaries **103/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 23 page-count และ 117 page-boundary rows; [รายการพร้อมเหตุผลภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ครบทุกแถวและไม่เปลี่ยนเกณฑ์, deferred หรือ excluded. เป้าหมาย 100% ยังไม่ถึง.
 
 
 Forward-looking plan. The summary is [`ROADMAP.md`](../ROADMAP.md); the ranked work list is
@@ -90,10 +92,10 @@ partial rows are fidelity gaps (beta work), not broken workflows. Doc4Me stays *
 
 The readiness number in [`ROADMAP.md`](../ROADMAP.md) was an estimate (~60%): a weighted sum of
 estimated dimension parities. Since stage B it is measured: **66.1%** at first, **73.4%** in the
-2026-10-25 report, and **93.2%** in the latest official Windows report (run 43792165925, source
-`6d4976c`, report commit `5f362a3`; ribbon 504/504, dialogs 216/228, pages 193/220, boundaries
-102/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
-7.0 points short of 100% overall. That report says 95.1% without its 22 deferred rows, 5.1 points
+2026-10-25 report, and **93.3%** in the latest official Windows report (run 43796305956, source
+`df4f160`, report commit `3fca7cd`; ribbon 504/504, dialogs 216/228, pages 197/220, boundaries
+103/220, languages 95/95, shortcuts 276/280; all 220 documents; DOCX open and round-trip 220/220),
+7.0 points short of 100% overall. That report says 95.2% without its 22 deferred rows, 5.1 points
 short, all of them pagination. Current `manual.tsv` has 22 deferred rows and records the ARM64
 check as pass after run 42262956358 built and verified the MSI and portable ZIP. The source TSVs
 map 95/95 language rows and the dialog TSV/source maps 216/228 rows (12 deferred; 7 excluded),
@@ -134,9 +136,9 @@ replaces ~60% in `ROADMAP.md`, `target-app-parity.md` and `gaps.md`).
 
 **C. Fix what the checks fail**, highest weight per hour first, until `cargo xtask readiness`
 reports 100.0% on the latest commit: every row of every check set passing. The latest official
-Windows measurement 43792165925 passes stability (220/220 corpus; 5/5 hand checks),
+Windows measurement 43796305956 passes stability (220/220 corpus; 5/5 hand checks),
 performance (6/6) and language catalog-key coverage (95/95; translation quality is not tested);
-the remaining measured area without deferred rows is pagination (193/220 page-count and 102/220
+the remaining measured area without deferred rows is pagination (197/220 page-count and 103/220
 boundary checks). Dialogs pass 216/228 with 12 deferred, and shortcuts pass 276/280 with four deferred;
 all non-deferred dialog and shortcut rows pass. The current source adds regression tests for OS
 text/IME delivery and keypad behavior; this Windows run confirms the same 276/280 shortcut result.
@@ -169,6 +171,7 @@ languages, screen-reader access.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | Windows runs 43794297193 (engine 02a6aa9: 195/220 pages, govuk-068 and zenodo-091 newly match) and 43796305956 (engine df4f160, report 3fca7cd: 197/220 pages, 103/220 boundaries, zenodo-156 and govuk-043 newly match), 93.3% overall / 95.2% without deferred; no newly failing row in either. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43792165925, engine 6d4976c, report 5f362a3: 193/220 page counts (zenodo-082 newly matches after the Cambria Math line fix), 102/220 boundaries (zenodo-032/073/082 newly match), 93.2% overall / 95.1% without deferred; no newly failing row versus report 7e50321. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
 | 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |

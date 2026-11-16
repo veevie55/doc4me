@@ -435,6 +435,8 @@ pub fn specs() -> Vec<CommandSpec> {
             Ok(json!({"value": s.autosave}))
         })
         .pure(),
+        CommandSpec::new("file.autoFormat", "AutoFormat", "Quick Access Toolbar", super::format::auto_format)
+            .params(r#"{"value"?: bool} → {"value": bool, "converted": number, "protected": bool}"#),
         CommandSpec::new("file.compatibility", "Check Compatibility", "File › Info", |s, _| {
             let mut issues = Vec::new();
             if s.doc.settings.watermark.is_some() {

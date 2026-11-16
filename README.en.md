@@ -7,8 +7,8 @@ with Microsoft Word, then goes further on speed, openness and agent control: eve
 command that scripts and AI agents can run, over a local control channel or MCP.
 
 The latest version is **1.1.4**, still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
-The latest official Windows measurement (run 43792165925, source `6d4976c`) is **93.2%**, or **95.1% excluding 22 deferred checks**.
-All 220 corpus documents open and round-trip; page counts match for 193/220 and page boundaries for 102/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
+The latest official Windows measurement (run 43796305956, source `df4f160`) is **93.3%**, or **95.2% excluding 22 deferred checks**.
+All 220 corpus documents open and round-trip; page counts match for 197/220 and page boundaries for 103/220. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
 
 ![Doc4Me with the built-in sample document](docs/images/hero.png)
 
@@ -50,7 +50,7 @@ Windows package and readiness workflows use the same pinned OFL font set and ver
 additional corpus fonts before building. See [docs/releasing.md](docs/releasing.md) for the pinned
 revisions and licence details.
 
-Latest Windows measurement: [run 43792165925](https://github.com/veevie55/doc4me/actions/runs/43792165925), source `6d4976c`; readiness is 93.2% overall / 95.1% without 22 deferred rows, with page counts 193/220 and page boundaries 102/220. There are still 27 page-count and 118 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
+Latest Windows measurement: [run 43796305956](https://github.com/veevie55/doc4me/actions/runs/43796305956), source `df4f160`; readiness is 93.3% overall / 95.2% without 22 deferred rows, with page counts 197/220 and page boundaries 103/220. There are still 23 page-count and 117 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
 
 The separate [Windows x64 installer](.github/workflows/windows-x64-installer.yml) is also manual and is the only workflow that can publish a Release.
 Its **commit** field accepts an earlier `main` commit's full 40-character SHA; enable **release** only when

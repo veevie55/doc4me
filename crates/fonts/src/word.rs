@@ -664,8 +664,19 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
         "ms gothic" | "ms pgothic" => Some((220.0 / 256.0, 36.0 / 256.0)),
         // Every Aptos family (Display, Narrow, Serif, Mono, each weight): hhea 1923 / 577.
         f if is_aptos(f) => Some((1923.0 / 2048.0, 577.0 / 2048.0)),
+        f if is_overpass(f) => Some((0.982, 0.284)),
         _ => None,
     }
+}
+
+/// Overpass and its weights. Word's PDFs embed the original static Overpass, whose line is
+/// 1.266 em: zenodo-067 steps its 10.5 pt single-spaced Overpass paragraphs 13.294 pt on average
+/// (Word places them 13.32 or 13.20 pt apart), with the 0.982 em ascent its embedded font
+/// descriptor declares. The variable Overpass in the pinned open font input has win metrics of
+/// (2316 + 756) / 2000 = 1.536 em, so its own line would be 21% taller.
+fn is_overpass(family: &str) -> bool {
+    let f = family.trim().to_ascii_lowercase();
+    f == "overpass" || overpass_weight(&f).is_some()
 }
 
 /// Cambria Math, whose text lines Word steps like Cambria's (1946 + 455 per 2048 em), not by
@@ -713,9 +724,9 @@ fn is_aptos(family: &str) -> bool {
 pub fn single_line(family: &str, face: &crate::FontFace, substituted: bool, size: f64) -> (f64, f64) {
     // "Arial Bold" spaces lines as Arial does.
     let family = face_name(family).map_or(family, |(base, ..)| base);
-    // Aptos's and Cambria Math's own win metrics aren't what Word spaces them by, so their lines
-    // hold when they are installed.
-    if let Some((a, d)) = requested_line(family).filter(|_| substituted || is_aptos(family) || is_cambria_math(family)) {
+    // Aptos's, Cambria Math's and the open variable Overpass's own win metrics aren't what Word
+    // spaces them by, so their lines hold when they are installed.
+    if let Some((a, d)) = requested_line(family).filter(|_| substituted || is_aptos(family) || is_cambria_math(family) || is_overpass(family)) {
         return (a * size, d * size);
     }
     if !substituted {
@@ -1153,6 +1164,11 @@ mod tests {
         assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
         assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
         // So do Symbol and Wingdings bullets drawn as standard characters by another face.
+        // Overpass, every weight, steps 1.266 em whatever face draws it (13.293 pt at 10.5 pt).
+        for name in ["Overpass", "Overpass Light", "overpass extrabold"] {
+            assert_eq!(em(single_line(name, &r.face, false, 1.0)), 1.266, "{name}");
+        }
+        assert_eq!(em(single_line("Overpass", &r.face, true, 10.5)), 13.293);
         assert_eq!(covered_fallback_line("Wingdings", 11.0).map(em), Some(12.208));
         assert_eq!(covered_fallback_line("Symbol", 1.0).map(em), Some(1.225));
         assert_eq!(covered_fallback_line("wingdings 2", 1.0).map(em), Some(1.054));

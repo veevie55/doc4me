@@ -1,6 +1,6 @@
 # Typing parity with Word
 
-> **Last reviewed:** 2026-10-11 · **Last updated:** 2026-10-25 · **Change:** trivial (Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (AutoFormat Thai digits switch beside AutoSave; previously trivial: Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
 
 What Word does when you type, observed black-box (same keystrokes typed into Word and
 Doc4Me, results read back paragraph by paragraph) and pinned by tests in
@@ -97,6 +97,16 @@ Word.
 | Typing over a selection | replaces it (Word's default); with "Typing replaces selected text" off, the text goes in front of the selection, which stays | `typing_over_a_selection_follows_the_replace_selection_option` |
 | Overtype on, typing | each character replaces the one after the caret, never the paragraph mark or an object; Insert switches overtype only with the Insert-key option on (off by default, as in Word) | `overtype_replaces_the_characters_after_the_caret` |
 
+## AutoFormat: Thai digits (Doc4Me, beyond Word)
+
+The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโนมัติ), beside AutoSave, is a Doc4Me addition with no Word counterpart (`file.autoFormat`; keytip Alt, Z, F). It is off by default and saved with the other preferences.
+
+| Keys / setting | Result | Test |
+|---|---|---|
+| Turn AutoFormat on | every Arabic digit the document shows becomes a Thai digit (0–9 → ๐–๙), in every story (body, headers, footers, notes, text boxes, comments), with the numbers Doc4Me makes (list numbers, page numbers), as one undoable step; Undo takes back the text, not the setting. A protected document keeps its text | `autoformat_turns_shown_and_typed_digits_into_thai_digits`, `autoformat_conversion_is_one_undo_step_and_spares_protected_documents` |
+| Typing digits with AutoFormat on | every typed Arabic digit is a Thai digit, one key at a time or several at once (`text.insert`, `raw` included) | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
+| Turn AutoFormat off | nothing converts back; digits typed afterwards stay Arabic | `autoformat_turns_shown_and_typed_digits_into_thai_digits` |
+
 ## Text direction
 
 - Typing Arabic, Hebrew or another right-to-left script as the first letters of a paragraph
@@ -146,6 +156,7 @@ Word.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-16 | minor | AutoFormat (title bar, beside AutoSave): turning it on converts the document's digits to Thai digits once; typed Arabic digits become Thai digits while it is on; off converts nothing back |
 | 2026-10-25 | trivial | Known gaps: Aptos is drawn with the bundled metric-compatible Intos |
 | 2026-10-11 | minor | Text direction: right-to-left letters typed into an empty paragraph make it right-to-left; existing paragraphs keep theirs (#713) |
 | 2026-10-11 | trivial | Grammar proofing (not AutoCorrect) no longer suggests capitalising a sentence after `...` or `…` (`proof::tests::ellipses_do_not_start_sentences`) |

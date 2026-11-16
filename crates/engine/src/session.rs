@@ -528,6 +528,9 @@ pub struct Prefs {
     pub xml_show_namespaces: bool,
     /// Custom XML editor: ask before removing a schema reference from a document.
     pub xml_confirm_schema_removal: bool,
+    /// AutoFormat (the title bar's switch beside AutoSave, `file.autoFormat`): typed Arabic
+    /// digits become Thai digits, and turning it on converts the document's digits once.
+    pub auto_thai_digits: bool,
 }
 
 /// What Paste keeps of the copied content's formatting (Word's Paste Options).
@@ -573,6 +576,7 @@ impl Default for Prefs {
             pictures_dir: None,
             xml_show_namespaces: false,
             xml_confirm_schema_removal: true,
+            auto_thai_digits: false,
         }
     }
 }
