@@ -967,11 +967,16 @@ fn layout_blocks(
                 let mut pl = ctx.para_labelled(p, width, table, &[], label.clone());
                 let ctxl = pl.rp.contextual_spacing;
                 let same = prev_style.as_ref().is_some_and(|(s, c)| *s == pl.rp.style && (*c || ctxl));
-                let before = if same && ctxl { 0.0 } else { pl.rp.space_before };
+                let mut before = if same && ctxl { 0.0 } else { pl.rp.space_before };
                 if same && ctxl {
                     y -= prev_after;
+                } else if prev_style.is_some() && !ctx.doc.settings.add_para_spacing {
+                    // As in the body (`place_para`): the larger of the space after and the space
+                    // before separates two paragraphs, unless the document asks for both (Don't
+                    // use HTML paragraph auto spacing). zenodo-091's table cells step two 11 pt
+                    // Arial paragraphs with 3 pt before and after 15.72 pt apart in Word's PDF.
+                    before = (before - prev_after.max(0.0)).max(before.min(0.0));
                 }
-                // Word: space between paragraphs is before + after (no collapsing).
                 y += if i == first { before } else { before.max(0.0) };
                 // (A frame's paragraphs are a box of their own: the range's ends close it.)
                 let mut bx = block_border_box_in(ctx, blocks, i, &range);

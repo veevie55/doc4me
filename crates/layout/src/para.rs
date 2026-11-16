@@ -2360,8 +2360,19 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let mut text = false;
         let mut any = false;
         let dropped = pl.drop_cap.map_or(0, |d| d.0);
+        // A tab doesn't make a line holding text taller, whatever its font (zenodo-091: Word steps
+        // contents lines of 11 pt Arial around 12 pt Calibri tabs by Arial's line). A line of only
+        // tabs, spaces and objects keeps their heights.
+        let has_text = pl.clusters.get(c0..c1).is_some_and(|cs| {
+            cs.iter().any(|c| match c.kind {
+                ClKind::Text => true,
+                // An equation is text.
+                ClKind::Object(o) => pl.maths.iter().any(|(m, _)| *m == o),
+                _ => false,
+            })
+        });
         for (k, c) in pl.clusters.get(c0..c1).into_iter().flatten().enumerate() {
-            if c.kind == ClKind::Marker || c0 + k < dropped {
+            if c.kind == ClKind::Marker || c0 + k < dropped || (has_text && c.kind == ClKind::Tab) {
                 continue;
             }
             // A floating object's anchor isn't text: its run's font doesn't make the line taller

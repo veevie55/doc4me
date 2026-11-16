@@ -2521,6 +2521,72 @@ fn the_larger_of_space_after_and_space_before_separates_paragraphs() {
     assert!((gap(8.0, 3.0, true) - line - 11.0).abs() < 0.01);
 }
 
+/// Table cells (and other boxes) separate paragraphs as the body does: the larger of the space
+/// after and the space before, both only with Don't use HTML paragraph auto spacing. zenodo-091's
+/// cells put two 11 pt Arial paragraphs with 3 pt before and after 15.72 pt apart in Word's PDF.
+#[test]
+fn table_cells_put_the_larger_of_space_after_and_space_before_between_paragraphs() {
+    let gap = |after: f32, before: f32, add: bool| {
+        let mut d = Document::from_text("before\nafter");
+        d.settings.add_para_spacing = add;
+        let p = |props| {
+            let mut p = doc4me_doc::Paragraph::with_text("Line", Default::default());
+            p.props = props;
+            doc4me_doc::para_block(p)
+        };
+        let mut t = Table::new(1, 1, 468.0);
+        t.rows[0].cells[0].blocks = vec![
+            p(ParaProps { space_before: Some(3.0), space_after: Some(after), ..Default::default() }),
+            p(ParaProps { space_before: Some(before), space_after: Some(3.0), ..Default::default() }),
+        ];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let top = |i: u32| l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, i]), off: 0 }).unwrap().top;
+        top(1) - top(0)
+    };
+    let line = gap(0.0, 0.0, false);
+    assert!((gap(3.0, 3.0, false) - line - 3.0).abs() < 0.01, "{}", gap(3.0, 3.0, false) - line);
+    assert!((gap(8.0, 3.0, false) - line - 8.0).abs() < 0.01);
+    assert!((gap(3.0, 12.0, false) - line - 12.0).abs() < 0.01);
+    // Inside a box, a later paragraph's negative space before stays clamped at zero, as before.
+    assert!((gap(8.0, -2.0, false) - line - 8.0).abs() < 0.01, "{}", gap(8.0, -2.0, false) - line);
+    // Don't use HTML paragraph auto spacing: both.
+    assert!((gap(3.0, 3.0, true) - line - 6.0).abs() < 0.01);
+    assert!((gap(8.0, 3.0, true) - line - 11.0).abs() < 0.01);
+}
+
+/// A tab in a bigger font doesn't make a line of text taller: Word's PDF of zenodo-091 steps its
+/// contents lines, Arial 11 pt text around a 12 pt Calibri tab, by Arial's 12.6 pt line. A line
+/// of nothing but tabs keeps their height.
+#[test]
+fn a_bigger_tab_does_not_raise_a_line_of_text() {
+    let height = |runs: &[(&str, f32)]| {
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        for (text, size) in runs {
+            let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(*size), ..Default::default() };
+            let at = p.text.len();
+            p.insert_text(at, text, &props).unwrap();
+        }
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        p.mark = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(11.0), ..Default::default() };
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, l0, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+        else {
+            panic!("missing body lines")
+        };
+        para.lines[*l0].height
+    };
+    let text = height(&[("1.1", 11.0), ("Data summary", 11.0)]);
+    let with_tab = height(&[("1.1", 11.0), ("\t", 24.0), ("Data summary", 11.0)]);
+    assert!((with_tab - text).abs() < 0.01, "a 24 pt tab between 11 pt words: {with_tab} against {text}");
+    let tabs_only = height(&[("\t\t", 24.0)]);
+    assert!(tabs_only > text + 5.0, "a line of 24 pt tabs keeps their height: {tabs_only} against {text}");
+}
+
 #[test]
 fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
     let top_of_b = |split: bool, mode: u32| {

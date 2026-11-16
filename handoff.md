@@ -1,3 +1,11 @@
+# Page-count work · tab and box spacing candidate · 2026-11-16
+
+Pushed after Cambria Math line (`6d4976c`, Windows run 43792165925 dispatched on it): a tab no longer raises a line holding text or an equation; `frame_box` (table cells, text boxes, frames) separates paragraphs by the larger of space after/before unless `add_para_spacing`, as the body already did. See [audit](docs/readiness/tab-box-spacing-2026-11-16.md). Linux vs `6d4976c`: pages **192→194/220** (govuk-068 16→15, zenodo-091 12→11), boundaries stay 102; govuk-046 matches further, zenodo-069 34→33 (Word 24), **zenodo-022 27→28 (Word 20)**; no previously passing row regresses. Full CI 6/6 in one run (2,560 pass / 1 existing ignored).
+
+Next: refresh docs with Windows run 43792165925 when it completes, dispatch Windows on this commit, continue remaining page-count cases (zenodo-091 boundary now page 4; zenodo-156/115/125 small docs).
+
+---
+
 # Page-count work · Cambria Math line candidate · 2026-11-16
 
 Current request: continue page counts; commit/push main without asking. Official Windows baseline remains run 43785505707 (engine `55d0c37`, report `7e50321`): 192/220 page counts, 99/220 boundaries, 93.0% / 94.9% without 22 deferred.
