@@ -650,6 +650,9 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
         // Verdana (win 2059 / 430: 1.215 em; DejaVu Sans is 1.164) and Georgia (win 1878 / 449:
         // 1.136 em; Source Serif 4 is 1.371), every style alike.
         "verdana" => Some((2059.0 / 2048.0, 430.0 / 2048.0)),
+        // Tahoma (win 2049 / 423: 1.207 em, as govuk-067's Word PDF declares it, 1000 / 207 per
+        // 1000; Arimo, which draws it, is 1.149), every style alike.
+        "tahoma" => Some((2049.0 / 2048.0, 423.0 / 2048.0)),
         "georgia" => Some((1878.0 / 2048.0, 449.0 / 2048.0)),
         // Garamond, as Word's PDFs of zenodo-115 and zenodo-118 declare it (ascent 862, descent
         // 263 per 1000) and step it: 11 pt body lines at 283/240 spacing 14.59 pt apart on
@@ -1213,6 +1216,9 @@ mod tests {
         assert_eq!(covered_fallback_line("Cambria Math", 10.5).map(em), Some(12.31));
         assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
         assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
+        // Tahoma keeps its own 1.207 em line whatever face draws it (13.277 pt at 11 pt).
+        assert_eq!(em(single_line("Tahoma", &r.face, true, 1.0)), 1.207);
+        assert_eq!(em(single_line("Tahoma", &r.face, true, 11.0)), 13.277);
         // Garamond keeps Word's 1.125 em line when another face stands in for it, and its measured
         // widths apply with Tinos or Times New Roman, not with other faces.
         assert_eq!(em(single_line("Garamond", &r.face, true, 1.0)), 1.125);
