@@ -104,6 +104,27 @@ jobs:
             if ($LASTEXITCODE -ne 0) { throw "Font-resolution diagnostic failed for $id" }
           }
 
+      # zenodo-123 matches Word's page count on Linux (38) but not here (39) with the same open
+      # fonts: print each page's first and last text line so the two platforms can be compared.
+      # Diagnostic only; it never fails the measurement.
+      - name: Page ends of documents that differ between platforms
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $cli = Join-Path $env:GITHUB_WORKSPACE 'target/release/doc4me-cli.exe'
+          foreach ($id in @('zenodo-123')) {
+            $document = Join-Path $env:GITHUB_WORKSPACE "corpus/readiness/$id.docx"
+            if (-not (Test-Path $document)) { Write-Output "--- ${id}: not downloaded, skipped ---"; continue }
+            $pdf = Join-Path $env:RUNNER_TEMP "$id.pdf"
+            & $cli convert $document $pdf | Out-Null
+            $pages = [int]([regex]::Match((pdfinfo $pdf | Out-String), 'Pages:\s+(\d+)').Groups[1].Value)
+            Write-Output "--- $id ($pages pages) ---"
+            for ($p = 1; $p -le $pages; $p++) {
+              $lines = @(pdftotext -f $p -l $p -layout $pdf - | Where-Object { $_.Trim() -ne '' })
+              if ($lines.Count -gt 0) { Write-Output ("p{0} first: {1}" -f $p, $lines[0].Trim()); Write-Output ("p{0} last:  {1}" -f $p, $lines[-1].Trim()) }
+            }
+          }
+
       - name: Render Thai readiness report
         shell: bash
         run: python tools/readiness_th.py
