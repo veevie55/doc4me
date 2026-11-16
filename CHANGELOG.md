@@ -12,6 +12,16 @@
 
 ## [Unreleased]
 
+
+## [1.1.4] - 2026-11-14
+
+### อัปเดตจากโค้ดล่าสุด · 2026-11-16
+
+- รีเฟรช v1.1.4 ตามคำสั่งผู้ใช้หลังแก้ page count เพิ่มเติม โดยรวมการแก้ฟอนต์ OFL, ตารางลอยพื้นหลังปก, section markers, workflow และเอกสารล่าสุด สร้าง Windows x64 MSI/portable ZIP ใหม่จาก commit ที่ตรวจแล้วแทนไฟล์เดิม คง URL/ID ของ Release และหมายเลขเวอร์ชันเดิม ตัวติดตั้งตั้งค่า AllowSameVersionUpgrades ไว้แล้ว ไม่มี schema migration ของ DOCX; release notes สะสมครบ 1.1.4 → 1.1.3 → 1.1.2 → 1.1.1 → 1.1.0 → 1.0.0
+- ตรวจซอร์ส engine `e00daf1`: full CI ผ่าน 6/6 (native 2,555 ผ่าน / ignored 1 เดิม; assets 141; layers 20; wasm 16), language audit รวม ignored ผ่าน 65/65 (`cargo test --workspace i18n -- --include-ignored`), cargo-audit exit 0 พร้อม unmaintained warnings เดิม 5 รายการ ไม่ suppress advisory ทดสอบตารางลอย 6/6 และเทียบ corpus immutable ครบ 220 ฉบับบน Linux ได้ 189→190 page-count matches เปลี่ยนเฉพาะ zenodo-136 26→25 ตรง reference อีก 219 รายการคงเดิม ตรวจ hash DOCX/PDF ครบ 440 ไฟล์
+- อัปเดต `ATTRIBUTION.md` และ `NOTICE` ให้ตรงกับ Windows workflow ปัจจุบันที่บังคับใช้ฟอนต์ OFL ชุด pinned ระบุ Roboto, Montserrat, Source Sans Pro, Overpass และ Noto Sans Ethiopic พร้อม upstream/ใบอนุญาต แก้ข้อความเก่าที่อ้างว่า Windows 1.1.4 ไม่ฝัง craft-fonts เพื่อให้ notice ในแพ็กเกจอธิบาย build input ล่าสุดตรงกัน ตรวจ asset attribution และตรวจ notice จริงใน ZIP หลัง build
+- ผล Windows run [43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181) วัด engine `e00daf1`, report `b6e1076`: จำนวนหน้าตรง **191/220** (190→191, zenodo-136 ผ่านเพิ่ม), boundaries **99/220**, readiness **93.0% รวม / 94.9% ไม่รวม 22 deferred**; open/round-trip/stability 220/220 ไม่มีรายการที่เคยผ่านกลับมาตกในห้าชุด corpus อัปเดต blockers ไทย/อังกฤษและ TSV ตรงกัน ไม่เปลี่ยนเกณฑ์/reference/exclusion/deferred ภาพปกกลับมาอยู่หน้าแรกแล้ว แต่ความสูงพื้นหลัง/เส้นยังต่าง reference จึงไม่อ้าง pixel parity หรือ readiness 100%
+
 ### แก้ไข
 
 - แก้ตารางลอยว่างขนาดเต็มหน้าที่ใช้เป็นพื้นหลังปกให้ใช้ความสูงขั้นต่ำสำหรับการ fit กับหน้าจริง แยกจากความสูงที่วาดรวมระยะขอบเซลล์ใน `crates/layout/src/{lib,table}.rs`; จำกัดเฉพาะ panel ว่างที่อิงหน้า/ขอบกระดาษ และคงกฎเดิมสำหรับตารางที่มีเนื้อหา/anchor ย่อหน้า เพื่อไม่ตัดข้อความ ทดสอบตารางลอย 6/6, full CI ผ่าน 6/6 (native 2,555 ผ่าน / ignored 1 เดิม; assets 141; wasm 16) และเทียบ immutable corpus 220 ฉบับบน Linux ได้ 189→190 page-count matches: zenodo-136 26→25 ตรง reference อีก 219 รายการคงเดิม ตรวจ hash ต้นฉบับ/reference ครบ 440 ไฟล์ ไม่มี threshold/exclusion/deferred เปลี่ยน รูปแบบ DOCX เดิมใช้ต่อได้ ไม่มี schema/dependency/font เปลี่ยน ภาพปกตรวจแล้วแต่ความสูงแถบพื้นหลังยังต่าง reference; ดู `docs/readiness/page-float-2026-11-15.md` สำหรับผล CI/Windows และข้อจำกัด
@@ -19,12 +29,12 @@
 
 ### เปลี่ยนแปลง
 
-- อัปเดตผล Windows readiness run [43727351543](https://github.com/veevie55/doc4me/actions/runs/43727351543), source `f01f7b6`, report `4d70b3c`: **93.0% รวม / 94.9% ไม่รวม 22 deferred**, จำนวนหน้า **190/220**, boundaries **99/220**; zenodo-095 และ zenodo-149 ผ่านจำนวนหน้าเพิ่ม อัปเดตเอกสารปัจจุบันตามรายงานและคง blockers ไทย/อังกฤษกับ TSV ที่สร้างจาก run เดียวกัน ไม่เปลี่ยนเกณฑ์/reference/exclusion/deferred รายการนี้ยังอยู่ใต้ Unreleased จนเตรียมซอร์สสำหรับคำสั่งออก v1.1.4 รอบใหม่; ขณะตรวจผลยังไม่มีการเปลี่ยน tag หรือไฟล์ Release
+- อัปเดตผล Windows readiness run [43727351543](https://github.com/veevie55/doc4me/actions/runs/43727351543), source `f01f7b6`, report `4d70b3c`: **93.0% รวม / 94.9% ไม่รวม 22 deferred**, จำนวนหน้า **190/220**, boundaries **99/220**; zenodo-095 และ zenodo-149 ผ่านจำนวนหน้าเพิ่ม อัปเดตเอกสารปัจจุบันตามรายงานและคง blockers ไทย/อังกฤษกับ TSV ที่สร้างจาก run เดียวกัน ไม่เปลี่ยนเกณฑ์/reference/exclusion/deferred รวมรายการนี้ในการอัปเดต v1.1.4 ตามคำสั่งผู้ใช้รอบล่าสุด
 
 
-- Page-count metrics and section markers: use condensed OFL Roboto for Arial Narrow/Nova Cond Light, Montserrat for Gotham, original OFL Source Sans Pro for direct requests, and correct Overpass Bold. Fit measured public-PDF advances and selected original line metrics without distributing proprietary font programs; preserve existing Thai behavior and leave ambiguous Nyala space widths unfitted. Prevent inherited keep flags on empty section-end markers from creating a blank page. Linux corpus page-count matches improve 187→189/220: zenodo-095 9→10 and zenodo-149 40→28, both matching references, with no previously passing row regressing. Withdraw the Tahoma width experiment after govuk-044 regressed. Expand Windows font diagnostics to current page-count failures. Fix test-only iterators for Rust 1.100 clippy. Validation: full CI 6/6, 2,554 native tests plus one pre-existing ignored, prepared-font tests 83/83, unchanged 220-document corpus comparison, actionlint; ALSA development setup is repaired. Official Windows score awaits remeasurement. See `docs/readiness/latin-metrics-2026-11-15.md` for evidence and limits.
+- Page-count metrics and section markers: use condensed OFL Roboto for Arial Narrow/Nova Cond Light, Montserrat for Gotham, original OFL Source Sans Pro for direct requests, and correct Overpass Bold. Fit measured public-PDF advances and selected original line metrics without distributing proprietary font programs; preserve existing Thai behavior and leave ambiguous Nyala space widths unfitted. Prevent inherited keep flags on empty section-end markers from creating a blank page. Linux corpus page-count matches improve 187→189/220: zenodo-095 9→10 and zenodo-149 40→28, both matching references, with no previously passing row regressing. Withdraw the Tahoma width experiment after govuk-044 regressed. Expand Windows font diagnostics to current page-count failures. Fix test-only iterators for Rust 1.100 clippy. Validation: full CI 6/6, 2,554 native tests plus one pre-existing ignored, prepared-font tests 83/83, unchanged 220-document corpus comparison, actionlint; ALSA development setup is repaired. Subsequent official Windows measurements are recorded in the refresh summary above. See `docs/readiness/latin-metrics-2026-11-15.md` for evidence and limits.
 
-- Page-count follow-up: use the openly licensed original Roboto instead of forcing Arimo; prepare pinned OFL regular/italic variable files with SHA-256 and license checks for Windows corpus/package builds. Add a font-resolution regression and a 32-document font/reference inventory. Validated with 76 font tests, font clippy, assets/layers and a release CLI probing all 32 documents; full CI stops at missing ALSA development metadata in this environment. Roboto resolves directly but zenodo-136 still has 26 pages versus reference 25. No new official page-count pass or reference exclusion is claimed; see `docs/readiness/page-count-audit-2026-11-15.md`.
+- Page-count follow-up: use the openly licensed original Roboto instead of forcing Arimo; prepare pinned OFL regular/italic variable files with SHA-256 and license checks for Windows corpus/package builds. Add a font-resolution regression and a 32-document font/reference inventory. Validated with 76 font tests, font clippy, assets/layers and a release CLI probing all 32 documents; the initial full CI attempt stopped at missing ALSA development metadata; this prerequisite is repaired and the current CI results are recorded above. Roboto resolves directly but zenodo-136 still has 26 pages versus reference 25. No new official page-count pass or reference exclusion is claimed; see `docs/readiness/page-count-audit-2026-11-15.md`.
 
 ### เปลี่ยนแปลง
 
@@ -42,7 +52,8 @@
 - สร้างภาพประกอบ README ทั้งชุดใหม่จากแอปจริงด้วยสคริปต์ `ui_shot` เมื่อ build สำเร็จ; ปรับ caption และ attribution ของภาพ About ให้ระบุ v1.1.4; ภาพไม่ผ่านการแต่งและไม่มี asset จากผลิตภัณฑ์อื่น
 - ตรวจสอบ: สคริปต์ `ui_shot` สำเร็จทั้ง 13 ภาพ, ตรวจไฟล์ PNG ทั้ง 13 ไฟล์และเปิดดูภาพ, `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy, test, assets, layers, wasm), `git diff --check` ผ่าน
 
-## [1.1.4] - 2026-11-14
+### รายละเอียดการเผยแพร่ก่อนการอัปเดตครั้งนี้
+
 
 ### อัปเดต Release จากโค้ดล่าสุด (2026-11-14)
 

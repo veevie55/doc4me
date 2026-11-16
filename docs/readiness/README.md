@@ -1,6 +1,6 @@
 # Readiness check sets
 
-**Page-count follow-up · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
+**Current Windows confirmation · 2026-11-16:** Run [43776538181](https://github.com/veevie55/doc4me/actions/runs/43776538181), engine `e00daf1`, report `b6e1076`: page counts **191/220**, boundaries **99/220**, readiness **93.0% overall / 94.9% excluding 22 deferred**. The [blank-panel audit, EN/TH](page-float-2026-11-15.md) records zenodo-136 newly matching 25 pages and no newly failing corpus row. CI 6/6, native 2,555 pass / one existing ignored; 440 corpus hashes verified. Current EN/TH blockers and TSV match the report; criteria/exclusions/deferred unchanged.
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
