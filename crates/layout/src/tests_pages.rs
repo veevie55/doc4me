@@ -562,3 +562,39 @@ fn automatic_spacing_skips_list_items_and_the_first_paragraph() {
     let height = l.caret(&Pos { story: StoryRef::Body, path: Path::top(2), off: 0 }).unwrap().height;
     assert!((line - height).abs() < 1.0, "no space between list items: {line} for a {height} pt line");
 }
+
+/// Lines of Cambria Math text step by Cambria's line (1.172 em), as in Word's PDF of zenodo-082,
+/// even where the face drawing it lacks Greek letters and a fallback face draws them; East Asian
+/// letters in the same run keep their fallback face's own line.
+#[test]
+fn cambria_math_lines_keep_cambrias_spacing_over_fallback_letters() {
+    use doc4me_doc::props::LineSpacing;
+
+    let line_height = |family: &str, text: &str| {
+        let props = CharProps { font: Some(family.into()), size: Some(10.5), ..Default::default() };
+        let mut p = Paragraph::with_text(text, props.clone());
+        p.mark = props;
+        p.props.line_spacing = Some(LineSpacing::Multiple(1.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        let mut d = Document::new();
+        d.body = vec![para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, l0, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+        else {
+            panic!("missing body lines")
+        };
+        para.lines[*l0].height
+    };
+    let cambria = 10.5 * (1946.0 + 455.0) / 2048.0;
+    for family in ["Cambria Math", "Cambria"] {
+        let latin = line_height(family, "M = 2N + 1/3");
+        let greek = line_height(family, "δRμ/Rμ = ζμ·εi ≡ hi/Ri, Δmμ ≈ π");
+        assert!((latin - cambria).abs() < 0.01, "{family}: Latin line {latin}, Cambria {cambria}");
+        assert!((greek - cambria).abs() < 0.01, "{family}: Greek line {greek}, Cambria {cambria}");
+    }
+    // East Asian letters aren't held to Cambria's line: they keep their fallback face's own, so
+    // the line is never shorter than Cambria's (taller where a CJK face's line is).
+    let cjk = line_height("Cambria Math", "M 漢字");
+    assert!(cjk >= cambria - 0.01, "East Asian line {cjk}");
+}

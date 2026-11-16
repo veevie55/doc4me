@@ -679,18 +679,32 @@ impl<'a> Builder<'a> {
 
     /// Style index for a resolved char in `face` (caps-scaled `size` override for small caps).
     fn style(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool) -> u16 {
-        self.style_for(rc, face_override, small, false)
+        self.style_for(rc, face_override, small, false, false)
     }
 
     /// [`Self::style`] for Thai (or other complex-script) text when `thai`: a substitute with a
     /// [`MetricFit`](doc4me_fonts::word::MetricFit) scales Thai and Latin letters apart.
-    fn style_for(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool, thai: bool) -> u16 {
+    /// `requested_has` says a fallback face draws letters the requested font itself holds in Word
+    /// (neither complex-script nor East Asian text), so the line keeps that font's spacing where
+    /// it is known ([`doc4me_fonts::word::covered_fallback_line`]).
+    fn style_for(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool, thai: bool, requested_has: bool) -> u16 {
         let family = font_for_document(self.env.doc, &rc.font);
         let r = doc4me_fonts::word::resolve(&family, rc.bold, rc.italic);
         let substituted = r.substituted || !family.eq_ignore_ascii_case(&rc.font);
         let face = face_override.unwrap_or(r.face);
         let fit = if face_override.is_none() { doc4me_fonts::word::metric_fit(&family, rc.bold, rc.italic) } else { None };
         let glyph_scale = fit.map_or(1.0, |f| f.scale(thai));
+        let size = rc.draw_size() * if small { 0.8 } else { 1.0 };
+        // A substitute standing in for another font takes that font's line spacing, as do letters
+        // a fallback face draws for a font known to hold them.
+        let covered = face_override.filter(|_| requested_has).and_then(|_| doc4me_fonts::word::covered_fallback_line(&family, size as f64));
+        let ((a, d), k) = match (fit, covered) {
+            (Some(f), _) => (f.line(), size as f64),
+            (None, _) if face_override.is_none() => (doc4me_fonts::word::single_line(&family, &face, r.substituted, size as f64), 1.0),
+            (None, Some(line)) => (line, 1.0),
+            (None, None) => (doc4me_fonts::word::line_metrics(&face), size as f64 / face.upem.max(1.0)),
+        };
+        let (ascent, descent) = ((a * k) as f32, (d * k) as f32);
         // The display list reads every run's format (link target, strike kind, underline colour,
         // baseline shift…) from its StyleRun, so runs share one only when their formats are equal.
         // Keyed by a hash of the commonly varying fields (no allocation: this runs for every shaped
@@ -710,18 +724,13 @@ impl<'a> Builder<'a> {
                 && let Some(st) = self.styles.get(i as usize)
                 && st.face.id() == face.id()
                 && st.glyph_scale == glyph_scale
+                && st.ascent.to_bits() == ascent.to_bits()
+                && st.descent.to_bits() == descent.to_bits()
                 && (Arc::ptr_eq(&st.rc, rc) || *st.rc == **rc)
             {
                 return i;
             }
         }
-        let size = rc.draw_size() * if small { 0.8 } else { 1.0 };
-        // A substitute standing in for another font takes that font's line spacing.
-        let ((a, d), k) = match fit {
-            Some(f) => (f.line(), size as f64),
-            None if face_override.is_none() => (doc4me_fonts::word::single_line(&family, &face, r.substituted, size as f64), 1.0),
-            None => (doc4me_fonts::word::line_metrics(&face), size as f64 / face.upem.max(1.0)),
-        };
         // A fallback face (letters the requested font lacks) is emboldened or slanted when it has
         // no bold or italic of its own.
         let (synth_bold, synth_italic) = match face_override {
@@ -735,8 +744,8 @@ impl<'a> Builder<'a> {
             synth_italic,
             substituted,
             rc: rc.clone(),
-            ascent: (a * k) as f32,
-            descent: (d * k) as f32,
+            ascent,
+            descent,
             shift: rc.baseline_shift(),
             glyph_scale,
             fit,
@@ -849,7 +858,9 @@ impl<'a> Builder<'a> {
             };
             let rc = &rc;
             let small = key.small;
-            let si = self.style_for(rc, key.face, small, key.complex);
+            // Letters outside complex and East Asian scripts are drawn by the requested font in Word.
+            let requested_has = key.face.is_some() && !key.complex && !sub.chars().any(east_asian);
+            let si = self.style_for(rc, key.face, small, key.complex, requested_has);
             let Some(st) = self.styles.get(si as usize).cloned() else { continue };
             let upper = rc.caps || small;
             // Displayed text: numeral substitution is 1 char → 1 char, so codepoints stay

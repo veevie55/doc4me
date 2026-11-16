@@ -668,6 +668,28 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
     }
 }
 
+/// Cambria Math, whose text lines Word steps like Cambria's (1946 + 455 per 2048 em), not by
+/// its own much taller math metrics: zenodo-082's Word PDF embeds Cambria Math and steps its
+/// 10.5 pt equation paragraphs (1.15 lines, 4 pt apart) 18.12 pt, 14.15 pt of line.
+fn is_cambria_math(family: &str) -> bool {
+    family.trim().eq_ignore_ascii_case("cambria math")
+}
+
+/// The single line, in points at `size`, of the font a document asks for when a fallback face
+/// draws characters that font has but its stand-in lacks. Word draws them in the requested font,
+/// so the line keeps that font's spacing instead of the fallback face's. Only Cambria and Cambria
+/// Math: Caladea has no Greek or Cyrillic and only some math symbols, and Word's PDFs
+/// (zenodo-082) step their lines by Cambria's line whatever the letters. Other families keep the
+/// fallback face's own line, because which letters their originals hold isn't established here.
+pub fn covered_fallback_line(family: &str, size: f64) -> Option<(f64, f64)> {
+    let family = face_name(family).map_or(family, |(base, ..)| base);
+    let f = family.trim().to_ascii_lowercase();
+    if f != "cambria" && f != "cambria math" {
+        return None;
+    }
+    requested_line(family).map(|(a, d)| (a * size, d * size))
+}
+
 /// Aptos, Aptos Display, Narrow, Serif, Mono and each weight.
 fn is_aptos(family: &str) -> bool {
     let f = family.trim().to_ascii_lowercase();
@@ -685,8 +707,9 @@ fn is_aptos(family: &str) -> bool {
 pub fn single_line(family: &str, face: &crate::FontFace, substituted: bool, size: f64) -> (f64, f64) {
     // "Arial Bold" spaces lines as Arial does.
     let family = face_name(family).map_or(family, |(base, ..)| base);
-    // Aptos's own win metrics aren't what Word spaces it by, so its line holds when it is installed.
-    if let Some((a, d)) = requested_line(family).filter(|_| substituted || is_aptos(family)) {
+    // Aptos's and Cambria Math's own win metrics aren't what Word spaces them by, so their lines
+    // hold when they are installed.
+    if let Some((a, d)) = requested_line(family).filter(|_| substituted || is_aptos(family) || is_cambria_math(family)) {
         return (a * size, d * size);
     }
     if !substituted {
@@ -1116,6 +1139,16 @@ mod tests {
         assert_eq!(em(single_line("Courier New", &r.face, true, 1.0)), 1.133);
         // Points scale with the size.
         assert_eq!(em(single_line("Cambria", &r.face, true, 12.0)), 14.068);
+        // Cambria Math is spaced like Cambria even when the face drawing it is its own (installed).
+        assert_eq!(em(single_line("Cambria Math", &r.face, false, 1.0)), 1.172);
+        assert_eq!(em(single_line("cambria math", &r.face, true, 10.5)), 12.31);
+        // Letters a stand-in lacks keep Cambria's line in Cambria and Cambria Math runs only.
+        assert_eq!(covered_fallback_line("Cambria Math", 10.5).map(em), Some(12.31));
+        assert_eq!(covered_fallback_line("Cambria Bold", 1.0).map(em), Some(1.172));
+        assert_eq!(covered_fallback_line(" cambria ", 1.0).map(em), Some(1.172));
+        for other in ["Courier New", "Calibri", "Cambria Mathematics", "Sarabun", ""] {
+            assert_eq!(covered_fallback_line(other, 1.0), None, "{other}");
+        }
     }
 
     #[test]
