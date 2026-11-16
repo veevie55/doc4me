@@ -4,6 +4,9 @@
 
 - Owner order: finish the not-yet-analysed group (govuk-053, zenodo-022, -039, -049, -053, -069, -081, -123, -125, -173), then the large/unknown group.
 - Done: zenodo-125 (continuous section marks take no room; spacing collapses at a continuous section's top).
+- Lead, not fixed (row splits): zenodo-123 (matches) and zenodo-173 (closer) when a row split never leaves one line of a multi-line cell paragraph alone (widow-safe cut), and zenodo-009/-091/-161 boundaries match, but zenodo-072 (9→10) and zenodo-069 regress; none of the four documents has `w:widowControl` (ECMA-376: absent means off, while Doc4Me defaults widow control on), so the real rule for zenodo-173's row (trHeight 589 atLeast, moved whole by Word) is still unknown. Reverted.
+- Lead, not fixed: zenodo-081 page 7 (first page of a landscape section whose two-line header reaches below the 56.7 pt top margin) starts 10.2 pt lower than Word (heading at 106.5 vs 96.3), so the last "1 2 3 4" row of page 7 moves on and adds a page.
+- Not analysed yet: zenodo-022, zenodo-069 (one page over after the Mac-charset fix), zenodo-039.
 - Lead, not fixed: zenodo-049 and govuk-053 pass on Linux if multiple-spacing leading may run past the top of a footer that pushes the body up, but WordCraft 627ded32's 38 Word probes say a footer above the margin needs whole line boxes (test `multiple_spacing_can_put_leading_in_the_margin_but_not_in_a_tall_footer`), and zenodo-109 regressed; reverted. zenodo-049's last line ends 0.5 pt above the footer top in Word: look at where Word puts the 1.079 multiple's extra leading.
 
 # PAUSED · 2026-11-16 — page-count work on hold by the owner
