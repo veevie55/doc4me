@@ -2765,6 +2765,29 @@ fn restart_at_one_with_even_odd_headers_keeps_a_recto_start() {
 }
 
 #[test]
+fn restart_at_one_with_mirror_margins_keeps_a_recto_start() {
+    // zenodo-114: mirrored margins and a Next Column break (one column) restarting at 1 after
+    // page vii: Word leaves a blank verso so page 1 is a recto.
+    for (mirror, start, extra) in [
+        (true, SectionStart::NextColumn, true),
+        (true, SectionStart::NextPage, true),
+        (false, SectionStart::NextColumn, false),
+        (true, SectionStart::Continuous, false),
+    ] {
+        let mut d = Document::new();
+        d.settings.mirror_margins = mirror;
+        let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+        cover.section = Some(Box::new(SectionProps { page_num_start: Some(7), ..Default::default() }));
+        d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+        d.last_section.page_num_start = Some(1);
+        d.last_section.start = start;
+        let l = lay(&d);
+        let fillers = l.pages.iter().filter(|p| p.parity_filler).count();
+        assert_eq!(fillers, usize::from(extra), "mirror={mirror}, start={start:?}");
+    }
+}
+
+#[test]
 fn a_restart_parity_page_does_not_take_the_first_page_header() {
     let mut d = Document::new();
     d.settings.even_odd_headers = true;
@@ -2789,10 +2812,12 @@ fn a_restart_parity_page_does_not_take_the_first_page_header() {
     assert_eq!(l.pages[2].footer_story, Some(footer));
     assert_eq!(l.caret(&d.start_of(StoryRef::Part(cover_note))).unwrap().page, 0);
     assert_eq!(l.caret(&d.start_of(StoryRef::Part(body_note))).unwrap().page, 2);
-    for start in [SectionStart::Continuous, SectionStart::NextColumn] {
-        d.last_section.start = start;
-        assert!(lay(&d).pages.iter().all(|p| !p.parity_filler));
-    }
+    // A continuous section stays on the page; a Next Column break in one column starts a page
+    // like Next Page and takes the recto too (zenodo-114).
+    d.last_section.start = SectionStart::Continuous;
+    assert!(lay(&d).pages.iter().all(|p| !p.parity_filler));
+    d.last_section.start = SectionStart::NextColumn;
+    assert!(lay(&d).pages.iter().any(|p| p.parity_filler));
     d.last_section.start = SectionStart::NextPage;
     let web = layout(&d, &mut LayoutCache::new(), &LayoutOptions { view: ViewMode::Web, ..Default::default() });
     assert!(web.pages.iter().all(|p| !p.parity_filler));

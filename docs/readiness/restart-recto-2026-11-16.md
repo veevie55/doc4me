@@ -34,3 +34,7 @@ Logs: `/workspace/work/restart-recto-{tests-final,cli,comparison,ci,proof-rechec
 CI รอบแรกติด benchmark proof-text ที่ ratio 32.0 ขณะที่เกณฑ์ต้องน้อยกว่า 32 ตรวจแยกโค้ดเดิมผ่านที่ ratio 28.0 โดยไม่ลด threshold หรือแก้เทสต์ full CI รอบสุดท้ายผ่าน **6/6** (native **2,557** ผ่าน / ignored 1 เดิม) แล้ว ไม่เพิ่ม excluded/deferred และไม่เปลี่ยนเอกสารหรือเกณฑ์ Release v1.1.4 ที่เผยแพร่แล้วคงเดิม
 
 ผล Windows run 43785505707 (source `55d0c37`, report `7e50321`) ยืนยันจำนวนหน้าตรง **192/220** เพิ่มจาก 191 โดยมีเพียง govuk-036 ที่ผ่านเพิ่ม (40 หน้า) เทียบรายการไม่ผ่านกับรายงาน `b6e1076` แล้วไม่มีรายการใดกลับมาตก ขอบเขตหน้าคงที่ **99/220** คะแนน **93.0% รวม / 94.9% ไม่นับ deferred** govuk-036 ยังไม่ผ่าน page boundary ที่หน้า 8 ตรงกับผลตรวจบน Linux
+
+## Update (later on 2026-11-16): mirror margins and Next Column
+
+zenodo-114 (Word's PDF: 71 pages) mirrors its margins (`w:mirrorMargins`, no even/odd headers) and separates its front-matter sections with Next Column breaks in one column. Its body section restarts at 1 after page vii, and Word leaves a blank page (PDF page 8) so page 1 falls on a recto. The rule now also applies with mirror margins, and to a Next Column break (which starts a page in one column like Next Page). Continuous sections and Web Layout are still unchanged. zenodo-114 now matches Word on every page; no other corpus document changed (`docs/readiness/recto-mirror-comparison-2026-11-16.tsv`).

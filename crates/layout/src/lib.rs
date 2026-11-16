@@ -2189,13 +2189,15 @@ fn layout_pass(
             // one long page
         } else if pb.pages.is_empty() || start != SectionStart::Continuous || turn != prev_turn {
             // A page holds text running one way: a section turning the other way starts a page.
-            // With different odd/even headers, Word makes a Next Page section restarting at 1
-            // begin on the next recto page. Check the preceding count before applying the
-            // restart (govuk-036); the intervening verso belongs to the preceding section.
+            // With different odd/even headers or mirror margins, Word makes a Next Page (or, in
+            // one column, Next Column) section restarting at 1 begin on the next recto page
+            // (govuk-036; zenodo-114's mirrored front matter ends on page vii, then a blank page).
+            // Check the preceding count before applying the restart; the intervening verso
+            // belongs to the preceding section.
             let filler = (!web
                 && si > 0
-                && start == SectionStart::NextPage
-                && doc.settings.even_odd_headers
+                && matches!(start, SectionStart::NextPage | SectionStart::NextColumn)
+                && (doc.settings.even_odd_headers || doc.settings.mirror_margins)
                 && restart == Some(1)
                 && !pb.number.is_multiple_of(2))
             .then(|| {
