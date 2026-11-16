@@ -1,5 +1,7 @@
 # Doc4Me roadmap
 
+**Page-number restart follow-up · 2026-11-16 (local probe):** [Audit, EN/TH](docs/readiness/restart-recto-2026-11-16.md): Linux page-count matches 190→191/220, only govuk-036 39→40 (reference40), other219 unchanged; all440 hashes verified. Its page endpoints match37/40, so boundary parity remains incomplete. Full CI 6/6 passed (2,557 native, one existing ignored); fresh Windows confirmation pending; current official scores below are unchanged. No criteria/exclusion/deferred changes.
+
 **Blank cover panel follow-up · 2026-11-15:** [Audit, EN/TH](docs/readiness/page-float-2026-11-15.md): accepted Linux page-count matches 189→190/220, only zenodo-136 26→25 (reference 25), other 219 counts unchanged; 440 corpus hashes verified. Six focused floating-table tests and full CI 6/6 pass (2,555 native, one existing ignored); Windows run 43776538181 confirms 191/220 page counts and 99/220 boundaries. Official readiness is 93.0% overall / 94.9% without 22 deferred. No criteria/exclusion/deferred changes.
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](docs/readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 94.9% excluding deferred; no criteria, references, exclusions or deferred rows changed.
@@ -36,7 +38,7 @@ agent control. This page is the summary; the assessment is
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
 | Remaining to **full parity** with Word desktop | **~750–1,250 h** (70–80% parallelizable) | estimated |
-| Commands / tests / code | 730 command specs · 2,564 test attributes · 238,639 Rust lines | measured by CLI and cargo xtask stats, 2026-11-15 |
+| Commands / tests / code | 730 command specs · 2,566 test attributes · 238,736 Rust lines | measured by CLI and cargo xtask stats, 2026-11-15 |
 | Releases | Doc4Me v1.1.4 (Latest), refresh from the latest measured engine; cumulative notes v1.1.4 → v1.1.3 → v1.1.2 → v1.1.1 → v1.1.0 → v1.0.0; Windows x64 MSI and portable ZIP. Separate manual artifact workflows now build Windows x86 and x64 packages from a chosen ref. Earlier 1.1.1–1.1.3 releases restored. WordCraft upstream last shipped v0.4.0 on every platform | measured |
 
 Hours are calibrated from this repo's PRs (equations #191: ~9.7k lines in ~5 h; `.doc` reader
@@ -129,7 +131,7 @@ See [localization-parity.md](docs/localization-parity.md) for the catalog audit.
 
 The table lists the twelve key languages plus Thai, which is tracked separately for its proofing and font work.
 
-| Interface language | Code | 238,639 Rust lines | cargo xtask stats, 2026-11-15 |
+| Interface language | Code | 238,736 Rust lines | cargo xtask stats, 2026-11-15 |
 |---|---|---|---|
 | English | en | source | 3,034 source keys |
 | Simplified Chinese | zh-hans | yes | 3,034 / 77 |

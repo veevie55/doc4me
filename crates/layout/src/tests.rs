@@ -2627,6 +2627,69 @@ fn a_hyphen_between_digits_is_a_break_opportunity() {
 }
 
 #[test]
+fn restart_at_one_with_even_odd_headers_keeps_a_recto_start() {
+    for previous in [0, 1, 2, 3, u32::MAX] {
+        for even_odd in [false, true] {
+            for restart in [None, Some(0), Some(1), Some(2)] {
+                let mut d = Document::new();
+                d.settings.even_odd_headers = even_odd;
+                let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+                cover.section = Some(Box::new(SectionProps { page_num_start: Some(previous), ..Default::default() }));
+                d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+                d.last_section.page_num_start = restart;
+                let l = lay(&d);
+                let extra = even_odd && restart == Some(1) && !previous.is_multiple_of(2);
+                assert_eq!(l.pages.len(), if extra { 3 } else { 2 }, "previous={previous}, even_odd={even_odd}, restart={restart:?}");
+                let last = l.pages.last().unwrap();
+                assert_eq!(last.number, restart.unwrap_or_else(|| previous.wrapping_add(1)));
+                assert!(!last.parity_filler);
+                if extra {
+                    let blank = &l.pages[1];
+                    assert!(blank.parity_filler && blank.items.is_empty() && blank.header.is_empty() && blank.footer.is_empty());
+                    assert_eq!(blank.section, 0);
+                    assert_eq!(blank.number, previous.wrapping_add(1));
+                    assert_eq!(last.section, 1);
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn a_restart_parity_page_does_not_take_the_first_page_header() {
+    let mut d = Document::new();
+    d.settings.even_odd_headers = true;
+    let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+    cover.section = Some(Box::new(SectionProps::default()));
+    d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+    let first = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("First", Default::default()))]);
+    let even = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Even", Default::default()))]);
+    let footer = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Foot", Default::default()))]);
+    d.last_section.page_num_start = Some(1);
+    d.last_section.title_page = true;
+    d.last_section.headers.first = Some(first);
+    d.last_section.headers.even = Some(even);
+    d.last_section.footers.default = Some(footer);
+    d.last_section.footers.first = Some(footer);
+    let cover_note = footnote(&mut d, &Pos::body(0, 3), "Cover note.");
+    let body_note = footnote(&mut d, &Pos::body(1, 2), "Body note.");
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 3);
+    assert!(l.pages[1].parity_filler && l.pages[1].header.is_empty() && l.pages[1].footer.is_empty());
+    assert_eq!(l.pages[2].header_story, Some(first));
+    assert_eq!(l.pages[2].footer_story, Some(footer));
+    assert_eq!(l.caret(&d.start_of(StoryRef::Part(cover_note))).unwrap().page, 0);
+    assert_eq!(l.caret(&d.start_of(StoryRef::Part(body_note))).unwrap().page, 2);
+    for start in [SectionStart::Continuous, SectionStart::NextColumn] {
+        d.last_section.start = start;
+        assert!(lay(&d).pages.iter().all(|p| !p.parity_filler));
+    }
+    d.last_section.start = SectionStart::NextPage;
+    let web = layout(&d, &mut LayoutCache::new(), &LayoutOptions { view: ViewMode::Web, ..Default::default() });
+    assert!(web.pages.iter().all(|p| !p.parity_filler));
+}
+
+#[test]
 fn page_numbers_can_restart_at_zero() {
     // `w:pgNumType w:start="0"`: a title page counted as page 0, so the page after it shows 1
     // (corpus govuk-032, zenodo-096, zenodo-097, zenodo-140, zenodo-147). It used to start at 1.

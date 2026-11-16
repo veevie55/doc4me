@@ -12,6 +12,11 @@
 
 ## [Unreleased]
 
+### แก้ไข
+
+- แก้ Next Page section ที่ restart เลขหน้า 1 และใช้หัวกระดาษคู่/คี่ให้เว้นหน้าคู่เปล่าก่อนเริ่มส่วนใหม่เมื่อจำเป็น (`crates/layout/src/lib.rs`); แยก `Page::parity_filler` ไม่วาดเนื้อหา/หัว/ท้ายกระดาษบนหน้าที่แทรก และคง First Page stories กับตำแหน่ง footnote ของหน้าจริง ไม่เปลี่ยนรูปแบบ DOCX, ฟอนต์, dependency หรือ restart/section แบบอื่น ตรวจ full CI ผ่าน 6/6 (native 2,557 ผ่าน / ignored 1 เดิม; assets 141; wasm 16) ผล Linux ครบ 220 ฉบับเพิ่ม page-count matches 190→191: govuk-036 39→40 ตรง reference อีก 219 รายการคงเดิม ตรวจ hash 440 ไฟล์แล้ว ไม่เพิ่ม excluded/deferred หรือเปลี่ยนเกณฑ์; ยังไม่ผ่าน page-boundary ทั้งฉบับ (37/40 หน้าตรง) ดู `docs/readiness/restart-recto-2026-11-16.md` สำหรับ regression/CI/Windows และข้อจำกัด ไม่ออก Release ในงานต่อส่วนนี้
+
+
 
 ## [1.1.4] - 2026-11-14
 

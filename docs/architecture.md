@@ -58,7 +58,7 @@ winit or rfd.
 
 ## Testing and gates
 
-- 2,555 native tests passed (2,564 source test attributes), covering
+- 2,557 native tests passed (2,566 source test attributes), covering
   input, `.doc`, formats, typing parity (`engine/src/tests_typing.rs`), bidi, i18n catalogs, UI
   interaction (egui_kittest), MCP acceptance; `hostile_params_never_panic` runs every command with
   junk params.

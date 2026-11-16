@@ -27,8 +27,8 @@ The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
 | Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
 | Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
 | Commands | 730 registered command specs | measured with CLI, 2026-11-14 |
-| Tests | 2,564 source attributes; 2,555 native passed, 1 originally ignored | stats and full CI, 2026-11-15 |
-| Code | 238,639 Rust lines | cargo xtask stats, 2026-11-15 |
+| Tests | 2,566 source attributes; 2,557 native passed, 1 originally ignored | stats and full CI, 2026-11-15 |
+| Code | 238,736 Rust lines | cargo xtask stats, 2026-11-15 |
 
 **Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
 

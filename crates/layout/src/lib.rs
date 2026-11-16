@@ -411,6 +411,8 @@ pub struct Page {
     pub section: usize,
     /// Page number as displayed (after section restarts).
     pub number: u32,
+    /// A generated parity page has no document content or header/footer stories.
+    pub parity_filler: bool,
     pub items: Vec<Placed>,
     /// Header / footer items (drawn dimmed while editing the body).
     pub header: Vec<Placed>,
@@ -2160,6 +2162,28 @@ fn layout_pass(
             // one long page
         } else if pb.pages.is_empty() || start != SectionStart::Continuous || turn != prev_turn {
             // A page holds text running one way: a section turning the other way starts a page.
+            // With different odd/even headers, Word makes a Next Page section restarting at 1
+            // begin on the next recto page. Check the preceding count before applying the
+            // restart (govuk-036); the intervening verso belongs to the preceding section.
+            let filler = (!web
+                && si > 0
+                && start == SectionStart::NextPage
+                && doc.settings.even_odd_headers
+                && restart == Some(1)
+                && !pb.number.is_multiple_of(2))
+            .then(|| {
+                pb.pages.last().map(|previous| Page {
+                    w: previous.w,
+                    h: previous.h,
+                    section: previous.section,
+                    number: previous.number.wrapping_add(1),
+                    body: previous.body,
+                    first_block: block,
+                    parity_filler: true,
+                    ..Default::default()
+                })
+            })
+            .flatten();
             if let Some(n) = restart {
                 // The page before the restart: 0 (Word's `w:start="0"`, a title page counted as
                 // page 0) wraps to `u32::MAX`, so the next page is numbered 0.
@@ -2167,6 +2191,13 @@ fn layout_pass(
             }
             pb.foot_top = first_foot;
             pb.new_page(block, first_top);
+            if let Some(filler) = filler {
+                // Start the real page normally so notes and paragraph state are finalized as
+                // before, then insert the content-free page ahead of it with matching layers.
+                let at = pb.pages.len().saturating_sub(1);
+                pb.pages.insert(at, filler);
+                pb.layers.insert(at.min(pb.layers.len()), Vec::new());
+            }
             pb.foot_top = foot_top;
             if !web && matches!(start, SectionStart::EvenPage | SectionStart::OddPage) {
                 let want_even = start == SectionStart::EvenPage;
@@ -3979,6 +4010,9 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
         }
     }
     for (i, page) in pages.iter_mut().enumerate() {
+        if page.parity_filler {
+            continue;
+        }
         let Some((_, sect)) = sections.get(page.section) else { continue };
         // Inherit header/footer references from earlier sections (Word's "link to previous").
         let pick = |all: &[HeaderSet]| -> Option<u32> {

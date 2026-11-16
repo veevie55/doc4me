@@ -1,3 +1,19 @@
+# Active page-count work · 2026-11-16
+
+Current user request is to continue page counts. The v1.1.4 refresh is already complete: source/tag `c6945389f50fe548f778a85b578cb842dca4a665`, installer run 43778427578, same release ID 445039704, both new MSI/ZIP downloaded and verified, six cumulative version headings and pinned OFL notices checked. **Do not republish or move that tag without a new request.** Current work belongs in Unreleased.
+
+Accepted local candidate: for Next Page + restart 1 + odd/even headers + preceding odd displayed number, insert a blank parity page before the real page. It belongs to the previous section and suppresses headers/footers; actual First Page stories and note indices remain intact. Other restart values, explicit Odd/Even Page behavior, Continuous/Next Column and web behavior are unchanged. See [audit](docs/readiness/restart-recto-2026-11-16.md).
+
+Linux prepared-font page-count comparison **190→191/220** against c694538: only govuk-036 39→40 (reference40), other 219 unchanged, 440 corpus hashes verified. Blank page 2 inspected; Contents physical page 3 numbered1. Normalized page endpoints **37/40**; pages8/19/37 still differ, so boundary failure remains. No criteria/source/reference/exclusion/deferred changes.
+
+Two new regressions cover the parity matrix, First Page headers/footers and note caret pages0/2. Initial prepared restart filter 4/4 passed; full CI with the added note assertions passed both new tests but stopped at unchanged proof_text timing ratio32.0 (<32 required). Isolated same-source recheck passed28.0; no threshold change. Final quiet full-CI rerun **passed 6/6**, native **2,557 pass / 1 existing ignored**, assets141, layers20, wasm16, without source/threshold changes. Final log `/workspace/work/restart-recto-ci-final.log`. Logs `/workspace/work/restart-recto-{tests-final,cli,comparison,ci,proof-recheck}.log`; baseline CLI `/workspace/work/page-count-baseline-2026-11-16-cli` is c694538. Candidate prepared CLI `/workspace/work/target-corpus-font-metrics/debug/doc4me-cli`.
+
+Next: commit/push main, measure Windows readiness, refresh EN/TH report+blockers+TSV and all live summaries. Last official Windows baseline remains 43776538181, engine e00daf1, report b6e1076: pages191/220, boundaries99/220, 93.0% overall /94.9% excluding22deferred; 29 page-count failures. Continue remaining cases after confirming the new source. Further read-only lead: govuk-018 first page misses C.REGULATOR heading; source uses Verdana→Inter, not DejaVu Sans. Do not infer a fix from empty minimum-row splitting: current split_row deliberately moves rows that are taller than their text as a whole; a global change requires evidence and full corpus checks.
+
+Earlier handoffs below are historical snapshots.
+
+---
+
 # v1.1.4 refresh after additional page-count match · 2026-11-16
 
 The user's latest request re-authorizes refreshing existing release v1.1.4 from the latest code after improving page counts. It supersedes the earlier cancellation preserved below. Preserve the release URL/ID, replace Windows x64 MSI/portable ZIP, move the existing tag to the exact tested source, and retain six cumulative version sections newest-to-oldest through 1.0.0. Freeze main during publication; do not deploy Pages.
