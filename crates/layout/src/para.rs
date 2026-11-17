@@ -2479,6 +2479,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             asc = asc.max(st.ascent);
             desc = desc.max(st.descent);
         }
+        let (text_asc, text_desc) = (asc, desc);
         if first && let Some(lab) = &pl.label {
             for st in lab.runs.iter().filter_map(|r| pl.styles.get(r.style as usize)) {
                 asc = asc.max(st.ascent);
@@ -2496,7 +2497,24 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let (height, centred) = match (rp.line_spacing, grid) {
             (LineSpacing::Multiple(m), Some(g)) => ((g.snap_height(natural) * m).max(g.snap_height(pictures)), true),
             (LineSpacing::AtLeast(v), Some(g)) => (g.snap_height(natural.max(pictures)).max(v), true),
-            (LineSpacing::Multiple(m), None) => ((natural * m).max(pictures + (m - 1.0).max(0.0) * natural), false),
+            (LineSpacing::Multiple(m), None) => {
+                // A list number or bullet taller than the text adds what sticks out above it,
+                // unscaled: the multiple applies to the text's line only, and the number's descent
+                // fits in the room the text's line has below its baseline. zenodo-039's Symbol
+                // bullets on 11 pt Times New Roman at 1.15 make the line 0.79 pt taller in Word's
+                // PDF (Symbol's 11.06 pt ascent over the text's 10.27), zenodo-052's on 14 pt
+                // Calibri 0.75 pt (20.4 against 19.65), and zenodo-165's 10 pt numbers on 8 pt text
+                // leave the lines below them 18.5 pt on (not 19.0).
+                if m >= 1.0 && (asc > text_asc + 0.001 || desc > text_desc + 0.001) {
+                    let text_line = text_asc + text_desc;
+                    let scaled = (text_line * m).max(pictures + (m - 1.0) * text_line);
+                    let above = (asc - text_asc).max(0.0);
+                    let below = (desc - (scaled - text_asc)).max(0.0);
+                    (scaled + above + below, false)
+                } else {
+                    ((natural * m).max(pictures + (m - 1.0).max(0.0) * natural), false)
+                }
+            }
             (LineSpacing::AtLeast(v), None) => (natural.max(pictures).max(v), false),
             (LineSpacing::Exactly(v), _) => (v, false),
         };

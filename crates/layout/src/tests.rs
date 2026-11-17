@@ -689,6 +689,46 @@ fn symbol_font_bullet_without_the_font_draws_a_bullet() {
 }
 
 #[test]
+fn a_bigger_list_number_adds_only_what_sticks_out_above_the_text() {
+    // zenodo-165: 10 pt numbers on 8 pt Times New Roman at 1.15. The multiple scales the text's
+    // line; the number adds its ascent over the text's unscaled, and its descent fits below the
+    // baseline. Word's PDF steps the lines after such items 18.5 pt on, not 19.0 (zenodo-039 and
+    // zenodo-052 show the same with Symbol bullets).
+    use doc4me_doc::props::LineSpacing;
+    let props = doc4me_doc::CharProps { font: Some("Times New Roman".into()), size: Some(8.0), ..Default::default() };
+    let mut p = doc4me_doc::Paragraph::with_text("Normality test", props.clone());
+    p.mark = props;
+    p.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::para_block(p)];
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+        for l in a.levels.iter_mut() {
+            l.chr.size = Some(10.0);
+            l.chr.font = Some("Times New Roman".into());
+        }
+    }
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+    let text = para.clusters.get(para.lines[0].c0).and_then(|c| para.styles.get(c.style as usize)).expect("the text's style");
+    let label = para.label.as_ref().and_then(|lab| lab.runs.first()).and_then(|r| para.styles.get(r.style as usize)).expect("a numbered label");
+    assert!(label.ascent > text.ascent, "the number stands taller than the text");
+    let expected = (text.ascent + text.descent) * 1.15 + (label.ascent - text.ascent);
+    let line = &para.lines[0];
+    assert!(
+        (line.height - expected).abs() < 0.01,
+        "line {} for text {}/{} and number {}/{}",
+        line.height,
+        text.ascent,
+        text.descent,
+        label.ascent,
+        label.descent
+    );
+    assert!((line.baseline - line.top - label.ascent).abs() < 0.01, "the number's ascent sets the baseline");
+}
+
+#[test]
 fn tables_lay_out_cells() {
     let mut d = Document::from_text("before\nafter");
     let mut t = Table::new(2, 3, 468.0);
