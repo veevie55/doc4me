@@ -1099,7 +1099,10 @@ fn column_content(ctx: &mut Ctx, t: &Table, style: Option<&TableStyleProps>, dep
         let mut g = row.props.grid_before.min(doc4me_doc::table::MAX_COLS as u32) as usize;
         for cell in &row.cells {
             let span = cell.span();
-            if cell.props.vmerge != VMerge::Continue {
+            // Turned text runs along the cell's height: its line length doesn't widen the column
+            // (zenodo-049's 32 pt "INDICE" column of btLr text stays 32 pt wide in Word's PDF), as in
+            // `measure_table_columns`.
+            if cell.props.vmerge != VMerge::Continue && !cell.props.text_direction.is_turned() {
                 let text = style.map(|st| region_text(st, region_of(t, style, ri, g, cell.span(), cols.len())));
                 let (lo, hi) = blocks_content(ctx, &cell.blocks, text.as_ref(), depth);
                 any |= hi > 0.0;

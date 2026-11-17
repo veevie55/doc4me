@@ -761,6 +761,28 @@ fn turned_table(dir: TextDirection, text: &str, row: Option<f32>) -> Document {
     d
 }
 
+#[test]
+fn turned_text_does_not_widen_its_autofit_column() {
+    // zenodo-049: a 32.25 pt column of btLr "INDICE" cells beside 315.8 pt of text stays 32.25 pt
+    // wide in Word's PDF; measured along the line, the word would widen it to 55 pt.
+    let first_w = |dir: TextDirection| {
+        let mut d = Document::from_text("before\nafter");
+        let mut t = Table::new(1, 2, 348.05);
+        t.grid = vec![32.25, 315.8];
+        for (c, w) in t.rows[0].cells.iter_mut().zip([32.25, 315.8]) {
+            c.props.width = Some(w);
+        }
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("INDICEINDICE", Default::default()))];
+        t.rows[0].cells[0].props.text_direction = dir;
+        t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Some text beside it.", Default::default()))];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        l.pages[0].items.iter().find_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.w) } else { None }).unwrap()
+    };
+    assert!((first_w(TextDirection::Up) - 32.25).abs() < 0.01, "{}", first_w(TextDirection::Up));
+    assert!(first_w(TextDirection::Horizontal) > 40.0, "horizontal text still widens it: {}", first_w(TextDirection::Horizontal));
+}
+
 fn turned_lines(l: &DocLayout) -> &Placed {
     l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [1, 0, 1, 0])).unwrap()
 }
