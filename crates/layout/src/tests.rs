@@ -6158,6 +6158,26 @@ fn wrapping_floats_in_a_cell_stay_inside_the_cell() {
 }
 
 #[test]
+fn a_page_break_in_a_bigger_run_does_not_make_its_line_taller() {
+    // zenodo-049: 11 pt text ends with a page break in a 12 pt run; Word steps that line like the
+    // others, so it still fits above the footer.
+    let line_h = |break_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("Some text", CharProps { size: Some(11.0), ..Default::default() });
+        let at = p.text.len();
+        p.insert_text(at, &doc4me_doc::para::PAGE_BREAK.to_string(), &CharProps { size: Some(break_size), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|i| if let Placed::Lines { para, l0, .. } = i { para.lines.get(*l0).map(|ln| ln.height) } else { None })
+            .unwrap()
+    };
+    assert!((line_h(24.0) - line_h(11.0)).abs() < 0.01, "{} vs {}", line_h(24.0), line_h(11.0));
+}
+
+#[test]
 fn emoji_drawn_by_a_fallback_face_keep_the_requested_fonts_line() {
     // zenodo-123: 10 pt Arial lines starting with ✅ or 🚫 step 12.42 pt in Word's PDF, like the
     // plain ones, though another face (Segoe UI Symbol there) draws the signs.

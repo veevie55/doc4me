@@ -2419,7 +2419,10 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             })
         });
         for (k, c) in pl.clusters.get(c0..c1).into_iter().flatten().enumerate() {
-            if c.kind == ClKind::Marker || c0 + k < dropped || (has_text && c.kind == ClKind::Tab) {
+            // Nor does a page or column break after text make the line taller: zenodo-049 ends a
+            // paragraph of 11 pt text with a page break in a 12 pt run, and Word steps that line
+            // like the others (it fits above the footer in Word's PDF).
+            if c.kind == ClKind::Marker || c0 + k < dropped || (has_text && matches!(c.kind, ClKind::Tab | ClKind::PageBreak | ClKind::ColumnBreak)) {
                 continue;
             }
             // A floating object's anchor isn't text: its run's font doesn't make the line taller
