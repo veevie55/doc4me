@@ -6157,6 +6157,48 @@ fn wrapping_floats_in_a_cell_stay_inside_the_cell() {
     assert!((front.x - (text_left + 400.0)).abs() < 0.01, "in front of text keeps its offset: {front:?}");
 }
 
+#[test]
+fn emoji_drawn_by_a_fallback_face_keep_the_requested_fonts_line() {
+    // zenodo-123: 10 pt Arial lines starting with ✅ or 🚫 step 12.42 pt in Word's PDF, like the
+    // plain ones, though another face (Segoe UI Symbol there) draws the signs.
+    let height = |text: &str| {
+        let mut d = Document::new();
+        let props = CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, props.clone())),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("x", props)),
+        ];
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        ys[1] - ys[0]
+    };
+    let plain = height("Atribucion");
+    for e in ["\u{2705} Atribucion", "\u{1F6AB} Atribucion"] {
+        assert!((height(e) - plain).abs() < 0.01, "{e}: {} vs {plain}", height(e));
+    }
+}
+
+#[test]
+fn a_cell_floats_offset_counts_from_above_its_paragraphs_space_before() {
+    // zenodo-157: a picture 23.25 pt below a heading (10 pt before) that opens a cell stands
+    // 23.25 pt below the row's top in Word's PDF, not below the heading's space before.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let top = |before: f32| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 468.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Heading", Default::default());
+        cp.props.space_before = Some(before);
+        let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 200.0, y: 20.0, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 40.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        shapes(&l.pages[0].items)[0].y
+    };
+    assert!((top(10.0) - top(0.0)).abs() < 0.01, "{} vs {}", top(10.0), top(0.0));
+}
+
 /// A bookmark isn't content: a picture slightly wider than the column right after one at the
 /// start of a paragraph stays on the paragraph's first line, as Word keeps zenodo-128's 471 pt
 /// pictures after a bookmark in a 468 pt column, instead of leaving an empty line above it.

@@ -988,7 +988,8 @@ fn layout_blocks(
                     // Arial paragraphs with 3 pt before and after 15.72 pt apart in Word's PDF.
                     before = (before - prev_after.max(0.0)).max(before.min(0.0));
                 }
-                y += if i == first { before } else { before.max(0.0) };
+                let gap_before = if i == first { before } else { before.max(0.0) };
+                y += gap_before;
                 // (A frame's paragraphs are a box of their own: the range's ends close it.)
                 let mut bx = block_border_box_in(ctx, blocks, i, &range);
                 if bx.joined_prev {
@@ -1003,7 +1004,10 @@ fn layout_blocks(
                     if left_out(oi) {
                         continue;
                     }
-                    let r = float_rect(frame, (0.0, width), y, w, h, float, ctx.cell_end.filter(|_| table.is_some()));
+                    // Offsets from the paragraph count from above its space before: zenodo-157's
+                    // picture 23.25 pt below a cell's first paragraph (10 pt before) stands 23.25 pt
+                    // below the row's top in Word's PDF.
+                    let r = float_rect(frame, (0.0, width), y - gap_before.max(0.0), w, h, float, ctx.cell_end.filter(|_| table.is_some()));
                     let outline = ctx.wrap_outline(o);
                     excl.extend(wrap_area(r, float, outline.as_deref().map(|v| v.as_slice())));
                     floats.insert(oi, r);

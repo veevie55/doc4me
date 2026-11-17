@@ -666,6 +666,12 @@ fn run_features(rc: &ResolvedChar, fit: bool, complex: bool, tnum: bool) -> Vec<
         .collect()
 }
 
+/// Emoji and dingbats (✅, 🚫…) with their joiners and selectors. Arrows and geometric shapes
+/// aren't: they make lines taller in Word too (govuk-016, zenodo-095).
+fn is_pictograph(c: char) -> bool {
+    matches!(u32::from(c), 0x2700..=0x27BF | 0x1F000..=0x1FAFF | 0xFE0F | 0x200D)
+}
+
 /// Text Word sets in the East Asian font: CJK ideographs, kana, bopomofo, CJK punctuation and
 /// fullwidth forms, and Hangul.
 fn east_asian(c: char) -> bool {
@@ -684,7 +690,7 @@ impl<'a> Builder<'a> {
 
     /// Style index for a resolved char in `face` (caps-scaled `size` override for small caps).
     fn style(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool) -> u16 {
-        self.style_for(rc, face_override, small, false, false)
+        self.style_for(rc, face_override, small, false, false, false)
     }
 
     /// [`Self::style`] for Thai (or other complex-script) text when `thai`: a substitute with a
@@ -692,7 +698,19 @@ impl<'a> Builder<'a> {
     /// `requested_has` says a fallback face draws letters the requested font itself holds in Word
     /// (neither complex-script nor East Asian text), so the line keeps that font's spacing where
     /// it is known ([`doc4me_fonts::word::covered_fallback_line`]).
-    fn style_for(&mut self, rc: &Arc<ResolvedChar>, face_override: Option<FaceRef>, small: bool, thai: bool, requested_has: bool) -> u16 {
+    ///
+    /// `pictographs` says the fallback face draws only emoji or dingbats: the line keeps the
+    /// requested font's height, as in Word (zenodo-123's 10 pt Arial lines starting with ✅ or 🚫
+    /// step 12.42 pt like the others in Word's PDF, though Segoe UI Symbol draws the signs).
+    fn style_for(
+        &mut self,
+        rc: &Arc<ResolvedChar>,
+        face_override: Option<FaceRef>,
+        small: bool,
+        thai: bool,
+        requested_has: bool,
+        pictographs: bool,
+    ) -> u16 {
         let family = font_for_document(self.env.doc, &rc.font);
         let r = doc4me_fonts::word::resolve(&family, rc.bold, rc.italic);
         let substituted = r.substituted || !family.eq_ignore_ascii_case(&rc.font);
@@ -702,7 +720,11 @@ impl<'a> Builder<'a> {
         let size = rc.draw_size() * if small { 0.8 } else { 1.0 };
         // A substitute standing in for another font takes that font's line spacing, as do letters
         // a fallback face draws for a font known to hold them.
-        let covered = face_override.filter(|_| requested_has).and_then(|_| doc4me_fonts::word::covered_fallback_line(&family, size as f64));
+        let covered = if face_override.is_some() && pictographs {
+            Some(doc4me_fonts::word::single_line(&family, &r.face, r.substituted, size as f64))
+        } else {
+            face_override.filter(|_| requested_has).and_then(|_| doc4me_fonts::word::covered_fallback_line(&family, size as f64))
+        };
         let ((a, d), k) = match (fit, covered) {
             (Some(f), _) => (f.line(), size as f64),
             (None, _) if face_override.is_none() => (doc4me_fonts::word::single_line(&family, &face, r.substituted, size as f64), 1.0),
@@ -865,7 +887,9 @@ impl<'a> Builder<'a> {
             let small = key.small;
             // Letters outside complex and East Asian scripts are drawn by the requested font in Word.
             let requested_has = key.face.is_some() && !key.complex && !sub.chars().any(east_asian);
-            let si = self.style_for(rc, key.face, small, key.complex, requested_has);
+            let pictographs =
+                key.face.is_some() && !key.complex && sub.chars().all(|c| is_pictograph(c) || c.is_whitespace()) && sub.chars().any(is_pictograph);
+            let si = self.style_for(rc, key.face, small, key.complex, requested_has, pictographs);
             let Some(st) = self.styles.get(si as usize).cloned() else { continue };
             let upper = rc.caps || small;
             // Displayed text: numeral substitution is 1 char → 1 char, so codepoints stay
