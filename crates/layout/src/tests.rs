@@ -1621,7 +1621,7 @@ fn tall_rows_split_across_pages() {
 #[test]
 fn a_split_row_keeps_room_for_its_bottom_border() {
     // The part of a row kept on a page closes with the row's bottom border under its last line:
-    // a line that fits only without the border goes to the next page (govuk-040, zenodo-173).
+    // a line that fits only without the border goes to the next page (govuk-040).
     use doc4me_doc::props::{Border, BorderStyle, Borders, LineSpacing};
     let first_page_lines = |border: f32| {
         let mut d = Document::new();
@@ -1647,6 +1647,35 @@ fn a_split_row_keeps_room_for_its_bottom_border() {
     };
     assert_eq!(first_page_lines(0.5), 1, "a 12 pt line and a 0.5 pt border fit in 13 pt");
     assert_eq!(first_page_lines(3.0), 0, "with a 3 pt border they don't");
+}
+
+#[test]
+fn a_paragraph_starting_a_split_rows_continuation_keeps_its_space_before() {
+    // zenodo-157: a heading (10 pt before) that goes on with a split cell to the next page stands
+    // 10 pt below the page's top in Word's PDF, as at the top of a page outside a table.
+    use doc4me_doc::props::LineSpacing;
+    let moved_y = |before: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 13.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        let mut one = doc4me_doc::Paragraph::with_text("one", Default::default());
+        one.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        one.props.space_after = Some(0.0);
+        let mut two = doc4me_doc::Paragraph::with_text("two", Default::default());
+        two.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        two.props.space_after = Some(0.0);
+        two.props.space_before = Some(before);
+        two.props.contextual_spacing = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(one), doc4me_doc::para_block(two)];
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "the second paragraph goes to the next page");
+        l.pages[1].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap()
+    };
+    let (with, without) = (moved_y(10.0), moved_y(0.0));
+    assert!((with - without - 10.0).abs() < 0.01, "10 pt before keeps the line 10 pt lower: {with} vs {without}");
 }
 
 #[test]
@@ -2449,6 +2478,28 @@ fn line_spacing_does_not_scale_pictures() {
 }
 
 #[test]
+fn a_picture_line_in_a_table_cell_adds_the_fonts_share_of_multiple_spacing() {
+    // zenodo-157: each row of a table whose cells hold an 11 pt heading and an inline picture
+    // (1.15 spacing) is 1.9 pt (0.15 of the font's 12.64 pt line) taller in Word's PDF than the
+    // picture alone, as in the body.
+    use doc4me_doc::props::LineSpacing;
+    let mut d = Document::from_text("Body");
+    let mut t = Table::new(1, 1, 300.0);
+    let mut cp = doc4me_doc::Paragraph::with_text("", Default::default());
+    cp.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    cp.insert_object(0, picture(100.0, 80.0, Default::default()), &Default::default()).unwrap();
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { path, .. } if path.0.len() > 1)) else {
+        panic!("no cell line")
+    };
+    let line = &para.lines[0];
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    assert!((line.height - (80.0 + 0.15 * natural)).abs() < 0.01, "line {} for an 80 pt picture in a cell", line.height);
+}
+
+#[test]
 fn alignment_tabs_between_inline_pictures_do_not_add_text_descent() {
     use doc4me_doc::props::LineSpacing;
 
@@ -2495,15 +2546,15 @@ fn picture_line_leading_uses_the_font_and_whitespace_takes_no_descent_outside_ce
             assert!((para.lines[0].baseline - para.lines[0].top - 30.0).abs() < 0.01);
             assert!((para.lines[0].text_desc - desc).abs() < 0.01);
 
-            // Keep the existing table-cell measurement while the table-specific rule awaits
-            // its own Word comparison: neither the font-leading nor whitespace change leaks in.
+            // In a table cell the line gets the same share of the font's height (zenodo-157's
+            // picture rows in Word's PDF); the whitespace rule there awaits its own comparison.
             let mut table = doc4me_doc::Table::new(1, 1, 468.0);
             table.rows[0].cells[0].blocks = d.body.clone();
             d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(table))];
             let l = lay(&d);
             let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
             let desc = if lead.is_empty() || lead == "\t" { 0.0 } else { para.styles[0].descent };
-            assert!((para.lines[0].height - (30.0 + desc)).abs() < 0.01, "table: {multiple}, {lead:?}");
+            assert!((para.lines[0].height - (30.0 + desc + (multiple - 1.0) * natural)).abs() < 0.01, "table: {multiple}, {lead:?}");
         }
         // A picture shorter than the font ends at the font's bottom, without adding descent.
         let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };

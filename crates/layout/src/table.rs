@@ -921,7 +921,12 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
                     if bottom <= cut + 0.01 {
                         kept_any = true;
                     } else {
-                        first_moved = first_moved.min(top);
+                        // A paragraph that starts the continuation keeps its space before above it:
+                        // zenodo-157's heading (10 pt before) on the next page of a split cell
+                        // stands 10 pt below the page's top in Word's PDF. (Not with contextual
+                        // spacing, where the space between two paragraphs may be suppressed.)
+                        let before = if k == 0 && !para.rp.contextual_spacing { para.rp.space_before.clamp(0.0, top.max(0.0)) } else { 0.0 };
+                        first_moved = first_moved.min(top - before);
                         break;
                     }
                 }

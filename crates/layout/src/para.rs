@@ -2487,8 +2487,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         }
         // Multiple spacing adds its share of the font's height to a picture line; it never
         // scales the picture itself (WordCraft dc388cfa, measured in Word). Text beside the
-        // picture also keeps its descent. Table cells retain their existing measurement until
-        // the corresponding table-line behavior is verified separately.
+        // picture also keeps its descent. So do table cells: zenodo-157's rows of an 11 pt heading
+        // and a picture (1.15 spacing) are 1.9 pt taller than the picture in Word's PDF.
         let natural = asc + desc;
         let below = if text { desc } else { 0.0 };
         let pictures = if obj_asc > asc { obj_asc + below } else { 0.0 };
@@ -2496,8 +2496,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let (height, centred) = match (rp.line_spacing, grid) {
             (LineSpacing::Multiple(m), Some(g)) => ((g.snap_height(natural) * m).max(g.snap_height(pictures)), true),
             (LineSpacing::AtLeast(v), Some(g)) => (g.snap_height(natural.max(pictures)).max(v), true),
-            (LineSpacing::Multiple(m), None) if env.table.is_none() => ((natural * m).max(pictures + (m - 1.0).max(0.0) * natural), false),
-            (LineSpacing::Multiple(m), None) => ((natural * m).max(pictures), false),
+            (LineSpacing::Multiple(m), None) => ((natural * m).max(pictures + (m - 1.0).max(0.0) * natural), false),
             (LineSpacing::AtLeast(v), None) => (natural.max(pictures).max(v), false),
             (LineSpacing::Exactly(v), _) => (v, false),
         };
