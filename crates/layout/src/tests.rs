@@ -760,6 +760,41 @@ fn a_justified_line_takes_in_a_word_only_if_it_sticks_out_a_little() {
 }
 
 #[test]
+fn a_rows_largest_cell_margins_frame_its_tallest_cell() {
+    // zenodo-173: the first two cells have 4 pt top and bottom margins and one line; the example
+    // cell has no margins and several lines. Word's row is the example's text plus 8 pt.
+    use doc4me_doc::props::LineSpacing;
+    let row_height = |margins: bool| {
+        let mut d = Document::from_text("Before");
+        let mut t = Table::new(1, 2, 300.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        let para = |text: &str| {
+            let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+            p.props.space_after = Some(0.0);
+            p.props.space_before = Some(0.0);
+            doc4me_doc::para_block(p)
+        };
+        t.rows[0].cells[0].blocks = vec![para("name")];
+        if margins {
+            t.rows[0].cells[0].props.margins = Some([4.0, 4.0, 4.0, 4.0]);
+        }
+        t.rows[0].cells[1].blocks = vec![para("one\ntwo\nthree")];
+        t.props.borders = None;
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        d.insert_block(StoryRef::Body, &Path::top(2), doc4me_doc::Block::Para(doc4me_doc::Paragraph::with_text("After", Default::default())))
+            .unwrap();
+        let l = lay(&d);
+        let y = |idx: u32| {
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [idx]).then_some(*y) } else { None }).unwrap()
+        };
+        y(2) - y(0)
+    };
+    let (with, without) = (row_height(true), row_height(false));
+    assert!((with - without - 8.0).abs() < 0.01, "the row is 8 pt taller with the first cell's margins: {with} vs {without}");
+}
+
+#[test]
 fn tables_lay_out_cells() {
     let mut d = Document::from_text("before\nafter");
     let mut t = Table::new(2, 3, 468.0);

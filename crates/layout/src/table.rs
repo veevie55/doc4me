@@ -506,6 +506,8 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         let mut row_hidden = row.props.hidden && !ctx.opts.show_hidden && !row.cells.is_empty();
         // The tallest cell margins plus border bands in the row.
         let mut row_insets = 0.0f32;
+        // The row's largest top and bottom insets and its tallest cell content (see below).
+        let (mut row_top, mut row_bottom, mut content) = (0.0f32, 0.0f32, 0.0f32);
         let is_header = header_rows && ri == 0;
         let is_total = t.props.look.total_row && ri + 1 == nrows && nrows > 1;
         let band = banded(t, style.as_ref(), ri);
@@ -623,6 +625,11 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 // The cell grows to hold its floating tables.
                 (items, height.max(floats_bottom))
             };
+            if cell.props.vmerge == VMerge::None && !turn.is_turned() {
+                content = content.max(h);
+            }
+            row_top = row_top.max(margins[0] + band_t);
+            row_bottom = row_bottom.max(margins[2] + band_b);
             let h = h + insets;
             if cell.props.vmerge != VMerge::Restart {
                 rh = rh.max(h);
@@ -644,6 +651,11 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             });
             g += span;
         }
+        // The row's largest top and bottom cell margins frame its tallest content, whichever cell
+        // they belong to: zenodo-173's rows, whose first two cells have 4 pt top and bottom margins
+        // and whose taller example cell has none, are 8 pt taller in Word's PDF than that cell's
+        // text.
+        rh = rh.max(content + row_top + row_bottom);
         // Word adds the cells' top and bottom margins and border bands to an at-least row height:
         // a 30pt row with 5pt margins and 0.5pt borders is 40.5pt tall even when its text needs less.
         let float_rh = match (row.props.height, row.props.height_rule) {
