@@ -6533,3 +6533,65 @@ fn automatic_spacing_skips_a_cells_first_and_last_paragraph() {
         marked(false)
     );
 }
+
+#[test]
+fn initial_table_headers_stay_with_the_first_body_row() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let check = |filler_height: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(filler_height));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(2, 1, 300.0);
+        t.rows[0].props.header = true;
+        for (row, h) in t.rows.iter_mut().zip([40.0, 20.0]) {
+            row.props.height = Some(h);
+            row.props.height_rule = HeightRule::Exact;
+            row.props.cant_split = true;
+        }
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .map(|p| {
+                p.items
+                    .iter()
+                    .filter_map(|it| match it {
+                        Placed::Cell { row, cell: 0, .. } => Some(*row),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>()
+    };
+    // A letter page has 648 pt of body. Forty-eight points fit the header alone.
+    assert_eq!(check(600.0), vec![vec![], vec![0, 1]]);
+    // With enough room both rows remain on the current page.
+    assert_eq!(check(540.0), vec![vec![0, 1]]);
+}
+
+#[test]
+fn a_caption_keeps_with_the_header_and_first_body_row() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let mut d = Document::new();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.line_spacing = Some(LineSpacing::Exactly(580.0));
+    filler.props.space_after = Some(0.0);
+    let mut caption = doc4me_doc::Paragraph::with_text("Caption", Default::default());
+    caption.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+    caption.props.space_after = Some(0.0);
+    caption.props.keep_next = Some(true);
+    let mut t = Table::new(2, 1, 300.0);
+    t.rows[0].props.header = true;
+    for (row, h) in t.rows.iter_mut().zip([40.0, 20.0]) {
+        row.props.height = Some(h);
+        row.props.height_rule = HeightRule::Exact;
+        row.props.cant_split = true;
+    }
+    d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::para_block(caption), doc4me_doc::Block::Table(t).into()];
+    let l = lay(&d);
+    let caption_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if *path == Path::top(1))));
+    assert_eq!(caption_page, Some(1));
+    assert!(l.pages[0].items.iter().all(|it| !matches!(it, Placed::Cell { .. })));
+    assert_eq!(l.pages[1].items.iter().filter(|it| matches!(it, Placed::Cell { .. })).count(), 2);
+}

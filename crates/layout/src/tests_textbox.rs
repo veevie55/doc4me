@@ -142,3 +142,54 @@ fn hostile_link_chains_stay_bounded() {
         assert_eq!(lines(&l, id).len(), 1, "box {id} shows its own text");
     }
 }
+
+#[test]
+fn a_floating_auto_fit_text_box_grows_instead_of_losing_its_last_line() {
+    let make = |auto_fit| {
+        let mut d = Document::from_text("anchor");
+        let id = text_box(&mut d, 0, &"Words filling several lines. ".repeat(12), 144.0, 36.0, TextBody { auto_fit, ..Default::default() });
+        if let Some(InlineObject::Shape { float, .. }) = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().objects.first_mut() {
+            float.wrap = doc4me_doc::para::Wrap::InFrontOfText;
+        }
+        let l = lay(&d);
+        (l, id)
+    };
+    let (fixed, fixed_id) = make(false);
+    let (grown, grown_id) = make(true);
+    let count = |l: &DocLayout, id| lines(l, id).iter().map(|(.., a, b)| b - a).sum::<usize>();
+    assert!(frame_of(&grown, grown_id).h > frame_of(&fixed, fixed_id).h + 50.0);
+    assert!(count(&grown, grown_id) > count(&fixed, fixed_id));
+    let rendered = grown.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(id), para, l1, .. } if *id == grown_id => {
+                l1.checked_sub(1).and_then(|i| para.lines.get(i)).map(|l| l.end)
+            }
+            _ => None,
+        })
+        .next_back();
+    assert_eq!(rendered, Some(crate::para::LineEnd::Para));
+}
+
+#[test]
+fn auto_fit_does_not_measure_a_linked_boxes_unused_story() {
+    let mut d = Document::from_text("one\ntwo");
+    let a = text_box(&mut d, 0, "Short", 144.0, 36.0, TextBody::default());
+    let b = text_box(&mut d, 1, &"Unused story. ".repeat(50), 144.0, 36.0, TextBody { auto_fit: true, ..Default::default() });
+    d.parts.get_mut(&a).unwrap().body.next = Some(b);
+    let obj = d.para_mut(StoryRef::Body, &Path::top(1)).unwrap().objects.first_mut().unwrap();
+    if let InlineObject::Shape { float, .. } = obj {
+        float.wrap = doc4me_doc::para::Wrap::InFrontOfText;
+    }
+    let l = lay(&d);
+    let rect = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| match it {
+            Placed::Object { path, rect, .. } if *path == Path::top(1) => Some(*rect),
+            _ => None,
+        })
+        .unwrap();
+    assert!((rect.h - 36.0).abs() < 0.01);
+}

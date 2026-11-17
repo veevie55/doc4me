@@ -278,6 +278,8 @@ pub struct Part {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Serialize, Deserialize, Default)]
 #[serde(default, rename_all = "camelCase")]
 pub struct TextBody {
+    /// Grow the shape to accommodate its text (`a:spAutoFit`).
+    pub auto_fit: bool,
     pub vert: props::TextVert,
     pub anchor: props::VAlign,
     /// Create Link: the text box (another `TextBox` part, shown by its own shape) the text
