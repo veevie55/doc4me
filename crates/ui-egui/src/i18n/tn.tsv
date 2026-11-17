@@ -2714,6 +2714,7 @@
 	Vector AB	Vektara AB
 	Version	Mofuta
 	Version History	Hisitori ya diphetolelo
+	Version {version}	Mofuta {version}
 	Version {version} ({build})	Mofuta {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Diphetolelo di bolokwa fa tokomane e butswe (faele ya .docx ga e na diphetolelo).
 	Vertical	E e emeng

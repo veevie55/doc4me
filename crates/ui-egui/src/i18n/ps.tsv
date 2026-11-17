@@ -2722,6 +2722,7 @@
 	Vector AB	وېکټور AB
 	Version	نسخه
 	Version History	د نسخو تاریخچه
+	Version {version}	نسخه {version}
 	Version {version} ({build})	نسخه {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	نسخې تر هغه ساتل کېږي چې سند پرانیستی وي (د .docx فایل نسخې نه لري).
 	Vertical	عمودي

@@ -2728,6 +2728,7 @@
 	Vector AB	AB bektorea
 	Version	Bertsioa
 	Version History	Bertsio-historia
+	Version {version}	{version} bertsioa
 	Version {version} ({build})	{version} bertsioa ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Bertsioak dokumentua irekita dagoen bitartean gordetzen dira (.docx fitxategi batek ez du bertsiorik).
 	Vertical	Bertikala

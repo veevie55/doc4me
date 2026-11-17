@@ -2726,6 +2726,7 @@
 	Vector AB	Διάνυσμα AB
 	Version	Έκδοση
 	Version History	Ιστορικό εκδόσεων
+	Version {version}	Έκδοση {version}
 	Version {version} ({build})	Έκδοση {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Οι εκδόσεις διατηρούνται όσο το έγγραφο είναι ανοιχτό (ένα αρχείο .docx δεν έχει εκδόσεις).
 	Vertical	Κατακόρυφα

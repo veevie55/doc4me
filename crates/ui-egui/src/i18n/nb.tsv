@@ -2724,6 +2724,7 @@
 	Vector AB	Vektor AB
 	Version	Versjon
 	Version History	Versjonslogg
+	Version {version}	Versjon {version}
 	Version {version} ({build})	Versjon {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versjoner beholdes mens dokumentet er åpent (en .docx-fil har ingen versjoner).
 	Vertical	Loddrett

@@ -2722,6 +2722,7 @@
 	Vector AB	સદિશ AB
 	Version	આવૃત્તિ
 	Version History	આવૃત્તિ ઇતિહાસ
+	Version {version}	આવૃત્તિ {version}
 	Version {version} ({build})	આવૃત્તિ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	દસ્તાવેજ ખુલ્લો હોય ત્યાં સુધી આવૃત્તિઓ રાખવામાં આવે છે (.docx ફાઇલમાં આવૃત્તિઓ હોતી નથી).
 	Vertical	ઊભું

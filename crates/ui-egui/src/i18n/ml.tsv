@@ -2722,6 +2722,7 @@
 	Vector AB	വെക്റ്റർ AB
 	Version	പതിപ്പ് (വേർഷൻ)
 	Version History	പതിപ്പ് ചരിത്രം
+	Version {version}	പതിപ്പ് {version}
 	Version {version} ({build})	പതിപ്പ് {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	പ്രമാണം തുറന്നിരിക്കുന്നിടത്തോളം പതിപ്പുകൾ സൂക്ഷിക്കുന്നു (.docx ഫയലിന് പതിപ്പുകളില്ല).
 	Vertical	ലംബം

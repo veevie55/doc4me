@@ -2722,6 +2722,7 @@
 	Vector AB	भेक्टर AB
 	Version	संस्करण
 	Version History	संस्करण इतिहास
+	Version {version}	संस्करण {version}
 	Version {version} ({build})	संस्करण {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	कागजात खुला रहँदासम्म संस्करण राखिन्छन् (.docx फाइलमा संस्करण हुँदैनन्)।
 	Vertical	ठाडो

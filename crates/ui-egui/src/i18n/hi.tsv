@@ -2722,6 +2722,7 @@
 	Vector AB	सदिश AB
 	Version	संस्करण
 	Version History	संस्करण इतिहास
+	Version {version}	संस्करण {version}
 	Version {version} ({build})	संस्करण {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	दस्तावेज़ खुला रहने तक संस्करण रखे जाते हैं (.docx फ़ाइल में संस्करण नहीं होते)।
 	Vertical	ऊर्ध्वाधर

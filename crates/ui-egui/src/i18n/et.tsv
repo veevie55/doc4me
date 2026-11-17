@@ -839,6 +839,7 @@
 	User Name	Kasutajanimi
 	User name:	Kasutajanimi:
 	Version History	Versiooniajalugu
+	Version {version}	Versioon {version}
 	Version {version} ({build})	Versioon {version} ({build})
 	Vertical	Püstine
 	Vertical Alignment	Püstjoondus

@@ -2724,6 +2724,7 @@
 	Vector AB	Vectorul AB
 	Version	Versiune
 	Version History	Istoric versiuni
+	Version {version}	Versiunea {version}
 	Version {version} ({build})	Versiunea {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versiunile sunt păstrate cât timp documentul este deschis (un fișier .docx nu are versiuni).
 	Vertical	Vertical

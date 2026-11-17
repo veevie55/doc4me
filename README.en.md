@@ -54,12 +54,15 @@ Latest Windows measurement: [run 44078179776](https://github.com/veevie55/doc4me
 
 Each build workflow also takes an optional **version** (such as `1.2.0` or `1.2.0-rc.1`), shown in
 `--version` and the installers' version fields; left empty, the build is named by its commit only.
-**file-name** chooses the download file names: `commit` (default) gives `doc4me-<commit>-windows-x64.msi`,
-`version` gives `doc4me-<version>-windows-x64.msi` (a version is then required). The About dialog follows
-the same choice, `Version 1.2.0 (01234567)` or `Commit 01234567`, also for builds of older commits. The
-[Release](.github/workflows/release.yml) workflow tags `v<version>` and publishes a GitHub Release, only when someone runs
-it: type the version, choose `main` (latest code) or a commit, tick the platforms to build, and name the files by
-version (default) or commit; a version with a pre-release part such as `1.2.0-rc.1` is published as a pre-release.
+**about** (the line under the name in the About dialog) and **file-name** (the download file names) each
+choose whether the version and the commit appear: `commit` (default) gives `Commit 01234567` /
+`doc4me-01234567-windows-x64.msi`, `version` gives `Version 1.2.0` / `doc4me-1.2.0-windows-x64.msi`,
+`version-commit` gives `Version 1.2.0 (01234567)` / `doc4me-1.2.0-01234567-windows-x64.msi`, and `none` shows
+nothing / `doc4me-windows-x64.msi` (version choices need a version). About follows the choice also for builds of
+older commits. The [Release](.github/workflows/release.yml) workflow tags `v<version>` and publishes a GitHub
+Release, only when someone runs it: type the version, choose `main` (latest code) or a commit, pick the Windows
+builds in **windows** and tick the other platforms, then choose **file-name** (default `version`) and **about**
+(default `version-commit`); a version with a pre-release part such as `1.2.0-rc.1` is published as a pre-release.
 See [docs/releasing.md](docs/releasing.md) for platform requirements.
 
 ## Highlights

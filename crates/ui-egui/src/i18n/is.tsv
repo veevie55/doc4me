@@ -2725,6 +2725,7 @@
 	Vector AB	Vigur AB
 	Version	Útgáfa
 	Version History	Útgáfusaga
+	Version {version}	Útgáfa {version}
 	Version {version} ({build})	Útgáfa {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Útgáfur eru geymdar meðan skjalið er opið (.docx-skrá hefur engar útgáfur).
 	Vertical	Lóðrétt

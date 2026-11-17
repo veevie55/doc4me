@@ -2722,6 +2722,7 @@
 	Vector AB	벡터 AB
 	Version	버전
 	Version History	버전 기록
+	Version {version}	버전 {version}
 	Version {version} ({build})	버전 {version}({build})
 	Versions are kept while the document is open (a .docx file has no versions).	문서가 열려 있는 동안 버전이 유지됩니다(.docx 파일에는 버전이 없음).
 	Vertical	세로

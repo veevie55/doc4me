@@ -2726,6 +2726,7 @@
 	Vector AB	Vekta AB
 	Version	Toleo
 	Version History	Historia ya Matoleo
+	Version {version}	Toleo {version}
 	Version {version} ({build})	Toleo {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Matoleo yanahifadhiwa wakati hati iko wazi (faili ya .docx haina matoleo).
 	Vertical	Wima

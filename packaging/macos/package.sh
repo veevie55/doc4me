@@ -3,7 +3,8 @@
 #
 #   $DIST/doc4me-<commit>-macos-<arch>.dmg          Doc4Me.app on a drag-to-Applications DMG
 #   $DIST/doc4me-cli-<commit>-macos-<arch>.zip      the headless CLI
-# <commit> is the short commit, or the version number with DOC4ME_FILE_NAME=version (env.sh).
+# <commit> is the short commit, the version, version-commit or nothing (then no "-<commit>"), as
+# DOC4ME_FILE_NAME chooses (env.sh).
 #
 # Usage: packaging/macos/package.sh [--arch universal|aarch64|x86_64] [--skip-build]
 #
@@ -41,8 +42,8 @@ IDENTITY="${MACOS_SIGN_IDENTITY:--}"
 SHORT_VERSION="${VERSION%%-*}"
 WORK="$CARGO_TARGET_DIR/macos-package"
 APP="$WORK/Doc4Me.app"
-DMG="$DIST/doc4me-$LABEL-macos-$ARCH.dmg"
-CLI_ZIP="$DIST/doc4me-cli-$LABEL-macos-$ARCH.zip"
+DMG="$DIST/doc4me${LABEL:+-$LABEL}-macos-$ARCH.dmg"
+CLI_ZIP="$DIST/doc4me-cli${LABEL:+-$LABEL}-macos-$ARCH.zip"
 
 NOTARIZE=0
 if [ "$IDENTITY" = "-" ]; then
@@ -154,7 +155,7 @@ fi
 
 # ---- CLI ---------------------------------------------------------------------------------------
 echo "==> building $CLI_ZIP"
-CLI_DIR="$WORK/doc4me-cli-$LABEL-macos-$ARCH"
+CLI_DIR="$WORK/doc4me-cli${LABEL:+-$LABEL}-macos-$ARCH"
 mkdir -p "$CLI_DIR"
 cp "$WORK/bin/doc4me-cli" "$CLI_DIR/"
 copy_docs "$CLI_DIR"

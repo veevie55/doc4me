@@ -4,7 +4,7 @@
 # Exports:
 #   ROOT                    workspace root
 #   COMMIT                  short commit (8 hex digits), or `dev`
-#   LABEL                   what names the packages: COMMIT, or VERSION with DOC4ME_FILE_NAME=version
+#   LABEL                   what names the packages (DOC4ME_FILE_NAME): COMMIT, VERSION, VERSION-COMMIT or empty
 #   VERSION                 [workspace.package] version from Cargo.toml (override: DOC4ME_VERSION);
 #                           only for package metadata fields that must be numeric (deb/rpm,
 #                           AppStream, Info.plist); file names use LABEL
@@ -48,21 +48,25 @@ case "$DOC4ME_BUILD_SHA" in
 esac
 export COMMIT
 
-# File names (packages, archives, the folders inside them) carry LABEL: the commit by default, or
-# the version number with DOC4ME_FILE_NAME=version (the build and Release workflows' file-name
-# field). A version must be a plain X.Y.Z[-pre] so it is safe in a file name.
+# File names (packages, archives, the folders inside them) carry LABEL, chosen with
+# DOC4ME_FILE_NAME (the build and Release workflows' file-name field): `commit` (the default),
+# `version`, `version-commit` (1.2.3-abcdef12) or `none` (an empty LABEL: the scripts then name
+# files doc4me-<platform>..., writing "${LABEL:+-$LABEL}"). A version must be a plain X.Y.Z[-pre]
+# so it is safe in a file name.
+check_label_version() {
+  if [ "${#VERSION}" -gt 64 ] ||
+    ! [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
+    echo "error: DOC4ME_FILE_NAME=$DOC4ME_FILE_NAME needs a version like 1.2.3 or 1.2.3-rc.1, got '$VERSION'" >&2
+    exit 1
+  fi
+}
 case "${DOC4ME_FILE_NAME:-commit}" in
   commit) LABEL="$COMMIT" ;;
-  version)
-    if [ "${#VERSION}" -gt 64 ] ||
-      ! [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$ ]]; then
-      echo "error: DOC4ME_FILE_NAME=version needs a version like 1.2.3 or 1.2.3-rc.1, got '$VERSION'" >&2
-      exit 1
-    fi
-    LABEL="$VERSION"
-    ;;
+  version) check_label_version; LABEL="$VERSION" ;;
+  version-commit) check_label_version; LABEL="$VERSION-$COMMIT" ;;
+  none) LABEL="" ;;
   *)
-    echo "error: DOC4ME_FILE_NAME must be commit or version, got '${DOC4ME_FILE_NAME}'" >&2
+    echo "error: DOC4ME_FILE_NAME must be commit, version, version-commit or none, got '${DOC4ME_FILE_NAME}'" >&2
     exit 1
     ;;
 esac

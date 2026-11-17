@@ -2722,6 +2722,7 @@
 	Vector AB	ვექტორი AB
 	Version	ვერსია
 	Version History	ვერსიების ისტორია
+	Version {version}	ვერსია {version}
 	Version {version} ({build})	ვერსია {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ვერსიები ინახება, სანამ დოკუმენტი ღიაა (.docx ფაილს ვერსიები არ აქვს).
 	Vertical	ვერტიკალური

@@ -1,7 +1,8 @@
 # Tag and publish a GitHub Release with a version number typed in the form. Manual only: no push,
 # tag, PR or schedule starts it. It builds the chosen platforms from one commit (main = the latest
-# code, or a commit SHA), bakes the version into each build (About dialog, --version, installer
-# version fields), then creates the tag v<version> on that commit and a Release with the files.
+# code, or a commit SHA), bakes the version into each build (--version, installer version fields,
+# and the About line and file names as chosen), then creates the tag v<version> on that commit and a
+# Release with the files. GitHub allows 10 fields, so the three Windows builds share one choice.
 # A version with a pre-release part (1.2.0-rc.1) makes a pre-release; a plain 1.2.0 the latest one.
 name: Release
 run-name: "Release ${{ inputs.version }} · ${{ inputs.ref }}"
@@ -10,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1 (shown in About; tag v<version>)'
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1 (tag v<version>; --version; About and file names as chosen)'
         required: true
         type: string
       ref:
@@ -18,18 +19,19 @@ on:
         required: true
         type: string
         default: main
-      windows-x64:
-        description: 'Build Windows x64 (MSI, portable ZIP)'
-        type: boolean
-        default: true
-      windows-x86:
-        description: 'Build Windows x86 (MSI, portable ZIP)'
-        type: boolean
-        default: false
-      windows-arm64:
-        description: 'Build Windows ARM64 (MSI, portable ZIP)'
-        type: boolean
-        default: false
+      windows:
+        description: 'Windows builds (MSI, portable ZIP each)'
+        type: choice
+        default: x64
+        options:
+          - x64
+          - x64, x86, arm64
+          - x64, x86
+          - x64, arm64
+          - x86
+          - x86, arm64
+          - arm64
+          - none
       linux:
         description: 'Build Linux x86_64 (AppImage, DEB, RPM, tar.gz)'
         type: boolean
@@ -47,12 +49,23 @@ on:
         type: boolean
         default: false
       file-name:
-        description: 'Name the download files by version (doc4me-<version>-...) or by commit (doc4me-<commit>-...)'
+        description: 'Download file names: doc4me-<version>-..., doc4me-<version>-<commit>-..., doc4me-<commit>-... or doc4me-... (none)'
         type: choice
         default: version
         options:
           - version
+          - version-commit
           - commit
+          - none
+      about:
+        description: 'Line under the name in About: Version <version> (<commit>), Version <version>, Commit <commit>, or nothing (none)'
+        type: choice
+        default: version-commit
+        options:
+          - version-commit
+          - version
+          - commit
+          - none
 
 permissions:
   contents: read
@@ -84,8 +97,10 @@ jobs:
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
-          ANY_TARGET: ${{ inputs.windows-x64 || inputs.windows-x86 || inputs.windows-arm64 || inputs.linux || inputs.macos || inputs.bsd || inputs.web }}
+          WINDOWS: ${{ inputs.windows }}
+          OTHER_TARGET: ${{ inputs.linux || inputs.macos || inputs.bsd || inputs.web }}
           FILE_NAME: ${{ inputs.file-name }}
+          ABOUT: ${{ inputs.about }}
         run: |
           # The same rule as the build workflows: numbers fit the MSI ProductVersion (255.255.65535).
           version="${REQUESTED_VERSION#v}"
@@ -95,14 +110,21 @@ jobs:
             echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
             exit 1
           fi
-          if [ "$ANY_TARGET" != true ]; then
+          # The build jobs below test the Windows choice with contains(), so only the listed values pass.
+          case "$WINDOWS" in
+            'x64' | 'x64, x86, arm64' | 'x64, x86' | 'x64, arm64' | 'x86' | 'x86, arm64' | 'arm64' | 'none') ;;
+            *) echo '::error::windows must be one of the listed choices'; exit 1 ;;
+          esac
+          if [ "$WINDOWS" = none ] && [ "$OTHER_TARGET" != true ]; then
             echo '::error::choose at least one platform to build'
             exit 1
           fi
-          case "$FILE_NAME" in
-            version | commit) ;;
-            *) echo '::error::file-name must be version or commit'; exit 1 ;;
-          esac
+          for choice in "file-name=$FILE_NAME" "about=$ABOUT"; do
+            case "${choice#*=}" in
+              version | version-commit | commit | none) ;;
+              *) echo "::error::${choice%%=*} must be version, version-commit, commit or none"; exit 1 ;;
+            esac
+          done
           # Semantic versioning: a pre-release part (after "-") marks a pre-release.
           case "$version" in
             *-*) prerelease=true ;;
@@ -124,37 +146,40 @@ jobs:
             printf 'tag=%s\n' "$tag"
             printf 'prerelease=%s\n' "$prerelease"
           } >> "$GITHUB_OUTPUT"
-          printf '### Release %s\n\nSource commit: `%s`\n\nFile names: by %s\n\nPre-release: %s\n' \
-            "$tag" "$commit" "$FILE_NAME" "$prerelease" >> "$GITHUB_STEP_SUMMARY"
+          printf '### Release %s\n\nSource commit: `%s`\n\nWindows: %s\n\nFile names: %s\n\nAbout: %s\n\nPre-release: %s\n' \
+            "$tag" "$commit" "$WINDOWS" "$FILE_NAME" "$ABOUT" "$prerelease" >> "$GITHUB_STEP_SUMMARY"
 
   # Every build gets the resolved commit SHA, so all platforms are built from the same source even
   # if the branch moves during the run.
   windows-x64:
     needs: prepare
-    if: inputs.windows-x64
+    if: contains(inputs.windows, 'x64')
     uses: ./.github/workflows/build-windows-x64.yml
     with:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   windows-x86:
     needs: prepare
-    if: inputs.windows-x86
+    if: contains(inputs.windows, 'x86')
     uses: ./.github/workflows/build-windows-x86.yml
     with:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   windows-arm64:
     needs: prepare
-    if: inputs.windows-arm64
+    if: contains(inputs.windows, 'arm64')
     uses: ./.github/workflows/build-windows-arm64.yml
     with:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   linux:
     needs: prepare
@@ -164,6 +189,7 @@ jobs:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   macos:
     needs: prepare
@@ -173,6 +199,7 @@ jobs:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
       arch: universal
 
   bsd:
@@ -183,6 +210,7 @@ jobs:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   web:
     needs: prepare
@@ -192,6 +220,7 @@ jobs:
       ref: ${{ needs.prepare.outputs.sha }}
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
 
   publish:
     needs: [prepare, windows-x64, windows-x86, windows-arm64, linux, macos, bsd, web]

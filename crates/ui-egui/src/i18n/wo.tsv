@@ -2714,6 +2714,7 @@
 	Vector AB	Vecteur AB
 	Version	Weersioŋ
 	Version History	Jaar-jaaru wersioŋ
+	Version {version}	Weersioŋ {version}
 	Version {version} ({build})	Weersioŋ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Version yi dañu leen di denc bi këyit bi ubbeeku (fichier .docx amul version).
 	Vertical	taxaw

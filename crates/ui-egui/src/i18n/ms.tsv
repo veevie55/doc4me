@@ -2729,6 +2729,7 @@
 	Vector AB	Vektor AB
 	Version	Versi
 	Version History	Sejarah Versi
+	Version {version}	Versi {version}
 	Version {version} ({build})	Versi {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versi disimpan selagi dokumen dibuka (fail .docx tiada versi).
 	Vertical	Menegak

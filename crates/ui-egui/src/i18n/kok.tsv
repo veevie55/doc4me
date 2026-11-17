@@ -2722,6 +2722,7 @@
 	Vector AB	सदिश AB
 	Version	आवृत्ती
 	Version History	आवृत्ती इतिहास
+	Version {version}	आवृत्ती {version}
 	Version {version} ({build})	आवृत्ती {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	दस्तावेज उगडो आसा तोमेरेन आवृत्त्यो दवरतात (.docx फायलीक आवृत्त्यो नात).
 	Vertical	उबें

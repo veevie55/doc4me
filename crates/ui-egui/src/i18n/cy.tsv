@@ -2725,6 +2725,7 @@
 	Vector AB	Fector AB
 	Version	Fersiwn
 	Version History	Hanes fersiynau
+	Version {version}	Fersiwn {version}
 	Version {version} ({build})	Fersiwn {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Cedwir fersiynau tra bo'r ddogfen ar agor (nid oes gan ffeil .docx fersiynau).
 	Vertical	Fertigol

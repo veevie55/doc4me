@@ -2727,6 +2727,7 @@
 	Vector AB	Вектор AB
 	Version	Версия
 	Version History	Хронология на версиите
+	Version {version}	Версия {version}
 	Version {version} ({build})	Версия {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Версиите се пазят, докато документът е отворен (файлът .docx няма версии).
 	Vertical	Вертикално

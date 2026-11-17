@@ -916,6 +916,7 @@
 	User Name	ユーザー名
 	User name:	ユーザー名:
 	Version History	バージョン履歴
+	Version {version}	バージョン {version}
 	Version {version} ({build})	バージョン {version}（{build}）
 	Vertical	縦
 	Vertical Alignment	垂直方向の配置

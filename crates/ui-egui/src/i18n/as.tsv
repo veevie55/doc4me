@@ -2722,6 +2722,7 @@
 	Vector AB	ভেক্টৰ AB
 	Version	সংস্কৰণ
 	Version History	সংস্কৰণৰ ইতিহাস
+	Version {version}	সংস্কৰণ {version}
 	Version {version} ({build})	সংস্কৰণ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	নথি খোলা থকালৈকে সংস্কৰণ ৰখা হয় (.docx ফাইলত সংস্কৰণ নাথাকে)।
 	Vertical	উলম্ব

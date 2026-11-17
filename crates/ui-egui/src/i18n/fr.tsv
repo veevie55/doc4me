@@ -886,6 +886,7 @@
 	User Name	Nom d’utilisateur
 	User name:	Nom d’utilisateur :
 	Version History	Historique des versions
+	Version {version}	Version {version}
 	Version {version} ({build})	Version {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alignement vertical

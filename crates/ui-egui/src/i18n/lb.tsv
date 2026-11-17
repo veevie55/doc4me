@@ -2725,6 +2725,7 @@
 	Vector AB	Vektor AB
 	Version	Versioun
 	Version History	Versiounsverlaf
+	Version {version}	Versioun {version}
 	Version {version} ({build})	Versioun {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versioune ginn behalen, soulaang d'Dokument op ass (en .docx-Fichier huet keng Versiounen).
 	Vertical	Vertikal

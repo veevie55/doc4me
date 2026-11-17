@@ -2722,6 +2722,7 @@
 	Vector AB	Վեկտոր AB
 	Version	Տարբերակ
 	Version History	Տարբերակների պատմություն
+	Version {version}	Տարբերակ {version}
 	Version {version} ({build})	Տարբերակ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Տարբերակները պահվում են, քանի դեռ փաստաթուղթը բաց է (.docx ֆայլը տարբերակներ չունի)։
 	Vertical	Ուղղահայաց

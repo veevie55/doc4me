@@ -2724,6 +2724,7 @@
 	Vector AB	Vektori AB
 	Version	Versio
 	Version History	Versiohistoria
+	Version {version}	Versio {version}
 	Version {version} ({build})	Versio {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versiot säilytetään, kun asiakirja on auki (.docx-tiedostossa ei ole versioita).
 	Vertical	Pysty

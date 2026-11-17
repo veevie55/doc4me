@@ -2725,6 +2725,7 @@
 	Vector AB	Vektor AB
 	Version	Različica
 	Version History	Zgodovina različic
+	Version {version}	Različica {version}
 	Version {version} ({build})	Različica {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Različice se hranijo, dokler je dokument odprt (datoteka .docx nima različic).
 	Vertical	Navpično

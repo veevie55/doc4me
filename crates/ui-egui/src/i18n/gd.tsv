@@ -2725,6 +2725,7 @@
 	Vector AB	Bheactar AB
 	Version	Tionndadh
 	Version History	Eachdraidh nan tionndadh
+	Version {version}	Tionndadh {version}
 	Version {version} ({build})	Tionndadh {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Thèid tionndaidhean a chumail fhad ’s a tha an sgrìobhainn fosgailte (chan eil tionndaidhean aig faidhle .docx).
 	Vertical	Inghearach

@@ -2728,6 +2728,7 @@
 	Vector AB	Vektors AB
 	Version	Versija
 	Version History	Versiju vēsture
+	Version {version}	Versija {version}
 	Version {version} ({build})	Versija {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versijas tiek glabātas, kamēr dokuments ir atvērts (.docx failam nav versiju).
 	Vertical	Vertikāli

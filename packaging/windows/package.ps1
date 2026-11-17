@@ -6,7 +6,8 @@
   Produces, in $env:DIST (default: dist/release):
     doc4me-<commit>-windows-<arch>.msi            per-machine installer (WiX v5)
     doc4me-<commit>-windows-<arch>-portable.zip   doc4me.exe + doc4me-cli.exe
-  <commit> is the short commit, or the version number with DOC4ME_FILE_NAME=version.
+  <commit> is the short commit, the version, version-commit or nothing (then no "-<commit>"), as
+  DOC4ME_FILE_NAME chooses.
 
   The binaries link the C runtime statically (+crt-static), so neither the MSI nor the portable
   zip needs the Visual C++ redistributable. Signing is delegated to sign.ps1 (skipped with a
@@ -61,20 +62,25 @@ New-Item -ItemType Directory -Force -Path $Dist | Out-Null
 
 if (-not $env:DOC4ME_BUILD_SHA) { $env:DOC4ME_BUILD_SHA = (git -C $Root rev-parse HEAD 2>$null) }
 $Commit = if ($env:DOC4ME_BUILD_SHA -match '^[0-9a-fA-F]{7,64}$') { $env:DOC4ME_BUILD_SHA.Substring(0, [Math]::Min(8, $env:DOC4ME_BUILD_SHA.Length)) } else { 'dev' }
-# File names carry the commit by default, or the version number with DOC4ME_FILE_NAME=version (the
-# build and Release workflows' file-name field; packaging/env.sh has the same rule). \z, not $, so
-# a trailing newline cannot slip into the name.
+# File names carry what DOC4ME_FILE_NAME chooses (the build and Release workflows' file-name field;
+# packaging/env.sh has the same rule): the commit (default), the version, version-commit, or
+# nothing (`none`: doc4me-windows-<arch>.msi). \z, not $, so a trailing newline cannot slip into
+# the name.
+function Assert-LabelVersion {
+  if ($Version.Length -gt 64 -or $Version -cnotmatch '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?\z') {
+    throw "DOC4ME_FILE_NAME=$FileName needs a version like 1.2.3 or 1.2.3-rc.1, got '$Version'"
+  }
+}
 $FileName = if ($env:DOC4ME_FILE_NAME) { $env:DOC4ME_FILE_NAME } else { 'commit' }
 $Label = switch -CaseSensitive ($FileName) {
   'commit' { $Commit }
-  'version' {
-    if ($Version.Length -gt 64 -or $Version -cnotmatch '^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?\z') {
-      throw "DOC4ME_FILE_NAME=version needs a version like 1.2.3 or 1.2.3-rc.1, got '$Version'"
-    }
-    $Version
-  }
-  default { throw "DOC4ME_FILE_NAME must be commit or version, got '$FileName'" }
+  'version' { Assert-LabelVersion; $Version }
+  'version-commit' { Assert-LabelVersion; "$Version-$Commit" }
+  'none' { '' }
+  default { throw "DOC4ME_FILE_NAME must be commit, version, version-commit or none, got '$FileName'" }
 }
+# "-<label>" in file names, or nothing.
+$LabelPart = if ($Label) { "-$Label" } else { '' }
 if (-not $env:DOC4ME_BUILD_DATE) { $env:DOC4ME_BUILD_DATE = (Get-Date).ToUniversalTime().ToString('yyyy-MM-dd') }
 
 Write-Output "Doc4Me $Commit for Windows $Arch ($Target)"
@@ -176,7 +182,7 @@ $rtf = '{\rtf1\ansi\ansicpg1252\deff0{\fonttbl{\f0\fswiss\fcharset0 Tahoma;}}\vi
   ($paragraphs -join "\par`r`n") + "\par`r`n}`r`n"
 [System.IO.File]::WriteAllText($LicenseRtf, $rtf, [System.Text.Encoding]::ASCII)
 
-$Msi = Join-Path $Dist "doc4me-$Label-windows-$Arch.msi"
+$Msi = Join-Path $Dist "doc4me$LabelPart-windows-$Arch.msi"
 Invoke-Native 'wix build' {
   wix build (Join-Path $PSScriptRoot 'doc4me.wxs') -arch $Arch `
     -ext WixToolset.UI.wixext -ext WixToolset.Util.wixext `
@@ -189,7 +195,7 @@ Remove-Item -Force -ErrorAction SilentlyContinue ([IO.Path]::ChangeExtension($Ms
 & (Join-Path $PSScriptRoot 'sign.ps1') $Msi
 
 # ---- portable zip ------------------------------------------------------------------------------
-$Portable = Join-Path $TargetDir "windows-package\doc4me-$Label-windows-$Arch-portable"
+$Portable = Join-Path $TargetDir "windows-package\doc4me$LabelPart-windows-$Arch-portable"
 Remove-Item -Recurse -Force $Portable -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $Portable | Out-Null
 Copy-Item (Join-Path $Stage '*.exe') $Portable
@@ -206,7 +212,7 @@ if ($env:CRAFT_FONTS_DIR) {
     Copy-Item $ofl.FullName (Join-Path $Portable "OFL-$($ofl.Directory.Name).txt")
   }
 }
-$Zip = Join-Path $Dist "doc4me-$Label-windows-$Arch-portable.zip"
+$Zip = Join-Path $Dist "doc4me$LabelPart-windows-$Arch-portable.zip"
 Remove-Item -Force $Zip -ErrorAction SilentlyContinue
 Compress-Archive -Path $Portable -DestinationPath $Zip
 

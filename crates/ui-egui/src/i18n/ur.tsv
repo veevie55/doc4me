@@ -2722,6 +2722,7 @@
 	Vector AB	ویکٹر AB
 	Version	ورژن
 	Version History	ورژن کی تاریخ
+	Version {version}	ورژن {version}
 	Version {version} ({build})	ورژن {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	دستاویز کھلی رہنے تک ورژنز رکھے جاتے ہیں (.docx فائل کے ورژنز نہیں ہوتے)۔
 	Vertical	عمودی

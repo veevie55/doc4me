@@ -2725,6 +2725,7 @@
 	Vector AB	Veicteoir AB
 	Version	Leagan
 	Version History	Stair na leaganacha
+	Version {version}	Leagan {version}
 	Version {version} ({build})	Leagan {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Coinnítear leaganacha fad atá an doiciméad oscailte (níl leaganacha ag comhad .docx).
 	Vertical	Ingearach

@@ -2725,6 +2725,7 @@
 	Vector AB	AB вектору
 	Version	Версия
 	Version History	Версиялар тарыхы
+	Version {version}	Версия {version}
 	Version {version} ({build})	Версия {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Версиялар документ ачык турганда сакталат (.docx файлында версиялар жок).
 	Vertical	Вертикалдуу

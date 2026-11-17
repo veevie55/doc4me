@@ -928,6 +928,7 @@
 	User Name	用户名
 	User name:	用户名：
 	Version History	版本历史记录
+	Version {version}	版本 {version}
 	Version {version} ({build})	版本 {version}（{build}）
 	Vertical	垂直
 	Vertical Alignment	垂直对齐方式

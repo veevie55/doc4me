@@ -2726,6 +2726,7 @@
 	Vector AB	Pere AB
 	Version	Putanga
 	Version History	Hītori Putanga
+	Version {version}	Putanga {version}
 	Version {version} ({build})	Putanga {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Ka puritia ngā putanga i te wā e tuwhera ana te tuhinga (kāore he putanga o tētahi kōnae .docx).
 	Vertical	Poutū

@@ -786,6 +786,7 @@ preview	Title	Пример
 	User Name	Имя пользователя
 	User name:	Имя пользователя:
 	Version History	Журнал версий
+	Version {version}	Версия {version}
 	Version {version} ({build})	Версия {version} ({build})
 	Vertical	Вертикально
 	Vertical Alignment	Вертикальное выравнивание

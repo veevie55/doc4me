@@ -2722,6 +2722,7 @@
 	Vector AB	المتجه AB
 	Version	الإصدار
 	Version History	محفوظات الإصدارات
+	Version {version}	الإصدار {version}
 	Version {version} ({build})	الإصدار {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	يُحتفظ بالإصدارات أثناء فتح المستند (ملف .docx ليس له إصدارات).
 	Vertical	عمودي

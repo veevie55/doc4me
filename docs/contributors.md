@@ -23,7 +23,7 @@ this page is the local copy of the decision.
 
 ## In Doc4Me
 
-- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab. The About tab names the developer (Chatrawichai Chanprom, veevie55); under the name it shows the version or the commit as the build's file-name choice says (`build_info::about_line`: `Version {version} ({build})` when files are named by version, else `Commit {commit}`, or `development build` without a commit; builds of older commits get the same line from `tools/about_label.py`), and has no source code link.
+- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab. The About tab names the developer (Chatrawichai Chanprom, veevie55); under the name it shows what the build's `about` field chose (`build_info::about_line`, `DOC4ME_ABOUT`: `Version {version} ({build})`, `Version {version}`, `Commit {commit}` (the default; `development build` without a commit) or nothing; builds of older commits get the same line from `tools/about_label.py`), and has no source code link.
 
 ## Credit yourself
 

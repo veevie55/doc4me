@@ -6,7 +6,8 @@
 #   $DIST/doc4me-<commit>-linux-<arch>.deb       Debian, Ubuntu, Mint, Pop!_OS, ...
 #   $DIST/doc4me-<commit>-linux-<arch>.rpm       Fedora, openSUSE, RHEL, ...
 #   $DIST/doc4me-<commit>-linux-<arch>.tar.gz    plain FHS-style tree (bin/, share/)
-# <commit> is the short commit, or the version number with DOC4ME_FILE_NAME=version (env.sh).
+# <commit> is the short commit, the version, version-commit or nothing (then no "-<commit>"), as
+# DOC4ME_FILE_NAME chooses (env.sh).
 #
 # Usage: packaging/linux/package.sh [--skip-build] [--formats "appimage deb rpm tar"]
 #
@@ -40,7 +41,7 @@ case "$ARCH" in
 esac
 # The project has no mail address yet: set DOC4ME_MAINTAINER to "Name <address>" for real packages.
 export DOC4ME_MAINTAINER="${DOC4ME_MAINTAINER:-Doc4Me contributors <https://github.com/chatraweechai/doc4me/issues>}"
-BASENAME="doc4me-$LABEL-linux-$ARCH"
+BASENAME="doc4me${LABEL:+-$LABEL}-linux-$ARCH"
 
 echo "==> Doc4Me $COMMIT for Linux $ARCH ($FORMATS)"
 

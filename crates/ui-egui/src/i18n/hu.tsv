@@ -787,6 +787,7 @@
 	User Name	Felhasználónév
 	User name:	Felhasználónév:
 	Version History	Verzióelőzmények
+	Version {version}	Verzió: {version}
 	Version {version} ({build})	Verzió: {version} ({build})
 	Vertical	Függőleges
 	Vertical Alignment	Függőleges igazítás

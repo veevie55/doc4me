@@ -2722,6 +2722,7 @@
 	Vector AB	දෛශිකය AB
 	Version	අනුවාදය
 	Version History	අනුවාද ඉතිහාසය
+	Version {version}	අනුවාදය {version}
 	Version {version} ({build})	අනුවාදය {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ලේඛනය විවෘතව ඇති තාක් අනුවාද තබා ගනී (.docx ගොනුවකට අනුවාද නැත).
 	Vertical	සිරස්

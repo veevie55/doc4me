@@ -2724,6 +2724,7 @@
 	Vector AB	Vector AB
 	Version	Versie
 	Version History	Versiegeschiedenis
+	Version {version}	Versie {version}
 	Version {version} ({build})	Versie {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versies worden bewaard zolang het document open is (een .docx-bestand heeft geen versies).
 	Vertical	Verticaal

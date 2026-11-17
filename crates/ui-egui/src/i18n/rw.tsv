@@ -2712,6 +2712,7 @@
 	Vector AB	Vector AB
 	Version	Inyandiko
 	Version History	Amateka ya verisiyo
+	Version {version}	Inyandiko {version}
 	Version {version} ({build})	Inyandiko {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Imirongo ibikwa mugihe inyandiko ifunguye (dosiye ya .docx idafite verisiyo).
 	Vertical	Uhagaritse

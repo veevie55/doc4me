@@ -2725,6 +2725,7 @@
 	Vector AB	Vektori AB
 	Version	Versioni
 	Version History	Historiku i versioneve
+	Version {version}	Versioni {version}
 	Version {version} ({build})	Versioni {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versionet mbahen sa kohë dokumenti është i hapur (një skedar .docx nuk ka versione).
 	Vertical	Vertikal

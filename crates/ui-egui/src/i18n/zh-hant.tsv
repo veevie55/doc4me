@@ -917,6 +917,7 @@
 	User Name	使用者名稱
 	User name:	使用者名稱：
 	Version History	版本歷程記錄
+	Version {version}	版本 {version}
 	Version {version} ({build})	版本 {version}（{build}）
 	Vertical	垂直
 	Vertical Alignment	垂直對齊方式

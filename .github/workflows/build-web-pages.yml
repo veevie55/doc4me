@@ -12,10 +12,20 @@ on:
         type: string
         default: main
       version:
-        description: 'Version number shown in About and --version, e.g. 1.2.0 or 1.2.0-rc.1 (empty = the commit only)'
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1: shown in About when chosen below (empty = none)'
         required: false
         type: string
         default: ''
+      about:
+        description: 'Line under the name in About: Commit <commit>, Version <version>, Version <version> (<commit>), or nothing (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options:
+          - commit
+          - version
+          - version-commit
+          - none
 
 permissions:
   contents: read
@@ -41,6 +51,7 @@ jobs:
         shell: bash
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
+          ABOUT: ${{ inputs.about }}
         run: |
           commit=$(git rev-parse HEAD)
           printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
@@ -59,13 +70,27 @@ jobs:
             fi
             printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
           fi
-          # No download files here: a version typed in the form is shown in About, else the commit
-          # (DOC4ME_FILE_NAME, as the file-name field of the other build workflows sets it).
-          if [ -n "$version" ]; then file_name=version; else file_name=commit; fi
-          printf 'DOC4ME_FILE_NAME=%s\n' "$file_name" >> "$GITHUB_ENV"
+          # The About line (build_info::about_line): commit (default), version, version-commit or
+          # none; the version choices need a version. No download files here, so no file-name field.
+          about="${ABOUT:-commit}"
+          case "$about" in
+            commit | none) ;;
+            version | version-commit)
+              if [ -z "$version" ]; then
+                echo "::error::about $about needs a version number"
+                exit 1
+              fi
+              ;;
+            *)
+              echo '::error::about must be commit, version, version-commit or none'
+              exit 1
+              ;;
+          esac
+          printf 'DOC4ME_ABOUT=%s\n' "$about" >> "$GITHUB_ENV"
           printf '%s\n' "$commit" > dist/web/SOURCE_COMMIT.txt
           printf '### GitHub Pages deployment\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+          printf '\nAbout: %s\n' "$about" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Check out the About tool (this workflow's revision)
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
@@ -78,7 +103,7 @@ jobs:
           sparse-checkout-cone-mode: false
           persist-credentials: false
 
-      # Sources older than build_info::about_line don't follow the file-name choice in About:
+      # Sources older than DOC4ME_ABOUT (build_info::about_line) don't follow the about choice:
       # tools/about_label.py patches their About dialog to match and leaves newer sources unchanged.
       - name: Show the chosen version or commit in About
         shell: bash

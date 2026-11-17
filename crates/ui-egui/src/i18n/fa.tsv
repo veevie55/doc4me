@@ -2722,6 +2722,7 @@
 	Vector AB	بردار AB
 	Version	نسخه
 	Version History	تاریخچهٔ نسخه‌ها
+	Version {version}	نسخهٔ {version}
 	Version {version} ({build})	نسخهٔ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	نسخه‌ها تا زمانی که سند باز است نگه داشته می‌شوند (فایل .docx نسخه ندارد).
 	Vertical	عمودی

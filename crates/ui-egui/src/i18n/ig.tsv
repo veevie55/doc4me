@@ -2712,6 +2712,7 @@
 	Vector AB	Ụgwọ nke ụlọ ọrụ Vector AB
 	Version	Ụdị
 	Version History	Akụkọ ụdị
+	Version {version}	Ụdị {version}
 	Version {version} ({build})	Ụdị {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	A na-edobe ụdịdị mgbe akwụkwọ ahụ mepere (faịlụ .docx enweghị nsụgharị).
 	Vertical	kwụ ọtọ

@@ -2722,6 +2722,7 @@
 	Vector AB	సదిశ AB
 	Version	సంస్కరణ
 	Version History	సంస్కరణ చరిత్ర
+	Version {version}	సంస్కరణ {version}
 	Version {version} ({build})	సంస్కరణ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	పత్రం తెరిచి ఉన్నంత వరకు సంస్కరణలు ఉంచబడతాయి (.docx ఫైల్‌లో సంస్కరణలు ఉండవు).
 	Vertical	నిలువు
