@@ -95,6 +95,31 @@ fn lay(ctx: &mut Ctx, id: u32, blocks: &Blocks, len: f32, vert: TextVert, depth:
     layout_box(ctx, story, blocks, &[], len, None, depth + 1, None).items
 }
 
+/// Measure a floating auto-fit box before positioning it, including its margins. Measuring
+/// uses the same recursion budget as drawing, so self-referential stories remain bounded.
+pub(crate) fn auto_size(ctx: &mut Ctx, obj: &doc4me_doc::InlineObject, w: f32, h: f32, depth: usize) -> (f32, f32) {
+    let Some(id) = obj.text_box() else { return (w, h) };
+    let Some(part) = ctx.doc.parts.get(&id) else { return (w, h) };
+    let body = part.body;
+    if !body.auto_fit || body.next.is_some() {
+        return (w, h);
+    }
+    ctx.chains.build(ctx.doc);
+    if ctx.chains.member.contains_key(&id) || !ctx.boxes.enter(id) {
+        return (w, h);
+    }
+    let blocks = part.blocks.clone();
+    let (len, _) = frame(&body, w, h);
+    let items = lay(ctx, id, &blocks, len, body.vert, depth);
+    ctx.boxes.leave();
+    let [l, t, r, b] = body.insets_pt();
+    let used = extent(&items);
+    match body.vert.turn() {
+        TextDirection::Horizontal => (w, h.max(used + t + b).min(4000.0)),
+        _ => (w.max(used + l + r).min(4000.0), h),
+    }
+}
+
 /// The items showing text box `id` in its frame `rect` (page coordinates): its text, or its
 /// share of a linked chain's, cut to what fits, aligned and turned as the box says.
 pub(crate) fn box_items(ctx: &mut Ctx, id: u32, rect: Rect, depth: usize) -> Vec<Placed> {

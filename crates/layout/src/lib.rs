@@ -1006,6 +1006,7 @@ fn layout_blocks(
                     if left_out(oi) {
                         continue;
                     }
+                    let (w, h) = textbox::auto_size(ctx, o, w, h, depth);
                     // Offsets from the paragraph count from above its space before: zenodo-157's
                     // picture 23.25 pt below a cell's first paragraph (10 pt before) stands 23.25 pt
                     // below the row's top in Word's PDF.
@@ -2937,6 +2938,7 @@ fn anchor_floats(
             if left_out(oi) {
                 continue;
             }
+            let (w, h) = textbox::auto_size(ctx, o, w, h, 0);
             let r = float_rect(Some(frame), (col_x, width), y0, w, h, float, None);
             rects.insert(oi, r);
             let outline = ctx.wrap_outline(o);
@@ -3022,7 +3024,10 @@ fn place_objects(
             }
             let rect = if floating {
                 let placed = if follows_break { None } else { floats.get(&oi).copied() };
-                placed.unwrap_or_else(|| float_rect(at.page, at.col, at.para_y, w, h, float, None))
+                placed.unwrap_or_else(|| {
+                    let (w, h) = textbox::auto_size(ctx, obj, w, h, depth);
+                    float_rect(at.page, at.col, at.para_y, w, h, float, None)
+                })
             } else {
                 let cx = x + line.cl_left(k).unwrap_or(0.0);
                 display::inline_rect(Some(obj), cx, y + (line.baseline - fl.top), c.adv, c.obj_h)

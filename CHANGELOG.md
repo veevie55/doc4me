@@ -6,6 +6,11 @@
 กติกา (`CLAUDE.md` ข้อ 3):
 
 - ทุกการเปลี่ยนแปลงโค้ด build packaging หรือ asset ต้องบันทึกใต้ `## [Unreleased]` ใน commit เดียวกัน
+
+### แก้ไข — corpus page boundaries (2026-11-17)
+
+- เก็บ `wps:bodyPr/a:spAutoFit` ใน `TextBody` และเขียนกลับเมื่อ save .docx (`crates/doc`, `crates/docx`) ก่อนหน้านี้ค่านี้หายระหว่างเปิดและบันทึกไฟล์ กล่องข้อความลอยที่ระบุให้ขยายตามข้อความจะวัดเนื้อหาและขยายกรอบตามแนวซ้อนบรรทัดก่อนวาง/คำนวณพื้นที่ wrap (`crates/layout`) เพื่อไม่ตัดบรรทัดท้าย เช่น govuk-002 หน้า 24 กล่องขนาดคงที่และ linked text boxes คงพฤติกรรมเดิม ใช้ recursion budget และเพดานขนาดเดิม ไม่มีการเปลี่ยนเกณฑ์ corpus หรือรายการ excluded/accepted/deferred ไม่มีผลต่อการติดตั้งทับหรือข้อความภาษาไทยโดยเฉพาะ ขอบเขต: การขยายขณะ layout รองรับกล่องลอย; กล่อง inline เก็บค่าไว้สำหรับ round-trip เท่านั้น ตรวจสอบ: เทสต์ AutoFit/กล่องคงที่และ save/reopen; layout 352/352, DOCX unit 98/98, text-box integration 5/5; `cargo xtask ci` ผ่านครบ 6 ขั้น (native 2,594 ผ่าน, 0 ล้มเหลว, ignored เดิม 1) และ fmt/clippy สุดท้ายผ่าน เทียบ corpus 219 ฉบับ: boundaries 118→119/219 เฉพาะ govuk-002, จำนวนหน้าทุกฉบับคงเดิม, ไม่มีเอกสารที่เคยผ่านกลับมาตก; open/round-trip/stability 219/219 ทุกชุด ดู `docs/readiness/textbox-autofit-2026-11-17.md` ยังเหลือ corpus-breaks 100 ฉบับและยังไม่ยืนยันแพตช์บน Windows หลังรวม main ถึง `5222566` ตรวจ CI ซ้ำครบ 6 ขั้น (native 2,598 ผ่าน / ignored เดิม 1) และตรวจ pagination ครบอีกครั้ง: pages 213/219, boundaries 119/219; govuk-067 ได้จำนวนหน้าตรงจาก commit ตารางของ main ไม่ใช่จาก AutoFit
+
 - ก่อนเผยแพร่ Release ให้ย้ายรายการไปเป็น `## [<commit>] - YYYY-MM-DD` โดย `<commit>` คือเลข commit แบบย่อที่ใช้ build รุ่นนั้น
 - ไม่มี workflow ใดออก GitHub Release เจ้าของ repository เผยแพร่เองและใช้เนื้อหาใต้หัวข้อนั้นเป็นบันทึกประจำรุ่น
 - ทุก Release ต้องรวมรายละเอียดรุ่นปัจจุบันและทุกรุ่นก่อนหน้าถึงรุ่นแรก เรียงจากใหม่ไปเก่า รวมถึงเมื่ออัปเดต Release ที่มีอยู่แล้ว

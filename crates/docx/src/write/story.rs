@@ -1049,13 +1049,18 @@ impl Writer<'_> {
         if let Some([l, t, r, b]) = &insets {
             attrs.extend([("lIns", l.as_str()), ("tIns", t.as_str()), ("rIns", r.as_str()), ("bIns", b.as_str())]);
         }
-        match extra.warp.as_ref().and_then(|t| t.sanitized()) {
-            Some(warp) => {
-                w.open("wps:bodyPr", &attrs);
+        let warp = extra.warp.as_ref().and_then(|t| t.sanitized());
+        if warp.is_some() || body.auto_fit {
+            w.open("wps:bodyPr", &attrs);
+            if let Some(warp) = warp {
                 text_warp(w, &warp);
-                w.close("wps:bodyPr");
             }
-            None => w.empty("wps:bodyPr", &attrs),
+            if body.auto_fit {
+                w.empty("a:spAutoFit", &[]);
+            }
+            w.close("wps:bodyPr");
+        } else {
+            w.empty("wps:bodyPr", &attrs);
         }
         w.close("wps:wsp");
     }

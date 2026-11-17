@@ -1,3 +1,13 @@
+# Corpus-breaks continuation · 2026-11-17
+
+- Scope from owner: complete only corpus-breaks/page boundaries. Still incomplete.
+- Baseline `ae83b65` / engine `f352d1a`: verified 438 corpus hashes, pinned prepared fonts; Linux 212/219 page counts and 118/219 boundaries. At that baseline Windows was 214/219 and 118/219.
+- Implemented floating text-box `a:spAutoFit` import, round-trip and measurement; govuk-002 page 24 now includes its final line and every page boundary matches. Full first corpus comparison 119/219 boundaries, no page-count change, no other row changes. See docs/readiness/textbox-autofit-2026-11-17.md and comparison TSV. Fixed and linked boxes unchanged; inline resize and VML-only AutoFit remain unsupported.
+- Focused tests pass (layout 352, DOCX unit 98, text-box integration 5); final release corpus verification confirms open/round-trip/stability 219/219 each, counts 212/219, boundaries 119/219. Full CI passes all 6 steps (2,594 native tests, one existing ignored; assets 141, layers 20 crates, WASM 16 crates). Final fmt/clippy passes after the linked-chain guard. No linked text boxes occur in the corpus.
+- Integrated main through `5222566`, preserving both concurrent table fixes. Combined CI passes 6/6 (native 2,598, existing ignored 1; layout 356). Full final pagination run: 213/219 pages and 119/219 boundaries, no conversion errors. Only govuk-067 gains a page-count match from the later main fix; AutoFit still adds only govuk-002 boundaries. Combined comparison TSV is linked in the audit. Still 100 failing corpus-breaks documents.
+- Next case investigated: govuk-024 page 2 has complete text but Rule 15.18 / Annex A reading order differs. Arial Black substitutes Carlito Bold. Word PDF Arial-Black descriptor ascent1083/descent307 per1000 vs Carlito750/250; these are PDF descriptor metrics, not enough evidence for Word line spacing. No font/position patch applied.
+- Do not publish a Release or deploy Pages. Keep criteria/accepted/excluded/deferred unchanged.
+
 > **Standing instruction from the owner (2026-11-16):** after finishing work, do **not** publish a GitHub Release or redeploy the GitHub Pages Web App; the owner does both. Commit/push to `main` as CLAUDE.md requires, and stop there.
 
 # Resumed 2026-11-16: the not-yet-analysed group first (owner)

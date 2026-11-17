@@ -60,10 +60,10 @@ fn tiny_png() -> Vec<u8> {
 #[test]
 fn direction_alignment_and_links_round_trip() {
     let mut d = Document::from_text("a\nb\nc");
-    let a = text_box(&mut d, "Flows on", TextBody { vert: TextVert::Vert, anchor: VAlign::Center, next: None, insets: None });
+    let a = text_box(&mut d, "Flows on", TextBody { vert: TextVert::Vert, anchor: VAlign::Center, next: None, insets: None, ..Default::default() });
     // Margins of the box's own (none on the left and top, as forms often have).
     let b = text_box(&mut d, "", TextBody { insets: Some([0, 0, 91_440, 12_700]), ..Default::default() });
-    let c = text_box(&mut d, "", TextBody { vert: TextVert::Stacked, anchor: VAlign::Bottom, next: None, insets: None });
+    let c = text_box(&mut d, "", TextBody { vert: TextVert::Stacked, anchor: VAlign::Bottom, next: None, insets: None, ..Default::default() });
     for (i, o) in [a, b, c].into_iter().enumerate() {
         d.insert_object(&doc4me_doc::Pos::body(i, 1), o, &Default::default()).unwrap();
     }
@@ -164,4 +164,15 @@ fn story_shared_by_many_shapes_is_written_once() {
     let xml = document_xml(&doc4me_docx::write(&d).unwrap());
     assert!(xml.len() < 2_000_000, "document.xml is {} bytes", xml.len());
     assert_eq!(xml.matches(text.as_str()).count(), 1);
+}
+
+#[test]
+fn shape_auto_fit_is_preserved_through_save_and_reopen() {
+    let mut d = Document::from_text("anchor");
+    let shape = text_box(&mut d, "Fit all this text", TextBody { auto_fit: true, ..Default::default() });
+    d.insert_object(&doc4me_doc::Pos::body(0, 6), shape, &Default::default()).unwrap();
+    let bytes = doc4me_docx::write(&d).unwrap();
+    assert!(document_xml(&bytes).contains("<a:spAutoFit/>"));
+    let reopened = doc4me_docx::read(&bytes).unwrap();
+    assert!(reopened.parts.get(&boxes(&reopened)[0]).unwrap().body.auto_fit);
 }
