@@ -1243,6 +1243,13 @@ fn autofit(grid: &mut [f32], content: &[(f32, f32)], t: &Table, avail: f32) {
     }
     if is_automatic(t) {
         let (lo, hi) = content.iter().fold((0.0f32, 0.0f32), |(l, h), c| (l + c.0, h + c.1.max(c.0)));
+        // Content that can't fit even at its narrowest (an unbreakable run longer than the room,
+        // which Word breaks at the cell's edge) leaves the file's grid as Word laid it out:
+        // zenodo-053's questionnaire has a 600-underscore line across all five columns, and its
+        // columns keep their 6313 and 678 twip grid in Word's PDF.
+        if lo > avail + 0.01 && hi > avail && grid.iter().sum::<f32>() <= avail + 0.01 && t.grid.len() == grid.len() {
+            return;
+        }
         let k = if hi <= avail {
             1.0
         } else if lo >= avail || hi - lo < 0.01 {
@@ -1295,6 +1302,27 @@ mod width_tests {
         let mut grid = [30.0, 20.0];
         autofit(&mut grid, &[(25.0, 25.0), (40.0, 40.0)], &table, 50.0);
         assert_eq!(grid, [25.0, 40.0]);
+    }
+
+    #[test]
+    fn autofit_keeps_the_grid_when_content_cannot_fit() {
+        // zenodo-053: an automatic table whose narrowest content is wider than the room (a long
+        // unbreakable underscore line) keeps the grid Word saved.
+        let mut table = Table::new(1, 3, 300.0);
+        table.props.width = None;
+        table.props.width_pct = None;
+        for c in table.rows.iter_mut().flat_map(|r| r.cells.iter_mut()) {
+            c.props.width = None;
+            c.props.width_pct = None;
+        }
+        assert!(is_automatic(&table));
+        let mut grid = [200.0, 50.0, 50.0];
+        autofit(&mut grid, &[(500.0, 700.0), (450.0, 400.0), (450.0, 400.0)], &table, 300.0);
+        assert_eq!(grid, [200.0, 50.0, 50.0]);
+        // Content that fits still decides.
+        let mut grid = [200.0, 50.0, 50.0];
+        autofit(&mut grid, &[(20.0, 100.0), (10.0, 40.0), (10.0, 40.0)], &table, 300.0);
+        assert_eq!(grid, [100.0, 40.0, 40.0]);
     }
 
     #[test]

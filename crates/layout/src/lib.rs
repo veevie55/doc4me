@@ -938,6 +938,8 @@ fn layout_blocks(
     let mut excl: Vec<WrapArea> = Vec::new();
     // Areas of the box's floating tables, which other floating tables may have to avoid.
     let mut float_tables: Vec<Rect> = Vec::new();
+    // Where the box's floating objects that text wraps around end (in a table cell).
+    let mut objects_bottom = 0.0f32;
     let mut y = 0.0f32;
     let mut prev_after = 0.0f32;
     // Where the last paragraph's lines ended, for the gap a border box runs through.
@@ -1009,7 +1011,15 @@ fn layout_blocks(
                     // below the row's top in Word's PDF.
                     let r = float_rect(frame, (0.0, width), y - gap_before.max(0.0), w, h, float, ctx.cell_end.filter(|_| table.is_some()));
                     let outline = ctx.wrap_outline(o);
-                    excl.extend(wrap_area(r, float, outline.as_deref().map(|v| v.as_slice())));
+                    let area = wrap_area(r, float, outline.as_deref().map(|v| v.as_slice()));
+                    // A table cell grows to hold a picture its text wraps around: zenodo-053's
+                    // next row starts below such a picture in Word's PDF, not under it.
+                    // (Only one placed from the cell's text: one measured from the page or margin
+                    // isn't the cell's to hold.)
+                    if table.is_some() && area.is_some() && matches!(float.v_rel, Anchor::Paragraph | Anchor::Line) {
+                        objects_bottom = objects_bottom.max(r.bottom());
+                    }
+                    excl.extend(area);
                     floats.insert(oi, r);
                 }
                 let rel = rel_exclusions(&excl, 0.0, y + bx.top);
@@ -1076,7 +1086,7 @@ fn layout_blocks(
             }
         }
     }
-    let floats_bottom = float_tables.iter().map(|r| r.bottom()).fold(0.0, f32::max);
+    let floats_bottom = float_tables.iter().map(|r| r.bottom()).fold(objects_bottom, f32::max);
     ctx.hide_deleted = outer_hide;
     BoxLayout { items: stack_objects(items, layers), height: y.max(0.0), floats_bottom, wraps: excl }
 }
@@ -3838,7 +3848,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 Anchor::Margin => Some(pb.sect.margin_top + f.y),
                 _ => None,
             };
-            if let Some(top) = top.filter(|t| t.is_finite() && *t > pb.y && *t < pb.bottom) {
+            // At the top of a page it stands at its own place even above the top margin: zenodo-053's
+            // activity tables 1324 twips from the page top start at 66.2 pt on a fresh page in
+            // Word's PDF, as the ones that fit a page do.
+            let fresh = pb.at_top();
+            if let Some(top) = top.filter(|t| t.is_finite() && (*t > pb.y || (fresh && *t >= 0.0)) && *t < pb.bottom) {
                 pb.y = top;
             }
         }

@@ -6304,6 +6304,57 @@ fn emoji_drawn_by_a_fallback_face_keep_the_requested_fonts_line() {
 }
 
 #[test]
+fn a_table_cell_grows_to_hold_a_picture_its_text_wraps_around() {
+    // zenodo-053: the row after a cell whose short text wraps around a 128 pt picture starts
+    // below the picture in Word's PDF, not under it.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let after_y = |wrap: Wrap| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 400.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Beside", Default::default());
+        let f = Float { wrap, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 0.0, y: 0.0, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 120.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        d.insert_block(StoryRef::Body, &Path::top(2), doc4me_doc::Block::Para(doc4me_doc::Paragraph::with_text("After", Default::default())))
+            .unwrap();
+        let l = lay(&d);
+        let shape = shapes(&l.pages[0].items)[0];
+        let y =
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [2]).then_some(*y) } else { None }).unwrap();
+        (y, shape.bottom())
+    };
+    let (y, bottom) = after_y(Wrap::Square);
+    assert!(y >= bottom - 0.01, "the paragraph after the table at {y}, the picture ends at {bottom}");
+    // A picture in front of the text takes no room.
+    let (y, bottom) = after_y(Wrap::InFrontOfText);
+    assert!(y < bottom - 50.0, "in front of the text: paragraph at {y}, picture to {bottom}");
+}
+
+#[test]
+fn a_floating_table_too_tall_for_a_page_starts_at_its_own_place_on_a_fresh_page() {
+    // zenodo-053: activity tables 1324 twips (66.2 pt) from the page top and longer than a page
+    // start at 66.2 pt in Word's PDF, above the 72 pt top margin.
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let mut d = Document::new();
+    let mut t = Table::new(60, 1, 300.0);
+    for row in &mut t.rows {
+        let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+        cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+        cp.props.space_after = Some(0.0);
+        row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    }
+    t.props.borders = None;
+    t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Page, y: 50.0, ..Default::default() });
+    d.body = vec![doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default()))];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "the table runs on to the next page");
+    let y =
+        l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap();
+    assert!(y < 60.0, "first row's text at {y}, the table placed 50 pt from the page top");
+}
+
+#[test]
 fn a_cell_floats_offset_counts_from_above_its_paragraphs_space_before() {
     // zenodo-157: a picture 23.25 pt below a heading (10 pt before) that opens a cell stands
     // 23.25 pt below the row's top in Word's PDF, not below the heading's space before.
