@@ -1092,6 +1092,7 @@ preview	Title	Пример
 	Align Bottom Left	По нижнему левому краю
 	Align Bottom Center	По нижнему краю, по центру
 	Align Bottom Right	По нижнему правому краю
+	Commit {commit}	Коммит {commit}
 	Commits	Коммиты
 	{contributors} contributors · {commits} commits	Участников: {contributors} · коммитов: {commits}
 	Display name	Отображаемое имя

@@ -1212,6 +1212,7 @@
 	Real name	Pärisnimi
 	Name	Nimi
 	PRs	PR-id
+	Commit {commit}	Commit {commit}
 	Commits	Commitid
 	First	Esimene
 	Last	Viimane

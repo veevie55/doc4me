@@ -1359,6 +1359,7 @@
 	Real name	Справжнє ім'я
 	Name	Ім'я
 	PRs	PR
+	Commit {commit}	Коміт {commit}
 	Commits	Коміти
 	First	Перший
 	Last	Останній

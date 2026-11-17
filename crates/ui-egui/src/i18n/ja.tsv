@@ -1347,6 +1347,7 @@
 	Real name	本名
 	Name	名前
 	PRs	PR
+	Commit {commit}	コミット {commit}
 	Commits	コミット
 	First	最初
 	Last	最後

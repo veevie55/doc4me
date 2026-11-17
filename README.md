@@ -38,8 +38,9 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 เปิด [Actions ของ repository นี้](https://github.com/veevie55/doc4me/actions) เลือก workflow แล้วกด **Run workflow**
 เลือก **Use workflow from: main** เพื่อใช้ขั้นตอน build ปัจจุบัน และใส่ช่อง **ref** เป็น `main` สำหรับโค้ดล่าสุด,
 หรือชื่อ branch/commit ที่ต้องการ ช่อง **version** (ไม่บังคับ) ใส่เลขเวอร์ชัน เช่น `1.2.0` หรือ `1.2.0-rc.1`
-ซึ่งจะแสดงในหน้าต่างเกี่ยวกับ (About), `--version` และช่องเวอร์ชันของตัวติดตั้ง; เว้นว่างไว้ build จะระบุด้วยเลข commit อย่างเดียว
+ซึ่งจะแสดงใน `--version` และช่องเวอร์ชันของตัวติดตั้ง; เว้นว่างไว้ build จะระบุด้วยเลข commit อย่างเดียว
 ช่อง **file-name** เลือกชื่อไฟล์ดาวน์โหลด: `commit` (ค่าเริ่มต้น) ได้ `doc4me-<commit>-windows-x64.msi`, `version` ได้ `doc4me-<เวอร์ชัน>-windows-x64.msi` (ต้องใส่ version ด้วย)
+และหน้าต่างเกี่ยวกับแสดงตามที่เลือก: `version` แสดง "เวอร์ชัน 1.2.0 (01234567)", `commit` แสดง "คอมมิต 01234567" แม้จะ build จาก commit เก่าก็ตาม
 
 | Workflow | เป้าหมาย | ไฟล์ที่ดาวน์โหลดจาก Artifacts |
 |---|---|---|

@@ -1279,6 +1279,7 @@
 	Real name	Nome reale
 	Name	Nome
 	PRs	PR
+	Commit {commit}	Commit {commit}
 	Commits	Commit
 	First	Primo
 	Last	Ultimo

@@ -1295,6 +1295,7 @@
 	Real name	Nom réel
 	Name	Nom
 	PRs	PR
+	Commit {commit}	Commit {commit}
 	Commits	Commits
 	First	Premier
 	Last	Dernier

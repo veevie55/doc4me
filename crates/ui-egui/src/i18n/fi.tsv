@@ -533,6 +533,7 @@
 	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Kommentit jokaisen sivun vieressä ja jäljitetyt muutokset PDF-tiedostoissa, tulosteissa ja kuvissa; kommenttiluettelo verkkosivujen, Markdownin ja tekstin lopussa.
 	Comments on version	Version kommentit
 	Comments Pane	Kommenttiruutu
+	Commit {commit}	Commit {commit}
 	Commits	Commitit
 	Common Accent Objects	Yleiset aksenttiobjektit
 	Common Brackets	Yleiset sulkeet

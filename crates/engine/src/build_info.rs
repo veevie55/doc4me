@@ -1,8 +1,9 @@
 //! The commit a build was made from, and the version number given to it, if any. Doc4Me names its
 //! builds by commit: `--version`, the MCP server and web requests show it. A build may also be
-//! given a version number (`DOC4ME_VERSION`, typed in the build or Release workflow); the About
-//! dialog, `--version` and the MCP server then show it as well. Without one, the About dialog
-//! shows neither.
+//! given a version number (`DOC4ME_VERSION`, typed in the build or Release workflow); `--version`
+//! and the MCP server then show it as well. The About dialog follows the workflow's file-name
+//! choice (`DOC4ME_FILE_NAME`): `version` shows the version and commit, anything else the commit
+//! ([`about_line`]).
 //!
 //! The build scripts and workflows set `DOC4ME_BUILD_SHA` (`packaging/env.sh`,
 //! `packaging/windows/package.ps1`, `.github/workflows/build-*.yml`); a plain `cargo build`
@@ -42,6 +43,32 @@ pub fn describe() -> String {
 /// The version, else `commit_or_dev()`: one word, for the MCP server's version and user agents.
 pub fn version_or_commit() -> &'static str {
     version().unwrap_or_else(commit_or_dev)
+}
+
+/// What the About dialog shows under the program's name.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum AboutLine {
+    /// `Version 1.2.3 (abcdef12)`: the build's file names carry the version number. `build` is
+    /// `None` for a development build.
+    Version { version: &'static str, build: Option<&'static str> },
+    /// `Commit abcdef12` (the default, and what file names carry), or `None` for a development
+    /// build.
+    Commit(Option<&'static str>),
+}
+
+/// The About dialog's line: the version when the build's files are named by version
+/// (`DOC4ME_FILE_NAME=version` with a version number), otherwise the commit. The build workflows
+/// set `DOC4ME_FILE_NAME`; for sources older than this function they patch the dialog with
+/// `tools/about_label.py` to the same effect.
+pub fn about_line() -> AboutLine {
+    about_line_for(option_env!("DOC4ME_FILE_NAME"), version(), commit())
+}
+
+fn about_line_for(file_name: Option<&str>, version: Option<&'static str>, commit: Option<&'static str>) -> AboutLine {
+    match (file_name.map(str::trim), version) {
+        (Some("version"), Some(version)) => AboutLine::Version { version, build: commit },
+        _ => AboutLine::Commit(commit),
+    }
 }
 
 /// `s` as a version number: `MAJOR.MINOR.PATCH` (no leading zeros) with an optional
@@ -109,5 +136,19 @@ mod tests {
             None => assert_eq!(describe(), commit_or_dev()),
         }
         assert!(version_or_commit() == commit_or_dev() || version().is_some());
+    }
+
+    #[test]
+    fn the_about_line_follows_the_file_name_choice() {
+        let v = Some("1.2.0");
+        let c = Some("552a0b68");
+        assert_eq!(about_line_for(Some("version"), v, c), AboutLine::Version { version: "1.2.0", build: c });
+        assert_eq!(about_line_for(Some("version"), v, None), AboutLine::Version { version: "1.2.0", build: None });
+        // Files named by commit, no choice (a local build), an unknown choice, or no version number.
+        assert_eq!(about_line_for(Some("commit"), v, c), AboutLine::Commit(c));
+        assert_eq!(about_line_for(None, v, c), AboutLine::Commit(c));
+        assert_eq!(about_line_for(Some("Version"), v, c), AboutLine::Commit(c));
+        assert_eq!(about_line_for(Some("version"), None, c), AboutLine::Commit(c));
+        assert_eq!(about_line_for(None, None, None), AboutLine::Commit(None));
     }
 }

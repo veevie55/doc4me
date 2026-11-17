@@ -1092,6 +1092,7 @@ preview	Title	Örnek
 	Align Bottom Left	Sol Alta Hizala
 	Align Bottom Center	Alt Ortaya Hizala
 	Align Bottom Right	Sağ Alta Hizala
+	Commit {commit}	Commit {commit}
 	Commits	Commit'ler
 	{contributors} contributors · {commits} commits	{contributors} katkıda bulunan · {commits} commit
 	Display name	Görünen ad

@@ -476,6 +476,7 @@
 	Comments	ข้อคิดเห็น
 	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	แสดงข้อคิดเห็นข้างแต่ละหน้าและการเปลี่ยนแปลงที่ติดตามใน PDF งานพิมพ์ และรูปภาพ ส่วนหน้าเว็บ Markdown และข้อความธรรมดาจะมีรายการข้อคิดเห็นไว้ท้ายเอกสาร
 	Comments Pane	แผงข้อคิดเห็น
+	Commit {commit}	คอมมิต {commit}
 	Commits	คอมมิต
 	Common Accent Objects	เครื่องหมายกำกับที่ใช้บ่อย
 	Common Brackets	วงเล็บที่ใช้บ่อย

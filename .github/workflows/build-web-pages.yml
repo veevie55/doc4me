@@ -59,9 +59,32 @@ jobs:
             fi
             printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
           fi
+          # No download files here: a version typed in the form is shown in About, else the commit
+          # (DOC4ME_FILE_NAME, as the file-name field of the other build workflows sets it).
+          if [ -n "$version" ]; then file_name=version; else file_name=commit; fi
+          printf 'DOC4ME_FILE_NAME=%s\n' "$file_name" >> "$GITHUB_ENV"
           printf '%s\n' "$commit" > dist/web/SOURCE_COMMIT.txt
           printf '### GitHub Pages deployment\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+
+      - name: Check out the About tool (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .doc4me-workflow
+          sparse-checkout: |
+            tools/about_label.py
+            crates/ui-egui/src/i18n/*.tsv
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Sources older than build_info::about_line don't follow the file-name choice in About:
+      # tools/about_label.py patches their About dialog to match and leaves newer sources unchanged.
+      - name: Show the chosen version or commit in About
+        shell: bash
+        run: |
+          python3 .doc4me-workflow/tools/about_label.py . .doc4me-workflow/crates/ui-egui/src/i18n
+          rm -rf .doc4me-workflow
 
       - name: Install Rust and the WebAssembly target
         uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch

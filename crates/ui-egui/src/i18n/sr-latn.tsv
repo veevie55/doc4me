@@ -1280,6 +1280,7 @@
 	Real name	Pravo ime
 	Name	Ime
 	PRs	PR-ovi
+	Commit {commit}	Commit {commit}
 	Commits	Commit-ovi
 	First	Prvi
 	Last	Zadnji

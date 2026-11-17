@@ -1296,6 +1296,7 @@
 	Real name	Skutečné jméno
 	Name	Jméno
 	PRs	PR
+	Commit {commit}	Commit {commit}
 	Commits	Commity
 	First	První
 	Last	Poslední

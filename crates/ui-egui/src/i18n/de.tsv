@@ -1273,6 +1273,7 @@
 	Real name	Echter Name
 	Name	Name
 	PRs	PRs
+	Commit {commit}	Commit {commit}
 	Commits	Commits
 	First	Erster
 	Last	Letzter

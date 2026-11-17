@@ -121,6 +121,25 @@ jobs:
           if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
           printf '\nFile names: by %s\n' "$file_name" >> "$GITHUB_STEP_SUMMARY"
 
+      - name: Check out the About tool (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .doc4me-workflow
+          sparse-checkout: |
+            tools/about_label.py
+            crates/ui-egui/src/i18n/*.tsv
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Sources older than build_info::about_line don't follow the file-name choice in About:
+      # tools/about_label.py patches their About dialog to match and leaves newer sources unchanged.
+      - name: Show the chosen version or commit in About
+        shell: bash
+        run: |
+          python .doc4me-workflow/tools/about_label.py . .doc4me-workflow/crates/ui-egui/src/i18n
+          rm -rf .doc4me-workflow
+
       - name: Install Rust and the x64 target
         uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
         with:

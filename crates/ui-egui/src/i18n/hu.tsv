@@ -1089,6 +1089,7 @@
 	Align Bottom Left	Igazítás balra le
 	Align Bottom Center	Igazítás középre le
 	Align Bottom Right	Igazítás jobbra le
+	Commit {commit}	Commit: {commit}
 	Commits	Commitok
 	{contributors} contributors · {commits} commits	{contributors} közreműködő · {commits} commit
 	Display name	Megjelenített név

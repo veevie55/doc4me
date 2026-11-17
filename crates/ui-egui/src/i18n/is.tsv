@@ -534,6 +534,7 @@
 	Comments beside each page and tracked changes in PDFs, prints and images; a comment list at the end of web pages, Markdown and text.	Athugasemdir við hlið hverrar síðu og raktar breytingar í PDF-skjölum, útprentunum og myndum; athugasemdalisti aftast á vefsíðum, í Markdown og texta.
 	Comments on version	Athugasemdir við útgáfu
 	Comments Pane	Athugasemdasvæði
+	Commit {commit}	Breyting {commit}
 	Commits	Útgáfur
 	Common Accent Objects	Algeng áherslutákn
 	Common Brackets	Algengir svigar

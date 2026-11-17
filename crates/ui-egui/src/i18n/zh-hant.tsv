@@ -1348,6 +1348,7 @@
 	Real name	真實姓名
 	Name	名稱
 	PRs	PR
+	Commit {commit}	提交 {commit}
 	Commits	提交
 	First	首次
 	Last	最近

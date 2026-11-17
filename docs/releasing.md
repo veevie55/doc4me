@@ -1,6 +1,6 @@
 # Building and releasing Doc4Me
 
-> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** download files can be named by version number or by commit (**file-name** field); every build workflow takes an optional version number (shown in About and `--version`), and a manual Release workflow tags and publishes a Release from `main` or a chosen commit with the platforms ticked (previously: builds are named by commit instead of a version number)
+> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** the About dialog shows the version or the commit as the file-name field chooses, also for builds of older commits (`tools/about_label.py`); download files can be named by version number or by commit (**file-name** field); every build workflow takes an optional version number (shown in About and `--version`), and a manual Release workflow tags and publishes a Release from `main` or a chosen commit with the platforms ticked (previously: builds are named by commit instead of a version number)
 
 ## Build a chosen commit
 
@@ -18,16 +18,25 @@ version is chosen for file names (below).
 A build may also be given a **version number** in the workflow form's **version** field: `1.2.3` or
 `1.2.3-rc.1` (a leading `v` is dropped; major and minor up to 255 and patch up to 65535, the MSI
 limits). The workflow checks it and passes it to the build as `DOC4ME_VERSION`
-(`crates/engine/src/build_info.rs`): the About dialog then shows `Version 1.2.3 (abcdef12)`,
-`--version` prints `doc4me 1.2.3 (abcdef12)`, the MCP server and user agent give `1.2.3`, the
-installers' numeric version fields below take it, and the artifact holds `VERSION.txt`. Without a
-version the About dialog shows neither a version number nor a commit, as before. Source commits older
-than this feature ignore the version in the app itself (only the installers' numeric fields take it).
+(`crates/engine/src/build_info.rs`): `--version` prints `doc4me 1.2.3 (abcdef12)`, the MCP server and user agent give `1.2.3`, the
+installers' numeric version fields below take it, and the artifact holds `VERSION.txt`.
+
+The About dialog follows the **file-name** choice below (`build_info::about_line`): files named by
+version show `Version 1.2.3 (abcdef12)`, files named by commit show `Commit abcdef12` (a local build
+without `DOC4ME_BUILD_SHA` shows `development build`). The Pages workflow has no download files, so
+it shows the version when one is typed and the commit otherwise. Every build workflow first checks out
+[`tools/about_label.py`](../tools/about_label.py) and the interface catalogs from its own revision
+and runs it on the selected source: a source older than `about_line` gets its About line replaced by
+code that reads the same variables (`DOC4ME_FILE_NAME`, `DOC4ME_VERSION`, `DOC4ME_BUILD_SHA`), and
+the strings it uses are added to its catalogs where missing, so a build from an older commit shows
+the version or commit as chosen, translated. Newer sources are left unchanged. The run stops if the
+dialog code is not recognised (checked against the About code of every revision since the first
+import). Older sources' `--version` and MCP version are not changed.
 
 The **file-name** field chooses what names the download files: `commit` (the default in the build
 workflows) gives `doc4me-<commit>-windows-x64.msi`, `version` gives `doc4me-<version>-windows-x64.msi`
 (likewise the portable ZIP, DMG, CLI ZIP, AppImage/zsync, DEB, RPM, tar.gz, Web ZIP and the folders
-inside the archives). `version` needs a version number; the run stops without one. The workflow passes
+inside the archives), and the About dialog shows the same choice (above). `version` needs a version number; the run stops without one. The workflow passes
 the choice as `DOC4ME_FILE_NAME` (`commit` or `version`) to `packaging/env.sh` and
 `packaging/windows/package.ps1`, which name the files with the commit or with `DOC4ME_VERSION`; a
 local packaging run with `DOC4ME_FILE_NAME=version` and no `DOC4ME_VERSION` uses the `Cargo.toml`
@@ -121,7 +130,7 @@ a plain `1.2.0` becomes the latest release. (GitHub allows at most 10 fields in 
 semantic versioning instead of a separate field.)
 
 The run calls the chosen platform workflows above (`workflow_call`) with the resolved SHA, the
-version and the file-name choice, so each package carries the version in its About dialog, `--version` and installer fields.
+version and the file-name choice, so each package carries the version in its `--version` and installer fields, and its About dialog shows the version or the commit as the file names do.
 When every chosen build succeeds, the `publish` job (the only job with `contents: write`) checks that
 each artifact's `SOURCE_COMMIT.txt` and `VERSION.txt` match, refuses two builds producing the same
 file name, adds `SHA256SUMS.txt` and `SOURCE_COMMIT.txt`, writes cumulative notes with
@@ -178,6 +187,7 @@ remain the owner's chosen upstream URLs.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-17 | minor | The About dialog follows the file-name choice (version, or commit; the Pages workflow: the version if typed), also when an older commit is built: the build workflows patch its About line with `tools/about_label.py`. |
 | 2026-11-17 | minor | Build workflows take an optional version number (About, `--version`, installer fields) and a **file-name** choice (download files named by commit or by version); a manual Release workflow tags `v<version>` and publishes a Release from `main` or a chosen commit with the ticked platforms (pre-release when the version has a pre-release part). |
 | 2026-11-16 | minor | Builds are named by commit instead of a version number (`--version`, MCP, user agent, package file names; the About dialog shows neither); Releases are published by hand; removed the deleted x64 installer and ARM64 readiness workflows from this page. |
 | 2026-11-15 | minor | Windows packages and readiness use a shared pinned OFL font set; the preparation script verifies Google Fonts hashes for Overpass and Noto Sans Ethiopic before embedding and packaging licences. |

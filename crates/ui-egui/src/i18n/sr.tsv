@@ -1284,6 +1284,7 @@
 	Real name	Право име
 	Name	Име
 	PRs	PR-ови
+	Commit {commit}	Commit {commit}
 	Commits	Commit-ови
 	First	Први
 	Last	Задњи
