@@ -6332,6 +6332,44 @@ fn a_table_cell_grows_to_hold_a_picture_its_text_wraps_around() {
 }
 
 #[test]
+fn a_tall_floating_table_runs_on_below_one_placed_at_the_same_spot() {
+    // govuk-067: "Role details" (longer than a page) follows "Personal details", both floating
+    // 1 twip below the same paragraph; Word runs the long one on below the other, not over it.
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let table = |rows: usize, text: &str| {
+        let mut t = Table::new(rows, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text(text, Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, ..Default::default() });
+        doc4me_doc::Block::Table(t).into()
+    };
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Before", Default::default())),
+        table(5, "Short"),
+        table(60, "Long"),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+    ];
+    let l = lay(&d);
+    let ys = |idx: u32| {
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(
+                |i| if let Placed::Lines { path, y, .. } = i { (path.0.first() == Some(&idx) && path.0.len() > 1).then_some(*y) } else { None },
+            )
+            .collect::<Vec<_>>()
+    };
+    let short_bottom = ys(1).into_iter().fold(f32::MIN, f32::max) + 14.0;
+    let long_top = ys(2).into_iter().fold(f32::MAX, f32::min);
+    assert!(long_top >= short_bottom - 0.01, "the long table starts at {long_top}, the short one ends at {short_bottom}");
+}
+
+#[test]
 fn a_floating_table_too_tall_for_a_page_starts_at_its_own_place_on_a_fresh_page() {
     // zenodo-053: activity tables 1324 twips (66.2 pt) from the page top and longer than a page
     // start at 66.2 pt in Word's PDF, above the 72 pt top margin.

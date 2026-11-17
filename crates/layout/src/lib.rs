@@ -3857,7 +3857,20 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
             }
         }
     }
-    // A table in the text flow starts below the floating objects in its way.
+    // A table in the text flow starts below the floating objects in its way. A floating table
+    // too tall for a page also clears one placed at (about) the same spot: govuk-067's "Role
+    // details" table follows "Personal details", both 1 twip below the same paragraph, and runs
+    // on below it in Word's PDF instead of over it.
+    if t.props.float.is_some() && !pb.web {
+        let (x0, x1) = (pb.col_x() + tl.x, pb.col_x() + tl.x + tl.width);
+        let same_spot: Vec<WrapArea> = pb
+            .excl
+            .iter()
+            .filter(|(r, ..)| r.y > pb.y && r.y <= pb.y + 1.0)
+            .map(|(r, b, c, w)| (Rect::new(r.x, pb.y, r.w, (r.bottom() - pb.y).max(0.0)), *b, c.clone(), *w))
+            .collect();
+        pb.y = below(&same_spot, pb.y, x0, x1);
+    }
     below_floats(pb, pb.col_x() + tl.x, pb.col_x() + tl.x + tl.width);
     let header_rows: Vec<usize> = (0..t.rows.len()).take_while(|r| t.rows.get(*r).is_some_and(|row| row.props.header)).collect();
     let place = |pb: &mut PageBuilder, row: &table::RowLayout| {
