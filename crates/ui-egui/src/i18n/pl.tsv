@@ -775,6 +775,7 @@
 	User Name	Nazwa użytkownika
 	User name:	Nazwa użytkownika:
 	Version History	Historia wersji
+	Version {version} ({build})	Wersja {version} ({build})
 	Vertical	Pionowo
 	Vertical Alignment	Wyrównanie w pionie
 	View	Widok
@@ -809,6 +810,7 @@
 	Zoom	Powiększenie
 	Zoom In	Powiększ
 	Zoom Out	Pomniejsz
+	development build	wersja rozwojowa
 	lowercase	małe litery
 	{group} settings	Ustawienia: {group}
 	{key}+Click to follow link	{key}+kliknięcie otwiera link

@@ -191,6 +191,7 @@
 	Delete Style	Stílus törlése
 	Delete Table	Táblázat törlése
 	Design	Tervezés
+	development build	fejlesztői kiadás
 	Diagonal	Átlós
 	Diamond	Rombusz
 	Dictate	Diktálás
@@ -786,6 +787,7 @@
 	User Name	Felhasználónév
 	User name:	Felhasználónév:
 	Version History	Verzióelőzmények
+	Version {version} ({build})	Verzió: {version} ({build})
 	Vertical	Függőleges
 	Vertical Alignment	Függőleges igazítás
 	View	Nézet

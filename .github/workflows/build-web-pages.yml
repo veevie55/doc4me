@@ -1,7 +1,7 @@
 # Build a selected Doc4Me Web App revision and publish it to this repository's
 # GitHub Pages site. Deployments are manual; pushes, tags and PRs do not publish.
 name: Build Web App on GitHub Pages
-run-name: 'Publish Web App · ${{ inputs.ref }}'
+run-name: "Publish Web App · ${{ inputs.ref }}${{ inputs.version && format(' · {0}', inputs.version) || '' }}"
 
 on:
   workflow_dispatch:
@@ -11,6 +11,11 @@ on:
         required: true
         type: string
         default: main
+      version:
+        description: 'Version number shown in About and --version, e.g. 1.2.0 or 1.2.0-rc.1 (empty = the commit only)'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -34,14 +39,29 @@ jobs:
       - name: Record the actual source commit
         id: source
         shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
         run: |
           commit=$(git rev-parse HEAD)
           printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
           # Bake the source commit into the build (crates/engine/src/build_info.rs), as build-web.yml does.
           printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
           mkdir -p dist/web
+          # The version typed in the form: checked here (never pasted into a script), then given to
+          # the build as DOC4ME_VERSION. Numbers fit the MSI ProductVersion (255.255.65535).
+          version="${REQUESTED_VERSION#v}"
+          if [ -n "$REQUESTED_VERSION" ]; then
+            semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+            if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+              [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+              echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+              exit 1
+            fi
+            printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
+          fi
           printf '%s\n' "$commit" > dist/web/SOURCE_COMMIT.txt
           printf '### GitHub Pages deployment\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
 
       - name: Install Rust and the WebAssembly target
         uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch

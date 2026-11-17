@@ -727,6 +727,7 @@
 	Detach Template	ਟੈਂਪਲੇਟ ਵੱਖ ਕਰੋ
 	Detect language automatically	ਭਾਸ਼ਾ ਆਪਣੇ-ਆਪ ਪਛਾਣੋ
 	Developer	ਡਿਵੈਲਪਰ
+	development build	ਡਿਵੈਲਪਮੈਂਟ ਬਿਲਡ
 	Diagonal	ਤਿਰਛਾ
 	Diagonal Dots	ਤਿਰਛੀਆਂ ਬਿੰਦੀਆਂ
 	Diamond	ਹੀਰਾ
@@ -2720,6 +2721,7 @@
 	Vector AB	ਵੈਕਟਰ AB
 	Version	ਵਰਜਨ
 	Version History	ਵਰਜਨ ਇਤਿਹਾਸ
+	Version {version} ({build})	ਵਰਜਨ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ਦਸਤਾਵੇਜ਼ ਖੁੱਲ੍ਹਾ ਹੋਣ ਤੱਕ ਵਰਜਨ ਰੱਖੇ ਜਾਂਦੇ ਹਨ (.docx ਫਾਈਲ ਵਿੱਚ ਵਰਜਨ ਨਹੀਂ ਹੁੰਦੇ)।
 	Vertical	ਖੜ੍ਹਵਾਂ
 	Vertical Alignment	ਖੜ੍ਹਵਾਂ ਸੰਰੇਖਣ

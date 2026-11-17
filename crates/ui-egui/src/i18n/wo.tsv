@@ -719,6 +719,7 @@
 	Detach Template	Detager modèle
 	Detect language automatically	Gis làkk wi ci saasi
 	Developer	Developpeur
+	development build	tabax yokkute
 	Diagonal	Diagonaal
 	Diagonal Dots	Tombi diagonaal
 	Diamond	Diamand
@@ -2712,6 +2713,7 @@
 	Vector AB	Vecteur AB
 	Version	Weersioŋ
 	Version History	Jaar-jaaru wersioŋ
+	Version {version} ({build})	Weersioŋ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Version yi dañu leen di denc bi këyit bi ubbeeku (fichier .docx amul version).
 	Vertical	taxaw
 	Vertical Alignment	Jubluwaay bu taxaw

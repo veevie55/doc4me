@@ -727,6 +727,7 @@
 	Detach Template	ટેમ્પલેટ અલગ કરો
 	Detect language automatically	ભાષા આપમેળે શોધો
 	Developer	ડેવલપર
+	development build	ડેવલપમેન્ટ બિલ્ડ
 	Diagonal	વિકર્ણ
 	Diagonal Dots	વિકર્ણ ટપકાં
 	Diamond	હીરો
@@ -2720,6 +2721,7 @@
 	Vector AB	સદિશ AB
 	Version	આવૃત્તિ
 	Version History	આવૃત્તિ ઇતિહાસ
+	Version {version} ({build})	આવૃત્તિ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	દસ્તાવેજ ખુલ્લો હોય ત્યાં સુધી આવૃત્તિઓ રાખવામાં આવે છે (.docx ફાઇલમાં આવૃત્તિઓ હોતી નથી).
 	Vertical	ઊભું
 	Vertical Alignment	ઊભું સંરેખણ

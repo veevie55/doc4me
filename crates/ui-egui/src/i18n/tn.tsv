@@ -719,6 +719,7 @@
 	Detach Template	Kgaoganya thempoleiti
 	Detect language automatically	Lemoga puo ka bowena
 	Developer	Tlhabololo
+	development build	Kgatiso ya tlhabololo
 	Diagonal	Mola wa go kgabaganya
 	Diagonal Dots	Marontho a tshiwano
 	Diamond	Taemane
@@ -2712,6 +2713,7 @@
 	Vector AB	Vektara AB
 	Version	Mofuta
 	Version History	Hisitori ya diphetolelo
+	Version {version} ({build})	Mofuta {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Diphetolelo di bolokwa fa tokomane e butswe (faele ya .docx ga e na diphetolelo).
 	Vertical	E e emeng
 	Vertical Alignment	Tshwaraganyo e e emeng

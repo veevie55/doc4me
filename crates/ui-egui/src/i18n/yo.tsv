@@ -330,6 +330,7 @@
 	Design	Apẹrẹ
 	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Lati ṣii awọn iwe aṣẹ Ọrọ pẹlu Doc4Me nipasẹ aiyipada: yan ọkan ninu Oluwari, yan Faili ral Gba Alaye, mu Doc4Me labẹ Ṣii pẹlu, lẹhinna tẹ Yipada Gbogbo.
 	Doc4Me is now the default app for Word documents.	Doc4Me jẹ ohun elo aiyipada fun awọn iwe aṣẹ Ọrọ.
+	development build	idagbasoke kọ
 	Diagonal	Akọ-ede
 	Diamond	Okuta iyebiye
 	Dictate	Sọ
@@ -919,6 +920,7 @@
 	User Name	Orukọ olumulo
 	User name:	Orukọ olumulo:
 	Version History	Itan Ẹya
+	Version {version} ({build})	Ẹya {version} ({build})
 	Vertical	Inaro
 	Vertical Alignment	Inaro titete
 	View	Wiwo

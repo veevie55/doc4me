@@ -727,6 +727,7 @@
 	Detach Template	შაბლონის მოხსნა
 	Detect language automatically	ენის ავტომატური ამოცნობა
 	Developer	დეველოპერი
+	development build	დეველოპერული ვერსია
 	Diagonal	დიაგონალური
 	Diagonal Dots	დიაგონალური წერტილები
 	Diamond	რომბი
@@ -2720,6 +2721,7 @@
 	Vector AB	ვექტორი AB
 	Version	ვერსია
 	Version History	ვერსიების ისტორია
+	Version {version} ({build})	ვერსია {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ვერსიები ინახება, სანამ დოკუმენტი ღიაა (.docx ფაილს ვერსიები არ აქვს).
 	Vertical	ვერტიკალური
 	Vertical Alignment	ვერტიკალური გასწორება

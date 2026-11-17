@@ -730,6 +730,7 @@
 	Detach Template	Dì-cheangail an teamplaid
 	Detect language automatically	Mothaich dhan chànan gu fèin-obrachail
 	Developer	Leasaiche
+	development build	tionndadh leasachaidh
 	Diagonal	Trastanach
 	Diagonal Dots	Dotagan trastanach
 	Diamond	Daoimean
@@ -2723,6 +2724,7 @@
 	Vector AB	Bheactar AB
 	Version	Tionndadh
 	Version History	Eachdraidh nan tionndadh
+	Version {version} ({build})	Tionndadh {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Thèid tionndaidhean a chumail fhad ’s a tha an sgrìobhainn fosgailte (chan eil tionndaidhean aig faidhle .docx).
 	Vertical	Inghearach
 	Vertical Alignment	Co-thaobhadh inghearach

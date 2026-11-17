@@ -23,7 +23,7 @@ this page is the local copy of the decision.
 
 ## In Doc4Me
 
-- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab. The About tab names the developer (Chatrawichai Chanprom, veevie55); it shows no version number or commit and has no source code link (`doc4me --version` prints the commit).
+- The About window is `Dialog::About` in `crates/ui-egui/src/dialogs.rs` (Help, or Backstage ▸ About); `ui.dialog {"name":"contributors"}` / `"models"` opens a tab. The About tab names the developer (Chatrawichai Chanprom, veevie55); it shows the version number and commit only for a build given a version (`DOC4ME_VERSION`, from the build or Release workflow: `Version {version} ({build})`), otherwise neither, and has no source code link (`doc4me --version` prints the commit).
 
 ## Credit yourself
 

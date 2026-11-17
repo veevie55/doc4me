@@ -717,6 +717,7 @@
 	Detach Template	Hlukanisa Isifanekiso
 	Detect language automatically	Thola ulimi ngokuzenzakalelayo
 	Developer	Unjiniyela
+	development build	ukwakhiwa kwentuthuko
 	Diagonal	I-diagonal
 	Diagonal Dots	Amachashazi Diagonal
 	Diamond	Idayimane
@@ -2710,6 +2711,7 @@
 	Vector AB	IVector AB
 	Version	Inguqulo
 	Version History	Umlando Wenguqulo
+	Version {version} ({build})	Inguqulo {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Izinguqulo zigcinwa ngenkathi idokhumenti ivuliwe (ifayela elithi .docx alinazo izinguqulo).
 	Vertical	Iqondile
 	Vertical Alignment	Ukuqondanisa Okuqondile

@@ -732,6 +732,7 @@
 	Detach Template	Atjungti šabloną
 	Detect language automatically	Aptikti kalbą automatiškai
 	Developer	Programų kūrėjas
+	development build	kūrimo versija
 	Diagonal	Įstrižai
 	Diagonal Dots	Įstrižiniai taškai
 	Diamond	Rombas
@@ -2725,6 +2726,7 @@
 	Vector AB	Vektorius AB
 	Version	Versija
 	Version History	Versijų istorija
+	Version {version} ({build})	Versija {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versijos saugomos, kol dokumentas atidarytas (.docx failas versijų neturi).
 	Vertical	Vertikalus
 	Vertical Alignment	Vertikali lygiuotė

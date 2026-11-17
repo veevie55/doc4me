@@ -329,6 +329,7 @@
 	Search for templates	Pesquisar modelos
 	To open Word documents with Doc4Me by default: select one in Finder, choose File › Get Info, pick Doc4Me under Open with, then click Change All.	Para abrir documentos do Word com o Doc4Me por padrão: selecione um no Finder, escolha Arquivo › Obter Informações, selecione o Doc4Me em “Abrir com” e clique em “Alterar Tudo”.
 	Doc4Me is now the default app for Word documents.	O Doc4Me agora é o aplicativo padrão para documentos do Word.
+	development build	versão de desenvolvimento
 	Diagonal	Diagonal
 	Diamond	Losango
 	Dictate	Ditar
@@ -915,6 +916,7 @@
 	User Name	Nome de usuário
 	User name:	Nome de usuário:
 	Version History	Histórico de versões
+	Version {version} ({build})	Versão {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alinhamento vertical
 	View	Exibir

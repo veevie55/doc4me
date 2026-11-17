@@ -732,6 +732,7 @@
 	Detach Template	Separar il model
 	Detect language automatically	Identifitgar automaticamain la lingua
 	Developer	Svilup
+	development build	versiun da svilup
 	Diagonal	Diagonal
 	Diagonal Dots	Puncts diagonals
 	Diamond	Diamant
@@ -2725,6 +2726,7 @@
 	Vector AB	Vectur AB
 	Version	Versiun
 	Version History	Istorgia da versiuns
+	Version {version} ({build})	Versiun {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Las versiuns vegnan mantegnidas uschè ditg ch'il document è avert (ina datoteca .docx n'ha naginas versiuns).
 	Vertical	Vertical
 	Vertical Alignment	Orientaziun verticala

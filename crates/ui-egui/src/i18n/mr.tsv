@@ -727,6 +727,7 @@
 	Detach Template	टेम्पलेट वेगळे करा
 	Detect language automatically	भाषा स्वयं ओळखा
 	Developer	विकसक
+	development build	विकास बिल्ड
 	Diagonal	कर्ण
 	Diagonal Dots	कर्ण बिंदू
 	Diamond	हिरा
@@ -2720,6 +2721,7 @@
 	Vector AB	सदिश AB
 	Version	आवृत्ती
 	Version History	आवृत्ती इतिहास
+	Version {version} ({build})	आवृत्ती {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	दस्तऐवज उघडा असेपर्यंत आवृत्त्या ठेवल्या जातात (.docx फाइलला आवृत्त्या नसतात).
 	Vertical	उभे
 	Vertical Alignment	उभे संरेखन

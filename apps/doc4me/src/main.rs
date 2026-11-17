@@ -246,7 +246,7 @@ fn main() -> eframe::Result {
             }
             "--sample" => sample = true,
             "--version" => {
-                println!("doc4me {}", doc4me_engine::build_info::commit_or_dev());
+                println!("doc4me {}", doc4me_engine::build_info::describe());
                 return Ok(());
             }
             _ => files.push(a),
@@ -265,7 +265,7 @@ fn main() -> eframe::Result {
     if let Some(logger) = logger {
         match log_dir().filter(|_| prefs_enabled()) {
             Some(dir) => match logger.attach_dir(&dir) {
-                Ok(path) => log::info!("Doc4Me {}, log file {}", doc4me_engine::build_info::commit_or_dev(), path.display()),
+                Ok(path) => log::info!("Doc4Me {}, log file {}", doc4me_engine::build_info::describe(), path.display()),
                 // Standard error only by now (`attach_dir` gave up on the file); unlike `eprintln!`, never panics.
                 Err(e) => log::warn!("no log file: {e}"),
             },

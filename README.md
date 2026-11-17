@@ -37,7 +37,8 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 
 เปิด [Actions ของ repository นี้](https://github.com/veevie55/doc4me/actions) เลือก workflow แล้วกด **Run workflow**
 เลือก **Use workflow from: main** เพื่อใช้ขั้นตอน build ปัจจุบัน และใส่ช่อง **ref** เป็น `main` สำหรับโค้ดล่าสุด,
-หรือชื่อ branch/commit ที่ต้องการ
+หรือชื่อ branch/commit ที่ต้องการ ช่อง **version** (ไม่บังคับ) ใส่เลขเวอร์ชัน เช่น `1.2.0` หรือ `1.2.0-rc.1`
+ซึ่งจะแสดงในหน้าต่างเกี่ยวกับ (About), `--version` และช่องเวอร์ชันของตัวติดตั้ง; เว้นว่างไว้ build จะระบุด้วยเลข commit อย่างเดียว
 
 | Workflow | เป้าหมาย | ไฟล์ที่ดาวน์โหลดจาก Artifacts |
 |---|---|---|
@@ -58,7 +59,8 @@ workflow Windows สำหรับแพ็กเกจและ readiness ใ�
 Windows ARM64 ยังไม่ลงลายเซ็นดิจิทัล และ macOS ลงลายเซ็นแบบ ad-hoc โดยยังไม่ notarize
 Web App ใช้ ZIP ที่แตกแล้วให้บริการผ่าน HTTP(S) ได้ หรือสั่ง workflow Pages เพื่อเผยแพร่เว็บไซต์; ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
 
-ไม่มี workflow ใดออก GitHub Release อัตโนมัติ เจ้าของ repository เผยแพร่ Release เองจากไฟล์ใน Artifacts
+workflow [Release](.github/workflows/release.yml) ออก tag `v<เวอร์ชัน>` และ GitHub Release เมื่อสั่ง Run workflow เท่านั้น:
+ใส่เลขเวอร์ชัน (แสดงในหน้าต่างเกี่ยวกับ) เลือก `main` (โค้ดล่าสุด) หรือเลข commit และติ๊กเลือกแพลตฟอร์มที่จะ build
 รายละเอียดและข้อกำหนดของแต่ละแพลตฟอร์มอยู่ที่ [docs/releasing.md](docs/releasing.md)
 
 ## ความสามารถหลัก

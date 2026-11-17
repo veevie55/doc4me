@@ -2784,7 +2784,13 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 2 => crate::credits::models_ui(ui),
                 _ => {
                     ui.label(egui::RichText::new(tl!("Doc4Me")).font(semibold(22.0)));
-                    // No version number or commit here (the owner's choice); `doc4me --version` shows the commit.
+                    // The version number a build was given (build or Release workflow), with its
+                    // commit; a build without one shows neither (the owner's choice), and
+                    // `doc4me --version` still shows the commit.
+                    if let Some(version) = doc4me_engine::build_info::version() {
+                        let build = doc4me_engine::build_info::commit().unwrap_or(tl!("development build"));
+                        ui.label(crate::i18n::fmt(tl!("Version {version} ({build})"), &[("version", version), ("build", build)]));
+                    }
                     ui.label(tl!("A free, open-source word processor written from scratch in Rust.\nBased on WordCraft by the ArtCraft team."));
                     ui.add_space(6.0);
                     // The developer's name, the same in every language (its row in each catalog is the name itself).

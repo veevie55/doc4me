@@ -733,6 +733,7 @@
 	Detach Template	Откачи шаблон
 	Detect language automatically	Автоматски препознај го јазикот
 	Developer	Програмер
+	development build	развојна верзија
 	Diagonal	Дијагонално
 	Diagonal Dots	Дијагонални точки
 	Diamond	Ромб
@@ -2726,6 +2727,7 @@
 	Vector AB	Вектор AB
 	Version	Верзија
 	Version History	Историја на верзии
+	Version {version} ({build})	Верзија {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Верзиите се чуваат додека документот е отворен (датотеката .docx нема верзии).
 	Vertical	Вертикално
 	Vertical Alignment	Вертикално порамнување

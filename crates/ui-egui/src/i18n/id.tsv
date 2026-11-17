@@ -732,6 +732,7 @@
 	Detach Template	Lepaskan Templat
 	Detect language automatically	Deteksi bahasa secara otomatis
 	Developer	Pengembang
+	development build	build pengembangan
 	Diagonal	Diagonal
 	Diagonal Dots	Titik Diagonal
 	Diamond	Belah Ketupat
@@ -2725,6 +2726,7 @@
 	Vector AB	Vektor AB
 	Version	Versi
 	Version History	Riwayat Versi
+	Version {version} ({build})	Versi {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versi disimpan selama dokumen terbuka (file .docx tidak memiliki versi).
 	Vertical	Vertikal
 	Vertical Alignment	Perataan Vertikal

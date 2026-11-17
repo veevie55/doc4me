@@ -729,6 +729,7 @@
 	Detach Template	Odvoji predložak
 	Detect language automatically	Automatski prepoznaj jezik
 	Developer	Razvojni programer
+	development build	razvojna verzija
 	Diagonal	Dijagonalno
 	Diagonal Dots	Dijagonalne točke
 	Diamond	Romb
@@ -2722,6 +2723,7 @@
 	Vector AB	Vektor AB
 	Version	Verzija
 	Version History	Povijest verzija
+	Version {version} ({build})	Verzija {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Verzije se čuvaju dok je dokument otvoren (datoteka .docx nema verzija).
 	Vertical	Okomito
 	Vertical Alignment	Okomito poravnanje

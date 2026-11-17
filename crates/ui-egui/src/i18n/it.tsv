@@ -863,6 +863,7 @@
 	User Name	Nome utente
 	User name:	Nome utente:
 	Version History	Cronologia versioni
+	Version {version} ({build})	Versione {version} ({build})
 	Vertical	Verticale
 	Vertical Alignment	Allineamento verticale
 	View	Visualizza
@@ -897,6 +898,7 @@
 	Zoom	Zoom
 	Zoom In	Ingrandisci
 	Zoom Out	Riduci
+	development build	build di sviluppo
 	lowercase	minuscole
 	{group} settings	Impostazioni {group}
 	{key}+Click to follow link	{key}+clic per seguire il collegamento

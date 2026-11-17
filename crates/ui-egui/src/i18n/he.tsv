@@ -727,6 +727,7 @@
 	Detach Template	נתק תבנית
 	Detect language automatically	זהה שפה אוטומטית
 	Developer	מפתחים
+	development build	גרסת פיתוח
 	Diagonal	אלכסוני
 	Diagonal Dots	נקודות אלכסוניות
 	Diamond	מעוין
@@ -2720,6 +2721,7 @@
 	Vector AB	וקטור AB
 	Version	גרסה
 	Version History	היסטוריית גרסאות
+	Version {version} ({build})	גרסה {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	הגרסאות נשמרות כל עוד המסמך פתוח (לקובץ .docx אין גרסאות).
 	Vertical	אנכי
 	Vertical Alignment	יישור אנכי

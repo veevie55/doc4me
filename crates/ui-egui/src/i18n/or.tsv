@@ -727,6 +727,7 @@
 	Detach Template	ଟେମ୍ପଲେଟ୍ ଅଲଗା କରନ୍ତୁ
 	Detect language automatically	ଭାଷା ସ୍ୱୟଂଚାଳିତ ଭାବେ ଚିହ୍ନଟ କରନ୍ତୁ
 	Developer	ଡେଭଲପର୍
+	development build	ଡେଭଲପମେଣ୍ଟ ବିଲ୍ଡ
 	Diagonal	କର୍ଣ୍ଣ
 	Diagonal Dots	କର୍ଣ୍ଣ ବିନ୍ଦୁ
 	Diamond	ହୀରା
@@ -2720,6 +2721,7 @@
 	Vector AB	ଭେକ୍ଟର AB
 	Version	ସଂସ୍କରଣ
 	Version History	ସଂସ୍କରଣ ଇତିହାସ
+	Version {version} ({build})	ସଂସ୍କରଣ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	ଡକ୍ୟୁମେଣ୍ଟ ଖୋଲା ଥିବା ପର୍ଯ୍ୟନ୍ତ ସଂସ୍କରଣ ରଖାଯାଏ (.docx ଫାଇଲ୍‌ରେ ସଂସ୍କରଣ ନଥାଏ)।
 	Vertical	ଭୂଲମ୍ବ
 	Vertical Alignment	ଭୂଲମ୍ବ ସଜ୍ଜା

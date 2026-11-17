@@ -732,6 +732,7 @@
 	Detach Template	Desanexar modelo
 	Detect language automatically	Detetar o idioma automaticamente
 	Developer	Programador
+	development build	versão de desenvolvimento
 	Diagonal	Diagonal
 	Diagonal Dots	Pontos diagonais
 	Diamond	Losango
@@ -2725,6 +2726,7 @@
 	Vector AB	Vetor AB
 	Version	Versão
 	Version History	Histórico de versões
+	Version {version} ({build})	Versão {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	As versões são mantidas enquanto o documento estiver aberto (um ficheiro .docx não tem versões).
 	Vertical	Vertical
 	Vertical Alignment	Alinhamento vertical

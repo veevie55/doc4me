@@ -727,6 +727,7 @@
 	Detach Template	ٹیمپلیٹ الگ کریں
 	Detect language automatically	زبان خودکار طور پر پہچانیں
 	Developer	ڈویلپر
+	development build	ڈیولپمنٹ بلڈ
 	Diagonal	ترچھا
 	Diagonal Dots	ترچھے نقطے
 	Diamond	ہیرا
@@ -2720,6 +2721,7 @@
 	Vector AB	ویکٹر AB
 	Version	ورژن
 	Version History	ورژن کی تاریخ
+	Version {version} ({build})	ورژن {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	دستاویز کھلی رہنے تک ورژنز رکھے جاتے ہیں (.docx فائل کے ورژنز نہیں ہوتے)۔
 	Vertical	عمودی
 	Vertical Alignment	عمودی ترتیب

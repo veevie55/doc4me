@@ -731,6 +731,7 @@
 	Detach Template	Gỡ mẫu
 	Detect language automatically	Tự động nhận diện ngôn ngữ
 	Developer	Nhà phát triển
+	development build	bản dựng phát triển
 	Diagonal	Chéo
 	Diagonal Dots	Chấm chéo
 	Diamond	Hình thoi
@@ -2724,6 +2725,7 @@
 	Vector AB	Vectơ AB
 	Version	Phiên bản
 	Version History	Lịch sử phiên bản
+	Version {version} ({build})	Phiên bản {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Các phiên bản được giữ khi tài liệu đang mở (tệp .docx không có phiên bản).
 	Vertical	Dọc
 	Vertical Alignment	Căn dọc

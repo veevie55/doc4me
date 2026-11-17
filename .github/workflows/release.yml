@@ -1,0 +1,274 @@
+# Tag and publish a GitHub Release with a version number typed in the form. Manual only: no push,
+# tag, PR or schedule starts it. It builds the chosen platforms from one commit (main = the latest
+# code, or a commit SHA), bakes the version into each build (About dialog, --version, installer
+# version fields), then creates the tag v<version> on that commit and a Release with the files.
+name: Release
+run-name: "Release ${{ inputs.version }} · ${{ inputs.ref }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1 (shown in About; tag v<version>)'
+        required: true
+        type: string
+      ref:
+        description: 'Source: main (latest code), or a full 40-character commit SHA, a tag or a branch'
+        required: true
+        type: string
+        default: main
+      windows-x64:
+        description: 'Build Windows x64 (MSI, portable ZIP)'
+        type: boolean
+        default: true
+      windows-x86:
+        description: 'Build Windows x86 (MSI, portable ZIP)'
+        type: boolean
+        default: false
+      windows-arm64:
+        description: 'Build Windows ARM64 (MSI, portable ZIP)'
+        type: boolean
+        default: false
+      linux:
+        description: 'Build Linux x86_64 (AppImage, DEB, RPM, tar.gz)'
+        type: boolean
+        default: false
+      macos:
+        description: 'Build macOS universal (DMG, CLI ZIP)'
+        type: boolean
+        default: false
+      bsd:
+        description: 'Build FreeBSD x86_64 (tar.gz)'
+        type: boolean
+        default: false
+      web:
+        description: 'Build the Web App (static site ZIP)'
+        type: boolean
+        default: false
+      prerelease:
+        description: 'Mark as a pre-release (not the latest release)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Check the version, the targets and that the tag is free
+        id: check
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          ANY_TARGET: ${{ inputs.windows-x64 || inputs.windows-x86 || inputs.windows-arm64 || inputs.linux || inputs.macos || inputs.bsd || inputs.web }}
+        run: |
+          # The same rule as the build workflows: numbers fit the MSI ProductVersion (255.255.65535).
+          version="${REQUESTED_VERSION#v}"
+          semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+          if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+            [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+            echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+            exit 1
+          fi
+          if [ "$ANY_TARGET" != true ]; then
+            echo '::error::choose at least one platform to build'
+            exit 1
+          fi
+          tag="v$version"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --silent 2>/dev/null; then
+            echo "::error::tag $tag already exists; choose another version"
+            exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" --silent 2>/dev/null; then
+            echo "::error::a Release for $tag already exists; choose another version"
+            exit 1
+          fi
+          commit=$(git rev-parse HEAD)
+          {
+            printf 'sha=%s\n' "$commit"
+            printf 'version=%s\n' "$version"
+            printf 'tag=%s\n' "$tag"
+          } >> "$GITHUB_OUTPUT"
+          printf '### Release %s\n\nSource commit: `%s`\n' "$tag" "$commit" >> "$GITHUB_STEP_SUMMARY"
+
+  # Every build gets the resolved commit SHA, so all platforms are built from the same source even
+  # if the branch moves during the run.
+  windows-x64:
+    needs: prepare
+    if: inputs.windows-x64
+    uses: ./.github/workflows/build-windows-x64.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  windows-x86:
+    needs: prepare
+    if: inputs.windows-x86
+    uses: ./.github/workflows/build-windows-x86.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  windows-arm64:
+    needs: prepare
+    if: inputs.windows-arm64
+    uses: ./.github/workflows/build-windows-arm64.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  linux:
+    needs: prepare
+    if: inputs.linux
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  macos:
+    needs: prepare
+    if: inputs.macos
+    uses: ./.github/workflows/build-macos.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      arch: universal
+
+  bsd:
+    needs: prepare
+    if: inputs.bsd
+    uses: ./.github/workflows/build-bsd.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  web:
+    needs: prepare
+    if: inputs.web
+    uses: ./.github/workflows/build-web.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+
+  publish:
+    needs: [prepare, windows-x64, windows-x86, windows-arm64, linux, macos, bsd, web]
+    # Runs when every chosen build succeeded (builds not chosen are skipped).
+    if: >-
+      always() && needs.prepare.result == 'success' &&
+      !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the release tools (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          path: workflow
+          persist-credentials: false
+
+      - name: Check out the released source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          path: source
+          persist-credentials: false
+
+      - name: Download the build artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        with:
+          path: artifacts
+
+      - name: Collect the release files
+        shell: bash
+        env:
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          mkdir -p release
+          found=0
+          for dir in artifacts/*/; do
+            [ -d "$dir" ] || continue
+            found=1
+            # Every build must come from the released commit and carry the released version.
+            if [ "$(tr -d '\r\n' < "$dir/SOURCE_COMMIT.txt")" != "$SHA" ]; then
+              echo "::error::$dir was not built from $SHA"
+              exit 1
+            fi
+            if [ "$(tr -d '\r\n' < "$dir/VERSION.txt")" != "$VERSION" ]; then
+              echo "::error::$dir does not carry version $VERSION"
+              exit 1
+            fi
+            for file in "$dir"*; do
+              name=$(basename "$file")
+              case "$name" in
+                SOURCE_COMMIT.txt | VERSION.txt) continue ;;
+                BINARY_INFO.txt) build=$(basename "$dir"); build=${build#doc4me-}; name="BINARY_INFO-${build%-"$SHA"}.txt" ;;
+              esac
+              if [ -e "release/$name" ]; then
+                echo "::error::two builds produced $name"
+                exit 1
+              fi
+              cp "$file" "release/$name"
+            done
+          done
+          if [ "$found" != 1 ] || [ -z "$(ls -A release)" ]; then
+            echo '::error::no build files to release'
+            exit 1
+          fi
+          printf '%s\n' "$SHA" > release/SOURCE_COMMIT.txt
+          (cd release && sha256sum -- * > "$RUNNER_TEMP/SHA256SUMS.txt" && mv "$RUNNER_TEMP/SHA256SUMS.txt" SHA256SUMS.txt)
+          ls -l release
+
+      - name: Write the release notes
+        shell: bash
+        env:
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          # The CHANGELOG section headed with this commit, or else its [Unreleased] entries, then
+          # every earlier release (cumulative notes, AGENTS.md).
+          python3 workflow/tools/release_notes.py "$SHA" "$RUNNER_TEMP/notes.md" \
+            --repo "$GITHUB_REPOSITORY" --server "$GITHUB_SERVER_URL" --commit "$SHA" \
+            --changelog source/CHANGELOG.md --unreleased-as "$VERSION · ${SHA:0:8}"
+          printf '\n\n---\n\nBuilt from commit `%s`. `SHA256SUMS.txt` lists the SHA-256 of every file.\n' "$SHA" >> "$RUNNER_TEMP/notes.md"
+
+      - name: Create the tag and the Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ needs.prepare.outputs.sha }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          PRERELEASE: ${{ inputs.prerelease }}
+        run: |
+          flags=(--latest)
+          if [ "$PRERELEASE" = true ]; then flags=(--prerelease --latest=false); fi
+          # Checked again: gh would reuse a tag made meanwhile, wherever it points.
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --silent 2>/dev/null; then
+            echo "::error::tag $TAG was created while the builds ran; nothing was published"
+            exit 1
+          fi
+          # --target creates the tag on the released commit.
+          gh release create "$TAG" release/* --repo "$GITHUB_REPOSITORY" --target "$SHA" \
+            --title "Doc4Me $VERSION" --notes-file "$RUNNER_TEMP/notes.md" "${flags[@]}"
+          printf '\nPublished [%s](%s/%s/releases/tag/%s)\n' "$TAG" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$TAG" >> "$GITHUB_STEP_SUMMARY"

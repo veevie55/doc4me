@@ -301,6 +301,7 @@
 	Deletions:	Odstranění:
 	Description:	Popis:
 	Design	Návrh
+	development build	vývojové sestavení
 	Diagonal	Diagonální
 	Diamond	Kosočtverec
 	Dictate	Diktovat
@@ -1198,6 +1199,7 @@
 	User Name	Uživatelské jméno
 	User name:	Uživatelské jméno:
 	Version History	Historie verzí
+	Version {version} ({build})	Verze {version} ({build})
 	Vertical	Svisle
 	Vertical Alignment	Svislé zarovnání
 	Vertical alignment:	Svislé zarovnání:

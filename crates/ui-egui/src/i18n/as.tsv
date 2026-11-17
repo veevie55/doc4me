@@ -727,6 +727,7 @@
 	Detach Template	টেমপ্লেট বিচ্ছিন্ন কৰক
 	Detect language automatically	ভাষা স্বয়ংক্ৰিয়ভাৱে চিনাক্ত কৰক
 	Developer	বিকাশক
+	development build	বিকাশ বিল্ড
 	Diagonal	কৰ্ণ
 	Diagonal Dots	কৰ্ণ বিন্দু
 	Diamond	হীৰা
@@ -2720,6 +2721,7 @@
 	Vector AB	ভেক্টৰ AB
 	Version	সংস্কৰণ
 	Version History	সংস্কৰণৰ ইতিহাস
+	Version {version} ({build})	সংস্কৰণ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	নথি খোলা থকালৈকে সংস্কৰণ ৰখা হয় (.docx ফাইলত সংস্কৰণ নাথাকে)।
 	Vertical	উলম্ব
 	Vertical Alignment	উলম্ব সাৰিবদ্ধকৰণ

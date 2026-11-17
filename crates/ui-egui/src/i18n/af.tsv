@@ -732,6 +732,7 @@
 	Detach Template	Ontkoppel sjabloon
 	Detect language automatically	Bespeur taal outomaties
 	Developer	Ontwikkelaar
+	development build	ontwikkelingsbou
 	Diagonal	Diagonaal
 	Diagonal Dots	Diagonale kolletjies
 	Diamond	Ruit
@@ -2725,6 +2726,7 @@
 	Vector AB	Vektor AB
 	Version	Weergawe
 	Version History	Weergawegeskiedenis
+	Version {version} ({build})	Weergawe {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Weergawes word gehou terwyl die dokument oop is (’n .docx-lêer het geen weergawes nie).
 	Vertical	Vertikaal
 	Vertical Alignment	Vertikale belyning

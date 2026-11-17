@@ -285,6 +285,7 @@
 	Right (vertical)	Droite (vertical)
 	Ruby text:	Texte ruby :
 	Search for templates	Rechercher des modèles
+	development build	version de développement
 	Diagonal	Diagonale
 	Diamond	Losange
 	Dictate	Dicter
@@ -886,6 +887,7 @@
 	User Name	Nom d’utilisateur
 	User name:	Nom d’utilisateur :
 	Version History	Historique des versions
+	Version {version} ({build})	Version {version} ({build})
 	Vertical	Vertical
 	Vertical Alignment	Alignement vertical
 	View	Affichage

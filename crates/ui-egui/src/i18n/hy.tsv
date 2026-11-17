@@ -727,6 +727,7 @@
 	Detach Template	Անջատել ձևանմուշը
 	Detect language automatically	Ավտոմատ որոշել լեզուն
 	Developer	Մշակող
+	development build	մշակման կառուցում
 	Diagonal	Անկյունագծային
 	Diagonal Dots	Անկյունագծային կետեր
 	Diamond	Ադամանդ
@@ -2720,6 +2721,7 @@
 	Vector AB	Վեկտոր AB
 	Version	Տարբերակ
 	Version History	Տարբերակների պատմություն
+	Version {version} ({build})	Տարբերակ {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Տարբերակները պահվում են, քանի դեռ փաստաթուղթը բաց է (.docx ֆայլը տարբերակներ չունի)։
 	Vertical	Ուղղահայաց
 	Vertical Alignment	Ուղղահայաց հավասարեցում

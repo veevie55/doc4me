@@ -731,6 +731,7 @@
 	Detach Template	Cire Samfuri
 	Detect language automatically	Gano harshe kai-tsaye
 	Developer	Mai Haɓakawa
+	development build	ginin haɓakawa
 	Diagonal	Mai karkata
 	Diagonal Dots	Ɗigogi Masu Karkata
 	Diamond	Lu'u-lu'u
@@ -2724,6 +2725,7 @@
 	Vector AB	Vector AB
 	Version	Siga
 	Version History	Tarihin Siga
+	Version {version} ({build})	Siga {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Ana riƙe sigogi yayin da takardar take buɗe (fayil .docx ba shi da sigogi).
 	Vertical	A tsaye
 	Vertical Alignment	Jeruwa a Tsaye

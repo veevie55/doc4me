@@ -731,6 +731,7 @@
 	Detach Template	Shablonni ajratish
 	Detect language automatically	Tilni avtomatik aniqlash
 	Developer	Dasturchi
+	development build	ishlab chiqish yigʻmasi
 	Diagonal	Diagonal
 	Diagonal Dots	Diagonal nuqtalar
 	Diamond	Romb
@@ -2724,6 +2725,7 @@
 	Vector AB	AB vektor
 	Version	Versiya
 	Version History	Versiyalar tarixi
+	Version {version} ({build})	Versiya {version} ({build})
 	Versions are kept while the document is open (a .docx file has no versions).	Versiyalar hujjat ochiq turgan paytda saqlanadi (.docx faylida versiyalar boʻlmaydi).
 	Vertical	Vertikal
 	Vertical Alignment	Vertikal tekislash
