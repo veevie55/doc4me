@@ -38,6 +38,20 @@ def failures(section: str, kind: str) -> list[tuple[str, str]]:
     return result
 
 
+def check_failures(text: str, kind: str) -> tuple[list[tuple[str, str]], int]:
+    """The listed failures of `kind` and its denominator. The report lists a check's failures
+    under `### <kind> (N of M)` only when there are some; with none, the summary table's
+    `<kind> M/M` gives the denominator (and must show every row passing)."""
+    if f"### {kind} (" in text:
+        section = report_section(text, kind)
+        total = int(require(r"^### " + re.escape(kind) + r" \(\d+ of (\d+)\)$", section, f"{kind} denominator").group(1))
+        return failures(section, kind), total
+    passed, total = map(int, require(re.escape(kind) + r" (\d+)/(\d+)", text, f"{kind} summary").groups())
+    if passed != total:
+        raise ValueError(f"readiness report lists no {kind} failures but its summary shows {passed}/{total}")
+    return [], total
+
+
 def report_section(text: str, kind: str) -> str:
     start = text.find(f"### {kind} (")
     if start < 0:
@@ -78,12 +92,8 @@ def main() -> None:
     source = require(r"at commit `([^`]+)`", report, "source commit").group(1)
     overall = require(r"\*\*Measured readiness: ([^*]+)\*\*", report, "overall score").group(1)
     without = require(r"\*\*Without the deferred rows: ([^*]+)\*\*", report, "without-deferred score").group(1)
-    pages_section = report_section(report, "corpus-pages")
-    breaks_section = report_section(report, "corpus-breaks")
-    page_failures = failures(pages_section, "corpus-pages")
-    break_failures = failures(breaks_section, "corpus-breaks")
-    page_total = int(require(r"^### corpus-pages \(\d+ of (\d+)\)$", pages_section, "page denominator").group(1))
-    break_total = int(require(r"^### corpus-breaks \(\d+ of (\d+)\)$", breaks_section, "boundary denominator").group(1))
+    page_failures, page_total = check_failures(report, "corpus-pages")
+    break_failures, break_total = check_failures(report, "corpus-breaks")
 
     source_url = f"https://github.com/veevie55/doc4me/actions/runs/{run}" if run.isdecimal() else ""
     run_ref = f"[{run}]({source_url})" if source_url else f"`{run}`"
