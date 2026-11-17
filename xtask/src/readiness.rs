@@ -735,19 +735,26 @@ pub fn structure_change(before: &BTreeMap<String, usize>, after: &BTreeMap<Strin
 
 /// Page count, then the first and last word of every page.
 fn compare_pages(ours: &Path, reference: &Path) -> (Result<(), String>, Result<(), String>) {
-    let (Some(a), Some(b)) = (pdf_pages(ours), pdf_pages(reference)) else {
-        return (Err("pdfinfo couldn't read a PDF (is poppler installed?)".into()), Err("no page count".into()));
+    let (a, b) = match (pdf_pages(ours), pdf_pages(reference)) {
+        (Ok(a), Ok(b)) => (a, b),
+        (Err(e), _) => return (Err(format!("Doc4Me PDF: {e}")), Err("no page count".into())),
+        (_, Err(e)) => return (Err(format!("Word PDF: {e}")), Err("no page count".into())),
     };
     if a != b {
         return (Err(format!("{a} pages, Word {b}")), Err("page count differs".into()));
     }
     for page in 1..=a {
-        let (x, y) = (page_words(ours, page), page_words(reference, page));
-        if let Some(reason) = page_boundary_failure(page, &x, &y) {
+        if let Err(reason) = compare_page_words(page, page_words(ours, page), page_words(reference, page)) {
             return (Ok(()), Err(reason));
         }
     }
     (Ok(()), Ok(()))
+}
+
+fn compare_page_words(page: usize, ours: Result<Vec<String>, String>, reference: Result<Vec<String>, String>) -> Result<(), String> {
+    let ours = ours.map_err(|e| format!("Doc4Me page {page}: {e}"))?;
+    let reference = reference.map_err(|e| format!("Word page {page}: {e}"))?;
+    page_boundary_failure(page, &ours, &reference).map_or(Ok(()), Err)
 }
 
 /// Explain a page-boundary mismatch with the exact first and last words from both PDFs.
@@ -763,15 +770,34 @@ fn page_boundary_failure(page: usize, ours: &[String], reference: &[String]) -> 
     }
 }
 
-fn pdf_pages(pdf: &Path) -> Option<usize> {
-    let out = Command::new("pdfinfo").arg(pdf).output().ok()?;
-    String::from_utf8_lossy(&out.stdout).lines().find_map(|l| l.strip_prefix("Pages:")).and_then(|n| n.trim().parse().ok())
+/// An extractor failure is not an empty page. Reject failed processes even when they wrote
+/// plausible partial output, and reject invalid UTF-8 rather than comparing replacement chars.
+fn poppler_stdout(tool: &str, out: std::io::Result<std::process::Output>) -> Result<String, String> {
+    let out = out.map_err(|e| format!("{tool} couldn't run: {e}"))?;
+    if !out.status.success() {
+        let stderr: String = String::from_utf8_lossy(&out.stderr).chars().take(240).collect();
+        return Err(format!("{tool} failed ({}): {}", out.status, stderr.trim()));
+    }
+    String::from_utf8(out.stdout).map_err(|_| format!("{tool} returned invalid UTF-8"))
 }
 
-fn page_words(pdf: &Path, page: usize) -> Vec<String> {
+fn pdf_pages(pdf: &Path) -> Result<usize, String> {
+    let text = poppler_stdout("pdfinfo", Command::new("pdfinfo").args(["-enc", "UTF-8"]).arg(pdf).output())?;
+    pdf_page_count(&text)
+}
+
+fn pdf_page_count(text: &str) -> Result<usize, String> {
+    text.lines()
+        .find_map(|l| l.strip_prefix("Pages:"))
+        .and_then(|n| n.trim().parse().ok())
+        .filter(|n| *n > 0)
+        .ok_or_else(|| "pdfinfo returned no positive page count".into())
+}
+
+fn page_words(pdf: &Path, page: usize) -> Result<Vec<String>, String> {
     let p = page.to_string();
-    let out = Command::new("pdftotext").args(["-q", "-f", &p, "-l", &p]).arg(pdf).arg("-").output();
-    out.map(|o| words(&String::from_utf8_lossy(&o.stdout))).unwrap_or_default()
+    let out = Command::new("pdftotext").args(["-q", "-enc", "UTF-8", "-f", &p, "-l", &p]).arg(pdf).arg("-").output();
+    poppler_stdout("pdftotext", out).map(|text| words(&text))
 }
 
 /// Words for comparing text: letters and digits, lower-cased (punctuation, spacing, ligatures and
@@ -1069,6 +1095,53 @@ mod tests {
             )
         );
         assert_eq!(page_boundary_failure(1, &ours, &ours), None);
+    }
+
+    #[test]
+    fn poppler_must_succeed_before_its_output_can_pass() {
+        #[cfg(unix)]
+        use std::os::unix::process::ExitStatusExt;
+        #[cfg(windows)]
+        use std::os::windows::process::ExitStatusExt;
+
+        let output = |success, stdout: &[u8]| {
+            Ok(std::process::Output {
+                status: std::process::ExitStatus::from_raw(if success { 0 } else { 256 }),
+                stdout: stdout.to_vec(),
+                stderr: b"cannot extract page".to_vec(),
+            })
+        };
+        for tool in ["pdfinfo", "pdftotext"] {
+            // Empty stdout from a failed extractor used to be treated as an empty page;
+            // two failed extractions could therefore pass the boundary comparison.
+            for stdout in [b"".as_slice(), b"Pages: 2\n", b"partial text"] {
+                let error = poppler_stdout(tool, output(false, stdout)).unwrap_err();
+                assert!(error.contains(tool) && error.contains("cannot extract page"), "{error}");
+            }
+            assert!(poppler_stdout(tool, Err(std::io::Error::from(std::io::ErrorKind::NotFound))).is_err());
+            assert!(poppler_stdout(tool, output(true, &[0xff])).is_err());
+        }
+        assert_eq!(poppler_stdout("pdftotext", output(true, b"\x0c")).unwrap(), "\x0c", "a successfully extracted blank page is valid");
+        assert_eq!(words(&poppler_stdout("pdftotext", output(true, "ภาษาไทย Café 123".as_bytes())).unwrap()), ["ภาษาไทย", "café", "123"]);
+    }
+
+    #[test]
+    fn pdfinfo_requires_a_positive_page_count() {
+        assert_eq!(pdf_page_count("Title: test\nPages:          12\nEncrypted: no\n"), Ok(12));
+        for text in ["", "Pages: 0\n", "Pages: -1\n", "Pages: unknown\n", "Pages: 999999999999999999999999999999999999999\n"] {
+            assert!(pdf_page_count(text).is_err(), "{text:?}");
+        }
+    }
+
+    #[test]
+    fn failed_extraction_never_matches_a_blank_page() {
+        let failure = || Err("pdftotext failed".to_string());
+        assert_eq!(compare_page_words(2, failure(), failure()), Err("Doc4Me page 2: pdftotext failed".into()));
+        assert_eq!(compare_page_words(3, Ok(vec![]), failure()), Err("Word page 3: pdftotext failed".into()));
+        assert!(compare_page_words(4, failure(), Ok(vec![])).is_err());
+        assert_eq!(compare_page_words(5, Ok(vec![]), Ok(vec![])), Ok(()));
+        assert_eq!(compare_page_words(6, Ok(words("same page")), Ok(words("same page"))), Ok(()));
+        assert!(compare_page_words(7, Ok(words("different page")), Ok(words("same page"))).is_err());
     }
 
     fn registry() -> Registry {

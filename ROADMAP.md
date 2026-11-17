@@ -1,5 +1,7 @@
 # Doc4Me roadmap
 
+**Boundary verification follow-up · 2026-11-17:** The latest committed Windows result is 219/219 page counts and 127/219 boundaries (run 44078179776, source `019b0ff`); 92 boundary failures remain. Failed Poppler extraction now fails verification instead of matching a blank page. A 52-page audit of five remaining cases finds identical per-page word multisets but six endpoint-order mismatches; all five still fail. No renderer change or new score is claimed. [Audit](docs/readiness/extraction-order-2026-11-17.md).
+
 **Initial table headers · 2026-11-17 (Linux verified; Windows pending):** Reserve the initial header/body prefix and keep its caption with it. All 219 document page counts stay unchanged; boundaries improve 119→120/219, only govuk-052 newly matching all nine pages. No previously passing document or page regresses; a first-word match within already-failing zenodo-173 page 15 is lost and documented. CI passes 6/6 (2,600 native passed, one existing ignored). Still 99 corpus-breaks failures. [Audit](docs/readiness/table-header-prefix-2026-11-17.md).
 
 **Text-box AutoFit · 2026-11-17 (Linux verified; Windows pending):** Floating boxes retain `a:spAutoFit` and grow to show their complete text. Against engine `f352d1a`, all 219 documents keep their page counts; boundaries improve 118→119/219, only govuk-002 newly matching, with no previously passing document regressing. Corpus-breaks still has 100 failures; criteria and exclusions are unchanged. [Audit](docs/readiness/textbox-autofit-2026-11-17.md).
@@ -20,9 +22,9 @@
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](docs/readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.3% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-**Stage: alpha** · latest official readiness is **93.4%** ([`docs/readiness.md`](docs/readiness.md), Windows run 43804632296, 2026-11-16; report commit `15584f5` measures source `093eaba`, all 220 documents); the report says **95.3% without 22 deferred rows**. Every dimension except pagination is at 100% without deferred rows: ribbon 504/504, dialogs 216/228 (12 deferred), shortcuts 276/280 (4 deferred), languages 95/95, platforms 5/5, file formats, stability and performance all pass. The remaining non-deferred gap is pagination: 21 page-count rows and 116 page-boundary rows do not match Word. See the exhaustive [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md). Seven dialog rows remain excluded from the 235 TSV rows. Language readiness measures catalog key-row presence, not translation accuracy; 22 catalogs are AI drafts awaiting native-speaker review. The latest release is Doc4Me 1.1.4; its cumulative notes run newest-to-oldest through v1.0.0.
+**Stage: alpha** · latest official readiness is **95.0%** ([`docs/readiness.md`](docs/readiness.md), Windows run 44078179776, 2026-11-17; source `019b0ff`, all 219 documents); **96.8% without 22 deferred rows**. Page-count checks pass 219/219 documents; page-boundary checks pass 127/219, leaving 92 boundary failures. All other dimensions pass without deferred rows. See the [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md). Catalog-key coverage does not establish translation accuracy; 22 catalogs remain AI drafts awaiting native-speaker review. Earlier dated snapshots below preserve their historical measurements.
 
-> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** readiness remeasured on Windows run 43804632296, source `093eaba`; blocker summaries and failure lists refreshed; GitHub Pages Web App workflow added. Current readiness is 93.4% overall / 95.3% without 22 deferred; pages 199/220, boundaries 104/220; criteria, corpus, exclusions and deferred unchanged.
+> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** reject failed PDF extraction in corpus verification; record five still-failing reading-order cases. Latest official Windows: run 44078179776, source `019b0ff`, pages 219/219 and boundaries 127/219; 95.0% overall / 96.8% without deferred. No new measurement or criteria change.
 
 **2026-11-14 update:** The readiness report listed the non-passing layout rows with English and Thai blocker assessments. Earlier dated progress entries retain their historical values.
 
@@ -47,7 +49,7 @@ agent control. This page is the summary; the assessment is
 |---|---|---|
 | Ribbon/menu catalog coverage | **504 / 504 (100%)** | measured (`cargo xtask parity` → [`docs/parity-checklist.md`](docs/parity-checklist.md), 2026-11-11) |
 | **Feature breadth** (weighted, incl. dialog options, styles, languages beyond the ribbon) | **~80%** | estimated |
-| **Ready for real work** (full target) | **93.4%** | latest official Windows report: run 43804632296, source `093eaba`, report commit `15584f5`, all 220 corpus documents; 95.3% without 22 deferred rows. Ribbon 504/504, dialogs 216/228 (12 deferred; all non-deferred pass), pages 199/220, boundaries 104/220, languages 95/95 catalog-key checks, shortcuts 276/280 (4 deferred; all non-deferred pass), and platforms 5/5. |
+| **Ready for real work** (full target) | **95.0%** | latest official Windows report: run 44078179776, source `019b0ff`, 219 documents; 96.8% without 22 deferred rows. Pages 219/219; boundaries 127/219. |
 | **Mainstream practitioner** | **~55%** | estimated: weekly-work depth × discounts for interaction (×0.93), stability (×0.90), file exchange (×0.90) |
 | **Essentials user** | **~63%** | estimated: core-feature depth × discounts for launch (×0.90), discoverability (×0.95), opening received files (×0.92) |
 | Remaining to **beta** | **~150–230 h** of Opus 5.5 agent wall-clock (gaps #1–#7) | estimated |
@@ -66,7 +68,7 @@ discounts and the user evidence (120 issues from outside users, 4 praise, 0 "swi
 
 | Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
 |---|---|---|---|
-| Full target (ready for real work) | **93.4%** (latest official Windows report) | **~600–1,000 h** (70–80% parallelizes) | Pagination and document fidelity, 7 currently excluded dialogs, native-speaker review of 22 AI-drafted catalogs, and owner-deferred hardware/service checks; plus everything below |
+| Full target (ready for real work) | **95.0%** (latest official Windows report) | **~600–1,000 h** (70–80% parallelizes) | Pagination and document fidelity, 7 currently excluded dialogs, native-speaker review of 22 AI-drafted catalogs, and owner-deferred hardware/service checks; plus everything below |
 | Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
 | Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
 
@@ -194,6 +196,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-17 | Reject failed PDF extraction rather than accepting an empty page; preserve valid blank-page comparisons. Audit five documents (52 pages), all still failing; official Windows result remains 127/219 boundaries. See extraction-order audit. |
 | 2026-11-15 | Update current readiness documentation; the later publication request supersedes the earlier cancellation. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-15 | Windows readiness run [43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report commit `2a5a0b0`: 92.9% overall / 94.8% without 22 deferred; 188/220 page counts, 99/220 page boundaries, 32 and 121 failures respectively. Updated bilingual Readiness blockers and TSV to match; criteria and corpus unchanged. |
 | 2026-11-14 | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,589 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source 6127a73: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table source awaits measurement. |

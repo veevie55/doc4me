@@ -1,5 +1,7 @@
 # Where Doc4Me falls short of Word
 
+**Boundary verification follow-up · 2026-11-17:** The latest committed Windows result is 219/219 page counts and 127/219 boundaries (run 44078179776, source `019b0ff`); 92 boundary failures remain. Failed Poppler extraction now fails verification instead of matching a blank page. A 52-page audit of five remaining cases finds identical per-page word multisets but six endpoint-order mismatches; all five still fail. No renderer change or new score is claimed. [Audit](readiness/extraction-order-2026-11-17.md).
+
 **Initial table headers · 2026-11-17 (Linux verified; Windows pending):** Reserve the initial header/body prefix and keep its caption with it. All 219 document page counts stay unchanged; boundaries improve 119→120/219, only govuk-052 newly matching all nine pages. No previously passing document or page regresses; a first-word match within already-failing zenodo-173 page 15 is lost and documented. CI passes 6/6 (2,600 native passed, one existing ignored). Still 99 corpus-breaks failures. [Audit](readiness/table-header-prefix-2026-11-17.md).
 
 **Text-box AutoFit · 2026-11-17 (Linux verified; Windows pending):** Floating boxes retain `a:spAutoFit` and grow to show their complete text. Against engine `f352d1a`, all 219 documents keep their page counts; boundaries improve 118→119/219, only govuk-002 newly matching, with no previously passing document regressing. Corpus-breaks still has 100 failures; criteria and exclusions are unchanged. [Audit](readiness/textbox-autofit-2026-11-17.md).
@@ -20,7 +22,7 @@
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.3% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** Windows readiness remeasured in run 43804632296 on source `093eaba`; 93.4% overall / 95.3% without 22 deferred; pages 199/220, boundaries 104/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** reject failed PDF extraction in corpus verification; record five still-failing reading-order cases. Latest official Windows: run 44078179776, source `019b0ff`, pages 219/219 and boundaries 127/219; 95.0% overall / 96.8% without deferred. No new measurement or criteria change.
 
 **Windows verification · 2026-11-16:** ผลทางการจาก [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), source `093eaba`, report `15584f5`: **93.4% รวม / 95.3% ไม่นับ 22 deferred**; pages **199/220**, boundaries **104/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 21 page-count และ 116 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
@@ -96,6 +98,7 @@ The same gaps grouped the way the parity documents are, for agents working in on
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-17 | minor | Fail PDF verification on extractor errors; record six endpoint mismatches in five same-page-text documents (52 pages). No layout change, score gain or criteria change. |
 | 2026-11-17 | minor | Initial table header/body prefix and caption: govuk-052 now matches all boundaries, Linux 119→120/219, all counts unchanged; partial changes in failing zenodo-108/173 documented. CI 6/6; Windows pending. |
 | 2026-11-17 | minor | Floating text-box AutoFit restores govuk-002 page 24; Linux boundaries 118→119/219, page counts unchanged, no regression. Windows confirmation pending; 100 corpus-breaks failures remain. |
 | 2026-11-16 | minor | Windows run 43804632296, engine 093eaba, report 15584f5: 199/220 page counts (zenodo-067 and zenodo-115 newly match after the Overpass line and Garamond metrics), 104/220 boundaries, 93.4% overall / 95.3% without deferred; no newly failing row versus report 3fca7cd. Criteria, corpus, exclusions and deferred unchanged. |

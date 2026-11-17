@@ -1704,19 +1704,35 @@ fn toc_and_fields() {
     assert_eq!(s.doc.plain_text(StoryRef::Body).matches("Summary\t").count(), 1, "one TOC entry after update");
 }
 
-/// A comment or reply made here carries its UTC time as `date_utc` too, so it shows in local time
-/// and is saved as `dateUtc`.
+/// Comments and replies keep UTC in `date_utc` and Word's local wall-clock time in `date`.
+/// Both are marked Z, but they coincide only on a machine whose time zone is UTC.
 #[test]
-fn new_comments_and_replies_carry_their_utc_time() {
+fn new_comments_and_replies_carry_utc_and_word_local_times() {
+    use crate::cmd::{local_offset_secs, now_unix, parse_iso, shift_secs};
+
+    let before = now_unix();
+    let offset_before = local_offset_secs();
     let mut s = s();
     run(&mut s, "document.setText", json!({"text": "Some text"}));
     run(&mut s, "select.all", json!({}));
     let id = run(&mut s, "review.newComment", json!({"text": "one"}))["id"].as_u64().unwrap();
     run(&mut s, "review.reply", json!({"id": id, "text": "two"}));
+    let after = now_unix();
+    let offset_after = local_offset_secs();
+    let written = before..=after;
     assert_eq!(s.doc.comments.len(), 2);
     for c in s.doc.comments.values() {
         assert!(c.date.ends_with('Z'), "{}", c.date);
-        assert_eq!(c.date_utc.as_str(), c.date.as_str());
+        assert!(c.date_utc.ends_with('Z'), "{}", c.date_utc);
+        let utc = parse_iso(&c.date_utc).unwrap();
+        assert!(written.contains(&utc), "UTC timestamp outside creation window: {}", c.date_utc);
+        let local = parse_iso(&c.date).unwrap();
+        // The two clock reads may straddle a second (or a daylight-saving transition).
+        assert!(
+            [offset_before, offset_after].iter().any(|offset| written.contains(&shift_secs(local, -offset))),
+            "Word local timestamp outside creation window: {}",
+            c.date
+        );
     }
 }
 

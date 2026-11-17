@@ -1,0 +1,7 @@
+id	page	doc4me_first	doc4me_last	word_first	word_last	doc4me_words	word_words	same_word_multiset
+govuk-024	2	annex	n	rule	n	47	47	true
+zenodo-020	1	bay	2023	bay	memo	362	362	true
+zenodo-030	16	available	containers	certificate	containers	340	340	true
+zenodo-050	2	brief	ca	storage	ca	269	269	true
+zenodo-050	3	brief	ca	ethics	ca	89	89	true
+zenodo-070	10	infraestructura	banco	infraestructura	80	327	327	true

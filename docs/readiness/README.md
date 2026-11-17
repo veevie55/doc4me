@@ -1,6 +1,8 @@
 # Readiness check sets
 
-**Current Windows confirmation · 2026-11-16:** Run [43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), engine `093eaba`, report `15584f5`: page counts **199/220**, boundaries **104/220**, readiness **93.4% overall / 95.3% excluding 22 deferred**. Run 43804632296 measured the [Overpass line](overpass-line-2026-11-16.md) and [Garamond metrics](garamond-metrics-2026-11-16.md) changes: zenodo-067 (count and boundaries) and zenodo-115 newly match. Compared row by row with report `3fca7cd`, no row is newly failing. Its workflow also rewrote README.md and README.en.md with the same numbers (`tools/readiness_readme.py`). Current EN/TH blockers and TSV match the report (21 page-count and 116 boundary failures); criteria/exclusions/deferred unchanged.
+**Latest committed Windows result · 2026-11-17:** Run [44078179776](https://github.com/veevie55/doc4me/actions/runs/44078179776), source `019b0ff`: **219/219 page counts, 127/219 boundaries, 95.0% overall / 96.8% excluding deferred**. The 2026-11-16 figures below are historical. The [extraction audit](extraction-order-2026-11-17.md) records a verifier fix and five still-failing reading-order cases; it claims no score improvement.
+
+**Historical Windows confirmation · 2026-11-16:** Run [43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), engine `093eaba`, report `15584f5`: page counts **199/220**, boundaries **104/220**, readiness **93.4% overall / 95.3% excluding 22 deferred**. Run 43804632296 measured the [Overpass line](overpass-line-2026-11-16.md) and [Garamond metrics](garamond-metrics-2026-11-16.md) changes: zenodo-067 (count and boundaries) and zenodo-115 newly match. Compared row by row with report `3fca7cd`, no row is newly failing. Its workflow also rewrote README.md and README.en.md with the same numbers (`tools/readiness_readme.py`). Current EN/TH blockers and TSV match the report (21 page-count and 116 boundary failures); criteria/exclusions/deferred unchanged.
 
 The measured readiness number comes from these files, not from estimates. `cargo xtask readiness`
 reads them, runs what can be run, and writes [`../readiness.md`](../readiness.md) plus its [Thai companion](../readiness.th.md). The plan that
@@ -102,6 +104,11 @@ timeout:
 | `corpus-breaks` | every page starts and ends with the same word as Word's page (`pdftotext`, letters and digits only) |
 | `corpus-stability` | no step panicked, was killed or ran out of time |
 
+`pdfinfo` and `pdftotext` must exit successfully and return valid UTF-8 (explicitly requested).
+The page count must be positive. A failed extraction fails the boundary check, with the PDF side
+and page in its diagnostic; it is never treated as an empty page. Two successfully extracted blank
+pages still match. These checks do not change the exact first/last-word rule.
+
 Without `--corpus` the corpus sets count as not run, so the number stays low until they run.
 
 Every Windows readiness measurement also refreshes the current bilingual blocker assessment and
@@ -118,3 +125,9 @@ commit the generated report and blocker files together. The Windows workflow per
 and records its GitHub run ID automatically.
 
 Page-count-only follow-up: [2026-11-15 font and reference audit](page-count-audit-2026-11-15.md), with exact source/reference hashes and declared/PDF fonts for the 32 currently failing page-count rows. This research does not change the official Windows measurement.
+
+## Revision history
+
+| Date | Change |
+|---|---|
+| 2026-11-17 | Require successful UTF-8 Poppler output and positive page counts; document the extraction-order audit and latest committed Windows baseline. |
