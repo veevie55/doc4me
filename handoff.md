@@ -1,3 +1,9 @@
+# Corpus-breaks initial-header follow-up · 2026-11-17
+
+- Scope remains corpus-breaks only; still incomplete. AutoFit already pushed as e4277bf (Linux 119/219 boundaries). The new header/body prefix fix makes govuk-052 match all nine pages and boundaries: 120/219, still 99 failures. All 219 page counts unchanged (213/219); no previously passing document/page is newly failing. Endpoint words within existing failures change in zenodo-108 and zenodo-173; z173 page15 loses a formerly matching first word, documented in the audit.
+- Shared header-prefix measurement also keeps captions with the table; no-body/oversized cases retain old paths. CI 6/6 (2,600 native passed, one existing ignored; layout 358, assets141, layers20, wasm16). See docs/readiness/table-header-prefix-2026-11-17.md and TSV. Windows confirmation pending; do not publish Release or Pages.
+- Read-only bag-of-words triage on the 94 same-page-count failures found five with identical NFKC word multisets on every page (govuk-024, zenodo-020/030/050/070). They remain failing under the original first/last-word criterion. govuk-066's footer date is a DATE field, not evidence by itself of different source editions.
+
 # Corpus-breaks continuation · 2026-11-17
 
 - Scope from owner: complete only corpus-breaks/page boundaries. Still incomplete.

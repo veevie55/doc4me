@@ -3690,7 +3690,7 @@ fn mirror_shift(rp: &doc4me_doc::resolve::ResolvedPara, number: u32, web: bool) 
 /// How much of what follows block `block` has to stand on the same page for Keep with next:
 /// the paragraphs after it that keep with the next one in turn, whole, then the start of the one
 /// after them — its first line, or its first two with widow control (Word won't leave one there)
-/// — or a table's first row. Between paragraphs, the larger of the space after and the space
+/// — or a table's header/body prefix. Between paragraphs, the larger of the space after and the space
 /// before, as they are placed; `after` is the space after block `block`.
 fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margin_leading: bool) -> f32 {
     let mut need = 0.0;
@@ -3733,7 +3733,9 @@ fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margi
             Some(Block::Table(t)) => {
                 let tl = table::layout_table(ctx, StoryRef::Body, t, &[b as u32], width, 1);
                 let cant_split = t.rows.first().is_some_and(|r| r.props.cant_split);
-                need += tl.rows.first().map_or(0.0, |r| if cant_split { r.height } else { table::first_line_bottom(r).min(r.height) });
+                need += table_header_start_need(t, &tl).unwrap_or_else(|| {
+                    tl.rows.first().map_or(0.0, |r| if cant_split { r.height } else { table::first_line_bottom(r).min(r.height) })
+                });
                 break;
             }
             None => break,
@@ -3774,6 +3776,27 @@ fn lookahead_para(ctx: &Ctx, p: &doc4me_doc::Paragraph, width: f32) -> para::Par
         fit_objects: false,
     };
     para::layout_para(p, &env)
+}
+
+/// Headers cannot stand alone above the first body row. Captions keeping with a table need
+/// the same prefix as the table itself; otherwise moving the header strands its caption.
+fn table_header_start_need(t: &doc4me_doc::Table, tl: &table::TableLayout) -> Option<f32> {
+    let headers = t.rows.iter().take_while(|r| r.props.header).count();
+    if headers == 0 {
+        return None;
+    }
+    let body = t.rows.get(headers)?;
+    let row = tl.rows.get(headers)?;
+    let start = if body.props.cant_split {
+        row.height
+    } else {
+        let min = match (body.props.height, body.props.height_rule) {
+            (Some(h), HeightRule::AtLeast) if h.is_finite() => h.max(0.0),
+            _ => 0.0,
+        };
+        table::first_line_bottom(row).max(min).min(row.height)
+    };
+    Some(tl.rows.iter().take(headers).map(|r| r.height).sum::<f32>() + start)
 }
 
 /// Whether a table row keeps with the next one: Word keeps a row on the page of the row after it
@@ -3893,6 +3916,15 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
     // Rows that keep with the next one (see `row_keeps_with_next`).
     let keeps: Vec<bool> = t.rows.iter().map(|r| row_keeps_with_next(ctx, r)).collect();
     let header_h: f32 = header_rows.iter().filter_map(|r| tl.rows.get(*r)).map(|r| r.height).sum();
+    // Initial headers and the first body row's start form one page prefix (govuk-052).
+    // Oversized prefixes retain the existing overflow behavior.
+    if !pb.at_top()
+        && let Some(need) = table_header_start_need(t, &tl)
+        && pb.y + need > pb.bottom + 0.01
+        && need <= pb.uncapped_bottom() - pb.top + 0.01
+    {
+        pb.advance(block, body_top);
+    }
     // Header rows are re-placed on every page a table spills onto, so a table is O(header items ×
     // pages) placed items, and an exact-height header row keeps all its overflowing text without
     // growing: a few KB of document could otherwise fill memory (WordCraft #1235, #3692). Once
