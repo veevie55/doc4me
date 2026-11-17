@@ -891,6 +891,54 @@ pub fn only_page_breaks(row: &RowLayout) -> bool {
     has_page_break
 }
 
+/// The largest bottom cell margin in row `ri` of `t`: the part of a split row kept on a page
+/// closes with it (see `place_table`).
+pub fn row_bottom_margin(ctx: &Ctx, t: &Table, ri: usize) -> f32 {
+    let style = table_style(ctx, t);
+    let def = default_margins(t, style.as_ref());
+    t.rows.get(ri).map_or(0.0, |row| {
+        row.cells
+            .iter()
+            .filter(|c| c.props.vmerge != VMerge::Continue)
+            .map(|c| c.props.margins.unwrap_or(def)[2])
+            .filter(|m| m.is_finite())
+            .fold(0.0f32, f32::max)
+            .clamp(0.0, 72.0)
+    })
+}
+
+/// Where the lines `l0..l1` of `para` (the first at `y` in the row) split at `cut`: the first line
+/// that doesn't fit. With widow control a split never leaves a paragraph's last line alone on the
+/// next page nor its first line alone above the cut, as in Word's PDFs although none of these
+/// files sets `w:widowControl` (Doc4Me's default): zenodo-072 splits a 7-line cell paragraph 5/2,
+/// zenodo-123 moves a row on whole rather than keep one line of a 3-line paragraph.
+fn line_split(para: &ParaLayout, l0: usize, l1: usize, y: f32, cut: f32) -> usize {
+    line_split_why(para, l0, l1, y, cut).0
+}
+
+/// [`line_split`], and whether widow control moved the paragraph's first line on.
+fn line_split_why(para: &ParaLayout, l0: usize, l1: usize, y: f32, cut: f32) -> (usize, bool) {
+    let base = para.lines.get(l0).map(|l| l.top).unwrap_or(0.0);
+    let mut split = l1;
+    for k in l0..l1 {
+        let Some(l) = para.lines.get(k) else { continue };
+        if y + l.top - base + l.height > cut + 0.01 {
+            split = k;
+            break;
+        }
+    }
+    if split < l1 && para.rp.widow_control {
+        let n = para.lines.len();
+        if split + 1 == l1 && l1 == n && split >= 2 && split > l0 {
+            split -= 1;
+        }
+        if split == 1 && l0 == 0 && n >= 2 {
+            return (0, true);
+        }
+    }
+    (split, false)
+}
+
 pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     if cut <= 0.0 || cut >= row.height {
         return None;
@@ -913,6 +961,8 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     }
     // Where each paragraph splits, and how far up the continuation moves.
     let mut first_moved = f32::MAX;
+    let mut cell_moved: std::collections::HashMap<Vec<u32>, f32> = std::collections::HashMap::new();
+    let mut other_moved = false;
     let mut kept_any = false;
     for it in &row.items {
         // Turned text moves as a whole, like a picture.
@@ -921,26 +971,33 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
                 kept_any = true;
             } else {
                 first_moved = first_moved.min(r.y);
+                other_moved = true;
             }
             continue;
         }
         match it {
-            Placed::Lines { para, l0, l1, y, .. } => {
+            Placed::Lines { para, l0, l1, y, path, .. } => {
                 let base = para.lines.get(*l0).map(|l| l.top).unwrap_or(0.0);
-                for k in *l0..*l1 {
-                    let Some(l) = para.lines.get(k) else { continue };
-                    let (top, bottom) = (y + l.top - base, y + l.top - base + l.height);
-                    if bottom <= cut + 0.01 {
-                        kept_any = true;
-                    } else {
-                        // A paragraph that starts the continuation keeps its space before above it:
-                        // zenodo-157's heading (10 pt before) on the next page of a split cell
-                        // stands 10 pt below the page's top in Word's PDF. (Not with contextual
-                        // spacing, where the space between two paragraphs may be suppressed.)
-                        let before = if k == 0 && !para.rp.contextual_spacing { para.rp.space_before.clamp(0.0, top.max(0.0)) } else { 0.0 };
-                        first_moved = first_moved.min(top - before);
-                        break;
-                    }
+                let (k, orphan) = line_split_why(para, *l0, *l1, *y, cut);
+                if k > *l0 {
+                    kept_any = true;
+                }
+                if k < *l1
+                    && let Some(l) = para.lines.get(k)
+                {
+                    let top = y + l.top - base;
+                    // A paragraph that starts the continuation keeps its space before above it:
+                    // zenodo-157's heading (10 pt before) on the next page of a split cell stands
+                    // 10 pt below the page's top in Word's PDF. (Not with contextual spacing,
+                    // where the space between two paragraphs may be suppressed, nor when widow
+                    // control moved it on: zenodo-022's list item starts the next page at its top.)
+                    let keep_before = !orphan;
+                    let before =
+                        if k == 0 && !para.rp.contextual_spacing && keep_before { para.rp.space_before.clamp(0.0, top.max(0.0)) } else { 0.0 };
+                    first_moved = first_moved.min(top - before);
+                    let cell = path.0.get(..path.0.len().saturating_sub(1)).unwrap_or_default().to_vec();
+                    let e = cell_moved.entry(cell).or_insert(f32::MAX);
+                    *e = e.min(top - before);
                 }
             }
             Placed::Image { rect, .. } | Placed::Shape { rect, .. } | Placed::Graphic { rect, .. } | Placed::Clip { rect, .. } => {
@@ -948,6 +1005,7 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
                     kept_any = true;
                 } else {
                     first_moved = first_moved.min(rect.y);
+                    other_moved = true;
                 }
             }
             _ => {}
@@ -968,8 +1026,23 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     if first_moved == f32::MAX {
         return None;
     }
-    // Keep a little of the cell's top margin on the continuation.
-    let shift = (first_moved - 2.0).max(0.0);
+    // The continuation keeps half a point above its first line (zenodo-022 page 16 and
+    // zenodo-157 page 3 start their cells' text 0.1-0.6 pt below the page's top in Word's PDFs).
+    let keep_top = 0.5f32;
+    let shift = (first_moved - keep_top).max(0.0);
+    // Each cell's continuation starts at the continuation's top, as in Word (zenodo-072: the
+    // cell whose paragraph keeps its last two lines together starts the next page level with the
+    // others). Not in a row with a picture or turned text moving on, which keep their place
+    // among the text (zenodo-157), nor for a nested table's text.
+    let per_cell = !other_moved;
+    let own_len = row.items.iter().filter_map(|it| if let Placed::Lines { path, .. } = it { Some(path.0.len()) } else { None }).min().unwrap_or(0);
+    let cell_shift = |path: &doc4me_doc::Path| -> f32 {
+        if !per_cell || path.0.len() != own_len {
+            return shift;
+        }
+        let cell = path.0.get(..path.0.len().saturating_sub(1)).unwrap_or_default();
+        cell_moved.get(cell).map_or(shift, |m| (m - keep_top).max(shift))
+    };
     let (mut a, mut b) = (Vec::new(), Vec::new());
     for it in &row.items {
         if let Some(r) = it.turned_bounds() {
@@ -985,14 +1058,7 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
         match it {
             Placed::Lines { story, path, para, l0, l1, x, y, turn } => {
                 let base = para.lines.get(*l0).map(|l| l.top).unwrap_or(0.0);
-                let mut split = *l1;
-                for k in *l0..*l1 {
-                    let Some(l) = para.lines.get(k) else { continue };
-                    if y + l.top - base + l.height > cut + 0.01 {
-                        split = k;
-                        break;
-                    }
-                }
+                let split = line_split(para, *l0, *l1, *y, cut);
                 if split > *l0 {
                     a.push(Placed::Lines { story: *story, path: path.clone(), para: para.clone(), l0: *l0, l1: split, x: *x, y: *y, turn: *turn });
                 }
@@ -1005,7 +1071,7 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
                         l0: split,
                         l1: *l1,
                         x: *x,
-                        y: top - shift,
+                        y: top - cell_shift(path),
                         turn: *turn,
                     });
                 }
@@ -1062,7 +1128,49 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
             }
         }
     }
-    Some((RowLayout { height: cut, items: a }, RowLayout { height: (row.height - shift).max(4.0), items: b }))
+    let mut b_height = (row.height - shift).max(4.0);
+    if per_cell {
+        // The continuation is as tall as its lowest content after each cell moved up, with the
+        // room the row had below its lowest line.
+        let bottom = |items: &[Placed]| {
+            items
+                .iter()
+                .filter_map(|it| match it {
+                    Placed::Lines { para, l0, l1, y, .. } => {
+                        let base = para.lines.get(*l0).map(|l| l.top).unwrap_or(0.0);
+                        para.lines.get(l1.saturating_sub(1)).map(|l| y + l.top - base + l.height)
+                    }
+                    Placed::Image { rect, .. }
+                    | Placed::Shape { rect, .. }
+                    | Placed::Graphic { rect, .. }
+                    | Placed::Clip { rect, .. }
+                    | Placed::Object { rect, .. } => Some(rect.bottom()),
+                    _ => None,
+                })
+                .fold(0.0f32, f32::max)
+        };
+        let pad = (row.height - bottom(&row.items)).max(0.0);
+        let needed = bottom(&b) + pad;
+        if needed > 0.0 && needed < b_height {
+            b_height = needed.max(4.0);
+            let old_bottom = (row.height - shift).max(4.0);
+            for it in &mut b {
+                match it {
+                    Placed::Fill { rect, .. } | Placed::Cell { rect, .. } => rect.h = rect.h.min((b_height - rect.y).max(0.0)),
+                    Placed::Rule { y0, y1, .. } if (*y0 - *y1).abs() < 0.01 && (*y0 - old_bottom).abs() < 0.02 => {
+                        *y0 = b_height;
+                        *y1 = b_height;
+                    }
+                    Placed::Rule { y0, y1, .. } => {
+                        *y0 = y0.min(b_height);
+                        *y1 = y1.min(b_height);
+                    }
+                    _ => {}
+                }
+            }
+        }
+    }
+    Some((RowLayout { height: cut, items: a }, RowLayout { height: b_height, items: b }))
 }
 
 /// The parts of `r` above `cut` and below it, the latter moved up by `shift` (onto the

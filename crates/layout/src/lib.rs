@@ -4017,7 +4017,19 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                         _ => None,
                     })
                     .unwrap_or(0.0);
-                let split = if splittable && pb.bottom - pb.y >= min_room - 0.01 { table::split_row(cur, pb.bottom - pb.y) } else { None };
+                // The part of a split row kept on this page closes with the row's bottom cell
+                // margin under its last line, as with its bottom border: zenodo-173 moves on a row
+                // whose second line fits only without its 4 pt margin. (Only when the row splits
+                // at all: one whose lines all fit but not its margin moves on whole.)
+                let margin = table::row_bottom_margin(ctx, t, ri);
+                let split = if splittable && pb.bottom - pb.y >= min_room - 0.01 {
+                    match table::split_row(cur, pb.bottom - pb.y) {
+                        Some(_) if margin > 0.0 => table::split_row(cur, pb.bottom - pb.y - margin),
+                        other => other,
+                    }
+                } else {
+                    None
+                };
                 match split {
                     Some((a, b)) => {
                         place(pb, &a);

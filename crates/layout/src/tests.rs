@@ -1784,6 +1784,77 @@ fn a_paragraph_starting_a_split_rows_continuation_keeps_its_space_before() {
     assert!((with - without - 10.0).abs() < 0.01, "10 pt before keeps the line 10 pt lower: {with} vs {without}");
 }
 
+/// A one-row table under a filler that leaves `room` points on the first page; its cells hold
+/// paragraphs of `lines` 12 pt lines with widow control on or off and the given bottom margin.
+/// Returns, per cell, the lines kept on the first page and the y of the first line moved on.
+fn split_row_case(room: f32, cells: &[(usize, bool)], bottom_margin: f32) -> Vec<(usize, Option<f32>)> {
+    use doc4me_doc::props::LineSpacing;
+    let mut d = Document::new();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - room));
+    filler.props.space_after = Some(0.0);
+    let mut t = Table::new(1, cells.len(), 300.0);
+    t.props.borders = None;
+    t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+    for (ci, (lines, widow)) in cells.iter().enumerate() {
+        let text = (0..*lines).map(|k| format!("line{k}")).collect::<Vec<_>>().join("\n");
+        let mut p = doc4me_doc::Paragraph::with_text(&text, Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_after = Some(0.0);
+        p.props.space_before = Some(0.0);
+        p.props.widow_control = Some(*widow);
+        t.rows[0].cells[ci].blocks = vec![doc4me_doc::para_block(p)];
+        if bottom_margin > 0.0 {
+            t.rows[0].cells[ci].props.margins = Some([0.0, 5.4, bottom_margin, 5.4]);
+        }
+    }
+    d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+    let l = lay(&d);
+    (0..cells.len())
+        .map(|ci| {
+            let kept = l.pages[0]
+                .items
+                .iter()
+                .filter_map(|i| {
+                    if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1 && path.0[2] == ci as u32).then_some(l1 - l0) } else { None }
+                })
+                .sum::<usize>();
+            let moved = l.pages.get(1).and_then(|pg| {
+                pg.items.iter().find_map(|i| {
+                    if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1 && path.0[2] == ci as u32).then_some(*y) } else { None }
+                })
+            });
+            (kept, moved)
+        })
+        .collect()
+}
+
+#[test]
+fn a_split_row_keeps_widow_and_orphan_control_in_its_cells() {
+    // zenodo-072: Word splits a 7-line cell paragraph 5/2, not 6/1; zenodo-123: a row whose
+    // 3-line cell paragraph could keep only its first line moves on whole.
+    assert_eq!(split_row_case(37.5, &[(4, false)], 0.0)[0].0, 3, "without widow control 3 of 4 lines stay");
+    assert_eq!(split_row_case(37.5, &[(4, true)], 0.0)[0].0, 2, "with it the last two lines go on together");
+    assert_eq!(split_row_case(13.5, &[(3, true)], 0.0)[0].0, 0, "one line alone doesn't stay: the row moves on");
+}
+
+#[test]
+fn a_split_row_keeps_room_for_its_bottom_cell_margin() {
+    // zenodo-173: a row's second line that fits only without the cells' 4 pt bottom margin goes on.
+    assert_eq!(split_row_case(26.5, &[(4, false)], 0.0)[0].0, 2);
+    assert_eq!(split_row_case(26.5, &[(4, false)], 4.0)[0].0, 1, "the 4 pt bottom margin takes the second line's room");
+}
+
+#[test]
+fn each_cell_of_a_split_row_goes_on_from_the_top() {
+    // zenodo-072 page 8: a cell that sent two lines on (widow control) and one that sent one start
+    // the next page level with each other in Word's PDF.
+    let r = split_row_case(37.5, &[(4, true), (4, false)], 0.0);
+    assert_eq!((r[0].0, r[1].0), (2, 3), "the cells split at different lines");
+    let (a, b) = (r[0].1.unwrap(), r[1].1.unwrap());
+    assert!((a - b).abs() < 0.01, "both continuations start at the top: {a} vs {b}");
+}
+
 #[test]
 fn a_row_does_not_split_into_less_room_than_its_minimum_height() {
     // zenodo-173: a row at least 29.45pt tall moves whole to the next page when about 28pt are
