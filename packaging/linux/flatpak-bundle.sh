@@ -2,6 +2,7 @@
 # Repackage a Doc4Me Linux tarball as a single-file Flatpak bundle:
 #
 #   $DIST/doc4me-<commit>-linux-<arch>.flatpak
+# <commit> is the short commit, or the version number with DOC4ME_FILE_NAME=version (env.sh).
 #
 # Usage: packaging/linux/flatpak-bundle.sh [--no-test] [TARBALL]
 #
@@ -36,7 +37,7 @@ case "$ARCH" in
   aarch64 | arm64) ARCH=aarch64 ;;
   *) echo "unsupported architecture $ARCH" >&2; exit 2 ;;
 esac
-BASENAME="doc4me-$COMMIT-linux-$ARCH"
+BASENAME="doc4me-$LABEL-linux-$ARCH"
 TARBALL="${TARBALL:-$DIST/$BASENAME.tar.gz}"
 [ -f "$TARBALL" ] || { echo "error: $TARBALL not found (run packaging/linux/package.sh --formats tar first)" >&2; exit 1; }
 for tool in flatpak flatpak-builder; do

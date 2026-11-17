@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Build the browser version and zip it:  $DIST/doc4me-web-<commit>.zip
+# <commit> is the short commit, or the version number with DOC4ME_FILE_NAME=version (env.sh).
 #
 # Usage: packaging/web/package.sh [--skip-build]
 #
@@ -24,7 +25,7 @@ if grep -Eq '(src|href)="/[^/]' "$SITE/index.html"; then
   exit 1
 fi
 
-NAME="doc4me-web-$COMMIT"
+NAME="doc4me-web-$LABEL"
 WORK="$CARGO_TARGET_DIR/web-package"
 rm -rf "$WORK"
 mkdir -p "$WORK/$NAME"

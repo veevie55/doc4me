@@ -17,6 +17,14 @@ on:
         required: false
         type: string
         default: ''
+      file-name:
+        description: 'Name the download files by commit (doc4me-<commit>-...) or by version (doc4me-<version>-..., needs a version)'
+        required: false
+        type: choice
+        default: commit
+        options:
+          - commit
+          - version
   # The Release workflow (release.yml) calls this build with the commit and version it resolved.
   workflow_call:
     inputs:
@@ -29,6 +37,11 @@ on:
         required: false
         type: string
         default: ''
+      file-name:
+        description: 'Name the download files by commit or version'
+        required: false
+        type: string
+        default: commit
 
 permissions:
   contents: read
@@ -50,6 +63,7 @@ jobs:
         shell: bash
         env:
           REQUESTED_VERSION: ${{ inputs.version }}
+          FILE_NAME: ${{ inputs.file-name }}
         run: |
           commit=$(git rev-parse HEAD)
           printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
@@ -69,8 +83,25 @@ jobs:
             printf '%s\n' "$version" > "dist/release/VERSION.txt"
           fi
           printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          # File names: the commit (default) or the version number (packaging/env.sh, package.ps1).
+          file_name="${FILE_NAME:-commit}"
+          case "$file_name" in
+            commit) ;;
+            version)
+              if [ -z "$version" ]; then
+                echo '::error::file names by version need a version number'
+                exit 1
+              fi
+              ;;
+            *)
+              echo '::error::file-name must be commit or version'
+              exit 1
+              ;;
+          esac
+          printf 'DOC4ME_FILE_NAME=%s\n' "$file_name" >> "$GITHUB_ENV"
           printf '### Build BSD (FreeBSD)\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
           if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+          printf '\nFile names: by %s\n' "$file_name" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Build inside a native FreeBSD VM
         uses: vmactions/freebsd-vm@811efaaac0668df8bfb8308c3ec997b5ab50037b # v1, pinned
@@ -79,7 +110,7 @@ jobs:
           arch: x86_64
           mem: 6144
           sync: rsync
-          envs: 'DOC4ME_BUILD_SHA DOC4ME_VERSION'
+          envs: 'DOC4ME_BUILD_SHA DOC4ME_VERSION DOC4ME_FILE_NAME'
           cache-after-prepare: true
           prepare: |
             pkg install -y bash git ca_root_nss rust llvm cmake ninja pkgconf \
@@ -92,7 +123,7 @@ jobs:
             export LIBCLANG_PATH="$(dirname "$clang_lib")"
             cargo build --release --locked -p doc4me -p doc4me-cli
             . packaging/env.sh
-            name="doc4me-$COMMIT-freebsd-x86_64"
+            name="doc4me-$LABEL-freebsd-x86_64"
             stage="$CARGO_TARGET_DIR/bsd-package/$name"
             mkdir -p "$stage/bin"
             cp target/release/doc4me target/release/doc4me-cli "$stage/bin/"

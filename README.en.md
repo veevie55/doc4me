@@ -53,9 +53,12 @@ revisions and licence details.
 Latest Windows measurement: [run 44078179776](https://github.com/veevie55/doc4me/actions/runs/44078179776); readiness is 95.0% overall / 96.8% without 22 deferred rows, with page counts 219/219 and page boundaries 127/219. There are still 0 page-count and 92 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
 
 Each build workflow also takes an optional **version** (such as `1.2.0` or `1.2.0-rc.1`), shown in the About
-dialog, `--version` and the installers' version fields; left empty, the build is named by its commit only. The
+dialog, `--version` and the installers' version fields; left empty, the build is named by its commit only.
+**file-name** chooses the download file names: `commit` (default) gives `doc4me-<commit>-windows-x64.msi`,
+`version` gives `doc4me-<version>-windows-x64.msi` (a version is then required). The
 [Release](.github/workflows/release.yml) workflow tags `v<version>` and publishes a GitHub Release, only when someone runs
-it: type the version, choose `main` (latest code) or a commit, and tick the platforms to build.
+it: type the version, choose `main` (latest code) or a commit, tick the platforms to build, and name the files by
+version (default) or commit; a version with a pre-release part such as `1.2.0-rc.1` is published as a pre-release.
 See [docs/releasing.md](docs/releasing.md) for platform requirements.
 
 ## Highlights

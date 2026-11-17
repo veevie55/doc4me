@@ -1,6 +1,6 @@
 # Building and releasing Doc4Me
 
-> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** every build workflow takes an optional version number (shown in About and `--version`), and a manual Release workflow tags and publishes a Release from `main` or a chosen commit with the platforms ticked (previously: builds are named by commit instead of a version number)
+> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** download files can be named by version number or by commit (**file-name** field); every build workflow takes an optional version number (shown in About and `--version`), and a manual Release workflow tags and publishes a Release from `main` or a chosen commit with the platforms ticked (previously: builds are named by commit instead of a version number)
 
 ## Build a chosen commit
 
@@ -12,7 +12,8 @@ Release only when someone runs it (see below).
 
 Doc4Me names its builds by the **commit** they were built from, not by a version number. `doc4me --version`, `doc4me-cli --version`, the MCP server's `serverInfo.version`
 and the web user agent show the short commit (8 hex digits, `dev` for a local build without
-`DOC4ME_BUILD_SHA`), and package files are named `doc4me-<commit>-<platform>-<arch>.<ext>`.
+`DOC4ME_BUILD_SHA`), and package files are named `doc4me-<commit>-<platform>-<arch>.<ext>` unless the
+version is chosen for file names (below).
 
 A build may also be given a **version number** in the workflow form's **version** field: `1.2.3` or
 `1.2.3-rc.1` (a leading `v` is dropped; major and minor up to 255 and patch up to 65535, the MSI
@@ -22,6 +23,16 @@ limits). The workflow checks it and passes it to the build as `DOC4ME_VERSION`
 installers' numeric version fields below take it, and the artifact holds `VERSION.txt`. Without a
 version the About dialog shows neither a version number nor a commit, as before. Source commits older
 than this feature ignore the version in the app itself (only the installers' numeric fields take it).
+
+The **file-name** field chooses what names the download files: `commit` (the default in the build
+workflows) gives `doc4me-<commit>-windows-x64.msi`, `version` gives `doc4me-<version>-windows-x64.msi`
+(likewise the portable ZIP, DMG, CLI ZIP, AppImage/zsync, DEB, RPM, tar.gz, Web ZIP and the folders
+inside the archives). `version` needs a version number; the run stops without one. The workflow passes
+the choice as `DOC4ME_FILE_NAME` (`commit` or `version`) to `packaging/env.sh` and
+`packaging/windows/package.ps1`, which name the files with the commit or with `DOC4ME_VERSION`; a
+local packaging run with `DOC4ME_FILE_NAME=version` and no `DOC4ME_VERSION` uses the `Cargo.toml`
+version. The commit is always recorded in `SOURCE_COMMIT.txt`, whichever is chosen. Source commits
+older than this feature ignore the choice and name their files by commit.
 
 Without a version, the numeric fields that installers require keep the `[workspace.package] version` from
 `Cargo.toml`: the MSI ProductVersion, the macOS `CFBundleShortVersionString`/`CFBundleVersion`,
@@ -33,7 +44,8 @@ carries it as its file and product version strings.
 2. Choose **Run workflow**, keeping **Use workflow from: main**. This selects the current workflow
    definition, independently of the source revision to build.
 3. Set **ref** to `main` for current code, or a commit SHA (or branch) from this repository, such
-   as the commit a published build came from. Optionally type a **version**. For macOS, choose `universal`, `aarch64`, or `x86_64` as well.
+   as the commit a published build came from. Optionally type a **version** and choose
+   **file-name** (`commit` or `version`). For macOS, choose `universal`, `aarch64`, or `x86_64` as well.
 4. Start the run explicitly. Download its **Artifacts** when it finishes. They are retained for
    14 days and include `SOURCE_COMMIT.txt`, the resolved 40-character source SHA. The same SHA is
    in the run summary and is supplied to the build through `DOC4ME_BUILD_SHA`.
@@ -102,10 +114,14 @@ starts only from **Run workflow** (keep **Use workflow from: main**). Its form:
 | **version** | Required. `1.2.3` or `1.2.3-rc.1`, checked as above. The tag is `v<version>`; the run stops if that tag or Release already exists. |
 | **ref** | `main` for the latest code (default), or a commit SHA, tag or branch. It is resolved once to a full SHA and every build uses that SHA, even if `main` moves during the run. |
 | **windows-x64**, **windows-x86**, **windows-arm64**, **linux**, **macos**, **bsd**, **web** | Tick the platforms to build (Windows x64 is ticked by default; at least one is required). macOS builds the universal DMG. |
-| **prerelease** | Mark the Release as a pre-release instead of the latest release. |
+| **file-name** | `version` (default): files named `doc4me-<version>-<platform>-<arch>.<ext>`; `commit`: `doc4me-<commit>-…`. |
 
-The run calls the chosen platform workflows above (`workflow_call`) with the resolved SHA and the
-version, so each package carries the version in its About dialog, `--version` and installer fields.
+A version with a pre-release part (`1.2.0-rc.1`, the text after `-`) is published as a **pre-release**;
+a plain `1.2.0` becomes the latest release. (GitHub allows at most 10 fields in a form, so this follows
+semantic versioning instead of a separate field.)
+
+The run calls the chosen platform workflows above (`workflow_call`) with the resolved SHA, the
+version and the file-name choice, so each package carries the version in its About dialog, `--version` and installer fields.
 When every chosen build succeeds, the `publish` job (the only job with `contents: write`) checks that
 each artifact's `SOURCE_COMMIT.txt` and `VERSION.txt` match, refuses two builds producing the same
 file name, adds `SHA256SUMS.txt` and `SOURCE_COMMIT.txt`, writes cumulative notes with
@@ -124,7 +140,7 @@ Before running it:
    `## [<commit>] - YYYY-MM-DD` (CLAUDE.md); otherwise the workflow uses them as they are.
    Headings of earlier releases keep their version numbers (history is not edited).
 
-To publish by hand instead, run the platform workflows with the same **ref** and **version**, then
+To publish by hand instead, run the platform workflows with the same **ref**, **version** and **file-name**, then
 publish their Artifacts with notes from `tools/release_notes.py`.
 
 `cargo xtask version` remains for the numeric installer fields of builds without a version; change it
@@ -162,6 +178,7 @@ remain the owner's chosen upstream URLs.
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-17 | minor | Build workflows take an optional version number (About, `--version`, installer fields) and a **file-name** choice (download files named by commit or by version); a manual Release workflow tags `v<version>` and publishes a Release from `main` or a chosen commit with the ticked platforms (pre-release when the version has a pre-release part). |
 | 2026-11-16 | minor | Builds are named by commit instead of a version number (`--version`, MCP, user agent, package file names; the About dialog shows neither); Releases are published by hand; removed the deleted x64 installer and ARM64 readiness workflows from this page. |
 | 2026-11-15 | minor | Windows packages and readiness use a shared pinned OFL font set; the preparation script verifies Google Fonts hashes for Overpass and Noto Sans Ethiopic before embedding and packaging licences. |
 | 2026-11-15 | minor | Added manual Windows x86 and x64 artifact workflows; both build MSI and portable ZIP from a selected ref and include source commit provenance. x86 uses the x64-hosted x86 MSVC toolchain. Neither workflow publishes a Release. |
