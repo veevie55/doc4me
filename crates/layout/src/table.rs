@@ -883,6 +883,22 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     if cut <= 0.0 || cut >= row.height {
         return None;
     }
+    // The row's bottom border closes the part kept on this page, under its last line: Word keeps
+    // room for it (govuk-040 moves on a line that fits only without the row's border).
+    let border = row
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Rule { y0, y1, border, .. } if (y0 - y1).abs() < 0.01 && *y0 >= row.height - 0.01 && border.is_visible() => {
+                Some(border.width.clamp(0.0, 12.0))
+            }
+            _ => None,
+        })
+        .fold(0.0f32, f32::max);
+    let cut = cut - border;
+    if cut <= 0.0 {
+        return None;
+    }
     // Where each paragraph splits, and how far up the continuation moves.
     let mut first_moved = f32::MAX;
     let mut kept_any = false;

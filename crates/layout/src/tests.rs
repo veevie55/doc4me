@@ -1619,6 +1619,37 @@ fn tall_rows_split_across_pages() {
 }
 
 #[test]
+fn a_split_row_keeps_room_for_its_bottom_border() {
+    // The part of a row kept on a page closes with the row's bottom border under its last line:
+    // a line that fits only without the border goes to the next page (govuk-040, zenodo-173).
+    use doc4me_doc::props::{Border, BorderStyle, Borders, LineSpacing};
+    let first_page_lines = |border: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 13.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(2, 1, 300.0);
+        let mut cell = doc4me_doc::Paragraph::with_text("one\ntwo\nthree\nfour", Default::default());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        cell.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        let line = Border { style: BorderStyle::Single, width: border, color: None, space: 0.0 };
+        // Only the rule between the rows: no top border band moves the text down.
+        t.props.borders = Some(Borders { between: Some(line), ..Default::default() });
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert_eq!(first_page_lines(0.5), 1, "a 12 pt line and a 0.5 pt border fit in 13 pt");
+    assert_eq!(first_page_lines(3.0), 0, "with a 3 pt border they don't");
+}
+
+#[test]
 fn a_row_does_not_split_into_less_room_than_its_minimum_height() {
     // zenodo-173: a row at least 29.45pt tall moves whole to the next page when about 28pt are
     // left, though its first lines would fit there. With room for its minimum height it splits.
