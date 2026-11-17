@@ -2276,7 +2276,11 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 {
                     last_break = Some(pj);
                 }
-                if let Some(bk) = last_break.filter(|bk| *bk >= c0) {
+                // A break after nothing but zero-width marks (a field's start, a bookmark) would
+                // leave an empty line: zenodo-103's citation fields in 17 pt wide cells break their
+                // too-long "[42]" after "[42" in Word's PDF, on the cell's first line.
+                let blank = |bk: usize| (c0..=bk).all(|k| pl.clusters.get(k).is_some_and(|c| c.kind == ClKind::Marker));
+                if let Some(bk) = last_break.filter(|bk| *bk >= c0 && !blank(*bk)) {
                     xs.truncate(bk + 1 - c0);
                     j = bk + 1;
                     // Recompute x for the kept clusters.

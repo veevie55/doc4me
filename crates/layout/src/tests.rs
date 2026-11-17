@@ -6540,6 +6540,28 @@ fn a_bookmark_before_an_oversized_picture_leaves_no_empty_line() {
     assert_eq!(lines(true), lines(false), "the bookmark adds no line");
 }
 
+/// A word too long for its line breaks within itself on the paragraph's first line, even after
+/// a zero-width mark: zenodo-103's citation fields in 17 pt wide cells show "[42" on the cell's
+/// first line in Word's PDF, not after an empty one.
+#[test]
+fn a_too_long_word_after_a_mark_breaks_on_the_first_line() {
+    let width = Document::new().last_section.text_width();
+    let lines = |mark: bool| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("[42]", Default::default());
+        p.props.indent_right = Some(width - 14.0);
+        if mark {
+            p.insert_object(0, InlineObject::BookmarkEnd { name: "b".into() }, &Default::default()).unwrap();
+        }
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.len()
+    };
+    assert!(lines(false) >= 2, "the word is too long for its line");
+    assert_eq!(lines(true), lines(false), "the mark adds no line");
+}
+
 /// Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below its last
 /// (zenodo-021: Word steps single-line cells with automatic spacing 33 pt apart, not 61); between
 /// two paragraphs of a cell it is.
