@@ -729,6 +729,37 @@ fn a_bigger_list_number_adds_only_what_sticks_out_above_the_text() {
 }
 
 #[test]
+fn a_justified_line_takes_in_a_word_only_if_it_sticks_out_a_little() {
+    // zenodo-157: Word shrinks a justified line's spaces to take in a word sticking out by up to
+    // about 0.35 of it (with the space before), not more, even when the spaces could give it.
+    let text = "aa bb cc dd ee ff gg hh ii jj kk ll mm nn oo pp qq rr ss tt uu vv ww xx yy zz";
+    let lines = |frac: f32| {
+        let mut d = Document::from_text(text);
+        let width = d.last_section.text_width();
+        let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        p.props.align = Some(Align::Justify);
+        p.props.space_after = Some(0.0);
+        // The natural width of the text and of its last word with the space before it.
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        let total: f32 = para.clusters.iter().map(|c| c.adv).sum();
+        let space = para.clusters.iter().rposition(|c| c.kind == crate::para::ClKind::Space).unwrap();
+        let last: f32 =
+            para.clusters[space..].iter().filter(|c| matches!(c.kind, crate::para::ClKind::Space | crate::para::ClKind::Text)).map(|c| c.adv).sum();
+        assert!(total < width, "the test text fits one line: {total} in {width}");
+        // Room for all but `frac` of the last word: indent the right edge in.
+        let room = total - frac * last;
+        let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        p.props.indent_right = Some(width - room);
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.len()
+    };
+    assert_eq!(lines(0.30), 1, "sticking out by 0.30 of it, the last word is taken in");
+    assert_eq!(lines(0.40), 2, "sticking out by 0.40 of it, it goes to the next line");
+}
+
+#[test]
 fn tables_lay_out_cells() {
     let mut d = Document::from_text("before\nafter");
     let mut t = Table::new(2, 3, 468.0);

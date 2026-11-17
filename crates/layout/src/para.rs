@@ -2236,11 +2236,17 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 }
             });
             let shrink = if shrink_spaces && !has_tab { space_shrink_room(space_w, space_n) } else { 0.0 };
+            let squeezed = !absorbs && shrink > 0.0 && x + c.adv > right_edge + 0.01 && x + c.adv <= right_edge + shrink + 0.01;
             let mut fits = absorbs
                 || x + c.adv <= right_edge + shrink + 0.01
                 || c.kind == ClKind::Space
                 || c.kind == ClKind::Marker
                 || slack_until.is_some_and(|e| j <= e);
+            // A word that only fits by shrinking the spaces may not stick out too far.
+            if fits && squeezed && !matches!(c.kind, ClKind::Space | ClKind::Marker) && !slack_until.is_some_and(|e| j <= e) {
+                let ws = last_break.filter(|b| *b >= c0).map_or(c0, |b| b + 1);
+                fits = overhang_fits(pl, (c0, ws, j), x, xs.get(ws.saturating_sub(c0)).copied().unwrap_or(x), right_edge);
+            }
             // A word with nowhere to break before it that overflows only by what a substitute font
             // adds stays whole instead of breaking mid-word.
             if !fits
@@ -2873,22 +2879,58 @@ fn row_spans(exclusions: &[Exclusion], top: f32, h: f32, lo: f32, hi: f32) -> Re
 const HYPHENATION_ZONE: f32 = doc4me_doc::DEFAULT_HYPHENATION_ZONE;
 
 /// How much of their width the spaces of a justified line may give up to fit more text (Word
-/// 2013+, compatibility mode 15). Word's PDFs: zenodo-039 fits a word needing 21.95% of its
-/// 11pt Times New Roman spaces, zenodo-003 one needing 20.7% (12pt), govuk-072 refuses one
-/// needing 23.0% (12pt Arial).
-const MAX_SPACE_SHRINK: f32 = 0.22;
-/// Nor does a space shrink below this width, points: zenodo-165's 8pt Times New Roman (2pt
-/// spaces) refuses words needing 20.6% and 21.4%, so small text gives up at most 20%.
-const MIN_SPACE: f32 = 1.6;
+/// 2013+, compatibility mode 15). Measured over 381 justified lines of Word's PDFs (zenodo-003,
+/// -039 and -157; zenodo-165 left out, its kerning makes the widths unmeasurable): with
+/// [`MAX_WORD_OVERHANG`] this limit disagrees with 10 of them, most with bold or italic words the
+/// measurement can't size; zenodo-039 takes in words needing up to 24.6% of its spaces. The
+/// refusals once read as a 22% limit (govuk-072 at 23.0%, zenodo-165's 8 pt text at 20.6% and
+/// 21.4%) are words sticking out too far.
+const MAX_SPACE_SHRINK: f32 = 0.25;
+
+/// The most of a word (with the space before it) that may stick out past the right edge for the
+/// line's spaces to shrink and take it in (justified lines, compatibility mode 15). Word's PDFs:
+/// zenodo-157 takes in "bastón" sticking out by 0.34 of it (21.6% of the line's spaces) but not
+/// "que" at 0.44 (15.7%) nor "de" at 0.61 (18.1%); zenodo-039 refuses "the" at 0.343 and
+/// zenodo-053 takes in "in" at about 0.346, so the limit sits about there. With the limit alone
+/// 141 of the 381 measured lines disagree, with this rule 10; line ends matching Word across the
+/// corpus go from 69,809 to 71,473 of 75,526.
+const MAX_WORD_OVERHANG: f32 = 0.35;
 
 /// How far `n` spaces `width` wide in all may shrink together: [`MAX_SPACE_SHRINK`] of their
-/// width, never below [`MIN_SPACE`] each.
+/// width.
 fn space_shrink_room(width: f32, n: usize) -> f32 {
-    if n == 0 || width <= 0.0 {
+    if n == 0 || width <= 0.0 || !width.is_finite() {
         return 0.0;
     }
-    let each = width / n as f32;
-    n as f32 * (each * MAX_SPACE_SHRINK).min((each - MIN_SPACE).max(0.0))
+    width * MAX_SPACE_SHRINK
+}
+
+/// Whether the word around cluster `j` (from `ws`, on a line from `c0`; the cluster starts at `x`,
+/// the word at `word_x`) may be taken into a justified line by shrinking its spaces: it may not
+/// stick out past `right_edge` by more than [`MAX_WORD_OVERHANG`] of its width with the space
+/// before it.
+fn overhang_fits(pl: &ParaLayout, (c0, ws, j): (usize, usize, usize), x: f32, word_x: f32, right_edge: f32) -> bool {
+    let mut end = x;
+    for c in pl.clusters.iter().skip(j) {
+        match c.kind {
+            ClKind::Marker => continue,
+            ClKind::Text | ClKind::Object(_) => {}
+            _ => break,
+        }
+        end += c.adv;
+        if c.break_after {
+            break;
+        }
+    }
+    let space_before =
+        ws.checked_sub(1).filter(|k| *k >= c0).and_then(|k| pl.clusters.get(k)).filter(|c| c.kind == ClKind::Space).map_or(0.0, |c| c.adv);
+    word_overhang_fits(end - right_edge, end - word_x, space_before)
+}
+
+/// [`overhang_fits`]' rule on its measures: how far the word sticks out, its width and the width
+/// of the space before it.
+fn word_overhang_fits(overhang: f32, word: f32, space_before: f32) -> bool {
+    overhang <= MAX_WORD_OVERHANG * (word + space_before) + 0.01
 }
 
 /// Take `-slack` (an overflow) out of the line's inner spaces, in proportion to their widths and
@@ -3295,15 +3337,21 @@ mod space_shrink_tests {
 
     #[test]
     fn spaces_shrink_up_to_the_measured_limits() {
-        // Word's PDFs: 21.95% of 11pt Times New Roman spaces fits (zenodo-039), 23.0% of 12pt
-        // Arial ones doesn't (govuk-072), and 8pt text gives up at most 20% (zenodo-165).
-        assert!(share(2.75) >= 0.2195);
-        assert!(share(12.0 * 0.2778) < 0.23);
-        assert!((share(2.0) - 0.2).abs() < 1e-4);
-        assert!(share(2.0) < 0.206);
-        // Never below the minimum width, and nothing to give for tiny spaces or none at all.
-        assert_eq!(space_shrink_room(1.0 * 4.0, 4), 0.0);
+        // A quarter of their width (zenodo-039 takes in words needing up to 24.6%), whatever the
+        // size; nothing to give with no spaces.
+        assert!((share(2.75) - 0.25).abs() < 1e-4);
+        assert!((share(2.0) - 0.25).abs() < 1e-4);
         assert_eq!(space_shrink_room(0.0, 0), 0.0);
         assert_eq!(space_shrink_room(10.0, 0), 0.0);
+    }
+
+    #[test]
+    fn a_word_sticking_out_too_far_is_not_taken_in() {
+        use super::word_overhang_fits;
+        // zenodo-157 (11 pt Times New Roman, 2.75 pt spaces): "bastón" (28.72 pt) sticking out
+        // 10.69 pt is taken in, "que" (15.88 pt) by 8.22 and "de" (10.38 pt) by 7.96 aren't.
+        assert!(word_overhang_fits(10.69, 28.72, 2.75));
+        assert!(!word_overhang_fits(8.22, 15.88, 2.75));
+        assert!(!word_overhang_fits(7.96, 10.38, 2.75));
     }
 }
