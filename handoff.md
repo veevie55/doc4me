@@ -1,5 +1,7 @@
 # Partial cell margins, lowered text, header-row start, Aptos Narrow · 2026-11-18
 
+- zenodo-119 (not fixed): its Keywords line 3 fits in Doc4Me because Arimo kerns "ff"/"fi" ("Efficiency," 53.58 pt) where Word's Arial doesn't (54.58 pt; document has `w:kern 2`). Turning kerning off for Arimo/Tinos/Cousine stand-ins cost 256 matching lines and zenodo-012/-065; Word kerns other pairs. Needs Arial's own pair list, which we don't have.
+
 - Missing tcMar/tblCellMar sides inherit (cell ← table ← style ← Word 0/5.4 pt) instead of 0; negative `w:position` lowers the line's ascent too; the header-rows-plus-first-line check adds the row's bottom cell margin when that row would split; Aptos Narrow → Roboto wdth 75 with measured widths (tools/aptos_narrow_pdf_metrics.py). Status unchanged at 138/219 Linux, lines 106,207 → 106,603. The margin fix alone failed govuk-052 and zenodo-154; the other three fixed what it exposed.
 
 # VML WordArt watermarks, centred unwrapped boxes · 2026-11-18
