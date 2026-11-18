@@ -437,6 +437,37 @@ fn shift_enter_stays_inside_the_list_item() {
     assert_eq!(paras(&s), vec![para("Line one\ncont", Some(0)), para("two", Some(0))]);
 }
 
+#[test]
+fn shift_enter_in_a_larger_font_keeps_the_previous_line_small() {
+    let mut s = s();
+    run(&mut s, "format.font", json!({"name": "Arial"}));
+    run(&mut s, "format.size", json!({"size": 8.0}));
+    typ(&mut s, "Small");
+    let heights = |s: &mut Session| {
+        s.layout()
+            .pages
+            .iter()
+            .flat_map(|p| &p.items)
+            .find_map(|item| {
+                if let crate::layout::Placed::Lines { para, .. } = item {
+                    Some(para.lines.iter().map(|l| l.height).collect::<Vec<_>>())
+                } else {
+                    None
+                }
+            })
+            .unwrap()
+    };
+    let before = heights(&mut s);
+    run(&mut s, "format.size", json!({"size": 24.0}));
+    run(&mut s, "text.lineBreak", json!({}));
+    typ(&mut s, "Next");
+    let after = heights(&mut s);
+    assert_eq!(after.len(), 2);
+    assert!((before[0] - after[0]).abs() < 0.01);
+    assert!(after[1] > after[0] * 2.0);
+    assert_eq!(paras(&s), vec![para("Small\nNext", None)]);
+}
+
 /// Body paragraph texts, lower-cased (AutoCorrect may capitalise a sentence start).
 fn texts(s: &Session) -> Vec<String> {
     paras(s).into_iter().map(|p| p.0.to_lowercase()).collect()

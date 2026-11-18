@@ -1,5 +1,7 @@
 # Doc4Me roadmap
 
+**Manual-break height follow-up · 2026-11-18:** A larger Shift+Enter break no longer raises preceding text; blank lines retain their own size. The 219-document comparison keeps all page counts and document endpoint results unchanged. This fixes visible geometry in govuk-024, not its remaining extraction-order failure. Official Windows still has 92 boundary failures; no score improvement is claimed. [Audit](docs/readiness/manual-break-2026-11-18.md).
+
 **Boundary verification follow-up · 2026-11-17:** The latest committed Windows result is 219/219 page counts and 127/219 boundaries (run 44078179776, source `019b0ff`); 92 boundary failures remain. Failed Poppler extraction now fails verification instead of matching a blank page. A 52-page audit of five remaining cases finds identical per-page word multisets but six endpoint-order mismatches; all five still fail. No renderer change or new score is claimed. [Audit](docs/readiness/extraction-order-2026-11-17.md).
 
 **Initial table headers · 2026-11-17 (Linux verified; Windows pending):** Reserve the initial header/body prefix and keep its caption with it. All 219 document page counts stay unchanged; boundaries improve 119→120/219, only govuk-052 newly matching all nine pages. No previously passing document or page regresses; a first-word match within already-failing zenodo-173 page 15 is lost and documented. CI passes 6/6 (2,600 native passed, one existing ignored). Still 99 corpus-breaks failures. [Audit](docs/readiness/table-header-prefix-2026-11-17.md).
@@ -24,7 +26,7 @@
 
 **Stage: alpha** · latest official readiness is **95.0%** ([`docs/readiness.md`](docs/readiness.md), Windows run 44078179776, 2026-11-17; source `019b0ff`, all 219 documents); **96.8% without 22 deferred rows**. Page-count checks pass 219/219 documents; page-boundary checks pass 127/219, leaving 92 boundary failures. All other dimensions pass without deferred rows. See the [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md). Catalog-key coverage does not establish translation accuracy; 22 catalogs remain AI drafts awaiting native-speaker review. Earlier dated snapshots below preserve their historical measurements.
 
-> **Last reviewed:** 2026-11-17 · **Last updated:** 2026-11-17 · **Change:** reject failed PDF extraction in corpus verification; record five still-failing reading-order cases. Latest official Windows: run 44078179776, source `019b0ff`, pages 219/219 and boundaries 127/219; 95.0% overall / 96.8% without deferred. No new measurement or criteria change.
+> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor — manual-break font height no longer raises preceding text. Full corpus page counts and document endpoint results unchanged; official Windows remains 127/219 boundaries. Criteria and accepted/excluded/deferred decisions unchanged.
 
 **2026-11-14 update:** The readiness report listed the non-passing layout rows with English and Thai blocker assessments. Earlier dated progress entries retain their historical values.
 
@@ -328,6 +330,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-18 | minor | Ignore the manual break’s font metrics after text; retain blank-line formatting. Regression coverage for typing, body/table layout and compatibility 14/15. Corpus results unchanged; see manual-break audit. |
 | 2026-11-17 | minor | Initial table header/body prefix and caption: govuk-052 now matches all boundaries, Linux 119→120/219, all counts unchanged; partial changes in failing zenodo-108/173 documented. CI 6/6; Windows pending. |
 | 2026-11-17 | minor | Floating text-box AutoFit restores govuk-002 page 24; Linux boundaries 118→119/219, page counts unchanged, no regression. Windows confirmation pending; 100 corpus-breaks failures remain. |
 | 2026-11-16 | minor | Windows run 43804632296, engine 093eaba, report 15584f5: 199/220 page counts (zenodo-067 and zenodo-115 newly match after the Overpass line and Garamond metrics), 104/220 boundaries, 93.4% overall / 95.3% without deferred; no newly failing row versus report 3fca7cd. Criteria, corpus, exclusions and deferred unchanged. |

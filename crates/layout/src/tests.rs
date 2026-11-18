@@ -2911,6 +2911,62 @@ fn a_bigger_tab_does_not_raise_a_line_of_text() {
     assert!(tabs_only > text + 5.0, "a line of 24 pt tabs keeps their height: {tabs_only} against {text}");
 }
 
+/// A manual break with the next line's larger formatting does not raise the preceding text
+/// (govuk-024). Empty lines retain their own break formatting, including inside cells.
+#[test]
+fn a_manual_break_uses_its_font_height_only_on_a_blank_line() {
+    let lines = |mode, cell, first: &str, break_size, extra_break, next_size| {
+        let props = |size| doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(size), ..Default::default() };
+        let mut p = Paragraph::with_text(first, props(8.0));
+        let br = doc4me_doc::para::LINE_BREAK.to_string();
+        p.insert_text(p.len(), &br, &props(break_size)).unwrap();
+        if extra_break {
+            p.insert_text(p.len(), &br, &props(break_size)).unwrap();
+        }
+        p.insert_text(p.len(), "Next", &props(next_size)).unwrap();
+        p.mark = props(8.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        d.body = if cell {
+            let mut table = Table::new(1, 1, 300.0);
+            table.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(p)];
+            vec![Arc::new(doc4me_doc::Block::Table(table))]
+        } else {
+            vec![doc4me_doc::para_block(p)]
+        };
+        let l = lay(&d);
+        let para = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| match it {
+                Placed::Lines { para, .. } => Some(para),
+                _ => None,
+            })
+            .unwrap();
+        para.lines.iter().map(|line| (line.height, line.baseline)).collect::<Vec<_>>()
+    };
+    for mode in [14, 15] {
+        for cell in [false, true] {
+            let plain = lines(mode, cell, "First", 8.0, false, 24.0);
+            let large_break = lines(mode, cell, "First", 24.0, false, 24.0);
+            assert_eq!(plain.len(), 2);
+            assert_eq!(large_break.len(), 2);
+            for (a, b) in plain.iter().zip(&large_break) {
+                assert!((a.0 - b.0).abs() < 0.01 && (a.1 - b.1).abs() < 0.01, "mode {mode}, cell {cell}: {plain:?} / {large_break:?}");
+            }
+            assert!(plain[1].0 > plain[0].0 + 5.0, "the next line keeps its larger text");
+            let blank = lines(mode, cell, "", 24.0, false, 8.0);
+            assert!(blank[0].0 > plain[0].0 + 5.0, "a blank line keeps its 24 pt break");
+            let consecutive = lines(mode, cell, "First", 24.0, true, 8.0);
+            assert_eq!(consecutive.len(), 3);
+            assert!((consecutive[0].0 - plain[0].0).abs() < 0.01);
+            assert!(consecutive[1].0 > consecutive[0].0 + 5.0);
+            assert!((consecutive[2].0 - plain[0].0).abs() < 0.01);
+        }
+    }
+}
+
 #[test]
 fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
     let top_of_b = |split: bool, mode: u32| {

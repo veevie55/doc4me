@@ -1,12 +1,16 @@
 # Typing parity with Word
 
-> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** minor (AutoFormat on: pasted lists take Thai digits; previously minor: AutoFormat Thai digits switch beside AutoSave; previously trivial: Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
+> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor (Shift+Enter preserves preceding text height; previously minor: AutoFormat on: pasted lists take Thai digits; previously minor: AutoFormat Thai digits switch beside AutoSave; previously trivial: Aptos known gap closed with Intos; previously minor: right-to-left letters typed into an empty paragraph make it right-to-left, #713; previously minor: editing options: typing replaces selection, overtype, #485; previously minor: Move Paragraph Up/Down, Promote/Demote, Go Back and Alt+X keys, #343) · **Target:** Microsoft Word (Microsoft 365) for Windows (measured until 2026-10-21 against Word for Mac 16.113.4; not re-measured on Windows yet)
 
 What Word does when you type, observed black-box (same keystrokes typed into Word and
 Doc4Me, results read back paragraph by paragraph) and pinned by tests in
 `crates/engine/src/tests_typing.rs`. When typing behaviour changes, change it here and in the
 tests together. Line breaking and pagination are in [`layout-parity.md`](layout-parity.md); the
 overall picture is in [`target-app-parity.md`](target-app-parity.md).
+
+## Manual line breaks
+
+Shift+Enter after text preserves the preceding text line’s height even when the break uses a larger font. The following text keeps its own size. Blank lines retain their break’s font height. This is pinned by `shift_enter_in_a_larger_font_keeps_the_previous_line_small` and layout tests for body paragraphs and table cells in compatibility modes 14/15. Evidence and corpus limits: [manual-break audit](readiness/manual-break-2026-11-18.md).
 
 ## Lists
 
@@ -159,6 +163,7 @@ The title bar's **AutoFormat** switch (Thai: รูปแบบอัตโน�
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-18 | minor | Shift+Enter with a larger pending font preserves the preceding text line’s height; empty lines retain break formatting. Command and body/table regressions added. |
 | 2026-11-16 | minor | AutoFormat on: lists pasted from elsewhere number in Thai digits; off, they keep their own format |
 | 2026-11-16 | minor | AutoFormat on: new lists and inserted page numbers show Thai digits |
 | 2026-11-16 | minor | AutoFormat on: "1. " (typed as "๑. ") still starts a numbered list, in Thai digits |
