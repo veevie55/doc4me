@@ -1290,6 +1290,7 @@ impl Reader<'_> {
             && let Some(part) = self.doc.parts.get_mut(&id)
         {
             part.body.auto_fit = bp.child("a:spAutoFit").is_some();
+            part.body.no_wrap = bp.attr("wrap") == Some("none");
             if let Some(v) = bp.attr("vert") {
                 part.body.vert = doc4me_doc::props::TextVert::from_ooxml(v);
             }

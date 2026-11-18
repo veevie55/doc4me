@@ -144,6 +144,25 @@ fn hostile_link_chains_stay_bounded() {
 }
 
 #[test]
+fn a_text_box_that_does_not_wrap_keeps_each_paragraph_on_one_line() {
+    // zenodo-163: a 207 pt footer box with wrap="none" shows its 30-word line whole, running past
+    // the box's right edge; wrapping, the same text takes several lines and loses its end.
+    let text = "RAQAMLI IQTISODIYOT ILMIY-ELEKTRON JURNALI | 15-SON | 2026 ".repeat(3);
+    let make = |no_wrap| {
+        let mut d = Document::from_text("anchor");
+        let id = text_box(&mut d, 0, text.trim_end(), 144.0, 120.0, TextBody { no_wrap, ..Default::default() });
+        (lay(&d), id)
+    };
+    let (unwrapped, uid) = make(true);
+    let (wrapped, wid) = make(false);
+    let count = |l: &DocLayout, id| lines(l, id).iter().map(|(.., a, b)| b - a).sum::<usize>();
+    assert_eq!(count(&unwrapped, uid), 1, "one line without wrapping");
+    assert!(count(&wrapped, wid) > 1, "the default box wraps");
+    let x = lines(&unwrapped, uid)[0].0;
+    assert!((x - frame_of(&unwrapped, uid).x - BOX_INSET_X).abs() < 0.5, "the line starts at the left margin");
+}
+
+#[test]
 fn a_floating_auto_fit_text_box_grows_instead_of_losing_its_last_line() {
     let make = |auto_fit| {
         let mut d = Document::from_text("anchor");

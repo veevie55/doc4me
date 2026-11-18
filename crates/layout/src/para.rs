@@ -1684,7 +1684,10 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         // too long for the line still breaks anywhere).
         let after_slash =
             text.get(..i).is_some_and(|t| t.ends_with('/')) && text.get(i..).and_then(|t| t.chars().next()).is_some_and(char::is_alphanumeric);
-        if (o == unicode_linebreak::BreakOpportunity::Allowed || i < text.len()) && !after_slash {
+        // Nor between a closing and an opening bracket with no space ("2022)(Adams"), where UAX #14
+        // allows one (CP ÷ OP): in the corpus Word keeps all 36 such pairs whole (zenodo-092).
+        let between_brackets = text.get(..i).is_some_and(|t| t.ends_with([')', ']'])) && text.get(i..).is_some_and(|t| t.starts_with(['(', '[']));
+        if (o == unicode_linebreak::BreakOpportunity::Allowed || i < text.len()) && !after_slash && !between_brackets {
             found.push(i);
         }
     }

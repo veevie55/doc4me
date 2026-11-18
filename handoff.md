@@ -1,3 +1,9 @@
+# Bracket line breaks and unwrapped text boxes · 2026-11-18
+
+- Scope: the corpus-breaks milestone left in this file (the form arc's Windows confirmation is done: run 44224006895). Two fixes from page-1 failures: no break between `)`/`]` and `(`/`[` with no space (Word keeps all 36 corpus pairs whole; zenodo-092), and text boxes with `wps:bodyPr wrap="none"` keep each paragraph on one line (`TextBody::no_wrap`, read/write/layout; zenodo-163 footer). Linux local, 438 hashes verified, pinned craft-fonts, release CLI: open/roundtrip/stability 219/219, pages 218/219 (zenodo-019 only), boundaries 129 → 131/219, no regressions. See docs/readiness/bracket-nowrap-2026-11-18.md and TSV.
+- Leads not changed: govuk-068 (Word PDF Arabic presentation forms; changing the comparison would change the measure), zenodo-119 (Word starts page 2 with "Zusammenfassung:", vertical drift, cause unknown), zenodo-020 (extraction order). Other page-1 failures still to analyse: govuk-018, govuk-021, govuk-038, govuk-048, zenodo-006, zenodo-081, zenodo-115, zenodo-126, zenodo-174.
+- Next: run readiness-windows.yml on this commit for the official result (the owner dispatches it, or a session that can run workflows). Corpus work dirs in this session: /home/user/work/corpus-base-ce70748 (baseline PDFs), target/readiness/corpus (candidate), CLIs /home/user/work/base-cli and cand2-cli. No Release/Pages.
+
 # Form fidelity follow-up · 2026-11-18
 
 - Linux arc complete: modern nested-table tail marks retain caret access without growing the row; measured Verdana advances apply with Inter; PDF protects expanded metric-fitted words without intentional tracking, preserving native glyph Unicode maps. Existing krilla0.8.2 is vendored with scoped ActualText inside BT/ET; upstream licenses/notices and four CC0 profiles are retained/attributed. No new font program or proprietary asset.

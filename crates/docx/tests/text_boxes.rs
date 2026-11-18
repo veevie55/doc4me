@@ -167,6 +167,24 @@ fn story_shared_by_many_shapes_is_written_once() {
 }
 
 #[test]
+fn a_text_box_that_does_not_wrap_keeps_wrap_none_through_save_and_reopen() {
+    let mut d = Document::from_text("anchor");
+    let shape = text_box(&mut d, "One long footer line", TextBody { no_wrap: true, ..Default::default() });
+    d.insert_object(&doc4me_doc::Pos::body(0, 6), shape, &Default::default()).unwrap();
+    let bytes = doc4me_docx::write(&d).unwrap();
+    assert!(document_xml(&bytes).contains("wrap=\"none\""));
+    let reopened = doc4me_docx::read(&bytes).unwrap();
+    assert!(reopened.parts.get(&boxes(&reopened)[0]).unwrap().body.no_wrap);
+    // A box that wraps (the default) writes no wrap attribute and reads back wrapping.
+    let mut d = Document::from_text("anchor");
+    let shape = text_box(&mut d, "Wrapped", TextBody::default());
+    d.insert_object(&doc4me_doc::Pos::body(0, 6), shape, &Default::default()).unwrap();
+    let bytes = doc4me_docx::write(&d).unwrap();
+    assert!(!document_xml(&bytes).contains("wrap=\"none\""));
+    assert!(!doc4me_docx::read(&bytes).unwrap().parts.get(&boxes(&doc4me_docx::read(&bytes).unwrap())[0]).unwrap().body.no_wrap);
+}
+
+#[test]
 fn shape_auto_fit_is_preserved_through_save_and_reopen() {
     let mut d = Document::from_text("anchor");
     let shape = text_box(&mut d, "Fit all this text", TextBody { auto_fit: true, ..Default::default() });

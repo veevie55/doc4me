@@ -291,6 +291,11 @@ pub struct TextBody {
     /// right, bottom. `None`: Word's 0.1" left and right and 0.05" top and bottom.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub insets: Option<[u32; 4]>,
+    /// Don't wrap text in the shape (Shape Format › Text Box › Wrap text off; `wps:bodyPr`
+    /// `wrap="none"`): each paragraph stays on its lines however wide, running past the box's
+    /// right edge (zenodo-163's one-line footer box).
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub no_wrap: bool,
 }
 
 /// Word's text box margins, EMU: left, top, right, bottom (0.1", 0.05", 0.1", 0.05").

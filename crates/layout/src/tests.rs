@@ -4296,6 +4296,31 @@ fn no_line_break_right_after_a_slash() {
 }
 
 #[test]
+fn no_line_break_between_a_closing_and_an_opening_bracket() {
+    // Word keeps "2022)(Adams," whole (zenodo-092); a space between the brackets still breaks.
+    let text: String = (0..120).map(|i| format!("w{} conflict(Adams, {})(Adams, 2022) [a{}][b] ", "x".repeat(i % 9), 2000 + i, i % 4)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(
+                        !(before.ends_with([')', ']']) && after.starts_with(['(', '['])),
+                        "line starts between brackets: {:?}",
+                        &text[line.start..line.stop]
+                    );
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
 fn a_line_may_start_at_a_bracket_after_a_quote_and_a_space() {
     // Unicode 15.1 dropped LB15 (`QU SP* × OP`): Word breaks in `estratégicos” (según` after the
     // space, as anywhere else (zenodo-025 wrapped a table row one line earlier than Word).

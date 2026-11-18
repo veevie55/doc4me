@@ -69,9 +69,31 @@ fn frame(body: &TextBody, w: f32, h: f32) -> (f32, f32) {
 /// The width stacked text is laid out in (a paragraph's narrowest).
 const STACK_WIDTH: f32 = 12.0;
 
+/// The line length a box that doesn't wrap its text (`no_wrap`) lays it out in: long enough for
+/// its longest line, so each paragraph keeps its own lines; at least the box's `len`. The text
+/// starts at the box's left margin and runs past the right one.
+fn unwrapped_len(ctx: &mut Ctx, id: u32, blocks: &Blocks, len: f32, depth: usize) -> f32 {
+    let items = layout_box(ctx, StoryRef::Part(id), blocks, &[], UNWRAPPED, None, depth + 1, None).items;
+    let mut widest = 0.0f32;
+    for it in &items {
+        if let Placed::Lines { para, l0, l1, .. } = it {
+            for line in para.lines.get(*l0..*l1).unwrap_or_default() {
+                widest = widest.max(line.xs.last().copied().unwrap_or(0.0));
+            }
+        }
+    }
+    // A little slack, so the measured line fits again when laid out at this length.
+    if widest > len { (widest + 0.5).min(UNWRAPPED) } else { len }
+}
+
+/// The line length unwrapped text is measured in, points (longer lines still wrap).
+const UNWRAPPED: f32 = 4000.0;
+
 /// Lay `blocks` of story `id` out in lines `len` long; stacked text one letter to a line.
 fn lay(ctx: &mut Ctx, id: u32, blocks: &Blocks, len: f32, vert: TextVert, depth: usize) -> Vec<Placed> {
     let story = StoryRef::Part(id);
+    let no_wrap = ctx.doc.parts.get(&id).is_some_and(|p| p.body.no_wrap);
+    let len = if no_wrap && vert != TextVert::Stacked { unwrapped_len(ctx, id, blocks, len, depth) } else { len };
     if vert == TextVert::Stacked {
         // One letter to a line: words may break anywhere, and each letter takes the narrowest
         // line a paragraph gets (the spacing after it doesn't show).

@@ -1045,6 +1045,9 @@ impl Writer<'_> {
         if body.anchor != doc4me_doc::props::VAlign::Top {
             attrs.push(("anchor", doc4me_doc::props::anchor_ooxml(body.anchor)));
         }
+        if body.no_wrap {
+            attrs.push(("wrap", "none"));
+        }
         let insets = body.insets.filter(|i| *i != doc4me_doc::DEFAULT_BOX_INSETS).map(|i| i.map(|v| v.min(doc4me_doc::MAX_BOX_INSET).to_string()));
         if let Some([l, t, r, b]) = &insets {
             attrs.extend([("lIns", l.as_str()), ("tIns", t.as_str()), ("rIns", r.as_str()), ("bIns", b.as_str())]);
