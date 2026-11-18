@@ -1377,6 +1377,62 @@ impl Reader<'_> {
                 extra: Default::default(),
             });
         }
+        // WordArt (`v:textpath`), as Word's watermarks ("DRAFT", "CONFIDENTIAL") are: a text box
+        // with the string on one centred line, behind or in front of the text as placed. Word
+        // stretches the string to fill the shape; the text takes the size that makes its letters
+        // about as wide as the shape (govuk-038, zenodo-060). The fill colour, lightened by its
+        // opacity, colours the letters.
+        if let Some(tp) = shape.child("v:textpath")
+            && let Some(string) = tp.attr("string").map(str::trim).filter(|s| !s.is_empty() && s.chars().count() <= 256)
+            && sc.story_depth < MAX_STORY_DEPTH
+            && w > 0.0
+            && h > 0.0
+        {
+            let family = tp
+                .attr("style")
+                .and_then(|st| vml_style(st, "font-family"))
+                .map(|f| f.trim().trim_matches(['"', '\'']).to_string())
+                .filter(|f| !f.is_empty());
+            let opacity =
+                shape.child("v:fill").and_then(|f| f.attr("opacity")).and_then(|o| o.trim().parse::<f32>().ok()).unwrap_or(1.0).clamp(0.0, 1.0);
+            let color = shape.attr("fillcolor").and_then(vml_color).map(|c| {
+                let mix = |v: u8| (f32::from(v) * opacity + 255.0 * (1.0 - opacity)).round().clamp(0.0, 255.0) as u8;
+                Rgb(mix(c.0), mix(c.1), mix(c.2))
+            });
+            // Average capital/letter advance of a sans-serif face, about 0.55 em.
+            let chars = string.chars().count().max(1) as f32;
+            let size = ((w / (chars * 0.55)).min(h)).clamp(1.0, 1584.0);
+            let props = doc4me_doc::CharProps {
+                font: family,
+                size: Some((size * 2.0).round() / 2.0),
+                color: color.map(doc4me_doc::props::TextColor::Rgb),
+                ..Default::default()
+            };
+            let mut para = Paragraph::with_text(string, props.clone());
+            para.mark = props;
+            para.props.align = Some(doc4me_doc::props::Align::Center);
+            para.props.space_before = Some(0.0);
+            para.props.space_after = Some(0.0);
+            let id = self.doc.add_part(PartKind::TextBox, vec![para_block(para)]);
+            if let Some(part) = self.doc.parts.get_mut(&id) {
+                part.body.insets = Some([0; 4]);
+                part.body.anchor = doc4me_doc::props::VAlign::Center;
+                part.body.no_wrap = true;
+            }
+            return Some(InlineObject::Shape {
+                kind: ShapeKind::TextBox,
+                w,
+                h,
+                fill: None,
+                stroke: None,
+                stroke_width: 0.0,
+                float,
+                story: Some(id),
+                freeform: None,
+                effects: Default::default(),
+                extra: Default::default(),
+            });
+        }
         if let Some(img) = shape.find("v:imagedata") {
             let id = img.attr("r:id").or_else(|| img.attr("r:pict"))?;
             let media = self.media_for(rels, id)?;

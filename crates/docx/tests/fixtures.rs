@@ -1739,3 +1739,30 @@ fn bidi_and_east_asian_theme_fonts_follow_the_theme_language() {
     // No theme language and no typeface: the Latin font, as before.
     assert_eq!(fonts(""), ["Major Latin", "Minor CS", "Major Latin", "Major Latin", "Minor EA"]);
 }
+
+#[test]
+fn a_vml_wordart_watermark_becomes_an_unwrapped_text_box() {
+    // govuk-038's "DRAFT" watermark (Word's Insert › Watermark): before, the whole shape was lost.
+    let body = r#"<w:p><w:r><w:pict><v:shape id="PowerPlusWaterMarkObject1" style="position:absolute;margin-left:0;margin-top:0;width:412.4pt;height:247.45pt;rotation:315;z-index:-251656192;mso-position-horizontal:center;mso-position-horizontal-relative:margin;mso-position-vertical:center;mso-position-vertical-relative:margin" fillcolor="silver" stroked="f"><v:fill opacity=".5"/><v:textpath style="font-family:&quot;Calibri&quot;;font-size:1pt" string="DRAFT"/></v:shape></w:pict></w:r></w:p>"#;
+    let d = read_body(body);
+    let Some(InlineObject::Shape { kind: ShapeKind::TextBox, w, h, float, story: Some(story), fill, stroke, .. }) =
+        paras(&d).first().and_then(|p| p.objects.first())
+    else {
+        panic!("the watermark must be read as a text box");
+    };
+    assert_eq!((*w, *h, *fill, *stroke), (412.4, 247.45, None, None));
+    assert_eq!((float.wrap, float.h_align, float.spin().deg), (Wrap::BehindText, Some(FloatAlign::Center), 315.0));
+    let part = d.parts.get(story).unwrap();
+    assert!(part.body.no_wrap);
+    let p = part.blocks[0].as_para().unwrap();
+    assert_eq!(p.text, "DRAFT");
+    assert_eq!(p.props.align, Some(Align::Center));
+    let run = &p.runs[0].props;
+    assert_eq!(run.font.as_deref(), Some("Calibri"));
+    // Silver (192) at half opacity over white.
+    assert_eq!(run.color, Some(TextColor::Rgb(Rgb(224, 224, 224))));
+    assert!(run.size.is_some_and(|s| s > 100.0 && s <= 247.45), "{:?}", run.size);
+    // Saved and reopened, the watermark text stays.
+    let again = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
+    assert!(again.parts.values().any(|p| p.blocks.first().and_then(|b| b.as_para()).is_some_and(|p| p.text == "DRAFT")));
+}

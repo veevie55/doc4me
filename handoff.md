@@ -1,3 +1,8 @@
+# VML WordArt watermarks, centred unwrapped boxes · 2026-11-18
+
+- `v:textpath` shapes (Word watermarks) are now read as unwrapped, centred, unfilled text boxes (font from the textpath, size ≈ box width / (0.55 em × letters), colour = fill lightened by opacity); before, they were dropped (not shown, lost on save). Fixed a bug in my own `no_wrap` layout: centred lines were measured by their end x in the 4,000 pt measuring length and ended up outside the box. Corpus status unchanged (138/219); zenodo-060 −10 matching lines (Word drew its "DO NOT SELL" as paths). Text in turned boxes stays upright by design; a trial turning it gave only "T" in pdftotext for govuk-038 and changes editing of every turned box, not kept.
+- Tried and rejected: first-row cell widths for autofit tables (68 tables; govuk-008 failed, several docs lost lines).
+
 # Slashes, joined brackets, list-label text map · 2026-11-18
 
 - No break after "/" unless whitespace follows; no opening bracket joined to the previous character starts a line. List labels pass per-character text ranges to the PDF writer so stand-in-width labels get ActualText ("12." no longer extracts as "1 2."). Linux: boundaries 136 → 138/219 (zenodo-096, zenodo-147), lines 106,155 → 106,217, no document worse. docs/readiness/slash-bracket-labels-2026-11-18.md.

@@ -160,6 +160,27 @@ fn a_text_box_that_does_not_wrap_keeps_each_paragraph_on_one_line() {
     assert!(count(&wrapped, wid) > 1, "the default box wraps");
     let x = lines(&unwrapped, uid)[0].0;
     assert!((x - frame_of(&unwrapped, uid).x - BOX_INSET_X).abs() < 0.5, "the line starts at the left margin");
+
+    // A centred line too (a watermark): it is measured by its own width, so it stays in the box.
+    let mut d = Document::from_text("anchor");
+    let id = text_box(&mut d, 0, "DRAFT", 300.0, 120.0, TextBody { no_wrap: true, ..Default::default() });
+    if let Some(Block::Para(p)) = d.parts.get_mut(&id).and_then(|p| p.blocks.first_mut()).map(Arc::make_mut) {
+        p.props.align = Some(doc4me_doc::props::Align::Center);
+    }
+    let l = lay(&d);
+    let frame = frame_of(&l, id);
+    let text_x: Vec<f32> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(s), x, para, l0, .. } if *s == id => {
+                para.lines.get(*l0).and_then(|line| line.xs.first()).map(|lx| x + lx)
+            }
+            _ => None,
+        })
+        .collect();
+    assert_eq!(text_x.len(), 1, "the centred line is shown");
+    assert!(text_x[0] >= frame.x - 0.5 && text_x[0] < frame.right(), "text at {} in {frame:?}", text_x[0]);
 }
 
 #[test]

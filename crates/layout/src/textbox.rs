@@ -78,7 +78,10 @@ fn unwrapped_len(ctx: &mut Ctx, id: u32, blocks: &Blocks, len: f32, depth: usize
     for it in &items {
         if let Placed::Lines { para, l0, l1, .. } = it {
             for line in para.lines.get(*l0..*l1).unwrap_or_default() {
-                widest = widest.max(line.xs.last().copied().unwrap_or(0.0));
+                // The line's own width and indent, not where a centred or right-aligned line sits
+                // in the measuring length (that put such text far outside the box, hidden).
+                let (first, last) = (line.xs.first().copied().unwrap_or(0.0), line.xs.last().copied().unwrap_or(0.0));
+                widest = widest.max((last - first).max(0.0) + line.left.max(0.0));
             }
         }
     }
