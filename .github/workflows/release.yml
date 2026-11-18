@@ -1,9 +1,3 @@
-# Tag and publish a GitHub Release with a version number typed in the form. Manual only: no push,
-# tag, PR or schedule starts it. It builds the chosen platforms from one commit (main = the latest
-# code, or a commit SHA), bakes the version into each build (--version, installer version fields,
-# and the About line and file names as chosen), then creates the tag v<version> on that commit and a
-# Release with the files. GitHub allows 10 fields, so the three Windows builds share one choice.
-# A version with a pre-release part (1.2.0-rc.1) makes a pre-release; a plain 1.2.0 the latest one.
 name: Release
 run-name: "Release ${{ inputs.version }} · ${{ inputs.ref }}"
 
