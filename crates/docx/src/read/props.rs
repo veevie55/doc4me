@@ -471,8 +471,17 @@ pub fn borders(e: &El) -> Borders {
 
 /// Margins element (`w:tblCellMar`, `w:tcMar`) → [top, left, bottom, right].
 pub fn margins(e: &El) -> [f32; 4] {
-    let get = |names: &[&str]| names.iter().find_map(|n| e.child(n)).and_then(|c| tw(c, "w:w")).unwrap_or(0.0).clamp(0.0, 1584.0);
-    [get(&["w:top"]), get(&["w:left", "w:start"]), get(&["w:bottom"]), get(&["w:right", "w:end"])]
+    margins_over(e, [0.0; 4])
+}
+
+/// Margins element → [top, left, bottom, right], the sides it leaves out taken from `base`: a
+/// cell's `w:tcMar` that sets only its left margin keeps the table's others (govuk-020: a cell
+/// with left 0 keeps the default 5.4 pt right margin in Word's PDF).
+pub fn margins_over(e: &El, base: [f32; 4]) -> [f32; 4] {
+    let get = |names: &[&str], i: usize| {
+        names.iter().find_map(|n| e.child(n)).and_then(|c| tw(c, "w:w")).map_or(base.get(i).copied().unwrap_or(0.0), |v| v).clamp(0.0, 1584.0)
+    };
+    [get(&["w:top"], 0), get(&["w:left", "w:start"], 1), get(&["w:bottom"], 2), get(&["w:right", "w:end"], 3)]
 }
 
 impl PropCtx {

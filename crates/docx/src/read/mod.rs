@@ -853,7 +853,7 @@ impl Reader<'_> {
                 t.borders = Some(props::borders(b));
             }
             t.fill = tp.child("w:shd").and_then(|e| self.pc.shd_fill(e));
-            t.cell_margins = tp.child("w:tblCellMar").map(props::margins);
+            t.cell_margins = tp.child("w:tblCellMar").map(|m| props::margins_over(m, [0.0, 5.4, 0.0, 5.4]));
             t.band_size = tp.child_val("w:tblStyleRowBandSize").and_then(u32_of).filter(|n| *n > 0).map(|n| n.min(1000));
         }
         for c in s.children("w:tblStylePr").take(64) {

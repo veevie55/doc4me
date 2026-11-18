@@ -3733,7 +3733,7 @@ fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margi
             Some(Block::Table(t)) => {
                 let tl = table::layout_table(ctx, StoryRef::Body, t, &[b as u32], width, 1);
                 let cant_split = t.rows.first().is_some_and(|r| r.props.cant_split);
-                need += table_header_start_need(t, &tl).unwrap_or_else(|| {
+                need += table_header_start_need(ctx, t, &tl).unwrap_or_else(|| {
                     tl.rows.first().map_or(0.0, |r| if cant_split { r.height } else { table::first_line_bottom(r).min(r.height) })
                 });
                 break;
@@ -3780,7 +3780,7 @@ fn lookahead_para(ctx: &Ctx, p: &doc4me_doc::Paragraph, width: f32) -> para::Par
 
 /// Headers cannot stand alone above the first body row. Captions keeping with a table need
 /// the same prefix as the table itself; otherwise moving the header strands its caption.
-fn table_header_start_need(t: &doc4me_doc::Table, tl: &table::TableLayout) -> Option<f32> {
+fn table_header_start_need(ctx: &Ctx, t: &doc4me_doc::Table, tl: &table::TableLayout) -> Option<f32> {
     let headers = t.rows.iter().take_while(|r| r.props.header).count();
     if headers == 0 {
         return None;
@@ -3794,7 +3794,11 @@ fn table_header_start_need(t: &doc4me_doc::Table, tl: &table::TableLayout) -> Op
             (Some(h), HeightRule::AtLeast) if h.is_finite() => h.max(0.0),
             _ => 0.0,
         };
-        table::first_line_bottom(row).max(min).min(row.height)
+        // A start that splits the row closes with its bottom cell margin, as a split row does
+        // (govuk-052: a heading row and its answer row's first line with the 5.65 pt margin
+        // under it don't fit 2.6 pt above the page's foot, and Word moves the table on).
+        let first = table::first_line_bottom(row).max(min);
+        if first < row.height - 0.01 { (first + table::row_bottom_margin(ctx, t, headers)).min(row.height) } else { row.height }
     };
     Some(tl.rows.iter().take(headers).map(|r| r.height).sum::<f32>() + start)
 }
@@ -3919,7 +3923,7 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
     // Initial headers and the first body row's start form one page prefix (govuk-052).
     // Oversized prefixes retain the existing overflow behavior.
     if !pb.at_top()
-        && let Some(need) = table_header_start_need(t, &tl)
+        && let Some(need) = table_header_start_need(ctx, t, &tl)
         && pb.y + need > pb.bottom + 0.01
         && need <= pb.uncapped_bottom() - pb.top + 0.01
     {

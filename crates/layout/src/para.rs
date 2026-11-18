@@ -2500,7 +2500,11 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                         c.kind != ClKind::Tab
                     };
                     // `obj_h` is set on text clusters only under ruby text, which the line grows to fit.
-                    ((st.ascent + st.shift.max(0.0)).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
+                    // Lowered text (a negative shift) reaches that much less high, as raised text
+                    // reaches higher: a line lowered throughout is as tall as before, only lower
+                    // (govuk-052: Arial 11 lowered 1 pt steps 12.6 pt in Word, its first line, with
+                    // unlowered words too, 13.7 pt).
+                    ((st.ascent + st.shift).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
                 };
                 asc = asc.max(a);
                 desc = desc.max(d);

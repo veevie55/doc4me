@@ -13,7 +13,7 @@ use doc4me_doc::table::{Cell, MAX_COLS, MAX_ROWS, Row, Table};
 use doc4me_doc::{Block, Blocks, InlineObject, Paragraph, PartKind, RevisionKind, Run, para_block};
 
 use super::Reader;
-use super::props::{sectpr, tcpr, trpr};
+use super::props::{margins_over, sectpr, tcpr, trpr};
 use super::shape_style::{preset_kind, shape_paint, vml_color};
 use crate::package::{Rels, rt};
 use crate::units::{int, measure, u32_of};
@@ -1524,6 +1524,20 @@ impl Reader<'_> {
                 .map(|c| crate::units::tw(c, "w:w").unwrap_or(0.0).clamp(0.0, crate::units::MAX_LEN_PT))
                 .collect();
         }
+        // Cell margins a table or cell leaves out come from the level above: the table's from its
+        // style (else Word's 0 / 5.4 pt), a cell's from the table's (govuk-020: `w:tcMar` with
+        // only a left margin keeps the 5.4 pt right one in Word's PDF).
+        let style_margins = table
+            .props
+            .style
+            .as_deref()
+            .and_then(|id| self.doc.styles.table_style(id))
+            .and_then(|s| s.parts.cell_margins)
+            .unwrap_or([0.0, 5.4, 0.0, 5.4]);
+        if let Some(m) = t.child("w:tblPr").and_then(|p| p.child("w:tblCellMar")) {
+            table.props.cell_margins = Some(margins_over(m, style_margins));
+        }
+        let base_margins = table.props.cell_margins.unwrap_or(style_margins);
         let mut rows = Vec::new();
         collect(t, "w:tr", &mut rows, &mut Vec::new(), 0);
         for (tr, row_controls) in rows.into_iter().take(MAX_ROWS) {
@@ -1539,6 +1553,9 @@ impl Reader<'_> {
                     .child("w:tcPr")
                     .map(|p| tcpr(&self.pc, p))
                     .unwrap_or_else(|| (doc4me_doc::props::CellProps { span: 1, ..Default::default() }, false));
+                if let Some(m) = tc.child("w:tcPr").and_then(|p| p.child("w:tcMar")) {
+                    props.margins = Some(margins_over(m, base_margins));
+                }
                 if let Some(ch) = tc.child("w:tcPr").and_then(|p| p.child("w:tcPrChange")) {
                     let old = ch.child("w:tcPr").map(|o| tcpr(&self.pc, o).0).unwrap_or_default();
                     props.fmt_change = PropChange::boxed(self.revision(RevisionKind::Format, ch), old);

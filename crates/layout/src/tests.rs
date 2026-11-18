@@ -28,6 +28,33 @@ fn display_text_retains_a_tab_without_assigning_it_a_visible_glyph() {
 }
 
 #[test]
+fn lowered_text_keeps_its_lines_height() {
+    // govuk-052: Arial 11 lowered 1 pt throughout steps as unlowered text does (12.6 pt in Word);
+    // a line mixing lowered and unlowered words grows by the lowering.
+    let pitch = |position: Option<f32>, first_plain: bool| {
+        let lowered = doc4me_doc::CharProps { position, ..Default::default() };
+        let text = "words to wrap onto several lines of a paragraph ".repeat(6);
+        let mut p = Paragraph::with_text(&text, lowered);
+        if first_plain {
+            p.runs.insert(0, doc4me_doc::Run { len: 0, props: Default::default() });
+            p.runs[0].len = 6;
+            p.runs[1].len -= 6;
+        }
+        let mut d = Document::from_text("");
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let para = l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clone()) } else { None }).unwrap();
+        (para.lines[0].height, para.lines[1].height)
+    };
+    let plain = pitch(None, false);
+    let lowered = pitch(Some(-1.0), false);
+    assert!((lowered.0 - plain.0).abs() < 0.01 && (lowered.1 - plain.1).abs() < 0.01, "plain {plain:?}, lowered {lowered:?}");
+    let mixed = pitch(Some(-1.0), true);
+    // (Scaled by the paragraph's multiple line spacing.)
+    assert!(mixed.0 - plain.0 > 0.99 && mixed.0 - plain.0 < 1.2 && (mixed.1 - plain.1).abs() < 0.01, "plain {plain:?}, mixed {mixed:?}");
+}
+
+#[test]
 fn a_list_label_passes_its_text_map_to_the_pdf() {
     // zenodo-147: "12." set on Verdana's widths with Inter's narrower glyphs read as "1 2." without
     // a glyph-to-text map; with one, the PDF keeps the label as one word.

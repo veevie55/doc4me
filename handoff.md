@@ -1,3 +1,7 @@
+# Partial cell margins, lowered text, header-row start, Aptos Narrow · 2026-11-18
+
+- Missing tcMar/tblCellMar sides inherit (cell ← table ← style ← Word 0/5.4 pt) instead of 0; negative `w:position` lowers the line's ascent too; the header-rows-plus-first-line check adds the row's bottom cell margin when that row would split; Aptos Narrow → Roboto wdth 75 with measured widths (tools/aptos_narrow_pdf_metrics.py). Status unchanged at 138/219 Linux, lines 106,207 → 106,603. The margin fix alone failed govuk-052 and zenodo-154; the other three fixed what it exposed.
+
 # VML WordArt watermarks, centred unwrapped boxes · 2026-11-18
 
 - `v:textpath` shapes (Word watermarks) are now read as unwrapped, centred, unfilled text boxes (font from the textpath, size ≈ box width / (0.55 em × letters), colour = fill lightened by opacity); before, they were dropped (not shown, lost on save). Fixed a bug in my own `no_wrap` layout: centred lines were measured by their end x in the 4,000 pt measuring length and ended up outside the box. Corpus status unchanged (138/219); zenodo-060 −10 matching lines (Word drew its "DO NOT SELL" as paths). Text in turned boxes stays upright by design; a trial turning it gave only "T" in pdftotext for govuk-038 and changes editing of every turned box, not kept.

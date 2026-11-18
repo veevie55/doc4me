@@ -93,7 +93,9 @@ fn substitutes(family: &str) -> &'static [&'static str] {
     // Serif's (Display is bundled; Narrow and Serif are used when installed).
     const APTOS: &[&str] = &["Intos", "Carlito", "Helvetica Neue", "Arial", "Liberation Sans", "Noto Sans", "DejaVu Sans", "Source Sans 3"];
     const APTOS_DISPLAY: &[&str] = &["Intos Display", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
-    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
+    // Aptos Narrow without Intos Narrow: Roboto's condensed width with Aptos Narrow's measured
+    // advances (zenodo-154, -097), as for Arial Narrow; Intos' normal width ran 10% wide.
+    const APTOS_NARROW: &[&str] = &["Intos Narrow", "Roboto", "Intos", "Carlito", "Arial", "Liberation Sans", "Source Sans 3"];
     const APTOS_SERIF: &[&str] =
         &["Intos Serif", "Caladea", "Times New Roman", "Liberation Serif", "Georgia", "Noto Serif", "DejaVu Serif", "Source Serif 4"];
     let f = family.to_ascii_lowercase();
@@ -193,7 +195,7 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         "cambria" | "cambria math" | "eu albertina" | "amasis mt pro medium" | "newsgoth cn bt" | "inherit" => Some("Caladea"),
         "aptos" | "aptos light" | "aptos semibold" | "aptos extrabold" | "aptos black" => Some("Intos"),
         "aptos display" => Some("Intos Display"),
-        "aptos narrow" => Some("Intos"),
+        "aptos narrow" => Some("Roboto"),
         "times new roman"
         | "times"
         | "tms rmn"
@@ -526,7 +528,11 @@ pub fn resolve(family: &str, bold: bool, italic: bool) -> Resolved {
             400
         };
         format!("{}{{wght:{weight}}}", style_name(bold, italic))
-    } else if fam == "Roboto" && (family.eq_ignore_ascii_case("Arial Narrow") || family.eq_ignore_ascii_case("Arial Nova Cond Light")) {
+    } else if fam == "Roboto"
+        && (family.eq_ignore_ascii_case("Arial Narrow")
+            || family.eq_ignore_ascii_case("Arial Nova Cond Light")
+            || family.eq_ignore_ascii_case("Aptos Narrow"))
+    {
         let weight = if bold {
             700
         } else if family.eq_ignore_ascii_case("Arial Nova Cond Light") {
@@ -826,6 +832,8 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         Some(if italic { crate::latin_metrics::NOVA_COND_LIGHT_ITALIC } else { crate::latin_metrics::NOVA_COND_LIGHT_REGULAR })
     } else if family.eq_ignore_ascii_case("Arial Narrow") && !italic {
         Some(if bold { crate::latin_metrics::ARIAL_NARROW_BOLD } else { crate::latin_metrics::ARIAL_NARROW_REGULAR })
+    } else if family.eq_ignore_ascii_case("Aptos Narrow") && !italic {
+        Some(if bold { crate::latin_metrics::APTOS_NARROW_BOLD } else { crate::latin_metrics::APTOS_NARROW_REGULAR })
     } else if family.eq_ignore_ascii_case("Gotham Book") && !bold && !italic {
         Some(crate::latin_metrics::GOTHAM_BOOK)
     } else if family.eq_ignore_ascii_case("Gotham Medium") && !bold && !italic {
@@ -931,6 +939,9 @@ mod tests {
             crate::latin_metrics::VERDANA_BOLD_ITALIC,
             crate::latin_metrics::CALIBRI_LIGHT_REGULAR,
             crate::latin_metrics::CALIBRI_LIGHT_ITALIC,
+            crate::latin_metrics::APTOS_NARROW_REGULAR,
+            crate::latin_metrics::APTOS_NARROW_BOLD,
+            crate::latin_metrics::TAHOMA_BOLD,
         ] {
             assert!(advances.windows(2).all(|p| p[0].0 < p[1].0));
             let fit = MetricFit { style: None, advances, line: (1.0, 0.25) };
@@ -958,6 +969,8 @@ mod tests {
             ("Arial Nova Cond Light", false, true),
             ("Arial Narrow", false, false),
             ("Arial Narrow", true, false),
+            ("Aptos Narrow", false, false),
+            ("Aptos Narrow", true, false),
         ] {
             let r = resolve(family, bold, italic);
             assert_eq!(r.face.family, "Roboto");

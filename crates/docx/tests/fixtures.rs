@@ -1766,3 +1766,16 @@ fn a_vml_wordart_watermark_becomes_an_unwrapped_text_box() {
     let again = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
     assert!(again.parts.values().any(|p| p.blocks.first().and_then(|b| b.as_para()).is_some_and(|p| p.text == "DRAFT")));
 }
+
+#[test]
+fn cell_margins_a_file_leaves_out_come_from_the_level_above() {
+    // govuk-020: a cell's `w:tcMar` sets only its left margin (0); its right stays the table's
+    // 5.4 pt. zenodo-154: `w:tblCellMar` with only top and bottom keeps Word's 5.4 pt sides.
+    let body = r#"<w:tbl><w:tblPr><w:tblCellMar><w:top w:w="57" w:type="dxa"/><w:bottom w:w="57" w:type="dxa"/></w:tblCellMar></w:tblPr><w:tblGrid><w:gridCol w:w="2000"/><w:gridCol w:w="2000"/></w:tblGrid>
+<w:tr><w:tc><w:tcPr><w:tcW w:w="2000" w:type="dxa"/><w:tcMar><w:left w:w="0" w:type="dxa"/></w:tcMar></w:tcPr><w:p/></w:tc><w:tc><w:tcPr><w:tcW w:w="2000" w:type="dxa"/></w:tcPr><w:p/></w:tc></w:tr></w:tbl><w:p/>"#;
+    let d = read_body(body);
+    let Some(Block::Table(t)) = d.body.first().map(|b| &**b) else { panic!("a table") };
+    assert_eq!(t.props.cell_margins, Some([2.85, 5.4, 2.85, 5.4]));
+    assert_eq!(t.rows[0].cells[0].props.margins, Some([2.85, 0.0, 2.85, 5.4]));
+    assert_eq!(t.rows[0].cells[1].props.margins, None);
+}
