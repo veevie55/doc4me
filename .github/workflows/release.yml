@@ -1,6 +1,5 @@
 name: Release
 run-name: "Release ${{ inputs.version }} · ${{ inputs.ref }}"
-
 on:
   workflow_dispatch:
     inputs:
@@ -52,14 +51,11 @@ on:
           - version
           - commit
           - none
-
 permissions:
   contents: read
-
 concurrency:
   group: release-${{ inputs.version }}
   cancel-in-progress: false
-
 jobs:
   prepare:
     if: github.event_name == 'workflow_dispatch'
@@ -72,11 +68,10 @@ jobs:
       prerelease: ${{ steps.check.outputs.prerelease }}
     steps:
       - name: Check out the selected source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ inputs.ref }}
           persist-credentials: false
-
       - name: Check the version, the targets and that the tag is free
         id: check
         shell: bash
@@ -88,7 +83,6 @@ jobs:
           FILE_NAME: ${{ inputs.file-name }}
           ABOUT: ${{ inputs.about }}
         run: |
-          # The same rule as the build workflows: numbers fit the MSI ProductVersion (255.255.65535).
           version="${REQUESTED_VERSION#v}"
           semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
           if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
@@ -96,7 +90,6 @@ jobs:
             echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
             exit 1
           fi
-          # The build jobs below test the Windows choice with contains(), so only the listed values pass.
           case "$WINDOWS" in
             'x64' | 'x64, arm64' | 'arm64' | 'none') ;;
             *) echo '::error::windows must be one of the listed choices'; exit 1 ;;
@@ -111,7 +104,6 @@ jobs:
               *) echo "::error::${choice%%=*} must be version, version-commit, commit or none"; exit 1 ;;
             esac
           done
-          # Semantic versioning: a pre-release part (after "-") marks a pre-release.
           case "$version" in
             *-*) prerelease=true ;;
             *) prerelease=false ;;
@@ -134,9 +126,6 @@ jobs:
           } >> "$GITHUB_OUTPUT"
           printf '### Release %s\n\nSource commit: `%s`\n\nWindows: %s\n\nFile names: %s\n\nAbout: %s\n\nPre-release: %s\n' \
             "$tag" "$commit" "$WINDOWS" "$FILE_NAME" "$ABOUT" "$prerelease" >> "$GITHUB_STEP_SUMMARY"
-
-  # Every build gets the resolved commit SHA, so all platforms are built from the same source even
-  # if the branch moves during the run.
   windows-x64:
     needs: prepare
     if: contains(inputs.windows, 'x64')
@@ -146,8 +135,7 @@ jobs:
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
-
- windows-arm64:
+  windows-arm64:
     needs: prepare
     if: contains(inputs.windows, 'arm64')
     uses: ./.github/workflows/build-windows-arm64.yml
@@ -156,7 +144,6 @@ jobs:
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
-
   linux:
     needs: prepare
     if: inputs.linux
@@ -166,7 +153,6 @@ jobs:
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
-
   macos:
     needs: prepare
     if: inputs.macos
@@ -177,7 +163,6 @@ jobs:
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
       arch: universal
-
   web:
     needs: prepare
     if: inputs.web
@@ -187,10 +172,8 @@ jobs:
       version: ${{ needs.prepare.outputs.version }}
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
-
   publish:
     needs: [prepare, windows-x64, windows-arm64, linux, macos, web]
-    # Runs when every chosen build succeeded (builds not chosen are skipped).
     if: >-
       always() && needs.prepare.result == 'success' &&
       !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
@@ -200,23 +183,20 @@ jobs:
       contents: write
     steps:
       - name: Check out the release tools (this workflow's revision)
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           path: workflow
           persist-credentials: false
-
       - name: Check out the released source
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
           ref: ${{ needs.prepare.outputs.sha }}
           path: source
           persist-credentials: false
-
       - name: Download the build artifacts
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
         with:
           path: artifacts
-
       - name: Collect the release files
         shell: bash
         env:
@@ -228,7 +208,6 @@ jobs:
           for dir in artifacts/*/; do
             [ -d "$dir" ] || continue
             found=1
-            # Every build must come from the released commit and carry the released version.
             if [ "$(tr -d '\r\n' < "$dir/SOURCE_COMMIT.txt")" != "$SHA" ]; then
               echo "::error::$dir was not built from $SHA"
               exit 1
@@ -257,20 +236,16 @@ jobs:
           printf '%s\n' "$SHA" > release/SOURCE_COMMIT.txt
           (cd release && sha256sum -- * > "$RUNNER_TEMP/SHA256SUMS.txt" && mv "$RUNNER_TEMP/SHA256SUMS.txt" SHA256SUMS.txt)
           ls -l release
-
       - name: Write the release notes
         shell: bash
         env:
           SHA: ${{ needs.prepare.outputs.sha }}
           VERSION: ${{ needs.prepare.outputs.version }}
         run: |
-          # The CHANGELOG section headed with this commit, or else its [Unreleased] entries, then
-          # every earlier release (cumulative notes, AGENTS.md).
           python3 workflow/tools/release_notes.py "$SHA" "$RUNNER_TEMP/notes.md" \
             --repo "$GITHUB_REPOSITORY" --server "$GITHUB_SERVER_URL" --commit "$SHA" \
             --changelog source/CHANGELOG.md --unreleased-as "$VERSION · ${SHA:0:8}"
           printf '\n\n---\n\nBuilt from commit `%s`. `SHA256SUMS.txt` lists the SHA-256 of every file.\n' "$SHA" >> "$RUNNER_TEMP/notes.md"
-
       - name: Create the tag and the Release
         shell: bash
         env:
@@ -282,12 +257,10 @@ jobs:
         run: |
           flags=(--latest)
           if [ "$PRERELEASE" = true ]; then flags=(--prerelease --latest=false); fi
-          # Checked again: gh would reuse a tag made meanwhile, wherever it points.
           if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --silent 2>/dev/null; then
             echo "::error::tag $TAG was created while the builds ran; nothing was published"
             exit 1
           fi
-          # --target creates the tag on the released commit.
           gh release create "$TAG" release/* --repo "$GITHUB_REPOSITORY" --target "$SHA" \
             --title "Doc4Me $VERSION" --notes-file "$RUNNER_TEMP/notes.md" "${flags[@]}"
           printf '\nPublished [%s](%s/%s/releases/tag/%s)\n' "$TAG" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$TAG" >> "$GITHUB_STEP_SUMMARY"
