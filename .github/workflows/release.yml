@@ -22,7 +22,7 @@ on:
       windows:
         description: 'Windows builds (MSI, portable ZIP each)'
         type: choice
-        default: x64, arm64
+        default: x64
         options:
           - x64
           - x64, arm64
@@ -31,15 +31,15 @@ on:
       linux:
         description: 'Build Linux x86_64 (AppImage, DEB, RPM, tar.gz)'
         type: boolean
-        default: true
+        default: false
       macos:
         description: 'Build macOS universal (DMG, CLI ZIP)'
         type: boolean
-        default: true
+        default: false
       web:
         description: 'Build the Web App (static site ZIP)'
         type: boolean
-        default: true
+        default: false
       file-name:
         description: 'Download file names: doc4me-<version>-..., doc4me-<version>-<commit>-..., doc4me-<commit>-... or doc4me-... (none)'
         type: choice
