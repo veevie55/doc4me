@@ -122,6 +122,12 @@ workflow [Release](.github/workflows/release.yml) ออก tag `v<เวอร�
 
 ![หน้าต่างเกี่ยวกับ Doc4Me](docs/images/about-th.png)
 
+ภาพข้างบนเป็น build ในเครื่องที่ไม่มีเลข commit จึงแสดง "รุ่นทดสอบสำหรับการพัฒนา" ส่วนภาพข้างล่างเป็น build จากโค้ดล่าสุด
+ที่ใส่เวอร์ชัน `v1.2.0-rc.1` และเลือกช่อง **about** เป็น `version-commit` หน้าต่างจึงแสดงเลขเวอร์ชันพร้อมเลข commit ที่ใช้ build
+(`d52da911`) โปรแกรมตัด `v` ข้างหน้าออกเมื่อแสดงผล (ดูตัวเลือกอื่นในหัวข้อ Build ด้วย GitHub Actions)
+
+![หน้าต่างเกี่ยวกับ Doc4Me ที่แสดง เวอร์ชัน 1.2.0-rc.1 (d52da911)](docs/images/about-version-th.png)
+
 ## Build จากซอร์สโค้ด
 
 ติดตั้ง Rust เวอร์ชัน 1.90 ขึ้นไป, CMake, คอมไพเลอร์ C++ และ libclang (การพูดเป็นข้อความ build whisper.cpp) บน Linux ต้องมี header ของ ALSA (`libasound2-dev` บน Debian/Ubuntu, `alsa-lib-devel` บน Fedora) ด้วย แล้วรัน

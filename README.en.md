@@ -104,6 +104,13 @@ the actual app with [`ui_shot`](crates/ui-egui/examples/ui_shot.rs); their scrip
 
 ![The About dialog in Doc4Me](docs/images/about.png)
 
+The screenshot above is a local build without a commit, so it reads "development build". The one below is a build
+of the latest code given the version `v1.2.0-rc.1` with **about** set to `version-commit`, so the dialog shows the
+version number and the commit it was built from (`d52da911`); the leading `v` is dropped when shown. See the build
+workflow section above for the other choices.
+
+![The About dialog in Doc4Me showing Version 1.2.0-rc.1 (d52da911)](docs/images/about-version.png)
+
 ## Build from source
 
 Install Rust 1.90 or newer, CMake, a C++ compiler, and libclang (Dictate builds whisper.cpp), and on Linux
