@@ -665,17 +665,24 @@ fn lines(
             // One draw per font run: a glyph id only means something in its own face.
             for run in &lab.runs {
                 let Some(st) = pl.styles.get(run.style as usize) else { continue };
+                let glyphs: Vec<(u32, f32, f32)> =
+                    lab.glyphs.get(run.glyphs.clone()).into_iter().flatten().map(|g| (g.gid, gx + g.dx, base - st.shift - g.dy)).collect();
+                // One glyph per character (digits and punctuation): give the PDF its text map, so a
+                // label set on a stand-in font's widths ("12." in Verdana widths drawn with Inter)
+                // keeps its word whole for text extraction (zenodo-147: "1 3.").
+                let chars: Vec<std::ops::Range<usize>> = run.text.char_indices().map(|(i, c)| i..i + c.len_utf8()).collect();
+                let ranges = if chars.len() == glyphs.len() { chars } else { Vec::new() };
                 out.push(Draw::Glyphs {
                     face: st.face,
                     size: st.glyph_size(),
-                    glyphs: lab.glyphs.get(run.glyphs.clone()).into_iter().flatten().map(|g| (g.gid, gx + g.dx, base - st.shift - g.dy)).collect(),
+                    glyphs,
                     color: text_color(&st.rc.color, None),
                     alpha,
                     synth_bold: st.synth_bold,
                     synth_italic: st.synth_italic,
                     text: run.text.clone(),
                     link: None,
-                    ranges: Vec::new(),
+                    ranges,
                     preserve_words: st.fit.is_some() && st.rc.spacing == 0.0,
                 });
             }

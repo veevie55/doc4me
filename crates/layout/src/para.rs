@@ -1703,11 +1703,15 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
     for (i, o) in unicode_linebreak::linebreaks(&text) {
         // Word keeps "and/or" and web addresses whole: no break right after a slash (a word
         // too long for the line still breaks anywhere).
+        // (Nor before "~", "_" or "[" there: zenodo-022's "/~/media", zenodo-146's "/_Remarks".)
         let after_slash =
-            text.get(..i).is_some_and(|t| t.ends_with('/')) && text.get(i..).and_then(|t| t.chars().next()).is_some_and(char::is_alphanumeric);
+            text.get(..i).is_some_and(|t| t.ends_with('/')) && text.get(i..).and_then(|t| t.chars().next()).is_some_and(|c| !c.is_whitespace());
         // Nor between a closing and an opening bracket with no space ("2022)(Adams"), where UAX #14
         // allows one (CP ÷ OP): in the corpus Word keeps all 36 such pairs whole (zenodo-092).
-        let between_brackets = text.get(..i).is_some_and(|t| t.ends_with([')', ']'])) && text.get(i..).is_some_and(|t| t.starts_with(['(', '[']));
+        // An opening bracket joined to the character before it never starts a line in Word's corpus
+        // PDFs either ("Ch." | "[arl]es", zenodo-168).
+        let between_brackets = text.get(i..).is_some_and(|t| t.starts_with(['(', '[']))
+            && text.get(..i).and_then(|t| t.chars().next_back()).is_some_and(|c| !c.is_whitespace());
         // Nor after "?" or "!" with a letter or digit straight after ("watch?v=", UAX #14 EX ÷ AL):
         // Word splits none of the corpus's web addresses there, Doc4Me split 15. Nor before an
         // em dash joined to the word before it ("scenarios—adversarial", B2): Word 0, Doc4Me 7.

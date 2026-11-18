@@ -1,3 +1,8 @@
+# Slashes, joined brackets, list-label text map · 2026-11-18
+
+- No break after "/" unless whitespace follows; no opening bracket joined to the previous character starts a line. List labels pass per-character text ranges to the PDF writer so stand-in-width labels get ActualText ("12." no longer extracts as "1 2."). Linux: boundaries 136 → 138/219 (zenodo-096, zenodo-147), lines 106,155 → 106,217, no document worse. docs/readiness/slash-bracket-labels-2026-11-18.md.
+- Remaining ideas from the split census: Word breaks long URLs character by character where they overflow (zenodo-054); "[ info ]" in zenodo-147 still extracts with spaces (body brackets in another run?).
+
 # Percentage tables before Word 2013, Tahoma Bold widths · 2026-11-18
 
 - Mode ≤ 14: a pct table width is of avail + default left/right cell margins (govuk-044's grid; 28 of 44 mode-14 pct tables match only this, none only the old reading; zenodo-108's centred tables match neither, −6 lines there). Tahoma Bold now uses TAHOMA_BOLD widths from the 2026-11-15 audit; govuk-044 no longer gains a page with them. Linux: boundaries 136/219 unchanged, pages 218/219, lines matching Word 105,998 → 106,155. docs/readiness/pct-tables-tahoma-bold-2026-11-18.md.

@@ -28,6 +28,31 @@ fn display_text_retains_a_tab_without_assigning_it_a_visible_glyph() {
 }
 
 #[test]
+fn a_list_label_passes_its_text_map_to_the_pdf() {
+    // zenodo-147: "12." set on Verdana's widths with Inter's narrower glyphs read as "1 2." without
+    // a glyph-to-text map; with one, the PDF keeps the label as one word.
+    let props = doc4me_doc::CharProps { font: Some("Verdana".into()), size: Some(10.0), ..Default::default() };
+    let mut d = Document::from_text("");
+    let mut p = Paragraph::with_text("Estimate", props.clone());
+    p.mark = props;
+    d.body = vec![doc4me_doc::para_block(p)];
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let draws = display::page_display(&d, &l.pages[0], &Default::default());
+    let label = draws
+        .iter()
+        .find_map(|draw| match draw {
+            display::Draw::Glyphs { text, ranges, glyphs, preserve_words, .. } if text.starts_with('1') => {
+                Some((ranges.len(), glyphs.len(), *preserve_words))
+            }
+            _ => None,
+        })
+        .expect("a label draw");
+    assert!(label.0 == label.1 && label.0 > 0, "ranges and glyphs: {label:?}");
+}
+
+#[test]
 fn verdana_substitution_wraps_at_the_requested_fonts_width() {
     let mut d = Document::new();
     d.last_section.page_w = 685.8; // 541.8 pt text width, as in the reference form.
@@ -886,6 +911,31 @@ fn tables_lay_out_cells() {
     let rules = l.pages[0].items.iter().filter(|i| matches!(i, Placed::Rule { .. })).count();
     assert!(rules >= 12, "rules {rules}");
     assert!(l.cell_at(0, c.x, c.top + 2.0).is_some());
+}
+
+#[test]
+fn no_line_break_after_a_slash_before_a_sign_or_before_a_joined_bracket() {
+    // zenodo-022 "/~/media", zenodo-146 "/_Remarks", zenodo-168 "Ch.[arl]es": Word splits none.
+    let text: String = (0..120).map(|i| format!("w{} https://e.org/~/x{} Ch.[arl]es{} ", "x".repeat(i % 9), i, i % 7)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(
+                        !before.ends_with('/') && !(after.starts_with('[') && before.ends_with('.')),
+                        "line starts at {:?}",
+                        &text[line.start..line.stop]
+                    );
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
 }
 
 #[test]
