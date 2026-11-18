@@ -1,3 +1,7 @@
+# Section vertical alignment on its last page · 2026-11-18
+
+- A page ended by the next section's page break is aligned with its own section's `vAlign` (was the next section's): zenodo-081's bottom-aligned title page; Linux 138 → 139/219. docs/readiness/section-valign-2026-11-18.md. Windows run 44364914820 confirmed 138/219 for 2b0f9bd.
+
 # Partial cell margins, lowered text, header-row start, Aptos Narrow · 2026-11-18
 
 - zenodo-119 (not fixed): its Keywords line 3 fits in Doc4Me because Arimo kerns "ff"/"fi" ("Efficiency," 53.58 pt) where Word's Arial doesn't (54.58 pt; document has `w:kern 2`). Turning kerning off for Arimo/Tinos/Cousine stand-ins cost 256 matching lines and zenodo-012/-065; Word kerns other pairs. Needs Arial's own pair list, which we don't have.

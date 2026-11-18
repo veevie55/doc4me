@@ -1521,6 +1521,8 @@ struct PageBuilder<'a> {
     line_no: u32,
     /// Index of the first body item of the current page (vertical alignment shifts from here).
     page_items_start: usize,
+    /// The current page was given its section's vertical alignment when the section ended.
+    valign_done: bool,
     /// The document's own footnote separators, laid out for the section's text width.
     seps: NoteSeps,
     /// Floating drawings kept together with their text and hit areas until their page is done.
@@ -1868,6 +1870,10 @@ impl PageBuilder<'_> {
         if self.web {
             return;
         }
+        // Aligned already, when its section ended.
+        if self.valign_done {
+            return;
+        }
         let space = (self.orig_bottom - self.notes_h() - self.y).max(0.0) * k;
         let start = self.page_items_start;
         if let Some(pg) = self.pages.last_mut() {
@@ -1917,6 +1923,7 @@ impl PageBuilder<'_> {
             }
         }
         self.page_items_start = decor.len();
+        self.valign_done = false;
         self.pages.push(Page { w, h, section: self.sect_idx, number: self.number, body, first_block, items: decor, ..Default::default() });
         self.layers.push(Vec::new());
         self.col = 0;
@@ -2133,6 +2140,7 @@ fn layout_pass(
         float_tables: Vec::new(),
         line_no: 0,
         page_items_start: 0,
+        valign_done: false,
         seps: NoteSeps::default(),
         layers: Vec::new(),
         max_y: 0.0,
@@ -2178,6 +2186,14 @@ fn layout_pass(
             _ if reflow => sect_ref,
             _ => sect,
         };
+        // The page the previous section ends on takes that section's vertical alignment before
+        // the new section's settings come in (zenodo-081: a bottom-aligned title page; with the
+        // next section's top alignment its content and the boxes anchored to it stayed up).
+        let starts_page = si > 0 && !web && (sect.start != SectionStart::Continuous || turn != prev_turn);
+        if starts_page && !pb.pages.is_empty() {
+            pb.apply_valign();
+            pb.valign_done = true;
+        }
         pb.sect = sect;
         pb.sect_idx = si;
         ctx.grid = para::Grid::default();

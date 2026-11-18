@@ -1430,6 +1430,23 @@ fn a_tracked_paragraph_mark_shows_in_its_authors_colour() {
 }
 
 #[test]
+fn a_bottom_aligned_section_keeps_its_alignment_when_the_next_starts_a_page() {
+    // zenodo-081: a title page whose section is bottom-aligned, then a top-aligned section on the
+    // next page. The title page's text goes to its foot, not the top.
+    use doc4me_doc::section::{SectionProps, SectionStart};
+    let mut d = Document::from_text("Title\nBody");
+    let first = SectionProps { valign: doc4me_doc::props::VAlign::Bottom, ..Default::default() };
+    d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().section = Some(Box::new(first));
+    d.last_section.start = SectionStart::NextPage;
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let title = l.caret(&Pos::body(0, 0)).unwrap().top;
+    let body = l.caret(&Pos::body(1, 0)).unwrap().top;
+    assert!(title > 600.0, "the title sits at the foot of its page: {title}");
+    assert!(body < 120.0, "the next section's text starts at the top: {body}");
+}
+
+#[test]
 fn section_breaks_show_with_formatting_marks() {
     use doc4me_doc::section::{SectionProps, SectionStart};
     // Two sections: "One" ends the first; the second starts as `start`.
