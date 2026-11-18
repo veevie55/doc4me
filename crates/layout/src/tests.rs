@@ -6111,6 +6111,15 @@ fn hide_mark_leaves_an_empty_last_paragraph_out_of_the_row_height() {
     assert!(mark.top > text.top, "the empty paragraph is laid out below the text: {mark:?}");
     assert!(top_after(&cell(false, ""), &normal) > one + 5.0, "without hideMark the mark's line counts");
     assert!(top_after(&cell(true, "more"), &normal) > one + 5.0, "a last paragraph with text counts");
+    let legacy = |mut doc: Document| {
+        doc.settings.compat_mode = 14;
+        doc
+    };
+    let legacy_hidden = legacy(cell(true, ""));
+    let legacy_shown = legacy(cell(false, ""));
+    assert!((top_after(&legacy_hidden, &normal) - top_after(&legacy_shown, &normal)).abs() < 0.01);
+    let lone_mark = |hide_mark| legacy(table_then_after(vec![(RowProps::default(), CellProps { hide_mark, ..Default::default() }, vec![plain("")])]));
+    assert!(top_after(&lone_mark(false), &normal) > top_after(&lone_mark(true), &normal) + 5.0);
 }
 
 /// The compulsory final mark after a nested table does not add a blank line in modern layout

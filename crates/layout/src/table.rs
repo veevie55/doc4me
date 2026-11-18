@@ -381,7 +381,10 @@ fn layout_cell_in(
     // Retain the mark for caret navigation, just as with hideMark; real text still takes space.
     let nested_tail =
         ctx.doc.settings.compat_mode >= 15 && n >= 2 && matches!(cell.blocks.get(n - 2).map(|b| b.as_ref()), Some(doc4me_doc::Block::Table(_)));
-    let ignored = (cell.props.hide_mark || nested_tail) && cell.blocks.last().and_then(|b| b.as_para()).is_some_and(|p| mark_only(ctx, p));
+    // Word 2010 keeps the final empty paragraph in a populated cell even with hideMark
+    // (govuk-045, Duration row). An otherwise empty cell still ignores its sole mark.
+    let hide_mark = cell.props.hide_mark && (n == 1 || ctx.doc.settings.compat_mode >= doc4me_doc::COMPAT_MODE_CURRENT);
+    let ignored = (hide_mark || nested_tail) && cell.blocks.last().and_then(|b| b.as_para()).is_some_and(|p| mark_only(ctx, p));
     if !ignored || n == 0 {
         return layout_box(ctx, story, &cell.blocks, cpath, cw, text, depth, None);
     }
