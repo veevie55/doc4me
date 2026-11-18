@@ -1,3 +1,8 @@
+# Percentage tables before Word 2013, Tahoma Bold widths · 2026-11-18
+
+- Mode ≤ 14: a pct table width is of avail + default left/right cell margins (govuk-044's grid; 28 of 44 mode-14 pct tables match only this, none only the old reading; zenodo-108's centred tables match neither, −6 lines there). Tahoma Bold now uses TAHOMA_BOLD widths from the 2026-11-15 audit; govuk-044 no longer gains a page with them. Linux: boundaries 136/219 unchanged, pages 218/219, lines matching Word 105,998 → 106,155. docs/readiness/pct-tables-tahoma-bold-2026-11-18.md.
+- Lead not taken: zenodo-149 needs Arial Nova Cond Light kerning (Word's line is 442 pt natural vs 432 pt room; kern pairs could be read from Word's TJ offsets, not done).
+
 # Query marks, joined em dashes, list-style indents · 2026-11-18
 
 - No break after "?"/"!" before alphanumerics (URLs; Doc4Me 15 splits, Word 0) or before an em dash joined to a word (7 vs 0); list-level indents yield to the indents of the style that brings the list (or a style based on it), not to inherited base-style indents (govuk-046 vs zenodo-067). Linux local: boundaries 135 → 136/219 (zenodo-012), lines matching Word 105,246 → 105,998 of 116,977 with no document worse. docs/readiness/query-dash-list-indent-2026-11-18.md.

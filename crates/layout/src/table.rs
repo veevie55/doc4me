@@ -427,8 +427,17 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         }
     }
     let mut total: f32 = grid.iter().sum();
+    // Before Word 2013 (compatibility mode 14 and earlier) a table stands out into the margin by
+    // its cells' side margins, and a percentage width is of that wider room (govuk-044: 97.76% of
+    // 453.15 pt + 2 × 5.4 pt = 453.56 pt, the file's grid; Word draws the table that wide).
+    let pct_room = if ctx.doc.settings.compat_mode < 15 {
+        let m = default_margins(t, style.as_ref());
+        avail + m[1].max(0.0) + m[3].max(0.0)
+    } else {
+        avail
+    };
     let target = match (t.props.width_pct, t.props.width) {
-        (Some(p), _) if p > 0.0 => Some(avail * (p / 100.0).min(1.0)),
+        (Some(p), _) if p > 0.0 => Some(pct_room * (p / 100.0).min(1.0)),
         (_, Some(w)) if w > 0.0 => Some(w),
         _ => None,
     };

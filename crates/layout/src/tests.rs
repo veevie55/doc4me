@@ -943,6 +943,26 @@ fn a_field_end_between_a_bracket_and_a_comma_is_no_line_break() {
 }
 
 #[test]
+fn a_percentage_table_width_counts_the_cell_margins_before_word_2013() {
+    // govuk-044 (compatibility mode 14): 97.76% of 453.15 pt plus the 5.4 pt side margins is
+    // 453.56 pt, the grid Word saved; from mode 15 the percentage is of the text width alone.
+    let width = |mode: u32| {
+        let mut d = Document::from_text("before\nafter");
+        d.settings.compat_mode = mode;
+        let mut t = Table::new(1, 2, 200.0);
+        t.props.width_pct = Some(100.0);
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let a = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 }).unwrap().x;
+        let b = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 }).unwrap().x;
+        2.0 * (b - a)
+    };
+    let text = 612.0 - 144.0;
+    assert!((width(15) - text).abs() < 0.5, "mode 15: {}", width(15));
+    assert!((width(14) - (text + 10.8)).abs() < 0.5, "mode 14: {}", width(14));
+}
+
+#[test]
 fn a_fixed_table_takes_its_first_rows_cell_widths_over_a_disagreeing_grid() {
     // zenodo-115/-137: Word draws a fixed-layout table's columns at the first row's cell widths
     // when the file's grid says otherwise.
