@@ -660,6 +660,43 @@ fn lists_get_labels_and_indent() {
 }
 
 #[test]
+fn a_list_style_with_its_own_indents_keeps_them_over_the_list_levels() {
+    // govuk-046: style "Number 3" brings a list and indents 36 pt; its level says 56.55 pt. Word's
+    // wrapped lines start at the style's indent. zenodo-067: when the indents come from a base
+    // style above the one that brings the list, the list level's indents win.
+    use doc4me_doc::{ParaProps, Style, StyleKind};
+    let second_line_x = |own: bool| {
+        let mut d = Document::from_text(&"words to wrap onto a second line ".repeat(8));
+        let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+        let indents = ParaProps { indent_left: Some(60.0), indent_first: Some(-60.0), ..Default::default() };
+        let num = ParaProps { numbering: Some(doc4me_doc::props::NumRef { num: id, level: 0 }), ..Default::default() };
+        std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
+            id: "Base".into(),
+            name: "Base".into(),
+            kind: StyleKind::Paragraph,
+            para: if own { ParaProps::default() } else { indents.clone() },
+            ..Default::default()
+        });
+        let para = if own { ParaProps { numbering: num.numbering, ..indents } } else { num };
+        std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
+            id: "List".into(),
+            name: "List".into(),
+            kind: StyleKind::Paragraph,
+            based_on: Some("Base".into()),
+            para,
+            ..Default::default()
+        });
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.style = Some("List".into())).unwrap();
+        let l = lay(&d);
+        let line =
+            l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { para.lines.get(1).cloned() } else { None }).unwrap();
+        l.caret(&Pos::body(0, line.start)).unwrap().x
+    };
+    assert!((second_line_x(true) - 132.0).abs() < 0.5, "style's own indents: {}", second_line_x(true));
+    assert!((second_line_x(false) - 108.0).abs() < 0.5, "base style's indents: {}", second_line_x(false));
+}
+
+#[test]
 fn chinese_counting_list_labels_and_their_font_runs() {
     // Issue #534: a "一、" list showed digits, drawn with glyph ids of another font.
     use doc4me_doc::section::NumFormat;
@@ -849,6 +886,28 @@ fn tables_lay_out_cells() {
     let rules = l.pages[0].items.iter().filter(|i| matches!(i, Placed::Rule { .. })).count();
     assert!(rules >= 12, "rules {rules}");
     assert!(l.cell_at(0, c.x, c.top + 2.0).is_some());
+}
+
+#[test]
+fn no_line_break_after_a_query_mark_in_an_address_or_before_a_joined_em_dash() {
+    // Word keeps "watch?v=…" and "scenarios—adversarial" whole (zenodo-012, zenodo-083).
+    let text: String =
+        (0..120).map(|i| format!("w{} https://e.org/watch?v={} scenarios\u{2014}adversarial{} ", "x".repeat(i % 9), i, i % 7)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(!before.ends_with('?') && !after.starts_with('\u{2014}'), "line starts at {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
 }
 
 #[test]

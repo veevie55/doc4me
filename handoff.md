@@ -1,3 +1,9 @@
+# Query marks, joined em dashes, list-style indents · 2026-11-18
+
+- No break after "?"/"!" before alphanumerics (URLs; Doc4Me 15 splits, Word 0) or before an em dash joined to a word (7 vs 0); list-level indents yield to the indents of the style that brings the list (or a style based on it), not to inherited base-style indents (govuk-046 vs zenodo-067). Linux local: boundaries 135 → 136/219 (zenodo-012), lines matching Word 105,246 → 105,998 of 116,977 with no document worse. docs/readiness/query-dash-list-indent-2026-11-18.md.
+- Tools in /home/user/work: firstdiff.py (first differing lines per failing doc), splits.py (where lines split inside tokens, Word vs Doc4Me), wrapstat.py (lines longer/shorter than Word per doc), eqlines.py A B (matching lines per doc between two corpus result dirs). Leads from wrapstat: zenodo-149 (37 lines shorter than Word), govuk-020/govuk-043 (lines longer: Cambria→Caladea docs).
+- Not fixable: govuk-066 footer DATE field (Word printed 08/02/2024), zenodo-006 (header not in the .docx).
+
 # Line breaks ignore zero-width markers · 2026-11-18
 
 - Field/bookmark/comment/permission/control boundary objects are left out of the text used for break opportunities (like hidden text): a Zotero field end between ")" and "," no longer lets a line start with the comma. Linux local at 1168b3b + change: boundaries 133 → 135/219 (zenodo-166, zenodo-174), 219/219 open/roundtrip/stability, pages 218/219, no regressions. docs/readiness/field-marker-breaks-2026-11-18.md. Dispatch readiness-windows.yml after pushing (Windows run 44306256566 for 1168b3b was in progress when this was written).

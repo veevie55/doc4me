@@ -1358,12 +1358,26 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
     if rp.indent_chars.iter().any(|c| *c != 0.0) {
         rp.set_char_unit(doc.styles.resolve_char_in(para_style, table_chr, &p.mark).size);
     }
-    // List level indents apply unless the paragraph sets its own.
+    // List level indents apply unless the paragraph sets its own; and when the paragraph is in
+    // the list through its style (no numbering of its own), unless that style sets them: Word puts
+    // the list's indents under the style's (govuk-046: style "Number 3" indents 36 pt with a 36 pt
+    // hanging indent, its list level 56.55/38.7 pt; Word's lines start 36 pt in).
     if let Some((_, lvl)) = &env.label {
-        if p.props.indent_left.is_none() && p.props.indent_left_chars.is_none_or(|c| c == 0.0) {
+        // Only the style that brings the list, or one based on it, counts: indents inherited from
+        // further up the chain stay under the list's (zenodo-067: "Liste puces - Noir" sets the
+        // list, its base style the indents; Word's lines follow the list level).
+        let chain = para_style.map(|s| doc.styles.chain(s)).unwrap_or_default();
+        let lister = chain.iter().rposition(|s| s.para.numbering.is_some());
+        let own = match lister {
+            Some(i) if p.props.numbering.is_none() => chain.get(i..).unwrap_or_default(),
+            _ => &[],
+        };
+        let style_left = own.iter().any(|s| s.para.indent_left.is_some() || s.para.indent_left_chars.is_some_and(|c| c != 0.0));
+        let style_first = own.iter().any(|s| s.para.indent_first.is_some() || s.para.indent_first_chars.is_some_and(|c| c != 0.0));
+        if p.props.indent_left.is_none() && p.props.indent_left_chars.is_none_or(|c| c == 0.0) && !style_left {
             rp.indent_left = lvl.indent;
         }
-        if p.props.indent_first.is_none() && p.props.indent_first_chars.is_none_or(|c| c == 0.0) {
+        if p.props.indent_first.is_none() && p.props.indent_first_chars.is_none_or(|c| c == 0.0) && !style_first {
             rp.indent_first = -lvl.hanging;
         }
     }
@@ -1661,17 +1675,19 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
     // Zero-width markers (field, bookmark, comment and content-control boundaries) are left out
     // too: Word breaks as if they weren't there, so a citation field's end between ")" and ","
     // is no place to start a line (zenodo-174: lines began with "," and ".").
-    let marker = |i: usize, c: char| c == OBJ && p.object_at(i).is_some_and(InlineObject::is_marker);
     let markers = p.objects.iter().any(InlineObject::is_marker);
     let (text, ends): (std::borrow::Cow<str>, Vec<(usize, usize)>) = if left.is_empty() && !markers {
         (p.text.as_str().into(), Vec::new())
     } else {
         let (mut text, mut ends) = (String::new(), Vec::new());
         let mut next = left.iter().peekable();
+        // The objects in order, one per object character (counted here, not looked up per char).
+        let mut objects = p.objects.iter();
         for (i, c) in p.text.char_indices() {
+            let marker = c == OBJ && objects.next().is_some_and(InlineObject::is_marker);
             // `left` is in order: skip the ranges that end here, then is `i` in the next one?
             while next.next_if(|r| r.end <= i).is_some() {}
-            if next.peek().is_some_and(|r| r.start <= i) || marker(i, c) {
+            if next.peek().is_some_and(|r| r.start <= i) || marker {
                 continue;
             }
             text.push(c);
@@ -1692,7 +1708,15 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         // Nor between a closing and an opening bracket with no space ("2022)(Adams"), where UAX #14
         // allows one (CP ÷ OP): in the corpus Word keeps all 36 such pairs whole (zenodo-092).
         let between_brackets = text.get(..i).is_some_and(|t| t.ends_with([')', ']'])) && text.get(i..).is_some_and(|t| t.starts_with(['(', '[']));
-        if (o == unicode_linebreak::BreakOpportunity::Allowed || i < text.len()) && !after_slash && !between_brackets {
+        // Nor after "?" or "!" with a letter or digit straight after ("watch?v=", UAX #14 EX ÷ AL):
+        // Word splits none of the corpus's web addresses there, Doc4Me split 15. Nor before an
+        // em dash joined to the word before it ("scenarios—adversarial", B2): Word 0, Doc4Me 7.
+        let next_alnum = text.get(i..).and_then(|t| t.chars().next()).is_some_and(char::is_alphanumeric);
+        let after_query = next_alnum && text.get(..i).is_some_and(|t| t.ends_with(['?', '!']));
+        let before_dash = text.get(i..).is_some_and(|t| t.starts_with('\u{2014}'))
+            && text.get(..i).and_then(|t| t.chars().next_back()).is_some_and(char::is_alphanumeric);
+        if (o == unicode_linebreak::BreakOpportunity::Allowed || i < text.len()) && !after_slash && !between_brackets && !after_query && !before_dash
+        {
             found.push(i);
         }
     }
