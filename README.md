@@ -65,12 +65,10 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 
 | Workflow | เป้าหมาย | ไฟล์ที่ดาวน์โหลดจาก Artifacts |
 |---|---|---|
-| [Build Windows x86](.github/workflows/build-windows-x86.yml) | แอป Windows x86 32 บิต (i686 MSVC; ใช้บน Windows 64 บิตที่รองรับได้ด้วย) | MSI และ portable ZIP |
 | [Build Windows x64](.github/workflows/build-windows-x64.yml) | Windows 64 บิต (x86_64 MSVC) | MSI และ portable ZIP |
 | [Build Windows ARM64](.github/workflows/build-windows-arm64.yml) | Windows ARM64 | MSI และ portable ZIP |
 | [Build macOS](.github/workflows/build-macos.yml) | Universal (Apple Silicon + Intel), หรือเลือกสถาปัตยกรรมเดียว | DMG และ CLI ZIP |
 | [Build Linux](.github/workflows/build-linux.yml) | x86_64, glibc 2.35 ขึ้นไป | AppImage, DEB, RPM และ tar.gz |
-| [Build BSD (FreeBSD)](.github/workflows/build-bsd.yml) | FreeBSD 14.5 x86_64 | tar.gz ของโปรแกรมและ CLI |
 | [Build Web App](.github/workflows/build-web.yml) | เบราว์เซอร์ที่รองรับ WebAssembly | ZIP ของเว็บแบบ static |
 | [Build Web App on GitHub Pages](.github/workflows/build-web-pages.yml) | เว็บไซต์สาธารณะของ Doc4Me | deploy ไปที่ [veevie55.github.io/doc4me](https://veevie55.github.io/doc4me/) |
 

@@ -1,6 +1,8 @@
 # Verdana forms, nested tables and PDF word text · 2026-11-18
 
-Status: Linux validated; Windows confirmation pending. Criteria and accepted/excluded/deferred decisions unchanged.
+Status: Linux validated; Windows confirmed by run 44224006895 (source `cedff9f`, report `ce70748`). Criteria and accepted/excluded/deferred decisions unchanged.
+
+Windows confirmation: page counts **219/219**, strict page boundaries **129/219** (previously 127/219), **90 boundary failures remain**. Readiness is **95.0%**, or **96.9% without the 22 deferred rows**. The generated report is committed separately in `ce70748`; the local Linux result below remains a separate measurement.
 
 ## Evidence and changes
 
@@ -44,3 +46,5 @@ Focused layout regressions cover the observed Verdana wrap and the final nested-
 ## ภาษาไทย
 
 แก้ตารางชั้นนอกที่นับย่อหน้าว่างท้ายตารางย่อยเป็นความสูงเพิ่ม ทั้งที่ Word จบขอบตารางตรงแถวสุดท้าย และใช้ค่าความกว้าง Verdana ที่ประกาศใน PDF อ้างอิงกับเส้นตัวอักษร Inter ที่เป็นโอเพนซอร์ส ไม่คัดลอกโปรแกรมฟอนต์ เพิ่มข้อความเชิงตรรกะรายคำใน PDF เพื่อไม่ให้ตัวอ่านแทรกช่องว่างกลางคำ ผลทดลองทั้ง corpus ทำให้ govuk-017 และ zenodo-027 ผ่านเพิ่ม โดยจำนวนหน้าทุกไฟล์ไม่เปลี่ยนและไม่มีเอกสารที่เคยผ่านกลับมาตก ยังไม่อ้างว่างานขอบเขตหน้าที่เหลือเสร็จทั้งหมด
+
+ผล Windows run 44224006895 ยืนยันแล้วว่า จำนวนหน้าผ่าน 219/219 และขอบเขตหน้าผ่านเพิ่มจาก 127 เป็น 129/219 ยังเหลือ 90 กรณี ความพร้อมรวม 95.0% หรือ 96.9% เมื่อไม่นับ deferred ทั้ง 22 รายการ โดยเกณฑ์ตรวจรับคงเดิม
