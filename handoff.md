@@ -1,3 +1,9 @@
+# Fixed-table cell widths · 2026-11-18
+
+- Fixed-layout tables take the first row's cell widths (one cell per grid column, all with point widths, any >1 pt off the grid); zenodo-115's table now has Word's equal columns and **zenodo-137 passes**. Linux local at b1d5a87 + change: 219/219 open/roundtrip/stability, pages 218/219, boundaries 133/219, no regressions vs 131 (bad5ec5); see docs/readiness/fixed-table-widths-2026-11-18.md. zenodo-115 still fails on its abstract's justified wrap ("authority," | "and").
+- Official Windows: run 44294389579 (source b1d5a87, includes bracket/no-wrap) gave 132/219, 95.1/97.0. A duplicate run I dispatched on the report-only commit 490355d (44300450827) was cancelled. Dispatch readiness-windows.yml after pushing this change (owner allows sessions to dispatch it).
+- Set aside: zenodo-006 (journal header not in the .docx: later edition), zenodo-126 and govuk-048 (extraction order on page 1). Remaining page-1 leads: govuk-021, govuk-038, zenodo-081, zenodo-119, zenodo-174, zenodo-115 abstract.
+
 # Legacy table cell height · 2026-11-18
 
 - The mode-14 govuk-045 Duration row retains its trailing empty paragraph in a populated cell even with hideMark. It restores the first postal address line to page 4 and passes all 23 boundaries. Isolated Linux comparison against 9eecfa2 yields 130→131/219 boundaries, one endpoint improvement across 2,941 pages, zero losses. See docs/readiness/legacy-table-cell-mark-2026-11-18.md.

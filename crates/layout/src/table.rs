@@ -412,6 +412,20 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     } else {
         vec![avail / ncols as f32; ncols]
     };
+    // A fixed-layout table whose first row gives every column its own width (one cell per grid
+    // column, each with a width in points) takes those widths where they disagree with the file's
+    // grid, as Word does (zenodo-115: grid 298.8/154.8 pt, cells 230.4/230.4 pt; Word draws two
+    // equal columns).
+    if t.props.fixed
+        && let Some(first) = t.rows.first()
+        && first.cells.len() == ncols
+        && first.cells.iter().all(|c| c.props.span <= 1 && c.props.width_pct.is_none() && c.props.width.is_some_and(|w| w.is_finite() && w > 0.0))
+    {
+        let widths: Vec<f32> = first.cells.iter().map(|c| c.props.width.unwrap_or(0.0).max(4.0)).collect();
+        if widths.iter().zip(&grid).any(|(a, b)| (a - b).abs() > 1.0) {
+            grid = widths;
+        }
+    }
     let mut total: f32 = grid.iter().sum();
     let target = match (t.props.width_pct, t.props.width) {
         (Some(p), _) if p > 0.0 => Some(avail * (p / 100.0).min(1.0)),

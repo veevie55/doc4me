@@ -852,6 +852,30 @@ fn tables_lay_out_cells() {
 }
 
 #[test]
+fn a_fixed_table_takes_its_first_rows_cell_widths_over_a_disagreeing_grid() {
+    // zenodo-115/-137: Word draws a fixed-layout table's columns at the first row's cell widths
+    // when the file's grid says otherwise.
+    let at = |cells: [Option<f32>; 2]| {
+        let mut d = Document::from_text("before\nafter");
+        let mut t = Table::new(1, 2, 453.6);
+        t.grid = vec![298.8, 154.8];
+        t.props.fixed = true;
+        for (cell, w) in t.rows[0].cells.iter_mut().zip(cells) {
+            cell.props.width = w;
+        }
+        t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("cell", Default::default()))];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 }).unwrap().x
+    };
+    let equal = at([Some(230.4), Some(230.4)]);
+    let grid = at([None, None]);
+    assert!((grid - equal - 68.4).abs() < 1.0, "cell widths {equal}, grid {grid}");
+    // Matching widths change nothing.
+    assert!((at([Some(298.8), Some(154.8)]) - grid).abs() < 0.01);
+}
+
+#[test]
 fn omitted_leading_grid_columns_offset_table_cells() {
     let mut d = Document::from_text("before\nafter");
     let mut t = Table::new(1, 3, 468.0);
