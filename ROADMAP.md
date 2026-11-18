@@ -1,5 +1,7 @@
 # Doc4Me roadmap
 
+**Form fidelity follow-up · 2026-11-18 (Linux verified; Windows pending):** Nested-table final marks, measured Verdana advances with Inter, and logical PDF words for metric fitting restore all boundaries in govuk-017 and zenodo-027. Local boundaries **128→130/219**, all counts unchanged (**216/219**); no previously passing document regresses. Exact comparison on 2,941 pages gives 23 endpoint gains and 3 losses inside already-failing zenodo-096/147, documented in the [audit](docs/readiness/verdana-nested-table-2026-11-18.md). Latest official Windows remains run 44212279192, source `df1ec6c`, boundaries **127/219** (92 failures). Criteria unchanged.
+
 **Manual-break height follow-up · 2026-11-18:** A larger Shift+Enter break no longer raises preceding text; blank lines retain their own size. The 219-document comparison keeps all page counts and document endpoint results unchanged. This fixes visible geometry in govuk-024, not its remaining extraction-order failure. Official Windows still has 92 boundary failures; no score improvement is claimed. [Audit](docs/readiness/manual-break-2026-11-18.md).
 
 **Boundary verification follow-up · 2026-11-17:** The latest committed Windows result is 219/219 page counts and 127/219 boundaries (run 44078179776, source `019b0ff`); 92 boundary failures remain. Failed Poppler extraction now fails verification instead of matching a blank page. A 52-page audit of five remaining cases finds identical per-page word multisets but six endpoint-order mismatches; all five still fail. No renderer change or new score is claimed. [Audit](docs/readiness/extraction-order-2026-11-17.md).
@@ -26,7 +28,7 @@
 
 **Stage: alpha** · latest official readiness is **95.0%** ([`docs/readiness.md`](docs/readiness.md), Windows run 44078179776, 2026-11-17; source `019b0ff`, all 219 documents); **96.8% without 22 deferred rows**. Page-count checks pass 219/219 documents; page-boundary checks pass 127/219, leaving 92 boundary failures. All other dimensions pass without deferred rows. See the [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md). Catalog-key coverage does not establish translation accuracy; 22 catalogs remain AI drafts awaiting native-speaker review. Earlier dated snapshots below preserve their historical measurements.
 
-> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor — manual-break font height no longer raises preceding text. Full corpus page counts and document endpoint results unchanged; official Windows remains 127/219 boundaries. Criteria and accepted/excluded/deferred decisions unchanged.
+> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor — nested-table mark and Verdana/PDF-word fitting improve Linux boundaries 128→130/219; all page counts unchanged. Three partial endpoint losses in already-failing documents are audited. Latest official Windows run 44212279192 remains 127/219; new Windows confirmation pending. Criteria unchanged.
 
 **2026-11-14 update:** The readiness report listed the non-passing layout rows with English and Thai blocker assessments. Earlier dated progress entries retain their historical values.
 
@@ -330,6 +332,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-18 | minor | Nested-table final mark, Verdana advance fitting and source-aware PDF ActualText: Linux govuk-017/zenodo-027 newly pass, 128→130/219 boundaries, counts unchanged. Partial losses and reader interoperability are documented; Windows pending. |
 | 2026-11-18 | minor | Ignore the manual break’s font metrics after text; retain blank-line formatting. Regression coverage for typing, body/table layout and compatibility 14/15. Corpus results unchanged; see manual-break audit. |
 | 2026-11-17 | minor | Initial table header/body prefix and caption: govuk-052 now matches all boundaries, Linux 119→120/219, all counts unchanged; partial changes in failing zenodo-108/173 documented. CI 6/6; Windows pending. |
 | 2026-11-17 | minor | Floating text-box AutoFit restores govuk-002 page 24; Linux boundaries 118→119/219, page counts unchanged, no regression. Windows confirmation pending; 100 corpus-breaks failures remain. |

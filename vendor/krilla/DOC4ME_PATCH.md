@@ -1,0 +1,7 @@
+# Doc4Me patch to krilla 0.8.2
+
+Origin: the published crates.io krilla 0.8.2 package, upstream LaurenzV/krilla commit `3ffdf0588cf98050aad6edba51ca70162e1fb5b5` (`crates/krilla`). Published checksum: `27da593198b20eeba65caeb73c2bbeec3e53ab08fa549898312ce81c4fce5e33`.
+
+Local changes: `src/content.rs` adds non-structural ActualText span writers; `src/surface.rs` exposes a `draw_glyphs_with_actual_text` drawing method (scoped inside BT/ET). It works inside or outside a structural tag and preserves the normal per-glyph Unicode mapping. The only additional Rust-file changes are documentation whitespace/final-newline normalization in `src/configure/validate.rs` and `src/interchange/tagging/generated.rs`; their code is unchanged. Trailing whitespace and extra final blank lines in non-code documentation/license files are normalized; their wording is retained. The published manifest is retained and the workspace patch selects this copy.
+
+Licensing: upstream MIT OR Apache-2.0 licenses and NOTICE are retained. The inherited `content_draw_path` method's resvg/MPL-2.0 notice is retained; the MPL-2.0 text is included separately. The four ICC profiles contain CC0 copyright tags and come from saucecontrol's Compact ICC Profiles through the pinned krilla source; their CC0 text is included in `icc/LICENSE_CC0.txt` and each profile is attributed in the root ATTRIBUTION.md. There are no font programs, vendor product images or test assets in this package.

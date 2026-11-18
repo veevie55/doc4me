@@ -376,7 +376,12 @@ fn layout_cell_in(
     depth: usize,
     n: usize,
 ) -> BoxLayout {
-    let ignored = cell.props.hide_mark && cell.blocks.last().and_then(|b| b.as_para()).is_some_and(|p| mark_only(ctx, p));
+    // In modern layout the required final mark after a nested table does not grow the cell:
+    // govuk-017/018's outer border ends at the last nested row, not one more blank line below.
+    // Retain the mark for caret navigation, just as with hideMark; real text still takes space.
+    let nested_tail =
+        ctx.doc.settings.compat_mode >= 15 && n >= 2 && matches!(cell.blocks.get(n - 2).map(|b| b.as_ref()), Some(doc4me_doc::Block::Table(_)));
+    let ignored = (cell.props.hide_mark || nested_tail) && cell.blocks.last().and_then(|b| b.as_para()).is_some_and(|p| mark_only(ctx, p));
     if !ignored || n == 0 {
         return layout_box(ctx, story, &cell.blocks, cpath, cw, text, depth, None);
     }

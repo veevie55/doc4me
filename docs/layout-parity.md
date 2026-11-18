@@ -1,5 +1,7 @@
 # Layout and pagination parity with Microsoft Word
 
+**Form fidelity follow-up · 2026-11-18 (Linux verified; Windows pending):** Nested-table final marks, measured Verdana advances with Inter, and logical PDF words for metric fitting restore all boundaries in govuk-017 and zenodo-027. Local boundaries **128→130/219**, all counts unchanged (**216/219**); no previously passing document regresses. Exact comparison on 2,941 pages gives 23 endpoint gains and 3 losses inside already-failing zenodo-096/147, documented in the [audit](readiness/verdana-nested-table-2026-11-18.md). Latest official Windows remains run 44212279192, source `df1ec6c`, boundaries **127/219** (92 failures). Criteria unchanged.
+
 **Manual-break height follow-up · 2026-11-18:** A larger Shift+Enter break no longer raises preceding text; blank lines retain their own size. The 219-document comparison keeps all page counts and document endpoint results unchanged. This fixes visible geometry in govuk-024, not its remaining extraction-order failure. Official Windows still has 92 boundary failures; no score improvement is claimed. [Audit](readiness/manual-break-2026-11-18.md).
 
 **Boundary verification follow-up · 2026-11-17:** The latest committed Windows result is 219/219 page counts and 127/219 boundaries (run 44078179776, source `019b0ff`); 92 boundary failures remain. Failed Poppler extraction now fails verification instead of matching a blank page. A 52-page audit of five remaining cases finds identical per-page word multisets but six endpoint-order mismatches; all five still fail. No renderer change or new score is claimed. [Audit](readiness/extraction-order-2026-11-17.md).
@@ -24,7 +26,7 @@
 
 **Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.3% excluding deferred; no criteria, references, exclusions or deferred rows changed.
 
-> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor — manual-break font height no longer raises preceding text. Full corpus page counts and document endpoint results unchanged; official Windows remains 127/219 boundaries. Criteria and accepted/excluded/deferred decisions unchanged.
+> **Last reviewed:** 2026-11-18 · **Last updated:** 2026-11-18 · **Change:** minor — nested-table mark and Verdana/PDF-word fitting improve Linux boundaries 128→130/219; all page counts unchanged. Three partial endpoint losses in already-failing documents are audited. Latest official Windows run 44212279192 remains 127/219; new Windows confirmation pending. Criteria unchanged.
 
 **Windows verification · 2026-11-16:** ผลทางการจาก [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), source `093eaba`, report `15584f5`: **93.4% รวม / 95.3% ไม่นับ 22 deferred**; pages **199/220**, boundaries **104/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 21 page-count และ 116 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
 
@@ -140,6 +142,7 @@ The [justification review](readiness/justification-review-2026-11-13.md) records
 
 | Date | Change | Summary |
 |---|---|---|
+| 2026-11-18 | minor | Nested-table final mark, Verdana advance fitting and source-aware PDF ActualText: Linux govuk-017/zenodo-027 newly pass, 128→130/219 boundaries, counts unchanged. Partial losses and reader interoperability are documented; Windows pending. |
 | 2026-11-18 | minor | Ignore the manual break’s font metrics after text; retain blank-line formatting. Regression coverage for typing, body/table layout and compatibility 14/15. Corpus results unchanged; see manual-break audit. |
 | 2026-11-17 | minor | Fail PDF verification on extractor errors; record six endpoint mismatches in five same-page-text documents (52 pages). No layout change, score gain or criteria change. |
 | 2026-11-17 | minor | Initial table header/body prefix and caption: govuk-052 now matches all boundaries, Linux 119→120/219, all counts unchanged; partial changes in failing zenodo-108/173 documented. CI 6/6; Windows pending. |

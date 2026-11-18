@@ -406,6 +406,54 @@ fn table_style_hidden_heading_text_stays_out_of_bookmarks_and_tags() {
 }
 
 #[test]
+fn positioned_words_keep_actual_text_and_individual_unicode_maps() {
+    for (font, spacing, fitted) in [("Verdana", 0.0, true), ("Verdana", 2.0, false), ("Source Sans 3", 2.0, false)] {
+        let mut d = Document::new();
+        d.body = vec![para_block(Paragraph::with_text(
+            "Management Objective",
+            CharProps { font: Some(font.into()), size: Some(12.0), spacing: Some(spacing), ..Default::default() },
+        ))];
+        for tagged in [false, true] {
+            let bytes = export(&d, &PdfOptions { tagged, compress: false, ..Default::default() }).unwrap();
+            let raw = String::from_utf8_lossy(&bytes);
+            if fitted {
+                assert!(raw.matches("/ActualText").count() >= 2, "logical fitted words in tagged={tagged}");
+            } else {
+                assert!(!raw.contains("/ActualText"), "intentional tracking keeps native extraction: {font}/{tagged}");
+            }
+            for (at, _) in raw.match_indices("/ActualText") {
+                let before = &raw[..at];
+                let bt = before.rfind("\nBT").expect("ActualText must be inside a text object");
+                assert!(before.rfind("\nET").is_none_or(|et| bt > et));
+                let after = &raw[at..];
+                assert!(after.find("EMC").unwrap() < after.find("\nET").unwrap(), "close the span before ending the text object");
+            }
+            // Hayro uses the individual font map. Every character must remain readable once.
+            assert_eq!(squash(&extract_text(&bytes).concat()), "Management Objective");
+        }
+    }
+}
+
+#[test]
+fn logical_word_spans_keep_tabs_spaces_long_words_and_reversed_maps() {
+    let make = |ranges: Vec<std::ops::Range<usize>>| {
+        ranges.into_iter().map(|r| KrillaGlyph::new(glyph_id(1), 1.0, 0.0, 0.0, 0.0, r, None)).collect::<Vec<_>>()
+    };
+    let text = "Ab\tCd é E";
+    let gs = make(vec![0..1, 1..2, 3..4, 4..5, 5..6, 6..8, 8..9, 9..10]);
+    assert_eq!(logical_word_spans(text, &gs, |_| 0.5), vec![(0..2, 0..2), (2..4, 3..5)]);
+    assert!(logical_word_spans(text, &gs, |_| 1.0).is_empty(), "native advances retain the original mapping path");
+    let mut spaced = gs.clone();
+    spaced[0].x_advance = 1.02;
+    assert_eq!(logical_word_spans(text, &spaced, |_| 1.0), vec![(0..2, 0..2)], "only the expanded word needs replacement text");
+    let reverse = gs.into_iter().rev().collect::<Vec<_>>();
+    assert!(logical_word_spans(text, &reverse, |_| 0.5).is_empty());
+    let long = "a".repeat(129);
+    assert!(logical_word_spans(&long, &make((0..129).map(|i| i..i + 1).collect()), |_| 0.5).is_empty());
+    assert!(logical_word_spans("éé", &make(vec![0..2, 2..4]), |_| 0.5).is_empty());
+}
+
+#[test]
 fn text_mapping_handles_ligatures_and_extras() {
     let d = Document::from_text("office affine");
     let lay = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());

@@ -13,6 +13,46 @@ fn lines_of(l: &DocLayout) -> usize {
 }
 
 #[test]
+fn display_text_retains_a_tab_without_assigning_it_a_visible_glyph() {
+    let d = Document::from_text("Left\tRight");
+    let l = lay(&d);
+    let draws = display::page_display(&d, &l.pages[0], &Default::default());
+    let mut all = String::new();
+    for draw in draws {
+        if let display::Draw::Glyphs { text, ranges, .. } = draw {
+            assert!(ranges.iter().all(|r| text.get(r.clone()).is_some_and(|s| !s.contains('\t'))));
+            all.push_str(&text);
+        }
+    }
+    assert_eq!(all, "Left\tRight");
+}
+
+#[test]
+fn verdana_substitution_wraps_at_the_requested_fonts_width() {
+    let mut d = Document::new();
+    d.last_section.page_w = 685.8; // 541.8 pt text width, as in the reference form.
+    let props = doc4me_doc::CharProps { font: Some("Verdana".into()), size: Some(11.0), ..Default::default() };
+    let text = "We normally keep copies of the information provided to us on a case for a period of one year following issue of the issue of the decision, and keep the decision itself for 5 years.";
+    let mut p = Paragraph::with_text(text, props.clone());
+    p.mark = props;
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let para = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| match it {
+            Placed::Lines { para, .. } => Some(para),
+            _ => None,
+        })
+        .unwrap();
+    let first = &para.lines[0];
+    assert_eq!(
+        text.get(first.start..first.stop).unwrap().trim(),
+        "We normally keep copies of the information provided to us on a case for a period of one year"
+    );
+}
+
+#[test]
 fn a_full_stop_and_adjacent_open_parenthesis_wrap_as_one_word() {
     for (text, first) in [("Prefix 2023.(Example)", "Prefix"), ("Prefix 2023. (Example)", "Prefix 2023.")] {
         let mut d = Document::new();
@@ -6046,6 +6086,37 @@ fn hide_mark_leaves_an_empty_last_paragraph_out_of_the_row_height() {
     assert!(mark.top > text.top, "the empty paragraph is laid out below the text: {mark:?}");
     assert!(top_after(&cell(false, ""), &normal) > one + 5.0, "without hideMark the mark's line counts");
     assert!(top_after(&cell(true, "more"), &normal) > one + 5.0, "a last paragraph with text counts");
+}
+
+/// The compulsory final mark after a nested table does not add a blank line in modern layout
+/// (govuk-017/018), but it remains available to the caret. Text and additional blank lines count.
+#[test]
+fn a_modern_nested_tables_final_mark_keeps_the_caret_without_growing_the_row() {
+    let doc = |mode, tail: Option<&str>, extra_blank| {
+        let props = doc4me_doc::CharProps { size: Some(24.0), ..Default::default() };
+        let inner = Table::new(1, 1, 180.0);
+        let mut outer = Table::new(1, 1, 200.0);
+        let blocks = &mut outer.rows[0].cells[0].blocks;
+        *blocks = vec![Arc::new(doc4me_doc::Block::Table(inner))];
+        if extra_blank {
+            blocks.push(doc4me_doc::para_block(Paragraph::with_text("", props.clone())));
+        }
+        if let Some(text) = tail {
+            blocks.push(doc4me_doc::para_block(Paragraph::with_text(text, props)));
+        }
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        d.body = vec![Arc::new(doc4me_doc::Block::Table(outer)), doc4me_doc::para_block(Paragraph::with_text("After", Default::default()))];
+        d
+    };
+    let opts = LayoutOptions::default();
+    let bare = top_after(&doc(15, None, false), &opts);
+    let d = doc(15, Some(""), false);
+    assert!((top_after(&d, &opts) - bare).abs() < 0.01);
+    assert!(lay(&d).caret(&Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 1]), off: 0 }).is_some());
+    assert!(top_after(&doc(15, Some("More"), false), &opts) > bare + 10.0);
+    assert!(top_after(&doc(15, Some(""), true), &opts) > bare + 10.0);
+    assert!(top_after(&doc(14, Some(""), false), &opts) > bare + 10.0, "legacy layout is unchanged");
 }
 
 /// A vertical merge running into or out of hidden rows keeps its borders on the rows shown: its

@@ -4,6 +4,8 @@ members = ["crates/*", "apps/*", "xtask"]
 default-members = ["crates/*", "apps/doc4me", "apps/doc4me-cli", "xtask"]
 
 [patch.crates-io]
+# Preserve positioned logical text without changing glyph-to-Unicode font mappings.
+krilla = { path = "vendor/krilla" }
 # Keep the keypad subtract physical code available to keyboard-shortcut dispatch. Upstream maps
 # both keypad and main-row minus to `Key::Minus`, so the app uses `physical_key = Num0` as a
 # documented sentinel for keypad subtract while retaining the logical `key = Minus`.

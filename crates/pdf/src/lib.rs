@@ -786,8 +786,8 @@ impl Exporter<'_> {
                     self.draw(s, d);
                 }
             }
-            Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges } => {
-                self.glyphs(s, face, *size, glyphs, *color, *alpha, *synth_bold, *synth_italic, text, ranges);
+            Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges, preserve_words } => {
+                self.glyphs(s, face, *size, glyphs, *color, *alpha, *synth_bold, *synth_italic, text, ranges, *preserve_words);
                 if let Some(l) = link {
                     self.link_rect(face, *size, glyphs, l);
                 }
@@ -1155,11 +1155,12 @@ impl Exporter<'_> {
         italic: bool,
         text: &str,
         known: &[std::ops::Range<usize>],
+        preserve_words: bool,
     ) {
         if !size.is_finite() || size <= 0.0 || size > 5000.0 {
             return;
         }
-        let Some(&(_, x0, y0)) = glyphs.first() else { return };
+        let Some(&(_, _, y0)) = glyphs.first() else { return };
         if !glyphs.iter().all(|(_, x, y)| ok(*x) && ok(*y)) {
             return;
         }
@@ -1197,7 +1198,35 @@ impl Exporter<'_> {
         });
         match font {
             Some(font) => {
-                s.draw_glyphs(Point::from_xy(x0, y0), &kg, font, &txt, size, false);
+                // ActualText describes logical words without changing each glyph's Unicode map.
+                // Positioned open-font substitutes can otherwise be extracted with spaces inside
+                // words. Keep complex/reversed mappings on krilla's existing shaping path.
+                let spans = if preserve_words && valid && glyphs.iter().all(|(_, _, y)| (y - y0).abs() < 0.01) {
+                    logical_word_spans(&txt, &kg, |g| face.advance(g) as f32 / upem)
+                } else {
+                    Vec::new()
+                };
+                let draw = |s: &mut Surface, range: std::ops::Range<usize>, actual: Option<&str>| {
+                    if let Some(gs) = kg.get(range.clone())
+                        && !gs.is_empty()
+                        && let Some((_, gx, _)) = glyphs.get(range.start)
+                    {
+                        if let Some(actual) = actual {
+                            s.draw_glyphs_with_actual_text(Point::from_xy(*gx, y0), gs, font.clone(), &txt, size, actual);
+                        } else {
+                            s.draw_glyphs(Point::from_xy(*gx, y0), gs, font.clone(), &txt, size, false);
+                        }
+                    }
+                };
+                let mut at = 0;
+                for (gs, word) in spans {
+                    draw(s, at..gs.start, None);
+                    if let Some(text) = txt.get(word) {
+                        draw(s, gs.clone(), Some(text));
+                    }
+                    at = gs.end;
+                }
+                draw(s, at..kg.len(), None);
             }
             None => {
                 if let Some(path) = glyph_outlines(face, size, glyphs) {
@@ -1552,6 +1581,54 @@ fn cluster_ends(clusters: &[usize], len: usize) -> Vec<usize> {
         later.push(c);
     }
     ends
+}
+
+/// Bounded, forward-ordered ASCII word spans. Glyph ranges stay unchanged: readers that use
+/// ToUnicode still see individual characters; ActualText-aware readers also retain positioned
+/// words. Spaces/tabs stay outside spans, and complex or reversed clusters keep their own maps.
+fn logical_word_spans(text: &str, glyphs: &[KrillaGlyph], nominal: impl Fn(u32) -> f32) -> Vec<(std::ops::Range<usize>, std::ops::Range<usize>)> {
+    if glyphs.len() < 2 || !glyphs.windows(2).all(|g| matches!(g, [a, b] if a.text_range.start <= b.text_range.start)) {
+        return Vec::new();
+    }
+    let mut words = Vec::new();
+    let mut start = None;
+    for (i, b) in text.bytes().chain(std::iter::once(b' ')).enumerate() {
+        if b.is_ascii_whitespace() {
+            if let Some(a) = start.take()
+                && i - a <= 128
+                && text.get(a..i).is_some_and(str::is_ascii)
+            {
+                if words.len() >= glyphs.len() {
+                    return Vec::new();
+                }
+                words.push(a..i);
+            }
+        } else if start.is_none() {
+            start = Some(i);
+        }
+    }
+    let mut spans: Vec<(std::ops::Range<usize>, std::ops::Range<usize>)> = Vec::new();
+    let mut wi = 0;
+    for (i, g) in glyphs.iter().enumerate() {
+        while words.get(wi).is_some_and(|w| w.end <= g.text_range.start) {
+            wi += 1;
+        }
+        if let Some(w) = words.get(wi).filter(|w| w.start <= g.text_range.start && g.text_range.end <= w.end) {
+            if let Some((gs, _)) = spans.last_mut().filter(|(gs, word)| gs.end == i && word == w) {
+                gs.end = i + 1;
+            } else {
+                spans.push((i..i + 1, w.clone()));
+            }
+        }
+    }
+    // Ordinary glyph advances need no replacement text. Only positioned expansion inside a
+    // logical word can make readers invent spaces; inter-word spacing is deliberately excluded.
+    spans.retain(|(gs, _)| {
+        glyphs
+            .get(gs.clone())
+            .is_some_and(|word| word.windows(2).any(|pair| pair.first().is_some_and(|g| g.x_advance > nominal(g.glyph_id.to_u32()) + 0.001)))
+    });
+    spans
 }
 
 #[cfg(test)]

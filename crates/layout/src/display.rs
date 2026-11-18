@@ -40,6 +40,8 @@ pub enum Draw {
         /// Byte range of `text` each glyph shows (one per glyph; a ligature's range covers all
         /// its characters). Empty when unknown: the PDF writer then guesses from the font.
         ranges: Vec<std::ops::Range<usize>>,
+        /// Font metrics were fitted without intentional tracking; PDF may preserve positioned words.
+        preserve_words: bool,
     },
     Fill {
         rect: Rect,
@@ -674,6 +676,7 @@ fn lines(
                     text: run.text.clone(),
                     link: None,
                     ranges: Vec::new(),
+                    preserve_words: st.fit.is_some() && st.rc.spacing == 0.0,
                 });
             }
         }
@@ -693,6 +696,7 @@ fn lines(
                 text: "-".into(),
                 link: None,
                 ranges: Vec::new(),
+                preserve_words: st.fit.is_some() && st.rc.spacing == 0.0,
             });
         }
         // Glyph runs grouped by style.
@@ -714,6 +718,9 @@ fn lines(
                     break;
                 }
                 let cx = x + line.cl_left(k).unwrap_or(0.0);
+                if c.kind == ClKind::Tab {
+                    text.push('\t');
+                }
                 if matches!(c.kind, ClKind::Text | ClKind::Space) {
                     let a = text.len();
                     // An object's cluster (a field, a note number) stands for the text it shows.
@@ -844,6 +851,7 @@ fn lines(
                     text,
                     link: rc.link.clone(),
                     ranges,
+                    preserve_words: st.fit.is_some() && st.rc.spacing == 0.0,
                 });
             }
             // Decorations across the run (underline skips trailing spaces of the line). Right-to-left
@@ -942,6 +950,7 @@ fn lines(
                 text: String::new(),
                 link: None,
                 ranges: Vec::new(),
+                preserve_words: false,
             });
         }
         // Inline objects.
@@ -1015,6 +1024,7 @@ fn lines(
                     text: r.text.clone(),
                     link: None,
                     ranges,
+                    preserve_words: st.fit.is_some() && st.rc.spacing == 0.0,
                 });
             }
         }
@@ -1159,6 +1169,7 @@ fn equation(items: &[MItem], x: f32, base: f32, alpha: f32, screen: bool, out: &
                 link: None,
                 // Equation text maps back through the font (no per-glyph ranges from the math layout).
                 ranges: Vec::new(),
+                preserve_words: false,
             }),
             MItem::Rect { x: rx, y, w, h, color } => out.push(Draw::Fill { rect: Rect::new(x + rx, base - y - h, *w, *h), color: *color, alpha }),
             MItem::Line { x0, y0, x1, y1, width, color, dotted } => out.push(Draw::Line {
@@ -1464,6 +1475,7 @@ pub(crate) fn text_glyphs(doc: &Document, r: Rect, it: &GraphicItem, alpha: f32,
             text: run.to_string(),
             link: None,
             ranges: Vec::new(),
+            preserve_words: false,
         });
         pen += w;
     }
@@ -1625,13 +1637,13 @@ pub fn upright_in_vertical(c: char) -> bool {
 fn upright_east_asian(items: Vec<Draw>) -> Vec<Draw> {
     let mut out = Vec::with_capacity(items.len());
     for d in items {
-        let Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges } = d else {
+        let Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges, preserve_words } = d else {
             out.push(d);
             continue;
         };
         let up = |k: usize| ranges.get(k).and_then(|r| text.get(r.clone())).and_then(|t| t.chars().next()).is_some_and(upright_in_vertical);
         if ranges.len() != glyphs.len() || !(0..glyphs.len()).any(up) {
-            out.push(Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges });
+            out.push(Draw::Glyphs { face, size, glyphs, color, alpha, synth_bold, synth_italic, text, link, ranges, preserve_words });
             continue;
         }
         let piece = |k0: usize, k1: usize| -> Draw {
@@ -1640,7 +1652,7 @@ fn upright_east_asian(items: Vec<Draw>) -> Vec<Draw> {
             let (b0, b1) = (rs.iter().map(|r| r.start).min().unwrap_or(0), rs.iter().map(|r| r.end).max().unwrap_or(0));
             let t = text.get(b0..b1).unwrap_or("").to_string();
             let rs = rs.iter().map(|r| r.start.saturating_sub(b0)..r.end.saturating_sub(b0)).collect();
-            Draw::Glyphs { face, size, glyphs: gs, color, alpha, synth_bold, synth_italic, text: t, link: link.clone(), ranges: rs }
+            Draw::Glyphs { face, size, glyphs: gs, color, alpha, synth_bold, synth_italic, text: t, link: link.clone(), ranges: rs, preserve_words }
         };
         let mut k0 = 0;
         while k0 < glyphs.len() {

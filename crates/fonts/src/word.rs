@@ -817,7 +817,7 @@ impl MetricFit {
 
 /// Measured advances for condensed Arial families drawn with Roboto, Gotham Book/Medium with
 /// Montserrat, Nyala with Noto Sans Ethiopic, Garamond with Tinos or Times New Roman, Cambria
-/// with Caladea and Calibri Light with Carlito; active only with the expected substitute.
+/// with Caladea, Verdana with Inter and Calibri Light with Carlito; active only with the expected substitute.
 /// TH Sarabun New/PSK additionally use their full scale, kerning and line fit with Sarabun.
 /// Other requested families keep the selected face's metrics.
 pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
@@ -844,6 +844,13 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         // Calibri Light has no bold: Word emboldens the light face and keeps its widths
         // (zenodo-049's bold italic runs are set with Calibri-LightItalic in Word's PDF).
         Some(if italic { crate::latin_metrics::CALIBRI_LIGHT_ITALIC } else { crate::latin_metrics::CALIBRI_LIGHT_REGULAR })
+    } else if family.eq_ignore_ascii_case("Verdana") {
+        Some(match (bold, italic) {
+            (true, true) => crate::latin_metrics::VERDANA_BOLD_ITALIC,
+            (true, false) => crate::latin_metrics::VERDANA_BOLD,
+            (false, true) => crate::latin_metrics::VERDANA_ITALIC,
+            (false, false) => crate::latin_metrics::VERDANA_REGULAR,
+        })
     } else if family.eq_ignore_ascii_case("Cambria") {
         Some(match (bold, italic) {
             (true, true) => crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
@@ -865,6 +872,8 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
             &["Caladea"]
         } else if family.eq_ignore_ascii_case("Calibri Light") {
             &["Carlito"]
+        } else if family.eq_ignore_ascii_case("Verdana") {
+            &["Inter"]
         } else if family.eq_ignore_ascii_case("Tahoma") {
             &["Arimo"]
         } else if family.eq_ignore_ascii_case("Garamond") {
@@ -916,6 +925,10 @@ mod tests {
             crate::latin_metrics::CAMBRIA_ITALIC,
             crate::latin_metrics::CAMBRIA_BOLD,
             crate::latin_metrics::CAMBRIA_BOLD_ITALIC,
+            crate::latin_metrics::VERDANA_REGULAR,
+            crate::latin_metrics::VERDANA_ITALIC,
+            crate::latin_metrics::VERDANA_BOLD,
+            crate::latin_metrics::VERDANA_BOLD_ITALIC,
             crate::latin_metrics::CALIBRI_LIGHT_REGULAR,
             crate::latin_metrics::CALIBRI_LIGHT_ITALIC,
         ] {
@@ -1201,6 +1214,23 @@ mod tests {
             let width = |text| crate::shape(&unicode.face, text, &[], |c| c).iter().map(|g| i64::from(g.x_advance)).sum::<i64>();
             assert!(width("iiii") < width("WWWW"), "proportional Latin widths: {bold}/{italic}");
         }
+    }
+
+    #[test]
+    fn verdana_drawn_with_inter_keeps_its_measured_widths_and_line() {
+        for (bold, italic, space) in [(false, false, 0.352), (false, true, 0.352), (true, false, 0.342), (true, true, 0.342)] {
+            let r = resolve("Verdana", bold, italic);
+            let fit = metric_fit("Verdana", bold, italic);
+            if r.substituted && r.face.family == "Inter" {
+                let fit = fit.expect("measured Verdana advances with Inter only");
+                assert_eq!(fit.advance(' '), Some(space));
+                assert_eq!(fit.advance('漢'), None);
+                assert!(((fit.line().0 + fit.line().1) * 1000.0 - 1215.33203125).abs() < 0.01);
+            } else {
+                assert!(fit.is_none(), "other faces keep their own advances");
+            }
+        }
+        assert!(metric_fit("Inter", false, false).is_none());
     }
 
     #[test]
