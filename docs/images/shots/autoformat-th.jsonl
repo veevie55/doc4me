@@ -1,0 +1,36 @@
+{"empty": true}
+{"method": "ui.language", "params": {"value": "th"}}
+{"method": "review.language", "params": {"lang": "th-TH", "default": true}}
+{"method": "styles.apply", "params": {"style": "Title"}}
+{"method": "text.insert", "params": {"text": "กำหนดการประชุม", "raw": true}}
+{"method": "text.newParagraph"}
+{"method": "styles.apply", "params": {"style": "Normal"}}
+{"method": "text.insert", "params": {"text": "ประชุมวันที่ 15 มกราคม 2569 เวลา 09.30 น. ห้อง 204", "raw": true}}
+{"method": "text.newParagraph"}
+{"method": "ui.text", "params": {"text": "1."}}
+{"steps": 2}
+{"method": "ui.text", "params": {"text": " "}}
+{"steps": 3}
+{"method": "ui.text", "params": {"text": "รับรองรายงานการประชุมครั้งที่ 3/2568"}}
+{"steps": 3}
+{"method": "ui.key", "params": {"key": "Enter"}}
+{"steps": 3}
+{"method": "ui.text", "params": {"text": "งบประมาณปี 2569 จำนวน 1,250,000 บาท"}}
+{"steps": 3}
+{"method": "ui.move", "params": {"x": 2000, "y": 2000}}
+{"steps": 10}
+{"shot": "target/autoformat-th-1.png"}
+{"method": "ui.click", "params": {"x": 280, "y": 21}}
+{"steps": 3}
+{"method": "ui.move", "params": {"x": 2000, "y": 2000}}
+{"steps": 10}
+{"shot": "target/autoformat-th-2.png"}
+{"method": "ui.focus"}
+{"steps": 3}
+{"method": "ui.key", "params": {"key": "Enter"}}
+{"steps": 3}
+{"method": "ui.text", "params": {"text": "เรื่องอื่น ๆ (ถ้ามี) เริ่ม 11.00 น."}}
+{"steps": 3}
+{"method": "ui.move", "params": {"x": 2000, "y": 2000}}
+{"steps": 10}
+{"shot": "target/autoformat-th-3.png"}
