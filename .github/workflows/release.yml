@@ -22,32 +22,24 @@ on:
       windows:
         description: 'Windows builds (MSI, portable ZIP each)'
         type: choice
-        default: x64
+        default: x64, arm64
         options:
           - x64
-          - x64, x86, arm64
-          - x64, x86
           - x64, arm64
-          - x86
-          - x86, arm64
           - arm64
           - none
       linux:
         description: 'Build Linux x86_64 (AppImage, DEB, RPM, tar.gz)'
         type: boolean
-        default: false
+        default: true
       macos:
         description: 'Build macOS universal (DMG, CLI ZIP)'
         type: boolean
-        default: false
-      bsd:
-        description: 'Build FreeBSD x86_64 (tar.gz)'
-        type: boolean
-        default: false
+        default: true
       web:
         description: 'Build the Web App (static site ZIP)'
         type: boolean
-        default: false
+        default: true
       file-name:
         description: 'Download file names: doc4me-<version>-..., doc4me-<version>-<commit>-..., doc4me-<commit>-... or doc4me-... (none)'
         type: choice
@@ -98,7 +90,7 @@ jobs:
           REQUESTED_VERSION: ${{ inputs.version }}
           GH_TOKEN: ${{ github.token }}
           WINDOWS: ${{ inputs.windows }}
-          OTHER_TARGET: ${{ inputs.linux || inputs.macos || inputs.bsd || inputs.web }}
+          OTHER_TARGET: ${{ inputs.linux || inputs.macos || inputs.web }}
           FILE_NAME: ${{ inputs.file-name }}
           ABOUT: ${{ inputs.about }}
         run: |
@@ -112,7 +104,7 @@ jobs:
           fi
           # The build jobs below test the Windows choice with contains(), so only the listed values pass.
           case "$WINDOWS" in
-            'x64' | 'x64, x86, arm64' | 'x64, x86' | 'x64, arm64' | 'x86' | 'x86, arm64' | 'arm64' | 'none') ;;
+            'x64' | 'x64, arm64' | 'arm64' | 'none') ;;
             *) echo '::error::windows must be one of the listed choices'; exit 1 ;;
           esac
           if [ "$WINDOWS" = none ] && [ "$OTHER_TARGET" != true ]; then
@@ -161,17 +153,7 @@ jobs:
       file-name: ${{ inputs.file-name }}
       about: ${{ inputs.about }}
 
-  windows-x86:
-    needs: prepare
-    if: contains(inputs.windows, 'x86')
-    uses: ./.github/workflows/build-windows-x86.yml
-    with:
-      ref: ${{ needs.prepare.outputs.sha }}
-      version: ${{ needs.prepare.outputs.version }}
-      file-name: ${{ inputs.file-name }}
-      about: ${{ inputs.about }}
-
-  windows-arm64:
+ windows-arm64:
     needs: prepare
     if: contains(inputs.windows, 'arm64')
     uses: ./.github/workflows/build-windows-arm64.yml
@@ -202,16 +184,6 @@ jobs:
       about: ${{ inputs.about }}
       arch: universal
 
-  bsd:
-    needs: prepare
-    if: inputs.bsd
-    uses: ./.github/workflows/build-bsd.yml
-    with:
-      ref: ${{ needs.prepare.outputs.sha }}
-      version: ${{ needs.prepare.outputs.version }}
-      file-name: ${{ inputs.file-name }}
-      about: ${{ inputs.about }}
-
   web:
     needs: prepare
     if: inputs.web
@@ -223,7 +195,7 @@ jobs:
       about: ${{ inputs.about }}
 
   publish:
-    needs: [prepare, windows-x64, windows-x86, windows-arm64, linux, macos, bsd, web]
+    needs: [prepare, windows-x64, windows-arm64, linux, macos, web]
     # Runs when every chosen build succeeded (builds not chosen are skipped).
     if: >-
       always() && needs.prepare.result == 'success' &&
