@@ -832,6 +832,9 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         Some(if italic { crate::latin_metrics::NOVA_COND_LIGHT_ITALIC } else { crate::latin_metrics::NOVA_COND_LIGHT_REGULAR })
     } else if family.eq_ignore_ascii_case("Arial Narrow") && !italic {
         Some(if bold { crate::latin_metrics::ARIAL_NARROW_BOLD } else { crate::latin_metrics::ARIAL_NARROW_REGULAR })
+    } else if (family == "等线" || family.eq_ignore_ascii_case("DengXian")) && !italic {
+        // DengXian's Latin letters, drawn with Carlito (zenodo-056: its body text ran 7% narrow).
+        Some(if bold { crate::latin_metrics::DENGXIAN_BOLD } else { crate::latin_metrics::DENGXIAN_REGULAR })
     } else if family.eq_ignore_ascii_case("Aptos Narrow") && !italic {
         Some(if bold { crate::latin_metrics::APTOS_NARROW_BOLD } else { crate::latin_metrics::APTOS_NARROW_REGULAR })
     } else if family.eq_ignore_ascii_case("Gotham Book") && !bold && !italic {
@@ -878,7 +881,7 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         } else if family.eq_ignore_ascii_case("Cambria") {
             // Only its open stand-in: Windows draws Cambria itself.
             &["Caladea"]
-        } else if family.eq_ignore_ascii_case("Calibri Light") {
+        } else if family.eq_ignore_ascii_case("Calibri Light") || family == "等线" || family.eq_ignore_ascii_case("DengXian") {
             &["Carlito"]
         } else if family.eq_ignore_ascii_case("Verdana") {
             &["Inter"]
@@ -942,6 +945,8 @@ mod tests {
             crate::latin_metrics::APTOS_NARROW_REGULAR,
             crate::latin_metrics::APTOS_NARROW_BOLD,
             crate::latin_metrics::TAHOMA_BOLD,
+            crate::latin_metrics::DENGXIAN_REGULAR,
+            crate::latin_metrics::DENGXIAN_BOLD,
         ] {
             assert!(advances.windows(2).all(|p| p[0].0 < p[1].0));
             let fit = MetricFit { style: None, advances, line: (1.0, 0.25) };

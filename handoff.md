@@ -1,3 +1,7 @@
+# DengXian widths · 2026-11-18
+
+- 等线/DengXian → Carlito with DENGXIAN widths from zenodo-056's composite fonts (tool now reads Identity-H /W + ToUnicode and takes `PREFIX Name ids…`). zenodo-056 lines 19 → 110/133, still fails page 1 (ω, subscripts drawn with other fonts in Word). zenodo-018's header "LECTURE NOTE…" has w14 gradient fill + outline: Word's PDF has no text for it, Doc4Me keeps invisible text over outlines by design (not changed).
+
 # Section vertical alignment on its last page · 2026-11-18
 
 - A page ended by the next section's page break is aligned with its own section's `vAlign` (was the next section's): zenodo-081's bottom-aligned title page; Linux 138 → 139/219. docs/readiness/section-valign-2026-11-18.md. Windows run 44364914820 confirmed 138/219 for 2b0f9bd.
