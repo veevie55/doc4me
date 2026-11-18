@@ -852,6 +852,38 @@ fn tables_lay_out_cells() {
 }
 
 #[test]
+fn a_field_end_between_a_bracket_and_a_comma_is_no_line_break() {
+    // zenodo-174: a citation field ends between "2020)" and ", se convierte"; Word breaks as if the
+    // field's markers weren't there, so no line starts with the comma.
+    let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+    for i in 0..60 {
+        let at = p.text.len();
+        p.insert_text(at, &format!("w{} (Cite et al., {})", "x".repeat(i % 9), 2000 + i), &Default::default()).unwrap();
+        let at = p.text.len();
+        p.insert_object(at, InlineObject::FieldEnd, &Default::default()).unwrap();
+        let at = p.text.len();
+        p.insert_text(at, ", y mas ", &Default::default()).unwrap();
+    }
+    let text = p.text.clone();
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let start = text[line.start..].trim_start_matches(doc4me_doc::para::OBJ);
+                    assert!(!start.starts_with(','), "line starts with a comma: {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
 fn a_fixed_table_takes_its_first_rows_cell_widths_over_a_disagreeing_grid() {
     // zenodo-115/-137: Word draws a fixed-layout table's columns at the first row's cell widths
     // when the file's grid says otherwise.

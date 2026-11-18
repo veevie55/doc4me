@@ -1658,7 +1658,12 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
     // not shown and, without markup, tracked deletions are left out, so a space or soft hyphen there
     // is no place to break, and words are hyphenated as they read.
     // The text and, for each char of it, its end there and in `p.text`.
-    let (text, ends): (std::borrow::Cow<str>, Vec<(usize, usize)>) = if left.is_empty() {
+    // Zero-width markers (field, bookmark, comment and content-control boundaries) are left out
+    // too: Word breaks as if they weren't there, so a citation field's end between ")" and ","
+    // is no place to start a line (zenodo-174: lines began with "," and ".").
+    let marker = |i: usize, c: char| c == OBJ && p.object_at(i).is_some_and(InlineObject::is_marker);
+    let markers = p.objects.iter().any(InlineObject::is_marker);
+    let (text, ends): (std::borrow::Cow<str>, Vec<(usize, usize)>) = if left.is_empty() && !markers {
         (p.text.as_str().into(), Vec::new())
     } else {
         let (mut text, mut ends) = (String::new(), Vec::new());
@@ -1666,7 +1671,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         for (i, c) in p.text.char_indices() {
             // `left` is in order: skip the ranges that end here, then is `i` in the next one?
             while next.next_if(|r| r.end <= i).is_some() {}
-            if next.peek().is_some_and(|r| r.start <= i) {
+            if next.peek().is_some_and(|r| r.start <= i) || marker(i, c) {
                 continue;
             }
             text.push(c);
@@ -1676,7 +1681,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
     };
     // The end of a char in `text` → the same place in `p.text`.
     let to_para = |i: usize| -> Option<usize> {
-        if left.is_empty() { Some(i) } else { ends.binary_search_by_key(&i, |e| e.0).ok().and_then(|k| ends.get(k)).map(|e| e.1) }
+        if left.is_empty() && !markers { Some(i) } else { ends.binary_search_by_key(&i, |e| e.0).ok().and_then(|k| ends.get(k)).map(|e| e.1) }
     };
     let mut found = Vec::new();
     for (i, o) in unicode_linebreak::linebreaks(&text) {

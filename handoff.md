@@ -1,3 +1,7 @@
+# Line breaks ignore zero-width markers · 2026-11-18
+
+- Field/bookmark/comment/permission/control boundary objects are left out of the text used for break opportunities (like hidden text): a Zotero field end between ")" and "," no longer lets a line start with the comma. Linux local at 1168b3b + change: boundaries 133 → 135/219 (zenodo-166, zenodo-174), 219/219 open/roundtrip/stability, pages 218/219, no regressions. docs/readiness/field-marker-breaks-2026-11-18.md. Dispatch readiness-windows.yml after pushing (Windows run 44306256566 for 1168b3b was in progress when this was written).
+
 # Fixed-table cell widths · 2026-11-18
 
 - Fixed-layout tables take the first row's cell widths (one cell per grid column, all with point widths, any >1 pt off the grid); zenodo-115's table now has Word's equal columns and **zenodo-137 passes**. Linux local at b1d5a87 + change: 219/219 open/roundtrip/stability, pages 218/219, boundaries 133/219, no regressions vs 131 (bad5ec5); see docs/readiness/fixed-table-widths-2026-11-18.md. zenodo-115 still fails on its abstract's justified wrap ("authority," | "and").
