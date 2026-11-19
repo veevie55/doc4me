@@ -5183,6 +5183,8 @@ fn a_line_a_fraction_of_a_point_past_the_page_bottom_stays() {
     };
     assert_eq!(pages(0.0), 1, "exactly full");
     assert_eq!(pages(0.2 / 40.0), 1, "0.2 pt over: still one page");
+    // zenodo-083: Word moves on a list item whose last line runs 0.28 pt past the margin.
+    assert_eq!(pages(0.29 / 40.0), 2, "0.29 pt over: the last line moves on");
     assert_eq!(pages(1.0 / 40.0), 2, "1 pt over: the last line moves on");
 }
 

@@ -3459,7 +3459,8 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
                 });
             // A line may run a fraction of a point past the room left, as in Word (zenodo-049's
             // footer clears a page's last line by less than 0.1 pt; govuk-036's last body line
-            // reaches 0.26 pt into the footnote separator's place in Word's PDF).
+            // reaches 0.26 pt into the footnote separator's place in Word's PDF), but not 0.28 pt
+            // (zenodo-083's list item moves on in Word).
             if bottom > limit + LINE_FIT_TOLERANCE && l1 > l0 && !split {
                 break;
             }
@@ -3917,7 +3918,7 @@ fn row_keeps_with_next(ctx: &mut Ctx, row: &doc4me_doc::Row) -> bool {
 }
 
 /// How far, points, a line may run past the room left on a page and still stay on it.
-const LINE_FIT_TOLERANCE: f32 = 0.3;
+const LINE_FIT_TOLERANCE: f32 = 0.27;
 
 /// Most header-row items repeated across one table's pages (a row counts at least one): far
 /// above any real table (three ordinary header rows over some 5,000 pages).
