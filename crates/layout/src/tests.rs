@@ -7001,6 +7001,35 @@ fn a_table_cell_grows_to_hold_a_picture_its_text_wraps_around() {
 }
 
 #[test]
+fn a_table_cell_grows_to_hold_a_picture_placed_from_the_margin_inside_it() {
+    // govuk-021: a Square logo 3.7 pt below the margin in the first cell of a table at the page's
+    // top makes that row as tall as the logo in Word's PDF.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let after_y = |v_rel: Anchor| {
+        let mut d = Document::new();
+        let mut t = Table::new(1, 1, 400.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Beside", Default::default());
+        let f = Float { wrap: Wrap::Square, h_rel: Anchor::Margin, v_rel, x: 200.0, y: 3.7, ..Default::default() };
+        cp.insert_object(0, rect_shape(70.0, 71.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.body = vec![
+            std::sync::Arc::new(doc4me_doc::Block::Table(t)),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+        ];
+        let l = lay(&d);
+        let shape = shapes(&l.pages[0].items)[0];
+        let y =
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [1]).then_some(*y) } else { None }).unwrap();
+        (y, shape.bottom())
+    };
+    let (y, bottom) = after_y(Anchor::Margin);
+    assert!(y >= bottom - 0.01, "the paragraph after the table at {y}, the logo ends at {bottom}");
+    // One placed from the page's top (above the cell) isn't the cell's to hold.
+    let (y, bottom) = after_y(Anchor::Page);
+    assert!(y < bottom - 20.0, "from the page: paragraph at {y}, picture to {bottom}");
+}
+
+#[test]
 fn a_tall_floating_table_runs_on_below_one_placed_at_the_same_spot() {
     // govuk-067: "Role details" (longer than a page) follows "Personal details", both floating
     // 1 twip below the same paragraph; Word runs the long one on below the other, not over it.

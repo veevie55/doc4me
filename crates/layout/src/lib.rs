@@ -1017,7 +1017,11 @@ fn layout_blocks(
                     // next row starts below such a picture in Word's PDF, not under it.
                     // (Only one placed from the cell's text: one measured from the page or margin
                     // isn't the cell's to hold.)
-                    if table.is_some() && area.is_some() && matches!(float.v_rel, Anchor::Paragraph | Anchor::Line) {
+                    // (One measured from the margin that lands inside the cell grows it too:
+                    // govuk-021's logo, Square-wrapped 3.7 pt below the margin in the first row's
+                    // cell, makes that row 75 pt tall in Word's PDF.)
+                    let in_cell_from_margin = float.v_rel == Anchor::Margin && r.y >= -0.01;
+                    if table.is_some() && area.is_some() && (matches!(float.v_rel, Anchor::Paragraph | Anchor::Line) || in_cell_from_margin) {
                         objects_bottom = objects_bottom.max(r.bottom());
                     }
                     excl.extend(area);
