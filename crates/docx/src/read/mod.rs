@@ -841,9 +841,6 @@ impl Reader<'_> {
         for s in root.children("w:style").take(10_000) {
             let Some(raw_id) = s.attr("w:styleId").filter(|i| !i.is_empty()) else { continue };
             let id = self.pc.style_id(raw_id);
-            if sheet.get(&id).is_some() {
-                continue;
-            }
             let kind = match s.attr("w:type").unwrap_or("paragraph") {
                 "character" => StyleKind::Character,
                 "table" => StyleKind::Table,
@@ -876,7 +873,12 @@ impl Reader<'_> {
                 let parts = self.table_style_parts(s, &mut st);
                 st.table = (parts != TableStyleParts::default()).then_some(parts);
             }
-            sheet.styles.push(st);
+            // A styleId defined twice: Word uses the later definition (zenodo-026's bold 12 pt
+            // Heading 2 follows a 13 pt one with the same id).
+            match sheet.get_mut(&id) {
+                Some(old) => *old = st,
+                None => sheet.styles.push(st),
+            }
         }
         self.doc.styles = std::sync::Arc::new(sheet);
         Ok(())

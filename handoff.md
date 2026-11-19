@@ -1,3 +1,8 @@
+# Duplicate style ids · 2026-11-19
+
+- A styleId defined twice in styles.xml takes its later definition (Word does): zenodo-026 passes, Linux 150/219, no new failure. Earlier this day: renamed embedded fonts (`___WRD_EMBED_SUB_NN` → font table name), no line number on the empty rest after a page break, footer top ignores the footer's own trailing multiple-spacing leading: zenodo-106 passes (716eb11).
+- Build note: the release CLI must be built with `CRAFT_FONTS_DIR=/home/user/craft-fonts` set (fonts crate build.rs embeds the stand-ins); a build without it (e.g. after `cargo xtask ci`) loses Roboto/Montserrat and fails zenodo-095/zenodo-149 pages.
+
 # Line fit tolerance; PDF font descriptor finding · 2026-11-19 (continued)
 
 - Owner: keep going until readiness is 100%; sessions may dispatch readiness-windows.yml themselves. Windows run for 3b118a6: 145/219, 95.6% / 97.5%.

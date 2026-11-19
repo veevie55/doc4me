@@ -141,6 +141,23 @@ fn omitted_paragraph_defaults_can_be_edited() {
     assert_eq!(doc4me_docx::read(&doc4me_docx::write(&new).unwrap()).unwrap().styles.default_para, new.styles.default_para);
 }
 
+#[test]
+fn a_style_defined_twice_takes_its_later_definition() {
+    // zenodo-026: Word draws Heading 2 bold 12 pt from the second definition, not 13 pt from the first.
+    let styles = format!(
+        r#"<w:styles {W_NS}><w:style w:type="paragraph" w:styleId="Normal" w:default="1"><w:name w:val="Normal"/></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="Heading 2"/><w:basedOn w:val="Normal"/><w:rPr><w:sz w:val="26"/></w:rPr></w:style><w:style w:type="paragraph" w:styleId="Heading2"><w:name w:val="Heading 2"/><w:basedOn w:val="Normal"/><w:pPr><w:spacing w:before="240"/></w:pPr><w:rPr><w:b/><w:sz w:val="24"/></w:rPr></w:style></w:styles>"#
+    );
+    let d = doc4me_docx::read(&docx(
+        r#"<w:p><w:pPr><w:pStyle w:val="Heading2"/></w:pPr><w:r><w:t>Head</w:t></w:r></w:p>"#,
+        &[("rId1", "styles", "styles.xml")],
+        &[("word/styles.xml", &styles)],
+    ))
+    .unwrap();
+    assert_eq!(d.styles.styles.iter().filter(|s| s.id == "Heading2").count(), 1);
+    let h = d.styles.get("Heading2").unwrap();
+    assert_eq!((h.chr.size, h.chr.bold, h.para.space_before), (Some(12.0), Some(true), Some(12.0)));
+}
+
 fn paras(d: &Document) -> Vec<&Paragraph> {
     d.body.iter().filter_map(|b| b.as_para()).collect()
 }

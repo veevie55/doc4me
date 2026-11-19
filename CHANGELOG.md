@@ -22,6 +22,10 @@
 
 ## [Unreleased]
 
+### แก้ไข — สไตล์ที่ประกาศซ้ำ styleId เดียวกัน (2026-11-19)
+
+- เมื่อ `styles.xml` ประกาศ `w:style` ที่มี `w:styleId` ซ้ำ ใช้นิยามตัวหลังแทนตัวแรก (`crates/docx/src/read/mod.rs` `read_styles`) เหตุผล: zenodo-026 มี Heading 2 สองชุด ชุดแรก 13 pt ไม่หนา ชุดหลัง 12 pt ตัวหนาพร้อม spacing และ PDF ของ Word ใช้ชุดหลัง (Calibri-Bold 12 pt) หัวข้อของเราเลยสูงเกินหัวข้อละประมาณ 1.2 pt สะสมจนหัวข้อ "4. Method" ไปตกหน้าถัดไป ใน corpus มีอีก 2 ฉบับที่ styleId ซ้ำ: zenodo-131 (นิยามซ้ำเหมือนกันทุกตัว) และ zenodo-123 (ชุดหลังเป็น Arial) ทั้งสองยังผ่านเหมือนเดิม ผลต่อผู้ใช้: เอกสารแบบนี้ได้หน้าตาสไตล์ตรงกับ Word และเมื่อบันทึกจะเขียนสไตล์นั้นออกไปชุดเดียว (ชุดที่ Word ใช้) ไม่มีผลกับไฟล์ที่ไม่มี styleId ซ้ำหรือกับภาษาไทย ตรวจสอบ: เทสต์ใหม่ `a_style_defined_twice_takes_its_later_definition` (`crates/docx/tests/fixtures.rs`); corpus บน Linux เทียบ `343fdd2`: corpus-breaks 149 → 150/219 (zenodo-026) ไม่มีเอกสารใหม่ที่ตก pages 218/219 และ open/roundtrip/stability 219/219 เท่าเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,663 ไม่ผ่าน 0)
+
 ### แก้ไข — ฟอนต์ที่ Word เปลี่ยนชื่อตอนฝัง, เลขบรรทัดหลังตัวแบ่งหน้า, ระยะบรรทัดเหนือ footer (2026-11-19)
 
 - ฟอนต์ที่ฝังซึ่ง Word เปลี่ยนชื่อในไฟล์ฟอนต์เป็น `___WRD_EMBED…` ใช้ชื่อและ style ตาม `fontTable.xml` (`w:name`, `w:embedBold`/`w:embedItalic`) และเมื่อไฟล์ฝังฟอนต์ทั้งชุด (ไม่มี `w:saveSubsetFonts`) ฟอนต์ของเอกสารมาก่อนฟอนต์ชื่อเดียวกันที่มีอยู่ ส่วนฟอนต์แบบ subset ใช้เติมเฉพาะที่ขาด (`crates/fonts/src/fontdb/user.rs` `add_document_fonts`, `DocumentFont`; `crates/doc/src/lib.rs` `EmbeddedFont`, `embedded_fonts_subset`; `crates/docx/src/read/mod.rs`) เหตุผล: zenodo-106 ฝัง Source Sans 3 ที่ระยะบรรทัด 1.424 em ไว้ภายใต้ชื่อ `___WRD_EMBED_SUB_44` เราจึงยังใช้ Source Sans 3 ที่ bundle มา (1.326 em) บรรทัดเตี้ยกว่า Word 1.4 pt ทุกบรรทัด
