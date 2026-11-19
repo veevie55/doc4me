@@ -45,7 +45,7 @@
 
 ## ขอบเขตที่ยังไม่อ้างว่ารองรับ
 
-- เป็น rich clipboard ภายใน Doc4Me; การโอน rich object ผ่าน system clipboard ไปทุกโปรแกรม/ทุกระบบปฏิบัติการยังไม่ได้ยืนยัน
+- เป็น rich clipboard ภายใน Doc4Me; การโอน rich object ผ่าน system clipboard ไปทุกโปรแกรม/ทุกระบบปฏิบัติการยังไม่ได้ยืนยัน (อัปเดต 2026-11-19: เพิ่มการส่งผ่าน system clipboard แล้ว ดู [system-clipboard-2026-11-19.md](system-clipboard-2026-11-19.md))
 - Word ink (`w14:contentPart`) ที่ reader ยังไม่รองรับยังเป็นช่องว่างเดิมใน [gaps](../gaps.md); OLE เก็บ payload และ preview ไม่เปิดรันโปรแกรม OLE server
 - ไม่ sort กลุ่มเซลล์ที่รวมแนวตั้ง และไม่ split table ผ่าน vertical merge ที่ยังต่อจากตารางส่วนแรก; คืนเหตุผลให้ผู้ใช้แยกเซลล์ก่อน ไม่ทำโครงสร้างเสีย
 - การแปลง table ที่ถูกหุ้มด้วย content control เชิงโครงสร้างต้องนำ wrapper ออกก่อน เพื่อไม่ทิ้งขอบเขต control อย่างเงียบ ๆ; nested table ยังคงเป็น table block

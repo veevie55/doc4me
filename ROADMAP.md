@@ -202,6 +202,7 @@ Ranked, to beta (detail and remaining milestones in [docs/roadmap.md](docs/roadm
 
 | Date | What landed |
 |---|---|
+| 2026-11-19 | System clipboard for objects (text boxes, pictures, shapes, icons, tables, charts, 3D models, SmartArt, equations, symbols, WordArt) across files, Doc4Me windows and other programs; fixes for stale clipboard after object copies and ribbon/menu Cut, and for Select All flattening a leading table. See `docs/readiness/system-clipboard-2026-11-19.md`. |
 | 2026-11-17 | Reject failed PDF extraction rather than accepting an empty page; preserve valid blank-page comparisons. Audit five documents (52 pages), all still failing; official Windows result remains 127/219 boundaries. See extraction-order audit. |
 | 2026-11-15 | Update current readiness documentation; the later publication request supersedes the earlier cancellation. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
 | 2026-11-15 | Windows readiness run [43701689470](https://github.com/veevie55/doc4me/actions/runs/43701689470), source `fd465e8`, report commit `2a5a0b0`: 92.9% overall / 94.8% without 22 deferred; 188/220 page counts, 99/220 page boundaries, 32 and 121 failures respectively. Updated bilingual Readiness blockers and TSV to match; criteria and corpus unchanged. |

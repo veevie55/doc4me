@@ -8,6 +8,7 @@
 
 pub mod build_info;
 pub mod catalog;
+pub mod clip_transfer;
 pub mod cmd;
 pub mod file_access;
 pub mod ink_math;
@@ -177,6 +178,8 @@ pub mod p {
 mod tests;
 #[cfg(test)]
 mod tests_bidi;
+#[cfg(test)]
+mod tests_clip_transfer;
 #[cfg(test)]
 mod tests_fonts;
 #[cfg(test)]

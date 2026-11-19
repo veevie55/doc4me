@@ -498,13 +498,9 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
                     let _ = app.run("edit.copyFormat", json!({}));
                     continue;
                 }
+                // `WordApp::run` hands the copy to the system clipboard.
                 let id = if matches!(e, egui::Event::Cut) { "edit.cut" } else { "edit.copy" };
-                if let Ok(r) = app.run(id, json!({}))
-                    && let Some(t) = r.get("text").and_then(Value::as_str)
-                    && !t.is_empty()
-                {
-                    ctx.copy_text(t.to_string());
-                }
+                let _ = app.run(id, json!({}));
             }
             egui::Event::Key { key, pressed: true, modifiers, .. } => {
                 // Enter takes the AutoText entry the tip offers; any other key puts the tip away.

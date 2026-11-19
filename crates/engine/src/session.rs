@@ -340,6 +340,9 @@ pub struct Session {
     pub shape_nav: bool,
     /// Plain text mirror of the clipboard (for the system clipboard).
     pub clipboard_text: String,
+    /// The token of the last copy handed to the system clipboard ([`crate::clip_transfer`]):
+    /// clipboard HTML carrying it is this session's own copy.
+    pub clipboard_token: Option<String>,
     /// Items collected by Copy and Cut this session, for the Clipboard pane.
     pub clip_history: crate::cmd::edit::ClipHistory,
     pub find: FindState,
@@ -627,6 +630,7 @@ impl Session {
             move_text: None,
             shape_nav: false,
             clipboard_text: String::new(),
+            clipboard_token: None,
             clip_history: Default::default(),
             find: FindState::default(),
             goal_x: None,
@@ -1118,6 +1122,7 @@ impl Session {
             move_text: _,
             shape_nav: _,
             clipboard_text: _,
+            clipboard_token: _,
             clip_history: _,
             find: _,
             goal_x: _,

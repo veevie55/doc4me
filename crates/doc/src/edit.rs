@@ -685,6 +685,12 @@ impl Document {
             }
             return out;
         }
+        // The ends are in different containers (a table and the text around it, two tables…):
+        // copy in the innermost container holding both, and a table an end is inside comes along
+        // from (or up to) that end's row, as Word extends such a selection to whole rows.
+        if let Some(blocks) = self.copy_across_tables(&a, &b) {
+            return blocks;
+        }
         for p in self.paths_between(&a, &b) {
             if let Some(para) = self.para(a.story, &p) {
                 let mut q = para.clone();
@@ -697,6 +703,63 @@ impl Document {
             }
         }
         out
+    }
+
+    /// [`Document::copy_blocks`] for ends in different containers: the blocks of the innermost
+    /// container holding both, tables an end is inside cut to whole rows. `None` when the paths
+    /// don't lead there (the caller then copies the paragraphs between).
+    fn copy_across_tables(&self, a: &Pos, b: &Pos) -> Option<Vec<Block>> {
+        let (pa, pb) = (&a.path.0, &b.path.0);
+        // The deepest container level (0, 3, 6…) both paths go through.
+        let mut c = 0usize;
+        while c + 3 < pa.len() && c + 3 < pb.len() && pa.get(c..c + 3) == pb.get(c..c + 3) {
+            c += 3;
+        }
+        let (ia, ib) = (*pa.get(c)? as usize, *pb.get(c)? as usize);
+        if ia > ib {
+            return None;
+        }
+        let container = self.container(a.story, &Path(pa.get(..=c)?.to_vec()))?;
+        let row_of = |p: &[u32]| if p.len() > c + 1 { p.get(c + 1).map(|r| *r as usize) } else { None };
+        let (ra, rb) = (row_of(pa), row_of(pb));
+        let mut out = Vec::new();
+        for i in ia..=ib {
+            let blk = container.get(i)?;
+            match &**blk {
+                Block::Table(t) if (i == ia && ra.is_some()) || (i == ib && rb.is_some()) => {
+                    let first = if i == ia { ra.unwrap_or(0) } else { 0 };
+                    let last = if i == ib { rb.unwrap_or(usize::MAX) } else { usize::MAX };
+                    let mut t = t.clone();
+                    let end = last.saturating_add(1).min(t.rows.len());
+                    if first >= end {
+                        continue;
+                    }
+                    t.rows = t.rows.drain(first..end).collect();
+                    // A merge continuing from a row left behind starts in the first row copied.
+                    if let Some(row) = t.rows.first_mut() {
+                        for cell in &mut row.cells {
+                            if cell.props.vmerge == crate::props::VMerge::Continue {
+                                cell.props.vmerge = crate::props::VMerge::Restart;
+                            }
+                        }
+                    }
+                    out.push(Block::Table(t));
+                }
+                Block::Para(p) => {
+                    let mut p = p.clone();
+                    let to = if i == ib && rb.is_none() { b.off } else { p.len() };
+                    let from = if i == ia && ra.is_none() { a.off } else { 0 };
+                    let _ = p.delete(to.min(p.len()), p.len());
+                    let _ = p.delete(0, from.min(p.len()));
+                    if i == ib && rb.is_none() && to < self.para(b.story, &b.path).map(Paragraph::len).unwrap_or(0) {
+                        p.section = None;
+                    }
+                    out.push(Block::Para(p));
+                }
+                Block::Table(t) => out.push(Block::Table(t.clone())),
+            }
+        }
+        Some(out)
     }
 
     /// Give copied boxes and notes independent stories. Captured fragments never fall back to

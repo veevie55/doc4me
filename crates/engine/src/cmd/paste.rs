@@ -55,6 +55,9 @@ fn source(s: &Session, v: &Value, fmt: &str) -> Option<String> {
     let non_empty = |t: String| if t.is_empty() { None } else { Some(t) };
     match fmt {
         "formatted" => {
+            if marked_copy(s, v).is_some() {
+                return Some(String::new());
+            }
             let f = s.clipboard.as_ref()?;
             // System clipboard text that isn't our own copy means someone else copied since.
             match p::str(v, "text") {
@@ -78,12 +81,89 @@ fn formats_json(ids: &[&str]) -> Value {
     json!(ids.iter().map(|id| json!({"id": id, "label": FORMATS.iter().find(|(f, _)| f == id).map(|(_, l)| *l).unwrap_or(*id)})).collect::<Vec<_>>())
 }
 
-fn paste_special(s: &mut Session, v: &Value) -> CmdResult {
-    for k in ["text", "html", "rtf"] {
-        if p::str(v, k).is_some_and(|t| t.len() > MAX_PASTE_BYTES) {
-            return Err(CmdError::Params(format!("`{k}` is larger than {} MB", MAX_PASTE_BYTES >> 20)));
+/// Refuse clipboard params too big to paste: HTML may carry a Doc4Me copy
+/// ([`crate::clip_transfer::MAX_HTML_BYTES`]), text and RTF up to [`MAX_PASTE_BYTES`].
+pub(crate) fn check_sizes(v: &Value, keys: &[&str]) -> Result<(), CmdError> {
+    for &k in keys {
+        let max = if k == "html" { crate::clip_transfer::MAX_HTML_BYTES } else { MAX_PASTE_BYTES };
+        if p::str(v, k).is_some_and(|t| t.len() > max) {
+            return Err(CmdError::Params(format!("`{k}` is larger than {} MB", max >> 20)));
         }
     }
+    Ok(())
+}
+
+/// Where pasted system clipboard content came from (File › Options › Advanced › Cut, copy, and
+/// paste has a setting for each).
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Origin {
+    /// This session's own copy.
+    Ours,
+    /// A copy from Doc4Me in another window or process.
+    Doc4Me,
+    /// Another program.
+    Other,
+}
+
+/// The Doc4Me copy in the system clipboard's HTML (`html` param): this session's own copy when
+/// it carries our token, else the copy it carries. `None` when there is none or it can't be read.
+pub(crate) fn marked_copy(s: &Session, v: &Value) -> Option<(Fragment, Origin)> {
+    let html = p::str(v, "html")?;
+    let payload = crate::clip_transfer::payload_from_html(html)?;
+    if s.clipboard_token.as_deref() == Some(payload.token.as_str())
+        && let Some(f) = &s.clipboard
+    {
+        return Some((f.clone(), Origin::Ours));
+    }
+    match crate::clip_transfer::fragment_from_payload(&payload) {
+        Ok(f) => Some((f, Origin::Doc4Me)),
+        Err(e) => {
+            log::warn!("clipboard: the Doc4Me copy couldn't be read ({e}); pasting its HTML");
+            None
+        }
+    }
+}
+
+/// What a plain Paste takes from the system clipboard's HTML or RTF, best first: a Doc4Me copy,
+/// else (unless the clipboard's text is our own copy's) another program's HTML, else its RTF.
+/// `None` leaves the paste to the text and our own copy.
+pub(crate) fn from_system(s: &mut Session, v: &Value) -> Option<(Fragment, Origin)> {
+    if let Some(found) = marked_copy(s, v) {
+        return Some(found);
+    }
+    let text = p::str(v, "text").map(|t| t.replace("\r\n", "\n"));
+    if let (Some(t), Some(f)) = (&text, &s.clipboard)
+        && f.plain_text() == *t
+    {
+        return None;
+    }
+    let has_content = |f: &Fragment| f.blocks.iter().any(|b| !b.as_para().is_some_and(Paragraph::is_empty));
+    let html = p::str(v, "html").filter(|h| !h.trim().is_empty());
+    let rtf = p::str(v, "rtf").filter(|r| looks_like_rtf(r));
+    // HTML naming its pictures by local file (Word's clipboard HTML) would lose them: RTF, which
+    // carries them, goes first then.
+    let rtf_first = rtf.is_some() && html.is_some_and(names_local_pictures);
+    for use_rtf in if rtf_first { [true, false] } else { [false, true] } {
+        let doc = if use_rtf { rtf.and_then(|r| doc4me_formats::rtf::import(r.as_bytes()).ok()) } else { html.map(doc4me_formats::html::import) };
+        if let Some(d) = doc {
+            let f = adopt(s, d);
+            if has_content(&f) {
+                return Some((f, Origin::Other));
+            }
+        }
+    }
+    None
+}
+
+/// Whether clipboard HTML shows pictures from local files (`file:` sources, Office's VML image
+/// data), which a paste doesn't read.
+fn names_local_pictures(html: &str) -> bool {
+    let lower = html.get(..html.len().min(4 << 20)).unwrap_or("").to_ascii_lowercase();
+    lower.contains("src=\"file:") || lower.contains("src='file:") || lower.contains("<v:imagedata")
+}
+
+fn paste_special(s: &mut Session, v: &Value) -> CmdResult {
+    check_sizes(v, &["text", "html", "rtf"])?;
     let ids = available(s, v);
     let Some(fmt) = p::str(v, "as") else {
         // No format chosen: list them and ask a front end (if any) to show the dialog.
@@ -117,7 +197,10 @@ fn paste_special(s: &mut Session, v: &Value) -> CmdResult {
             r["pastedAs"] = json!(fmt);
             return Ok(r);
         }
-        "formatted" => s.clipboard.clone().ok_or_else(|| CmdError::Failed("the clipboard is empty".into()))?,
+        "formatted" => match marked_copy(s, v) {
+            Some((f, _)) => f,
+            None => s.clipboard.clone().ok_or_else(|| CmdError::Failed("the clipboard is empty".into()))?,
+        },
         "html" => adopt(s, doc4me_formats::html::import(&src)),
         _ => adopt(s, doc4me_formats::rtf::import(src.as_bytes()).map_err(|e| CmdError::Failed(format!("bad RTF: {e}")))?),
     };

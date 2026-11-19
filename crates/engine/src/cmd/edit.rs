@@ -43,7 +43,7 @@ pub fn specs() -> Vec<CommandSpec> {
             .key("Mod+Shift+F3")
             .when(|s| if s.building_blocks.contains_key(SPIKE) { None } else { Some("the Spike is empty") }),
         CommandSpec::new("edit.copy", "Copy", "Home › Clipboard", copy).key("Mod+C").pure(),
-        CommandSpec::new("edit.paste", "Paste", "Home › Clipboard", paste).key("Mod+V").params(r#"{"text"?: string}"#),
+        CommandSpec::new("edit.paste", "Paste", "Home › Clipboard", paste).key("Mod+V").params(r#"{"text"?: string, "html"?: string, "rtf"?: string}"#),
         CommandSpec::new("edit.pasteText", "Paste: Keep Text Only", "Home › Clipboard › Paste", paste_text)
             .params(r#"{"text"?: string}"#)
             // Word for Windows (Microsoft 365): Ctrl+Shift+V pastes text only.
@@ -184,7 +184,9 @@ fn copy(s: &mut Session, _: &Value) -> CmdResult {
     s.clip_history.push(&f, &s.clipboard_text);
     s.clipboard = Some(f);
     s.clipboard_doc = Some(s.document_id());
-    Ok(json!({"text": s.clipboard_text}))
+    // A new copy: the token of the last one handed to the system clipboard no longer names it.
+    s.clipboard_token = None;
+    Ok(json!({"text": s.clipboard_text, "copied": true}))
 }
 
 fn cut(s: &mut Session, v: &Value) -> CmdResult {
@@ -321,15 +323,27 @@ fn paste(s: &mut Session, v: &Value) -> CmdResult {
     // File › Options › Advanced › Cut, copy, and paste: our own copy from this document or
     // another one, or another program's.
     let ours = if s.clipboard_doc == Some(s.document_id()) { s.prefs.paste_same } else { s.prefs.paste_between };
-    // An explicit text param (from the system clipboard) wins unless it matches our own copy.
-    let (frag, mode) = match (p::str(v, "text"), &s.clipboard) {
-        (Some(t), Some(f)) if f.plain_text() == t.replace("\r\n", "\n") => (f.clone(), ours),
-        (Some(t), _) => (Fragment::from_text(&t.replace("\r\n", "\n")), s.prefs.paste_other),
-        (None, Some(f)) => (f.clone(), ours),
-        (None, None) => return Err(CmdError::Failed("the clipboard is empty".into())),
+    // Plain text keeps no limit of its own here (as before); HTML and RTF are parsed.
+    super::paste::check_sizes(v, &["html", "rtf"])?;
+    // The system clipboard's HTML or RTF (from a front end): our own copy, another Doc4Me
+    // window's, or another program's. An explicit text param (from the system clipboard) wins
+    // over our own copy unless it matches it.
+    let (frag, mode) = match super::paste::from_system(s, v) {
+        Some((f, super::paste::Origin::Ours)) => (f, ours),
+        Some((f, super::paste::Origin::Doc4Me)) => (f, s.prefs.paste_between),
+        Some((f, super::paste::Origin::Other)) => (f, s.prefs.paste_other),
+        None => match (p::str(v, "text"), &s.clipboard) {
+            (Some(t), Some(f)) if f.plain_text() == t.replace("\r\n", "\n") => (f.clone(), ours),
+            (Some(t), _) => (Fragment::from_text(&t.replace("\r\n", "\n")), s.prefs.paste_other),
+            (None, Some(f)) => (f.clone(), ours),
+            (None, None) => return Err(CmdError::Failed("the clipboard is empty".into())),
+        },
     };
     if mode != crate::session::PasteMode::Keep {
-        return paste_text(s, &json!({"text": frag.plain_text()}));
+        // Text only: the system clipboard's own text when it has some (another program's text
+        // is what it meant), else the copy's.
+        let text = p::str(v, "text").filter(|t| !t.is_empty()).map(str::to_string).unwrap_or_else(|| frag.plain_text());
+        return paste_text(s, &json!({"text": text}));
     }
     super::paste::insert(s, frag)?;
     sel_result(s)

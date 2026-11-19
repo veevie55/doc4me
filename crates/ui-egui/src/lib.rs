@@ -83,6 +83,7 @@ pub mod ribbon_keys;
 pub mod screen_clip;
 pub mod scroll;
 pub mod style_format;
+pub mod system_clipboard;
 pub mod table_pen;
 pub mod table_resize;
 pub mod theme;
@@ -152,6 +153,9 @@ pub struct Services {
     /// Desktop: the text on the system clipboard, if any. Ctrl+V gets it from egui's paste event;
     /// the ribbon and context-menu Paste read it here (#584).
     pub clipboard_text: Option<Box<dyn Fn() -> Option<String>>>,
+    /// Desktop: the system clipboard in more formats than text (HTML, RTF, pictures), so copied
+    /// objects reach other programs and other Doc4Me windows. See [`system_clipboard`].
+    pub system_clipboard: Option<system_clipboard::SystemClipboard>,
     /// Web: keep a font the user added (stored file name, original bytes) for the next visit
     /// (#582). Desktop fonts are stored by the font database itself, in the app's font folder.
     pub store_font: Option<Box<dyn Fn(&str, &[u8])>>,
@@ -689,6 +693,9 @@ impl WordApp {
         // The ribbon and context-menu Paste commands send no text: read the system clipboard's, as
         // Ctrl+V's paste event carries it (#584).
         let mut params = params;
+        // Paste and Paste Special also get the clipboard's HTML and RTF: a Doc4Me copy (ours or
+        // another window's) or another program's formatted content.
+        let doc4me_copy = matches!(id, "edit.paste" | "edit.pasteSpecial") && system_clipboard::add_rich(self, &mut params);
         if matches!(id, "edit.paste" | "edit.pasteText" | "edit.pasteMerge" | "edit.pasteSpecial")
             && params.get("text").is_none()
             && let Some(text) = self.services.clipboard_text.as_ref().and_then(|f| f()).filter(|t| !t.is_empty())
@@ -697,6 +704,7 @@ impl WordApp {
             // Picture files copied in a file manager reach us as their paths: paste the pictures,
             // as Ctrl+V does.
             if id == "edit.paste"
+                && !doc4me_copy
                 && self.session.math.is_none()
                 && paste_picture::names_picture_files(&text)
                 && let Some(r) = paste_picture::paste(self)
@@ -706,14 +714,21 @@ impl WordApp {
             o.insert("text".into(), Value::String(text));
         }
         // Paste without system clipboard text: a picture there is newer than our own copy (copying
-        // here replaces it with text), so it wins (#45).
+        // here replaces the clipboard), so it wins (#45), unless the clipboard holds a Doc4Me
+        // copy, whose picture is only for other programs.
         if id == "edit.paste"
             && params.get("text").is_none()
+            && !doc4me_copy
             && let Some(r) = paste_picture::paste(self)
         {
             return r;
         }
         let r = self.execute_user(id, params);
+        // Copy and Cut hand the copy to the system clipboard, whatever ran them (keys, ribbon,
+        // context menu, command search).
+        if matches!(id, "edit.copy" | "edit.cut") && r.as_ref().is_ok_and(|v| v.get("copied").and_then(Value::as_bool) == Some(true)) {
+            system_clipboard::publish(self);
+        }
         // Check Accessibility shows its findings in the Accessibility pane, kept up to date there.
         if id == "file.accessibility" && r.is_ok() {
             self.session.view.accessibility_pane = true;

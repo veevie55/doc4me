@@ -23,6 +23,7 @@ mod graphics;
 mod logging;
 mod print;
 mod screen_clip;
+mod system_clipboard;
 
 use doc4me_engine::Session;
 use doc4me_ui_egui::{
@@ -196,6 +197,7 @@ fn services(file_dialog: file_dialogs::Hook, ctx: &egui::Context) -> Services {
         make_default_app: default_apps::hook(),
         animations_enabled: Some(animations::hook(ctx)),
         clipboard_text: Some(Box::new(|| arboard::Clipboard::new().ok()?.get_text().ok())),
+        system_clipboard: Some(system_clipboard::service()),
         ..Default::default()
     }
 }
