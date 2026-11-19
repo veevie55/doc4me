@@ -2486,7 +2486,14 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 _ => false,
             })
         });
+        // Spaces hanging after a line's last text don't make it taller either (govuk-065 ends
+        // paragraphs of 11 pt text with a space in the 12 pt default size; Word steps those last
+        // lines like the others).
+        let last_text = pl.clusters.get(c0..c1).and_then(|cs| cs.iter().rposition(|c| !matches!(c.kind, ClKind::Space | ClKind::Marker)));
         for (k, c) in pl.clusters.get(c0..c1).into_iter().flatten().enumerate() {
+            if has_text && c.kind == ClKind::Space && last_text.is_some_and(|t| k > t) {
+                continue;
+            }
             // Nor does a line, page or column break after text make the line taller: zenodo-049 ends a
             // paragraph of 11 pt text with a page break in a 12 pt run, and Word steps that line
             // like the others. govuk-024's 24 pt manual break follows 8 pt form text; Word keeps

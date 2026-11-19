@@ -4585,6 +4585,23 @@ fn a_run_of_dots_after_a_space_may_start_a_line() {
 }
 
 #[test]
+fn a_bigger_space_hanging_at_a_lines_end_leaves_its_height_alone() {
+    // govuk-065: 11 pt paragraphs end with a space in the 12 pt default size; Word's last lines
+    // are as tall as the others.
+    let height = |space_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("text", doc4me_doc::CharProps { size: Some(11.0), ..Default::default() });
+        let end = p.text.len();
+        p.insert_text(end, " ", &doc4me_doc::CharProps { size: Some(space_size), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    assert!((height(24.0) - height(11.0)).abs() < 0.01, "{} vs {}", height(24.0), height(11.0));
+}
+
+#[test]
 fn unequal_formats_lay_out_in_linear_time() {
     // Runs whose formats never compare equal (NaN spacing from a hostile file) each get a style;
     // finding a run's style must not compare it against every earlier one.
