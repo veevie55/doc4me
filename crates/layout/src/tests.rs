@@ -4570,6 +4570,21 @@ fn a_line_may_start_at_a_bracket_after_a_quote_and_a_space() {
 }
 
 #[test]
+fn a_run_of_dots_after_a_space_may_start_a_line() {
+    // govuk-065: "(2) ......" (a dot run too long for what is left of the line) puts "(2)" alone
+    // on its line in Word's PDF; UAX #14 alone (LB13) keeps the space and the dots together.
+    assert_eq!(super::para::space_dot_breaks("(2) ..... and . x ...."), vec![4, 18]);
+    let mut d = Document::from_text(&format!("(2) {}", ".".repeat(200)));
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.first_mut().map(std::sync::Arc::make_mut) {
+        p.props.align = Some(doc4me_doc::props::Align::Justify);
+    }
+    let l = lay(&d);
+    let text = &d.body[0].as_para().unwrap().text;
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no lines") };
+    assert_eq!(&text[para.lines[0].start..para.lines[0].stop], "(2) ", "the dots start the next line");
+}
+
+#[test]
 fn unequal_formats_lay_out_in_linear_time() {
     // Runs whose formats never compare equal (NaN spacing from a hostile file) each get a style;
     // finding a run's style must not compare it against every earlier one.

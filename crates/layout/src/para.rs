@@ -1741,6 +1741,15 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         found.sort_unstable();
         found.dedup();
     }
+    // UAX #14 keeps a space and the full stops after it together (LB13, `× IS` even after
+    // spaces); Word breaks there, before a run of dots (govuk-065's "(2) ......" form lines put
+    // "(2)" alone on its line, the dots below).
+    let dots = space_dot_breaks(&text);
+    if !dots.is_empty() {
+        found.extend(dots);
+        found.sort_unstable();
+        found.dedup();
+    }
     // Myanmar has no spaces between words: it wraps between syllables.
     if text.chars().any(|c| matches!(u32::from(c), 0x1000..=0x109F | 0xA9E0..=0xA9FF | 0xAA60..=0xAA7F)) {
         found.extend(doc4me_doc::cluster::myanmar_breaks(&text));
@@ -1891,6 +1900,19 @@ const SUBSTITUTE_SLACK: f32 = 0.03;
 /// For a cluster `j` at `x` that doesn't fit before `right_edge`, on a line starting at `line_x`
 /// with no break opportunity yet: the last cluster of its word when the whole word, in a
 /// substitute font, overflows by at most [`SUBSTITUTE_SLACK`] of the line's text so far.
+/// Break opportunities (byte offsets in `text`) after a space and before two or more full stops.
+pub(crate) fn space_dot_breaks(text: &str) -> Vec<usize> {
+    let mut out = Vec::new();
+    let mut prev_space = false;
+    for (i, c) in text.char_indices() {
+        if prev_space && c == '.' && text.get(i + 1..).is_some_and(|t| t.starts_with('.')) {
+            out.push(i);
+        }
+        prev_space = c == ' ';
+    }
+    out
+}
+
 fn slack_word(pl: &ParaLayout, j: usize, x: f32, line_x: f32, right_edge: f32) -> Option<usize> {
     let substituted = |style: u16| pl.styles.get(style as usize).is_some_and(|st| st.substituted);
     let mut end_x = x;
