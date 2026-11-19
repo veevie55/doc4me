@@ -573,6 +573,21 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     }
     let mut rows: Vec<Vec<CellBox>> = Vec::with_capacity(nrows);
     let mut heights: Vec<f32> = Vec::with_capacity(nrows);
+    // Each cell's first and last paragraph styles, row by row (contextual spacing compares a
+    // cell's text with the cells beside it in its row).
+    let ends: Vec<Vec<(Option<String>, Option<String>)>> = t
+        .rows
+        .iter()
+        .map(|r| {
+            r.cells
+                .iter()
+                .map(|c| {
+                    let mut style = |b: Option<&std::sync::Arc<Block>>| b.and_then(|b| b.as_para()).map(|p| ctx.resolved(p).style.clone());
+                    (style(c.blocks.first()), style(c.blocks.last()))
+                })
+                .collect()
+        })
+        .collect();
     let mut float_heights: Vec<f32> = Vec::with_capacity(nrows);
     // Rows Word doesn't show while hidden text isn't shown: the end-of-row mark is hidden and so
     // is everything in the row. They take no room and draw nothing (their cells are still laid
@@ -699,8 +714,13 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 (items, len)
             } else {
                 let outer_end = ctx.cell_end.replace(margins[3].max(0.0));
+                let row_ends = ends.get(ri).map_or(&[][..], Vec::as_slice);
+                let prev = ci.checked_sub(1).and_then(|k| row_ends.get(k)).and_then(|e| e.1.clone());
+                let next = row_ends.get(ci + 1).and_then(|e| e.0.clone());
+                let outer_neighbours = ctx.cell_neighbours.replace((prev, next));
                 let BoxLayout { mut items, height, floats_bottom, .. } = layout_cell(ctx, story, cell, &cpath, cw, text, depth);
                 ctx.cell_end = outer_end;
+                ctx.cell_neighbours = outer_neighbours;
                 for it in &mut items {
                     it.translate(x0 + margins[1], margins[0] + band_t);
                 }

@@ -630,6 +630,11 @@ struct Ctx<'a> {
     /// While a table cell's text is laid out: the cell's end (right) margin, which floating
     /// objects in the cell may reach into ([`float_rect`]).
     cell_end: Option<f32>,
+    /// While a table cell's text is laid out: the styles of the paragraphs just before and just
+    /// after the cell's text in its row (the previous cell's last paragraph, the next cell's
+    /// first), which contextual spacing compares with across the cell's edges. Taken by the
+    /// cell's box, so boxes inside it don't see it.
+    cell_neighbours: Option<(Option<String>, Option<String>)>,
     /// Whether tracked deletions are left out in the story being laid out
     /// ([`LayoutOptions::hides_deleted`]): the body's, or the story of the [`layout_box`] at work.
     hide_deleted: bool,
@@ -945,6 +950,8 @@ fn layout_blocks(
     // Where the last paragraph's lines ended, for the gap a border box runs through.
     let mut prev_end = 0.0f32;
     let mut prev_style: Option<(String, bool)> = None;
+    // In a table cell: the styles of the paragraphs before and after its text (other cells').
+    let (cell_prev, cell_next) = if table.is_some() { ctx.cell_neighbours.take().unwrap_or_default() } else { (None, None) };
     // The paragraphs of a frame placed with its first one are skipped up to here.
     let mut skip_to = range.start;
     let first = range.start;
@@ -972,7 +979,12 @@ fn layout_blocks(
                 let mut pl = ctx.para_labelled(p, width, table, &[], label.clone());
                 let ctxl = pl.rp.contextual_spacing;
                 let same = prev_style.as_ref().is_some_and(|(s, c)| *s == pl.rp.style && (*c || ctxl));
-                let mut before = if same && ctxl { 0.0 } else { pl.rp.space_before };
+                // Contextual spacing looks past the cell's edges to the cells beside it in Word:
+                // govuk-044's table rows of one "Table text" paragraph per cell (3 pt before and
+                // after) are 16.8 pt tall in Word's PDF, not 19.8; each row's first cell keeps its
+                // space before (its text is 3 pt lower than the other cells'), the rest don't.
+                let across_before = ctxl && i == 0 && cell_prev.as_deref() == Some(pl.rp.style.as_str());
+                let mut before = if (same && ctxl) || across_before { 0.0 } else { pl.rp.space_before };
                 // Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below
                 // its last, as in a web page's cells: zenodo-021's cells of single 12 pt lines with
                 // automatic spacing are rows 33 pt apart in Word's PDF, not 61.
@@ -1044,8 +1056,12 @@ fn layout_blocks(
                 prev_end = y;
                 // (A list item keeps it: zenodo-021's rows ending in one bulleted question are 14 pt
                 // taller in Word's PDF than those ending in plain text.)
-                let after =
-                    if table.is_some() && i + 1 == blocks.len() && pl.rp.space_after_auto && !is_list(&pl.rp) { 0.0 } else { pl.rp.space_after };
+                let across_after = ctxl && i + 1 == range.end && cell_next.as_deref() == Some(pl.rp.style.as_str());
+                let after = if (table.is_some() && i + 1 == blocks.len() && pl.rp.space_after_auto && !is_list(&pl.rp)) || across_after {
+                    0.0
+                } else {
+                    pl.rp.space_after
+                };
                 y += bx.bottom + after;
                 // Keep the actual trailing space: the next paragraph may suppress it when
                 // contextual spacing applies. `same` describes this paragraph and its previous
@@ -2094,6 +2110,7 @@ fn layout_pass(
         heads: Vec::new(),
         header_wraps: HashMap::new(),
         cell_end: None,
+        cell_neighbours: None,
     };
     let (all_heads, all_feet) = (linked_all(&sections, |s| s.headers), linked_all(&sections, |s| s.footers));
     ctx.heads = all_heads.clone();

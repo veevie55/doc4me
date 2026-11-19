@@ -7449,3 +7449,50 @@ fn a_centred_merge_broken_by_the_page_centres_its_text_on_the_page() {
     let mid = ys[0].0 + ys[0].1 / 2.0 - top;
     assert!((mid - 40.0).abs() < 4.0, "the text's middle {mid} pt below the merge's top, not 40");
 }
+
+/// Text taller than its exact line spacing shares the line between its ascent and descent, and
+/// lowering it (`w:position`) then moves it down: govuk-044's page number, 20 pt lowered 12 pt
+/// in a 10 pt exact line, is drawn 12 pt lower than unlowered text in Word's PDF.
+#[test]
+fn lowered_text_in_a_short_exact_line_keeps_its_baseline_and_moves_down() {
+    let baseline = |position: f32| {
+        let chr = CharProps { size: Some(20.0), position: Some(position), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("9", chr);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(10.0));
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let line = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].clone()) } else { None })
+            .unwrap();
+        line.baseline - line.top
+    };
+    let (plain, lowered) = (baseline(0.0), baseline(-12.0));
+    assert!((plain - lowered).abs() < 0.01, "the line's baseline stays put ({plain} vs {lowered}); the text moves");
+    // The line is shared by the font's ascent and descent (about 7 to 8 pt of 10 for 20 pt
+    // text), not put a whole descent above the line's bottom (under 6 pt).
+    assert!(plain > 6.0 && plain < 10.0, "{plain}");
+}
+
+/// Contextual spacing compares a cell's paragraph with the cells beside it in its row: two
+/// cells in one style, 3 pt before and after, make a row 3 pt shorter than without it.
+#[test]
+fn contextual_spacing_looks_at_the_cells_beside_a_cell() {
+    let row_h = |contextual: bool| {
+        let mut t = Table::new(1, 2, 300.0);
+        for c in t.rows[0].cells.iter_mut() {
+            let mut p = doc4me_doc::Paragraph::with_text("x", Default::default());
+            p.props.space_before = Some(3.0);
+            p.props.space_after = Some(3.0);
+            p.props.contextual_spacing = Some(contextual);
+            c.blocks = vec![doc4me_doc::para_block(p)];
+        }
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        lay(&d).pages[0].items.iter().find_map(|it| if let Placed::Cell { rect, row: 0, cell: 0, .. } = it { Some(rect.h) } else { None }).unwrap()
+    };
+    let (off, on) = (row_h(false), row_h(true));
+    assert!((off - on - 3.0).abs() < 0.05, "{off} vs {on}");
+}

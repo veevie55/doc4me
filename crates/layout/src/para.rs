@@ -2468,6 +2468,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         // Vertical metrics.
         let picture_spacing = env.table.is_none() && grid.is_none() && matches!(rp.line_spacing, LineSpacing::Multiple(_));
         let (mut asc, mut desc) = (0.0f32, 0.0f32);
+        // The text's own ascent and descent, before raising or lowering (exact spacing).
+        let (mut raw_asc, mut raw_desc) = (0.0f32, 0.0f32);
         // The tallest picture on the line (it sits on the baseline).
         let mut obj_asc = 0.0f32;
         // Whether text or an equation needs descent below the baseline. Outside table cells,
@@ -2533,6 +2535,8 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     // reaches higher: a line lowered throughout is as tall as before, only lower
                     // (govuk-052: Arial 11 lowered 1 pt steps 12.6 pt in Word, its first line, with
                     // unlowered words too, 13.7 pt).
+                    raw_asc = raw_asc.max(st.ascent);
+                    raw_desc = raw_desc.max(st.descent);
                     ((st.ascent + st.shift).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
                 };
                 asc = asc.max(a);
@@ -2610,6 +2614,15 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             && let LineSpacing::Multiple(m) = rp.line_spacing
         {
             top + (natural * m.min(1.0)).max(obj_asc)
+        } else if let LineSpacing::Exactly(_) = rp.line_spacing
+            && raw_asc + raw_desc > height + 0.01
+            && obj_asc <= 0.0
+        {
+            // Text taller than its exact line: Word shares the line between the font's ascent and
+            // descent (before any raising or lowering, which then moves the text). govuk-044's
+            // page number, 20 pt Tahoma lowered 12 pt in a 10 pt exact line, has its baseline
+            // 20.3 pt below the frame's top in Word's PDF: 10 × 20.0 / 24.1 + 12.
+            top + height * raw_asc / (raw_asc + raw_desc)
         } else {
             top + baseline_offset(rp.line_spacing, asc, height, desc).max(obj_asc.min(height - below))
         };
