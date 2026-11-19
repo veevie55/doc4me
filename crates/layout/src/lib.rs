@@ -3416,7 +3416,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
                     let sep = pb.seps.sep_h(pb.notes.first().is_some_and(|n| n.cont));
                     pb.body_floor().max(bottom) + sep + before + last.first_piece() + pb.seps.notice_h() <= pb.orig_bottom + 0.01
                 });
-            if bottom > limit + 0.01 && l1 > l0 && !split {
+            // A line may run a fraction of a point past the room left, as in Word (zenodo-049's
+            // footer clears a page's last line by less than 0.1 pt; govuk-036's last body line
+            // reaches 0.26 pt into the footnote separator's place in Word's PDF).
+            if bottom > limit + LINE_FIT_TOLERANCE && l1 > l0 && !split {
                 break;
             }
             // A line holding nothing but a page or column break can stay at the bottom even
@@ -3863,6 +3866,9 @@ fn row_keeps_with_next(ctx: &mut Ctx, row: &doc4me_doc::Row) -> bool {
     }
     any
 }
+
+/// How far, points, a line may run past the room left on a page and still stay on it.
+const LINE_FIT_TOLERANCE: f32 = 0.3;
 
 /// Most header-row items repeated across one table's pages (a row counts at least one): far
 /// above any real table (three ordinary header rows over some 5,000 pages).

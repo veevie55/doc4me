@@ -1,3 +1,10 @@
+# Line fit tolerance; PDF font descriptor finding · 2026-11-19 (continued)
+
+- Owner: keep going until readiness is 100%; sessions may dispatch readiness-windows.yml themselves. Windows run for 3b118a6: 145/219, 95.6% / 97.5%.
+- Lines may overrun the room left by up to 0.3 pt (LINE_FIT_TOLERANCE): zenodo-049 passes, Linux 146/219, no regressions.
+- Tried and reverted: PDF FontDescriptor Ascent/Descent/FontBBox from the font's head box (as Adobe PDFMaker writes): +4 (govuk-024, zenodo-030/050/070) −6 (govuk-072, zenodo-054/061/080/118/127). The corpus's reference PDFs come from different producers: Word's own Save as PDF writes hhea ascent/descent (what krilla writes now), Adobe PDFMaker (51 of 219 references) writes the head box, Mac Word (Creator "Microsoft Word") hhea too. The "ORDER" failures (same words, pdftotext order differs) are largely PDFMaker references; no single descriptor style matches all producers.
+- govuk-036 p7: Word's last body line reaches 0.26 pt into the footnote separator; now fits with the tolerance, but the document still fails on p8's end.
+
 # Split rows keep keep-with-next paragraphs; table cell spacing · 2026-11-19
 
 - Embedded DOCX fonts (odttf, ECMA-376 §17.8.1) are now read and registered at open: zenodo-129 passes (Linux 145/219). Cell floats placed from the margin inside the cell grow the cell (govuk-021 p1 now differs only in pdftotext order).

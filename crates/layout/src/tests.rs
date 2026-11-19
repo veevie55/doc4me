@@ -5109,6 +5109,29 @@ fn cell_spacing_insets_cells_and_the_table_content() {
 }
 
 #[test]
+fn a_line_a_fraction_of_a_point_past_the_page_bottom_stays() {
+    // zenodo-049: Word keeps a page's last line that runs under 0.1 pt into the footer's room.
+    use doc4me_doc::props::LineSpacing;
+    let pages = |exact: f32| {
+        let mut d = Document::new();
+        let room = d.last_section.page_h - d.last_section.margin_top - d.last_section.margin_bottom;
+        let n = 40usize;
+        // One paragraph of `n` lines (manual line breaks).
+        let text: Vec<String> = (0..n).map(|i| format!("line {i}")).collect();
+        let mut p = doc4me_doc::Paragraph::with_text(&text.join("\n"), Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(room / n as f32 + exact));
+        p.props.space_after = Some(0.0);
+        p.props.space_before = Some(0.0);
+        p.props.widow_control = Some(false);
+        d.body = vec![doc4me_doc::para_block(p)];
+        lay(&d).pages.len()
+    };
+    assert_eq!(pages(0.0), 1, "exactly full");
+    assert_eq!(pages(0.2 / 40.0), 1, "0.2 pt over: still one page");
+    assert_eq!(pages(1.0 / 40.0), 2, "1 pt over: the last line moves on");
+}
+
+#[test]
 fn kinsoku_keeps_a_manual_line_break_before_a_closing_bracket() {
     // #269: kinsoku forbids a line starting with 」, but a manual line break (Shift+Enter) right
     // before one still ends the line there.

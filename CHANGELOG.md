@@ -22,6 +22,10 @@
 
 ## [Unreleased]
 
+### แก้ไข — บรรทัดที่ล้นท้ายหน้าเพียงเศษส่วนของพอยต์ยังอยู่ในหน้าเดิม (2026-11-19)
+
+- บรรทัดของย่อหน้าที่เกินที่ว่างท้ายหน้า (หรือที่ว่างก่อนเชิงอรรถ/ส่วนท้าย) ไม่เกิน 0.3 pt ยังอยู่ในหน้าเดิมแบบ Word แทนการดันไปหน้าถัดไป (`crates/layout/src/lib.rs` `LINE_FIT_TOLERANCE`) เหตุผล: zenodo-049 บรรทัดสุดท้ายของหน้าห่างส่วนท้ายไม่ถึง 0.1 pt ใน PDF ของ Word เราจึงดันไปหน้าถัดไป ผลต่อผู้ใช้: การตัดหน้าตรง Word ในกรณีที่ห่างกันแค่การปัดเศษ ไม่กระทบการอ่าน/บันทึก .docx หรือภาษาไทย ตรวจสอบ: เทสต์ใหม่ `a_line_a_fraction_of_a_point_past_the_page_bottom_stays`; corpus บน Linux เทียบ `3b118a6`: corpus-breaks 145 → 146/219 (zenodo-049) ไม่มีเอกสารใหม่ที่ตก pages 218/219 และ open/roundtrip/stability 219/219 เท่าเดิม; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,656 ไม่ผ่าน 0)
+
 ### เพิ่ม — ใช้ฟอนต์ที่ฝังมาในไฟล์ .docx (2026-11-19)
 
 - อ่านฟอนต์ที่ไฟล์ Word ฝังไว้ (Word › Options › Save › Embed fonts: `w:embedRegular`/`w:embedBold`/`w:embedItalic`/`w:embedBoldItalic` ใน `fontTable.xml`) ถอดการ obfuscate ด้วย `w:fontKey` ตาม ECMA-376 §17.8.1 (XOR 32 ไบต์แรกด้วย GUID ที่อ่านจากท้าย) แล้วเพิ่มเข้า font DB ตอนเปิดเอกสาร ข้อความจึงใช้ฟอนต์จริงแทนฟอนต์ทดแทน แบบเดียวกับ Word (`crates/docx/src/read/mod.rs` `read_embedded_fonts`, `font_key`, `deobfuscate_font`; `crates/doc/src/lib.rs` `Document::embedded_fonts`; `crates/fonts/src/fontdb/user.rs` `FontDb::add_document_fonts` ซึ่งล้างแคชการเลือกฟอนต์; `crates/engine/src/io.rs` `register_embedded_fonts` ใน `open_bytes_with`) เหตุผล: zenodo-129 ฝัง Open Sans ไว้ แต่เราวาดด้วย Carlito ความกว้างและระยะบรรทัดต่างจน Word ใส่ย่อหน้าในหน้าได้มากกว่า 80 คำ ผลต่อผู้ใช้: เอกสารที่ฝังฟอนต์แสดงและจัดหน้าตรงกับที่ผู้เขียนเห็น ฟอนต์ที่ฝังใช้ได้ตลอด session (ไม่ได้ติดตั้งลงเครื่องหรือเก็บกับฟอนต์ของผู้ใช้) ฟอนต์ที่มีชื่อซ้ำกับฟอนต์ที่มีอยู่แล้ว หรือที่มีฟอนต์ทดแทนแบบ metric-compatible กำหนดไว้ (เช่น Arial → Arimo) ยังใช้ตามกฎเดิม
