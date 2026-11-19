@@ -30,7 +30,7 @@
 
 - เทสต์ engine ใหม่ 10 รายการใน `crates/engine/src/tests_clip_transfer.rs`: วัตถุ 10 ชนิด (รูป รูปร่าง กล่องข้อความไทย WordArt ไทย ไอคอน 3D model แผนภูมิ SmartArt สมการ ตาราง) ไปถึงหน้าต่างอื่นเป็นชนิดเดิมพร้อมไบต์รูป; ข้อความตัวหนา + กล่องข้อความไทย; โปรแกรมอื่นได้รูปของรูปร่างใน HTML/RTF และสัญลักษณ์พิเศษเป็น Unicode; วัตถุเดียวได้ PNG และ BMP header ถูกต้อง; สำเนาของเราเองใช้สำเนาในหน่วยความจำ; HTML/RTF จากโปรแกรมอื่นวางพร้อมตัวหนา ตาราง รูป; Paste Special; payload เสีย 7 แบบไม่ panic และ fallback; สำเนาที่จบด้วยตารางไม่มีย่อหน้าเกิน; Select All ที่ขึ้นต้นด้วยตาราง
 - เทสต์ UI ใหม่ 2 รายการใน `crates/ui-egui/src/system_clipboard.rs`: รูปร่างคัดลอกจากหน้าต่างหนึ่งวางอีกหน้าต่างเป็นรูปร่าง ไม่ใช่รูปที่อยู่ข้างกัน; ในหน้าต่างเดียวกัน; Cut เขียน clipboard; Copy โดยไม่ได้เลือกไม่เขียน; HTML จากโปรแกรมอื่นวางเป็นตัวหนา; clipboard ล้มเหลวยังคัดลอกได้
-- โค้ด Windows (`clipboard-win`) ตรวจ `cargo check` และ `cargo clippy -D warnings` บน target `x86_64-pc-windows-gnu` ด้วย crate จำลองที่ใช้ฟังก์ชันเดียวกัน; CI Windows หลัง push เป็นตัวยืนยันสุดท้าย
+- โค้ด Windows (`clipboard-win`) ตรวจ `cargo check` และ `cargo clippy -D warnings` บน target `x86_64-pc-windows-gnu` ด้วย crate จำลองที่ใช้ฟังก์ชันเดียวกัน; repo ไม่มี CI ที่รันเองเมื่อ push การ build บน Windows จริงจะเกิดใน Readiness (Windows) รอบถัดไปที่เจ้าของสั่งรัน
 
 ## ข้อจำกัดที่ทราบ
 

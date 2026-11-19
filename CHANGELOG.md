@@ -39,9 +39,11 @@
 
 ### ตรวจสอบ — system clipboard (2026-11-19)
 
-- เทสต์ใหม่ 12 รายการ: engine 10 รายการใน `crates/engine/src/tests_clip_transfer.rs` (วัตถุ 10 ชนิดไปถึงหน้าต่างอื่นเป็นชนิดเดิมพร้อมไบต์รูป, ข้อความตัวหนาและกล่องข้อความไทย, รูปของรูปร่างใน HTML/RTF, PNG/BMP ของวัตถุเดียว, สำเนาของเราเอง, HTML/RTF จากโปรแกรมอื่นรวม RTF มาก่อนเมื่อ HTML อ้างรูปเป็นไฟล์ local, Paste Special, payload เสีย 7 แบบ, สำเนาที่จบด้วยตาราง, Select All ที่ขึ้นต้นด้วยตาราง) และ UI 2 รายการใน `crates/ui-egui/src/system_clipboard.rs`; `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy -D warnings, test: ผ่าน 2,647 ไม่ผ่าน 0 ignored เดิม 1, assets, layers, wasm); โค้ด Windows ตรวจ `cargo check`/`cargo clippy -D warnings` บน `x86_64-pc-windows-gnu` ด้วย crate จำลองที่ใช้ฟังก์ชันเดียวกัน (CI Windows หลัง push เป็นตัวยืนยันสุดท้าย)
+- เทสต์ใหม่ 12 รายการ: engine 10 รายการใน `crates/engine/src/tests_clip_transfer.rs` (วัตถุ 10 ชนิดไปถึงหน้าต่างอื่นเป็นชนิดเดิมพร้อมไบต์รูป, ข้อความตัวหนาและกล่องข้อความไทย, รูปของรูปร่างใน HTML/RTF, PNG/BMP ของวัตถุเดียว, สำเนาของเราเอง, HTML/RTF จากโปรแกรมอื่นรวม RTF มาก่อนเมื่อ HTML อ้างรูปเป็นไฟล์ local, Paste Special, payload เสีย 7 แบบ, สำเนาที่จบด้วยตาราง, Select All ที่ขึ้นต้นด้วยตาราง) และ UI 2 รายการใน `crates/ui-egui/src/system_clipboard.rs`; `cargo xtask ci` ผ่านครบ 6 ขั้น (fmt, clippy -D warnings, test: ผ่าน 2,647 ไม่ผ่าน 0 ignored เดิม 1, assets, layers, wasm); โค้ด Windows ตรวจ `cargo check`/`cargo clippy -D warnings` บน `x86_64-pc-windows-gnu` ด้วย crate จำลองที่ใช้ฟังก์ชันเดียวกัน (repo ไม่มี CI ที่รันเองเมื่อ push การ build บน Windows จริงจะเกิดใน Readiness (Windows) รอบถัดไปที่เจ้าของสั่งรัน)
 
 ### ข้อจำกัดที่ทราบ — system clipboard (2026-11-19)
+
+- แก้ข้อมูลในบันทึกตรวจสอบของรายการนี้ที่เคยระบุว่า "CI Windows หลัง push" จะยืนยัน: repo ไม่มี workflow ที่รันเองเมื่อ push โค้ด Windows จึงยังตรวจแค่ด้วย crate จำลองบน target windows-gnu
 
 - macOS/Linux/BSD ไม่มี PNG/RTF แยก (arboard เขียนได้ชุดเดียว) โปรแกรมที่รับเฉพาะรูปวางวัตถุไม่ได้; โปรแกรมอื่นได้รูปของรูปร่าง/แผนภูมิ/SmartArt/สมการ ไม่ใช่วัตถุ Office ที่แก้ไขได้; HTML ที่อ้างรูปเป็นไฟล์ local โดยไม่มี RTF จะไม่มีรูป; เว็บยังเป็นข้อความเท่านั้น; ยังไม่ได้ทดสอบด้วยมือกับ Word/LibreOffice บน Windows/macOS จริงในรอบนี้ รายละเอียดใน `docs/readiness/system-clipboard-2026-11-19.md`
 
