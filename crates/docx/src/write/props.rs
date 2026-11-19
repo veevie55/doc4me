@@ -444,6 +444,9 @@ fn tblpr_inner(w: &mut W, t: &TableProps) {
     if let Some(a) = t.align {
         w.val("w:jc", align_val(if matches!(a, Align::Justify | Align::Distribute | Align::ThaiDistribute) { Align::Left } else { a }));
     }
+    if let Some(sp) = t.cell_spacing.filter(|v| v.is_finite() && *v > 0.0) {
+        w.empty("w:tblCellSpacing", &[("w:w", &twips(sp)), ("w:type", "dxa")]);
+    }
     if let Some(i) = t.indent {
         w.empty("w:tblInd", &[("w:w", &twips(i)), ("w:type", "dxa")]);
     }

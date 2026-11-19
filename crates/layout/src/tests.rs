@@ -5007,6 +5007,72 @@ fn a_split_row_moves_shading_below_the_cut_with_it() {
 }
 
 #[test]
+fn a_split_row_keeps_a_keep_with_next_paragraph_with_the_next_one() {
+    // zenodo-144: a heading kept with the next paragraph goes to the next page with it when a
+    // row splits between them; at the row's top the row moves on whole.
+    use crate::table::{RowLayout, split_row, split_row_keeping};
+    let d = Document::from_text("Line");
+    let l = lay(&d);
+    let Some(Placed::Lines { story, para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let mut heading = (*para).clone();
+    heading.rp.keep_next = true;
+    let heading = std::sync::Arc::new(heading);
+    let line = |i: u32, p: &std::sync::Arc<crate::ParaLayout>, y: f32| Placed::Lines {
+        story,
+        path: doc4me_doc::Path(vec![0, 0, 0, i]),
+        para: p.clone(),
+        l0: 0,
+        l1: 1,
+        x: 0.0,
+        y,
+        turn: TextDirection::Horizontal,
+    };
+    let h = para.lines[0].height;
+    let lines = |r: &RowLayout| r.items.iter().filter(|i| matches!(i, Placed::Lines { .. })).count();
+    // Text, the heading, then the paragraph it introduces, which doesn't fit above the cut.
+    let row = RowLayout { height: 200.0, items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)] };
+    let cut = 50.0 + h + 1.0;
+    let (a, _) = split_row(&row, cut).expect("splits");
+    assert_eq!(lines(&a), 2, "without the keep the heading stays");
+    let (a, b) = split_row_keeping(&row, cut).expect("splits");
+    assert_eq!((lines(&a), lines(&b)), (1, 2), "the heading goes on with its paragraph");
+    // The heading starts the row: nothing stays, the row moves on whole.
+    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)] };
+    assert!(split_row_keeping(&row, h + 1.0).is_none());
+    assert!(split_row(&row, h + 1.0).is_some(), "at a page's top the row still splits");
+}
+
+#[test]
+fn cell_spacing_insets_cells_and_the_table_content() {
+    // zenodo-036: with 0.75 pt between cells Word's rows are 1.5 pt taller and the first cell's
+    // text 1.5 pt further from the table's edge, both ways.
+    let text_at = |spacing: Option<f32>| {
+        let mut d = Document::new();
+        let mut t = Table::new(2, 1, 200.0);
+        for row in &mut t.rows {
+            row.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Cell", Default::default()))];
+        }
+        t.props.cell_spacing = spacing;
+        d.body.insert(0, std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+        let l = lay(&d);
+        let mut ys: Vec<(f32, f32)> = l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { path, x, y, .. } = it { (path.0.len() == 4).then_some((*x, *y)) } else { None })
+            .collect();
+        ys.sort_by(|a, b| a.1.total_cmp(&b.1));
+        ys
+    };
+    let (a, b) = (text_at(None), text_at(Some(0.75)));
+    assert_eq!((a.len(), b.len()), (2, 2), "{a:?} {b:?}");
+    assert!((b[0].0 - a[0].0 - 1.5).abs() < 0.01, "x {a:?} {b:?}");
+    assert!((b[0].1 - a[0].1 - 1.5).abs() < 0.01, "first row y {a:?} {b:?}");
+    assert!(((b[1].1 - b[0].1) - (a[1].1 - a[0].1) - 1.5).abs() < 0.01, "row pitch {a:?} {b:?}");
+}
+
+#[test]
 fn kinsoku_keeps_a_manual_line_break_before_a_closing_bracket() {
     // #269: kinsoku forbids a line starting with 」, but a manual line break (Shift+Enter) right
     // before one still ends the line there.

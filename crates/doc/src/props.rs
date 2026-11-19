@@ -1187,6 +1187,10 @@ pub struct TableProps {
     pub borders: Option<Borders>,
     /// Default cell margins (top, left, bottom, right), points.
     pub cell_margins: Option<[f32; 4]>,
+    /// Spacing between cells (`w:tblCellSpacing`), points: Word insets each cell by it within
+    /// its grid column and row, and the table's content by it again from its edge.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cell_spacing: Option<f32>,
     /// Fixed column widths (no auto-fit).
     pub fixed: bool,
     /// Table style options ("look"): header row, total row, banded rows, first column, last

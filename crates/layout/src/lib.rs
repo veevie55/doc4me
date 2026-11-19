@@ -4043,8 +4043,11 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 // at all: one whose lines all fit but not its margin moves on whole.)
                 let margin = table::row_bottom_margin(ctx, t, ri);
                 let split = if splittable && pb.bottom - pb.y >= min_room - 0.01 {
-                    match table::split_row(cur, pb.bottom - pb.y) {
-                        Some(_) if margin > 0.0 => table::split_row(cur, pb.bottom - pb.y - margin),
+                    // Paragraphs kept with the next one go on with it, unless the row already
+                    // starts this page (it would never fit).
+                    let split: fn(&table::RowLayout, f32) -> _ = if pb.at_top() || fresh { table::split_row } else { table::split_row_keeping };
+                    match split(cur, pb.bottom - pb.y) {
+                        Some(_) if margin > 0.0 => split(cur, pb.bottom - pb.y - margin),
                         other => other,
                     }
                 } else {

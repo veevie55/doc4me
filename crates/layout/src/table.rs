@@ -401,6 +401,7 @@ fn layout_cell_in(
 
 pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], avail: f32, depth: usize) -> TableLayout {
     let style = table_style(ctx, t);
+    let spacing = cell_spacing(t);
     let parts = style.as_ref().map(|s| &s.parts);
     // Cell text formatting per region, built once per table (nothing without a table style).
     let mut cell_text: Vec<(Region, CellText)> = Vec::new();
@@ -505,6 +506,8 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         (_, true) => avail - total - start_offset,
         (_, false) => start_offset,
     };
+    // Spacing between cells also insets the table's content from its start edge.
+    let x = if rtl { x - spacing } else { x + spacing };
     let nrows = t.rows.len();
     let header_rows = t.props.look.header_row;
     // First pass: lay out every cell's content.
@@ -549,7 +552,10 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             // Right to left: grid columns run from the right edge, and the start (left) margin
             // is on the cell's right.
             let (x0, x1) = if rtl { ((acc - x1).max(0.0), (acc - x0).max(0.0)) } else { (x0, x1) };
-            let margins = cell.props.margins.unwrap_or(margins_def);
+            let margins = spaced(cell.props.margins.unwrap_or(margins_def), spacing);
+            // The table's own inset from its edge, above the first row and below the last.
+            let margins =
+                [margins[0] + if ri == 0 { spacing } else { 0.0 }, margins[1], margins[2] + if ri + 1 == nrows { spacing } else { 0.0 }, margins[3]];
             let margins = if rtl { [margins[0], margins[3], margins[2], margins[1]] } else { margins };
             let cw = (x1 - x0 - margins[1] - margins[3]).max(4.0);
             let mut fill = cell.props.shading;
@@ -970,7 +976,59 @@ fn line_split_why(para: &ParaLayout, l0: usize, l1: usize, y: f32, cut: f32) -> 
     (split, false)
 }
 
+/// Lower a split row's `cut` so a paragraph set to keep with the next one goes on with it: when
+/// the paragraph after it in the same cell keeps no line above the cut, the cut moves to the top
+/// of the kept paragraph (chains follow). zenodo-144's "IMPORTANT" heading starts the next page
+/// with the paragraph it introduces in Word's PDF. Not for a paragraph already continuing from
+/// the page before.
+fn keep_with_next_cut(row: &RowLayout, cut: f32) -> f32 {
+    let lines: Vec<(&doc4me_doc::Path, &ParaLayout, usize, usize, f32)> = row
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { path, para, l0, l1, y, .. } => Some((path, &**para, *l0, *l1, *y)),
+            _ => None,
+        })
+        .collect();
+    let mut c = cut;
+    for _ in 0..16 {
+        let mut lowered = c;
+        for (path, para, l0, l1, y) in &lines {
+            if !para.rp.keep_next || *l0 != 0 || line_split(para, *l0, *l1, *y, c) < *l1 {
+                continue;
+            }
+            let Some(last) = path.0.last() else { continue };
+            let mut next_path = path.0.clone();
+            if let Some(l) = next_path.last_mut() {
+                *l = last.saturating_add(1);
+            }
+            let Some((_, np, n0, n1, ny)) = lines.iter().find(|(p, ..)| p.0 == next_path) else { continue };
+            if *n1 > *n0 && line_split_why(np, *n0, *n1, *ny, c).0 == *n0 {
+                // The kept paragraph's first line stands at `y` (its line 0 starts the item); at
+                // the row's top that keeps nothing and the row moves on whole.
+                lowered = lowered.min(*y);
+            }
+        }
+        if lowered >= c {
+            break;
+        }
+        c = lowered;
+    }
+    c
+}
+
 pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
+    split_row_with(row, cut, false)
+}
+
+/// [`split_row`] keeping paragraphs set to keep with the next one with it ([`keep_with_next_cut`]):
+/// `None` when that keeps nothing here, so the row moves on whole (zenodo-144's row starting with
+/// its "IMPORTANT" heading). For a row not at the top of its page.
+pub fn split_row_keeping(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
+    split_row_with(row, cut, true)
+}
+
+fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, RowLayout)> {
     if cut <= 0.0 || cut >= row.height {
         return None;
     }
@@ -990,6 +1048,7 @@ pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     if cut <= 0.0 {
         return None;
     }
+    let cut = if keep { keep_with_next_cut(row, cut) } else { cut };
     // Where each paragraph splits, and how far up the continuation moves.
     let mut first_moved = f32::MAX;
     let mut cell_moved: std::collections::HashMap<Vec<u32>, f32> = std::collections::HashMap::new();
@@ -1262,6 +1321,18 @@ fn region_text(st: &TableStyleProps, (header, total, first_col, last_col, band, 
 /// Each column's narrowest and widest content, cell margins included: its longest word and its
 /// longest line. A cell spanning columns shares what they lack between them; nested tables count
 /// with their own. `None` when every cell is empty.
+/// The table's spacing between cells (`w:tblCellSpacing`), points: 0 without, capped.
+fn cell_spacing(t: &Table) -> f32 {
+    t.props.cell_spacing.filter(|v| v.is_finite()).map_or(0.0, |v| v.clamp(0.0, 72.0))
+}
+
+/// Cell margins with the spacing between cells added on every side: Word insets each cell by
+/// the spacing within its grid slot (zenodo-036: rows 0.75 pt × 2 taller, a column's text 1.5 pt
+/// further in, autofit columns 1.5 pt wider, as Word's PDF draws them).
+fn spaced(m: [f32; 4], spacing: f32) -> [f32; 4] {
+    if spacing <= 0.0 { m } else { m.map(|v| v + spacing) }
+}
+
 fn column_content(ctx: &mut Ctx, t: &Table, style: Option<&TableStyleProps>, depth: usize) -> Option<Vec<(f32, f32)>> {
     let margins_def = default_margins(t, style);
     let mut cols = vec![(0.0f32, 0.0f32); t.cols().max(1)];
@@ -1278,7 +1349,7 @@ fn column_content(ctx: &mut Ctx, t: &Table, style: Option<&TableStyleProps>, dep
                 let text = style.map(|st| region_text(st, region_of(t, style, ri, g, cell.span(), cols.len())));
                 let (lo, hi) = blocks_content(ctx, &cell.blocks, text.as_ref(), depth);
                 any |= hi > 0.0;
-                let m = cell.props.margins.unwrap_or(margins_def);
+                let m = spaced(cell.props.margins.unwrap_or(margins_def), cell_spacing(t));
                 let need = (lo + m[1] + m[3], hi + m[1] + m[3]);
                 match cols.get_mut(g) {
                     Some(col) if span == 1 => *col = (col.0.max(need.0), col.1.max(need.1)),

@@ -1,3 +1,12 @@
+# Split rows keep keep-with-next paragraphs; table cell spacing · 2026-11-19
+
+- `w:tblCellSpacing` is now read/saved and laid out (each cell inset by it, the table content by it again): zenodo-036 passes; with the keep fix Linux 139 → 141/219, no new failure. govuk-031 (also uses spacing) still fails on p8 for another reason.
+- Triage of the rest (/home/user/work/triage.py): 10 ORDER (same words, only extraction order), 18 small (one line/paragraph across the boundary, e.g. zenodo-026 heading: we have slightly more height before it), 50 layout.
+
+- The owner now allows sessions to dispatch `readiness-windows.yml` themselves (only that workflow). Run 44453166606 (`6b106e9`, clipboard work) gave 95.4% / 97.3%, breaks 139/219 unchanged.
+- A row split leaves a keepNext paragraph (whose next paragraph in the same cell keeps no line) for the next page; a row starting with one moves on whole; rows already at a page top split as before. zenodo-144 passes; Linux 139 → 140/219, no new failure. Linux setup this session: craft-fonts at /home/user/craft-fonts (pinned c1db6d1, prepared), CLIs /home/user/base-cli and /home/user/cand-cli, `cargo xtask readiness --corpus --dry-run --diagnostics --jobs 4 --cli <cli>`, compare `corpus-breaks` lines of the logs. Helpers: /home/user/work/cmp.sh ID PAGE, /home/user/work/triage.py LOG (ORDER = same words on the page, only extraction order differs).
+- Note: the readiness workflow builds only the CLI, so the Windows clipboard code in apps/doc4me is still unbuilt on Windows.
+
 # DengXian widths · 2026-11-18
 
 - 等线/DengXian → Carlito with DENGXIAN widths from zenodo-056's composite fonts (tool now reads Identity-H /W + ToUnicode and takes `PREFIX Name ids…`). zenodo-056 lines 19 → 110/133, still fails page 1 (ω, subscripts drawn with other fonts in Word). zenodo-018's header "LECTURE NOTE…" has w14 gradient fill + outline: Word's PDF has no text for it, Doc4Me keeps invisible text over outlines by design (not changed).

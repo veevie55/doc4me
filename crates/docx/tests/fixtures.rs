@@ -1779,3 +1779,21 @@ fn cell_margins_a_file_leaves_out_come_from_the_level_above() {
     assert_eq!(t.rows[0].cells[0].props.margins, Some([2.85, 0.0, 2.85, 5.4]));
     assert_eq!(t.rows[0].cells[1].props.margins, None);
 }
+
+#[test]
+fn table_cell_spacing_is_read_and_saved() {
+    // zenodo-036: `w:tblCellSpacing` 15 twips (0.75 pt); other units are ignored.
+    let body = r#"<w:tbl><w:tblPr><w:tblW w:w="0" w:type="auto"/><w:tblCellSpacing w:w="15" w:type="dxa"/></w:tblPr><w:tblGrid><w:gridCol w:w="2000"/></w:tblGrid>
+<w:tr><w:tc><w:p/></w:tc></w:tr></w:tbl><w:p/>"#;
+    let d = read_body(body);
+    let Some(Block::Table(t)) = d.body.first().map(|b| &**b) else { panic!("a table") };
+    assert_eq!(t.props.cell_spacing, Some(0.75));
+    let again = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
+    let Some(Block::Table(t)) = again.body.first().map(|b| &**b) else { panic!("a table") };
+    assert_eq!(t.props.cell_spacing, Some(0.75), "kept when saved");
+    for bad in [r#"w:w="15" w:type="pct""#, r#"w:w="0" w:type="dxa""#, r#"w:w="-40" w:type="dxa""#] {
+        let d = read_body(&body.replace(r#"w:w="15" w:type="dxa""#, bad));
+        let Some(Block::Table(t)) = d.body.first().map(|b| &**b) else { panic!("a table") };
+        assert_eq!(t.props.cell_spacing, None, "{bad}");
+    }
+}

@@ -505,6 +505,15 @@ impl PropCtx {
                 }
                 "w:jc" => t.align = k.attr("w:val").map(align),
                 "w:tblInd" => t.indent = tw(k, "w:w"),
+                // Only a width in twips means anything here (Word writes `dxa`); 31 680 twips
+                // (22 in) is Word's own upper limit.
+                "w:tblCellSpacing" => {
+                    t.cell_spacing = if matches!(k.attr("w:type"), None | Some("dxa")) {
+                        tw(k, "w:w").map(|v| v.clamp(0.0, 1584.0)).filter(|v| *v > 0.0)
+                    } else {
+                        None
+                    }
+                }
                 "w:tblBorders" => t.borders = Some(borders(k)),
                 "w:shd" => t.shading = self.shd_fill(k),
                 "w:tblLayout" => t.fixed = k.attr("w:type") == Some("fixed"),
