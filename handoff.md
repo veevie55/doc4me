@@ -1,5 +1,7 @@
 # Split rows keep keep-with-next paragraphs; table cell spacing · 2026-11-19
 
+- Embedded DOCX fonts (odttf, ECMA-376 §17.8.1) are now read and registered at open: zenodo-129 passes (Linux 145/219). Cell floats placed from the margin inside the cell grow the cell (govuk-021 p1 now differs only in pdftotext order).
+
 - List items ending a cell keep automatic space after; STYLEREF to a style no paragraph uses shows Word's error text: zenodo-021 passes, Linux 144/219.
 - Leads not fixed: zenodo-125 (empty continuous-section marker after a full page starts p3 in ours; letting it stay at p2's bottom changed column balancing of the section before — reverted); govuk-005 p12 (Word keeps 3.55 pt space before at a new section's page top, contrary to the after-break rule built on 8 other docs); govuk-046 p10 (keepNext caption row of a table moves on in Word though it and the next row fit); zenodo-140 p8 (Word moves a 3-line row whose first line fits with ~3 pt to spare; widowControl off).
 

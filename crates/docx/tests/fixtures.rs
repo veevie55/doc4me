@@ -1797,3 +1797,38 @@ fn table_cell_spacing_is_read_and_saved() {
         assert_eq!(t.props.cell_spacing, None, "{bad}");
     }
 }
+
+#[test]
+fn embedded_fonts_are_read_and_deobfuscated() {
+    // A font embedded with Word's obfuscation (ECMA-376 §17.8.1): the first 32 bytes XORed with
+    // the key from `w:fontKey`, its hex digits read from the end.
+    let mut plain = vec![0u8, 1, 0, 0];
+    plain.extend((0u8..60).map(|i| i.wrapping_mul(7)));
+    let guid = "{00112233-4455-6677-8899-AABBCCDDEEFF}";
+    let key: Vec<u8> = (0..16).map(|i| 0xFFu8.wrapping_sub(0x11 * i as u8)).collect();
+    let mut obfuscated = plain.clone();
+    for (i, b) in obfuscated.iter_mut().take(32).enumerate() {
+        *b ^= key[i % 16];
+    }
+    let fonts = format!(
+        r#"<w:fonts {W_NS} xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"><w:font w:name="Embedded Sans"><w:embedRegular r:id="rIdF1" w:fontKey="{guid}"/><w:embedBold r:id="rIdF2" w:fontKey="{guid}"/></w:font></w:fonts>"#
+    );
+    let doc = format!(
+        r#"<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document {W_NS}><w:body><w:p><w:r><w:t>x</w:t></w:r></w:p></w:body></w:document>"#
+    );
+    let doc_rels = rels(&[("rIdFontTable", "fontTable", "fontTable.xml")]);
+    let font_rels = rels(&[("rIdF1", "font", "fonts/font1.odttf"), ("rIdF2", "font", "fonts/font2.odttf")]);
+    let bytes = zip(&[
+        ("_rels/.rels", ROOT_RELS.as_bytes()),
+        ("word/document.xml", doc.as_bytes()),
+        ("word/_rels/document.xml.rels", doc_rels.as_bytes()),
+        ("word/fontTable.xml", fonts.as_bytes()),
+        ("word/_rels/fontTable.xml.rels", font_rels.as_bytes()),
+        ("word/fonts/font1.odttf", &obfuscated),
+        // Not a font once de-obfuscated: left out.
+        ("word/fonts/font2.odttf", b"garbage that is not a font at all, really not one......"),
+    ]);
+    let d = doc4me_docx::read(&bytes).unwrap();
+    assert_eq!(d.embedded_fonts.len(), 1);
+    assert_eq!(d.embedded_fonts[0].as_slice(), plain.as_slice());
+}

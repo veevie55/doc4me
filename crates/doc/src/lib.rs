@@ -894,6 +894,11 @@ pub struct Document {
     /// original run font stays in `CharProps`; layout uses an alternate only when it is missing.
     #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     pub font_aliases: BTreeMap<String, FontAlias>,
+    /// Fonts the file embeds (Word › Options › Save › Embed fonts), as plain font files (the
+    /// package's obfuscation undone): opening the document makes them available for its text,
+    /// as Word does. Not saved back (yet).
+    #[serde(skip)]
+    pub embedded_fonts: Vec<Arc<Vec<u8>>>,
     pub core: CoreProps,
     /// Bibliography sources (References › Manage Sources).
     pub sources: Vec<Source>,
@@ -1020,6 +1025,7 @@ impl Document {
             revisions: Vec::new(),
             settings: Settings::default(),
             font_aliases: BTreeMap::new(),
+            embedded_fonts: Vec::new(),
             core: CoreProps::default(),
             sources: Vec::new(),
             custom_props: Vec::new(),

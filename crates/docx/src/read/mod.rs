@@ -565,6 +565,7 @@ impl Reader<'_> {
 
     fn read_font_table(&mut self, path: &str) -> Result<(), DocxError> {
         let Some(root) = self.xml(path)? else { return Ok(()) };
+        self.read_embedded_fonts(path, &root);
         for font in root.children("w:font").take(MAX_FONT_ALIASES) {
             let (Some(name), Some(alternate)) = (font.attr("w:name"), font.child_val("w:altName")) else { continue };
             let (name, alternate) = (name.trim(), alternate.trim());
@@ -576,6 +577,35 @@ impl Reader<'_> {
             self.doc.font_aliases.entry(key).or_insert_with(|| doc4me_doc::FontAlias { font: name.into(), alternate: alternate.into(), mac_charset });
         }
         Ok(())
+    }
+
+    /// The fonts the font table embeds (`w:embedRegular`, `w:embedBold`…, ECMA-376 §17.8.3.3),
+    /// each de-obfuscated with its `w:fontKey` (§17.8.1). A part that isn't a font afterwards is
+    /// skipped; counts and sizes are capped (hostile files).
+    fn read_embedded_fonts(&mut self, path: &str, root: &El) {
+        let rels = self.pkg.rels(path);
+        let mut total = 0usize;
+        for font in root.children("w:font").take(MAX_FONT_ALIASES) {
+            for kind in ["w:embedRegular", "w:embedBold", "w:embedItalic", "w:embedBoldItalic"] {
+                let Some(e) = font.child(kind) else { continue };
+                if self.doc.embedded_fonts.len() >= MAX_EMBEDDED_FONTS {
+                    return;
+                }
+                let Some(rel) = e.attr("r:id").and_then(|id| rels.by_id(id)).filter(|r| !r.external) else { continue };
+                let Some(bytes) = self.pkg.get(&rel.target).filter(|b| b.len() <= MAX_EMBEDDED_FONT_BYTES) else { continue };
+                if total.saturating_add(bytes.len()) > MAX_EMBEDDED_FONTS_BYTES {
+                    return;
+                }
+                let mut data = bytes.to_vec();
+                if let Some(key) = e.attr("w:fontKey").and_then(font_key) {
+                    deobfuscate_font(&mut data, &key);
+                }
+                if is_font_file(&data) {
+                    total = total.saturating_add(data.len());
+                    self.doc.embedded_fonts.push(std::sync::Arc::new(data));
+                }
+            }
+        }
     }
 
     pub fn revision(&mut self, kind: RevisionKind, e: &El) -> u32 {
@@ -1501,4 +1531,65 @@ fn read_protection(k: &El, s: &mut doc4me_doc::Settings) {
 /// apart (`dateUtc`) are written back as they were read, so anything else is dropped.
 fn looks_iso(s: &str) -> bool {
     (16..=40).contains(&s.len()) && s.as_bytes().get(4) == Some(&b'-') && s.bytes().all(|b| b.is_ascii_digit() || b"-:TZ.+".contains(&b))
+}
+
+/// Most fonts and bytes taken from one file's font table.
+const MAX_EMBEDDED_FONTS: usize = 64;
+const MAX_EMBEDDED_FONT_BYTES: usize = 32 << 20;
+const MAX_EMBEDDED_FONTS_BYTES: usize = 128 << 20;
+
+/// A `w:fontKey` GUID (`{8F3E…}`) as the 16 key bytes, in the order ECMA-376 §17.8.1 applies
+/// them: the GUID's hex digits read from the end, two at a time.
+fn font_key(guid: &str) -> Option<[u8; 16]> {
+    let hex: Vec<u8> = guid.bytes().filter(|b| b.is_ascii_hexdigit()).collect();
+    if hex.len() != 32 {
+        return None;
+    }
+    let digit = |b: u8| char::from(b).to_digit(16).and_then(|d| u8::try_from(d).ok());
+    let mut key = [0u8; 16];
+    for (i, k) in key.iter_mut().enumerate() {
+        let at = 30usize.checked_sub(i * 2)?;
+        let (hi, lo) = (digit(*hex.get(at)?)?, digit(*hex.get(at + 1)?)?);
+        *k = hi << 4 | lo;
+    }
+    Some(key)
+}
+
+/// Undo an embedded font's obfuscation: its first 32 bytes are XORed with the key (§17.8.1).
+fn deobfuscate_font(data: &mut [u8], key: &[u8; 16]) {
+    for (i, b) in data.iter_mut().take(32).enumerate() {
+        *b ^= key[i % 16];
+    }
+}
+
+/// Whether `data` starts like a TrueType/OpenType font or collection.
+fn is_font_file(data: &[u8]) -> bool {
+    matches!(data.get(..4), Some([0, 1, 0, 0] | b"OTTO" | b"true" | b"ttcf"))
+}
+
+#[cfg(test)]
+mod embedded_font_tests {
+    use super::*;
+
+    #[test]
+    fn font_keys_deobfuscate_the_first_32_bytes() {
+        let key = font_key("{00112233-4455-6677-8899-AABBCCDDEEFF}").unwrap();
+        // The hex digits read from the end: FF, EE, DD … 00.
+        assert_eq!(key[0], 0xFF);
+        assert_eq!(key[15], 0x00);
+        let mut font = vec![0u8, 1, 0, 0];
+        font.resize(64, 7);
+        let plain = font.clone();
+        deobfuscate_font(&mut font, &key);
+        assert!(!is_font_file(&font));
+        deobfuscate_font(&mut font, &key);
+        assert_eq!(font, plain);
+        assert!(is_font_file(&font));
+        assert_eq!(font_key("{0011}"), None);
+        assert_eq!(font_key("not a guid at all, not even close to it"), None);
+        // Short data: only what there is.
+        let mut short = vec![1u8, 2];
+        deobfuscate_font(&mut short, &key);
+        assert_eq!(short, vec![1 ^ 0xFF, 2 ^ 0xEE]);
+    }
 }

@@ -105,6 +105,23 @@ pub fn open_bytes(name: &str, bytes: &[u8]) -> Result<Document, String> {
 /// whether the file was encrypted. Without the password needed the error satisfies
 /// [`needs_password`]; with a wrong one, [`wrong_password`].
 pub fn open_bytes_with(name: &str, bytes: &[u8], password: Option<&str>) -> Result<(Document, bool), String> {
+    let (doc, encrypted) = open_bytes_read(name, bytes, password)?;
+    register_embedded_fonts(&doc);
+    Ok((doc, encrypted))
+}
+
+/// Make the fonts a document embeds available to the layout, as Word sets its text in them
+/// (zenodo-129 embeds Open Sans, otherwise drawn with Carlito).
+pub fn register_embedded_fonts(doc: &Document) {
+    if doc.embedded_fonts.is_empty() {
+        return;
+    }
+    let files = doc.embedded_fonts.iter().map(|f| f.to_vec()).collect();
+    let added = doc4me_fonts::FontDb::global().add_document_fonts(files);
+    log::info!("{added} embedded font faces added");
+}
+
+fn open_bytes_read(name: &str, bytes: &[u8], password: Option<&str>) -> Result<(Document, bool), String> {
     let ext = ext_of(name);
     if matches!(ext.as_str(), "docx" | "docm" | "dotx" | "dotm" | "doc" | "dot") && doc4me_docx::is_encrypted(bytes) {
         let mut doc = doc4me_docx::read_with_password(bytes, password).map_err(|e| e.to_string())?;

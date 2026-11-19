@@ -530,6 +530,17 @@ impl FontDb {
         Ok(font)
     }
 
+    /// Make the fonts a document embeds available (TTF/OTF/TTC bytes): its text is then set in
+    /// them, as in Word. Faces already present (same family and style) are skipped; they aren't
+    /// stored with the user's fonts. Returns how many faces were added.
+    pub fn add_document_fonts(&self, files: Vec<Vec<u8>>) -> usize {
+        let added = self.add_fonts(files);
+        if added > 0 {
+            self.fonts_changed();
+        }
+        added
+    }
+
     /// Forget cached fallback choices and tell watchers ([`FontDb::generation`]).
     fn fonts_changed(&self) {
         self.fallbacks.write().unwrap_or_else(|e| e.into_inner()).map.clear();
