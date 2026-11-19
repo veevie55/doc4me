@@ -586,7 +586,10 @@ impl Reader<'_> {
         let rels = self.pkg.rels(path);
         let mut total = 0usize;
         for font in root.children("w:font").take(MAX_FONT_ALIASES) {
-            for kind in ["w:embedRegular", "w:embedBold", "w:embedItalic", "w:embedBoldItalic"] {
+            let Some(family) = font.attr("w:name").map(str::trim).filter(|n| !n.is_empty() && n.len() <= MAX_FONT_NAME) else { continue };
+            for (kind, bold, italic) in
+                [("w:embedRegular", false, false), ("w:embedBold", true, false), ("w:embedItalic", false, true), ("w:embedBoldItalic", true, true)]
+            {
                 let Some(e) = font.child(kind) else { continue };
                 if self.doc.embedded_fonts.len() >= MAX_EMBEDDED_FONTS {
                     return;
@@ -602,7 +605,12 @@ impl Reader<'_> {
                 }
                 if is_font_file(&data) {
                     total = total.saturating_add(data.len());
-                    self.doc.embedded_fonts.push(std::sync::Arc::new(data));
+                    self.doc.embedded_fonts.push(doc4me_doc::EmbeddedFont {
+                        family: family.to_string(),
+                        bold,
+                        italic,
+                        data: std::sync::Arc::new(data),
+                    });
                 }
             }
         }
@@ -1122,6 +1130,9 @@ impl Reader<'_> {
                 }
                 "m:mathPr" => s.math = Some(math::read_math_pr(k)),
                 "w:mirrorMargins" => s.mirror_margins = on_off(k),
+                // Embedded fonts hold only the characters used (§17.15.1.81): they may not stand
+                // in for a whole installed font.
+                "w:saveSubsetFonts" => self.doc.embedded_fonts_subset = on_off(k),
                 "w:autoHyphenation" => s.auto_hyphenation = on_off(k),
                 "w:characterSpacingControl" => {
                     if let Some(v) = k.attr("w:val").and_then(doc4me_doc::CharSpacing::from_ooxml) {

@@ -70,6 +70,39 @@ fn multiple_spacing_can_put_leading_in_the_margin_but_not_in_a_tall_footer() {
     }
 }
 
+#[test]
+fn a_footers_own_multiple_spacing_under_its_last_line_leaves_the_body_room() {
+    // zenodo-106: the page number (1.15 spacing) reaches above the bottom margin; Word's body runs
+    // to the top of its text line, not of its whole line box.
+    use doc4me_doc::props::LineSpacing;
+    let body_bottom = |spacing: LineSpacing| {
+        let mut d = Document::from_text(&"Body line\n".repeat(80));
+        d.last_section.margin_bottom = 20.0;
+        d.last_section.footer = 18.0;
+        let mut p = Paragraph::with_text("1", CharProps { size: Some(11.0), ..Default::default() });
+        p.props.line_spacing = Some(spacing);
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        let id = d.add_part(PartKind::Footer, vec![doc4me_doc::para_block(p)]);
+        d.last_section.footers.default = Some(id);
+        lay(&d).pages[0]
+            .items
+            .iter()
+            .filter_map(|it| {
+                if let Placed::Lines { story: StoryRef::Body, y, para, l0, l1, .. } = it {
+                    Some(y + para.lines[*l0..*l1].iter().map(|l| l.height).sum::<f32>())
+                } else {
+                    None
+                }
+            })
+            .fold(0.0f32, f32::max)
+    };
+    let single = body_bottom(LineSpacing::Multiple(1.0));
+    let wide = body_bottom(LineSpacing::Multiple(2.0));
+    // The doubled spacing's extra leading sits under the footer's text and doesn't push the body up.
+    assert!((wide - single).abs() < 0.01, "single {single}, double {wide}");
+}
+
 fn leading_probe(multiple: f32, footer: bool) -> (Document, f32) {
     use doc4me_doc::props::LineSpacing;
 

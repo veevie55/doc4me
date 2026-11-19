@@ -1830,5 +1830,8 @@ fn embedded_fonts_are_read_and_deobfuscated() {
     ]);
     let d = doc4me_docx::read(&bytes).unwrap();
     assert_eq!(d.embedded_fonts.len(), 1);
-    assert_eq!(d.embedded_fonts[0].as_slice(), plain.as_slice());
+    let f = &d.embedded_fonts[0];
+    assert_eq!(f.data.as_slice(), plain.as_slice());
+    // Named as the font table names it (Word renames the file's own family).
+    assert_eq!((f.family.as_str(), f.bold, f.italic), ("Embedded Sans", false, false));
 }

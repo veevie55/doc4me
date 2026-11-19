@@ -13,7 +13,9 @@ use skrifa::string::StringId;
 use skrifa::{GlyphId, MetadataProvider};
 
 pub(crate) mod user;
-pub use user::{FONT_FILE_EXTS, FontFormat, Installed, MAX_FONT_FILE_BYTES, UserFont, UserFontError, decode_font_file, is_font_file_name, sniff};
+pub use user::{
+    DocumentFont, FONT_FILE_EXTS, FontFormat, Installed, MAX_FONT_FILE_BYTES, UserFont, UserFontError, decode_font_file, is_font_file_name, sniff,
+};
 
 /// The family used when a requested family is unknown: Sarabun, Doc4Me's main font (Thai and
 /// Latin), bundled so it is there on every platform.

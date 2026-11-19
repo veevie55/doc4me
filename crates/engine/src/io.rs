@@ -116,8 +116,12 @@ pub fn register_embedded_fonts(doc: &Document) {
     if doc.embedded_fonts.is_empty() {
         return;
     }
-    let files = doc.embedded_fonts.iter().map(|f| f.to_vec()).collect();
-    let added = doc4me_fonts::FontDb::global().add_document_fonts(files);
+    let files = doc
+        .embedded_fonts
+        .iter()
+        .map(|f| doc4me_fonts::DocumentFont { family: f.family.clone(), bold: f.bold, italic: f.italic, data: f.data.to_vec() })
+        .collect();
+    let added = doc4me_fonts::FontDb::global().add_document_fonts(files, !doc.embedded_fonts_subset);
     log::info!("{added} embedded font faces added");
 }
 

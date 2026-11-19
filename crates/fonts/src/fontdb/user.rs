@@ -17,7 +17,7 @@ use std::sync::atomic::Ordering;
 use skrifa::MetadataProvider;
 use skrifa::raw::FileRef;
 
-use super::{FontBytes, FontDb, enumerate_faces, make_face};
+use super::{FontBytes, FontDb, FontFace, MAX_FILE_FACES, enumerate_faces, make_face};
 
 /// Largest font file accepted (as given: TTF, OTF, TTC, WOFF or WOFF2).
 pub const MAX_FONT_FILE_BYTES: usize = 50 << 20;
@@ -33,6 +33,16 @@ const STORED_EXTS: &[&str] = &["ttf", "otf", "ttc", "otc"];
 pub const FONT_FILE_EXTS: &[&str] = &["ttf", "otf", "ttc", "otc", "woff", "woff2"];
 
 /// Is `name` (a file name or path) named like a font file?
+/// A font a document embeds, for [`FontDb::add_document_fonts`]: the family and style its font
+/// table gives it, and the font file.
+#[derive(Clone, Debug)]
+pub struct DocumentFont {
+    pub family: String,
+    pub bold: bool,
+    pub italic: bool,
+    pub data: Vec<u8>,
+}
+
 pub fn is_font_file_name(name: &str) -> bool {
     let ext = name.rsplit_once('.').map(|(_, e)| e.to_ascii_lowercase());
     ext.is_some_and(|e| FONT_FILE_EXTS.contains(&e.as_str()))
@@ -533,8 +543,56 @@ impl FontDb {
     /// Make the fonts a document embeds available (TTF/OTF/TTC bytes): its text is then set in
     /// them, as in Word. Faces already present (same family and style) are skipped; they aren't
     /// stored with the user's fonts. Returns how many faces were added.
-    pub fn add_document_fonts(&self, files: Vec<Vec<u8>>) -> usize {
-        let added = self.add_fonts(files);
+    ///
+    /// With `whole` (the document embeds whole fonts, not subsets), a face whose family and style
+    /// are already present comes first for them from now on: the document's own version of the
+    /// font (zenodo-106's Source Sans 3 has another line height than the bundled one). Subsets
+    /// only fill in families that are missing.
+    ///
+    /// A face Word renamed (zenodo-106's Source Sans 3 is "___WRD_EMBED_SUB_44" inside) takes the
+    /// family and style the document's font table gives it.
+    pub fn add_document_fonts(&self, files: Vec<DocumentFont>, whole: bool) -> usize {
+        let mut added = 0;
+        let key = |f: &FontFace| (f.family.to_ascii_lowercase(), f.style.to_ascii_lowercase());
+        for file in files {
+            let data = Arc::new(file.data);
+            let style = match (file.bold, file.italic) {
+                (false, false) => "Regular",
+                (true, false) => "Bold",
+                (false, true) => "Italic",
+                (true, true) => "Bold Italic",
+            };
+            // The first face of the file is the font (a collection's others aren't named).
+            let Some(f) = enumerate_faces(&data, MAX_FILE_FACES).into_iter().next() else { continue };
+            let Some(mut face) = make_face(FontBytes::Owned(data.clone()), f.index, f.family, f.style, f.legacy, f.coords) else { continue };
+            face.local_names = f.local;
+            // Only a renamed font takes the table's name: one keeping its own (zenodo-129's Open
+            // Sans faces, with Light and SemiBold styles) is found by that.
+            if face.family.starts_with("___WRD_EMBED") || face.family.trim().is_empty() {
+                face.family = file.family.clone();
+                face.legacy_family = file.family.clone();
+                face.style = style.to_string();
+                face.weight = if file.bold { 700.0 } else { 400.0 };
+                face.italic = file.italic;
+            }
+            let face = Arc::new(face);
+            let k = key(&face);
+            let mut all = self.faces.write().unwrap_or_else(std::sync::PoisonError::into_inner);
+            match all.iter().position(|g| key(g) == k) {
+                // The same font already there first (the document opened before): nothing to do.
+                Some(i) if all.get(i).is_some_and(|g| g.data() == face.data()) => {}
+                // Another version of the font: the document's own comes first, unless it is a subset.
+                Some(_) if whole => {
+                    all.insert(0, face);
+                    added += 1;
+                }
+                Some(_) => {}
+                None => {
+                    all.push(face);
+                    added += 1;
+                }
+            }
+        }
         if added > 0 {
             self.fonts_changed();
         }
@@ -669,6 +727,29 @@ pub(crate) mod tests {
     use super::*;
 
     const FAMILY: &str = "Userfont Sans";
+
+    #[test]
+    fn document_fonts_take_their_font_table_names_and_whole_fonts_come_first() {
+        let file = |name: &str| std::fs::read(Path::new(env!("CARGO_MANIFEST_DIR")).join("../../assets/fonts").join(name)).unwrap();
+        // Word renames an embedded font's own family: the font table's name is used.
+        let db = FontDb::with_font_dirs(vec![]);
+        let renamed = renamed("SourceSans3-Regular.ttf", "___WRD_EMBED_");
+        let n = db.add_document_fonts(vec![DocumentFont { family: "Doc Sans".into(), bold: true, italic: false, data: renamed.clone() }], true);
+        assert_eq!(n, 1);
+        assert!(db.has_family("Doc Sans"));
+        assert_eq!(db.face("Doc Sans", "Bold").data().len(), renamed.len());
+        // Opening it again adds nothing.
+        assert_eq!(db.add_document_fonts(vec![DocumentFont { family: "Doc Sans".into(), bold: true, italic: false, data: renamed }], true), 0);
+        // A whole font the database already has another version of comes first; a subset doesn't.
+        let mut other = file("SourceSans3-Bold.ttf");
+        other.extend([0u8; 4]);
+        let bundled = db.face("Source Sans 3", "Bold").data().len();
+        let doc = |data: Vec<u8>| vec![DocumentFont { family: "Source Sans 3".into(), bold: true, italic: false, data }];
+        assert_eq!(db.add_document_fonts(doc(other.clone()), false), 0);
+        assert_eq!(db.face("Source Sans 3", "Bold").data().len(), bundled, "a subset only fills gaps");
+        assert_eq!(db.add_document_fonts(doc(other.clone()), true), 1);
+        assert_eq!(db.face("Source Sans 3", "Bold").data().len(), other.len(), "the document's own version");
+    }
 
     /// A bundled Source Sans 3 file renamed `family` (as long as the original name).
     pub(crate) fn renamed(file: &str, family: &str) -> Vec<u8> {

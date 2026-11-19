@@ -898,7 +898,10 @@ pub struct Document {
     /// package's obfuscation undone): opening the document makes them available for its text,
     /// as Word does. Not saved back (yet).
     #[serde(skip)]
-    pub embedded_fonts: Vec<Arc<Vec<u8>>>,
+    pub embedded_fonts: Vec<EmbeddedFont>,
+    /// The embedded fonts hold only the characters the document uses (`w:saveSubsetFonts`).
+    #[serde(skip)]
+    pub embedded_fonts_subset: bool,
     pub core: CoreProps,
     /// Bibliography sources (References › Manage Sources).
     pub sources: Vec<Source>,
@@ -973,6 +976,16 @@ impl std::fmt::Debug for MediaIndex {
 }
 
 /// A `w:font` name and its `w:altName`, retained for font substitution during layout and save.
+/// A font the document embeds, by the name and style its font table gives it (Word renames the
+/// font file's own family, `___WRD_EMBED_SUB_44`), as a plain font file.
+#[derive(Clone, Debug, PartialEq)]
+pub struct EmbeddedFont {
+    pub family: String,
+    pub bold: bool,
+    pub italic: bool,
+    pub data: Arc<Vec<u8>>,
+}
+
 #[derive(Clone, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct FontAlias {
@@ -1026,6 +1039,7 @@ impl Document {
             settings: Settings::default(),
             font_aliases: BTreeMap::new(),
             embedded_fonts: Vec::new(),
+            embedded_fonts_subset: false,
             core: CoreProps::default(),
             sources: Vec::new(),
             custom_props: Vec::new(),

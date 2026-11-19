@@ -4602,6 +4602,28 @@ fn a_bigger_space_hanging_at_a_lines_end_leaves_its_height_alone() {
 }
 
 #[test]
+fn the_empty_rest_of_a_paragraph_after_its_page_break_is_not_a_numbered_line() {
+    // zenodo-106: keywords ending with a page break; Word's next page goes on with the next number.
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Keywords\u{000C}", Default::default())),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Introduction", Default::default())),
+    ];
+    d.last_section.line_numbers = Some(doc4me_doc::section::LineNumbering { start: 1, count_by: 1, ..Default::default() });
+    let l = lay(&d);
+    // Line numbers are the decoration story's lines with an empty path.
+    let numbers = |i: usize| {
+        l.pages[i]
+            .items
+            .iter()
+            .filter(|it| matches!(it, Placed::Lines { story, path, .. } if *story == crate::DECOR_STORY && path.0.is_empty()))
+            .count()
+    };
+    assert_eq!(l.pages.len(), 2);
+    assert_eq!((numbers(0), numbers(1)), (1, 1), "one numbered line on each page");
+}
+
+#[test]
 fn unequal_formats_lay_out_in_linear_time() {
     // Runs whose formats never compare equal (NaN spacing from a hostile file) each get a style;
     // finding a run's style must not compare it against every earlier one.

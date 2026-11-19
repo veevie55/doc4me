@@ -2677,9 +2677,23 @@ fn foot_top_for(ctx: &mut Ctx, sect: &SectionProps, footer: Option<u32>) -> f32 
     // A page total in the footer is filled in after pagination, like the header's: it doesn't
     // make the body lay out again.
     let track = std::mem::replace(&mut ctx.track_totals, false);
-    let h = layout_box(ctx, StoryRef::Part(id), &blocks, &[], sect.text_width(), None, 0, None).height;
+    let bl = layout_box(ctx, StoryRef::Part(id), &blocks, &[], sect.text_width(), None, 0, None);
     ctx.track_totals = track;
-    sect.page_h - sect.footer - h
+    // The extra leading of multiple spacing under the footer's last line doesn't count: zenodo-106's
+    // page number (11 pt at 1.15) leaves the body 1.9 pt more than its whole line box would, and
+    // Word's lines of 1.15 spacing reach that far.
+    let last = bl.items.iter().filter_map(|it| match it {
+        Placed::Lines { para, l1, y, l0, .. } => para.lines.get(l1.checked_sub(1)?).map(|line| {
+            let first_top = para.lines.get(*l0).map_or(0.0, |f| f.top);
+            (y + line.top - first_top + line.height, line.height - line.fit_height(para.rp.line_spacing, true))
+        }),
+        _ => None,
+    });
+    let trailing = last
+        .reduce(|a, b| if b.0 >= a.0 { b } else { a })
+        .filter(|(bottom, _)| (*bottom - bl.height).abs() < 0.5)
+        .map_or(0.0, |(_, extra)| extra.max(0.0));
+    sect.page_h - sect.footer - (bl.height - trailing)
 }
 
 /// Wrapping drawings in a header also keep the body clear of their contour. Keep the layout
@@ -3570,6 +3584,14 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         {
             for li in l0..l1 {
                 let Some(line) = pl.lines.get(li).filter(|l| !l.beside) else { continue };
+                // The empty rest of a paragraph after its page or column break (its mark) isn't
+                // a numbered line in Word: zenodo-106's keywords end with a page break, and Word's
+                // next page goes on with the number after the keywords' last line.
+                let after_break =
+                    li.checked_sub(1).and_then(|k| pl.lines.get(k)).is_some_and(|p| matches!(p.end, LineEnd::PageBreak | LineEnd::ColumnBreak));
+                if after_break && line.start >= line.stop {
+                    continue;
+                }
                 pb.line_no = pb.line_no.saturating_add(1);
                 let n = pb.line_no.saturating_add(ln.start.saturating_sub(1));
                 if ln.count_by > 1 && !n.is_multiple_of(ln.count_by) {
