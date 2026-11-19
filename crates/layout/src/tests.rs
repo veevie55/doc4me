@@ -5048,7 +5048,7 @@ fn a_split_row_moves_shading_below_the_cut_with_it() {
     };
     let fill = |y: f32, h: f32| Placed::Fill { rect: doc4me_geom::Rect::new(0.0, y, 100.0, h), color: doc4me_doc::props::Rgb(200, 0, 0) };
     // The row's own shading (from its top) and a nested cell's shading starting below the cut.
-    let row = RowLayout { height: 200.0, items: vec![line_row(0.0), line_row(150.0), fill(0.0, 200.0), fill(150.0, 50.0)] };
+    let row = RowLayout { height: 200.0, items: vec![line_row(0.0), line_row(150.0), fill(0.0, 200.0), fill(150.0, 50.0)], merged: Vec::new() };
     let (a, b) = split_row(&row, 100.0).expect("splits");
     let fills = |r: &RowLayout| {
         r.items.iter().filter_map(|i| if let Placed::Fill { rect, .. } = i { Some((rect.y, rect.h)) } else { None }).collect::<Vec<_>>()
@@ -5086,14 +5086,15 @@ fn a_split_row_keeps_a_keep_with_next_paragraph_with_the_next_one() {
     let h = para.lines[0].height;
     let lines = |r: &RowLayout| r.items.iter().filter(|i| matches!(i, Placed::Lines { .. })).count();
     // Text, the heading, then the paragraph it introduces, which doesn't fit above the cut.
-    let row = RowLayout { height: 200.0, items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)] };
+    let row =
+        RowLayout { height: 200.0, items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)], merged: Vec::new() };
     let cut = 50.0 + h + 1.0;
     let (a, _) = split_row(&row, cut).expect("splits");
     assert_eq!(lines(&a), 2, "without the keep the heading stays");
     let (a, b) = split_row_keeping(&row, cut).expect("splits");
     assert_eq!((lines(&a), lines(&b)), (1, 2), "the heading goes on with its paragraph");
     // The heading starts the row: nothing stays, the row moves on whole.
-    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)] };
+    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)], merged: Vec::new() };
     assert!(split_row_keeping(&row, h + 1.0).is_none());
     assert!(split_row(&row, h + 1.0).is_some(), "at a page's top the row still splits");
 }
@@ -5127,7 +5128,7 @@ fn a_split_row_moves_on_whole_when_a_cell_would_keep_none_of_its_text() {
         turn: TextDirection::Horizontal,
     };
     let h = one.lines[0].height;
-    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)] };
+    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)], merged: Vec::new() };
     // The first line of each fits; widow control moves the two-line cell's paragraph on whole.
     let cut = h + 1.0;
     assert!(split_row(&row, cut).is_some(), "at a page's top the row still splits");
@@ -7410,4 +7411,41 @@ fn a_caption_keeps_with_the_header_and_first_body_row() {
     assert_eq!(caption_page, Some(1));
     assert!(l.pages[0].items.iter().all(|it| !matches!(it, Placed::Cell { .. })));
     assert_eq!(l.pages[1].items.iter().filter(|it| matches!(it, Placed::Cell { .. })).count(), 2);
+}
+
+/// A centred vertical merge whose last row moves to the next page centres its text in the part
+/// of the merge on this page, as Word does (zenodo-003's author table), not in the whole merge.
+#[test]
+fn a_centred_merge_broken_by_the_page_centres_its_text_on_the_page() {
+    use doc4me_doc::props::{HeightRule, VAlign, VMerge};
+    let mut t = Table::new(3, 2, 300.0);
+    for (ri, h) in [40.0, 40.0, 800.0].into_iter().enumerate() {
+        t.rows[ri].props.height = Some(h);
+        t.rows[ri].props.height_rule = HeightRule::Exact;
+        t.rows[ri].props.cant_split = true;
+        t.rows[ri].cells[0].props.vmerge = if ri == 0 { VMerge::Restart } else { VMerge::Continue };
+        t.rows[ri].cells[0].props.valign = VAlign::Center;
+    }
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("M", Default::default()))];
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    let top = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Cell { rect, row: 0, cell: 0, .. } = it { Some(rect.y) } else { None })
+        .next()
+        .unwrap();
+    let ys: Vec<(f32, f32)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { para, l0, l1, y, .. } if para.lines[*l0..*l1].iter().any(|ln| ln.start < ln.stop) => Some((*y, para.lines[*l0].height)),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(ys.len(), 1, "{ys:?}");
+    let mid = ys[0].0 + ys[0].1 / 2.0 - top;
+    assert!((mid - 40.0).abs() < 4.0, "the text's middle {mid} pt below the merge's top, not 40");
 }

@@ -4079,6 +4079,35 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 }
             }
         }
+        // A merge that starts in a row placed whole here but goes on past this page: its centred
+        // or bottom-aligned text is aligned within the part of it on this page (Word).
+        if let [only] = pieces.as_mut_slice()
+            && !only.merged.is_empty()
+            && pb.y + only.height <= pb.bottom + 0.01
+        {
+            let room = |m: &table::MergedSpan| {
+                let mut y = pb.y + only.height;
+                let mut vis = only.height;
+                for k in ri + 1..=ri.saturating_add(m.rows) {
+                    let Some(next) = tl.rows.get(k) else { break };
+                    if y + next.height <= pb.bottom + 0.01 {
+                        y += next.height;
+                        vis += next.height;
+                        continue;
+                    }
+                    // A row that splits here leaves the rest of the page to the merge.
+                    let can_split = !t.rows.get(k).is_some_and(|r| r.props.cant_split || r.props.header);
+                    if can_split && y + table::first_line_bottom(next).min(next.height) <= pb.bottom + 0.01 {
+                        vis += (pb.bottom - y).max(0.0);
+                    }
+                    break;
+                }
+                vis
+            };
+            if let Some(cut) = only.with_merges_cut(room) {
+                *only = std::borrow::Cow::Owned(cut);
+            }
+        }
         let n_pieces = pieces.len();
         for (pi, piece) in pieces.iter().enumerate() {
             let row: &table::RowLayout = piece;

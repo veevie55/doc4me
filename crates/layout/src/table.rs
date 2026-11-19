@@ -11,11 +11,56 @@ use doc4me_geom::Rect;
 use crate::para::{CellText, ClKind, LineEnd, ParaLayout};
 use crate::{BoxLayout, Ctx, Placed, layout_box};
 
-#[derive(Clone)]
+#[derive(Clone, Default)]
 pub struct RowLayout {
     pub height: f32,
     /// Items relative to the table's top-left (x) and the row's top (y).
     pub items: Vec<Placed>,
+    /// Vertically merged cells starting in this row whose content is centred or bottom-aligned
+    /// in the rows they span (moved again when the table breaks inside the merge).
+    pub merged: Vec<MergedSpan>,
+}
+
+/// A vertically merged cell's aligned content within its first row's items.
+#[derive(Clone, Debug)]
+pub struct MergedSpan {
+    /// The cell's content items in [`RowLayout::items`].
+    pub items: std::ops::Range<usize>,
+    /// How many rows after this one the merge continues into.
+    pub rows: usize,
+    /// The content's height (margins included).
+    pub content: f32,
+    pub valign: VAlign,
+    /// How far the content was moved down within the whole merge.
+    pub dy: f32,
+}
+
+impl RowLayout {
+    /// This row with each merged cell's content aligned within `visible` points of its merge
+    /// (the part on this page, when the table breaks before the merge ends; Word aligns a merged
+    /// cell's text within the part of it on the page: zenodo-003's author table).
+    pub fn with_merges_cut(&self, visible: impl Fn(&MergedSpan) -> f32) -> Option<RowLayout> {
+        let mut out: Option<RowLayout> = None;
+        for m in &self.merged {
+            let room = visible(m);
+            let dy = match m.valign {
+                VAlign::Top => continue,
+                VAlign::Center => ((room - m.content) / 2.0).max(0.0),
+                VAlign::Bottom => (room - m.content).max(0.0),
+            };
+            let shift = dy - m.dy;
+            if shift.abs() < 0.01 || !shift.is_finite() {
+                continue;
+            }
+            let row = out.get_or_insert_with(|| self.clone());
+            if let Some(items) = row.items.get_mut(m.items.clone()) {
+                for it in items {
+                    it.translate(0.0, shift);
+                }
+            }
+        }
+        out
+    }
 }
 
 pub struct TableLayout {
@@ -757,20 +802,23 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     let mut out = Vec::with_capacity(rows.len());
     for (ri, cells) in rows.into_iter().enumerate() {
         if is_hidden(ri) {
-            out.push(RowLayout { height: 0.0, items: Vec::new() });
+            out.push(RowLayout::default());
             continue;
         }
         let rh = heights.get(ri).copied().unwrap_or(0.0);
         let mut items = Vec::new();
+        let mut merged = Vec::new();
         for (ci, c) in cells.into_iter().enumerate() {
             // A restart cell spans several rows: its height is their sum.
             let mut span_h = rh;
+            let mut span_rows = 0;
             if c.vmerge == VMerge::Restart {
                 let mut k = ri + 1;
                 while cont.get(k).is_some_and(|v| v.contains(&c.g)) {
                     span_h += heights.get(k).copied().unwrap_or(0.0);
                     k += 1;
                 }
+                span_rows = k - ri - 1;
             }
             let rect = Rect::new(c.x, 0.0, c.w, span_h);
             if c.vmerge != VMerge::Continue
@@ -784,6 +832,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 VAlign::Bottom => (span_h - c.h).max(0.0),
             };
             let mut cell_items = c.items;
+            let turned = c.turned.is_some();
             if let Some(tn) = c.turned {
                 dy = 0.0;
                 let m = c.margins;
@@ -818,9 +867,13 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                     it.turn(tn.turn, ox, oy);
                 }
             }
+            let first = items.len();
             for mut it in cell_items {
                 it.translate(0.0, dy);
                 items.push(it);
+            }
+            if span_rows > 0 && !turned && c.valign != VAlign::Top {
+                merged.push(MergedSpan { items: first..items.len(), rows: span_rows, content: c.h, valign: c.valign, dy });
             }
             let b = c.borders;
             let (x0, x1, y0, y1) = (c.x, c.x + c.w, 0.0, rh);
@@ -863,7 +916,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 story,
             });
         }
-        out.push(RowLayout { height: rh, items });
+        out.push(RowLayout { height: rh, items, merged });
     }
     TableLayout { x, width: total, float_fit_height: float_heights.iter().sum(), rows: out }
 }
@@ -1281,7 +1334,7 @@ fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, R
             }
         }
     }
-    Some((RowLayout { height: cut, items: a }, RowLayout { height: b_height, items: b }))
+    Some((RowLayout { height: cut, items: a, merged: Vec::new() }, RowLayout { height: b_height, items: b, merged: Vec::new() }))
 }
 
 /// The parts of `r` above `cut` and below it, the latter moved up by `shift` (onto the

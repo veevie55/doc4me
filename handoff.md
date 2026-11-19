@@ -1,5 +1,6 @@
 # Duplicate style ids · 2026-11-19
 
+- Merged centred/bottom cells cut by a page break align their text in the part on the page (zenodo-003 "Name" now at Word's y). zenodo-003 still fails: its turned merged cells ("CONTRIBUTION PERCENTAGE", "OTHER") are laid along the whole merge; Word wraps them to the part on the page (needs a relayout at pagination). zenodo-149 p6 and zenodo-022 p15 are extraction-only (Word's "ti" ligature has no Unicode; bullet order).
 - A styleId defined twice in styles.xml takes its later definition (Word does): zenodo-026 passes, Linux 150/219, no new failure. Earlier this day: renamed embedded fonts (`___WRD_EMBED_SUB_NN` → font table name), no line number on the empty rest after a page break, footer top ignores the footer's own trailing multiple-spacing leading: zenodo-106 passes (716eb11).
 - Build note: the release CLI must be built with `CRAFT_FONTS_DIR=/home/user/craft-fonts` set (fonts crate build.rs embeds the stand-ins); a build without it (e.g. after `cargo xtask ci`) loses Roboto/Montserrat and fails zenodo-095/zenodo-149 pages.
 
