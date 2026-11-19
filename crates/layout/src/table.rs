@@ -1017,6 +1017,24 @@ fn keep_with_next_cut(row: &RowLayout, cut: f32) -> f32 {
     c
 }
 
+/// Whether a cell with text would keep none of it above `cut` (its first paragraph moving on
+/// whole, by widow control) while other cells keep lines: Word moves such a row on whole
+/// (govuk-031 page 8: a two-line "Get batch learner registration" cell beside one-line cells).
+fn starts_a_cell_on_the_next_page(row: &RowLayout, cut: f32) -> bool {
+    let own_len = row.items.iter().filter_map(|it| if let Placed::Lines { path, .. } = it { Some(path.0.len()) } else { None }).min();
+    let mut cells: std::collections::HashMap<&[u32], bool> = std::collections::HashMap::new();
+    for it in &row.items {
+        let Placed::Lines { path, para, l0, l1, y, .. } = it else { continue };
+        if Some(path.0.len()) != own_len || *l1 <= *l0 || para.lines.iter().all(|l| l.height <= 0.0) {
+            continue;
+        }
+        let cell = path.0.get(..path.0.len().saturating_sub(1)).unwrap_or_default();
+        let kept = line_split_why(para, *l0, *l1, *y, cut).0 > *l0;
+        *cells.entry(cell).or_insert(false) |= kept;
+    }
+    cells.values().any(|k| !k) && cells.values().any(|k| *k)
+}
+
 pub fn split_row(row: &RowLayout, cut: f32) -> Option<(RowLayout, RowLayout)> {
     split_row_with(row, cut, false)
 }
@@ -1102,6 +1120,9 @@ fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, R
         }
     }
     if !kept_any {
+        return None;
+    }
+    if keep && starts_a_cell_on_the_next_page(row, cut) {
         return None;
     }
     // Every line fits and only a nested table's cell runs past the cut (a floating table's

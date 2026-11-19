@@ -1,5 +1,8 @@
 # Split rows keep keep-with-next paragraphs; table cell spacing · 2026-11-19
 
+- A split row whose text cell would keep nothing on the page (widow control) moves on whole: govuk-031, zenodo-123; Linux 141 → 143/219, no new failure.
+- Tried and reverted: giving FORMCHECKBOX boxes drawn by a fallback face (Noto Sans Symbols ☐) the run's line height. govuk-006 p2 drift drops from +7 pt to about 1 pt, but govuk-017 and govuk-031 then fail: Word's box does make the line somewhat taller than plain Arial. Needs the real box height rule (sizeAuto box ≈ font size?) before retrying.
+
 - `w:tblCellSpacing` is now read/saved and laid out (each cell inset by it, the table content by it again): zenodo-036 passes; with the keep fix Linux 139 → 141/219, no new failure. govuk-031 (also uses spacing) still fails on p8 for another reason.
 - Triage of the rest (/home/user/work/triage.py): 10 ORDER (same words, only extraction order), 18 small (one line/paragraph across the boundary, e.g. zenodo-026 heading: we have slightly more height before it), 50 layout.
 

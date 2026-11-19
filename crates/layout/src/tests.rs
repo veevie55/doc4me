@@ -5045,6 +5045,42 @@ fn a_split_row_keeps_a_keep_with_next_paragraph_with_the_next_one() {
 }
 
 #[test]
+fn a_split_row_moves_on_whole_when_a_cell_would_keep_none_of_its_text() {
+    // govuk-031: a two-line cell (widow control) beside one-line cells; Word moves the row.
+    use crate::table::{RowLayout, split_row, split_row_keeping};
+    let d = Document::from_text(&"words wrap onto a second line ".repeat(6));
+    let l = lay(&d);
+    let Some(Placed::Lines { story, para: two, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let d = Document::from_text("One");
+    let l = lay(&d);
+    let Some(Placed::Lines { para: one, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let mut two = (*two).clone();
+    two.rp.widow_control = true;
+    let two = std::sync::Arc::new(two);
+    assert!(two.lines.len() >= 2, "two lines");
+    let line = |cell: u32, p: &std::sync::Arc<crate::ParaLayout>| Placed::Lines {
+        story,
+        path: doc4me_doc::Path(vec![0, 0, cell, 0]),
+        para: p.clone(),
+        l0: 0,
+        l1: p.lines.len(),
+        x: 0.0,
+        y: 0.0,
+        turn: TextDirection::Horizontal,
+    };
+    let h = one.lines[0].height;
+    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)] };
+    // The first line of each fits; widow control moves the two-line cell's paragraph on whole.
+    let cut = h + 1.0;
+    assert!(split_row(&row, cut).is_some(), "at a page's top the row still splits");
+    assert!(split_row_keeping(&row, cut).is_none(), "elsewhere it moves on whole");
+}
+
+#[test]
 fn cell_spacing_insets_cells_and_the_table_content() {
     // zenodo-036: with 0.75 pt between cells Word's rows are 1.5 pt taller and the first cell's
     // text 1.5 pt further from the table's edge, both ways.
