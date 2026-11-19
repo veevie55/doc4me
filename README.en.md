@@ -7,8 +7,8 @@ with Microsoft Word, then goes further on speed, openness and agent control: eve
 command that scripts and AI agents can run, over a local control channel or MCP.
 
 Doc4Me is still in **alpha**. See [ROADMAP.md](ROADMAP.md) for progress.
-The latest official Windows measurement (run 44459504462) is **95.5%**, or **97.4% excluding 22 deferred checks**.
-All 219 corpus documents open and round-trip; page counts match for 219/219 and page boundaries for 143/219. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
+The latest official Windows measurement (run 44463398721) is **95.5%**, or **97.4% excluding 22 deferred checks**.
+All 219 corpus documents open and round-trip; page counts match for 219/219 and page boundaries for 144/219. See the [readiness report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md) for remaining failures and their evidence.
 
 ![Doc4Me with the built-in sample document](docs/images/hero.png)
 
@@ -50,7 +50,7 @@ Windows package and readiness workflows use the same pinned OFL font set and ver
 additional corpus fonts before building. See [docs/releasing.md](docs/releasing.md) for the pinned
 revisions and licence details.
 
-Latest Windows measurement: [run 44459504462](https://github.com/veevie55/doc4me/actions/runs/44459504462); readiness is 95.5% overall / 97.4% without 22 deferred rows, with page counts 219/219 and page boundaries 143/219. There are still 0 page-count and 76 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
+Latest Windows measurement: [run 44463398721](https://github.com/veevie55/doc4me/actions/runs/44463398721); readiness is 95.5% overall / 97.4% without 22 deferred rows, with page counts 219/219 and page boundaries 144/219. There are still 0 page-count and 75 boundary failures. See the [report](docs/readiness.md) and [bilingual blocker assessment](docs/readiness/blockers-2026-11-14.md).
 
 Each build workflow also takes an optional **version** (such as `1.2.0` or `1.2.0-rc.1`), shown in
 `--version` and the installers' version fields; left empty, the build is named by its commit only.
