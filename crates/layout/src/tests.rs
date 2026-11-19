@@ -5132,6 +5132,42 @@ fn a_line_a_fraction_of_a_point_past_the_page_bottom_stays() {
 }
 
 #[test]
+fn an_empty_paragraph_ending_a_section_before_a_continuous_break_takes_no_room() {
+    // zenodo-155: the abstract's single-column section (begun on a new page) ends with an empty
+    // paragraph before a continuous two-column section; Word gives that paragraph no room.
+    use doc4me_doc::section::SectionStart;
+    let gap = |next: SectionStart| {
+        let mut d = Document::new();
+        let a = doc4me_doc::Paragraph::with_text("Abstract", Default::default());
+        let mut mark = doc4me_doc::Paragraph::new();
+        mark.section = Some(Box::new(d.last_section.clone()));
+        let b = doc4me_doc::Paragraph::with_text("Introduction", Default::default());
+        d.last_section.start = next;
+        d.last_section.columns.count = 2;
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(mark), doc4me_doc::para_block(b)];
+        let l = lay(&d);
+        let y = |i: u32| {
+            l.pages
+                .iter()
+                .flat_map(|p| &p.items)
+                .find_map(|it| if let Placed::Lines { path, y, .. } = it { (path.0 == [i]).then_some(*y) } else { None })
+        };
+        (y(2).unwrap_or(0.0) - y(0).unwrap_or(0.0), l.pages.len())
+    };
+    let (continuous, pages) = gap(SectionStart::Continuous);
+    assert_eq!(pages, 1);
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Abstract", Default::default())),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Introduction", Default::default())),
+    ];
+    let l = lay(&d);
+    let ys: Vec<f32> = l.pages[0].items.iter().filter_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).collect();
+    let plain = ys[1] - ys[0];
+    assert!((continuous - plain).abs() < 0.5, "the empty mark adds nothing: {continuous} vs {plain}");
+}
+
+#[test]
 fn kinsoku_keeps_a_manual_line_break_before_a_closing_bracket() {
     // #269: kinsoku forbids a line starting with 」, but a manual line break (Shift+Enter) right
     // before one still ends the line there.

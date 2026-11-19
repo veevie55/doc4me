@@ -3162,6 +3162,17 @@ fn next_section_starts_page(doc: &Document, block: usize) -> bool {
     doc.sections().iter().find(|(end, _)| *end > block).is_some_and(|(_, s)| s.start != SectionStart::Continuous)
 }
 
+/// Body paragraph `p` (block `block`) ends a section with a continuous break: the next section
+/// starts on the same page (a break's kind is the next section's start, ECMA-376 §17.6.22).
+/// zenodo-155's abstract ends a page-start section with an empty paragraph before a continuous
+/// two-column section, and Word gives that paragraph no room.
+/// (A multi-column section's own mark still counts in balancing its columns, as before:
+/// zenodo-010's three-column title section; only one that began continuously, as zenodo-125's,
+/// leaves it out.)
+fn ends_with_continuous_break(doc: &Document, p: &Paragraph, block: usize) -> bool {
+    p.section.as_deref().is_some_and(|s| s.start == SectionStart::Continuous || s.columns.count <= 1) && !next_section_starts_page(doc, block)
+}
+
 /// Body paragraph `p` (block `block`) is empty and only ends its section, and the next section
 /// starts on a new page. Word never gives such a paragraph a page of its own: one that doesn't fit
 /// stays below the page's last line (zenodo-135), and one after a page break stays on the break's
@@ -3235,8 +3246,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // spacing: zenodo-125's 1- and 2-column sections are separated by empty Normal (Web)
     // paragraphs with automatic spacing, and Word steps the text across them as if they weren't
     // there (14 pt, not 28). The paragraph before keeps its space after for what follows.
-    let section_mark =
-        p.text.is_empty() && p.objects.is_empty() && p.section.as_deref().is_some_and(|s| s.start == SectionStart::Continuous) && pl.lines.len() == 1;
+    let section_mark = p.text.is_empty() && p.objects.is_empty() && ends_with_continuous_break(ctx.doc, p, block) && pl.lines.len() == 1;
     let prev_kept = if section_mark { pb.prev.clone() } else { None };
     // Contextual spacing subtracts each paragraph's own side from the same-style gap.
     let mut before = pl.rp.space_before;
@@ -3336,7 +3346,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // ordinary empty 7pt paragraph after a table; Word leaves one blank line there while our
     // second line shifted the following paragraph down by 8.4pt. Keep the marker in the layout
     // for navigation, but don't let its invisible paragraph mark advance the text flow.
-    if p.text.is_empty() && p.objects.is_empty() && p.section.as_deref().is_some_and(|s| s.start == SectionStart::Continuous) && pl.lines.len() == 1 {
+    if p.text.is_empty() && p.objects.is_empty() && ends_with_continuous_break(ctx.doc, p, block) && pl.lines.len() == 1 {
         let pl = Arc::make_mut(&mut pl);
         pl.height = 0.0;
         if let Some(line) = pl.lines.first_mut() {
