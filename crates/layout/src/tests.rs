@@ -7158,6 +7158,29 @@ fn automatic_spacing_skips_a_cells_first_and_last_paragraph() {
     let two_plain = row_gap(2, false);
     let two_auto = row_gap(2, true);
     assert!(((two_auto[1] - two_auto[0]) - (two_plain[1] - two_plain[0]) - 14.0).abs() < 0.5, "14 pt between a cell's two paragraphs");
+    // A list item ending a cell keeps its automatic space after (zenodo-021: rows ending in a
+    // bulleted question are 14 pt taller in Word's PDF).
+    let list_gap = |list: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            let mut p = doc4me_doc::Paragraph::with_text("item", Default::default());
+            p.props.space_before_auto = Some(true);
+            p.props.space_after_auto = Some(true);
+            p.props.space_before = Some(0.0);
+            p.props.space_after = Some(0.0);
+            if list {
+                p.props.numbering = Some(doc4me_doc::props::NumRef { num: 1, level: 0 });
+            }
+            row.cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let tops: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        tops[1] - tops[0]
+    };
+    assert!((list_gap(true) - list_gap(false) - 14.0).abs() < 0.5, "list {} vs plain {}", list_gap(true), list_gap(false));
     // A cell ending in a hidden empty mark (govuk-068) keeps the space after the paragraph before it.
     let marked = |auto: bool| {
         let mut d = Document::from_text("after");

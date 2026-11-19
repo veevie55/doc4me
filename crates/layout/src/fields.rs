@@ -22,6 +22,9 @@ pub struct FieldCtx {
     pub title: Arc<str>,
     pub author: Arc<str>,
     pub filename: Arc<str>,
+    /// Styles the body's paragraphs use, by lower-case id and name, for STYLEREF; `None` when
+    /// not known (a STYLEREF then keeps its result).
+    pub styles_used: Option<Arc<std::collections::HashSet<String>>>,
 }
 
 /// A footnote's or endnote's number, as its section's options give it.
@@ -107,13 +110,50 @@ pub fn field_text(instr: &str, result: &str, ctx: &FieldCtx) -> (String, bool) {
         // A legacy form check box has no result: Word draws the box (its checked state is in the
         // form field data, which isn't kept).
         "FORMCHECKBOX" if result.is_empty() => ("\u{2610}".to_string(), false),
+        // A style no paragraph uses: Word's result when it updates the field (zenodo-021's
+        // captions number by `STYLEREF 1 \s`, but no paragraph is in Heading 1).
+        "STYLEREF" if ctx.styles_used.as_ref().is_some_and(|used| styleref_target(instr).is_some_and(|t| !used.contains(&t))) => {
+            ("Error! No text of specified style in document.".to_string(), false)
+        }
         _ => (result.to_string(), false),
     }
+}
+
+/// The style a STYLEREF field names, lower-case: `1`–`9` are the built-in headings by name
+/// ("heading 1"), otherwise the (quoted) style name.
+fn styleref_target(instr: &str) -> Option<String> {
+    let rest = instr.trim_start().get("STYLEREF".len()..)?.trim_start();
+    let name = if let Some(q) = rest.strip_prefix('"') {
+        q.split('"').next()?.to_string()
+    } else {
+        rest.split_whitespace().next().filter(|w| !w.starts_with('\\'))?.to_string()
+    };
+    if name.is_empty() {
+        return None;
+    }
+    Some(match name.parse::<u8>() {
+        Ok(n @ 1..=9) => format!("heading {n}"),
+        _ => name.to_lowercase(),
+    })
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn styleref_to_a_style_no_paragraph_uses_is_an_error() {
+        let used: std::collections::HashSet<String> = ["normal", "heading2", "heading 2"].into_iter().map(String::from).collect();
+        let ctx = FieldCtx { styles_used: Some(Arc::new(used)), ..Default::default() };
+        let err = "Error! No text of specified style in document.";
+        assert_eq!(field_text(" STYLEREF 1 \\s ", "8", &ctx).0, err);
+        assert_eq!(field_text(" STYLEREF 2 \\s ", "8", &ctx).0, "8");
+        assert_eq!(field_text(r#" STYLEREF "Heading 2" "#, "Intro", &ctx).0, "Intro");
+        assert_eq!(field_text(r#" STYLEREF "Title" \* MERGEFORMAT "#, "x", &ctx).0, err);
+        // Unknown styles in use (no context): the result stays.
+        assert_eq!(field_text(" STYLEREF 1 \\s ", "8", &FieldCtx::default()).0, "8");
+        assert_eq!(field_text(" STYLEREF ", "8", &ctx).0, "8");
+    }
 
     #[test]
     fn page_fields() {

@@ -1038,7 +1038,10 @@ fn layout_blocks(
                 }
                 y += bx.top + pl.height;
                 prev_end = y;
-                let after = if table.is_some() && i + 1 == blocks.len() && pl.rp.space_after_auto { 0.0 } else { pl.rp.space_after };
+                // (A list item keeps it: zenodo-021's rows ending in one bulleted question are 14 pt
+                // taller in Word's PDF than those ending in plain text.)
+                let after =
+                    if table.is_some() && i + 1 == blocks.len() && pl.rp.space_after_auto && !is_list(&pl.rp) { 0.0 } else { pl.rp.space_after };
                 y += bx.bottom + after;
                 // Keep the actual trailing space: the next paragraph may suppress it when
                 // contextual spacing applies. `same` describes this paragraph and its previous
@@ -2071,6 +2074,7 @@ fn layout_pass(
             notes: Arc::new(notes),
             title: doc.core.title.as_str().into(),
             author: doc.core.creator.as_str().into(),
+            styles_used: Some(Arc::new(styles_used(doc))),
             ..Default::default()
         },
         notes_hash,
@@ -3160,6 +3164,25 @@ fn next_section_starts_page(doc: &Document, block: usize) -> bool {
 /// page (zenodo-160).
 fn only_ends_section(doc: &Document, p: &Paragraph, block: usize) -> bool {
     p.section.is_some() && p.text.is_empty() && p.objects.is_empty() && next_section_starts_page(doc, block)
+}
+
+/// The styles the body's paragraphs use, by lower-case id
+/// and name: what a STYLEREF field can find (see [`fields::FieldCtx::styles_used`]).
+fn styles_used(doc: &Document) -> std::collections::HashSet<String> {
+    let mut ids = std::collections::HashSet::new();
+    for path in doc.para_paths(StoryRef::Body) {
+        if let Some(p) = doc.para(StoryRef::Body, &path) {
+            ids.insert(p.props.style.clone().unwrap_or_else(|| "Normal".into()));
+        }
+    }
+    let mut out = std::collections::HashSet::new();
+    for id in ids {
+        if let Some(st) = doc.styles.get(&id) {
+            out.insert(st.name.to_lowercase());
+        }
+        out.insert(id.to_lowercase());
+    }
+    out
 }
 
 fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, body_top: f32) {
