@@ -355,6 +355,43 @@ fn a_tall_footer_pushes_the_body_up() {
     assert!((l.pages[0].body.bottom() - (792.0 - 72.0)).abs() < 0.01, "{:?}", l.pages[0].body);
 }
 
+/// A picture the footer's text wraps around counts down to its bottom: the body ends above the
+/// footer's top by as much as the picture reaches below the footer's last line (govuk-061's
+/// first-page footer logo in Word's PDF).
+#[test]
+fn a_wrapped_picture_in_the_footer_pushes_the_body_up() {
+    let body_bottom_at = |h: f32, v_rel: doc4me_doc::para::Anchor, y: f32| {
+        let mut d = Document::from_text(&"Body line\n".repeat(80));
+        let mut foot = doc4me_doc::Paragraph::with_text("Footer", Default::default());
+        let float =
+            doc4me_doc::para::Float { wrap: doc4me_doc::para::Wrap::Square, h_rel: doc4me_doc::para::Anchor::Column, v_rel, y, ..Default::default() };
+        let shape = InlineObject::Shape {
+            kind: doc4me_doc::para::ShapeKind::Rectangle,
+            w: 40.0,
+            h,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            freeform: None,
+            effects: Default::default(),
+            extra: Default::default(),
+        };
+        foot.insert_object(6, shape, &Default::default()).unwrap();
+        let id = d.add_part(PartKind::Footer, vec![doc4me_doc::para_block(foot)]);
+        d.last_section.footers.default = Some(id);
+        lay(&d).pages[0].body.bottom()
+    };
+    let body_bottom = |h: f32| body_bottom_at(h, doc4me_doc::para::Anchor::Paragraph, 0.0);
+    let (small, tall) = (body_bottom(5.0), body_bottom(100.0));
+    assert!((small - (792.0 - 72.0)).abs() < 0.01, "a small picture fits in the margin: {small}");
+    assert!(tall < 792.0 - 36.0 - 99.0, "a 100 pt picture pushes the body above it: {tall}");
+    // One placed from the page, far from the footer's text, doesn't (zenodo-029).
+    let away = body_bottom_at(100.0, doc4me_doc::para::Anchor::Page, 300.0);
+    assert!((away - (792.0 - 72.0)).abs() < 0.01, "{away}");
+}
+
 #[test]
 fn a_linked_tall_header_pushes_the_next_sections_body_down() {
     // #454: section 2 has no header of its own and shows section 1's (link to previous).

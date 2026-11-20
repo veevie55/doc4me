@@ -2710,7 +2710,19 @@ fn foot_top_for(ctx: &mut Ctx, sect: &SectionProps, footer: Option<u32>) -> f32 
         .reduce(|a, b| if b.0 >= a.0 { b } else { a })
         .filter(|(bottom, _)| (*bottom - bl.height).abs() < 0.5)
         .map_or(0.0, |(_, extra)| extra.max(0.0));
-    sect.page_h - sect.footer - (bl.height - trailing)
+    // A picture the footer's text wraps around counts down to its bottom: govuk-061's first-page
+    // footer (one 15 pt line, a logo reaching 10.8 pt below it) leaves Word's body 773.5 pt deep, so
+    // an empty 14.5 pt paragraph ending at 781.1 pt starts the next page in its PDF.
+    // (Only one that starts beside the footer's text: zenodo-029's footer anchors a picture placed
+    // from the page, hundreds of points away, which doesn't make the footer taller.)
+    let wraps_bottom = bl
+        .wraps
+        .iter()
+        .filter(|a| a.0.y >= -0.01 - bl.height && a.0.y <= bl.height)
+        .map(|a| a.0.bottom())
+        .filter(|b| b.is_finite())
+        .fold(0.0f32, f32::max);
+    sect.page_h - sect.footer - (bl.height - trailing).max(wraps_bottom.min(sect.page_h))
 }
 
 /// Wrapping drawings in a header also keep the body clear of their contour. Keep the layout
@@ -3218,6 +3230,20 @@ fn collapsed_section_mark(doc: &Document, p: &Paragraph, block: usize) -> bool {
         && (!is_table(block.checked_sub(1)) || is_table(block.checked_add(1)))
 }
 
+/// Body paragraph `p` holds nothing (but zero-width markers such as bookmarks) and its paragraph
+/// mark is hidden text, with hidden text not shown: like a hidden row, it takes no room, as in
+/// Word (govuk-048's hidden empty paragraph holding a bookmark between two tables).
+fn hidden_empty_para(ctx: &mut Ctx, p: &Paragraph) -> bool {
+    if ctx.opts.show_hidden || p.section.is_some() || !table::markers_only(p, 0..p.text.len()) {
+        return false;
+    }
+    let style = p.props.style.as_deref();
+    if !ctx.doc.styles.resolve_char_in(style, None, &p.mark).hidden {
+        return false;
+    }
+    p.props.numbering.or_else(|| ctx.resolved(p).numbering).filter(|n| n.num != 0).is_none()
+}
+
 /// Body paragraph `p` (block `block`) is empty and only ends its section, and the next section
 /// starts on a new page. Word never gives such a paragraph a page of its own: one that doesn't fit
 /// stays below the page's last line (zenodo-135), and one after a page break stays on the break's
@@ -3291,7 +3317,8 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // spacing: zenodo-125's 1- and 2-column sections are separated by empty Normal (Web)
     // paragraphs with automatic spacing, and Word steps the text across them as if they weren't
     // there (14 pt, not 28). The paragraph before keeps its space after for what follows.
-    let section_mark = collapsed_section_mark(ctx.doc, p, block) && pl.lines.len() == 1;
+    let hidden_empty = hidden_empty_para(ctx, p) && pl.lines.len() == 1;
+    let section_mark = (collapsed_section_mark(ctx.doc, p, block) && pl.lines.len() == 1) || hidden_empty;
     let prev_kept = if section_mark { pb.prev.clone() } else { None };
     // Contextual spacing subtracts each paragraph's own side from the same-style gap.
     let mut before = pl.rp.space_before;
@@ -3393,7 +3420,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // ordinary empty 7pt paragraph after a table; Word leaves one blank line there while our
     // second line shifted the following paragraph down by 8.4pt. Keep the marker in the layout
     // for navigation, but don't let its invisible paragraph mark advance the text flow.
-    if collapsed_section_mark(ctx.doc, p, block) && pl.lines.len() == 1 {
+    if (collapsed_section_mark(ctx.doc, p, block) && pl.lines.len() == 1) || hidden_empty {
         let pl = Arc::make_mut(&mut pl);
         pl.height = 0.0;
         if let Some(line) = pl.lines.first_mut() {

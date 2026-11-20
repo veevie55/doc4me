@@ -361,7 +361,7 @@ fn region_borders(p: &TableStyleParts, (ri, nrows): (usize, usize), (first_g, la
 
 /// Whether `p.text[r]` is only zero-width markers (bookmarks, comment anchors, field and content
 /// control boundaries), which show nothing.
-fn markers_only(p: &Paragraph, r: std::ops::Range<usize>) -> bool {
+pub(crate) fn markers_only(p: &Paragraph, r: std::ops::Range<usize>) -> bool {
     p.text.get(r.clone()).is_some_and(|t| {
         t.char_indices().all(|(i, c)| c == doc4me_doc::para::OBJ && p.object_at(r.start + i).is_some_and(doc4me_doc::para::InlineObject::is_marker))
     })

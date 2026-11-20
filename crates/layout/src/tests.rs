@@ -6532,6 +6532,38 @@ fn top_after(d: &Document, opts: &LayoutOptions) -> f32 {
     layout(d, &mut LayoutCache::new(), opts).caret(&Pos::body(1, 0)).unwrap().top
 }
 
+/// An empty body paragraph whose mark is hidden (holding only a bookmark) takes no room while
+/// hidden text isn't shown, as in Word (govuk-048's paragraph between two tables), and does with
+/// hidden text shown.
+#[test]
+fn an_empty_paragraph_with_a_hidden_mark_takes_no_room() {
+    use doc4me_doc::props::CharProps;
+    let build = |hidden: bool| {
+        let mut d = Document::from_text("one");
+        let mut mid = doc4me_doc::Paragraph::new();
+        if hidden {
+            mid.mark = CharProps { hidden: Some(true), ..Default::default() };
+        }
+        mid.insert_object(0, InlineObject::BookmarkStart { name: "b".into() }, &Default::default()).unwrap();
+        d.body.push(doc4me_doc::para_block(mid));
+        d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("three", Default::default())));
+        d
+    };
+    let top = |d: &Document, show: bool| {
+        let opts = LayoutOptions { show_hidden: show, ..Default::default() };
+        layout(d, &mut LayoutCache::new(), &opts).caret(&Pos::body(2, 0)).unwrap().top
+    };
+    let (shown, hidden) = (build(false), build(true));
+    let two = {
+        let mut d = Document::from_text("one");
+        d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("three", Default::default())));
+        layout(&d, &mut LayoutCache::new(), &LayoutOptions::default()).caret(&Pos::body(1, 0)).unwrap().top
+    };
+    assert!((top(&hidden, false) - two).abs() < 0.01, "hidden: as if it weren't there ({} vs {two})", top(&hidden, false));
+    assert!(top(&shown, false) > two + 5.0, "a visible mark keeps its line");
+    assert!(top(&hidden, true) > two + 5.0, "hidden text shown: it shows");
+}
+
 /// A table row whose end-of-row mark is hidden (`w:trPr/w:hidden`) and whose content is all
 /// hidden text takes no room while hidden text isn't shown, as in Word (govuk-066's forms hide 58
 /// rows); a bookmark in it (a zero-width marker without the hidden formatting) doesn't make it
