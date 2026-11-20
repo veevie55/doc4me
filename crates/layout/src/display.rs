@@ -1589,16 +1589,11 @@ pub(crate) fn effects_in(effects: doc4me_doc::effects::ShapeEffects, spin: Spin)
 /// baseline at `cx`): inside the room kept for its effects.
 /// A rotated one's unrotated frame, centred in that room.
 pub(crate) fn inline_rect(obj: Option<&InlineObject>, cx: f32, base: f32, adv: f32, obj_h: f32) -> Rect {
+    // The line's box less the effect extent, which holds a rotated object's overhang as Word's
+    // does: the object's own (unrotated) frame, which is drawn turned about its centre.
     let frame = obj.and_then(InlineObject::frame);
     let [l, t, r, b] = frame.map_or([0.0; 4], |(_, _, float)| float.effect_extent());
-    let room = Rect::new(cx + l, base - obj_h + t, (adv - l - r).max(0.0), (obj_h - t - b).max(0.0));
-    let Some((w, h, float)) = frame.filter(|(_, _, f)| f.rot != 0.0) else { return room };
-    // The room is the rotated bounds of the frame: undo the rotation.
-    let (w, h) = (doc4me_geom::finite(w).clamp(1.0, 4000.0), doc4me_geom::finite(h).clamp(1.0, 4000.0));
-    let (bw, _) = float.spin().extent(w, h);
-    let k = if bw > 0.0 { room.w / bw } else { 1.0 };
-    let (fw, fh) = (w * k, h * k);
-    Rect::new(room.x + (room.w - fw) / 2.0, room.y + (room.h - fh) / 2.0, fw, fh)
+    Rect::new(cx + l, base - obj_h + t, (adv - l - r).max(0.0), (obj_h - t - b).max(0.0))
 }
 
 /// A Drawing Canvas's background and outline over its frame `rect`.

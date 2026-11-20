@@ -1202,7 +1202,7 @@ fn first_object(doc: &mut Document) -> &mut InlineObject {
 
 /// #319 with #332: an OLE object turned or flipped in Doc4Me is written back turned, in its VML
 /// shape (`rotation`, `flip`) and in a DrawingML picture (`a:xfrm` rot/flipH/flipV, with the
-/// effect extent covering the rotated bounds like other drawings).
+/// effect extent, which holds the rotated bounds' overhang as Word's does).
 #[test]
 fn rotated_ole_objects_round_trip() {
     let picture = "\u{89}PNG stand-in";
@@ -1232,6 +1232,10 @@ fn rotated_ole_objects_round_trip() {
     assert_eq!(spin(&paras(&d)[0].objects[0]), doc4me_geom::Spin::new(0.0, true, false));
     if let Some(f) = first_object(&mut d).float_mut() {
         f.set_spin(doc4me_geom::Spin::new(90.0, true, false));
+        // The effect extent holds the turned bounds' overhang, as Word's does (Doc4Me's rotate
+        // commands move it by the change).
+        let (px, py) = f.spin_pad(72.0, 36.0);
+        f.effect = [px, py, px, py];
     }
     let out = doc4me_docx::write(&d).unwrap();
     let body = text(&unzip(&out), "word/document.xml");
@@ -1244,7 +1248,7 @@ fn rotated_ole_objects_round_trip() {
     let o = &paras(&back)[0].objects[0];
     assert!(matches!(o, InlineObject::Image { ole: Some(_), .. }), "{o:?}");
     assert_eq!(spin(o), doc4me_geom::Spin::new(90.0, true, false));
-    assert_eq!(o.frame().unwrap().2.effect, [0.0; 4], "the rotated overhang is not kept as effects room");
+    assert_eq!(o.frame().unwrap().2.effect, [-18.0, 18.0, -18.0, 18.0], "the effect extent is kept as written");
 }
 
 /// Issue #41: tracked formatting changes (ECMA-376 §17.13.5) survive open and save — run,

@@ -1799,8 +1799,8 @@ fn equation_manual_breaks_round_trip() {
 }
 
 /// #332: rotation (`a:xfrm/@rot`, 60000ths of a degree) and flips of pictures, shapes, text boxes
-/// and groups survive save and load; the effect extent written covers the rotated bounds, and
-/// reading takes that overhang back out of the effects room.
+/// and groups survive save and load; the effect extent, which holds the rotated bounds' overhang
+/// as Word's does, is written and read back as it is.
 #[test]
 fn rotation_and_flips_round_trip() {
     let mut d = Document::new();
@@ -1810,7 +1810,12 @@ fn rotation_and_flips_round_trip() {
         w: 100.0,
         h: 50.0,
         alt: String::new(),
-        float: Float { rot: 30.0, effect: [6.0; 4], ..Default::default() },
+        float: {
+            // 6 pt of effects room and the overhang of the 100 × 50 picture turned 30°.
+            let f = Float { rot: 30.0, ..Default::default() };
+            let (px, py) = f.spin_pad(100.0, 50.0);
+            Float { effect: [6.0 + px, 6.0 + py, 6.0 + px, 6.0 + py], ..f }
+        },
         crop: [0.0; 4],
         ole: None,
         video: None,
@@ -1861,7 +1866,7 @@ fn rotation_and_flips_round_trip() {
     let spins: Vec<(f32, bool, bool)> = got.iter().map(|o| o.frame().unwrap().2).map(|f| (f.rot, f.flip_h, f.flip_v)).collect();
     assert_eq!(spins, [(30.0, false, false), (90.0, true, false), (315.5, false, true), (45.0, false, false)]);
     let effect = got[0].frame().unwrap().2.effect;
-    assert!(effect.iter().all(|e| (e - 6.0).abs() < 0.01), "{effect:?}");
+    assert!((effect[0] - 11.8).abs() < 0.01 && (effect[1] - 27.65).abs() < 0.01, "kept as written: {effect:?}");
     assert!(got[1].frame().unwrap().2.effect.iter().all(|e| e.abs() < 0.01), "no effects room appears");
     let InlineObject::Group { children, .. } = &got[3] else { panic!("{got:?}") };
     assert_eq!(children[0].obj.frame().unwrap().2.rot, 10.0);

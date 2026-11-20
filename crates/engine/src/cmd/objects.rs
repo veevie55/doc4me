@@ -665,7 +665,7 @@ fn shape_effects(s: &mut Session, v: &Value) -> CmdResult {
     let mut last = ShapeEffects::default();
     for pos in &targets {
         let o = edit_obj(s, pos, |o| {
-            if let InlineObject::Shape { effects, float, .. } = o {
+            if let InlineObject::Shape { effects, float, w, h, .. } = o {
                 let mut e = *effects;
                 if let Some(x) = shadow {
                     e.shadow = x;
@@ -677,8 +677,11 @@ fn shape_effects(s: &mut Session, v: &Value) -> CmdResult {
                     e.soft_edge = x;
                 }
                 *effects = e.sanitized();
-                // Room around the shape for its shadow and glow, as Word's effect extent.
-                float.effect = effects.extent();
+                // Room around the shape for its shadow and glow, as Word's effect extent, with its
+                // turned bounds' overhang (which Word's effect extent holds too).
+                let (px, py) = float.spin_pad(*w, *h);
+                let fx = effects.extent();
+                float.effect = [fx[0] + px, fx[1] + py, fx[2] + px, fx[3] + py];
             }
         })?;
         if let InlineObject::Shape { effects, .. } = o {
@@ -1242,14 +1245,17 @@ fn edit_obj(s: &mut Session, pos: &Pos, f: impl Fn(&mut InlineObject)) -> Result
 
 fn edit_float(s: &mut Session, pos: &Pos, f: impl Fn(&mut Float)) -> Result<InlineObject, CmdError> {
     edit_obj(s, pos, |o| {
+        let before = o.frame().map(|(_, _, f)| f.spin());
         if let Some(float) = o.float_mut() {
             f(float);
         }
+        keep_rotated_room(o, before);
     })
 }
 
 fn with_float(s: &mut Session, f: impl Fn(&mut Float)) -> CmdResult {
     with_obj(s, |o| {
+        let before = o.frame().map(|(_, _, f)| f.spin());
         if let Some(float) = o.float_mut() {
             let was_inline = float.wrap == Wrap::Inline;
             f(float);
@@ -1258,7 +1264,25 @@ fn with_float(s: &mut Session, f: impl Fn(&mut Float)) -> CmdResult {
                 float.dist = 9.0;
             }
         }
+        keep_rotated_room(o, before);
     })
+}
+
+/// After an object's rotation changed: its effect extent moves by the change in its turned
+/// bounds' overhang, as Word rewrites it when an object is rotated, keeping the room for its
+/// shadow and glow. Layout takes an inline object's room from its size and effect extent only,
+/// as Word does (zenodo-085's picture turned 5° with no effect extent takes just its height).
+fn keep_rotated_room(o: &mut InlineObject, before: Option<doc4me_geom::Spin>) {
+    let Some((w, h, f)) = o.frame() else { return };
+    let Some(before) = before.filter(|b| *b != f.spin()) else { return };
+    let old = Float { rot: before.deg, flip_h: before.flip_h, flip_v: before.flip_v, ..Float::default() }.spin_pad(w, h);
+    let new = f.spin_pad(w, h);
+    let (dx, dy) = (new.0 - old.0, new.1 - old.1);
+    if let Some(float) = o.float_mut() {
+        for (e, d) in float.effect.iter_mut().zip([dx, dy, dx, dy]) {
+            *e = (doc4me_geom::finite(*e) + d).clamp(-1584.0, 1584.0);
+        }
+    }
 }
 
 /// Move one position in the selected drawing's page/story/box layer. Renumber that layer so even
@@ -2110,6 +2134,23 @@ mod tests {
         assert!((rect(&mut s).y - before.y).abs() < 0.01, "it stays put");
         s.run("edit.undo", &json!({})).unwrap();
         assert_eq!(v_rel(&s), Anchor::Page);
+    }
+
+    #[test]
+    fn rotating_moves_the_effect_extent_by_the_turned_bounds() {
+        // Word's effect extent holds a rotated object's overhang; Doc4Me's rotation commands keep
+        // it so, and turning back leaves the room it had before.
+        let mut s = Session::new(doc4me_doc::Document::new());
+        let data = super::super::insert::base64_encode(&png(20, 10));
+        s.run("insert.picture", &json!({"data": data, "width": 200})).unwrap();
+        let effect = |s: &Session| selected(s).unwrap().1.frame().unwrap().2.effect;
+        assert_eq!(effect(&s), [0.0; 4]);
+        s.run("arrange.rotation", &json!({"degrees": 90})).unwrap();
+        // 200 × 100 turned 90°: 50 narrower on each side, 50 taller above and below.
+        let e = effect(&s);
+        assert!((e[0] + 50.0).abs() < 0.01 && (e[1] - 50.0).abs() < 0.01 && (e[2] + 50.0).abs() < 0.01 && (e[3] - 50.0).abs() < 0.01, "{e:?}");
+        s.run("arrange.rotation", &json!({"degrees": 0})).unwrap();
+        assert!(effect(&s).iter().all(|v| v.abs() < 0.01), "{:?}", effect(&s));
     }
 
     /// #332: Rotate and Flip turn the frame (an angle and mirroring), never the pixels; an exact

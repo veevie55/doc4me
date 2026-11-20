@@ -1541,11 +1541,13 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
                                 let maxw = (env.width - rp.indent_left.max(0.0) - rp.indent_right.max(0.0)).max(18.0);
                                 let (w, h) = (w.clamp(1.0, 4000.0), h.clamp(1.0, 4000.0));
                                 let s = if env.fit_objects && w > maxw { maxw / w } else { 1.0 };
-                                // The line makes room for effects (shadows) around the picture too, and
-                                // for a rotated one's bounds, as Word does.
+                                // The line makes room for the picture's extent and its effect extent
+                                // only, as Word does: Word writes a rotated picture's turned bounds and
+                                // its shadows there (zenodo-085's picture turned 5° with no effect
+                                // extent takes just its height in Word's PDF, 32.7 pt less than its
+                                // turned bounds). Rotating in Doc4Me fills it in the same way.
                                 let [el, et, er, eb] = float.effect_extent();
-                                let (px, py) = float.spin_pad(w * s, h * s);
-                                push(&mut b, ClKind::Object(k), w * s + el + er + 2.0 * px, h * s + et + eb + 2.0 * py);
+                                push(&mut b, ClKind::Object(k), (w * s + el + er).max(1.0), (h * s + et + eb).max(1.0));
                             } else {
                                 push(&mut b, ClKind::Object(k), 0.0, 0.0);
                             }

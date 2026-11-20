@@ -194,9 +194,11 @@ pub struct Float {
     /// Distance from surrounding text above and below (points).
     pub dist_top: f32,
     pub dist_bottom: f32,
-    /// Room around the object for effects such as shadows (left, top, right, bottom, points),
-    /// inline or floating: lines and surrounding text keep clear of it. Rotation's own overhang
-    /// is not in here: it follows from [`Float::rot`] (see [`Float::spin_pad`]).
+    /// Room around the object (left, top, right, bottom, points) that an inline object's line
+    /// keeps besides its size, as Word's `wp:effectExtent`: shadows and glow, and a rotated
+    /// object's turned bounds (negative where the turned object is narrower than its frame).
+    /// Word writes it when it rotates an object or gives it effects, and lays lines out by it
+    /// alone; Doc4Me does the same (rotating moves it by the change in [`Float::spin_pad`]).
     pub effect: [f32; 4],
     /// Rotation clockwise about the object's centre, degrees (DrawingML `a:xfrm/@rot`). Offsets
     /// and the size stay those of the unrotated frame, as in Word; see [`Float::spin`].
@@ -274,9 +276,10 @@ impl Float {
         let (bw, bh) = self.spin().extent(w, h);
         ((bw - w) / 2.0, (bh - h) / 2.0)
     }
-    /// The effect extents, finite and clamped (left, top, right, bottom).
+    /// The effect extents, finite and clamped (left, top, right, bottom); negative where a turned
+    /// object is narrower than its frame.
     pub fn effect_extent(&self) -> [f32; 4] {
-        self.effect.map(|v| if v.is_finite() { v.clamp(0.0, 1584.0) } else { 0.0 })
+        self.effect.map(|v| if v.is_finite() { v.clamp(-1584.0, 1584.0) } else { 0.0 })
     }
 }
 

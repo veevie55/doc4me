@@ -400,10 +400,8 @@ impl super::Writer<'_> {
                 }
             }
             "wp:effectExtent" => {
-                // Word's effect extent also covers a rotated object's overhang (its rotated bounds).
-                let (px, py) = float.spin_pad(w, h);
-                let [el, et, er, eb] = float.effect_extent();
-                let ext = [el + px, et + py, er + px, eb + py].map(emu);
+                // The effect extent as the model holds it (Word's: a rotated object's overhang included).
+                let ext = float.effect_extent().map(emu);
                 e.attrs.retain(|(k, _)| !matches!(k.as_str(), "l" | "t" | "r" | "b"));
                 for (k, v) in ["l", "t", "r", "b"].into_iter().zip(ext) {
                     e.attrs.push((k.to_string(), v));

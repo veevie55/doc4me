@@ -992,7 +992,7 @@ impl Reader<'_> {
         float.alt = meta;
         if let Some(e) = c.child("wp:effectExtent") {
             for (slot, n) in float.effect.iter_mut().zip(["l", "t", "r", "b"]) {
-                // Negative for a rotated object narrower than its frame; settled below.
+                // Negative for a rotated object narrower than its frame.
                 *slot = e.attr(n).and_then(|v| measure(v, 12_700.0)).unwrap_or(0.0).clamp(-1584.0, 1584.0);
             }
         }
@@ -1048,14 +1048,8 @@ impl Reader<'_> {
             obj.set_alt_text(&alt);
         }
         self.set_shape_id(&mut obj, c.child("wp:docPr").and_then(|p| p.attr("id")));
-        // Word's effect extent also covers a rotated object's overhang; the model keeps that
-        // apart (it follows from the angle), so take it back out.
-        if let Some(f) = obj.float_mut() {
-            let (px, py) = f.spin_pad(w, h);
-            for (e, p) in f.effect.iter_mut().zip([px, py, px, py]) {
-                *e = (*e - p).clamp(0.0, 1584.0);
-            }
-        }
+        // The effect extent is kept as Word wrote it, a rotated object's overhang included (or
+        // left out: zenodo-085's picture turned 5° has none, and Word's line keeps just its height).
         Some(obj)
     }
 
