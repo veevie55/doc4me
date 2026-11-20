@@ -174,6 +174,23 @@ fn split_number(row: &[MNode]) -> Option<(Arg, Arg, usize)> {
     None
 }
 
+/// The size variant of a display operator (`variants`: glyph and height, font units) at least
+/// `want` tall, the smallest such, and the factor to draw it at: the font's tallest, scaled up a
+/// little, when none is that tall; `base` when it has none.
+fn display_variant(variants: &[(u32, f32)], base: u32, want: f32) -> (u32, f32) {
+    let tall_enough = variants.iter().filter(|v| v.1 >= want - 0.5).min_by(|a, b| a.1.total_cmp(&b.1));
+    match tall_enough {
+        Some(v) => (v.0, 1.0),
+        None => match variants.iter().max_by(|a, b| a.1.total_cmp(&b.1)) {
+            Some(v) if v.1 > 0.0 => {
+                let f = (want / v.1).clamp(1.0, 1.5);
+                (v.0, if f <= 1.1 { 1.0 } else { f })
+            }
+            _ => (base, 1.0),
+        },
+    }
+}
+
 /// Lay out an equation set at the size and colour of `rc`. `display`: an equation on a line of
 /// its own (bigger operators, limits above and below, full-size fractions).
 /// `avail` is the width of the line (numbered display equations fill it, wider display equations
@@ -845,18 +862,12 @@ impl Ctx<'_> {
                 let op = if *grow && target > 0.0 && self.t.is_some() {
                     self.stretch_v(base_gid, target, size).unwrap_or_else(|| self.glyph_id(base_gid, size, self.color))
                 } else if target > 0.0 && self.t.is_some() {
-                    // Word sets display operators about 1.2 em tall: the size variant nearest that.
-                    let want = target.min(size * 1.2) * self.upem / size;
-                    let (g, adv) = self
-                        .t
-                        .as_ref()
-                        .and_then(|t| t.vert.get(&base_gid))
-                        .and_then(|c| c.variants.iter().min_by(|a, b| (a.1 - want).abs().total_cmp(&(b.1 - want).abs())))
-                        .copied()
-                        .unwrap_or((base_gid, want));
-                    // A font without a variant near that size: scale the nearest one.
-                    let f = if adv > 0.0 { (want / adv).clamp(0.6, 1.5) } else { 1.0 };
-                    let f = if (0.9..=1.1).contains(&f) { 1.0 } else { f };
+                    // The smallest size variant at least the font's display operator height, as the
+                    // OpenType MATH table intends and Word does: zenodo-044's display ∑ in Cambria
+                    // Math (minimum 2500 per 2048 em) is its 3911-unit variant in Word's PDF, with
+                    // limits 17.9 pt above and 15.3 pt below a 12 pt baseline, not the 2312-unit one.
+                    let variants = self.t.as_ref().and_then(|t| t.vert.get(&base_gid)).map(|c| c.variants.as_slice()).unwrap_or(&[]);
+                    let (g, f) = display_variant(variants, base_gid, target * self.upem / size);
                     self.glyph_id(g, size * f, self.color)
                 } else if base_gid != 0 {
                     self.glyph_id(base_gid, size, self.color)
@@ -1999,6 +2010,22 @@ fn hcat(parts: Vec<Bx>) -> Bx {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_display_operator_takes_the_smallest_variant_at_least_the_display_height() {
+        // Cambria Math's ∑ variants (heights per 2048 em) and its display operator minimum, 2500:
+        // Word's PDF of zenodo-044 draws the 3911-unit one.
+        let sum = [(963, 1862.0), (3532, 2312.0), (3533, 3911.0), (3534, 5911.0), (3535, 8590.0)];
+        assert_eq!(display_variant(&sum, 963, 2500.0), (3533, 1.0));
+        // Exactly tall enough counts; out of order variants too.
+        assert_eq!(display_variant(&[(2, 3000.0), (1, 2500.0)], 9, 2500.0), (1, 1.0));
+        // None tall enough: the tallest, scaled up a little (at most 1.5×, not for 10% or less).
+        assert_eq!(display_variant(&[(1, 1000.0), (2, 2000.0)], 9, 2100.0), (2, 1.0));
+        let (g, f) = display_variant(&[(1, 1000.0)], 9, 2500.0);
+        assert_eq!((g, f), (1, 1.5));
+        // No variants: the base glyph as it is.
+        assert_eq!(display_variant(&[], 9, 2500.0), (9, 1.0));
+    }
     use doc4me_doc::math::Math;
 
     fn rc() -> ResolvedChar {
