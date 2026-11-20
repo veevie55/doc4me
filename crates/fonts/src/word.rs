@@ -192,6 +192,10 @@ fn open_substitute(family: &str) -> Option<&'static str> {
         "overpass" => Some("Overpass"),
         "overpass light" | "overpass extralight" | "overpass semibold" | "overpass extrabold" => Some("Overpass"),
         "calibri" | "calibri light" | "calibri semibold" | "calibri bold" => Some("Carlito"),
+        // DengXian's Latin letters: Carlito with DengXian's widths (`metric_fit`), on every
+        // platform. Without this, Windows set it in Arial (installed, first of the sans
+        // stand-ins) and the measured widths never applied (zenodo-056 in the Windows run).
+        "dengxian" | "等线" => Some("Carlito"),
         "cambria" | "cambria math" | "eu albertina" | "amasis mt pro medium" | "newsgoth cn bt" | "inherit" => Some("Caladea"),
         "aptos" | "aptos light" | "aptos semibold" | "aptos extrabold" | "aptos black" => Some("Intos"),
         "aptos display" => Some("Intos Display"),
@@ -1134,6 +1138,14 @@ mod tests {
                 assert_eq!(r.face.weight >= 600.0, bold);
             }
         }
+    }
+
+    /// DengXian (等线) is drawn with Carlito on every platform, so its measured Latin widths apply
+    /// where Arial is installed too (zenodo-056 on Windows).
+    #[test]
+    fn dengxian_is_drawn_with_carlito_everywhere() {
+        assert_eq!(open_substitute("等线"), Some("Carlito"));
+        assert_eq!(open_substitute("DengXian"), Some("Carlito"));
     }
 
     #[test]
