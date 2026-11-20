@@ -22,6 +22,10 @@
 
 ## [Unreleased]
 
+### เพิ่ม — workflow Readiness (Windows) อัปโหลด PDF ของเอกสารที่ไม่ผ่าน (2026-11-20)
+
+- `.github/workflows/readiness-windows.yml` มีสองขั้นใหม่หลังการวัด: รวบรวม `doc4me.pdf` ของทุกเอกสารที่อยู่ในรายการ corpus-pages หรือ corpus-breaks ของรายงาน แล้วอัปโหลดเป็น artifact `readiness-mismatch-pdfs` (เก็บไว้ 14 วัน, `actions/upload-artifact` pin SHA เดียวกับ workflow อื่น) ทั้งสองขั้นเป็น `continue-on-error` จึงไม่ทำให้การวัดล้ม เหตุผล: เจ้าของอนุญาต 2026-11-20 ให้ดูผลฝั่ง Windows ได้ เพราะเอกสารที่มีสมการและฟอนต์บางตัว (เช่น Cambria Math) จัดหน้าบน Windows ต่างจาก Linux ไม่กระทบแอป ไฟล์ .docx หรือเกณฑ์ readiness ตรวจสอบ: YAML parse ได้ และใช้ regex เดียวกันกับ docs/readiness.md ปัจจุบันได้เอกสาร 66 ฉบับตรงกับรายการที่ไม่ผ่าน; `cargo xtask ci` ผ่านครบ 6 ขั้น
+
 ### เปลี่ยนแปลง — defer การเทียบการแบ่งหน้าของ corpus 16 ฉบับตามคำสั่งเจ้าของ; แก้ Arial Black และระยะขอบบนของเซลล์ในแถว (2026-11-20)
 
 - ตามคำสั่งเจ้าของ 2026-11-20 corpus รองรับ `check` = `deferred` (เหตุผลอยู่ใน `note`): ถ้าการเทียบจำนวนหน้าหรือขอบเขตหน้าไม่ผ่าน จะนับเป็น deferred (ยังนับว่าไม่ผ่านในตัวเลขรวม แต่ไม่นับในตัวเลขแบบไม่รวม deferred) ถ้าผ่านก็ยังนับผ่าน ส่วนการเปิด บันทึกกลับ และความเสถียรยังวัดตามเดิม ไม่ได้ลบแถวใดและไม่ได้เปลี่ยนไฟล์อ้างอิง (`xtask/src/readiness.rs` `Pagination`, `record_document`; `docs/readiness/README.md`; ข้อความในรายงานบอกว่า deferred รวมหน้าของ corpus ด้วย; `tools/readiness_th.py` อ่านจำนวน deferred จากรายงานแทนเลข 22 ที่เขียนตายตัว)

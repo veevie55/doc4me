@@ -125,6 +125,36 @@ jobs:
             }
           }
 
+      # Doc4Me's PDFs of the documents whose page count or page boundaries don't match Word's, so
+      # they can be compared with Linux and with Word's references (fonts such as Cambria Math are
+      # only on Windows). Diagnostic only; it never fails the measurement.
+      - name: Collect the PDFs of documents that don't match
+        shell: pwsh
+        continue-on-error: true
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'readiness-mismatch-pdfs'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          $report = Get-Content -Raw docs/readiness.md
+          $ids = @()
+          foreach ($set in @('corpus-pages', 'corpus-breaks')) {
+            $body = [regex]::Match($report, "(?ms)^### $set \([^\r\n]+\)\r?\n(?<body>.*?)(?=^#{1,3} |\z)").Groups['body'].Value
+            foreach ($m in [regex]::Matches($body, '(?m)^- `([A-Za-z0-9_-]+)`')) { $ids += $m.Groups[1].Value }
+          }
+          foreach ($id in ($ids | Sort-Object -Unique)) {
+            $pdf = Join-Path $env:GITHUB_WORKSPACE "target/readiness/corpus/$id/doc4me.pdf"
+            if (Test-Path $pdf) { Copy-Item $pdf (Join-Path $out "$id.pdf") }
+          }
+          Write-Output "collected $((Get-ChildItem $out).Count) PDFs"
+
+      - name: Upload the PDFs of documents that don't match
+        continue-on-error: true
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: readiness-mismatch-pdfs
+          path: ${{ runner.temp }}/readiness-mismatch-pdfs
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Render Thai readiness report
         shell: bash
         run: python tools/readiness_th.py
