@@ -894,6 +894,13 @@ impl Reader<'_> {
             }
             t.fill = tp.child("w:shd").and_then(|e| self.pc.shd_fill(e));
             t.cell_margins = tp.child("w:tblCellMar").map(|m| props::margins_over(m, [0.0, 5.4, 0.0, 5.4]));
+            // As on a table: a width in twips, within Word's 22 in limit (govuk-031's "Table Web 2").
+            t.cell_spacing = tp
+                .child("w:tblCellSpacing")
+                .filter(|k| matches!(k.attr("w:type"), None | Some("dxa")))
+                .and_then(|k| tw(k, "w:w"))
+                .map(|v| v.clamp(0.0, 1584.0))
+                .filter(|v| *v > 0.0);
             t.band_size = tp.child_val("w:tblStyleRowBandSize").and_then(u32_of).filter(|n| *n > 0).map(|n| n.min(1000));
         }
         for c in s.children("w:tblStylePr").take(64) {

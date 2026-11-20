@@ -5138,10 +5138,12 @@ fn a_split_row_moves_on_whole_when_a_cell_would_keep_none_of_its_text() {
 #[test]
 fn cell_spacing_insets_cells_and_the_table_content() {
     // zenodo-036: with 0.75 pt between cells Word's rows are 1.5 pt taller and the first cell's
-    // text 1.5 pt further from the table's edge, both ways.
+    // text 1.5 pt further from the table's edge, both ways. (Its tables have no borders; with
+    // borders the cells' and the frame's add to that: `cell_spacing_rows_hold_both_cell_borders_and_the_frame`.)
     let text_at = |spacing: Option<f32>| {
         let mut d = Document::new();
         let mut t = Table::new(2, 1, 200.0);
+        t.props.style = None;
         for row in &mut t.rows {
             row.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Cell", Default::default()))];
         }
@@ -7539,4 +7541,104 @@ fn a_bullets_descent_doesnt_make_its_line_taller() {
     // The label's ascent counts in full; the line below the baseline stays the text's.
     assert!((bulleted.1 - big.1).abs() < 0.05, "baseline {bulleted:?} vs {big:?}");
     assert!((bulleted.0 - (big.1 + (small.0 - small.1))).abs() < 0.05, "line {bulleted:?}: {small:?} {big:?}");
+}
+
+/// A legacy check box is drawn as a square the size of the box (crossed when checked), as Word
+/// draws it, not as a ☐ character: no glyph shows text for it, and it keeps the line of the
+/// run's font. A box bigger than its text makes the line as tall as that font's line at the box's
+/// size (govuk-031's 12 pt boxes in 11 pt Arial).
+#[test]
+fn a_form_check_box_is_a_drawn_square_on_its_texts_line() {
+    use doc4me_doc::form::{FormField, FormKind};
+    let lay_box = |size: Option<f32>, checked: bool| {
+        let props = CharProps { size: Some(11.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("Yes", props.clone());
+        p.mark = props.clone();
+        let mut f = FormField::check_box();
+        if let FormKind::CheckBox { size: s, checked: c, .. } = &mut f.kind {
+            *s = size;
+            *c = Some(checked);
+        }
+        p.insert_object(
+            0,
+            InlineObject::Field { instr: " FORMCHECKBOX ".into(), result: String::new(), locked: false, code: false, form: Some(Box::new(f)) },
+            &props,
+        )
+        .unwrap();
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let draws = display::page_display(&d, &l.pages[0], &display::DisplayOptions::default());
+        let line = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].clone()) } else { None })
+            .unwrap();
+        (draws, line)
+    };
+    let plain = {
+        let props = CharProps { size: Some(11.0), ..Default::default() };
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Yes", props))];
+        let l = lay(&d);
+        l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].height) } else { None }).unwrap()
+    };
+    let squares = |draws: &[display::Draw]| {
+        draws
+            .iter()
+            .filter_map(|d| match d {
+                display::Draw::Shape { rect, kind: doc4me_doc::para::ShapeKind::Rectangle, stroke: Some(_), .. } => Some(*rect),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+    };
+    let crosses = |draws: &[display::Draw]| draws.iter().filter(|d| matches!(d, display::Draw::Line { .. })).count();
+    let (draws, line) = lay_box(None, false);
+    let sq = squares(&draws);
+    assert_eq!(sq.len(), 1, "one square");
+    assert!((sq[0].w - 11.0 * 0.96).abs() < 0.01 && (sq[0].h - sq[0].w).abs() < 0.01, "{:?}", sq[0]);
+    assert_eq!(crosses(&draws), 0);
+    let text: String = draws.iter().filter_map(|d| if let display::Draw::Glyphs { text, .. } = d { Some(text.as_str()) } else { None }).collect();
+    assert!(!text.contains('\u{2610}') && text.contains("Yes"), "{text:?}");
+    assert!((line.height - plain).abs() < 0.01, "a box the text's size keeps its line: {} vs {plain}", line.height);
+    // Checked: crossed corner to corner.
+    let (draws, _) = lay_box(None, true);
+    assert_eq!(crosses(&draws), 2);
+    // A 12 pt box: drawn 12 pt, the line as tall as 12 pt text's.
+    let (draws, big) = lay_box(Some(12.0), false);
+    assert!((squares(&draws)[0].w - 12.0 * 0.96).abs() < 0.01);
+    assert!((big.height - plain * 12.0 / 11.0).abs() < 0.05, "{} vs {}", big.height, plain * 12.0 / 11.0);
+    assert!((big.baseline - big.top - (line.baseline - line.top)).abs() < 0.01, "standing on the text's baseline");
+}
+
+/// With spacing between cells (the table's own or its style's) each cell has its own top and
+/// bottom borders inside the row, and the table's frame border stands outside the first and last
+/// rows: govuk-031's rows are 24.6 pt apart in Word's PDF, 21.05 pt + two 0.75 pt borders + 2 pt.
+#[test]
+fn cell_spacing_rows_hold_both_cell_borders_and_the_frame() {
+    // 0: no spacing; 1: the table's own; 2: its style's. Every table has the style.
+    let cells = |mode: u8| {
+        let mut t = Table::new(3, 1, 200.0);
+        let b = Border::single(0.75);
+        t.props.borders = Some(Borders { top: Some(b), bottom: Some(b), left: Some(b), right: Some(b), between: Some(b), inside_v: Some(b) });
+        let mut d = Document::new();
+        let mut st =
+            doc4me_doc::styles::Style { id: "Web".into(), name: "Web".into(), kind: doc4me_doc::styles::StyleKind::Table, ..Default::default() };
+        st.table = Some(doc4me_doc::styles::TableStyleParts { cell_spacing: (mode == 2).then_some(1.0), ..Default::default() });
+        std::sync::Arc::make_mut(&mut d.styles).styles.push(st);
+        t.props.style = Some("Web".into());
+        if mode == 1 {
+            t.props.cell_spacing = Some(1.0);
+        }
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(*rect) } else { None }).collect::<Vec<Rect>>()
+    };
+    let (none, own, styled) = (cells(0), cells(1), cells(2));
+    let pitch = |c: &[Rect]| c[2].y - c[1].y;
+    assert!((pitch(&own) - pitch(&styled)).abs() < 0.01, "the style's spacing counts like the table's: {own:?} vs {styled:?}");
+    // An inner row: 2 × 1 pt of spacing and its cells' bottom border (0.75 pt) more.
+    assert!((pitch(&own) - pitch(&none) - 2.75).abs() < 0.01, "{own:?} vs {none:?}");
+    // The first row also holds the frame border and 1 pt more spacing above its cells.
+    assert!(((own[1].y - own[0].y) - pitch(&own) - 1.75).abs() < 0.01, "{own:?}");
 }

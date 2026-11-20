@@ -1,3 +1,9 @@
+# Form check boxes, table-style cell spacing · 2026-11-20
+
+- FORMCHECKBOX is now an em space in the run's font with a drawn square (`Enclosed`, `cross` when checked), like Word's PDF (paths, no text); a box bigger than its text adds descent up to that font's line at the box size. Table styles' `w:tblCellSpacing` is read/saved/used; with spacing each row holds its cells' bottom borders and the first/last rows the frame border. Exact lines taller than their text take the paragraph mark font's ascent share. Linux 153/219 (govuk-018, govuk-021), no new failure.
+- Tried along the way: drawing the box line from the fallback face (old), from the run's line at box size (govuk-031 rows right but govuk-017 extraction order flipped), and at the run size alone (govuk-031 rows 1.1 pt short). Word's drawn sizeAuto box looks ~15 pt for 11 pt text in govuk-020 (render measurement only; not applied).
+- govuk-031 p7 still starts 1.9 pt high from the page top (table continuing at the top of the page).
+
 # Duplicate style ids · 2026-11-19
 
 - List labels no longer add their descent to a line (Courier New "o" bullets: 7 documents now step like Word): zenodo-083 passes, govuk-009 fails (its page 1 starts 20 pt high: Word 2013 pushed the body below an empty header, the newer Word behind govuk-017/018 doesn't; a fix in either direction swaps which of them fails). Next lead: Arial Nova Cond Light's line is 1.209 em in Word (ascent 963, descent 224 per 1000 declared; Roboto stand-in 1.173), but setting it makes zenodo-149 29 pages (other compensations there: list rows on p10 are denser in Word).

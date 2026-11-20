@@ -346,6 +346,8 @@ pub struct Enclosed {
     pub w: f32,
     pub h: f32,
     pub stroke: f32,
+    /// Crossed corner to corner too (a checked form check box).
+    pub cross: bool,
 }
 
 /// What a table style gives the text of a cell: its paragraph and run formatting, with the
@@ -1276,7 +1278,7 @@ fn overstrike(
         EncloseShape::Diamond => ShapeKind::Diamond,
     };
     let stroke = (s * 0.06).clamp(0.4, 4.0);
-    enclosures.push((k, Enclosed { kind, x: (adv - bw) / 2.0, top: cy + bh / 2.0, w: bw, h: bh, stroke }));
+    enclosures.push((k, Enclosed { kind, x: (adv - bw) / 2.0, top: cy + bh / 2.0, w: bw, h: bh, stroke, cross: false }));
 }
 
 impl Builder<'_> {
@@ -1565,13 +1567,53 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
                                         Some(f) => {
                                             let t = f.display(result);
                                             let mut look = (*rc).clone();
-                                            if let doc4me_doc::form::FormKind::CheckBox { size: Some(pt), .. } = f.kind {
-                                                look.size = pt;
-                                            }
                                             if env.form_shading && look.highlight.is_none() && look.shading.is_none() {
                                                 look.shading = Some(FIELD_SHADING);
                                             }
-                                            b.shape_wrappable(&t, start, end, &Arc::new(look));
+                                            let look = Arc::new(look);
+                                            if let doc4me_doc::form::FormKind::CheckBox { size, .. } = f.kind {
+                                                // Word draws a check box itself, a square of the box's
+                                                // size (its own, or the text's) stroked 0.06 of it, on
+                                                // the line of the run's font at the run's size, with no
+                                                // text: govuk-020's 11 pt Arial lines with a box step
+                                                // 12.6 pt in Word's PDF like those without, and
+                                                // govuk-031's 12 pt boxes in 11 pt text are paths 11.5
+                                                // pt square from 10.9 pt above the baseline, stroked
+                                                // 0.72 pt. An em space holds its place; the square
+                                                // (crossed when checked) is drawn over it.
+                                                let side_of = size.filter(|v| v.is_finite() && *v > 0.0).unwrap_or(look.size).clamp(1.0, 1584.0);
+                                                let k0 = b.clusters.len();
+                                                b.shape_wrappable("\u{2003}", start, end, &look);
+                                                // A box bigger than the text makes the line as tall as
+                                                // the text's font's line at the box's size, below the
+                                                // baseline: govuk-031's rows of 12 pt boxes in 11 pt
+                                                // Arial are as tall as 12 pt Arial lines in Word's PDF,
+                                                // their boxes standing on the 11 pt text's baseline.
+                                                if side_of > look.size
+                                                    && let Some(c) = b.clusters.get_mut(k0)
+                                                    && let Some(st) = b.styles.get(c.style as usize)
+                                                {
+                                                    let k = side_of / look.size.max(0.01);
+                                                    c.obj_d = c.obj_d.max((st.ascent + st.descent) * k - st.ascent);
+                                                }
+                                                if let Some(adv) = b.clusters.get(k0).map(|c| c.adv) {
+                                                    let side = side_of * 0.96;
+                                                    enclosures.push((
+                                                        k0,
+                                                        Enclosed {
+                                                            kind: doc4me_doc::para::ShapeKind::Rectangle,
+                                                            x: (adv - side) / 2.0,
+                                                            top: side_of * 0.91,
+                                                            w: side,
+                                                            h: side,
+                                                            stroke: (side_of * 0.06).clamp(0.25, 12.0),
+                                                            cross: f.checked() == Some(true),
+                                                        },
+                                                    ));
+                                                }
+                                            } else {
+                                                b.shape_wrappable(&t, start, end, &look);
+                                            }
                                         }
                                         None => {
                                             let (t, page_dep) = field_text(instr, result, env.fields);
@@ -2537,7 +2579,9 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     // unlowered words too, 13.7 pt).
                     raw_asc = raw_asc.max(st.ascent);
                     raw_desc = raw_desc.max(st.descent);
-                    ((st.ascent + st.shift).max(c.obj_h + st.shift), st.descent + (-st.shift).max(0.0))
+                    // `obj_d` on a text cluster: a form check box bigger than its text reaches
+                    // that far below the baseline.
+                    ((st.ascent + st.shift).max(c.obj_h + st.shift), (st.descent + (-st.shift).max(0.0)).max(c.obj_d))
                 };
                 asc = asc.max(a);
                 desc = desc.max(d);
@@ -2625,7 +2669,12 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             // descent (before any raising or lowering, which then moves the text). govuk-044's
             // page number, 20 pt Tahoma lowered 12 pt in a 10 pt exact line, has its baseline
             // 20.3 pt below the frame's top in Word's PDF: 10 × 20.0 / 24.1 + 12.
-            top + height * raw_asc / (raw_asc + raw_desc)
+            // The share is the paragraph font's, whatever else the line holds: govuk-020's
+            // 12 pt exact lines of 11 pt Arial step 12.0 pt in Word's PDF, the first one with a
+            // check box drawn by a taller fallback face too.
+            let (a, d) = pl.styles.get(mark_style as usize).map_or((raw_asc, raw_desc), |m| (m.ascent, m.descent));
+            let (a, d) = if a + d > 0.0 { (a, d) } else { (raw_asc, raw_desc) };
+            top + height * a / (a + d)
         } else {
             top + baseline_offset(rp.line_spacing, asc, height, desc).max(obj_asc.min(height - below))
         };

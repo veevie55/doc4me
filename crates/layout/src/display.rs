@@ -996,14 +996,13 @@ fn lines(
             let (Some(c), Some(left)) = (pl.clusters.get(*k), line.cl_left(*k)) else { continue };
             let Some(st) = pl.styles.get(c.style as usize) else { continue };
             let rect = Rect::new(x + left + e.x, base - st.shift - e.top, e.w, e.h);
-            out.push(Draw::Shape {
-                rect,
-                kind: e.kind,
-                fill: None,
-                stroke: Some(text_color(&st.rc.color, None)),
-                stroke_width: e.stroke,
-                effects: Default::default(),
-            });
+            let color = text_color(&st.rc.color, None);
+            out.push(Draw::Shape { rect, kind: e.kind, fill: None, stroke: Some(color), stroke_width: e.stroke, effects: Default::default() });
+            if e.cross {
+                for (y0, y1) in [(rect.y, rect.bottom()), (rect.bottom(), rect.y)] {
+                    out.push(Draw::Line { x0: rect.x, y0, x1: rect.right(), y1, width: e.stroke, color, stroke: Stroke::Solid, alpha });
+                }
+            }
         }
         // Ruby (Phonetic Guide) text over its base text, in runs of one style.
         for r in pl.rubies.iter().filter(|r| (line.c0..line.c1).contains(&r.cluster)) {

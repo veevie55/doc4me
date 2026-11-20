@@ -54,6 +54,8 @@ pub struct TableStyleParts {
     pub fill: Option<Rgb>,
     /// Cell margins, points: [top, left, bottom, right] (`w:tblCellMar`).
     pub cell_margins: Option<[f32; 4]>,
+    /// Spacing between cells, points (`w:tblCellSpacing`), for tables that set none themselves.
+    pub cell_spacing: Option<f32>,
     pub header_fill: Option<Rgb>,
     pub header_chr: CharProps,
     /// Cell borders of the header row (`firstRow` region's `w:tcBorders`): `between` is the
@@ -104,6 +106,7 @@ impl TableStyleParts {
         self.band_chr.overlay(&patch.band_chr);
         self.fill = patch.fill.or(self.fill);
         self.cell_margins = patch.cell_margins.or(self.cell_margins);
+        self.cell_spacing = patch.cell_spacing.or(self.cell_spacing);
         self.header_fill = patch.header_fill.or(self.header_fill);
         self.header_chr.overlay(&patch.header_chr);
         self.band_fill = patch.band_fill.or(self.band_fill);

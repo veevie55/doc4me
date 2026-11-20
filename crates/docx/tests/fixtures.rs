@@ -1852,3 +1852,19 @@ fn embedded_fonts_are_read_and_deobfuscated() {
     // Named as the font table names it (Word renames the file's own family).
     assert_eq!((f.family.as_str(), f.bold, f.italic), ("Embedded Sans", false, false));
 }
+
+#[test]
+fn a_table_styles_cell_spacing_is_read_and_saved() {
+    // govuk-031's "Table Web 2": 20 twips between cells, set on the style only.
+    let styles = format!(
+        r#"<w:styles {W_NS}><w:style w:type="paragraph" w:styleId="Normal" w:default="1"><w:name w:val="Normal"/></w:style><w:style w:type="table" w:styleId="TableWeb2"><w:name w:val="Table Web 2"/><w:tblPr><w:tblCellSpacing w:w="20" w:type="dxa"/><w:tblBorders><w:top w:val="inset" w:sz="6" w:space="0" w:color="auto"/></w:tblBorders></w:tblPr></w:style><w:style w:type="table" w:styleId="Pct"><w:name w:val="Pct"/><w:tblPr><w:tblCellSpacing w:w="50" w:type="pct"/></w:tblPr></w:style></w:styles>"#
+    );
+    let mut d = doc4me_docx::read(&docx("<w:p/>", &[("rId1", "styles", "styles.xml")], &[("word/styles.xml", &styles)])).unwrap();
+    for _ in 0..2 {
+        let parts = |id: &str| d.styles.get(id).and_then(|s| s.table.clone()).unwrap_or_default();
+        assert_eq!(parts("TableWeb2").cell_spacing, Some(1.0));
+        // Only a width in twips counts, as on a table.
+        assert_eq!(parts("Pct").cell_spacing, None);
+        d = doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap();
+    }
+}

@@ -446,7 +446,7 @@ fn layout_cell_in(
 
 pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], avail: f32, depth: usize) -> TableLayout {
     let style = table_style(ctx, t);
-    let spacing = cell_spacing(t);
+    let spacing = cell_spacing(t, style.as_ref());
     let parts = style.as_ref().map(|s| &s.parts);
     // Cell text formatting per region, built once per table (nothing without a table style).
     let mut cell_text: Vec<(Region, CellText)> = Vec::new();
@@ -613,9 +613,17 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             // is on the cell's right.
             let (x0, x1) = if rtl { ((acc - x1).max(0.0), (acc - x0).max(0.0)) } else { (x0, x1) };
             let margins = spaced(cell.props.margins.unwrap_or(margins_def), spacing);
-            // The table's own inset from its edge, above the first row and below the last.
-            let margins =
-                [margins[0] + if ri == 0 { spacing } else { 0.0 }, margins[1], margins[2] + if ri + 1 == nrows { spacing } else { 0.0 }, margins[3]];
+            // The table's own inset from its edge, above the first row and below the last, and
+            // with spacing between cells the table's frame border outside the cells' own (Word:
+            // govuk-031's frame line stands 2.76 pt above its first cell's border, 0.75 pt of
+            // frame and 2 pt of spacing).
+            let frame = |b: Option<Border>| if spacing > 0.0 { b.filter(Border::is_visible).map_or(0.0, |b| b.width.clamp(0.0, 12.0)) } else { 0.0 };
+            let margins = [
+                margins[0] + if ri == 0 { spacing + frame(tborders.top) } else { 0.0 },
+                margins[1],
+                margins[2] + if ri + 1 == nrows { spacing + frame(tborders.bottom) } else { 0.0 },
+                margins[3],
+            ];
             let margins = if rtl { [margins[0], margins[3], margins[2], margins[1]] } else { margins };
             let cw = (x1 - x0 - margins[1] - margins[3]).max(4.0);
             let mut fill = cell.props.shading;
@@ -689,7 +697,10 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             // Word keeps the cell's text clear of its top border (and the last row's of its bottom
             // border): the border's width sits on top of the cell margin.
             let band = |b: Option<Border>| b.filter(Border::is_visible).map_or(0.0, |b| b.width.clamp(0.0, 12.0));
-            let (band_t, band_b) = (band(borders.top), if ri + 1 == nrows { band(borders.bottom) } else { 0.0 });
+            // With spacing between cells each cell has all four borders of its own, so every row
+            // holds its cells' bottom borders too: govuk-031's rows (1 pt spacing, 0.75 pt inset
+            // borders) are 24.6 pt apart in Word's PDF, their 21.05 pt height + two borders + 2 pt.
+            let (band_t, band_b) = (band(borders.top), if ri + 1 == nrows || spacing > 0.0 { band(borders.bottom) } else { 0.0 });
             let insets = margins[0] + margins[2] + band_t + band_b;
             let turn = cell.props.text_direction;
             let mut turned = None;
@@ -1415,9 +1426,9 @@ fn region_text(st: &TableStyleProps, (header, total, first_col, last_col, band, 
 /// Each column's narrowest and widest content, cell margins included: its longest word and its
 /// longest line. A cell spanning columns shares what they lack between them; nested tables count
 /// with their own. `None` when every cell is empty.
-/// The table's spacing between cells (`w:tblCellSpacing`), points: 0 without, capped.
-fn cell_spacing(t: &Table) -> f32 {
-    t.props.cell_spacing.filter(|v| v.is_finite()).map_or(0.0, |v| v.clamp(0.0, 72.0))
+/// The table's spacing between cells (`w:tblCellSpacing`), its own or its style's, points: 0 without, capped.
+fn cell_spacing(t: &Table, style: Option<&TableStyleProps>) -> f32 {
+    t.props.cell_spacing.or(style.and_then(|s| s.parts.cell_spacing)).filter(|v| v.is_finite()).map_or(0.0, |v| v.clamp(0.0, 72.0))
 }
 
 /// Cell margins with the spacing between cells added on every side: Word insets each cell by
@@ -1443,7 +1454,7 @@ fn column_content(ctx: &mut Ctx, t: &Table, style: Option<&TableStyleProps>, dep
                 let text = style.map(|st| region_text(st, region_of(t, style, ri, g, cell.span(), cols.len())));
                 let (lo, hi) = blocks_content(ctx, &cell.blocks, text.as_ref(), depth);
                 any |= hi > 0.0;
-                let m = spaced(cell.props.margins.unwrap_or(margins_def), cell_spacing(t));
+                let m = spaced(cell.props.margins.unwrap_or(margins_def), cell_spacing(t, style));
                 let need = (lo + m[1] + m[3], hi + m[1] + m[3]);
                 match cols.get_mut(g) {
                     Some(col) if span == 1 => *col = (col.0.max(need.0), col.1.max(need.1)),

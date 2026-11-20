@@ -818,10 +818,14 @@ fn style_xml(w: &mut W, st: &Style) {
         w.close("w:rPr");
     }
     if let Some(t) = &st.table {
-        if t.borders.is_some() || t.cell_margins.is_some() || t.band_size.is_some() {
+        let spacing = t.cell_spacing.filter(|v| v.is_finite() && *v > 0.0);
+        if t.borders.is_some() || t.cell_margins.is_some() || t.band_size.is_some() || spacing.is_some() {
             w.open("w:tblPr", &[]);
             if let Some(n) = t.band_size {
                 w.val("w:tblStyleRowBandSize", &n.clamp(1, 1000).to_string());
+            }
+            if let Some(sp) = spacing {
+                w.empty("w:tblCellSpacing", &[("w:w", &crate::units::twips(sp.min(1584.0))), ("w:type", "dxa")]);
             }
             if let Some(b) = &t.borders {
                 props::borders(w, "w:tblBorders", b, Some("w:insideH"), &[]);
