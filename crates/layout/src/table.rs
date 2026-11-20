@@ -19,6 +19,9 @@ pub struct RowLayout {
     /// Vertically merged cells starting in this row whose content is centred or bottom-aligned
     /// in the rows they span (moved again when the table breaks inside the merge).
     pub merged: Vec<MergedSpan>,
+    /// Cells (paths) whose text was moved down to the row's largest top margin, and by how much
+    /// (a split row's continuation keeps the room it had below its lowest line without it).
+    pub lifts: Vec<(Vec<u32>, f32)>,
 }
 
 /// A vertically merged cell's aligned content within its first row's items.
@@ -570,8 +573,11 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         span: usize,
         /// Turned text: `items` are still in the turned frame (placed in the second pass).
         turned: Option<Turned>,
+        /// Where its text starts below the row's top: its top margin and border band.
+        top: f32,
     }
     let mut rows: Vec<Vec<CellBox>> = Vec::with_capacity(nrows);
+    let mut row_lifts: Vec<Vec<(Vec<u32>, f32)>> = Vec::with_capacity(nrows);
     let mut heights: Vec<f32> = Vec::with_capacity(nrows);
     // Each cell's first and last paragraph styles, row by row (contextual spacing compares a
     // cell's text with the cells beside it in its row).
@@ -761,8 +767,26 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 g,
                 span,
                 turned,
+                top: margins[0] + band_t,
             });
             g += span;
+        }
+        // Every cell's text starts below the row's largest top margin and border band: zenodo-173's
+        // header and body cells without margins of their own set their text on the same baselines
+        // as the first two cells' with 4 pt top margins in Word's PDF (4 pt lower than their own
+        // margins would put them).
+        let mut lifts = Vec::new();
+        for (ci, c) in cells.iter_mut().enumerate().filter(|(_, c)| c.turned.is_none() && c.vmerge != VMerge::Continue) {
+            let lower = row_top - c.top;
+            if lower > 0.001 {
+                for it in &mut c.items {
+                    it.translate(0.0, lower);
+                }
+                c.h += lower;
+                let mut cell = path.to_vec();
+                cell.extend([ri as u32, ci as u32]);
+                lifts.push((cell, lower));
+            }
         }
         // The row's largest top and bottom cell margins frame its tallest content, whichever cell
         // they belong to: zenodo-173's rows, whose first two cells have 4 pt top and bottom margins
@@ -789,6 +813,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
         float_heights.push(if row_hidden { 0.0 } else { float_rh.max(4.0) });
         hidden_rows.push(row_hidden);
         rows.push(cells);
+        row_lifts.push(lifts);
     }
     let is_hidden = |ri: usize| hidden_rows.get(ri).copied().unwrap_or(false);
     // Vertically merged cells: grow the last row of the merge if the content is taller.
@@ -947,7 +972,7 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 story,
             });
         }
-        out.push(RowLayout { height: rh, items, merged });
+        out.push(RowLayout { height: rh, items, merged, lifts: row_lifts.get(ri).cloned().unwrap_or_default() });
     }
     TableLayout { x, width: total, float_fit_height: float_heights.iter().sum(), rows: out }
 }
@@ -1186,10 +1211,15 @@ fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, R
                     let keep_before = !orphan;
                     let before =
                         if k == 0 && !para.rp.contextual_spacing && keep_before { para.rp.space_before.clamp(0.0, top.max(0.0)) } else { 0.0 };
-                    first_moved = first_moved.min(top - before);
+                    // (The row's height counts from where its text would start without the moves
+                    // down to the row's largest top margin.)
+                    let lift = row.lifts.iter().find(|(cell, _)| path.0.starts_with(cell)).map_or(0.0, |(_, d)| *d);
+                    first_moved = first_moved.min(top - before - lift);
                     let cell = path.0.get(..path.0.len().saturating_sub(1)).unwrap_or_default().to_vec();
+                    // Each cell's continuation keeps that move too: zenodo-173's cells without
+                    // top margins of their own go on 4 pt below the next page's top in Word's PDF.
                     let e = cell_moved.entry(cell).or_insert(f32::MAX);
-                    *e = e.min(top - before);
+                    *e = e.min(top - before - lift);
                 }
             }
             Placed::Image { rect, .. } | Placed::Shape { rect, .. } | Placed::Graphic { rect, .. } | Placed::Clip { rect, .. } => {
@@ -1344,7 +1374,21 @@ fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, R
                 })
                 .fold(0.0f32, f32::max)
         };
-        let pad = (row.height - bottom(&row.items)).max(0.0);
+        // (Measured without the moves down to the row's largest top margin, as before them.)
+        let lift = |it: &Placed| match it {
+            Placed::Lines { path, .. } => row.lifts.iter().find(|(cell, _)| path.0.starts_with(cell)).map_or(0.0, |(_, d)| *d),
+            _ => 0.0,
+        };
+        let unlifted: Vec<Placed> = row
+            .items
+            .iter()
+            .map(|it| {
+                let mut it = it.clone();
+                it.translate(0.0, -lift(&it));
+                it
+            })
+            .collect();
+        let pad = (row.height - bottom(&unlifted)).max(0.0);
         let needed = bottom(&b) + pad;
         if needed > 0.0 && needed < b_height {
             b_height = needed.max(4.0);
@@ -1365,7 +1409,10 @@ fn split_row_with(row: &RowLayout, cut: f32, keep: bool) -> Option<(RowLayout, R
             }
         }
     }
-    Some((RowLayout { height: cut, items: a, merged: Vec::new() }, RowLayout { height: b_height, items: b, merged: Vec::new() }))
+    Some((
+        RowLayout { height: cut, items: a, merged: Vec::new(), lifts: Vec::new() },
+        RowLayout { height: b_height, items: b, merged: Vec::new(), lifts: Vec::new() },
+    ))
 }
 
 /// The parts of `r` above `cut` and below it, the latter moved up by `shift` (onto the

@@ -48,7 +48,12 @@ assessments distinguish measured facts from causes that are still unverified.
   A corpus row whose pagination the owner accepted (the reference PDF was made from another edition
   while Doc4Me matches the `.docx`'s own saved layout) has `check` = `accepted` and the decision
   in `note`: its page-count and page-boundary checks pass; opening, round trip and stability are
-  still measured.
+  still measured. A corpus row whose pagination the owner deferred (the reference can't be matched
+  from the `.docx`, or every word of the page is there and only pdftotext's reading order differs)
+  has `check` = `deferred` and the reason in `note`: a failing page-count or page-boundary check
+  counts as deferred (not passing; left out of the number without deferred rows), a passing one
+  still passes, and opening, round trip and stability are still measured. See
+  [deferred-pagination-2026-11-20.md](deferred-pagination-2026-11-20.md) for the evidence per row.
 - A row whose check can't be made or met in a development session waits with `status` =
   `deferred` while its prerequisites or verification are unavailable. The owner originally asked
   to skip these rows on 2026-10-27 and explicitly resumed them on 2026-11-07. Authorization to

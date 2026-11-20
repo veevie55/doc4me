@@ -22,6 +22,19 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง — defer การเทียบการแบ่งหน้าของ corpus 16 ฉบับตามคำสั่งเจ้าของ; แก้ Arial Black และระยะขอบบนของเซลล์ในแถว (2026-11-20)
+
+- ตามคำสั่งเจ้าของ 2026-11-20 corpus รองรับ `check` = `deferred` (เหตุผลอยู่ใน `note`): ถ้าการเทียบจำนวนหน้าหรือขอบเขตหน้าไม่ผ่าน จะนับเป็น deferred (ยังนับว่าไม่ผ่านในตัวเลขรวม แต่ไม่นับในตัวเลขแบบไม่รวม deferred) ถ้าผ่านก็ยังนับผ่าน ส่วนการเปิด บันทึกกลับ และความเสถียรยังวัดตามเดิม ไม่ได้ลบแถวใดและไม่ได้เปลี่ยนไฟล์อ้างอิง (`xtask/src/readiness.rs` `Pagination`, `record_document`; `docs/readiness/README.md`; ข้อความในรายงานบอกว่า deferred รวมหน้าของ corpus ด้วย; `tools/readiness_th.py` อ่านจำนวน deferred จากรายงานแทนเลข 22 ที่เขียนตายตัว)
+- defer 16 แถวใน `docs/readiness/corpus.tsv` พร้อมหลักฐานรายแถวใน `docs/readiness/deferred-pagination-2026-11-20.md`:
+  - กลุ่ม ข (ไฟล์อ้างอิงทำจากต้นฉบับที่ไม่ตรงกับ .docx) 6 ฉบับ: zenodo-006 (header ของวารสารไม่มีใน .docx), govuk-066 (ฟิลด์ DATE), zenodo-018 (WordArt gradient ไม่มีตัวอักษรใน PDF), govuk-068 (Arabic presentation forms), zenodo-149 (ligature "ti" ไม่มี Unicode), zenodo-022 (ลำดับ bullet สองคอลัมน์)
+  - กลุ่ม ก (คำบนหน้าครบ ต่างแค่ลำดับที่ pdftotext อ่าน) 10 ฉบับ: zenodo-020, -029, -030, -050, -070, -072 (baseline ทุกคำต่างจาก Word ไม่เกิน 0.4 pt), govuk-024 และ zenodo-173 (ตรงหลังแก้ด้านล่าง), govuk-005 (ระยะก่อนย่อหน้าหลัง section break ต่าง 3.55 pt: ถ้าเลิกตัดจะทำให้ zenodo-022/-069/-081 จำนวนหน้าผิด และ zenodo-109 ไม่ผ่าน ทั้งที่หน้านี้ก็ยังไม่ตรง), govuk-054 (กล่องข้อความหมุน −90° ที่ Doc4Me คงข้อความตั้งตรงตามที่ออกแบบไว้)
+- แก้ Arial Black ที่ใช้ฟอนต์อื่นแทน ให้ใช้เมตริกบรรทัดของตัวเอง (ascent/descent 2254/634 ต่อ 2048) (`crates/fonts/src/word.rs` `requested_line`) เหตุผล: หัวเรื่อง "Rule 15.18" ขนาด 24 pt ของ govuk-024 ใน PDF ของ Word มี baseline ต่ำกว่าขอบบนของแถว 26.4 pt (1.100 em) แต่ของเราสูงกว่านั้น 3.55 pt หลังแก้ baseline ทั้งหน้าตรง Word ภายใน 0.4 pt
+- ข้อความของทุกเซลล์ในแถวเริ่มใต้ระยะขอบบนที่มากที่สุดของแถว และเมื่อแถวถูกแบ่งข้ามหน้า ส่วนที่ต่อไปหน้าถัดไปยังคงระยะนั้นและคงความสูงเดิม (`crates/layout/src/table.rs`: `CellBox::top`, `RowLayout::lifts`, `split_row_with` วัด `first_moved`/`pad` จากตำแหน่งก่อนเลื่อน) เหตุผล: ใน zenodo-173 สองคอลัมน์แรกมี `tcMar` top 4 pt ส่วนอีกสามคอลัมน์ไม่มี แต่ใน PDF ของ Word ข้อความทั้งห้าคอลัมน์อยู่บน baseline เดียวกัน ของเราสามคอลัมน์หลังสูงกว่า 4.02 pt หลังแก้หน้า 5, 12, 18 และ 22 ตรง Word ภายใน 0.2 pt (ตอนแก้รอบแรกที่ยังไม่ได้แก้ส่วนแถวต่อ จำนวนหน้ากลายเป็น 24 จาก 25 จึงแก้ส่วนนั้นด้วย)
+- ผลต่อผู้ใช้: ตารางที่เซลล์ตั้งระยะขอบบนไม่เท่ากัน และข้อความ Arial Black วางตรง Word ไม่เปลี่ยนไฟล์ .docx ไม่มีผลเฉพาะกับภาษาไทย ส่วนการ defer มีผลแค่กับตัวเลข readiness แบบไม่รวม deferred
+- ตรวจสอบ:
+  - เทสต์ใหม่ `deferred_rows_defer_failing_pagination_only` (xtask), `a_rows_cells_start_below_its_largest_top_margin` (layout) และ assertion ของ Arial Black ใน `substitutes_keep_the_requested_fonts_line` (fonts)
+  - corpus บน Linux: ไม่มีฉบับใหม่ที่ตก จำนวนหน้า 218/219 เท่าเดิม และ open/roundtrip/stability 219/219; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,672 ไม่ผ่าน 0)
+
 ### เพิ่ม — เครื่องมือวิเคราะห์ corpus-breaks และ handoff งานที่เหลือ (2026-11-20)
 
 - `tools/corpus_analysis.py` (ใหม่) รวมสคริปต์วิเคราะห์ที่เคยอยู่นอก repo (และหายไปกับ container) ไว้ในที่เดียว: `triage LOG` (แบ่งความล้มเหลวเป็น ORDER/small/layout), `drift LOG` (จุดที่ตำแหน่งบรรทัดเริ่มเลื่อน), `lines`/`match ID PAGE` (ตำแหน่งบรรทัดของเราเทียบ Word), `ends ID PAGE` (ข้อความรอบขอบหน้า), `pitch ID N` (ระยะบรรทัดต่อฟอนต์), `desc PDF` (Ascent/Descent/FontBBox ที่ PDF ประกาศ) อ่าน PDF ที่ `cargo xtask readiness --corpus` สร้างไว้ใน target/readiness/corpus/<id>/doc4me.pdf หรือโฟลเดอร์ที่ระบุด้วย `--ours` และไม่เขียนไฟล์ใดๆ เหตุผล: ให้ session ถัดไปไล่ฉบับที่ไม่ผ่านต่อได้ทันที ไม่กระทบแอป ไฟล์ .docx หรือภาษาไทย ตรวจสอบ: รันทุกคำสั่งกับ log ของ corpus รอบล่าสุดและ govuk-006/-020/-044, zenodo-149 ได้ผลเดียวกับสคริปต์เดิม และ `python3 -m py_compile` ผ่าน; `cargo xtask ci` ผ่านครบ 6 ขั้น

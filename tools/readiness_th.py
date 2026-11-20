@@ -13,6 +13,7 @@ def capture(pattern: str, default: str = "ไม่พบข้อมูล") ->
 
 measured = capture(r"\*\*Measured readiness: ([^*]+)\*\*")
 ahead = capture(r"\*\*Without the deferred rows: ([^*]+)\*\*")
+deferred = capture(r"Without the deferred rows: [0-9.]+%\*\* — (\d+) rows", "?")
 commit = capture(r"at commit `([^`]+)`")
 date = capture(r"readiness` on ([0-9-]+)")
 
@@ -43,9 +44,9 @@ doc = [
     "|---|---:|---:|---:|---|", *rows, "",
     "## รายการที่ยังไม่ผ่านและเหตุผลรายข้อ", "",
     f"มีรายการ corpus-pages ที่ไม่ผ่าน {page_failures} รายการ และ corpus-breaks ที่ไม่ผ่าน {break_failures} รายการ ผลล่าสุดพร้อม observations อยู่ใน [อุปสรรค readiness ฉบับภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [ฉบับภาษาอังกฤษ](readiness/blockers-2026-11-14.md); workflow จะปรับ blockers จากผลวัดทุกครั้ง", "",
-    "การยังแยกสาเหตุไม่ได้ไม่ทำให้รายการผ่าน ต้องตรงกับ Word ตามเกณฑ์เดิมก่อนจึงนับผ่าน ไม่มีการลดเกณฑ์หรือเพิ่มข้อยกเว้น", "",
+    "การยังแยกสาเหตุไม่ได้ไม่ทำให้รายการผ่าน ต้องตรงกับ Word ตามเกณฑ์เดิมก่อนจึงนับผ่าน ไม่มีการลดเกณฑ์ ข้อยกเว้นมีเฉพาะที่เจ้าของสั่ง defer ไว้พร้อมหลักฐาน", "",
     "## รายการ deferred", "",
-    "มี 22 รายการ deferred ซึ่งยังนับเป็นไม่ผ่านในคะแนนรวมและไม่รวมในตัวเลข ‘ไม่นับ deferred’ ตามวิธีคำนวณเดิม รายการและ prerequisite ที่บันทึกไว้ยังคงเดิม ดู [รายงาน readiness ฉบับเต็ม](readiness.md) และ [แผน deferred](readiness/deferred-plan.md)", "",
+    f"มี {deferred} รายการ deferred ซึ่งยังนับเป็นไม่ผ่านในคะแนนรวมและไม่รวมในตัวเลข ‘ไม่นับ deferred’ ได้แก่รายการที่รอ prerequisite (ฮาร์ดแวร์ แพลตฟอร์ม บริการภายนอก) และหน้าของ corpus ที่เจ้าของให้ defer การเทียบการแบ่งหน้า ดู [รายงาน readiness ฉบับเต็ม](readiness.md), [แผน deferred](readiness/deferred-plan.md) และ [หลักฐานของ corpus ที่ defer](readiness/deferred-pagination-2026-11-20.md)", "",
     "## วิธีอ่านผล", "",
     "รายงานนี้วัด source ที่ระบุด้านบนจาก Windows runner; เป้าหมาย readiness 100% ยังไม่ถึง เพราะ layout comparison ที่ยังไม่ตรงจะคงสถานะไม่ผ่านจนกว่าจะมีผลวัดที่ตรงเกณฑ์ คำแปลมิติต่าง ๆ แสดงคู่กับชื่อชุดตรวจและจำนวนจริงจากรายงานต้นทาง", "",
 ]

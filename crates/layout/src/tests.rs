@@ -5048,7 +5048,12 @@ fn a_split_row_moves_shading_below_the_cut_with_it() {
     };
     let fill = |y: f32, h: f32| Placed::Fill { rect: doc4me_geom::Rect::new(0.0, y, 100.0, h), color: doc4me_doc::props::Rgb(200, 0, 0) };
     // The row's own shading (from its top) and a nested cell's shading starting below the cut.
-    let row = RowLayout { height: 200.0, items: vec![line_row(0.0), line_row(150.0), fill(0.0, 200.0), fill(150.0, 50.0)], merged: Vec::new() };
+    let row = RowLayout {
+        height: 200.0,
+        items: vec![line_row(0.0), line_row(150.0), fill(0.0, 200.0), fill(150.0, 50.0)],
+        merged: Vec::new(),
+        lifts: Vec::new(),
+    };
     let (a, b) = split_row(&row, 100.0).expect("splits");
     let fills = |r: &RowLayout| {
         r.items.iter().filter_map(|i| if let Placed::Fill { rect, .. } = i { Some((rect.y, rect.h)) } else { None }).collect::<Vec<_>>()
@@ -5086,15 +5091,19 @@ fn a_split_row_keeps_a_keep_with_next_paragraph_with_the_next_one() {
     let h = para.lines[0].height;
     let lines = |r: &RowLayout| r.items.iter().filter(|i| matches!(i, Placed::Lines { .. })).count();
     // Text, the heading, then the paragraph it introduces, which doesn't fit above the cut.
-    let row =
-        RowLayout { height: 200.0, items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)], merged: Vec::new() };
+    let row = RowLayout {
+        height: 200.0,
+        items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)],
+        merged: Vec::new(),
+        lifts: Vec::new(),
+    };
     let cut = 50.0 + h + 1.0;
     let (a, _) = split_row(&row, cut).expect("splits");
     assert_eq!(lines(&a), 2, "without the keep the heading stays");
     let (a, b) = split_row_keeping(&row, cut).expect("splits");
     assert_eq!((lines(&a), lines(&b)), (1, 2), "the heading goes on with its paragraph");
     // The heading starts the row: nothing stays, the row moves on whole.
-    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)], merged: Vec::new() };
+    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)], merged: Vec::new(), lifts: Vec::new() };
     assert!(split_row_keeping(&row, h + 1.0).is_none());
     assert!(split_row(&row, h + 1.0).is_some(), "at a page's top the row still splits");
 }
@@ -5128,7 +5137,7 @@ fn a_split_row_moves_on_whole_when_a_cell_would_keep_none_of_its_text() {
         turn: TextDirection::Horizontal,
     };
     let h = one.lines[0].height;
-    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)], merged: Vec::new() };
+    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)], merged: Vec::new(), lifts: Vec::new() };
     // The first line of each fits; widow control moves the two-line cell's paragraph on whole.
     let cut = h + 1.0;
     assert!(split_row(&row, cut).is_some(), "at a page's top the row still splits");
@@ -7641,4 +7650,26 @@ fn cell_spacing_rows_hold_both_cell_borders_and_the_frame() {
     assert!((pitch(&own) - pitch(&none) - 2.75).abs() < 0.01, "{own:?} vs {none:?}");
     // The first row also holds the frame border and 1 pt more spacing above its cells.
     assert!(((own[1].y - own[0].y) - pitch(&own) - 1.75).abs() < 0.01, "{own:?}");
+}
+
+/// Every cell's text in a row starts below the row's largest top margin: zenodo-173's cells
+/// without top margins of their own share the baselines of the cells with 4 pt margins in Word's
+/// PDF. A split row's continuation keeps that, and its height.
+#[test]
+fn a_rows_cells_start_below_its_largest_top_margin() {
+    let mut t = Table::new(1, 2, 300.0);
+    t.rows[0].cells[0].props.margins = Some([4.0, 4.0, 4.0, 4.0]);
+    for c in t.rows[0].cells.iter_mut() {
+        c.blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Cell", Default::default()))];
+    }
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    let ys: Vec<f32> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Lines { path, y, .. } = it { (path.0.len() == 4).then_some(*y) } else { None })
+        .collect();
+    assert_eq!(ys.len(), 2, "{ys:?}");
+    assert!((ys[0] - ys[1]).abs() < 0.01, "both cells' text on one line: {ys:?}");
 }

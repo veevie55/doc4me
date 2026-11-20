@@ -660,6 +660,9 @@ fn requested_line(family: &str) -> Option<(f64, f64)> {
         // 1000; Arimo, which draws it, is 1.149), every style alike.
         "tahoma" => Some((2049.0 / 2048.0, 423.0 / 2048.0)),
         "georgia" => Some((1878.0 / 2048.0, 449.0 / 2048.0)),
+        // Arial Black (win/hhea 2254 / 634): govuk-024's 24 pt "Rule 15.18" stands 26.4 pt below
+        // its row's top in Word's PDF, 1.100 em; the face drawing it has a lower ascent.
+        "arial black" => Some((2254.0 / 2048.0, 634.0 / 2048.0)),
         // Garamond, as Word's PDFs of zenodo-115 and zenodo-118 declare it (ascent 862, descent
         // 263 per 1000) and step it: 11 pt body lines at 283/240 spacing 14.59 pt apart on
         // average, 1.125 em of line. Tinos' own hhea line is 1.150 em.
@@ -1259,6 +1262,9 @@ mod tests {
         assert_eq!(em(single_line("Cordia New", &r.face, true, 1.0)), 1.3);
         assert_eq!(em(single_line("Cambria", &r.face, true, 1.0)), 1.172);
         assert_eq!(em(single_line("Courier New", &r.face, true, 1.0)), 1.133);
+        // Arial Black's ascent is 1.100 em (govuk-024's 24 pt heading in Word's PDF).
+        let (a, d) = single_line("Arial Black", &r.face, true, 24.0);
+        assert!((a - 26.414).abs() < 0.01 && (d - 7.43).abs() < 0.01, "{a} {d}");
         // Points scale with the size.
         assert_eq!(em(single_line("Cambria", &r.face, true, 12.0)), 14.068);
         // Cambria Math is spaced like Cambria even when the face drawing it is its own (installed).

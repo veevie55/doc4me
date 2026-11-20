@@ -584,9 +584,16 @@ fn sets_from_corpus(manifest: &[BTreeMap<String, String>], dir: &Path, cli: &Pat
     let names = ["corpus-open", "corpus-roundtrip", "corpus-pages", "corpus-breaks", "corpus-stability"];
     let mut sets: Vec<SetResult> = names.iter().map(|n| SetResult::new(n)).collect();
     let mut todo = Vec::new();
-    // Rows whose pagination the owner accepted (`check` = `accepted`): see `record_document`.
-    let accepted: std::collections::BTreeSet<String> =
-        manifest.iter().filter(|r| col(r, "check") == "accepted").map(|r| col(r, "id").to_string()).collect();
+    // Rows whose pagination the owner accepted (`check` = `accepted`) or deferred (`deferred`,
+    // with the reason in `note`): see `record_document`.
+    let pagination: BTreeMap<String, Pagination> = manifest
+        .iter()
+        .filter_map(|r| match col(r, "check") {
+            "accepted" => Some((col(r, "id").to_string(), Pagination::Accepted)),
+            "deferred" => Some((col(r, "id").to_string(), Pagination::Deferred(col(r, "note").to_string()))),
+            _ => None,
+        })
+        .collect();
     for row in manifest {
         let id = col(row, "id");
         let (docx, pdf) = (dir.join(format!("{id}.docx")), dir.join(format!("{id}.pdf")));
@@ -620,22 +627,37 @@ fn sets_from_corpus(manifest: &[BTreeMap<String, String>], dir: &Path, cli: &Pat
     let mut results = results.into_inner().unwrap_or_default();
     results.sort_by(|a, b| a.id.cmp(&b.id));
     for r in &results {
-        record_document(&mut sets, r, accepted.contains(&r.id));
+        record_document(&mut sets, r, pagination.get(&r.id).unwrap_or(&Pagination::Measured));
     }
     (sets, available)
 }
 
-/// Count one document's results into the five corpus sets. `accepted`: the owner accepted the
-/// row's pagination (`check` = `accepted` in `corpus.tsv`, with the decision in `note`), because
-/// the reference PDF was made from another edition while Doc4Me matches the `.docx`'s own saved
-/// layout (govuk-026): its page-count and page-boundary checks pass; opening, round trip and
-/// stability are still measured.
-fn record_document(sets: &mut [SetResult], r: &DocResult, accepted: bool) {
+/// How a corpus row's page-count and page-boundary checks count (`check` in `corpus.tsv`).
+#[derive(Debug, Clone, PartialEq)]
+enum Pagination {
+    Measured,
+    /// `accepted`: the owner accepted the row's pagination, with the decision in `note`, because
+    /// the reference PDF was made from another edition while Doc4Me matches the `.docx`'s own
+    /// saved layout (govuk-026). Both checks pass.
+    Accepted,
+    /// `deferred`: the owner set the row's pagination aside (the reason in `note`): the reference
+    /// PDF can't be matched from the `.docx` (another edition, a date printed when it was made,
+    /// text Word's PDF has no characters for) or only pdftotext's reading order differs with every
+    /// word on the page. A failing check counts as deferred (not passing, left out of the number
+    /// without deferred rows); a passing one still passes.
+    Deferred(String),
+}
+
+/// Count one document's results into the five corpus sets, its pagination as `pagination` says;
+/// opening, round trip and stability are always measured.
+fn record_document(sets: &mut [SetResult], r: &DocResult, pagination: &Pagination) {
     for (k, (set, res)) in sets.iter_mut().zip([&r.open, &r.roundtrip, &r.pages, &r.breaks, &r.stable]).enumerate() {
-        match res {
-            _ if accepted && (k == 2 || k == 3) => set.pass(),
-            Ok(()) => set.pass(),
-            Err(e) => set.fail(&r.id, e.clone()),
+        let paging = k == 2 || k == 3;
+        match (res, pagination) {
+            (_, Pagination::Accepted) if paging => set.pass(),
+            (Ok(()), _) => set.pass(),
+            (Err(e), Pagination::Deferred(why)) if paging => set.defer(&r.id, format!("{why} ({e})")),
+            (Err(e), _) => set.fail(&r.id, e.clone()),
         }
     }
 }
@@ -840,7 +862,7 @@ fn render(sets: &[SetResult], corpus_run: usize, corpus_listed: usize, commit: &
     ));
     md.push_str(&format!("**Measured readiness: {:.1}%**\n\n", total * 100.0));
     md.push_str(&format!(
-        "**Without the deferred rows: {:.1}%** — {deferred} rows await their recorded prerequisites and verification (hardware, platform access or external services); they count as not passing in the number above. Authorization to resume work alone does not make a check pass.\n\n",
+        "**Without the deferred rows: {:.1}%** — {deferred} rows await their recorded prerequisites and verification (hardware, platform access or external services) or are corpus pages whose reference PDF the owner set aside; they count as not passing in the number above. Authorization to resume work alone does not make a check pass.\n\n",
         ahead * 100.0
     ));
     if corpus_run < CORPUS_TARGET {
@@ -996,12 +1018,39 @@ mod tests {
         };
         let fresh = || ["corpus-open", "corpus-roundtrip", "corpus-pages", "corpus-breaks", "corpus-stability"].map(SetResult::new);
         let mut plain = fresh();
-        record_document(&mut plain, &r, false);
+        record_document(&mut plain, &r, &Pagination::Measured);
         assert_eq!(plain.iter().map(|s| s.passed).collect::<Vec<_>>(), [1, 0, 0, 0, 1]);
         let mut accepted = fresh();
-        record_document(&mut accepted, &r, true);
+        record_document(&mut accepted, &r, &Pagination::Accepted);
         assert_eq!(accepted.iter().map(|s| s.passed).collect::<Vec<_>>(), [1, 0, 1, 1, 1]);
         assert!(accepted.iter().all(|s| s.total == 1));
+    }
+
+    /// A row whose pagination the owner deferred: failing page checks count as deferred (not
+    /// passing, out of the number without deferred rows), passing ones still pass, and the other
+    /// corpus checks count what was measured.
+    #[test]
+    fn deferred_rows_defer_failing_pagination_only() {
+        let fresh = || ["corpus-open", "corpus-roundtrip", "corpus-pages", "corpus-breaks", "corpus-stability"].map(SetResult::new);
+        let r = DocResult {
+            id: "doc-006".into(),
+            open: Ok(()),
+            roundtrip: Err("lost".into()),
+            pages: Ok(()),
+            breaks: Err("page 1 starts or ends differently".into()),
+            stable: Ok(()),
+        };
+        let mut sets = fresh();
+        record_document(&mut sets, &r, &Pagination::Deferred("another edition".into()));
+        assert_eq!(sets.iter().map(|s| s.passed).collect::<Vec<_>>(), [1, 0, 1, 0, 1]);
+        assert_eq!(sets.iter().map(|s| s.deferred).collect::<Vec<_>>(), [0, 0, 0, 1, 0]);
+        assert!(
+            sets[3].failing.iter().any(|(id, why)| id == "doc-006" && why.starts_with("deferred: another edition (page 1")),
+            "{:?}",
+            sets[3].failing
+        );
+        assert_eq!(sets[3].rate_ahead(), 1.0);
+        assert_eq!(sets[1].deferred, 0, "a failed round trip is still a failure");
     }
     use super::*;
 
