@@ -491,6 +491,8 @@ fn wide_accent(c: char) -> bool {
             | '\u{23DF}'
             | '\u{23B4}'
             | '\u{23B5}'
+            // The default accent (a hat): Word's PDF of zenodo-085 stretches it across "DSE".
+            | '\u{302}'
     )
 }
 
@@ -825,8 +827,22 @@ impl Ctx<'_> {
             let cls = if r.lit { Cls::Ord } else { class_of(ch) };
             if ch == ' ' || ch == '\u{2061}' || ch == '\u{2062}' || ch == '\u{2063}' || ch == '\u{200B}' {
                 flush(&mut cur, cur_k0, cur_face, synth_italic, &mut out);
-                // Word sets a typed space in an equation about 0.4 em wide.
-                out.push(RunPart::Atom(blank(if ch == ' ' { size * 0.4 } else { 0.0 }, k)));
+                // Word sets a typed space in an equation as the math font's space, after the
+                // italic correction of an italic letter before it: in its PDF of zenodo-085
+                // (Cambria Math 12 pt) "d p" is 2.64 pt (451/2048 em) + 0.38 pt (d's correction)
+                // apart, "t n" 2.64 + 0.29. (A face without a space: 0.25 em.)
+                let w = if ch == ' ' {
+                    let space = self.glyphs(self.face, " ", size, 0, color, (false, false)).w;
+                    let space = if space > 0.0 && space.is_finite() { space } else { size * 0.25 };
+                    let ic = match out.last() {
+                        Some(RunPart::Atom(b)) if !b.transparent => b.ic.max(0.0),
+                        _ => 0.0,
+                    };
+                    space + ic
+                } else {
+                    0.0
+                };
+                out.push(RunPart::Atom(blank(w, k)));
                 continue;
             }
             let same_face = cur_face.map(|f| f.id()) == face.map(|f| f.id());
@@ -2072,6 +2088,27 @@ mod tests {
 
     fn lay_in(math: &Math, lin: &str, display: bool, avail: f32, mp: &MathProps) -> MathLayout {
         layout_equation(math, lin, &rc(), display, avail, mp, &mut 0)
+    }
+
+    /// A typed space is the math font's own space (Cambria Math's: 0.22 em), not 0.4 em: Word's
+    /// PDF of zenodo-085 sets "Estimated percent" 2.64 pt + the italic correction apart at 12 pt.
+    #[test]
+    fn a_typed_space_is_the_fonts_space() {
+        let x_of = |text: &str, ch: &str| {
+            let nodes = vec![MNode::Run(MRun::new(text))];
+            let m = lay_in(&Math { nodes, ..Default::default() }, "", false, 400.0, &MathProps::default());
+            m.items
+                .iter()
+                .find_map(|it| match it {
+                    MItem::Glyphs { glyphs, text, .. } if text.ends_with(ch) => glyphs.last().map(|g| g.1),
+                    _ => None,
+                })
+                .expect("the glyph")
+        };
+        let size = rc().size;
+        let (with, without) = (x_of("a b", "b"), x_of("ab", "b"));
+        let space = with - without;
+        assert!(space > 0.1 * size && space < 0.35 * size, "space {space} at {size} pt");
     }
 
     /// Script sizes are whole half points, rounded down, as in Word's PDFs: 12 pt text's
