@@ -7498,3 +7498,45 @@ fn contextual_spacing_looks_at_the_cells_beside_a_cell() {
     let (off, on) = (row_h(false), row_h(true));
     assert!((off - on - 3.0).abs() < 0.05, "{off} vs {on}");
 }
+
+/// A list label bigger than its text makes the line taller above the baseline only: its descent
+/// doesn't count. Word steps zenodo-083's 11 pt Times New Roman items with 10 pt Courier New "o"
+/// bullets (descent 3.0 pt against 2.4) 12.65 pt apart, like the text alone, and so do
+/// zenodo-107's, zenodo-156's, zenodo-067's and govuk-037's lists.
+#[test]
+fn a_bullets_descent_doesnt_make_its_line_taller() {
+    let height = |text: f32, label: Option<f32>| {
+        let props = doc4me_doc::CharProps { size: Some(text), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("Scikit-learn", props.clone());
+        p.mark = props;
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        if let Some(size) = label {
+            let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::BulletChar('o'));
+            for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+                for l in a.levels.iter_mut() {
+                    l.chr.size = Some(size);
+                }
+            }
+            d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 }))
+                .unwrap();
+        }
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| {
+                if let Placed::Lines { para, l0, .. } = it {
+                    Some((para.lines[*l0].height, para.lines[*l0].baseline - para.lines[*l0].top))
+                } else {
+                    None
+                }
+            })
+            .unwrap()
+    };
+    let (small, big) = (height(11.0, None), height(20.0, None));
+    let bulleted = height(11.0, Some(20.0));
+    // The label's ascent counts in full; the line below the baseline stays the text's.
+    assert!((bulleted.1 - big.1).abs() < 0.05, "baseline {bulleted:?} vs {big:?}");
+    assert!((bulleted.0 - (big.1 + (small.0 - small.1))).abs() < 0.05, "line {bulleted:?}: {small:?} {big:?}");
+}

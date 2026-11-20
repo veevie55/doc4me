@@ -2567,10 +2567,13 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             desc = desc.max(st.descent);
         }
         let (text_asc, text_desc) = (asc, desc);
+        // A list label taller than the text makes the line taller above the baseline only: its
+        // descent doesn't count. Word steps lines with Courier New "o" bullets (10 pt, 3.0 pt
+        // descent) by their text's line alone: zenodo-083's 11 pt Times New Roman items 12.65 pt
+        // apart, zenodo-107's, zenodo-156's, zenodo-067's and govuk-037's likewise.
         if first && let Some(lab) = &pl.label {
             for st in lab.runs.iter().filter_map(|r| pl.styles.get(r.style as usize)) {
                 asc = asc.max(st.ascent);
-                desc = desc.max(st.descent);
             }
         }
         // Multiple spacing adds its share of the font's height to a picture line; it never
