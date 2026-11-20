@@ -565,6 +565,9 @@ impl Reader<'_> {
                 let math = super::math::read_omath(k, Default::default());
                 let linear = doc4me_doc::math::to_linear(&math.nodes);
                 self.emit_obj(sc, pb, InlineObject::Equation { linear, display: false, math }, &props);
+                if let Some(br) = super::math::trailing_break(k) {
+                    self.read_run_child(sc, pb, br, &props, rels, &mut None, depth + 1);
+                }
             }
             "m:oMathPara" => {
                 let props = self.run_props_none(ctx);
@@ -573,6 +576,12 @@ impl Reader<'_> {
                     let math = super::math::read_omath(m, jc);
                     let linear = doc4me_doc::math::to_linear(&math.nodes);
                     self.emit_obj(sc, pb, InlineObject::Equation { linear, display: true, math }, &props);
+                    // A break ending the equation (`w:br` in its last run) starts a line after
+                    // it, as in Word: zenodo-056's scaling equation ends in one, and Word's PDF
+                    // leaves an empty line under it.
+                    if let Some(br) = super::math::trailing_break(m) {
+                        self.read_run_child(sc, pb, br, &props, rels, &mut None, depth + 1);
+                    }
                 }
             }
             "mc:AlternateContent" => {

@@ -2504,6 +2504,15 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     xs.push(x);
                     j += 1;
                 }
+                // A line break right after it ends its line instead of taking one of its own:
+                // zenodo-056's scaling equation ends in a break, and Word's PDF leaves one empty
+                // line under it, not two.
+                if pl.clusters.get(j).is_some_and(|c| c.kind == ClKind::LineBreak) {
+                    xs.push(x);
+                    j += 1;
+                    end = LineEnd::LineBreak;
+                    break;
+                }
                 end = if j >= n { LineEnd::Para } else { LineEnd::Wrap };
                 break;
             }

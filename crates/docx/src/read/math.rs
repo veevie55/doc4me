@@ -248,6 +248,13 @@ fn run_text(r: &El) -> String {
     s
 }
 
+/// The `w:br` in an equation's last run when that run holds nothing else: a break after the
+/// equation (the math model has no place for it inside).
+pub(crate) fn trailing_break(m: &El) -> Option<&El> {
+    let last = m.els().last()?;
+    (last.name == "m:r" && run_text(last).is_empty()).then(|| last.child("w:br")).flatten()
+}
+
 fn run(r: &El) -> Option<MRun> {
     let text = run_text(r);
     if text.is_empty() {

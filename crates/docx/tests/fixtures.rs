@@ -703,6 +703,21 @@ fn additive_paragraph_spacing_is_read_and_written_back() {
     assert!(doc4me_docx::read(&doc4me_docx::write(&split).unwrap()).unwrap().settings.split_page_break_mark);
 }
 
+/// A break ending an equation (`w:br` in its last math run) becomes a line break after it in the
+/// paragraph (zenodo-056); one in a run with text, or none, adds nothing.
+#[test]
+fn a_break_ending_an_equation_follows_it() {
+    let m = r#"xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math""#;
+    let eq = |tail: &str| {
+        let body = format!(r#"<w:p><m:oMathPara {m}><m:oMath {m}><m:r><m:t>x</m:t></m:r>{tail}</m:oMath></m:oMathPara></w:p>"#);
+        let d = read_body(&body);
+        d.para(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().text.clone()
+    };
+    let with = eq("<m:r><w:br/></m:r>");
+    assert!(with.ends_with(doc4me_doc::para::LINE_BREAK), "{with:?}");
+    assert!(!eq("").contains(doc4me_doc::para::LINE_BREAK));
+}
+
 /// The Word version that saved a file (`docProps/app.xml` `AppVersion`) is read and written
 /// back, so a saved file lays out the same (Word 2013 and earlier keep an empty header's line).
 #[test]

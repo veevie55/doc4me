@@ -4604,6 +4604,27 @@ fn a_run_of_dots_after_a_space_may_start_a_line() {
     assert_eq!(&text[para.lines[0].start..para.lines[0].stop], "(2) ", "the dots start the next line");
 }
 
+/// A line break right after a display equation ends the equation's line rather than taking a line
+/// of its own: one empty line follows, as in Word's PDF of zenodo-056.
+#[test]
+fn a_break_after_a_display_equation_leaves_one_empty_line() {
+    use doc4me_doc::math::{MNode, MRun, Math};
+    let lines = |brk: bool| {
+        let mut d = Document::new();
+        let math = Math { nodes: vec![MNode::Run(MRun::new("x"))], ..Default::default() };
+        d.insert_object(&Pos::body(0, 0), InlineObject::Equation { linear: "x".into(), display: true, math }, &Default::default()).unwrap();
+        if brk {
+            let end = d.para(StoryRef::Body, &Path::top(0)).unwrap().text.len();
+            d.insert_text(&Pos::body(0, end), "\n", &Default::default()).unwrap();
+        }
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines.len()
+    };
+    assert_eq!(lines(false), 1);
+    assert_eq!(lines(true), 2, "the equation's line and one empty line after the break");
+}
+
 /// DengXian (等线) holds its own CJK punctuation: a full-width colon a fallback face draws keeps
 /// DengXian's line, as zenodo-056's "Abstract：" line in Word's PDF.
 #[test]
