@@ -7426,6 +7426,37 @@ fn a_caption_keeps_with_the_header_and_first_body_row() {
     assert_eq!(l.pages[1].items.iter().filter(|it| matches!(it, Placed::Cell { .. })).count(), 2);
 }
 
+/// A table whose last row keeps with the next keeps with the paragraph after the table: zenodo-051's
+/// one-cell table holding a picture (Keep with next) goes to the next page with its caption.
+#[test]
+fn a_tables_last_row_keeping_with_next_keeps_with_the_paragraph_after() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let build = |keep: bool| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(580.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        t.rows[0].props.height = Some(40.0);
+        t.rows[0].props.height_rule = HeightRule::Exact;
+        t.rows[0].props.cant_split = true;
+        let mut pic = doc4me_doc::Paragraph::with_text("Picture", Default::default());
+        pic.props.keep_next = Some(keep);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(pic)];
+        let mut caption = doc4me_doc::Paragraph::with_text("Caption", Default::default());
+        caption.props.line_spacing = Some(LineSpacing::Exactly(40.0));
+        caption.props.space_before = Some(0.0);
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(caption)];
+        let l = lay(&d);
+        let cell_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Cell { .. })));
+        let caption_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if *path == Path::top(2))));
+        (cell_page, caption_page)
+    };
+    // 580 + 40 fits the 648 pt page, the caption's 40 more doesn't.
+    assert_eq!(build(false), (Some(0), Some(1)), "without keep with next the table stays");
+    assert_eq!(build(true), (Some(1), Some(1)), "with it the table goes with the caption");
+}
+
 /// A centred vertical merge whose last row moves to the next page centres its text in the part
 /// of the merge on this page, as Word does (zenodo-003's author table), not in the whole merge.
 #[test]

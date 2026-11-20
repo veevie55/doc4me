@@ -4062,11 +4062,24 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 need += tl.rows[k].height;
                 k += 1;
             }
-            if k > ri
-                && let Some(next) = tl.rows.get(k)
-            {
-                let cant_split = t.rows.get(k).is_some_and(|r| r.props.cant_split);
-                need += if cant_split { next.height } else { table::first_line_bottom(next).min(next.height) };
+            // The run reaches the table's last row: it keeps with the start of what follows the
+            // table (zenodo-051's one-cell table holding a picture set to keep with next goes to
+            // the next page with the caption under the table in Word's PDF).
+            let to_end = keeps.get(k) == Some(&true) && k + 1 == tl.rows.len() && t.props.float.is_none();
+            if to_end {
+                need += tl.rows.get(k).map_or(0.0, |r| r.height);
+                need += keep_next_need(ctx, block, pb.col_w(), 0.0, false);
+            }
+            if k > ri || to_end {
+                let next_start = if to_end {
+                    0.0
+                } else if let Some(next) = tl.rows.get(k) {
+                    let cant_split = t.rows.get(k).is_some_and(|r| r.props.cant_split);
+                    if cant_split { next.height } else { table::first_line_bottom(next).min(next.height) }
+                } else {
+                    0.0
+                };
+                need += next_start;
                 if pb.y + need > pb.bottom + 0.01 && need + header_h <= pb.uncapped_bottom() - pb.top {
                     pb.advance(block, body_top);
                     let repeat = header_repeats.saturating_add(header_cost) <= MAX_HEADER_ITEMS;
