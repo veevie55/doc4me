@@ -703,6 +703,17 @@ fn additive_paragraph_spacing_is_read_and_written_back() {
     assert!(doc4me_docx::read(&doc4me_docx::write(&split).unwrap()).unwrap().settings.split_page_break_mark);
 }
 
+/// The Word version that saved a file (`docProps/app.xml` `AppVersion`) is read and written
+/// back, so a saved file lays out the same (Word 2013 and earlier keep an empty header's line).
+#[test]
+fn the_saving_word_version_is_read_and_written_back() {
+    let mut d = doc4me_doc::Document::from_text("Text");
+    assert_eq!(doc4me_docx::read(&doc4me_docx::write(&d).unwrap()).unwrap().settings.app_version, None);
+    d.settings.app_version = Some(15);
+    let bytes = doc4me_docx::write(&d).unwrap();
+    assert_eq!(doc4me_docx::read(&bytes).unwrap().settings.app_version, Some(15));
+}
+
 #[test]
 fn compatibility_mode_is_read_and_defaults_to_word_2007() {
     let compat = |v: &str| {

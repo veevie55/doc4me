@@ -2657,6 +2657,13 @@ fn item_bottom(y: f32, para: &ParaLayout, l0: usize, l1: usize) -> Option<f32> {
 /// the header distance is past the top margin and the body still starts at the margin). Empty
 /// paragraphs added to make room do push it.
 fn blank_story(doc: &Document, blocks: &Blocks) -> bool {
+    // Word 2013 and earlier give even an unused header or footer its line: govuk-009's empty
+    // header (saved by Word 2013) starts the body below it, at 41.0 pt, past the 21.3 pt margin,
+    // and govuk-060's empty footer (Word 2010) keeps its footnotes above it in Word's PDFs, while
+    // govuk-017's and govuk-018's (Word 2016 and later) don't move the body.
+    if doc.settings.app_version.is_some_and(|v| v < 16) {
+        return false;
+    }
     match blocks.as_slice() {
         [b] => match &**b {
             Block::Para(p) => {

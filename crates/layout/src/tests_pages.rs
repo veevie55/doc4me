@@ -392,6 +392,24 @@ fn a_wrapped_picture_in_the_footer_pushes_the_body_up() {
     assert!((away - (792.0 - 72.0)).abs() < 0.01, "{away}");
 }
 
+/// An empty header reaching past the top margin moves the body for a file saved by Word 2013 or
+/// earlier (govuk-009), not for one from a later Word or another program (govuk-018).
+#[test]
+fn an_empty_header_pushes_the_body_in_files_from_word_2013_and_earlier() {
+    let top = |app: Option<u16>| {
+        let mut d = Document::from_text("Body");
+        d.last_section.margin_top = 20.0;
+        d.last_section.header = 30.0;
+        let id = d.add_part(PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::new())]);
+        d.last_section.headers.default = Some(id);
+        d.settings.app_version = app;
+        lay(&d).pages[0].body.y
+    };
+    assert!((top(None) - 20.0).abs() < 0.01, "{}", top(None));
+    assert!((top(Some(16)) - 20.0).abs() < 0.01, "{}", top(Some(16)));
+    assert!(top(Some(15)) > 40.0, "{}", top(Some(15)));
+}
+
 #[test]
 fn a_linked_tall_header_pushes_the_next_sections_body_down() {
     // #454: section 2 has no header of its own and shows section 1's (link to previous).

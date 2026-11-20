@@ -22,6 +22,12 @@
 
 ## [Unreleased]
 
+### แก้ไข — header/footer ว่างดันเนื้อหาในไฟล์จาก Word 2013 และเก่ากว่า; เก็บเวอร์ชัน Word ที่บันทึกไฟล์ (2026-11-20)
+
+- อ่าน `AppVersion` จาก `docProps/app.xml` (เวอร์ชันหลักของ Word ที่บันทึกไฟล์) เก็บใน `Settings::app_version` และเขียนกลับตอนบันทึก (`crates/doc/src/lib.rs`, `crates/docx/src/read/mod.rs` `read_app`, `crates/docx/src/write/mod.rs` `app_xml`) เพื่อให้ไฟล์ที่บันทึกแล้วเปิดใหม่จัดหน้าเหมือนเดิม
+- header หรือ footer ที่มีแค่ย่อหน้าว่าง ในไฟล์ที่บันทึกโดย Word 2013 หรือเก่ากว่า (AppVersion < 16) นับความสูงบรรทัดของมัน จึงดันเนื้อหาเมื่อยื่นเกินขอบกระดาษ ส่วนไฟล์จาก Word 2016 ขึ้นไปหรือไม่ระบุเวอร์ชันทำเหมือนเดิม (ไม่ดัน) (`crates/layout/src/lib.rs` `blank_story`) เหตุผล: การทดลองนับ header/footer ว่างทุกกรณีกับ corpus ทั้งชุดเปลี่ยนผลแค่ 4 ฉบับ: govuk-009 (header ว่าง, Word 2013: Word เริ่มเนื้อหาที่ 41.0 pt = ระยะ header 28.35 + บรรทัด Arial 11 pt เกินขอบบน 21.3) และ govuk-060 (footer ว่าง, Word 2010: เชิงอรรถหน้า 2 จบที่ 782.4 pt เหนือบรรทัด footer) ผ่าน แต่ govuk-017 และ govuk-018 (Word 2016+, PDF จาก PDFMaker 25) ตก เพราะ Word ไม่ดันเนื้อหา AppVersion แยกสองกลุ่มนี้ได้ตรงทั้งหมด
+- ผลต่อผู้ใช้: เอกสารเก่าที่มี header/footer ว่างจัดหน้าเหมือน Word รุ่นที่สร้าง ไฟล์ .docx ที่บันทึกด้วย Doc4Me จะมี `AppVersion` เดิมของไฟล์ (ไฟล์ใหม่ไม่มี) ไม่มีผลเฉพาะกับภาษาไทย ตรวจสอบ: เทสต์ใหม่ `an_empty_header_pushes_the_body_in_files_from_word_2013_and_earlier` และ `the_saving_word_version_is_read_and_written_back`; ทั้ง 4 ฉบับบันทึกแล้วเปิดใหม่ได้ข้อความ PDF เหมือนเดิมและ AppVersion คงเดิม; corpus บน Linux: **govuk-009 และ govuk-060 ผ่าน** ไม่มีเอกสารใหม่ที่ตก; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,692 ไม่ผ่าน 0)
+
 ### แก้ไข — ตัวอักษร/เครื่องหมาย CJK ในข้อความ 等线 ใช้ความสูงบรรทัดของ DengXian (2026-11-20)
 
 - ตัวอักษรที่ฟอนต์ fallback วาดแทนในข้อความที่ขอ 等线/DengXian (เช่นทวิภาคเต็มความกว้าง "：") ใช้ความสูงบรรทัดของ DengXian เหมือนตัวอักษรละตินในข้อความเดียวกัน (`metric_fit` line) แทนเมตริกของฟอนต์ fallback เพราะ DengXian มีตัวอักษร CJK เอง Word จึงไม่เปลี่ยนความสูงบรรทัด (`crates/layout/src/para.rs` `style_for`) เหตุผล: zenodo-056 หน้า 1 บรรทัด "Abstract：" ของเราสูงกว่า Word 13 pt เพราะทวิภาคมาจากฟอนต์ CJK ที่บรรทัดสูง (Shippori Mincho) หลังแก้ หน้า 1 ตรงกับ Word ภายใน 0.8 pt ทั้งหน้าบน Linux (เดิมต่างตั้งแต่ +16 pt)

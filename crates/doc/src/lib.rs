@@ -480,6 +480,13 @@ pub struct Settings {
     /// 2013 and later, which places a table's border at the margin rather than its text and lets
     /// justified lines shrink their spaces to fit more text.
     pub compat_mode: u32,
+    /// Major version of the Word that last saved the file (`docProps/app.xml` `AppVersion`: 14
+    /// for Word 2010, 15 for Word 2013, 16 for Word 2016 and later), when it says. Kept so a
+    /// saved file lays out the same: Word 2013 and earlier give an empty header or footer its
+    /// line, which can push the body (govuk-009, govuk-060); later versions don't (govuk-017,
+    /// govuk-018).
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub app_version: Option<u16>,
     /// Space after a paragraph and space before the next add up (`w:doNotUseHTMLParagraphAutoSpacing`,
     /// File › Options › Advanced › Layout options "Don't use HTML paragraph auto spacing"); without
     /// it Word, since 2007, puts the larger of the two between them.
@@ -856,6 +863,7 @@ impl Default for Settings {
             protect_formatting: false,
             protect_hash: Vec::new(),
             compat_mode: COMPAT_MODE_CURRENT,
+            app_version: None,
             add_para_spacing: false,
             split_page_break_mark: false,
             adjust_line_height_in_table: false,

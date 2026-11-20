@@ -1222,6 +1222,11 @@ fn app_xml(doc: &Document) -> Vec<u8> {
     w.leaf("Words", &[], &doc.word_count().to_string());
     w.leaf("Paragraphs", &[], &doc.paragraph_count().to_string());
     w.leaf("DocSecurity", &[], "0");
+    // The version of Word the file came from, so it lays out the same when opened again
+    // (`Settings::app_version`).
+    if let Some(v) = doc.settings.app_version {
+        w.leaf("AppVersion", &[], &format!("{v}.0000"));
+    }
     w.close("Properties");
     w.into_bytes()
 }

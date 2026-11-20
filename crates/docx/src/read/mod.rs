@@ -258,6 +258,9 @@ pub(crate) fn read_opened(pkg: &Package) -> Result<Document, DocxError> {
 
     let core = root_rels.by_type(rt::CORE).map(|x| x.target.clone()).unwrap_or_else(|| "docProps/core.xml".into());
     r.read_core(&core);
+    if let Some(a) = root_rels.by_type(rt::APP).map(|x| x.target.clone()) {
+        r.read_app(&a);
+    }
     if let Some(c) = root_rels.by_type(rt::CUSTOM)
         && let Ok(Some(x)) = r.xml(&c.target)
     {
@@ -1474,6 +1477,14 @@ impl Reader<'_> {
             }
         }
         Ok(())
+    }
+
+    /// The major version of the Word that saved the file (`AppVersion`, "15.0000"), kept in the
+    /// settings ([`doc4me_doc::Settings::app_version`]).
+    fn read_app(&mut self, path: &str) {
+        let Ok(Some(root)) = self.xml(path) else { return };
+        let version = root.els().find(|k| k.name.rsplit(':').next() == Some("AppVersion")).map(|k| k.text());
+        self.doc.settings.app_version = version.and_then(|v| v.trim().split('.').next()?.parse::<u16>().ok()).filter(|v| (1..=99).contains(v));
     }
 
     fn read_core(&mut self, path: &str) {
