@@ -7373,6 +7373,45 @@ fn a_floating_table_too_tall_for_a_page_keeps_its_offset_from_the_text() {
     assert!((offset - none - 17.65).abs() < 0.01, "{offset} vs {none}");
 }
 
+/// A floating table placed from the text, too tall for a page and pushed to the next one by a
+/// table already standing where it would start, begins there below its anchor's first line
+/// (govuk-067's "Role details" table, 14.5 pt under the top margin in Word's PDF).
+#[test]
+fn a_tall_text_floating_table_pushed_to_the_next_page_clears_its_anchor_line() {
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let table = |rows: usize| {
+        let mut t = Table::new(rows, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.borders = None;
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, ..Default::default() });
+        t
+    };
+    let top = |line: f32| {
+        let mut d = Document::new();
+        let mut anchor = doc4me_doc::Paragraph::new();
+        anchor.props.line_spacing = Some(LineSpacing::Exactly(line));
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Before", Default::default())),
+            doc4me_doc::Block::Table(table(42)).into(),
+            doc4me_doc::Block::Table(table(60)).into(),
+            doc4me_doc::para_block(anchor),
+        ];
+        let l = lay(&d);
+        l.pages[1]
+            .items
+            .iter()
+            .find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.first() == Some(&2) && path.0.len() > 1).then_some(*y) } else { None })
+            .expect("the second table goes on on page 2")
+    };
+    let (short, tall) = (top(20.0), top(40.0));
+    assert!((tall - short - 20.0).abs() < 0.5, "starts below its anchor's line: {short} vs {tall}");
+}
+
 #[test]
 fn a_cell_floats_offset_counts_from_above_its_paragraphs_space_before() {
     // zenodo-157: a picture 23.25 pt below a heading (10 pt before) that opens a cell stands

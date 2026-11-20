@@ -3960,6 +3960,22 @@ fn table_header_start_need(ctx: &Ctx, t: &doc4me_doc::Table, tl: &table::TableLa
     Some(tl.rows.iter().take(headers).map(|r| r.height).sum::<f32>() + start)
 }
 
+/// The first line's height of the paragraph a floating table after body block `block` is
+/// anchored to: the next paragraph, past any other tables (0 when none follows).
+fn anchor_line(ctx: &mut Ctx, block: usize, width: f32) -> f32 {
+    for b in block + 1..block + 9 {
+        match ctx.doc.body.get(b).map(|b| &**b) {
+            Some(Block::Para(p)) => {
+                let pl = lookahead_para(ctx, p, width);
+                return pl.lines.first().map_or(0.0, |l| l.height.max(0.0));
+            }
+            Some(Block::Table(_)) => continue,
+            None => break,
+        }
+    }
+    0.0
+}
+
 /// Whether a table row keeps with the next one: Word keeps a row on the page of the row after it
 /// when the paragraphs in it are set to Keep with next (how a heading row stays with the rows it
 /// heads). A row with no paragraph doesn't.
@@ -4008,6 +4024,7 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
     }
     let width = pb.col_w();
     let mut tl = table::layout_table(ctx, StoryRef::Body, t, &[block as u32], width, 1);
+    let mut tall_text_float: Option<f32> = None;
     if let Some(f) = t.props.float.filter(|_| !pb.web) {
         // Before Word 2013 layout (compatibility mode 15) an offset places the first cell's text,
         // so the edge sits a cell margin further out.
@@ -4027,6 +4044,12 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         if fits {
             place_floating_table(pb, &tl, &f, legacy, block, body_top);
             return;
+        }
+        // Placed from the text, it starts a new page below its anchor's first line: govuk-067's
+        // "Role details" table, 1 twip below an empty 12 pt Tahoma paragraph and pushed to the
+        // next page by the table above it, starts that line's 14.5 pt down there in Word's PDF.
+        if matches!(f.v_rel, Anchor::Paragraph | Anchor::Line) && f.v_align.is_none() && f.y >= 0.0 {
+            tall_text_float = Some(f.y.max(anchor_line(ctx, block, pb.col_w())));
         }
         // Too tall for a page: Word lets it run across pages like a table in the text, from its
         // own left edge.
@@ -4068,6 +4091,17 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         pb.y = below(&same_spot, pb.y, x0, x1);
     }
     below_floats(pb, pb.col_x() + tl.x, pb.col_x() + tl.x + tl.width);
+    if let Some(off) = tall_text_float
+        && !pb.at_top()
+        && let Some(first) = tl.rows.first()
+    {
+        let cant_split = t.rows.first().is_some_and(|r| r.props.cant_split);
+        let start = if cant_split { first.height } else { table::first_line_bottom(first).min(first.height) };
+        if pb.y + start > pb.bottom + 0.01 && off + start <= pb.uncapped_bottom() - pb.top + 0.01 {
+            pb.advance(block, body_top);
+            pb.y += off;
+        }
+    }
     let header_rows: Vec<usize> = (0..t.rows.len()).take_while(|r| t.rows.get(*r).is_some_and(|row| row.props.header)).collect();
     let place = |pb: &mut PageBuilder, row: &table::RowLayout| {
         let (x, y) = (pb.col_x() + tl.x, pb.y);
