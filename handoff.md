@@ -1,3 +1,87 @@
+# งานที่เหลือก่อน readiness ครบ 100% และแนวทาง · 2026-11-20
+
+## สถานะ (Windows run 44653897562, commit 951613d)
+
+- **95.8%** รวม / **97.7%** ไม่นับ 22 แถว deferred; corpus-pages 219/219, corpus-breaks **153/219** (ไม่ผ่าน 66), open/roundtrip/stability 219/219, ribbon 504/504, performance/localization/platforms ครบ
+- ส่วนที่ขาด 4.2 จุด มาจากสองแหล่งเท่านั้น
+  1. **corpus-breaks 66 ฉบับ: ประมาณ 2.3 จุด** (Layout น้ำหนัก 0.15, คะแนน = ค่าเฉลี่ย pages กับ breaks = 84.9%) ผ่านเพิ่มหนึ่งฉบับได้ประมาณ 0.034 จุด
+  2. **22 แถว deferred: ประมาณ 1.9 จุด** (dialogs 12, shortcuts 4, ecosystem 1, hardware 5) เจ้าของสั่งไว้ว่า "skip until asked" และต้องใช้ฮาร์ดแวร์/แพลตฟอร์ม/บริการภายนอก session ทำให้ผ่านเองไม่ได้ (ดูรายการใน docs/readiness.md › Deferred rows) **ถ้าจะให้ readiness ครบ 100% จริง เจ้าของต้องสั่งปลด deferred และจัดหาสิ่งที่ต้องใช้** (เครื่องพิมพ์, จอหลายจอ DPI ต่างกัน, ปากกา, ไมโครโฟน, สแกนเนอร์/กล้อง, IME ญี่ปุ่น/เกาหลี/จีนบน Windows, Mendeley, OLE server/Outlook/Exchange ซึ่งบางรายการเป็นของ Microsoft ที่ repo นี้ห้ามพึ่ง) ส่วน 97.7% → 100% ต้องให้ corpus-breaks ผ่าน 219/219
+
+## corpus-breaks ที่เหลือ แบ่งกลุ่ม (triage บน Linux, `python3 tools/corpus_analysis.py triage LOG`)
+
+Windows กับ Linux ไม่ผ่านที่หน้าเดียวกันแทบทุกฉบับ ยกเว้น zenodo-085 (Linux ไม่มีฟอนต์คณิต) zenodo-141 (ไม่ผ่านเฉพาะ Windows) และ zenodo-019 (จำนวนหน้าผิดเฉพาะ Linux)
+
+### ก. ORDER: คำบนหน้าครบ ต่างแค่ลำดับที่ pdftotext อ่าน (10)
+govuk-005 p12, govuk-024 p2, govuk-054 p11, zenodo-020 p1, zenodo-029 p2, zenodo-030 p16, zenodo-050 p2, zenodo-070 p10, zenodo-072 p6, zenodo-173 p5
+- สาเหตุส่วนใหญ่: PDF อ้างอิงทำด้วยผู้ผลิตต่างกัน (Adobe PDFMaker 51/219 ใช้ head bbox ใน FontDescriptor, Word Save as PDF ใช้ hhea) และลำดับที่ข้อความถูกเขียนลง content stream ต่างจากของเรา ลองเปลี่ยน descriptor ทั้งชุดแล้ว +4/−6 จึงถอนออก
+- แนวทาง: (1) ทีละฉบับ เทียบ `pdftotext -raw` และ bbox ของบรรทัดท้าย/หัวหน้า ดูว่าความต่างมาจากตำแหน่งจริง (ต่างไม่กี่ pt จนกลุ่มบรรทัดสลับ) หรือจากลำดับการวาด (header/footer ก่อนหรือหลังเนื้อหา, เซลล์ตาราง, กล่องข้อความลอย) ถ้าเป็นตำแหน่งจริง แก้ layout ต่อ ถ้าเป็นลำดับการวาด ให้วาดตามลำดับที่ Word ใช้กับ PDF ของ Word เอง (2) เลือก descriptor ต่อผู้ผลิตไม่ได้ เพราะ .docx ไม่บอกผู้ผลิต (3) การเปลี่ยนวิธีเทียบของ verifier (เช่น เทียบชุดคำของบรรทัดแรก/สุดท้าย) **เป็นการเปลี่ยนเกณฑ์ ต้องได้รับอนุมัติจากเจ้าของก่อน**
+
+### ข. ฝั่งเราแก้ไม่ได้หรือต้องให้เจ้าของตัดสิน (6)
+- zenodo-006 p1: header ใน PDF ไม่มีใน .docx (เป็นคนละ edition)
+- govuk-066 p5: ฟิลด์ DATE ใน footer Word พิมพ์วันที่ตอนนั้น (08/02/2024)
+- zenodo-018 p12: header เป็น WordArt gradient ที่ Word ไม่เขียนข้อความลง PDF
+- govuk-068 p1: PDF ของ Word ใช้ Arabic presentation forms (การเทียบด้วย NFKC จะแก้ได้ แต่เป็นการเปลี่ยนเกณฑ์)
+- zenodo-149 p6: ligature "ti" ใน PDF ของ Word ไม่มี Unicode ("Introduc�on")
+- zenodo-022 p15: ลำดับ bullet ในตารางสองคอลัมน์ (layout ตรงแล้ว)
+- แนวทาง: เสนอเจ้าของพร้อมหลักฐาน ให้เลือกระหว่าง defer/exclude หรือ normalize การเทียบ ห้ามเปลี่ยนเองแม้เหตุผลดี
+
+### ค. small: คำไม่กี่คำข้ามขอบหน้า มีแนวทางแล้ว (14)
+- govuk-006 p2, govuk-020 p2: ฟอร์มที่มีช่องติ๊ก Word วาดกล่อง sizeAuto ใหญ่ราว 15 pt ให้ข้อความ 11 pt (วัดจากภาพเท่านั้น) และยังต่างอยู่ราว 2 pt ในตารางสองคอลัมน์ของ govuk-020 ไล่ด้วย `match govuk-020 2`
+- govuk-036 p8: บรรทัดสุดท้ายของ Word ล้นเข้าตัวคั่นเชิงอรรถ 0.26 pt (ผ่านที่ p7 แล้ว) p8 ยังต้องไล่
+- govuk-038 p1: ข้อความหมุนในกล่อง ("DRAFT") pdftotext ได้ตัวอักษรแยก
+- govuk-046 p11: แถวคำบรรยายตารางที่ keepNext ใน Word ย้ายไปหน้าถัดไป แม้มันกับแถวถัดไปพอดีหน้า
+- zenodo-003 p13: เซลล์รวมแนวตั้งที่ข้อความหมุน ("CONTRIBUTION PERCENTAGE", "OTHER") Word ตัดบรรทัดตามส่วนที่อยู่ในหน้า ต้อง layout ใหม่ตอนแบ่งหน้า
+- zenodo-056 p1: DengXian กับ ω/ตัวห้อยที่ Word วาดด้วยฟอนต์อื่น
+- zenodo-119 p1: Arimo ใช้ kerning คู่ "ff"/"fi" แต่ Arial ไม่ใช้ (ต้องได้ตาราง kern ของ Arial เอง เช่นวัดจาก TJ ใน PDF ของ Word)
+- zenodo-125 p3: marker ของ continuous section ว่างหลังหน้าเต็ม ลองให้ค้างท้าย p2 แล้วการเกลี่ยคอลัมน์ของ section ก่อนหน้าเปลี่ยน
+- zenodo-126 p1, govuk-048 p1: ลำดับการอ่านในหน้า 1
+- zenodo-140 p9: Word ย้ายแถว 3 บรรทัดที่บรรทัดแรกพอดีและเหลือที่ราว 3 pt (widowControl ปิด)
+- zenodo-149 p6, zenodo-022 p15: ดูกลุ่ม ข
+
+### ง. layout: เลื่อนหลายบรรทัด (41) แยกตามสาเหตุที่รู้
+- **คณิตศาสตร์** (zenodo-017, -044, -051, -053, -070, -085, -108, -113, -155): บน Linux ไม่มีฟอนต์ที่มีตาราง MATH บน Windows มี Cambria Math และไม่ผ่านที่หน้าหลังกว่า (เช่น zenodo-085 p11) **แนวทาง: ต้องเห็นผลลัพธ์ฝั่ง Windows** ให้ workflow readiness-windows อัปโหลด PDF ของฉบับที่ไม่ผ่านเป็น artifact (แก้ workflow ต้องขอเจ้าของก่อน) หรือเพิ่มฟอนต์คณิต OFL (STIX Two Math/Latin Modern Math) ลง craft-fonts เพื่อประมาณบน Linux
+- **เมตริกฟอนต์แทน**:
+  - Arial Nova Cond Light ใน Word สูง 1.209 em (Roboto ที่ใช้แทนสูง 1.173 em) แต่แก้แล้ว zenodo-149 ได้ 29 หน้า เพราะแถวรายการหน้า 10 ของ Word ถี่กว่า ต้องแก้สองจุดพร้อมกัน
+  - Tahoma: govuk-067
+  - Cambria→Caladea บรรทัดยาวกว่า: govuk-020, govuk-043
+  - Bookman Old Style: zenodo-157
+  - วิธี: วัดความกว้างและเมตริกจาก PDF ของ Word ด้วยเครื่องมือใน tools/*_pdf_metrics.py แล้วใส่ใน crates/fonts/src/latin_metrics.rs หรือ word.rs `requested_line` ต้องได้ทั้ง corpus ไม่ใช่แค่ฉบับเดียว
+- **ตาราง/วัตถุลอย**:
+  - zenodo-157 p2: รูป Square ที่ anchor ท้ายย่อหน้าในแถวที่ถูกแบ่ง Word เก็บ 3 บรรทัดไว้ แล้วย้ายบรรทัดที่เหลือไปพร้อมรูป
+  - govuk-031 p7: เริ่มสูงกว่า Word 1.9 pt จากหัวหน้า (ตารางต่อจากหน้าก่อน)
+- **header**: govuk-009 p2 PDF ทำด้วย Word 2013 ซึ่งดัน body ลงใต้ header ว่าง ส่วน Word รุ่นใหม่ (govuk-017/018) ไม่ดัน ยังไม่รู้สิ่งที่ใช้แยกสองกรณีใน .docx ไล่หาความต่างที่เหลือ เช่น app.xml AppVersion หรือ compat settings อื่น ห้ามเดาจากผู้ผลิต PDF
+- **ยังไม่ได้วิเคราะห์** (เริ่มด้วย `drift LOG`):
+  - govuk: 028, 029, 037, 043, 047, 053, 058, 059, 060
+  - zenodo: 008, 011, 023, 047, 048, 060, 068, 069, 071, 095, 103, 115 (บทคัดย่อ justify ตัดบรรทัดต่าง), 136, 138, 146, 153, 160
+- zenodo-141 ไม่ผ่านเฉพาะบน Windows ต้องใช้ผลจาก Windows
+
+## วิธีทำงานที่ได้ผล (ทำซ้ำได้ทุก session)
+
+1. เตรียมฟอนต์: craft-fonts pin ที่ c1db6d1 แล้วรัน `tools/prepare_corpus_fonts.py`
+2. build CLI โดย**ต้องตั้ง** `CRAFT_FONTS_DIR` (build.rs ฝังฟอนต์แทน ถ้าไม่ตั้ง จะไม่มี Roboto/Montserrat และ zenodo-095/149 จำนวนหน้าผิด หลัง `cargo xtask ci` ต้อง build ใหม่):
+   `CRAFT_FONTS_DIR=… CRAFT_FONTS_REQUIRED=1 CARGO_INCREMENTAL=0 cargo build --release -p doc4me-cli`
+3. วัด: `CRAFT_FONTS_DIR=… cargo xtask readiness --corpus --dry-run --diagnostics --jobs 4 --cli <cli> > log` ใช้เวลาราว 10 นาที
+4. เทียบชุดที่ไม่ผ่านกับรอบก่อน: `grep -E "^corpus-(breaks|pages|open|roundtrip|stability)\s" log | awk '{print $1,$2}' | sort` แล้วใช้ `comm` **รับเฉพาะการแก้ที่ไม่มีฉบับใหม่ตก** ถ้ามีฉบับตก ให้หาสาเหตุ (หลายครั้งเป็นการชดเชยกันที่ไม่ถูก เช่น descent ของ bullet ที่บังเมตริก Arial Nova)
+5. วิเคราะห์ฉบับหนึ่ง:
+   - `tools/corpus_analysis.py ends ID PAGE`
+   - `match ID PAGE` (หาจุดที่เริ่มเลื่อน)
+   - `pitch ID N` (ระยะบรรทัดต่อฟอนต์)
+   - `desc PDF` (เมตริกที่ Word ประกาศ)
+   - เปิด XML ของย่อหน้า/ตาราง/สไตล์ที่ตรงกันแล้วหากฎ ข้อมูลที่ดีที่สุดคือ PDF ของ Word เอง (path ของกล่อง, ระยะเส้นขอบ, baseline)
+   - ทดลองหลายสมมติฐานด้วย env toggle ชั่วคราว แล้วลบออกก่อน commit
+6. ก่อน commit:
+   - หาหลักฐานจากหลายฉบับ (เช่นสแกนทั้ง corpus ว่ากฎนี้กระทบใคร)
+   - เพิ่มเทสต์ที่ไม่ผ่านถ้าไม่มีการแก้ (ฟอนต์ในเทสต์ไม่ใช่ฟอนต์จริง ให้ออกแบบเทสต์ไม่ให้พึ่งเมตริกเฉพาะ)
+   - เขียน CHANGELOG ใต้ [Unreleased] พร้อมหลักฐาน
+   - รัน `cargo xtask ci` ให้ผ่านครบ 6 ขั้น
+   - commit แล้ว `git fetch && git merge origin/main` (workflow commit รายงานลง main) แล้ว push ไป main และ branch
+7. สั่ง readiness-windows.yml หลัง push (เจ้าของอนุญาตเฉพาะ workflow นี้) แล้วอ่านผลที่ workflow commit กลับมาใน docs/readiness.md ห้ามสั่ง Release หรือ Pages
+8. ลำดับที่คุ้มที่สุดต่อไป:
+   - กลุ่ม ค ที่รู้กฎแล้ว (zenodo-003, -140, -125, govuk-046)
+   - "ยังไม่ได้วิเคราะห์" ในกลุ่ม ง
+   - ขอเจ้าของเรื่อง artifact ของ Windows สำหรับกลุ่มคณิต
+   - เสนอกลุ่ม ก/ข ให้เจ้าของตัดสินพร้อมหลักฐาน
+
 # Form check boxes, table-style cell spacing · 2026-11-20
 
 - FORMCHECKBOX is now an em space in the run's font with a drawn square (`Enclosed`, `cross` when checked), like Word's PDF (paths, no text); a box bigger than its text adds descent up to that font's line at the box size. Table styles' `w:tblCellSpacing` is read/saved/used; with spacing each row holds its cells' bottom borders and the first/last rows the frame border. Exact lines taller than their text take the paragraph mark font's ascent share. Linux 153/219 (govuk-018, govuk-021), no new failure.
