@@ -7654,13 +7654,15 @@ fn cell_spacing_rows_hold_both_cell_borders_and_the_frame() {
 
 /// A cell's own bottom border between rows that the row below doesn't share (no inside border,
 /// no top border of its own) adds to its row's height: zenodo-108's header cells with a 1 pt
-/// bottom border start the next row 1 pt further down in Word's PDF. With an inside border the
-/// row below holds the shared border, as before.
+/// bottom border start the next row 1 pt further down in Word's PDF; a bottom margin at least as
+/// wide holds it (Table S10). With an inside border the row below holds the shared border, as
+/// before.
 #[test]
 fn a_cells_unshared_bottom_border_adds_to_its_row() {
-    let pitch = |own_bottom: bool, inside: bool| {
+    let pitch_m = |own_bottom: bool, inside: bool, margin: f32| {
         let mut t = Table::new(3, 1, 200.0);
         t.props.style = None;
+        t.rows[0].cells[0].props.margins = Some([margin, 5.4, margin, 5.4]);
         if inside {
             t.props.borders = Some(Borders { between: Some(Border::single(1.0)), ..Default::default() });
         }
@@ -7674,6 +7676,9 @@ fn a_cells_unshared_bottom_border_adds_to_its_row() {
             l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(*rect) } else { None }).collect();
         c[1].y - c[0].y
     };
+    let pitch = |own_bottom: bool, inside: bool| pitch_m(own_bottom, inside, 0.0);
+    // Inside a bottom margin at least as wide (zenodo-108's Table S10, 1.5 pt margins): no more room.
+    assert!((pitch_m(true, false, 1.5) - pitch_m(false, false, 1.5)).abs() < 0.01, "{} vs {}", pitch_m(true, false, 1.5), pitch_m(false, false, 1.5));
     assert!((pitch(true, false) - pitch(false, false) - 1.0).abs() < 0.01, "{} vs {}", pitch(true, false), pitch(false, false));
     assert!((pitch(true, true) - pitch(false, true)).abs() < 0.01, "shared with the inside border: {} vs {}", pitch(true, true), pitch(false, true));
 }

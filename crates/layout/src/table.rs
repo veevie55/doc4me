@@ -708,12 +708,14 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
             // borders) are 24.6 pt apart in Word's PDF, their 21.05 pt height + two borders + 2 pt.
             // Between rows the border is shared, and the row below holds it as its top border.
             // A cell's own bottom border that the row below has no top border or inside border
-            // to share with stays this row's: zenodo-108's table header cells (8 pt text, 1 pt
-            // bottom border, no inside borders) start the next row 20.16 pt down in Word's PDF.
+            // to share with stays this row's, inside its bottom margin: zenodo-108's Table S13a
+            // header cells (8 pt text, no margins, 1 pt bottom border) start the next row
+            // 20.16 pt down in Word's PDF, 1 pt more than the text, while Table S10's (1.5 pt
+            // margins) start it no further down for theirs.
             let below_holds = tb.between.is_some_and(|b| b.is_visible())
                 || t.rows.get(ri + 1).is_some_and(|r| r.cells.iter().any(|c| c.props.borders.is_some_and(|b| b.top.is_some())));
             let own_bottom = if below_holds { None } else { cb.bottom.or(rb.bottom) };
-            let band_b = if ri + 1 == nrows || spacing > 0.0 { band(borders.bottom) } else { band(own_bottom) };
+            let band_b = if ri + 1 == nrows || spacing > 0.0 { band(borders.bottom) } else { (band(own_bottom) - margins[2]).max(0.0) };
             let band_t = band(borders.top);
             let insets = margins[0] + margins[2] + band_t + band_b;
             let turn = cell.props.text_direction;

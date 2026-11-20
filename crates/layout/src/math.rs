@@ -509,7 +509,14 @@ impl Ctx<'_> {
         }
     }
     fn size(&self, st: St) -> f32 {
-        self.base * self.scale(st.level)
+        self.sized(self.base, st.level)
+    }
+    /// Text of size `base` at script `level`. Word sets script sizes in whole half points,
+    /// rounding down: in its PDFs, 12 pt Cambria Math's scripts (73%: 8.76 pt) are 8.5 pt
+    /// (zenodo-044) and 10 pt's (7.3 pt) 7 pt (zenodo-108). Never below a half point.
+    fn sized(&self, base: f32, level: u8) -> f32 {
+        let s = base * self.scale(level);
+        if level == 0 { s } else { ((s * 2.0).floor() / 2.0).max(0.5) }
     }
     /// A constant in points at the style's size.
     fn k(&self, c: C, st: St) -> f32 {
@@ -724,7 +731,7 @@ impl Ctx<'_> {
 
     fn run_atoms(&self, r: &MRun, st: St, u0: usize, path: &[(usize, usize)]) -> Vec<RunPart> {
         let mut out = Vec::new();
-        let size = r.size.filter(|s| s.is_finite()).unwrap_or(self.base).clamp(1.0, 1638.0) * self.scale(st.level);
+        let size = self.sized(r.size.filter(|s| s.is_finite()).unwrap_or(self.base).clamp(1.0, 1638.0), st.level);
         let color = r.color.unwrap_or(self.color);
         if r.nor {
             // Normal text: the text font, upright unless asked.
@@ -2065,6 +2072,28 @@ mod tests {
 
     fn lay_in(math: &Math, lin: &str, display: bool, avail: f32, mp: &MathProps) -> MathLayout {
         layout_equation(math, lin, &rc(), display, avail, mp, &mut 0)
+    }
+
+    /// Script sizes are whole half points, rounded down, as in Word's PDFs: 12 pt text's
+    /// scripts are 8.5 pt (zenodo-044), 10 pt's 7 pt (zenodo-108).
+    #[test]
+    fn script_sizes_are_whole_half_points() {
+        let size_of = |base: f32, text: &str| {
+            let mut c = rc();
+            c.size = base;
+            let m = layout_equation(&Math::default(), "x^2", &c, false, 400.0, &MathProps::default(), &mut 0);
+            m.items
+                .iter()
+                .find_map(|it| match it {
+                    MItem::Glyphs { size, text: t, .. } if t == text => Some(*size),
+                    _ => None,
+                })
+                .expect("the script")
+        };
+        for base in [10.0f32, 11.0, 12.0] {
+            let s = size_of(base, "2");
+            assert!((s * 2.0 - (s * 2.0).round()).abs() < 1e-4 && s < base * 0.75 && s > base * 0.6, "{base}: {s}");
+        }
     }
 
     /// An accented character's subscript sits as low as the bare character's, not lower by the
