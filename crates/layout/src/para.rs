@@ -725,8 +725,15 @@ impl<'a> Builder<'a> {
         let size = rc.draw_size() * if small { 0.8 } else { 1.0 };
         // A substitute standing in for another font takes that font's line spacing, as do letters
         // a fallback face draws for a font known to hold them.
+        // DengXian (等线) holds its own CJK letters and punctuation: a fallback face drawing them
+        // keeps DengXian's line, as the Latin letters do (zenodo-056's "Abstract：" line, whose
+        // full-width colon came from a taller CJK face, was 13 pt deeper than Word's).
+        let dengxian = family == "等线" || family.eq_ignore_ascii_case("DengXian");
         let covered = if face_override.is_some() && pictographs {
             Some(doc4me_fonts::word::single_line(&family, &r.face, r.substituted, size as f64))
+        } else if let Some(f) = face_override.filter(|_| dengxian).and_then(|_| doc4me_fonts::word::metric_fit(&family, rc.bold, rc.italic)) {
+            let (a, d) = f.line();
+            Some((a * size as f64, d * size as f64))
         } else {
             face_override.filter(|_| requested_has).and_then(|_| doc4me_fonts::word::covered_fallback_line(&family, size as f64))
         };

@@ -4604,6 +4604,22 @@ fn a_run_of_dots_after_a_space_may_start_a_line() {
     assert_eq!(&text[para.lines[0].start..para.lines[0].stop], "(2) ", "the dots start the next line");
 }
 
+/// DengXian (等线) holds its own CJK punctuation: a full-width colon a fallback face draws keeps
+/// DengXian's line, as zenodo-056's "Abstract：" line in Word's PDF.
+#[test]
+fn dengxian_cjk_punctuation_keeps_dengxians_line() {
+    let height = |text: &str| {
+        let mut d = Document::new();
+        let p = doc4me_doc::Paragraph::with_text(text, doc4me_doc::CharProps { font: Some("等线".into()), size: Some(11.0), ..Default::default() });
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    let (latin, colon) = (height("Abstract"), height("Abstract\u{FF1A}"));
+    assert!((colon - latin).abs() < 0.01, "{colon} vs {latin}");
+}
+
 #[test]
 fn a_bigger_space_hanging_at_a_lines_end_leaves_its_height_alone() {
     // govuk-065: 11 pt paragraphs end with a space in the 12 pt default size; Word's last lines
