@@ -5519,6 +5519,28 @@ fn long_footnotes_continue_on_the_next_page() {
     assert!(own_note.top > p1.3, "own note after the continued one: {own_note:?} {p1:?}");
 }
 
+/// A footnote paragraph with widow control never leaves one line on either side of a page end
+/// (govuk-059's three-line footnote 3 moves to the next page whole with its reference's line).
+#[test]
+fn a_split_footnote_keeps_two_lines_on_each_side() {
+    let mut seen_split = false;
+    for n in 40..60 {
+        let mut d = Document::from_text(&"Body text line.\n".repeat(n));
+        let id = footnote(&mut d, &Pos::body(n - 2, 4), &"A footnote line that wraps around. ".repeat(14));
+        let l = lay(&d);
+        let pieces = note_pieces(&l, id);
+        if pieces.len() > 1 {
+            seen_split = true;
+        }
+        for p in &pieces {
+            if pieces.len() > 1 {
+                assert!(p.2 - p.1 >= 2, "{n}: a piece of one line: {pieces:?}");
+            }
+        }
+    }
+    assert!(seen_split, "some layout splits the note");
+}
+
 #[test]
 fn short_footnotes_stay_whole() {
     let mut d = Document::from_text(&"Body text line.\n".repeat(60));

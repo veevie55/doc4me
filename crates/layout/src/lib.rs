@@ -1695,8 +1695,19 @@ impl NoteBox {
                 continue;
             }
             let Some(first) = para.lines.get(*l0) else { continue };
-            for l in para.lines.get(*l0..*l1).unwrap_or(&[]) {
+            // Widow and orphan control holds in notes too: a note paragraph that keeps it doesn't
+            // leave a single line on either side of the page end. govuk-059's three-line footnote
+            // 3 goes to the next page whole in Word's PDF, with the line holding its reference,
+            // rather than leaving its first line under the others.
+            let lines = para.lines.get(*l0..*l1).unwrap_or(&[]);
+            let n = lines.len();
+            let whole = *l0 == 0 && *l1 >= para.lines.len();
+            for (i, l) in lines.iter().enumerate() {
                 last_top = last_top.max(y + l.top - first.top);
+                let (here, there) = (i + 1, n - i - 1);
+                if para.rp.widow_control && whole && there > 0 && (here < 2 || there < 2) {
+                    continue;
+                }
                 cuts.push(y + l.top - first.top + l.height);
             }
         }
