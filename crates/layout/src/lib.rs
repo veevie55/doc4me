@@ -4139,13 +4139,17 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                     break;
                 }
                 // A row doesn't start on a page with less room than its minimum height (`w:trHeight`
-                // at least): zenodo-173 moves a 29.45pt row whole with about 28pt left in Word.
+                // at least) with its cells' top and bottom margins, which Word adds to that height:
+                // zenodo-173 moves a 29.45pt row whole with about 28pt left in Word, zenodo-140 a
+                // 21 pt row with 5 pt margins whose first line would fit in the 27 pt left.
                 let min_room = t
                     .rows
                     .get(ri)
                     .filter(|_| rest.is_none())
                     .and_then(|r| match (r.props.height, r.props.height_rule) {
-                        (Some(h), HeightRule::AtLeast) if h.is_finite() => Some(h),
+                        (Some(h), HeightRule::AtLeast) if h.is_finite() => {
+                            Some(h + table::row_top_margin(ctx, t, ri) + table::row_bottom_margin(ctx, t, ri))
+                        }
                         _ => None,
                     })
                     .unwrap_or(0.0);

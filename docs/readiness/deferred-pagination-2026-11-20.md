@@ -21,6 +21,7 @@ Word's, words matched by text and position; "content order" compares `pdftotext 
 | govuk-068 | Word's PDF writes the Arabic text as presentation forms (U+FExx); the same text compares as other words. |
 | zenodo-149 | Word's PDF has no character for its "ti" ligature ("Introduc�on", page 6). |
 | zenodo-022 | Page 15 starts at the same table row in both; only the order of its two-column bullets (and the ordinal "3e") differs in extraction. |
+| zenodo-126 | Page 1's first words in Word's PDF, "SAFER wearables study", are text Word drew from the EPS logo picture (`wearables_logo.eps`); the `.docx` holds no such text. Every baseline of the page's own text is within 0.32 pt of Word's. (Found while checking group C; deferred the same way.) |
 
 ## Every word is on the page, only the reading order differs (owner's group A)
 

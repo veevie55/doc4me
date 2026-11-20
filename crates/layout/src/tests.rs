@@ -7695,3 +7695,36 @@ fn a_cant_split_row_taller_than_a_page_splits() {
         }
     }
 }
+
+/// A row's at-least height counts with its cells' top and bottom margins for the room it needs to
+/// start on a page: zenodo-140's 21 pt row with 5 pt margins moves on whole with 27 pt left in
+/// Word's PDF, though its first line would fit.
+#[test]
+fn a_rows_minimum_height_with_its_margins_must_fit_to_start_a_page() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let first_page_lines = |room: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - room));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        t.props.borders = None;
+        t.rows[0].props.height = Some(21.0);
+        t.rows[0].props.height_rule = HeightRule::AtLeast;
+        t.rows[0].cells[0].props.margins = Some([5.0, 5.0, 5.0, 5.0]);
+        let mut p = doc4me_doc::Paragraph::with_text("one\ntwo\nthree", Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_after = Some(0.0);
+        p.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { path, l0, l1, .. } = it { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert_eq!(first_page_lines(27.0), 0, "21 + 5 + 5 pt don't fit in 27: the row moves on");
+    assert!(first_page_lines(33.0) > 0, "they fit in 33: the row starts here");
+}

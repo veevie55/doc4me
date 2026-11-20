@@ -1040,13 +1040,22 @@ pub fn only_page_breaks(row: &RowLayout) -> bool {
 /// The largest bottom cell margin in row `ri` of `t`: the part of a split row kept on a page
 /// closes with it (see `place_table`).
 pub fn row_bottom_margin(ctx: &Ctx, t: &Table, ri: usize) -> f32 {
+    row_margin(ctx, t, ri, 2)
+}
+
+/// The largest top cell margin of row `ri` (see [`row_bottom_margin`]).
+pub fn row_top_margin(ctx: &Ctx, t: &Table, ri: usize) -> f32 {
+    row_margin(ctx, t, ri, 0)
+}
+
+fn row_margin(ctx: &Ctx, t: &Table, ri: usize, side: usize) -> f32 {
     let style = table_style(ctx, t);
     let def = default_margins(t, style.as_ref());
     t.rows.get(ri).map_or(0.0, |row| {
         row.cells
             .iter()
             .filter(|c| c.props.vmerge != VMerge::Continue)
-            .map(|c| c.props.margins.unwrap_or(def)[2])
+            .map(|c| c.props.margins.unwrap_or(def).get(side).copied().unwrap_or(0.0))
             .filter(|m| m.is_finite())
             .fold(0.0f32, f32::max)
             .clamp(0.0, 72.0)
