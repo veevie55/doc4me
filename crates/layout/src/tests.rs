@@ -7652,6 +7652,32 @@ fn cell_spacing_rows_hold_both_cell_borders_and_the_frame() {
     assert!(((own[1].y - own[0].y) - pitch(&own) - 1.75).abs() < 0.01, "{own:?}");
 }
 
+/// A cell's own bottom border between rows that the row below doesn't share (no inside border,
+/// no top border of its own) adds to its row's height: zenodo-108's header cells with a 1 pt
+/// bottom border start the next row 1 pt further down in Word's PDF. With an inside border the
+/// row below holds the shared border, as before.
+#[test]
+fn a_cells_unshared_bottom_border_adds_to_its_row() {
+    let pitch = |own_bottom: bool, inside: bool| {
+        let mut t = Table::new(3, 1, 200.0);
+        t.props.style = None;
+        if inside {
+            t.props.borders = Some(Borders { between: Some(Border::single(1.0)), ..Default::default() });
+        }
+        if own_bottom {
+            t.rows[0].cells[0].props.borders = Some(Borders { bottom: Some(Border::single(1.0)), ..Default::default() });
+        }
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        let c: Vec<Rect> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(*rect) } else { None }).collect();
+        c[1].y - c[0].y
+    };
+    assert!((pitch(true, false) - pitch(false, false) - 1.0).abs() < 0.01, "{} vs {}", pitch(true, false), pitch(false, false));
+    assert!((pitch(true, true) - pitch(false, true)).abs() < 0.01, "shared with the inside border: {} vs {}", pitch(true, true), pitch(false, true));
+}
+
 /// Every cell's text in a row starts below the row's largest top margin: zenodo-173's cells
 /// without top margins of their own share the baselines of the cells with 4 pt margins in Word's
 /// PDF. A split row's continuation keeps that, and its height.
