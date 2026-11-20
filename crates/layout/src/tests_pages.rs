@@ -724,6 +724,34 @@ fn an_empty_continuous_section_mark_takes_no_room_or_spacing() {
     assert!((gap(true) - gap(false)).abs() < 0.01, "the mark adds nothing: {} vs {}", gap(true), gap(false));
 }
 
+/// The empty mark of a continuous section break straight after a table keeps its line and space
+/// after: it is the paragraph Word always puts below a table. zenodo-155's text below Table 2
+/// starts a blank line and 10 pt further down in Word's PDF.
+#[test]
+fn an_empty_continuous_section_mark_after_a_table_keeps_its_line() {
+    let gap = |mark: bool| {
+        let mut d = Document::from_text("");
+        let mut t = Table::new(1, 1, 468.0);
+        t.rows[0].cells[0].blocks = vec![para_block(Paragraph::with_text("Cell", Default::default()))];
+        let mut body = vec![Arc::new(Block::Table(t))];
+        if mark {
+            let mut m = Paragraph::with_text("", Default::default());
+            m.props.space_after = Some(10.0);
+            m.section = Some(Box::new(doc4me_doc::SectionProps { start: doc4me_doc::section::SectionStart::Continuous, ..Default::default() }));
+            body.push(para_block(m));
+        }
+        body.push(para_block(Paragraph::with_text("Text", Default::default())));
+        d.body = body;
+        d.last_section.start = doc4me_doc::section::SectionStart::Continuous;
+        let l = lay(&d);
+        let n = d.body.len();
+        let top = |path: Path| l.caret(&Pos { story: StoryRef::Body, path, off: 0 }).unwrap().top;
+        top(Path::top(n - 1)) - top(Path(vec![0, 0, 0, 0]))
+    };
+    let (with, without) = (gap(true), gap(false));
+    assert!(with - without > 15.0, "the mark keeps its line and its space after: {with} vs {without}");
+}
+
 #[test]
 fn keep_with_next_counts_a_short_widow_controlled_paragraph_whole() {
     // zenodo-090: a Heading 2 (keep with next) above a three-line paragraph with widow control,

@@ -347,6 +347,9 @@ struct Bx {
     cuts: Vec<f32>,
     /// A manual line break before this atom (`m:brk`; the value is its `m:alnAt`).
     brk: Option<u8>,
+    /// One character under an accent: its subscript doesn't drop with the base's descent, as
+    /// after the bare character.
+    accented_char: bool,
 }
 
 impl Bx {
@@ -951,6 +954,9 @@ impl Ctx<'_> {
     fn attach(&self, base: Bx, sub: Option<Bx>, sup: Option<Bx>, st: St, char_base: bool) -> Bx {
         let (bw, ba, bd, ic) = (base.w, base.a, base.d, base.ic);
         let (first, last) = (base.first, base.last);
+        // Word drops the subscript of an accented character as after the bare character: in
+        // zenodo-108's p̃_g (Cambria Math 10 pt) the g sits 2.04 pt down, as in p_g beside it.
+        let sub_char_base = char_base || base.accented_char;
         let mut out = Bx { w: bw, ..Default::default() };
         out.put(base, 0.0, 0.0);
         let mut u = 0.0f32;
@@ -964,7 +970,7 @@ impl Ctx<'_> {
         }
         if let Some(b) = &sub {
             v = self.k(C::SubscriptShiftDown, st).max(b.a - self.k(C::SubscriptTopMax, st));
-            if !char_base {
+            if !sub_char_base {
                 v = v.max(bd + self.k(C::SubscriptBaselineDropMin, st));
             }
         }
@@ -1479,6 +1485,7 @@ impl Ctx<'_> {
         out.first = f;
         out.last = l;
         out.ic = ic;
+        out.accented_char = glyph.is_some();
         out.glyph = glyph.filter(|_| false);
         out
     }
@@ -2058,6 +2065,22 @@ mod tests {
 
     fn lay_in(math: &Math, lin: &str, display: bool, avail: f32, mp: &MathProps) -> MathLayout {
         layout_equation(math, lin, &rc(), display, avail, mp, &mut 0)
+    }
+
+    /// An accented character's subscript sits as low as the bare character's, not lower by the
+    /// base's descent: zenodo-108's p̃_g and p_g in Word's PDF (both 2.04 pt down at 10 pt).
+    #[test]
+    fn an_accented_characters_subscript_sits_as_after_the_bare_character() {
+        let g_baseline = |accent: bool| {
+            let p = vec![MNode::Run(MRun::new("p"))];
+            let base = if accent { vec![MNode::Acc { chr: '\u{303}', e: p }] } else { p };
+            let nodes = vec![MNode::Script { kind: ScriptKind::Sub, base, sub: vec![MNode::Run(MRun::new("g"))], sup: vec![] }];
+            let m = lay_in(&Math { nodes, ..Default::default() }, "", false, 400.0, &MathProps::default());
+            let ls = lines(&m);
+            ls.iter().find(|l| l.1.iter().any(|(_, t)| t == "g" || t == "𝑔")).map(|l| l.0).expect("the subscript")
+        };
+        let (bare, accented) = (g_baseline(false), g_baseline(true));
+        assert!((bare - accented).abs() < 0.01, "{accented} vs {bare}");
     }
 
     #[test]
