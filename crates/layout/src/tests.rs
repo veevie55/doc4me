@@ -1214,6 +1214,26 @@ fn turned_text_wraps_in_an_exact_row() {
     assert!(after.top < b.y + 72.0 + 30.0, "the row keeps its exact height: {after:?}");
 }
 
+/// A minimum row height wraps turned text to it rather than growing (zenodo-138's header row of
+/// turned column names); a word longer than it breaks between characters, as across a narrow cell.
+#[test]
+fn turned_text_wraps_to_a_minimum_row_height() {
+    let at_least = |text: &str| {
+        let mut d = turned_table(TextDirection::Up, text, Some(72.0));
+        if let Some(doc4me_doc::Block::Table(t)) = d.body.get_mut(1).map(std::sync::Arc::make_mut) {
+            t.rows[0].props.height_rule = doc4me_doc::props::HeightRule::AtLeast;
+        }
+        let l = lay(&d);
+        let it = turned_lines(&l).clone();
+        let lines = if let Placed::Lines { l0, l1, .. } = &it { l1 - l0 } else { 0 };
+        (lines, it.turned_bounds().unwrap())
+    };
+    let (lines, b) = at_least(&"word ".repeat(30));
+    assert!(lines > 2 && b.h <= 72.0, "wraps at the minimum height: {lines} lines, {b:?}");
+    let (lines, b) = at_least(&"x".repeat(40));
+    assert!(lines > 1 && b.h <= 72.0, "a long word breaks to the minimum height: {lines}, {b:?}");
+}
+
 #[test]
 fn hostile_turned_cells_never_panic() {
     // Empty, huge and nested turned cells, in exact rows too small for anything.

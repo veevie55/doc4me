@@ -726,9 +726,20 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 // Turned text: its lines run along the cell's height. An exact row height sets
                 // their length; otherwise they get the length the text needs unwrapped and the row
                 // grows to fit (the second pass lays them out again if the row ends up taller).
+                // A minimum row height wraps them to it, unless a line can't fit: zenodo-138's
+                // header row (at least 92.7 pt) of turned column names wraps them onto two lines
+                // in Word's PDF instead of growing.
                 let snap = (ctx.counters.clone(), ctx.eq_count);
                 let len = match (row.props.height, row.props.height_rule) {
                     (Some(h), HeightRule::Exact) if h > 0.0 => (h - insets).clamp(4.0, TURNED_LIMIT),
+                    (Some(h), HeightRule::AtLeast) if h.is_finite() && h - insets >= 4.0 => {
+                        let min = (h - insets).min(TURNED_LIMIT);
+                        let probe = layout_box(ctx, story, &cell.blocks, &cpath, min, text, depth, None).items;
+                        (ctx.counters, ctx.eq_count) = (snap.0.clone(), snap.1);
+                        // `natural_length` adds 0.5 pt of slack.
+                        let need = natural_length(&probe) - 0.5;
+                        if need > min + 0.01 { (need + 0.5).min(TURNED_MAX) } else { min }
+                    }
                     _ => {
                         let probe = layout_box(ctx, story, &cell.blocks, &cpath, TURNED_MAX, text, depth, None).items;
                         (ctx.counters, ctx.eq_count) = (snap.0.clone(), snap.1);
