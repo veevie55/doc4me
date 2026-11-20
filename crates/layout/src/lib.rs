@@ -4154,7 +4154,12 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 // whose second line fits only without its 4 pt margin. (Only when the row splits
                 // at all: one whose lines all fit but not its margin moves on whole.)
                 let margin = table::row_bottom_margin(ctx, t, ri);
-                let split = if splittable && pb.bottom - pb.y >= min_room - 0.01 {
+                // A row that can't split but doesn't fit even on a page of its own (under any
+                // repeated header rows) splits all the same, as in Word: govuk-006's form panel,
+                // one "can't split" row taller than a page, goes on to the next page from the
+                // first page's last line in Word's PDF.
+                let too_tall = (pb.at_top() || fresh) && !header_rows.contains(&ri) && t.rows.get(ri).is_some_and(|r| r.props.cant_split);
+                let split = if (splittable || too_tall) && pb.bottom - pb.y >= min_room - 0.01 {
                     // Paragraphs kept with the next one go on with it, unless the row already
                     // starts this page (it would never fit).
                     let split: fn(&table::RowLayout, f32) -> _ = if pb.at_top() || fresh { table::split_row } else { table::split_row_keeping };

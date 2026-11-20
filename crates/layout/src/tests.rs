@@ -7673,3 +7673,25 @@ fn a_rows_cells_start_below_its_largest_top_margin() {
     assert_eq!(ys.len(), 2, "{ys:?}");
     assert!((ys[0] - ys[1]).abs() < 0.01, "both cells' text on one line: {ys:?}");
 }
+
+/// A row that can't split but is taller than a page splits all the same, as in Word, instead of
+/// running past the bottom of the page (govuk-006's form panel).
+#[test]
+fn a_cant_split_row_taller_than_a_page_splits() {
+    let mut t = Table::new(1, 1, 300.0);
+    t.rows[0].props.cant_split = true;
+    t.rows[0].cells[0].blocks =
+        (0..120).map(|i| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("line {i}"), Default::default()))).collect();
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "{} pages", l.pages.len());
+    let page_h = d.last_section.page_h;
+    for (i, page) in l.pages.iter().enumerate() {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, y, .. } = it {
+                assert!(y + para.lines[*l0].height <= page_h, "page {i}: a line at {y} runs past the page");
+            }
+        }
+    }
+}
