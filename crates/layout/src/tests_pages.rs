@@ -323,8 +323,10 @@ fn keep_with_next_uses_the_same_margin_fit_as_the_following_blank_line() {
                 })
                 .unwrap()
         };
-        let kept_page = usize::from(!next_text.is_empty());
-        assert_eq!((page_of(1), page_of(2), page_of(3)), (kept_page, kept_page, 1), "{next_text:?}");
+        // Empty or not, the next paragraph's line fits once its extra leading runs into the
+        // margin, so the heading stays (zenodo-093's empty paragraph; zenodo-113's and
+        // zenodo-146's text lines in Word's PDFs).
+        assert_eq!((page_of(1), page_of(2), page_of(3)), (0, 0, 1), "{next_text:?}");
     }
 }
 
@@ -803,4 +805,36 @@ fn a_keep_with_next_run_longer_than_a_page_stays_where_it_falls() {
             .unwrap()
     };
     assert_eq!(page_of(3), 0, "the second block stays with the first");
+}
+
+/// Keep with next allows the fraction of a point a line may run past the room left, as placing
+/// the line does: zenodo-071's heading stays with its next line 0.2 pt short of the room in Word.
+#[test]
+fn keep_with_next_allows_a_fraction_of_a_point() {
+    use doc4me_doc::props::LineSpacing;
+    let pages = |over: f32| {
+        let make = |text: &str| {
+            let mut p = Paragraph::with_text(text, CharProps::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(20.0));
+            p.props.space_before = Some(0.0);
+            p.props.space_after = Some(0.0);
+            p
+        };
+        let mut filler = make("Filler");
+        filler.props.line_spacing = Some(LineSpacing::Exactly(40.0));
+        let mut heading = make("Heading");
+        heading.props.keep_next = Some(true);
+        let mut d = Document::new();
+        d.body = vec![para_block(filler), para_block(heading), para_block(make("Next")), para_block(make("Last"))];
+        d.last_section.margin_top = 20.0;
+        d.last_section.margin_bottom = 20.0;
+        d.last_section.page_h = 40.0 + 40.0 + 40.0 - over;
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .position(|page| page.items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, path, .. } if *path == Path::top(1))))
+            .unwrap()
+    };
+    assert_eq!(pages(0.2), 0, "0.2 pt short: the heading stays");
+    assert_eq!(pages(1.0), 1, "1 pt short: it goes on with its next line");
 }

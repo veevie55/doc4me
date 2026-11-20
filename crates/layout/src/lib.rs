@@ -3359,8 +3359,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             Some(_) => pb.top,
             None => pb.y,
         };
-        // (Against the whole column: balanced columns grow to hold it.)
-        if pb.y + need > pb.bottom && !pb.at_top() && need + (pb.y - chain_top) <= pb.uncapped_bottom() - pb.top {
+        // (Against the whole column: balanced columns grow to hold it.) With the fraction of a
+        // point a line may run past the room left: zenodo-113's Heading 2 and the line it keeps
+        // with end 0.02 pt past the bottom margin here as on Word's page 3.
+        if pb.y + need > pb.bottom + LINE_FIT_TOLERANCE && !pb.at_top() && need + (pb.y - chain_top) <= pb.uncapped_bottom() - pb.top {
             pb.advance(block, body_top);
             pb.y += pl.rp.space_before.min(0.0);
         }
@@ -3818,11 +3820,11 @@ fn keep_next_need(ctx: &mut Ctx, block: usize, width: f32, after: f32, mut margi
                 } else {
                     1
                 };
-                // Text needs its complete starting line boxes for Keep with next. A plain
-                // empty paragraph instead keeps its mark here while trailing leading may
-                // enter the margin, just as when it is placed (Word reference zenodo-093).
-                let blank = p.text.is_empty() && p.objects.is_empty() && pl.rp.borders.is_none() && pl.rp.shading.is_none();
-                let trailing = pl.lines.get(lines - 1).map_or(0.0, |l| l.height - l.fit_height(pl.rp.line_spacing, margin_leading && blank));
+                // The multiple spacing's extra leading under the last line it needs here may run
+                // into the bottom margin, as when the line is placed: zenodo-093's empty
+                // paragraph, and zenodo-113's Heading 2 whose next line (1.15 spacing) ends 2 pt
+                // into the margin with its leading on Word's page 3 (zenodo-146 alike).
+                let trailing = pl.lines.get(lines - 1).map_or(0.0, |l| l.height - l.fit_height(pl.rp.line_spacing, margin_leading));
                 need += gap + pl.lines.iter().take(lines).map(|l| l.height).sum::<f32>() - trailing;
                 break;
             }

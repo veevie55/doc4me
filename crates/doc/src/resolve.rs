@@ -154,7 +154,10 @@ impl ResolvedChar {
             + match self.vert_align {
                 VertAlign::Baseline => 0.0,
                 VertAlign::Superscript => self.size * 0.33,
-                VertAlign::Subscript => -self.size * 0.14,
+                // 0.14 of the subscript's own size: Word drops 11 pt Times New Roman's
+                // subscripts 0.96 pt in zenodo-113's PDF (a full-size 0.14 em, 1.54 pt, made each
+                // line holding one 0.6 pt taller).
+                VertAlign::Subscript => -self.draw_size() * 0.14,
             }
     }
 }

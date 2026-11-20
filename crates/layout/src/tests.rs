@@ -7728,3 +7728,17 @@ fn a_rows_minimum_height_with_its_margins_must_fit_to_start_a_page() {
     assert_eq!(first_page_lines(27.0), 0, "21 + 5 + 5 pt don't fit in 27: the row moves on");
     assert!(first_page_lines(33.0) > 0, "they fit in 33: the row starts here");
 }
+
+/// A subscript drops 0.14 of its own (shrunk) size, as in Word: 11 pt Times New Roman's
+/// subscripts 0.96 pt in zenodo-113's PDF, not 0.14 of the full size.
+#[test]
+fn a_subscript_drops_by_its_own_size() {
+    let rc = doc4me_doc::resolve::ResolvedChar {
+        size: 11.0,
+        vert_align: doc4me_doc::props::VertAlign::Subscript,
+        ..doc4me_doc::styles::StyleSheet::default().resolve_char(None, &Default::default())
+    };
+    assert!((rc.baseline_shift() + 11.0 * 0.65 * 0.14).abs() < 0.001, "{}", rc.baseline_shift());
+    let sup = doc4me_doc::resolve::ResolvedChar { vert_align: doc4me_doc::props::VertAlign::Superscript, ..rc };
+    assert!((sup.baseline_shift() - 11.0 * 0.33).abs() < 0.001, "superscripts unchanged");
+}
