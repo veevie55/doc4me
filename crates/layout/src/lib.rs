@@ -4017,9 +4017,13 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
         // activity tables (2411 twips from the page top, longer than a page) begin there in
         // Word's PDF and run on to the next page, under the floating heading table above them.
         if f.v_align.is_none() {
+            // One placed from the text starts its offset below where it stands in the text:
+            // zenodo-068's checklist table (353 twips below the text, too long for a page)
+            // starts 17.65 pt under the heading before it in Word's PDF.
             let top = match f.v_rel {
                 Anchor::Page => Some(f.y),
                 Anchor::Margin => Some(pb.sect.margin_top + f.y),
+                Anchor::Paragraph | Anchor::Line if f.y > 0.0 => Some(pb.y + f.y),
                 _ => None,
             };
             // At the top of a page it stands at its own place even above the top margin: zenodo-053's

@@ -7284,6 +7284,36 @@ fn a_floating_table_too_tall_for_a_page_starts_at_its_own_place_on_a_fresh_page(
     assert!(y < 60.0, "first row's text at {y}, the table placed 50 pt from the page top");
 }
 
+/// A floating table placed from the text and too tall for a page starts its offset below where it
+/// stands in the text: zenodo-068's checklist table 353 twips below the text starts 17.65 pt under
+/// the heading before it in Word's PDF.
+#[test]
+fn a_floating_table_too_tall_for_a_page_keeps_its_offset_from_the_text() {
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let first_row_y = |y_off: f32| {
+        let mut d = Document::new();
+        let mut t = Table::new(60, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.borders = None;
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: y_off, ..Default::default() });
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Heading", Default::default())),
+            doc4me_doc::Block::Table(t).into(),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+        ];
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "the table runs on to the next page");
+        l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap()
+    };
+    let (none, offset) = (first_row_y(0.0), first_row_y(17.65));
+    assert!((offset - none - 17.65).abs() < 0.01, "{offset} vs {none}");
+}
+
 #[test]
 fn a_cell_floats_offset_counts_from_above_its_paragraphs_space_before() {
     // zenodo-157: a picture 23.25 pt below a heading (10 pt before) that opens a cell stands
