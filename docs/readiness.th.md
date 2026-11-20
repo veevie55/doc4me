@@ -1,6 +1,6 @@
 # ผล readiness ที่วัดได้ (ภาษาไทย)
 
-> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-20 ที่ source commit `066fe50`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
+> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-20 ที่ source commit `13e61c8`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
 
 **Readiness รวม: 96.1%**  
 **เมื่อไม่นับรายการ deferred: 98.5%**
