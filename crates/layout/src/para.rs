@@ -89,6 +89,9 @@ pub struct Cluster {
     pub obj_d: f32,
     /// The cluster is a decimal separator (decimal tabs align on it).
     pub dot: bool,
+    /// Text that is only white space other than a plain space (an en space, U+2002): it
+    /// doesn't make a line taller when it trails the line's last text, like a space.
+    pub blank: bool,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -983,6 +986,7 @@ impl<'a> Builder<'a> {
                     obj_h: 0.0,
                     obj_d: 0.0,
                     dot: s == "." || s == ",",
+                    blank: kind == ClKind::Text && !s.is_empty() && s.chars().all(char::is_whitespace),
                 });
             }
         }
@@ -1034,6 +1038,7 @@ impl<'a> Builder<'a> {
                 obj_h: 0.0,
                 obj_d: 0.0,
                 dot: false,
+                blank: false,
             });
             return;
         };
@@ -1059,7 +1064,21 @@ impl<'a> Builder<'a> {
         let style = first.style;
         let g1 = added.last().map(|c| c.g1).unwrap_or(g0);
         self.shown.push((self.clusters.len(), text.to_string(), ranges));
-        self.clusters.push(Cluster { start, end, adv: x, kind: ClKind::Text, style, g0, g1, break_after: false, obj_h: 0.0, obj_d: 0.0, dot: false });
+        let blank = !text.is_empty() && text.chars().all(char::is_whitespace);
+        self.clusters.push(Cluster {
+            start,
+            end,
+            adv: x,
+            kind: ClKind::Text,
+            style,
+            g0,
+            g1,
+            break_after: false,
+            obj_h: 0.0,
+            obj_d: 0.0,
+            dot: false,
+            blank,
+        });
     }
 
     /// Two Lines in One (`w:eastAsianLayout/@w:combine`): `text` (document range `start..end`)
@@ -1191,7 +1210,20 @@ impl<'a> Builder<'a> {
         if !text.is_empty() {
             self.shown.push((k, text, ranges));
         }
-        self.clusters.push(Cluster { start, end, adv, kind: ClKind::Text, style, g0, g1, break_after: false, obj_h: 0.0, obj_d: 0.0, dot: false });
+        self.clusters.push(Cluster {
+            start,
+            end,
+            adv,
+            kind: ClKind::Text,
+            style,
+            g0,
+            g1,
+            break_after: false,
+            obj_h: 0.0,
+            obj_d: 0.0,
+            dot: false,
+            blank: false,
+        });
         Some(k)
     }
 }
@@ -1467,6 +1499,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
                     obj_h: 0.0,
                     obj_d: 0.0,
                     dot: false,
+                    blank: false,
                 });
             }
             continue;
@@ -1521,7 +1554,20 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
             let si = b.style(&rc, None, false);
             let g = b.glyphs.len() as u32;
             let push = |b: &mut Builder, kind: ClKind, adv: f32, h: f32| {
-                b.clusters.push(Cluster { start, end, adv, kind, style: si, g0: g, g1: g, break_after: false, obj_h: h, obj_d: 0.0, dot: false })
+                b.clusters.push(Cluster {
+                    start,
+                    end,
+                    adv,
+                    kind,
+                    style: si,
+                    g0: g,
+                    g1: g,
+                    break_after: false,
+                    obj_h: h,
+                    obj_d: 0.0,
+                    dot: false,
+                    blank: false,
+                })
             };
             match c {
                 '\t' => push(&mut b, ClKind::Tab, 0.0, 0.0),
@@ -1668,6 +1714,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
                                 obj_h: ml.ascent.max(a).max(0.01),
                                 obj_d: ml.descent.max(d),
                                 dot: false,
+                                blank: false,
                             });
                             if *display {
                                 displays.push((b.clusters.len() - 1, math.jc));
@@ -2535,9 +2582,11 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         // Spaces hanging after a line's last text don't make it taller either (govuk-065 ends
         // paragraphs of 11 pt text with a space in the 12 pt default size; Word steps those last
         // lines like the others).
-        let last_text = pl.clusters.get(c0..c1).and_then(|cs| cs.iter().rposition(|c| !matches!(c.kind, ClKind::Space | ClKind::Marker)));
+        // (En spaces too: govuk-048's "Contact for enquiries:" in 10 pt ends in a 12 pt space and
+        // an empty form field's five en spaces; Word sets the line by the 10 pt text.)
+        let last_text = pl.clusters.get(c0..c1).and_then(|cs| cs.iter().rposition(|c| !matches!(c.kind, ClKind::Space | ClKind::Marker) && !c.blank));
         for (k, c) in pl.clusters.get(c0..c1).into_iter().flatten().enumerate() {
-            if has_text && c.kind == ClKind::Space && last_text.is_some_and(|t| k > t) {
+            if has_text && (c.kind == ClKind::Space || c.blank) && last_text.is_some_and(|t| k > t) {
                 continue;
             }
             // Nor does a line, page or column break after text make the line taller: zenodo-049 ends a

@@ -4619,6 +4619,21 @@ fn a_bigger_space_hanging_at_a_lines_end_leaves_its_height_alone() {
         para.lines[0].height
     };
     assert!((height(24.0) - height(11.0)).abs() < 0.01, "{} vs {}", height(24.0), height(11.0));
+    // Nor a bigger space followed by en spaces (an empty form field's), as in govuk-048's
+    // "Contact for enquiries:" line.
+    let with_en = |space_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("text", doc4me_doc::CharProps { size: Some(11.0), ..Default::default() });
+        let end = p.text.len();
+        p.insert_text(end, " ", &doc4me_doc::CharProps { size: Some(space_size), ..Default::default() }).unwrap();
+        let end = p.text.len();
+        p.insert_text(end, "\u{2002}\u{2002}\u{2002}", &doc4me_doc::CharProps { size: Some(11.0), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    assert!((with_en(24.0) - with_en(11.0)).abs() < 0.01, "{} vs {}", with_en(24.0), with_en(11.0));
 }
 
 #[test]
@@ -6868,7 +6883,7 @@ fn a_megabyte_long_word_lays_out_quickly() {
 
 /// A cluster with the given advance and kind, for the tests that measure a word by hand.
 fn word_cluster(kind: para::ClKind, adv: f32, break_after: bool) -> para::Cluster {
-    para::Cluster { start: 0, end: 1, adv, kind, style: 0, g0: 0, g1: 1, break_after, obj_h: 0.0, obj_d: 0.0, dot: false }
+    para::Cluster { start: 0, end: 1, adv, kind, style: 0, g0: 0, g1: 1, break_after, obj_h: 0.0, obj_d: 0.0, dot: false, blank: false }
 }
 
 /// A word that a negative advance makes narrower still fits beside a float: the width of a word

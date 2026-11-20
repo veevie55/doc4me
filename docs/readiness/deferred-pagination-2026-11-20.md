@@ -36,6 +36,7 @@ Word's, words matched by text and position; "content order" compares `pdftotext 
 | zenodo-070 | 10 | within 0.17 pt | — | line grouping by declared glyph boxes |
 | zenodo-072 | 6 | within 0.14 pt | — | line grouping by declared glyph boxes |
 | govuk-024 | 2 | within 0.4 pt after the fix below | same | PDFMaker declares Arial Black's head box (ascent 1083) |
+| govuk-048 | 1 | within 0.4 pt to mid-page after the fixes below, drifting to 1.42 pt higher across the stacked boxed tables at the foot | — | the nested "Impact Assessment" box (top 34.9 pt) is read before "ANNEX A" (top 37.3 pt); the same in both PDFs within 0.25 pt; the page ends on the same word |
 | zenodo-173 | 5 | within 0.19 pt after the fix below | — | the page number and the last cell swap |
 | govuk-005 | 12 | 3.6 pt apart (not fixed) | — | Word keeps 3.55 pt space before at the top of a page opened by a next-page section break; not suppressing it there fails zenodo-022, -069, -081 (page counts) and -109 and still leaves this page apart |
 | govuk-054 | 11 | the same except one text box | — | the figure's text box turned −90° keeps its text upright in Doc4Me (by design); Word turns it |
@@ -45,6 +46,11 @@ will print it, and writing head-box descriptors for every font was measured on 2
 (+4/−6 documents) and withdrawn.
 
 ### Fixes made while checking
+
+- **govuk-048** (added 2026-11-20): an empty paragraph whose mark is hidden (holding a bookmark)
+  between two tables took a 13.8 pt line in Doc4Me and none in Word; a line ending in a 12 pt space
+  and an empty form field's en spaces ("Contact for enquiries:") was set 2.12 pt lower than Word's.
+  Both are fixed; the page's first 600 pt now match Word's baselines within 0.4 pt.
 
 - **govuk-024**: Arial Black, drawn by a stand-in, now keeps its own line (win/hhea 2254/634 per
   2048): its 24 pt heading's baseline is 26.4 pt below the row's top in Word's PDF, and was 3.55 pt
