@@ -4275,6 +4275,17 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 // one "can't split" row taller than a page, goes on to the next page from the
                 // first page's last line in Word's PDF.
                 let too_tall = (pb.at_top() || fresh) && !header_rows.contains(&ri) && t.rows.get(ri).is_some_and(|r| r.props.cant_split);
+                // Its centred and bottom-aligned cells of one row align within the room left on
+                // the page before it splits, as Word aligns them within the part kept here:
+                // zenodo-136's publication row, whose centred "Yes" sat mid-row 94 pt down, splits
+                // two lines into page 15 in Word's PDF instead of moving on whole.
+                let room_left = pb.bottom - pb.y;
+                let realigned = if room_left < cur.height {
+                    cur.with_merges_cut(|m| if m.rows == 0 { room_left.max(m.content) } else { m.room() })
+                } else {
+                    None
+                };
+                let cur = realigned.as_ref().unwrap_or(cur);
                 let split = if (splittable || too_tall) && pb.bottom - pb.y >= min_room - 0.01 {
                     // Paragraphs kept with the next one go on with it, unless the row already
                     // starts this page (it would never fit).

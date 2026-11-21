@@ -7689,6 +7689,31 @@ fn a_centred_merge_broken_by_the_page_centres_its_text_on_the_page() {
     assert!((mid - 40.0).abs() < 4.0, "the text's middle {mid} pt below the merge's top, not 40");
 }
 
+/// A row of one height whose centred cell would sit lower than the room left on the page still
+/// splits there, its centred text aligned within the part kept on the page, as in Word
+/// (zenodo-136's publication row: Word keeps two lines and the centred "Yes" on page 15).
+#[test]
+fn a_row_with_a_centred_cell_splits_with_the_cell_aligned_on_the_page() {
+    use doc4me_doc::props::VAlign;
+    let mut t = Table::new(1, 2, 300.0);
+    t.rows[0].cells[0].blocks = (0..20).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("xx", Default::default()))).collect();
+    t.rows[0].cells[1].props.valign = VAlign::Center;
+    t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("YYY", Default::default()))];
+    let mut d = Document::new();
+    d.body = (0..15).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("p", Default::default()))).collect();
+    d.body.push(std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+    d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::new()));
+    let l = lay(&d);
+    // The paragraphs by their length: 1 the body's, 2 the long cell's, 3 the centred cell's.
+    let lens = |pg: usize| -> Vec<usize> {
+        l.pages[pg].items.iter().filter_map(|it| if let Placed::Lines { para, .. } = it { Some(para.text_len) } else { None }).collect()
+    };
+    let first = lens(0);
+    assert!(first.contains(&3), "the centred cell stays on the first page: {first:?}");
+    assert!(first.contains(&2), "the row splits: {first:?}");
+    assert!(lens(1).contains(&2), "the rest of the row goes on");
+}
+
 /// Text taller than its exact line spacing shares the line between its ascent and descent, and
 /// lowering it (`w:position`) then moves it down: govuk-044's page number, 20 pt lowered 12 pt
 /// in a 10 pt exact line, is drawn 12 pt lower than unlowered text in Word's PDF.

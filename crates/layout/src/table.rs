@@ -16,7 +16,7 @@ pub struct RowLayout {
     pub height: f32,
     /// Items relative to the table's top-left (x) and the row's top (y).
     pub items: Vec<Placed>,
-    /// Vertically merged cells starting in this row whose content is centred or bottom-aligned
+    /// Cells starting in this row (vertically merged or not) whose content is centred or bottom-aligned
     /// in the rows they span (moved again when the table breaks inside the merge).
     pub merged: Vec<MergedSpan>,
     /// Cells (paths) whose text was moved down to the row's largest top margin, and by how much
@@ -36,6 +36,17 @@ pub struct MergedSpan {
     pub valign: VAlign,
     /// How far the content was moved down within the whole merge.
     pub dy: f32,
+}
+
+impl MergedSpan {
+    /// The height the content is aligned within now (its whole merge, unless realigned).
+    pub fn room(&self) -> f32 {
+        match self.valign {
+            VAlign::Top => self.content,
+            VAlign::Center => self.content + 2.0 * self.dy,
+            VAlign::Bottom => self.content + self.dy,
+        }
+    }
 }
 
 impl RowLayout {
@@ -949,7 +960,9 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
                 it.translate(0.0, dy);
                 items.push(it);
             }
-            if span_rows > 0 && !turned && c.valign != VAlign::Top {
+            // (A cell of one row too: when the row splits at a page end, Word aligns its text
+            // within the part of the row on the page, zenodo-136's centred "Yes" cells.)
+            if !turned && c.valign != VAlign::Top {
                 merged.push(MergedSpan { items: first..items.len(), rows: span_rows, content: c.h, valign: c.valign, dy });
             }
             let b = c.borders;
