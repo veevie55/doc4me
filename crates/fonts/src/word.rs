@@ -848,7 +848,9 @@ pub fn metric_fit(family: &str, bold: bool, italic: bool) -> Option<MetricFit> {
         Some(if bold { crate::latin_metrics::DENGXIAN_BOLD } else { crate::latin_metrics::DENGXIAN_REGULAR })
     } else if family.eq_ignore_ascii_case("Aptos Narrow") && !italic {
         Some(if bold { crate::latin_metrics::APTOS_NARROW_BOLD } else { crate::latin_metrics::APTOS_NARROW_REGULAR })
-    } else if family.eq_ignore_ascii_case("Gotham Book") && !bold && !italic {
+    } else if family.eq_ignore_ascii_case("Gotham Book") && !italic {
+        // Bold too: Gotham Book is one weight, and Word emboldens it and keeps its widths
+        // (zenodo-095's bold note is set with Gotham-Book in Word's PDF, as wide as regular text).
         Some(crate::latin_metrics::GOTHAM_BOOK)
     } else if family.eq_ignore_ascii_case("Gotham Medium") && !bold && !italic {
         Some(crate::latin_metrics::GOTHAM_MEDIUM)
@@ -1328,6 +1330,12 @@ mod tests {
             assert!(metric_fit("Calibri Light", false, true).is_some());
             assert_eq!(metric_fit("Calibri Light", true, true).and_then(|f| f.advance('A')), Some(0.563));
             assert!(metric_fit("Calibri", false, false).is_none());
+        }
+        // Gotham Book's widths apply with Montserrat to (synthetic) bold as well.
+        if resolve("Gotham Book", false, false).face.family == "Montserrat" {
+            let regular = metric_fit("Gotham Book", false, false).and_then(|f| f.advance('e'));
+            assert!(regular.is_some());
+            assert_eq!(metric_fit("Gotham Book", true, false).and_then(|f| f.advance('e')), regular);
         }
         // So do Symbol and Wingdings bullets drawn as standard characters by another face.
         // Overpass, every weight, steps 1.266 em whatever face draws it (13.293 pt at 10.5 pt).
