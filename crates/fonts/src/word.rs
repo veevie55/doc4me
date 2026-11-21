@@ -567,18 +567,22 @@ pub fn resolve(family: &str, bold: bool, italic: bool) -> Resolved {
 pub fn symbol_font_char(family: &str, c: char) -> Option<char> {
     let code = u32::from(c).checked_sub(0xF000)?;
     let u = match (family.to_ascii_lowercase().as_str(), code) {
-        // Adobe Symbol encoding.
+        // Adobe Symbol encoding. 0x2D is the minus sign, a common dash bullet (govuk-038's
+        // "Bullets (dashes)" list: Word's PDF draws and extracts it as U+2212).
+        ("symbol", 0x2D) => '\u{2212}',
         ("symbol", 0xA7) => '\u{2663}',
         ("symbol", 0xA8) => '\u{2666}',
         ("symbol", 0xA9) => '\u{2665}',
         ("symbol", 0xAA) => '\u{2660}',
         ("symbol", 0xAE) => '\u{2192}',
         ("symbol", 0xB7) => '\u{2022}',
+        ("symbol", 0xBE) => '\u{23AF}',
         ("symbol", 0xD7) => '\u{22C5}',
         ("symbol", 0xE0) => '\u{25CA}',
         // Wingdings characters common as list bullets.
         ("wingdings", 0x6C) => '\u{25CF}',
         ("wingdings", 0x6E) => '\u{25A0}',
+        ("wingdings", 0x75) => '\u{29EB}',
         ("wingdings", 0x76) => '\u{2756}',
         ("wingdings", 0xA7) => '\u{25AA}',
         ("wingdings", 0xD8) => '\u{27A2}',
@@ -1470,6 +1474,8 @@ mod tests {
         assert_eq!(symbol_font_char("symbol", '\u{F0B7}'), Some('\u{2022}'));
         assert_eq!(symbol_font_char("Wingdings", '\u{F0A7}'), Some('\u{25AA}'));
         assert_eq!(symbol_font_char("Wingdings", '\u{F0D8}'), Some('\u{27A2}'));
+        assert_eq!(symbol_font_char("Symbol", '\u{F02D}'), Some('\u{2212}'));
+        assert_eq!(symbol_font_char("Wingdings", '\u{F075}'), Some('\u{29EB}'));
         // Same code, other font; unknown codes; ordinary characters.
         assert_eq!(symbol_font_char("Arial", '\u{F0B7}'), None);
         assert_eq!(symbol_font_char("Symbol", '\u{F041}'), None);
