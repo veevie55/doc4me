@@ -6433,7 +6433,9 @@ fn paragraph_borders_take_room_and_join_into_boxes() {
     for w in sides.windows(2) {
         assert!(w[1].0 <= w[0].1 + 0.01, "the sides have no gap: {sides:?}");
     }
-    // A between border separates the two paragraphs with its own room.
+    // A between border separates the two paragraphs with its own room, and the bottom border's
+    // distance from the text above it (Word: zenodo-011's references step 2.4 pt more across a
+    // 0.5 pt between border 1 pt from the text, with a bottom border 1 pt from the text).
     let mut between = boxed.clone();
     for i in [1, 2] {
         if let Some(doc4me_doc::Block::Para(p)) = between.body.get_mut(i).map(Arc::make_mut) {
@@ -6441,7 +6443,16 @@ fn paragraph_borders_take_room_and_join_into_boxes() {
         }
     }
     let c = para_tops(&lay(&between));
-    assert!((c[2] - b[2] - 5.5).abs() < 0.01 && (c[3] - b[3] - 5.5).abs() < 0.01, "{b:?} {c:?}");
+    assert!((c[2] - b[2] - 9.5).abs() < 0.01 && (c[3] - b[3] - 9.5).abs() < 0.01, "{b:?} {c:?}");
+    // Without a bottom border, just the between border's own room.
+    let mut no_bottom = boxed.clone();
+    for i in [1, 2] {
+        if let Some(doc4me_doc::Block::Para(p)) = no_bottom.body.get_mut(i).map(Arc::make_mut) {
+            p.props.borders = Some(Borders { between: Some(line), bottom: None, ..Borders::box_(line) });
+        }
+    }
+    let e = para_tops(&lay(&no_bottom));
+    assert!((e[2] - b[2] - 5.5).abs() < 0.01, "{b:?} {e:?}");
 }
 
 /// A last line of nothing but a tab is as tall as a bigger paragraph mark after it (govuk-015's

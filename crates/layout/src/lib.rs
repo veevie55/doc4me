@@ -1394,6 +1394,9 @@ struct BorderBox {
     /// The space between the paragraph before (in the same box) and this one's top band, which
     /// the box's sides and shading run through.
     gap: f32,
+    /// The part of `top` that is the bottom border's distance from the text, kept above a between
+    /// border (see [`border_box`]); not at the top of a page, where the box starts again.
+    extra: f32,
 }
 
 /// A border's width plus its distance from the text, points (nothing for no border).
@@ -1421,12 +1424,22 @@ fn border_box(
     let Some(b) = rp.borders else { return BorderBox::default() };
     let joined_prev = prev.is_some_and(|p| same_border_box(p, rp));
     let joined_next = next.is_some_and(|n| same_border_box(rp, n));
+    // Between two paragraphs of a box, Word keeps the bottom border's distance from the text above
+    // the between border, besides the between border and its own distance: zenodo-011's
+    // references (bottom and between borders 0.5 pt, 1 pt from the text) step 2.4 pt more across
+    // each border than within a paragraph in Word's PDF, not 1.5 (as zenodo-065 and -119).
+    let extra = if joined_prev && b.between.is_some_and(|x| x.is_visible()) {
+        b.bottom.filter(Border::is_visible).map_or(0.0, |x| x.space.clamp(0.0, 31.0))
+    } else {
+        0.0
+    };
     BorderBox {
-        top: border_band(if joined_prev { b.between } else { b.top }),
+        top: if joined_prev { border_band(b.between) + extra } else { border_band(b.top) },
         bottom: if joined_next { 0.0 } else { border_band(b.bottom) },
         joined_prev,
         joined_next,
         gap: 0.0,
+        extra,
     }
 }
 
@@ -3484,6 +3497,11 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
         let Some(first) = pl.lines.get(l0) else { break };
         // A paragraph's first line may start below its top (pushed down by a floating object),
         // and starts below its top border.
+        // At the top of a page the box starts again: no bottom border's distance above it.
+        if l0 == 0 && pb.at_top() && bx.extra > 0.0 {
+            bx.top -= bx.extra;
+            bx.extra = 0.0;
+        }
         let lead = if l0 == 0 { first.top.max(0.0) + bx.top } else { header_lead };
         let mut l1 = l0;
         let mut forced_break = None;
