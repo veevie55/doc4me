@@ -3357,6 +3357,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     let placed_at = spot(pb);
     if pl.rp.page_break_before && !pb.at_page_top() && !pb.web {
         pb.new_page(block, body_top);
+        // Like a page started by a page break, its space before goes at the top: govuk-029's
+        // "ANNEX 2" (page break before, 18 pt before) sits at the top margin in Word's PDF, as do
+        // govuk-053's section headings on pages 6, 17, 29 and 30.
+        pb.after_break = true;
     }
     // An empty paragraph that only ends a continuous section takes no room in Word, not even its
     // spacing: zenodo-125's 1- and 2-column sections are separated by empty Normal (Web)

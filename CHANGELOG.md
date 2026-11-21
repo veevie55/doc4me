@@ -22,6 +22,12 @@
 
 ## [Unreleased]
 
+### แก้ไข — ย่อหน้าที่ขึ้นหน้าใหม่ด้วย "page break before" ทิ้ง space before ที่บนสุดของหน้า (2026-11-21)
+
+- ย่อหน้าที่ตั้ง `w:pageBreakBefore` และขึ้นหน้าใหม่ ตอนนี้ไม่เว้น space before ที่บนสุดของหน้าใหม่ เหมือนหน้าที่เปิดด้วย page break อยู่แล้ว (`crates/layout/src/lib.rs` `place_para` ตั้ง `pb.after_break`) เหตุผล: govuk-029 หัวข้อ "ANNEX 2" (style มี pageBreakBefore และ space before 18 pt) ใน PDF ของ Word ชิดขอบบน ส่วนของเราต่ำกว่า 15 pt และหัวข้อ section ของ govuk-053 หน้า 6, 17, 29, 30 ก็เป็นแบบเดียวกัน
+- ผลต่อผู้ใช้: หัวข้อที่ขึ้นหน้าใหม่ด้วย page break before วางตรงตำแหน่ง Word ไม่เปลี่ยนไฟล์ .docx ไม่มีผลเฉพาะกับภาษาไทย
+- ตรวจสอบ: เทสต์ใหม่ `page_break_before_drops_the_space_before_at_the_new_page_top` (ไม่ผ่านเมื่อไม่มีการแก้: 90 แทน 72); เทียบตำแหน่งคำกับ PDF ของ Word ใน 9 ฉบับที่มี pageBreakBefore: govuk-029 ค่าคลาดเฉลี่ย 6.67 → 1.43 pt, govuk-019 1.63 → 1.41, govuk-053 หน้า 6 23.1 → 0.44, หน้า 17 24.0 → 0.13, หน้า 29 24.0 → 0.09, หน้า 30 43.7 → 0.11 (ค่ารวมทั้งฉบับของ govuk-053 แย่ลง 41.7 → 55.1 เพราะหน้า 32 ที่ตกอยู่แล้วขยับต่อจากจุดอื่น) ฉบับอื่นไม่เปลี่ยน; corpus บน Linux: govuk-029 ผ่าน ไม่มีเอกสารที่ตกเพิ่ม; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,702 ไม่ผ่าน 0)
+
 ### แก้ไข — ฟิลด์ MACROBUTTON/GOTOBUTTON ที่ไม่มีผลลัพธ์แสดงข้อความปุ่ม (2026-11-21)
 
 - ฟิลด์ `MACROBUTTON` และ `GOTOBUTTON` ที่ไฟล์ไม่ได้เขียนผลลัพธ์ไว้ (ไม่มี `w:fldChar separate`) ตอนนี้แสดงข้อความปุ่ม คือส่วนของโค้ดหลังชื่อฟิลด์และชื่อ macro/bookmark (`crates/layout/src/fields.rs` `field_text` และฟังก์ชันใหม่ `button_text`) เดิมไม่แสดงอะไร ถ้าฟิลด์มีผลลัพธ์อยู่แล้วยังใช้ผลลัพธ์เดิม เหตุผล: zenodo-157 หน้า 1 footnote "E-mail: `MACROBUTTON NoMacro author@institute.xxx`" ใน PDF ของ Word แสดง "author@institute.xxx" ส่วนของเราว่าง

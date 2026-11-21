@@ -1498,6 +1498,23 @@ fn a_continuous_section_mark_pushed_past_the_page_end_takes_no_room_on_the_next(
     assert!((b_top - top).abs() < 0.5, "b starts at the top margin ({top}), not at {b_top}");
 }
 
+/// A paragraph with "page break before" that starts a new page drops its space before at the top,
+/// as one after a page break does (govuk-029's "ANNEX 2" sits at the top margin in Word's PDF).
+#[test]
+fn page_break_before_drops_the_space_before_at_the_new_page_top() {
+    let mut d = Document::from_text("a\nb");
+    {
+        let second = d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap();
+        second.props.page_break_before = Some(true);
+        second.props.space_before = Some(18.0);
+    }
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let top = l.pages[1].body.y;
+    let y = l.pages[1].items.iter().find_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).unwrap();
+    assert!((y - top).abs() < 0.5, "b starts at the top margin ({top}), not {y}");
+}
+
 #[test]
 fn section_breaks_show_with_formatting_marks() {
     use doc4me_doc::section::{SectionProps, SectionStart};
