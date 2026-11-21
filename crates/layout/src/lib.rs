@@ -2002,6 +2002,11 @@ impl PageBuilder<'_> {
     fn at_top(&self) -> bool {
         self.y <= self.top + 0.01
     }
+    /// At the top of an empty column: [`Self::at_top`], at the page's own body top (not a
+    /// continuous section's top partway down the page, where a line that doesn't fit goes on).
+    fn at_empty_top(&self) -> bool {
+        self.at_top() && self.pages.last().is_none_or(|pg| self.top <= pg.body.y + 0.01)
+    }
     /// A continuous section can have its own column top partway down an existing page.
     fn at_page_top(&self) -> bool {
         self.col == 0 && self.pages.last().is_none_or(|p| self.y <= p.body.y + 0.01)
@@ -3248,6 +3253,15 @@ fn collapsed_section_mark(doc: &Document, p: &Paragraph, block: usize) -> bool {
         && (!is_table(block.checked_sub(1)) || is_table(block.checked_add(1)))
 }
 
+/// A one-line paragraph that takes no room: its line and the paragraph are 0 high.
+fn collapse_line(pl: &mut Arc<para::ParaLayout>) {
+    let pl = Arc::make_mut(pl);
+    pl.height = 0.0;
+    if let Some(line) = pl.lines.first_mut() {
+        line.height = 0.0;
+    }
+}
+
 /// Body paragraph `p` holds nothing (but zero-width markers such as bookmarks) and its paragraph
 /// mark is hidden text, with hidden text not shown: like a hidden row, it takes no room, as in
 /// Word (govuk-048's hidden empty paragraph holding a bookmark between two tables).
@@ -3439,11 +3453,7 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
     // second line shifted the following paragraph down by 8.4pt. Keep the marker in the layout
     // for navigation, but don't let its invisible paragraph mark advance the text flow.
     if (collapsed_section_mark(ctx.doc, p, block) && pl.lines.len() == 1) || hidden_empty {
-        let pl = Arc::make_mut(&mut pl);
-        pl.height = 0.0;
-        if let Some(line) = pl.lines.first_mut() {
-            line.height = 0.0;
-        }
+        collapse_line(&mut pl);
     }
     let mut n = pl.lines.len();
     let mut l0 = 0;
@@ -3540,7 +3550,9 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             // So does an empty paragraph that only ends its section when the next section starts
             // on a new page (zenodo-135: Word keeps it below the page's last line).
             let only_section_end = bottom > limit + 0.01 && l1 == l0 && only_ends_section(ctx.doc, p, block);
-            if bottom > limit + 0.01 && l1 == l0 && !pb.at_top() && !split && !only_break && !only_section_end {
+            // (At a continuous section's top partway down the page, too: zenodo-125's two-column
+            // text after a page number at the foot of page 2 starts page 3 in Word's PDF.)
+            if bottom > limit + 0.01 && l1 == l0 && !pb.at_empty_top() && !split && !only_break && !only_section_end {
                 break;
             }
             new_notes.extend(line_notes);
@@ -3605,7 +3617,10 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
             l1 -= 1;
         }
         if l1 == l0 {
-            if pb.at_top() {
+            // (A continuous section's own top partway down a page is no empty page: its first line
+            // that doesn't fit there goes on to the next column or page. zenodo-125's two-column
+            // text after a page number at the foot of page 2 starts page 3 in Word's PDF.)
+            if pb.at_empty_top() {
                 l1 = l0 + 1; // can't fit even one line on an empty page: overflow
             } else {
                 pb.advance(block, body_top);
@@ -3614,6 +3629,13 @@ fn place_para(ctx: &mut Ctx, pb: &mut PageBuilder, p: &Paragraph, block: usize, 
                     (float_rects, pl) = anchor_floats(ctx, pb, p, (y0, bx.top), excl_mark, &label);
                     anchor_y = y0;
                     n = pl.lines.len();
+                    // A section mark that takes no room still takes none here: zenodo-125's page
+                    // numbers fill their pages to the bottom margin, and laid out again on the
+                    // next page the mark took its line back and pushed the two-column text there
+                    // 14.5 pt below Word's.
+                    if section_mark && n == 1 {
+                        collapse_line(&mut pl);
+                    }
                     // At the top of a column the box doesn't reach up to the paragraph before.
                     bx.gap = 0.0;
                 }

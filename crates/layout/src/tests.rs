@@ -1466,6 +1466,38 @@ fn a_bottom_aligned_section_keeps_its_alignment_when_the_next_starts_a_page() {
     assert!(body < 120.0, "the next section's text starts at the top: {body}");
 }
 
+/// An empty mark ending a continuous section that a paragraph's space after has pushed past the
+/// page's foot still takes no room on the next page, and the next section's text starts there at
+/// the top margin (zenodo-125: each page number fills its page to the bottom margin, and the
+/// two-column text after it starts the next page at the top margin in Word's PDF).
+#[test]
+fn a_continuous_section_mark_pushed_past_the_page_end_takes_no_room_on_the_next() {
+    use doc4me_doc::section::{SectionProps, SectionStart};
+    let mut d = Document::from_text("a\n\nb");
+    {
+        let first = d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap();
+        first.props.space_before = Some(560.0);
+        first.props.space_after = Some(200.0);
+    }
+    let ends = SectionProps { start: SectionStart::Continuous, ..Default::default() };
+    d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap().section = Some(Box::new(ends));
+    d.last_section.start = SectionStart::Continuous;
+    d.last_section.columns.count = 2;
+    let l = lay(&d);
+    let top = l.pages[0].body.y;
+    let b_top = l
+        .pages
+        .iter()
+        .skip(1)
+        .flat_map(|pg| &pg.items)
+        .find_map(|it| match it {
+            Placed::Lines { para, y, .. } if para.text_len == 1 => Some(*y),
+            _ => None,
+        })
+        .expect("b on a later page");
+    assert!((b_top - top).abs() < 0.5, "b starts at the top margin ({top}), not at {b_top}");
+}
+
 #[test]
 fn section_breaks_show_with_formatting_marks() {
     use doc4me_doc::section::{SectionProps, SectionStart};
