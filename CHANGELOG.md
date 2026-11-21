@@ -22,6 +22,10 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง — Cargo.lock สำหรับ dependency ใหม่ของ doc4me-layout (2026-11-21)
+
+- บันทึก `Cargo.lock` ที่ตกหล่นจาก commit "วาดข้อความในภาพ EMF": `doc4me-layout` พึ่ง `doc4me-metafile` (crate ใน workspace เดียวกัน ไม่มี dependency ภายนอกเพิ่ม) ผลต่อผู้ใช้: ไม่มี ตรวจสอบ: `cargo xtask ci` ผ่านครบ 6 ขั้นด้วย lock file นี้ (เทสต์ผ่าน 2,706 ไม่ผ่าน 0) และ layers ผ่าน (layout L2 พึ่ง metafile L1 ได้)
+
 ### เพิ่ม — วาดข้อความในภาพ EMF (2026-11-21)
 
 - ภาพ EMF ที่มีข้อความ (record `EMR_EXTTEXTOUTW` พร้อมฟอนต์จาก `EMR_EXTCREATEFONTINDIRECTW`, สีจาก `EMR_SETTEXTCOLOR` และการจัดแนวจาก `EMR_SETTEXTALIGN`) ตอนนี้แสดงข้อความนั้น เดิม Doc4Me ไม่วาดข้อความใน metafile เลย ป้ายในกราฟและแผนภาพจึงหายไป

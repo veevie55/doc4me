@@ -1273,6 +1273,7 @@ dependencies = [
  "doc4me-doc",
  "doc4me-fonts",
  "doc4me-geom",
+ "doc4me-metafile",
  "doc4me-proof",
  "foldhash",
  "image",
