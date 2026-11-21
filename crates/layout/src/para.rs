@@ -520,11 +520,12 @@ pub(crate) fn font_for_aliases<'a>(aliases: &'a std::collections::BTreeMap<Strin
     Cow::Borrowed(&alias.alternate)
 }
 
-/// Break opportunities after each hyphen-minus that has a digit on both sides, as byte offsets
-/// just past the hyphen.
+/// Break opportunities after each hyphen-minus with a digit after it and a letter or digit before
+/// it, as byte offsets just past the hyphen (Word breaks zenodo-136's "post-COVID-" | "19", where
+/// UAX #14 keeps "COVID-19" whole and Doc4Me squeezed it onto the line).
 pub(crate) fn digit_hyphen_breaks(text: &str) -> Vec<usize> {
     let b = text.as_bytes();
-    (1..b.len().saturating_sub(1)).filter(|&i| b[i] == b'-' && b[i - 1].is_ascii_digit() && b[i + 1].is_ascii_digit()).map(|i| i + 1).collect()
+    (1..b.len().saturating_sub(1)).filter(|&i| b[i] == b'-' && b[i - 1].is_ascii_alphanumeric() && b[i + 1].is_ascii_digit()).map(|i| i + 1).collect()
 }
 
 /// What a piece of text is shaped as: one face, case, script formatting and direction.
@@ -1998,12 +1999,18 @@ const SUBSTITUTE_SLACK: f32 = 0.03;
 /// For a cluster `j` at `x` that doesn't fit before `right_edge`, on a line starting at `line_x`
 /// with no break opportunity yet: the last cluster of its word when the whole word, in a
 /// substitute font, overflows by at most [`SUBSTITUTE_SLACK`] of the line's text so far.
-/// Break opportunities (byte offsets in `text`) after a space and before two or more full stops.
+/// Break opportunities (byte offsets in `text`) after a space and before two or more full stops,
+/// or before a comma, semicolon, colon or full stop joined to the word after it: Word breaks
+/// zenodo-136's "Jo Widdicombe ,María-Gloria" after "Widdicombe ", where UAX #14 (LB13) keeps
+/// the space and the comma together and the long word that leaves was broken in the middle.
 pub(crate) fn space_dot_breaks(text: &str) -> Vec<usize> {
     let mut out = Vec::new();
     let mut prev_space = false;
     for (i, c) in text.char_indices() {
-        if prev_space && c == '.' && text.get(i + 1..).is_some_and(|t| t.starts_with('.')) {
+        let next = text.get(i + c.len_utf8()..).and_then(|t| t.chars().next());
+        let dots = c == '.' && next == Some('.');
+        let joined = matches!(c, ',' | ';' | ':' | '.') && next.is_some_and(char::is_alphanumeric);
+        if prev_space && (dots || joined) {
             out.push(i);
         }
         prev_space = c == ' ';

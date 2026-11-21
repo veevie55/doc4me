@@ -3348,6 +3348,7 @@ fn a_hyphen_between_digits_is_a_break_opportunity() {
     assert_eq!(para::digit_hyphen_breaks("16 98173-4097;"), vec![9]);
     assert_eq!(para::digit_hyphen_breaks("2010-2015 and 1-2-3"), vec![5, 16, 18]);
     assert!(para::digit_hyphen_breaks("-5 well-known 5–6 5-").is_empty());
+    assert_eq!(para::digit_hyphen_breaks("post-COVID-19"), vec![11]);
     // In a line too narrow for the number, it breaks right after the hyphen, not at whatever
     // character the width runs out at.
     let mut d = Document::from_text("98173-4097");
@@ -4594,6 +4595,7 @@ fn a_run_of_dots_after_a_space_may_start_a_line() {
     // govuk-065: "(2) ......" (a dot run too long for what is left of the line) puts "(2)" alone
     // on its line in Word's PDF; UAX #14 alone (LB13) keeps the space and the dots together.
     assert_eq!(super::para::space_dot_breaks("(2) ..... and . x ...."), vec![4, 18]);
+    assert_eq!(super::para::space_dot_breaks("Jo Widdicombe ,María and , x"), vec![14]);
     let mut d = Document::from_text(&format!("(2) {}", ".".repeat(200)));
     if let Some(doc4me_doc::Block::Para(p)) = d.body.first_mut().map(std::sync::Arc::make_mut) {
         p.props.align = Some(doc4me_doc::props::Align::Justify);
