@@ -7714,6 +7714,79 @@ fn a_row_with_a_centred_cell_splits_with_the_cell_aligned_on_the_page() {
     assert!(lens(1).contains(&2), "the rest of the row goes on");
 }
 
+/// A table set wider than 100% of the text width stands out past the margins, as in Word
+/// (zenodo-136's 104.1% publication table is 728.4 pt wide in 700.1 pt of text width).
+#[test]
+fn a_table_over_a_hundred_percent_wide_stands_out_past_the_margins() {
+    let width = |pct: f32| {
+        let mut t = Table::new(1, 2, 300.0);
+        t.props.width_pct = Some(pct);
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        let rects: Vec<Rect> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, row: 0, .. } = it { Some(*rect) } else { None }).collect();
+        rects.iter().map(|r| r.right()).fold(f32::MIN, f32::max) - rects.iter().map(|r| r.x).fold(f32::MAX, f32::min)
+    };
+    let (full, wide) = (width(100.0), width(104.0));
+    assert!((wide / full - 1.04).abs() < 0.005, "{wide} pt is 104% of {full} pt");
+}
+
+/// Rows of the floating table at the page foot (left: page 0, right: page 1).
+fn float_rows_by_page(l: &DocLayout) -> (Vec<usize>, Vec<usize>) {
+    let rows = |pg: usize| -> Vec<usize> {
+        let mut v: Vec<usize> =
+            l.pages[pg].items.iter().filter_map(|it| if let Placed::Cell { row, .. } = it { Some(row.to_owned()) } else { None }).collect();
+        v.dedup();
+        v
+    };
+    (rows(0), if l.pages.len() > 1 { rows(1) } else { Vec::new() })
+}
+
+/// A floating table placed from the text that would run past the page's end splits there like
+/// a table in the text (Word's multi-page floating tables: zenodo-136's last activity table
+/// keeps its heading rows at the foot of page 24), instead of moving on whole.
+#[test]
+fn a_floating_table_running_past_the_page_end_splits_across_pages() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let mut t = Table::new(12, 2, 300.0);
+    t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, overlap: false, ..Default::default() });
+    let mut d = Document::new();
+    d.body = (0..14).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("p", Default::default()))).collect();
+    d.body.push(std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+    d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::new()));
+    let (first, second) = float_rows_by_page(&lay(&d));
+    assert!(first.contains(&0) && !first.contains(&11), "its first rows stay on the first page: {first:?}");
+    assert!(second.contains(&11) && !second.contains(&0), "the rest goes on: {second:?}");
+}
+
+/// A table in the text right after a floating table placed just below the text (1 twip) starts
+/// below it rather than over it (govuk-067's "E3" table after the floating "E" table).
+#[test]
+fn a_table_after_a_floating_table_just_below_the_text_starts_below_it() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let mut f = Table::new(3, 2, 300.0);
+    f.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, overlap: false, ..Default::default() });
+    let flow = Table::new(1, 2, 300.0);
+    let mut d = Document::new();
+    d.body = vec![
+        std::sync::Arc::new(doc4me_doc::Block::Table(f)),
+        std::sync::Arc::new(doc4me_doc::Block::Table(flow)),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::new()),
+    ];
+    let l = lay(&d);
+    let cells: Vec<(usize, Rect)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Cell { rect, table, .. } = it { Some((table.0.first().copied().unwrap_or(0) as usize, *rect)) } else { None })
+        .collect();
+    let float_bottom = cells.iter().filter(|c| c.0 == 0).map(|c| c.1.bottom()).fold(f32::MIN, f32::max);
+    let flow_top = cells.iter().filter(|c| c.0 == 1).map(|c| c.1.y).fold(f32::MAX, f32::min);
+    assert!(flow_top >= float_bottom - 0.01, "the table in the text starts at {flow_top}, under the floating one ending at {float_bottom}");
+}
+
 /// Text taller than its exact line spacing shares the line between its ascent and descent, and
 /// lowering it (`w:position`) then moves it down: govuk-044's page number, 20 pt lowered 12 pt
 /// in a 10 pt exact line, is drawn 12 pt lower than unlowered text in Word's PDF.

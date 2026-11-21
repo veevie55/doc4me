@@ -4041,7 +4041,17 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
                 .flat_map(|c| &c.blocks)
                 .all(|b| matches!(&**b, Block::Para(p) if p.text.is_empty() && p.objects.is_empty()));
         let fits = if blank_panel { tl.float_fit_height <= pb.sect.page_h + 0.01 } else { h <= pb.uncapped_bottom() - pb.top + 0.01 };
-        if fits {
+        // One placed from the text that would run past the page's end splits across pages
+        // like a table in the text (Word's multi-page floating tables): zenodo-136's last
+        // activity table keeps its five heading rows at the foot of page 24 in Word's PDF, and
+        // govuk-067's "Health declaration" table keeps its C1 rows on page 7 and goes on to C2
+        // on page 8. A table that starts a page and fits is placed whole as before.
+        let runs_off = matches!(f.v_rel, Anchor::Paragraph | Anchor::Line)
+            && f.v_align.is_none()
+            && f.y >= 0.0
+            && !pb.at_top()
+            && pb.y + f.y + h > pb.bottom + 0.01;
+        if fits && !runs_off {
             place_floating_table(pb, &tl, &f, legacy, block, body_top);
             return;
         }
@@ -4076,11 +4086,12 @@ fn place_table(ctx: &mut Ctx, pb: &mut PageBuilder, t: &doc4me_doc::Table, block
             }
         }
     }
-    // A table in the text flow starts below the floating objects in its way. A floating table
-    // too tall for a page also clears one placed at (about) the same spot: govuk-067's "Role
-    // details" table follows "Personal details", both 1 twip below the same paragraph, and runs
-    // on below it in Word's PDF instead of over it.
-    if t.props.float.is_some() && !pb.web {
+    // A table in the text flow starts below the floating objects in its way. Any table also
+    // clears one placed (about) where it starts: govuk-067's "Role details" table follows
+    // "Personal details", both 1 twip below the same paragraph, and runs on below it in Word's
+    // PDF instead of over it; its "E3" table, in the text right after the floating "E" table
+    // 1 twip down, starts the next page below it instead of over it.
+    if !pb.web {
         let (x0, x1) = (pb.col_x() + tl.x, pb.col_x() + tl.x + tl.width);
         let same_spot: Vec<WrapArea> = pb
             .excl

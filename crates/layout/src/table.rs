@@ -496,8 +496,11 @@ pub fn layout_table(ctx: &mut Ctx, story: StoryRef, t: &Table, path: &[u32], ava
     } else {
         avail
     };
+    // A percentage over 100 makes the table wider than the margins, as in Word: zenodo-136's
+    // 104.1% publication table is 728.4 pt wide in a 700.1 pt text width in Word's PDF (as are
+    // govuk-066's 106.7% and zenodo-143's 101.5% tables). (At most 600%, against absurd values.)
     let target = match (t.props.width_pct, t.props.width) {
-        (Some(p), _) if p > 0.0 => Some(pct_room * (p / 100.0).min(1.0)),
+        (Some(p), _) if p > 0.0 => Some(pct_room * (p / 100.0).min(6.0)),
         (_, Some(w)) if w > 0.0 => Some(w),
         _ => None,
     };
