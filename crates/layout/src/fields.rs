@@ -110,6 +110,10 @@ pub fn field_text(instr: &str, result: &str, ctx: &FieldCtx) -> (String, bool) {
         // A legacy form check box has no result: Word draws the box (its checked state is in the
         // form field data, which isn't kept).
         "FORMCHECKBOX" if result.is_empty() => ("\u{2610}".to_string(), false),
+        // A button field shows its display text, the words after the macro or bookmark name:
+        // zenodo-157's footnote `MACROBUTTON NoMacro author@institute.xxx`, written with no
+        // result, reads "author@institute.xxx" in Word's PDF.
+        "MACROBUTTON" | "GOTOBUTTON" if result.is_empty() => (button_text(instr).to_string(), false),
         // A style no paragraph uses: Word's result when it updates the field (zenodo-021's
         // captions number by `STYLEREF 1 \s`, but no paragraph is in Heading 1).
         "STYLEREF" if ctx.styles_used.as_ref().is_some_and(|used| styleref_target(instr).is_some_and(|t| !used.contains(&t))) => {
@@ -117,6 +121,17 @@ pub fn field_text(instr: &str, result: &str, ctx: &FieldCtx) -> (String, bool) {
         }
         _ => (result.to_string(), false),
     }
+}
+
+/// A `MACROBUTTON` or `GOTOBUTTON` field's display text: its code after the field name and the
+/// macro or bookmark name, trimmed.
+fn button_text(instr: &str) -> &str {
+    let mut rest = instr.trim_start();
+    for _ in 0..2 {
+        let end = rest.find(char::is_whitespace).unwrap_or(rest.len());
+        rest = rest.get(end..).unwrap_or("").trim_start();
+    }
+    rest.trim_end()
 }
 
 /// The style a STYLEREF field names, lower-case: `1`–`9` are the built-in headings by name
@@ -159,6 +174,10 @@ mod tests {
     fn page_fields() {
         let ctx = FieldCtx { page: 4, pages: 12, ..Default::default() };
         assert_eq!(field_text("PAGE", "", &ctx), ("4".into(), true));
+        assert_eq!(field_text(" MACROBUTTON NoMacro author@institute.xxx ", "", &ctx), ("author@institute.xxx".into(), false));
+        assert_eq!(field_text("GOTOBUTTON  intro  Go to  the start", "", &ctx).0, "Go to  the start");
+        assert_eq!(field_text("MACROBUTTON NoMacro [Name]", "Kept", &ctx).0, "Kept");
+        assert_eq!(field_text("MACROBUTTON", "", &ctx).0, "");
         assert_eq!(field_text(" PAGE \\* ROMAN ", "", &ctx).0, "IV");
         assert_eq!(field_text("NUMPAGES \\* CardText", "", &ctx).0, "Twelve");
         assert_eq!(field_text("NUMPAGES \\* CHINESENUM1", "", &ctx).0, "十二");
