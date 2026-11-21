@@ -22,6 +22,19 @@
 
 ## [Unreleased]
 
+### เพิ่ม — วาดข้อความในภาพ EMF (2026-11-21)
+
+- ภาพ EMF ที่มีข้อความ (record `EMR_EXTTEXTOUTW` พร้อมฟอนต์จาก `EMR_EXTCREATEFONTINDIRECTW`, สีจาก `EMR_SETTEXTCOLOR` และการจัดแนวจาก `EMR_SETTEXTALIGN`) ตอนนี้แสดงข้อความนั้น เดิม Doc4Me ไม่วาดข้อความใน metafile เลย ป้ายในกราฟและแผนภาพจึงหายไป
+  - `crates/metafile`: อ่าน record ข้างต้นเป็น `Item::Text` (ตำแหน่ง ทิศของ baseline ตาม escapement ขนาดฟอนต์ ระยะของแต่ละตัวอักษร สี การจัดแนว ชื่อฟอนต์ ตัวหนา/เอียง) และเพิ่ม `has_emf_plus`
+  - `crates/layout/src/metafile_text.rs` (ใหม่): แปลงเป็น `Draw::Glyphs` วางทับภาพในหน้า (ตัดให้อยู่ในกรอบภาพ หมุนตาม escapement) PDF จึงได้ข้อความจริงที่ดึงและค้นหาได้ และภาพหน้าจอก็ได้ด้วย
+  - ไฟล์ EMF+ dual (มี record EMF+) วาดข้อความเป็นเส้นขอบตัวอักษรแทน (`Draw::Art`) เพราะ Word เล่นส่วน EMF+ ผ่าน GDI+ ซึ่งข้อความออกมาเป็นเส้นโค้งที่ดึงไม่ได้
+  - ข้าม: ข้อความที่เป็น glyph index (`ETO_GLYPH_INDEX`) และข้อความที่ไม่มีฟอนต์ถูกเลือก; ข้อความใน WMF ยังไม่รองรับ
+- เหตุผล: zenodo-047 ภาพ gel ทั้ง 5 ภาพมีป้าย "250 kDa", "A06"… เป็นข้อความใน PDF ของ Word ของเราไม่มี หน้า 3 จึงจบด้วยคำต่างกัน; zenodo-141 ภาพโครงสร้างเคมี (EMF+ dual) ใน PDF ของ Word มีป้ายแต่ดึงเป็นข้อความไม่ได้
+- ความปลอดภัย: จำกัดจำนวนตัวอักษรต่อ run (8,192), จำนวน run ต่อภาพ (20,000), ขนาดฟอนต์ (0.05–2,000 pt) และจำนวนภาพใน cache (64); ทุก offset ในไฟล์อ่านแบบตรวจขอบเขต ไฟล์ที่ผิดรูปแบบได้ข้อความน้อยลงหรือไม่มี ไม่ panic
+- ผลต่อผู้ใช้: ป้ายในภาพ EMF แสดงและอยู่ใน PDF เหมือน Word ไม่เปลี่ยนไฟล์ .docx (ภาพยังเก็บเหมือนเดิม)
+- readiness: zenodo-126 ที่เคย defer (เหตุผลเดิมว่า ".docx ไม่มีข้อความนั้น" ซึ่งผิด เพราะข้อความอยู่ใน EMF ของโลโก้) ตอนนี้ผ่าน จึงเลิก defer ใน `docs/readiness/corpus.tsv` และบันทึกการแก้ไว้ในแถวเดิมของ `docs/readiness/deferred-pagination-2026-11-20.md`
+- ตรวจสอบ: เทสต์ใหม่ใน metafile `emf_text_runs_keep_font_colour_alignment_and_advances`, `emf_text_turns_with_its_escapement_and_skips_what_it_cannot_read`, `emf_plus_comments_mark_a_dual_file` และใน layout `metafile_text_is_drawn_as_glyphs_and_dual_files_as_outlines`; corpus บน Linux: zenodo-047 และ zenodo-126 ผ่าน ไม่มีเอกสารที่ตกเพิ่ม (ครั้งแรกที่ยังไม่แยก EMF+ zenodo-141 ตก จึงเพิ่มการวาดเป็นเส้นขอบ); zenodo-047 ทุกหน้ามีชุดคำตรงกับ Word; `cargo xtask ci` ผ่านครบ 6 ขั้น (เทสต์ผ่าน 2,706 ไม่ผ่าน 0)
+
 ### เปลี่ยนแปลง — defer zenodo-048 (กลุ่ม ข) (2026-11-21)
 
 - defer zenodo-048 ตามคำสั่งเจ้าของ (กลุ่ม ข; `docs/readiness/corpus.tsv` และตารางกลุ่ม ข ใน `docs/readiness/deferred-pagination-2026-11-20.md`) หลักฐาน: ต่างเฉพาะหน้า 4–6 เชิงอรรถที่ 5 มีฟิลด์ `REF _Ref224571658` ซึ่งในไฟล์เก็บผลลัพธ์ "ANNEXE B: Exemples d’outils de collecte de données" แต่ PDF ของ Word พิมพ์ข้อความปัจจุบันของ bookmark ("ANNEXE B : Exemples…" รวม page break ที่ bookmark เริ่มต้น ทำให้ข้อความเชิงอรรถอยู่ต่ำกว่าเลขเชิงอรรถ 3 บรรทัด) คืออัปเดตฟิลด์ตอนสร้าง PDF ทั้งที่ไฟล์ไม่ได้ขอ (ไม่มี `w:updateFields`) จึงมาจากการตั้งค่า "Update fields before printing" ของโปรแกรม หน้าอื่นมีชุดคำตรงกับ Word ทั้งหมด

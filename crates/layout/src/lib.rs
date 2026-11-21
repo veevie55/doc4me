@@ -15,6 +15,7 @@ pub mod fields;
 pub mod hit;
 pub mod kinsoku;
 pub mod math;
+mod metafile_text;
 pub mod outline;
 pub mod para;
 mod table;

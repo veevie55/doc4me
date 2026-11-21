@@ -2,7 +2,7 @@
 
 use crate::canvas::Canvas;
 use crate::dib::Rgba;
-use crate::{Error, Item, MAX_BYTES, MAX_ITEMS, Seg, is_metafile, parse};
+use crate::{Error, Item, MAX_BYTES, MAX_ITEMS, Seg, Text, is_metafile, parse};
 
 fn h16(v: i32) -> Vec<u8> {
     (v as i16).to_le_bytes().to_vec()
@@ -120,7 +120,7 @@ const DIB24_RGBA: [u8; 16] = [255, 0, 0, 255, 255, 255, 255, 255, 0, 0, 255, 255
 fn path_segs(item: &Item) -> (&Vec<Seg>, Option<[u8; 4]>, Option<([u8; 4], f32)>, bool) {
     match item {
         Item::Path { segs, fill, stroke, even_odd } => (segs, *fill, *stroke, *even_odd),
-        Item::Bitmap { .. } => panic!("expected a path"),
+        Item::Bitmap { .. } | Item::Text(_) => panic!("expected a path"),
     }
 }
 
@@ -1048,4 +1048,90 @@ fn empty_poly_groups_reserve_nothing() {
     // Counts past the points are cut short, and the size still matches.
     let ops = crate::geom::subpaths(&pts, &[2, 5, 4], false);
     assert_eq!((ops.len(), ops.capacity()), (3, 3));
+}
+
+/// EMR_EXTCREATEFONTINDIRECTW for `face` with `height` (negative: an em) and `escapement`.
+fn font_rec(slot: u32, height: i32, escapement: i32, weight: i32, face: &str) -> Vec<u8> {
+    let mut p = cat(vec![h32(slot), e32(height), e32(0), e32(escapement), e32(0), e32(weight), vec![0; 8]]);
+    let mut name: Vec<u8> = face.encode_utf16().flat_map(|u| u.to_le_bytes()).collect();
+    name.resize(64, 0);
+    p.extend(name);
+    erec(82, &p)
+}
+
+/// EMR_EXTTEXTOUTW of `text` at (x, y) with the advances `dx` (none when empty) and `options`.
+fn text_rec(x: i32, y: i32, text: &str, dx: &[i32], options: u32) -> Vec<u8> {
+    let units: Vec<u16> = text.encode_utf16().collect();
+    let off_string = 8 + 68;
+    let string: Vec<u8> = units.iter().flat_map(|u| u.to_le_bytes()).collect();
+    let mut string_padded = string.clone();
+    while !string_padded.len().is_multiple_of(4) {
+        string_padded.push(0);
+    }
+    let off_dx = if dx.is_empty() { 0 } else { off_string + string_padded.len() };
+    let mut p = cat(vec![
+        vec![0; 16],
+        h32(1),
+        vec![0; 8],
+        e32(x),
+        e32(y),
+        h32(units.len() as u32),
+        h32(off_string as u32),
+        h32(options),
+        vec![0; 16],
+        h32(off_dx as u32),
+    ]);
+    p.extend(string_padded);
+    for d in dx {
+        p.extend(d.to_le_bytes());
+    }
+    erec(84, &p)
+}
+
+/// A text run comes out with its font, colour, alignment and advances in picture units (points
+/// here: 100 device units span the 25 mm frame).
+#[test]
+fn emf_text_runs_keep_font_colour_alignment_and_advances() {
+    let recs =
+        [font_rec(1, -20, 0, 700, "Arial"), erec(37, &h32(1)), erec(24, &h32(0x0000_00FF)), erec(22, &h32(24)), text_rec(10, 40, "Hi", &[10, 8], 0)];
+    let p = parse(&emf(&recs, [0, 0, 100, 50], [0, 0, 2500, 1250])).unwrap();
+    let k = (2500.0 * 72.0 / 2540.0 / 100.0) as f32;
+    let texts: Vec<&Text> = p.items.iter().filter_map(|i| if let Item::Text(t) = i { Some(t) } else { None }).collect();
+    assert_eq!(texts.len(), 1, "{:?}", p.items);
+    let t = texts[0];
+    assert_eq!((t.text.as_str(), t.face.as_str(), t.bold, t.italic, t.cell, t.align), ("Hi", "Arial", true, false, false, 24));
+    assert_eq!(t.color, [255, 0, 0, 255]);
+    assert!(close(t.x, 10.0 * k) && close(t.y, 40.0 * k) && close(t.size, 20.0 * k), "{t:?}");
+    assert!(close(t.dir.0, 1.0) && close(t.dir.1, 0.0), "{t:?}");
+    assert!(t.advances.len() == 2 && close(t.advances[0], 10.0 * k) && close(t.advances[1], 8.0 * k), "{t:?}");
+}
+
+/// A 90° escapement turns the baseline up the page; glyph-index strings and text with no font
+/// selected are left out.
+#[test]
+fn emf_text_turns_with_its_escapement_and_skips_what_it_cannot_read() {
+    let recs = [
+        text_rec(5, 5, "no font", &[], 0),
+        font_rec(1, -10, 900, 400, "Arial"),
+        erec(37, &h32(1)),
+        text_rec(10, 40, "up", &[], 0),
+        text_rec(10, 40, "gl", &[], 0x10),
+    ];
+    let p = parse(&emf(&recs, [0, 0, 100, 50], [0, 0, 2500, 1250])).unwrap();
+    let texts: Vec<&Text> = p.items.iter().filter_map(|i| if let Item::Text(t) = i { Some(t) } else { None }).collect();
+    assert_eq!(texts.len(), 1, "{texts:?}");
+    assert_eq!(texts[0].text, "up");
+    assert!(close(texts[0].dir.0, 0.0) && close(texts[0].dir.1, -1.0), "{:?}", texts[0].dir);
+    assert!(texts[0].advances.is_empty());
+}
+
+/// An EMF+ comment marks a dual file; a plain EMF and a WMF are not.
+#[test]
+fn emf_plus_comments_mark_a_dual_file() {
+    let plain = emf(&[erec(43, &cat(vec![e32(0), e32(0), e32(5), e32(5)]))], [0, 0, 100, 50], [0, 0, 2500, 1250]);
+    assert!(!crate::has_emf_plus(&plain));
+    let comment = erec(70, &cat(vec![h32(8), b"EMF+".to_vec(), vec![0; 4]]));
+    let dual = emf(&[comment], [0, 0, 100, 50], [0, 0, 2500, 1250]);
+    assert!(crate::has_emf_plus(&dual));
+    assert!(!crate::has_emf_plus(b"not a metafile"));
 }

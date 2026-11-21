@@ -2,7 +2,7 @@
 //! record (bitmap info and bits) are relative to the record start, so each handler reads the record slice.
 
 use crate::bytes::Bytes;
-use crate::canvas::{BS_NULL, Brush, Canvas, Obj, PS_NULL, PS_STYLE_MASK, Pen, Xform, colorref};
+use crate::canvas::{BS_NULL, Brush, Canvas, Font, Obj, PS_NULL, PS_STYLE_MASK, Pen, Xform, colorref};
 use crate::dib::{self, Blend};
 use crate::geom::{self, ArcKind, P};
 use crate::{Error, Frame, MAX_PATH_OPS};
@@ -161,6 +161,10 @@ fn record(cv: &mut Canvas, typ: u32, r: Bytes) {
         76 | 77 => bitblt(cv, r, typ == 77),
         80 => set_dibits(cv, r),
         81 => stretch_dibits(cv, r),
+        82 => create_font(cv, r),
+        24 => r.u32(8).map(|c| cv.set_text_color(colorref(c))),
+        22 => r.u32(8).map(|a| cv.set_text_align(a)),
+        84 => ext_text_out_w(cv, r),
         114 => alphablend(cv, r),
         _ => Some(()),
     };
@@ -226,6 +230,55 @@ fn create_pen(cv: &mut Canvas, r: Bytes) -> Option<()> {
     let width = r.i32(16)?;
     let color = r.u32(24)?;
     cv.add_object(Some(slot), Obj::Pen(Pen { style, width: f64::from(width), color: colorref(color) }));
+    Some(())
+}
+
+/// EMR_EXTCREATEFONTINDIRECTW: handle, then LOGFONTW (height, width, escapement, orientation,
+/// weight, italic, underline, strike-out, charset, precisions, quality, pitch, 32-character face).
+fn create_font(cv: &mut Canvas, r: Bytes) -> Option<()> {
+    let slot = r.u32(8)? as usize;
+    let height = f64::from(r.i32(12)?);
+    let escapement = f64::from(r.i32(20)?);
+    let weight = r.i32(28)?;
+    let italic = r.slice(32, 1)?.first().is_some_and(|b| *b != 0);
+    let name = r.slice(40, 64).unwrap_or(&[]);
+    let units: Vec<u16> = name.chunks_exact(2).map(|c| u16::from_le_bytes([c[0], c[1]])).take_while(|u| *u != 0).collect();
+    let face = String::from_utf16_lossy(&units);
+    cv.create_font(slot, Font { height, escapement, weight, italic, face });
+    Some(())
+}
+
+/// ETO_PDY: the advances come in (x, y) pairs.
+const ETO_PDY: u32 = 0x2000;
+/// ETO_GLYPH_INDEX: the string holds glyph indices of the font, not characters.
+const ETO_GLYPH_INDEX: u32 = 0x10;
+
+/// EMR_EXTTEXTOUTW: bounds, graphics mode, scales, then EMRTEXT (reference point at 36, count at
+/// 44, string offset at 48, options at 52, clip rectangle, advances offset at 72). Glyph-index
+/// strings can't be read without the font that made them: they are left out.
+fn ext_text_out_w(cv: &mut Canvas, r: Bytes) -> Option<()> {
+    let at = xy32(r, 36)?;
+    let n = (r.u32(44)? as usize).min(8192);
+    let off = r.u32(48)? as usize;
+    let options = r.u32(52)?;
+    if options & ETO_GLYPH_INDEX != 0 || n == 0 {
+        return Some(());
+    }
+    let units: Vec<u16> = r.slice(off, n.checked_mul(2)?)?.chunks_exact(2).map(|c| u16::from_le_bytes([c[0], c[1]])).collect();
+    let text = String::from_utf16_lossy(&units);
+    let off_dx = r.u32(72)? as usize;
+    let step = if options & ETO_PDY != 0 { 8 } else { 4 };
+    let dx: Vec<f64> = if off_dx == 0 { Vec::new() } else { (0..n).map_while(|k| r.i32(off_dx + k * step).map(f64::from)).collect() };
+    // A surrogate pair is one character with two advances: add them up.
+    let mut adv = Vec::with_capacity(dx.len());
+    let mut k = 0;
+    for c in text.chars() {
+        let w = c.len_utf16();
+        adv.push(dx.get(k..k + w).map_or(0.0, |s| s.iter().sum()));
+        k += w;
+    }
+    let adv = if dx.len() >= units.len() { adv } else { Vec::new() };
+    cv.text(at, text, &adv);
     Some(())
 }
 

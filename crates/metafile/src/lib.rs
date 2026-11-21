@@ -60,6 +60,32 @@ pub enum Item {
     },
     /// A bitmap stretched into `rect` = `[x, y, w, h]` (picture units), RGBA8 rows top-down.
     Bitmap { rect: [f32; 4], width: u32, height: u32, rgba: Vec<u8> },
+    /// A text run (EMF ExtTextOutW), in picture units. The reader has no fonts: whoever draws it
+    /// resolves the face, places the run by `align` and keeps it to the picture.
+    Text(Text),
+}
+
+/// A text run of a metafile, in picture coordinates (y down).
+#[derive(Debug, Clone, PartialEq)]
+pub struct Text {
+    /// The reference point the alignment flags (`align`, GDI's TA_*) are relative to.
+    pub x: f32,
+    pub y: f32,
+    /// The baseline's direction, a unit vector.
+    pub dir: (f32, f32),
+    /// The font's height: an em, or a cell height (em plus internal leading) when `cell`.
+    pub size: f32,
+    pub cell: bool,
+    pub text: String,
+    /// Each character's advance along the baseline; empty for the font's own widths.
+    pub advances: Vec<f32>,
+    pub color: [u8; 4],
+    /// GDI text alignment: TA_CENTER (6) or TA_RIGHT (2) horizontally, TA_BASELINE (24) or
+    /// TA_BOTTOM (8) vertically (neither: the reference point is the top).
+    pub align: u32,
+    pub face: String,
+    pub bold: bool,
+    pub italic: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -100,6 +126,34 @@ pub fn parse(bytes: &[u8]) -> Result<Picture, Error> {
     Ok(build(cv.items, frame))
 }
 
+/// True when the EMF holds EMF+ records (an "EMF+ dual" file from GDI+): Word plays those, and
+/// GDI+ draws their text as outlines, so it is no text in Word's PDF (zenodo-141's chemistry
+/// figures), where a plain EMF's text runs are text (zenodo-047's gel labels).
+pub fn has_emf_plus(bytes: &[u8]) -> bool {
+    let b = Bytes(bytes);
+    if !emf::is_emf(b) {
+        return false;
+    }
+    let mut off = 0usize;
+    for _ in 0..MAX_ITEMS {
+        let (Some(typ), Some(size)) = (b.u32(off), b.u32(off + 4)) else { return false };
+        let size = size as usize;
+        if size < 8 {
+            return false;
+        }
+        // EMR_COMMENT whose data starts with the "EMF+" identifier.
+        if typ == 70 && b.slice(off + 12, 4) == Some(b"EMF+") {
+            return true;
+        }
+        if typ == 14 {
+            return false;
+        }
+        let Some(next) = off.checked_add(size) else { return false };
+        off = next;
+    }
+    false
+}
+
 /// True when the bytes start like a WMF (placeable or plain header) or an EMF.
 pub fn is_metafile(bytes: &[u8]) -> bool {
     let b = Bytes(bytes);
@@ -136,6 +190,31 @@ fn build(raw: Vec<Raw>, frame: Option<Frame>) -> Picture {
             let (x, y) = tf((r[0], r[1]));
             let rect = [f(x)?, f(y)?, f(r[2] * sx)?, f(r[3] * sy)?];
             Some(Item::Bitmap { rect, width: img.w as u32, height: img.h as u32, rgba: img.px })
+        }
+        Raw::Text(t) => {
+            let (x, y) = tf(t.at);
+            let (dx, dy) = (t.dir.0 * sx, t.dir.1 * sy);
+            let along = dx.hypot(dy);
+            if along.is_nan() || along <= 0.0 {
+                return None;
+            }
+            // Across the baseline the picture scales by the other axis.
+            let across = (t.dir.1 * sx).hypot(t.dir.0 * sy);
+            let advances = t.advances.iter().map(|a| f(a * along)).collect::<Option<Vec<f32>>>()?;
+            Some(Item::Text(Text {
+                x: f(x)?,
+                y: f(y)?,
+                dir: (f(dx / along)?, f(dy / along)?),
+                size: f(t.size * across)?,
+                cell: t.cell,
+                text: t.text,
+                advances,
+                color: t.color,
+                align: t.align,
+                face: t.face,
+                bold: t.bold,
+                italic: t.italic,
+            }))
         }
     });
     let items = items.collect();
@@ -201,6 +280,7 @@ fn bbox(raw: &[Raw]) -> Option<[f64; 4]> {
                 grow((rect[0], rect[1]));
                 grow((rect[0] + rect[2], rect[1] + rect[3]));
             }
+            Raw::Text(t) => grow(t.at),
         }
     }
     b

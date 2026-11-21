@@ -8159,3 +8159,71 @@ fn a_subscript_drops_by_its_own_size() {
     let sup = doc4me_doc::resolve::ResolvedChar { vert_align: doc4me_doc::props::VertAlign::Superscript, ..rc };
     assert!((sup.baseline_shift() - 11.0 * 0.33).abs() < 0.001, "superscripts unchanged");
 }
+
+/// A metafile picture's text runs: [`display::page_display`] draws them as glyphs over the picture
+/// (text Word's PDF has, zenodo-047's gel labels), and an EMF+ dual file's from outlines, which
+/// are no text (zenodo-141's chemistry figures).
+#[test]
+fn metafile_text_is_drawn_as_glyphs_and_dual_files_as_outlines() {
+    fn rec(typ: u32, p: &[u8]) -> Vec<u8> {
+        let mut p = p.to_vec();
+        while !p.len().is_multiple_of(4) {
+            p.push(0);
+        }
+        let mut v = typ.to_le_bytes().to_vec();
+        v.extend(((8 + p.len()) as u32).to_le_bytes());
+        v.extend(p);
+        v
+    }
+    fn le(v: &[i32]) -> Vec<u8> {
+        v.iter().flat_map(|x| x.to_le_bytes()).collect()
+    }
+    let emf = |dual: bool| {
+        let mut h = vec![0u8; 88];
+        h[0..4].copy_from_slice(&1u32.to_le_bytes());
+        h[4..8].copy_from_slice(&88u32.to_le_bytes());
+        h[8..24].copy_from_slice(&le(&[0, 0, 100, 100]));
+        h[24..40].copy_from_slice(&le(&[0, 0, 2500, 2500]));
+        h[40..44].copy_from_slice(&0x464D_4520u32.to_le_bytes());
+        h[72..88].copy_from_slice(&le(&[1000, 1000, 250, 250]));
+        let mut font = le(&[1, -20, 0, 0, 0, 400, 0, 0]);
+        let mut name: Vec<u8> = "Arial".encode_utf16().flat_map(|u| u.to_le_bytes()).collect();
+        name.resize(64, 0);
+        font.extend(name);
+        let mut text = le(&[0, 0, 0, 0, 1, 0, 0, 10, 50, 2, 76, 0, 0, 0, 0, 0, 0]);
+        text.extend("Hi".encode_utf16().flat_map(|u| u.to_le_bytes()));
+        let mut recs = vec![h];
+        if dual {
+            recs.push(rec(70, &[le(&[8]), b"EMF+".to_vec(), vec![0; 4]].concat()));
+        }
+        recs.extend([rec(82, &font), rec(37, &le(&[1])), rec(84, &text), rec(14, &[0; 12])]);
+        recs.concat()
+    };
+    let draws = |dual: bool| {
+        let mut d = Document::new();
+        let media = d.add_media(emf(dual), "emf");
+        let mut p = doc4me_doc::Paragraph::new();
+        let obj =
+            InlineObject::Image { media, w: 70.0, h: 70.0, alt: String::new(), float: Default::default(), crop: [0.0; 4], ole: None, video: None };
+        p.insert_object(0, obj, &Default::default()).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        display::page_display(&d, &l.pages[0], &display::DisplayOptions::default())
+    };
+    fn find(items: &[display::Draw], glyphs: &mut Vec<String>, art: &mut usize) {
+        for it in items {
+            match it {
+                display::Draw::Glyphs { text, .. } => glyphs.push(text.clone()),
+                display::Draw::Art { .. } => *art += 1,
+                display::Draw::Clip { items, .. } | display::Draw::Rotated { items, .. } => find(items, glyphs, art),
+                _ => {}
+            }
+        }
+    }
+    let (mut glyphs, mut art) = (Vec::new(), 0);
+    find(&draws(false), &mut glyphs, &mut art);
+    assert!(glyphs.iter().any(|t| t == "Hi") && art == 0, "{glyphs:?} {art}");
+    let (mut glyphs, mut art) = (Vec::new(), 0);
+    find(&draws(true), &mut glyphs, &mut art);
+    assert!(!glyphs.iter().any(|t| t == "Hi") && art == 1, "{glyphs:?} {art}");
+}

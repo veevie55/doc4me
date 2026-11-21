@@ -54,10 +54,30 @@ pub(crate) struct Brush {
     pub color: [u8; 4],
 }
 
+/// A logical font (EMF LOGFONTW): enough to draw text with a font of that family.
+#[derive(Clone, Debug, PartialEq)]
+pub(crate) struct Font {
+    /// `lfHeight`: negative is the em height, positive the cell height (em plus internal leading),
+    /// in logical units.
+    pub height: f64,
+    /// `lfEscapement`: the baseline's angle, tenths of a degree counter-clockwise.
+    pub escapement: f64,
+    pub weight: i32,
+    pub italic: bool,
+    pub face: String,
+}
+
+/// Fonts kept from one file; past this, new fonts take a slot but draw nothing.
+const MAX_FONTS: usize = 4096;
+/// Characters kept from one text record.
+const MAX_TEXT_CHARS: usize = 8192;
+
 #[derive(Clone, Copy, Debug)]
 pub(crate) enum Obj {
     Pen(Pen),
     Brush(Brush),
+    /// Index into [`Canvas::fonts`].
+    Font(usize),
     /// Fonts, palettes, pattern brushes and regions: they take a table slot but draw nothing.
     Other,
 }
@@ -168,6 +188,24 @@ fn ratio(num: f64, den: f64) -> f64 {
 pub(crate) enum Raw {
     Path { ops: Vec<Op>, fill: Option<[u8; 4]>, stroke: Option<([u8; 4], f64)>, even_odd: bool },
     Bitmap { rect: [f64; 4], img: Rgba },
+    Text(RawText),
+}
+
+/// A text run in device units: its reference point, the baseline's direction (a unit vector), the
+/// font's height and each character's advance along the baseline (empty: the font's own widths).
+pub(crate) struct RawText {
+    pub at: P,
+    pub dir: P,
+    /// The font height in device units (an em when `cell` is false, else a cell height).
+    pub size: f64,
+    pub cell: bool,
+    pub text: String,
+    pub advances: Vec<f64>,
+    pub color: [u8; 4],
+    pub align: u32,
+    pub face: String,
+    pub bold: bool,
+    pub italic: bool,
 }
 
 #[derive(Clone)]
@@ -177,6 +215,9 @@ struct Saved {
     brush: Brush,
     even_odd: bool,
     nop: bool,
+    font: Option<usize>,
+    text_color: [u8; 4],
+    text_align: u32,
 }
 
 pub(crate) struct Canvas {
@@ -205,6 +246,11 @@ pub(crate) struct Canvas {
     in_path: bool,
     path: Vec<Op>,
     full: bool,
+    /// Fonts created so far ([`Obj::Font`] indexes them) and the one selected.
+    fonts: Vec<Font>,
+    font: Option<usize>,
+    text_color: [u8; 4],
+    text_align: u32,
 }
 
 impl Canvas {
@@ -228,6 +274,10 @@ impl Canvas {
             in_path: false,
             path: Vec::new(),
             full: false,
+            fonts: Vec::new(),
+            font: None,
+            text_color: [0, 0, 0, 255],
+            text_align: 0,
         }
     }
 
@@ -241,6 +291,7 @@ impl Canvas {
             // What is held, capacity and all (WordCraft #3692).
             Raw::Path { ops, .. } => ops.capacity().saturating_mul(std::mem::size_of::<Op>()),
             Raw::Bitmap { img, .. } => img.px.capacity(),
+            Raw::Text(t) => t.text.capacity().saturating_add(t.advances.capacity().saturating_mul(8)),
         };
         if self.items.len() >= MAX_ITEMS || self.used.saturating_add(cost) > MAX_BYTES {
             self.full = true;
@@ -319,7 +370,16 @@ impl Canvas {
     /// could no longer match the file.
     pub fn save_dc(&mut self) {
         if self.saved.len() < MAX_STACK {
-            self.saved.push(Saved { map: self.map, pen: self.pen, brush: self.brush, even_odd: self.even_odd, nop: self.nop });
+            self.saved.push(Saved {
+                map: self.map,
+                pen: self.pen,
+                brush: self.brush,
+                even_odd: self.even_odd,
+                nop: self.nop,
+                font: self.font,
+                text_color: self.text_color,
+                text_align: self.text_align,
+            });
         } else {
             self.full = true;
         }
@@ -336,6 +396,9 @@ impl Canvas {
         self.brush = s.brush;
         self.even_odd = s.even_odd;
         self.nop = s.nop;
+        self.font = s.font;
+        self.text_color = s.text_color;
+        self.text_align = s.text_align;
     }
 
     /// Stores an object in `slot` (EMF index), or in the lowest free slot (WMF handle table).
@@ -385,6 +448,7 @@ impl Canvas {
         match self.objects.get(i as usize).copied().flatten() {
             Some(Obj::Pen(p)) => self.pen = p,
             Some(Obj::Brush(b)) => self.brush = b,
+            Some(Obj::Font(k)) => self.font = Some(k),
             Some(Obj::Other) | None => {}
         }
     }
@@ -405,6 +469,66 @@ impl Canvas {
             8 => self.pen = Pen { style: PS_NULL, width: 0.0, color: black },
             _ => {}
         }
+    }
+
+    /// EMR_EXTCREATEFONTINDIRECTW: keeps the font and puts it in `slot`.
+    pub fn create_font(&mut self, slot: usize, font: Font) {
+        if self.fonts.len() < MAX_FONTS {
+            self.fonts.push(font);
+            self.add_object(Some(slot), Obj::Font(self.fonts.len() - 1));
+        } else {
+            self.add_object(Some(slot), Obj::Other);
+        }
+    }
+
+    pub fn set_text_color(&mut self, c: [u8; 4]) {
+        self.text_color = c;
+    }
+
+    pub fn set_text_align(&mut self, a: u32) {
+        self.text_align = a;
+    }
+
+    /// Text drawn with the selected font at logical point `at`, each character `dx` logical units
+    /// on from the one before (empty: the font's widths). No font selected: nothing is drawn.
+    pub fn text(&mut self, at: P, text: String, dx: &[f64]) {
+        let Some(font) = self.font.and_then(|k| self.fonts.get(k)).cloned() else { return };
+        if text.is_empty() || self.nop {
+            return;
+        }
+        let text: String = text.chars().take(MAX_TEXT_CHARS).collect();
+        // The baseline is the logical x axis as the mapping draws it, turned counter-clockwise on
+        // the page (y down) by the escapement.
+        let p0 = self.map.device(at);
+        let p1 = self.map.device((at.0 + 1.0, at.1));
+        let (bx, by) = (p1.0 - p0.0, p1.1 - p0.1);
+        let along = bx.hypot(by);
+        if !(along.is_finite() && along > 0.0) {
+            return;
+        }
+        let (bx, by) = (bx / along, by / along);
+        let a = (font.escapement / 10.0).to_radians();
+        let dir = (bx * a.cos() + by * a.sin(), by * a.cos() - bx * a.sin());
+        // The font height as the mapping draws the logical y axis.
+        let up = self.map.device((at.0, at.1 + font.height.abs()));
+        let size = (up.0 - p0.0).hypot(up.1 - p0.1);
+        if !(size.is_finite() && size > 0.0) {
+            return;
+        }
+        let advances = dx.iter().take(text.chars().count()).map(|d| d * along).collect();
+        self.push(Raw::Text(RawText {
+            at: p0,
+            dir,
+            size,
+            cell: font.height > 0.0,
+            text,
+            advances,
+            color: self.text_color,
+            align: self.text_align,
+            face: font.face,
+            bold: font.weight >= 600,
+            italic: font.italic,
+        }));
     }
 
     fn map_op(&self, op: Op) -> Op {

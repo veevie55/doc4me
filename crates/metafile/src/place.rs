@@ -80,6 +80,8 @@ impl Picture {
                         out.push(PlacedItem::Bitmap { index, rect });
                     }
                 }
+                // Text needs fonts: the page's display list draws it (see `Picture::fit`).
+                Item::Text(_) => {}
             }
         }
         out

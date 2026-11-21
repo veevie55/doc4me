@@ -12,6 +12,7 @@ workspace = true
 doc4me-geom = { workspace = true, features = ["image"] }
 doc4me-doc = { workspace = true }
 doc4me-fonts = { workspace = true }
+doc4me-metafile = { workspace = true }
 doc4me-proof = { workspace = true }
 kurbo = { workspace = true }
 foldhash = { workspace = true }

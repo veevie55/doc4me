@@ -258,6 +258,7 @@ impl Vector {
             .map(|it| match it {
                 Item::Path { segs, .. } => segs.len() * std::mem::size_of::<Seg>(),
                 Item::Bitmap { .. } => 0,
+                Item::Text(t) => t.text.len() + t.advances.len() * std::mem::size_of::<f32>(),
             })
             .sum();
         px + segs

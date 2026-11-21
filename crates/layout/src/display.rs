@@ -544,7 +544,9 @@ fn item_in(doc: &Document, it: &Placed, opts: &DisplayOptions, alpha: f32, outer
         Placed::Fill { rect, color } => out.push(Draw::Fill { rect: *rect, color: *color, alpha }),
         Placed::Rule { x0, y0, x1, y1, border } => out.push(rule(*x0, *y0, *x1, *y1, border, alpha)),
         Placed::Image { rect, media, crop, spin, .. } => {
-            spun(*spin, *rect, vec![Draw::Image { rect: *rect, media: media.clone(), crop: *crop, alpha }], out)
+            let mut items = vec![Draw::Image { rect: *rect, media: media.clone(), crop: *crop, alpha }];
+            items.extend(crate::metafile_text::draws(doc, media, *rect, *crop, alpha));
+            spun(*spin, *rect, items, out)
         }
         Placed::Shape { rect, kind, fill, stroke, stroke_width, effects, freeform, spin, extra } => {
             let mut items = Vec::new();
@@ -973,7 +975,7 @@ fn lines(
             let spin = obj.and_then(InlineObject::frame).map(|(_, _, f)| f.spin()).unwrap_or_default();
             match obj {
                 Some(o @ (InlineObject::Image { .. } | InlineObject::Shape { .. } | InlineObject::Group { .. })) => {
-                    object_draws(o, rect, Spin::default(), alpha, opts, out)
+                    object_draws(doc, o, rect, Spin::default(), alpha, opts, out)
                 }
                 Some(InlineObject::Graphic { graphic, alt, .. }) => {
                     let mut draws = Vec::new();
@@ -1546,10 +1548,14 @@ fn spun(spin: Spin, rect: Rect, items: Vec<Draw>, out: &mut Vec<Draw>) {
 /// A picture, shape or group drawn in `rect` (its unturned frame), turned by its own spin about
 /// the rect's centre; a group's members are turned inside it. `outer` is the spin it is already
 /// drawn inside (its group's). Nothing for anything else.
-fn object_draws(o: &InlineObject, rect: Rect, outer: Spin, alpha: f32, opts: &DisplayOptions, out: &mut Vec<Draw>) {
+fn object_draws(doc: &Document, o: &InlineObject, rect: Rect, outer: Spin, alpha: f32, opts: &DisplayOptions, out: &mut Vec<Draw>) {
     let own = o.frame().map(|(_, _, f)| f.spin()).unwrap_or_default();
     match o {
-        InlineObject::Image { media, crop, .. } => spun(own, rect, vec![Draw::Image { rect, media: media.clone(), crop: *crop, alpha }], out),
+        InlineObject::Image { media, crop, .. } => {
+            let mut items = vec![Draw::Image { rect, media: media.clone(), crop: *crop, alpha }];
+            items.extend(crate::metafile_text::draws(doc, media, rect, *crop, alpha));
+            spun(own, rect, items, out)
+        }
         InlineObject::Shape { kind, fill, stroke, stroke_width, effects, freeform, extra, .. } => {
             let effects = effects_in(*effects, own.within(outer));
             let mut items = Vec::new();
@@ -1559,7 +1565,7 @@ fn object_draws(o: &InlineObject, rect: Rect, outer: Spin, alpha: f32, opts: &Di
         InlineObject::Group { .. } => {
             let mut members = Vec::new();
             for ([x, y, w, h], c) in o.group_rects(rect.x, rect.y, rect.w, rect.h) {
-                object_draws(c, Rect::new(x, y, w, h), own.within(outer), alpha, opts, &mut members);
+                object_draws(doc, c, Rect::new(x, y, w, h), own.within(outer), alpha, opts, &mut members);
             }
             match o.canvas_style() {
                 // A Drawing Canvas: its background and outline, then its members clipped to its
