@@ -7,8 +7,8 @@ Doc4Me เป็นโปรแกรมประมวลผลคำแบบ�
 และการสั่งงานด้วยเอเจนต์ ทุกความสามารถเป็นคำสั่งที่สคริปต์และเอเจนต์ AI เรียกใช้ได้ ผ่านช่องทางควบคุมในเครื่องหรือ MCP
 
 Doc4Me ยังอยู่ในระยะ **alpha** ดูความคืบหน้าที่ [ROADMAP.md](ROADMAP.md)
-ผลวัด Windows ทางการล่าสุด (run 44854241154): **96.3%** หรือ **98.9% เมื่อไม่นับ 45 รายการ deferred**
-คลังเอกสาร 219 ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง 219/219 และขอบเขตหน้าตรง 167/219
+ผลวัด Windows ทางการล่าสุด (run 44869100479): **96.4%** หรือ **98.9% เมื่อไม่นับ 45 รายการ deferred**
+คลังเอกสาร 219 ไฟล์เปิดและบันทึกกลับได้ครบ จำนวนหน้าตรง 219/219 และขอบเขตหน้าตรง 168/219
 ดู [ผลวัด readiness](docs/readiness.th.md) และ [การประเมิน blocker ภาษาไทย](docs/readiness/blockers-2026-11-14.th.md) สำหรับรายการที่ยังไม่ผ่านและหลักฐาน
 
 ![หน้าจอภาษาไทยของ Doc4Me กับเอกสารภาษาไทย](docs/images/thai.png)
@@ -76,7 +76,7 @@ Windows x86, Windows x64, Windows ARM64, macOS, Linux, FreeBSD และ Web App
 ไฟล์ build ของ workflow สร้างแพ็กเกจทั้งเจ็ดรายการอยู่ใน **Artifacts** ของ run นั้น 14 วัน พร้อม `SOURCE_COMMIT.txt` ระบุ commit ที่ใช้จริง
 workflow Pages ใช้ `ref` ที่เลือกเพื่อ build แล้วแทนที่เว็บไซต์ปัจจุบันเมื่อ deploy สำเร็จ; เลือก **Use workflow from: main** เพื่อใช้ workflow ล่าสุด
 workflow Windows สำหรับแพ็กเกจและ readiness ใช้ชุดฟอนต์ OFL ที่ pin เดียวกัน และตรวจ hash ของฟอนต์เพิ่มเติมก่อน build; ดูรายละเอียด revision และใบอนุญาตใน [docs/releasing.md](docs/releasing.md)
-ผลวัด Windows ล่าสุด (run [44854241154](https://github.com/veevie55/doc4me/actions/runs/44854241154)): readiness 96.3% รวม /98.9% ไม่รวม 45 deferred, จำนวนหน้า 219/219 และขอบเขตหน้า 167/219; ยังมี page-count 0 รายการและ boundary 52 รายการที่ไม่ผ่าน ตาม [รายงาน](docs/readiness.th.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).
+ผลวัด Windows ล่าสุด (run [44869100479](https://github.com/veevie55/doc4me/actions/runs/44869100479)): readiness 96.4% รวม /98.9% ไม่รวม 45 deferred, จำนวนหน้า 219/219 และขอบเขตหน้า 168/219; ยังมี page-count 0 รายการและ boundary 51 รายการที่ไม่ผ่าน ตาม [รายงาน](docs/readiness.th.md) และ [การวิเคราะห์ blocker ไทย/อังกฤษ](docs/readiness/blockers-2026-11-14.th.md).
 Windows ARM64 ยังไม่ลงลายเซ็นดิจิทัล และ macOS ลงลายเซ็นแบบ ad-hoc โดยยังไม่ notarize
 Web App ใช้ ZIP ที่แตกแล้วให้บริการผ่าน HTTP(S) ได้ หรือสั่ง workflow Pages เพื่อเผยแพร่เว็บไซต์; ดู [วิธีนำขึ้นโฮสต์](packaging/web/README.md)
 
