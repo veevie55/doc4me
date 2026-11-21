@@ -1,6 +1,6 @@
 # ผล readiness ที่วัดได้ (ภาษาไทย)
 
-> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-21 ที่ source commit `8e5fc7c`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
+> สร้างจาก [`readiness.md`](readiness.md) เมื่อ 2026-11-21 ที่ source commit `1d10877`; ตัวเลขและเกณฑ์มาจากรายงาน Windows ทางการ ไม่แก้เกณฑ์ น้ำหนัก corpus สถานะ deferred หรือ excluded
 
 **Readiness รวม: 96.3%**  
 **เมื่อไม่นับรายการ deferred: 98.8%**
@@ -9,7 +9,7 @@
 |---|---:|---:|---:|---|
 | ฟีเจอร์ | 0.30 | 97.4% | 100.0% | ribbon 504/504; dialogs 216/228 (12 deferred) |
 | รูปแบบไฟล์ | 0.20 | 100.0% | 100.0% | corpus-open 219/219; corpus-roundtrip 219/219 |
-| การจัดหน้าและแบ่งหน้า | 0.15 | 87.9% | 91.7% | corpus-pages 219/219; corpus-breaks 166/219 (20 deferred) |
+| การจัดหน้าและแบ่งหน้า | 0.15 | 87.9% | 92.1% | corpus-pages 219/219; corpus-breaks 166/219 (22 deferred) |
 | UI/UX | 0.10 | 98.6% | 100.0% | shortcuts 276/280 (4 deferred) |
 | ความเสถียร | 0.10 | 100.0% | 100.0% | corpus-stability 219/219; stability 5/5 |
 | ประสิทธิภาพ | 0.05 | 100.0% | 100.0% | performance 6/6 |
@@ -26,7 +26,7 @@
 
 ## รายการ deferred
 
-มี 42 รายการ deferred ซึ่งยังนับเป็นไม่ผ่านในคะแนนรวมและไม่รวมในตัวเลข ‘ไม่นับ deferred’ ได้แก่รายการที่รอ prerequisite (ฮาร์ดแวร์ แพลตฟอร์ม บริการภายนอก) และหน้าของ corpus ที่เจ้าของให้ defer การเทียบการแบ่งหน้า ดู [รายงาน readiness ฉบับเต็ม](readiness.md), [แผน deferred](readiness/deferred-plan.md) และ [หลักฐานของ corpus ที่ defer](readiness/deferred-pagination-2026-11-20.md)
+มี 44 รายการ deferred ซึ่งยังนับเป็นไม่ผ่านในคะแนนรวมและไม่รวมในตัวเลข ‘ไม่นับ deferred’ ได้แก่รายการที่รอ prerequisite (ฮาร์ดแวร์ แพลตฟอร์ม บริการภายนอก) และหน้าของ corpus ที่เจ้าของให้ defer การเทียบการแบ่งหน้า ดู [รายงาน readiness ฉบับเต็ม](readiness.md), [แผน deferred](readiness/deferred-plan.md) และ [หลักฐานของ corpus ที่ defer](readiness/deferred-pagination-2026-11-20.md)
 
 ## วิธีอ่านผล
 
