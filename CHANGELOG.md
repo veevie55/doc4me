@@ -22,6 +22,11 @@
 
 ## [Unreleased]
 
+### เปลี่ยนแปลง — defer zenodo-048 (กลุ่ม ข) (2026-11-21)
+
+- defer zenodo-048 ตามคำสั่งเจ้าของ (กลุ่ม ข; `docs/readiness/corpus.tsv` และตารางกลุ่ม ข ใน `docs/readiness/deferred-pagination-2026-11-20.md`) หลักฐาน: ต่างเฉพาะหน้า 4–6 เชิงอรรถที่ 5 มีฟิลด์ `REF _Ref224571658` ซึ่งในไฟล์เก็บผลลัพธ์ "ANNEXE B: Exemples d’outils de collecte de données" แต่ PDF ของ Word พิมพ์ข้อความปัจจุบันของ bookmark ("ANNEXE B : Exemples…" รวม page break ที่ bookmark เริ่มต้น ทำให้ข้อความเชิงอรรถอยู่ต่ำกว่าเลขเชิงอรรถ 3 บรรทัด) คืออัปเดตฟิลด์ตอนสร้าง PDF ทั้งที่ไฟล์ไม่ได้ขอ (ไม่มี `w:updateFields`) จึงมาจากการตั้งค่า "Update fields before printing" ของโปรแกรม หน้าอื่นมีชุดคำตรงกับ Word ทั้งหมด
+- ผลต่อผู้ใช้: ไม่เปลี่ยนโค้ด ไม่ลบแถวใด ตรวจสอบ: เทียบชุดคำทุกหน้าด้วย pdftotext; อ่านตำแหน่งเลขเชิงอรรถทั้งสอง PDF ด้วย PyMuPDF (เลข 5 ตรงกัน Word วางข้อความที่ 757.8 ใต้เลขที่ 722); ตรวจเนื้อหา bookmark และ settings.xml; `cargo test -p xtask` ผ่าน 39/39
+
 ### แก้ไข — ย่อหน้าที่ขึ้นหน้าใหม่ด้วย "page break before" ทิ้ง space before ที่บนสุดของหน้า (2026-11-21)
 
 - ย่อหน้าที่ตั้ง `w:pageBreakBefore` และขึ้นหน้าใหม่ ตอนนี้ไม่เว้น space before ที่บนสุดของหน้าใหม่ เหมือนหน้าที่เปิดด้วย page break อยู่แล้ว (`crates/layout/src/lib.rs` `place_para` ตั้ง `pb.after_break`) เหตุผล: govuk-029 หัวข้อ "ANNEX 2" (style มี pageBreakBefore และ space before 18 pt) ใน PDF ของ Word ชิดขอบบน ส่วนของเราต่ำกว่า 15 pt และหัวข้อ section ของ govuk-053 หน้า 6, 17, 29, 30 ก็เป็นแบบเดียวกัน
