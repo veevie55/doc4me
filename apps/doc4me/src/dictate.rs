@@ -89,16 +89,34 @@ fn file_sha256(path: &Path) -> Result<String, String> {
     Ok(h.finalize().iter().map(|b| format!("{b:02x}")).collect())
 }
 
+/// A cached model is trusted only when both its expected size and checksum match.
+fn model_file_is_valid(path: &Path, model: &Model) -> bool {
+    std::fs::metadata(path).is_ok_and(|m| m.is_file() && m.len() == model.size) && file_sha256(path).is_ok_and(|sum| sum == model.sha256)
+}
+
 /// The model's file, downloaded and checked first if it isn't there yet.
 fn ensure_model(model: &Model, dir: &Path, online: bool, stop: &AtomicBool, send: &dyn Fn(DictationEvent)) -> Result<PathBuf, String> {
     let path = dir.join(model.file);
-    if std::fs::metadata(&path).is_ok_and(|m| m.len() == model.size) {
+    if model_file_is_valid(&path, model) {
         return Ok(path);
     }
     if !online {
-        return Err("the speech model isn't on this computer and online services are turned off (File › Options › Trust Center)".into());
+        let reason = if std::fs::symlink_metadata(&path).is_ok() {
+            "the speech model on this computer is damaged"
+        } else {
+            "the speech model isn't on this computer"
+        };
+        return Err(format!("{reason} and online services are turned off (File › Options › Trust Center)"));
     }
     std::fs::create_dir_all(dir).map_err(|e| format!("couldn't make {}: {e}", dir.display()))?;
+    // On Windows, rename won't replace an existing destination. Remove an invalid cached entry
+    // before downloading its verified replacement. symlink_metadata/remove_file operate on the
+    // entry itself, so a stale symlink is removed without touching its target.
+    match std::fs::symlink_metadata(&path) {
+        Ok(_) => std::fs::remove_file(&path).map_err(|e| format!("couldn't replace the damaged speech model: {e}"))?,
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => return Err(format!("couldn't inspect the speech model: {e}")),
+    }
     let part = dir.join(format!("{}.part", model.file));
     let progress = Arc::new(AtomicU64::new(0));
     let mut req = FetchRequest::get(format!("{MODEL_URL}{}", model.file), model.size);
@@ -332,6 +350,27 @@ fn open_stream(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn cached_model_must_match_its_checksum_even_when_its_size_matches() {
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let dir = std::env::temp_dir().join(format!("doc4me-model-check-{}-{}", std::process::id(), NEXT.fetch_add(1, Ordering::Relaxed)));
+        std::fs::create_dir_all(&dir).unwrap();
+        let model = Model { file: "test-model.bin", size: 13, sha256: "6d6065cea517391b0166d6a74be33c924cc416b959fa1eee6a146094195b639d" };
+        let path = dir.join(model.file);
+
+        std::fs::write(&path, b"trusted model").unwrap();
+        assert!(model_file_is_valid(&path, &model));
+        assert_eq!(ensure_model(&model, &dir, false, &AtomicBool::new(false), &|_| {}).unwrap(), path);
+
+        // Same length as the trusted bytes, so a size-only check would accept it.
+        std::fs::write(&path, b"corrupt model").unwrap();
+        assert!(!model_file_is_valid(&path, &model));
+        let error = ensure_model(&model, &dir, false, &AtomicBool::new(false), &|_| {}).unwrap_err();
+        assert!(error.contains("damaged"), "{error}");
+
+        let _ = std::fs::remove_dir_all(dir);
+    }
 
     #[test]
     fn sound_is_resampled_and_cut_at_pauses() {
