@@ -344,7 +344,7 @@ jobs:
           APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
           APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
-        run: packaging/macos/import-cert.sh
+        run: bash packaging/macos/import-cert.sh
       - name: Sign and notarize the DMG and CLI ZIP
         if: steps.credentials.outputs.available == 'true'
         shell: bash

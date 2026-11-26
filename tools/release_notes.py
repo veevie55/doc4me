@@ -90,7 +90,12 @@ def main() -> None:
         parser.error("release must be a commit SHA (7 to 40 hex digits)")
     if not COMMIT.fullmatch(args.commit.lower()):
         parser.error("--commit must be a commit SHA")
-    text = args.changelog.read_text(encoding="utf-8")
+    try:
+        text = args.changelog.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        if args.unreleased_as is None:
+            parser.error(f"changelog not found: {args.changelog}")
+        text = ""
     found = sections(text)
     synthetic = None  # the --unreleased-as title, whose entries sit under [Unreleased] in the file
     start = next((i for i, (heading, _) in enumerate(found) if matches(heading, release)), None)

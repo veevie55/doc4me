@@ -191,7 +191,7 @@ jobs:
           printf 'APPIMAGETOOL=%s\n' "$RUNNER_TEMP/doc4me-tools/appimagetool" >> "$GITHUB_ENV"
 
       - name: Build AppImage, DEB, RPM, and tar archive
-        run: packaging/linux/package.sh
+        run: bash packaging/linux/package.sh
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2

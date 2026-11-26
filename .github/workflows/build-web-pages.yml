@@ -158,7 +158,7 @@ jobs:
           (cd apps/doc4me-web && trunk build --release --locked)
           printf '%s\n' "${{ steps.source.outputs.sha }}" > dist/web/SOURCE_COMMIT.txt
           touch dist/web/.nojekyll
-          packaging/web/package.sh --skip-build
+          bash packaging/web/package.sh --skip-build
 
       - name: Upload the Pages site artifact
         uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
