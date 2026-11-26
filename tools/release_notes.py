@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 """Write cumulative GitHub release notes from the released CHANGELOG sections.
 
 Doc4Me names releases by the commit they were built from: a release's section is headed
