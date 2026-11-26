@@ -1,0 +1,523 @@
+name: Release
+run-name: "Release ${{ inputs.version }} · ${{ inputs.ref }}"
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1 (tag v<version>; --version; About and file names as chosen)'
+        required: true
+        type: string
+      ref:
+        description: 'Source: main (latest code), or a full 40-character commit SHA, a tag or a branch'
+        required: true
+        type: string
+        default: main
+      windows:
+        description: 'Windows builds (MSI, portable ZIP each)'
+        type: choice
+        default: x64
+        options:
+          - x64
+          - x64, arm64
+          - x86
+          - x86, x64
+          - x86, arm64
+          - x86, x64, arm64
+          - arm64
+          - none
+      linux:
+        description: 'Build Linux x86_64 (AppImage, DEB, RPM, tar.gz)'
+        type: boolean
+        default: false
+      macos:
+        description: 'Build macOS universal (DMG, CLI ZIP)'
+        type: boolean
+        default: false
+      web:
+        description: 'Build the Web App (static site ZIP)'
+        type: boolean
+        default: false
+      pages:
+        description: 'Build and publish the Web App on GitHub Pages'
+        type: boolean
+        default: false
+      file-name:
+        description: 'Download file names: doc4me-<version>-..., doc4me-<version>-<commit>-..., doc4me-<commit>-... or doc4me-... (none)'
+        type: choice
+        default: version
+        options:
+          - version
+          - version-commit
+          - commit
+          - none
+      about:
+        description: 'Line under the name in About: Version <version> (<commit>), Version <version>, Commit <commit>, or nothing (none)'
+        type: choice
+        default: version-commit
+        options:
+          - version-commit
+          - version
+          - commit
+          - none
+      sign:
+        description: 'Sign Windows and macOS files when credentials are available (requires ref main)'
+        required: false
+        type: boolean
+        default: false
+permissions:
+  contents: read
+concurrency:
+  group: release-${{ inputs.version }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      sha: ${{ steps.check.outputs.sha }}
+      version: ${{ steps.check.outputs.version }}
+      tag: ${{ steps.check.outputs.tag }}
+      prerelease: ${{ steps.check.outputs.prerelease }}
+      windows-arches: ${{ steps.check.outputs.windows-arches }}
+    steps:
+      - name: Check the signed release request
+        if: inputs.sign
+        shell: bash
+        env:
+          SOURCE_REF: ${{ inputs.ref }}
+          WINDOWS: ${{ inputs.windows }}
+          MACOS: ${{ inputs.macos }}
+        run: |
+          if [ "$GITHUB_REF" != refs/heads/main ] || [ "$SOURCE_REF" != main ]; then
+            echo '::error::Signed releases require the main workflow and ref main'
+            exit 1
+          fi
+          if [ "$WINDOWS" = none ] && [ "$MACOS" != true ]; then
+            echo '::error::Choose at least one Windows or macOS build to sign'
+            exit 1
+          fi
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ inputs.sign && github.workflow_sha || inputs.ref }}
+          persist-credentials: false
+      - name: Check the version, the targets and that the tag is free
+        id: check
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          GH_TOKEN: ${{ github.token }}
+          WINDOWS: ${{ inputs.windows }}
+          OTHER_TARGET: ${{ inputs.linux || inputs.macos || inputs.web }}
+          FILE_NAME: ${{ inputs.file-name }}
+          ABOUT: ${{ inputs.about }}
+          CODE_SIGNING: ${{ inputs.sign }}
+        run: |
+          version="${REQUESTED_VERSION#v}"
+          semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+          if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+            [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+            echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+            exit 1
+          fi
+          case "$WINDOWS" in
+            'x64' | 'x64, arm64' | 'x86' | 'x86, x64' | 'x86, arm64' | 'x86, x64, arm64' | 'arm64' | 'none') ;;
+            *) echo '::error::windows must be one of the listed choices'; exit 1 ;;
+          esac
+          if [ "$WINDOWS" = none ] && [ "$OTHER_TARGET" != true ] && [ "${{ inputs.pages }}" != true ]; then
+            echo '::error::choose at least one platform to build'
+            exit 1
+          fi
+          for choice in "file-name=$FILE_NAME" "about=$ABOUT"; do
+            case "${choice#*=}" in
+              version | version-commit | commit | none) ;;
+              *) echo "::error::${choice%%=*} must be version, version-commit, commit or none"; exit 1 ;;
+            esac
+          done
+          case "$version" in
+            *-*) prerelease=true ;;
+            *) prerelease=false ;;
+          esac
+          tag="v$version"
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$tag" --silent 2>/dev/null; then
+            echo "::error::tag $tag already exists; choose another version"
+            exit 1
+          fi
+          if gh api "repos/$GITHUB_REPOSITORY/releases/tags/$tag" --silent 2>/dev/null; then
+            echo "::error::a Release for $tag already exists; choose another version"
+            exit 1
+          fi
+          commit=$(git rev-parse HEAD)
+          {
+            printf 'sha=%s\n' "$commit"
+            printf 'version=%s\n' "$version"
+            printf 'tag=%s\n' "$tag"
+            printf 'prerelease=%s\n' "$prerelease"
+            if [ "$WINDOWS" = none ]; then
+              printf 'windows-arches=[]\n'
+            else
+              printf 'windows-arches=["%s"]\n' "${WINDOWS//, /\",\"}"
+            fi
+          } >> "$GITHUB_OUTPUT"
+          printf "### Release %s\n\nSource commit: \`%s\`\n\nWindows: %s\n\nFile names: %s\n\nAbout: %s\n\nPre-release: %s\n\nCode signing: %s\n" \
+            "$tag" "$commit" "$WINDOWS" "$FILE_NAME" "$ABOUT" "$prerelease" "${CODE_SIGNING:-false}" >> "$GITHUB_STEP_SUMMARY"
+  windows-x64:
+    needs: prepare
+    if: contains(inputs.windows, 'x64')
+    uses: ./.github/workflows/build-windows-x64.yml
+    with:
+      disable-cache: ${{ inputs.sign }}
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+  windows-x86:
+    needs: prepare
+    if: contains(inputs.windows, 'x86')
+    uses: ./.github/workflows/build-windows-x86.yml
+    with:
+      disable-cache: ${{ inputs.sign }}
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+  windows-arm64:
+    needs: prepare
+    if: contains(inputs.windows, 'arm64')
+    uses: ./.github/workflows/build-windows-arm64.yml
+    with:
+      disable-cache: ${{ inputs.sign }}
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+  linux:
+    needs: prepare
+    if: inputs.linux
+    uses: ./.github/workflows/build-linux.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+  macos:
+    needs: prepare
+    if: inputs.macos
+    uses: ./.github/workflows/build-macos.yml
+    with:
+      disable-cache: ${{ inputs.sign }}
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+      arch: universal
+  web:
+    needs: prepare
+    if: inputs.web
+    uses: ./.github/workflows/build-web.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      file-name: ${{ inputs.file-name }}
+      about: ${{ inputs.about }}
+  sign-windows:
+    needs: [prepare, windows-x86, windows-x64, windows-arm64]
+    if: >-
+      !cancelled() && inputs.sign && inputs.windows != 'none' && needs.prepare.result == 'success' &&
+      !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    strategy:
+      matrix:
+        arch: ${{ fromJSON(needs.prepare.outputs.windows-arches) }}
+    name: Sign Windows ${{ matrix.arch }}
+    runs-on: windows-latest
+    timeout-minutes: 20
+    environment: release-signing
+    steps:
+      - name: Check Windows signing credentials
+        id: credentials
+        shell: pwsh
+        env:
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SIGNING_ENDPOINT: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          AZURE_SIGNING_ACCOUNT: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
+          AZURE_CERT_PROFILE: ${{ secrets.AZURE_CERT_PROFILE }}
+        run: |
+          $azure = 'AZURE_TENANT_ID', 'AZURE_CLIENT_ID', 'AZURE_CLIENT_SECRET',
+            'AZURE_SIGNING_ENDPOINT', 'AZURE_SIGNING_ACCOUNT', 'AZURE_CERT_PROFILE'
+          if ($env:WINDOWS_CERTIFICATE -or -not ($azure | Where-Object { -not [Environment]::GetEnvironmentVariable($_) })) {
+            'available=true' >> $env:GITHUB_OUTPUT
+          } else {
+            Write-Output '::warning::Windows signing credentials are incomplete. Using the unsigned build.'
+            New-Item -ItemType Directory -Path signing-result | Out-Null
+            'missing-credentials' > signing-result/SIGNING_SKIPPED.txt
+          }
+      - name: Check out the signing tools
+        if: steps.credentials.outputs.available == 'true'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+      - name: Download the unsigned Windows packages
+        if: steps.credentials.outputs.available == 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: doc4me-windows-${{ matrix.arch }}-${{ needs.prepare.outputs.sha }}
+          path: unsigned
+      - name: Install WiX v5 and extensions
+        if: steps.credentials.outputs.available == 'true'
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.UI.wixext/5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2
+      - name: Sign the executables and MSI
+        if: steps.credentials.outputs.available == 'true'
+        shell: pwsh
+        env:
+          ARCH: ${{ matrix.arch }}
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          FILE_NAME: ${{ inputs.file-name }}
+          WINDOWS_CERTIFICATE: ${{ secrets.WINDOWS_CERTIFICATE }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_SIGNING_ENDPOINT: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+          AZURE_SIGNING_ACCOUNT: ${{ secrets.AZURE_SIGNING_ACCOUNT }}
+          AZURE_CERT_PROFILE: ${{ secrets.AZURE_CERT_PROFILE }}
+        run: |
+          ./packaging/windows/sign-release.ps1 -Arch $env:ARCH -ArtifactDir unsigned -Dist signing-result `
+            -SourceCommit $env:SHA -Version $env:VERSION -FileName $env:FILE_NAME
+      - name: Upload the Windows signing result
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: doc4me-signing-windows-${{ matrix.arch }}-${{ needs.prepare.outputs.sha }}
+          path: signing-result/*
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
+  sign-macos:
+    needs: [prepare, macos]
+    if: inputs.sign && inputs.macos
+    name: Sign and notarize macOS
+    runs-on: macos-latest
+    timeout-minutes: 120
+    environment: release-signing
+    steps:
+      - name: Check macOS signing credentials
+        id: credentials
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: |
+          if [ -n "$APPLE_CERTIFICATE" ] && [ -n "$APPLE_ID" ] && [ -n "$APPLE_PASSWORD" ] && [ -n "$APPLE_TEAM_ID" ]; then
+            printf 'available=true\n' >> "$GITHUB_OUTPUT"
+          else
+            echo '::warning::macOS signing credentials are incomplete. Using the ad-hoc signed build.'
+            mkdir signing-result
+            printf 'missing-credentials\n' > signing-result/SIGNING_SKIPPED.txt
+          fi
+      - name: Check out the signing tools
+        if: steps.credentials.outputs.available == 'true'
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.workflow_sha }}
+          persist-credentials: false
+      - name: Download the ad-hoc signed macOS packages
+        if: steps.credentials.outputs.available == 'true'
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: doc4me-macos-universal-${{ needs.prepare.outputs.sha }}
+          path: unsigned
+      - name: Import the Developer ID certificate
+        if: steps.credentials.outputs.available == 'true'
+        shell: bash
+        env:
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: packaging/macos/import-cert.sh
+      - name: Sign and notarize the DMG and CLI ZIP
+        if: steps.credentials.outputs.available == 'true'
+        shell: bash
+        env:
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          FILE_NAME: ${{ inputs.file-name }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+        run: bash packaging/macos/sign-release.sh unsigned signing-result "$SHA" "$VERSION" "$FILE_NAME"
+      - name: Remove the temporary signing keychain
+        if: always()
+        shell: bash
+        run: |
+          if [ -n "${MACOS_KEYCHAIN:-}" ]; then
+            security delete-keychain "$MACOS_KEYCHAIN"
+            rmdir "$(dirname "$MACOS_KEYCHAIN")"
+          fi
+      - name: Upload the macOS signing result
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: doc4me-signing-macos-universal-${{ needs.prepare.outputs.sha }}
+          path: signing-result/*
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 14
+  pages:
+    needs: [prepare, sign-windows, sign-macos]
+    if: >-
+      !cancelled() && inputs.pages && needs.prepare.result == 'success' &&
+      (!inputs.sign || ((inputs.windows == 'none' || needs.sign-windows.result == 'success') &&
+      (!inputs.macos || needs.sign-macos.result == 'success')))
+    uses: ./.github/workflows/build-web-pages.yml
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+      version: ${{ needs.prepare.outputs.version }}
+      about: ${{ inputs.about }}
+      deploy-pages: true
+  publish:
+    needs: [prepare, windows-x86, windows-x64, windows-arm64, linux, macos, web, sign-windows, sign-macos, pages]
+    if: >-
+      always() && needs.prepare.result == 'success' &&
+      (inputs.windows != 'none' || inputs.linux || inputs.macos || inputs.web) &&
+      (!inputs.sign || ((inputs.windows == 'none' || needs.sign-windows.result == 'success') &&
+      (!inputs.macos || needs.sign-macos.result == 'success'))) &&
+      !contains(needs.*.result, 'failure') && !contains(needs.*.result, 'cancelled')
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the release tools (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          path: workflow
+          persist-credentials: false
+      - name: Check out the released source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+          path: source
+          persist-credentials: false
+      - name: Download the build artifacts
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          path: artifacts
+          pattern: doc4me-*-${{ needs.prepare.outputs.sha }}
+      - name: Collect the release files
+        shell: bash
+        env:
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          WINDOWS: ${{ inputs.windows }}
+          MACOS: ${{ inputs.macos }}
+          LINUX: ${{ inputs.linux }}
+          WEB: ${{ inputs.web }}
+          SIGN: ${{ inputs.sign }}
+        run: |
+          mkdir -p release
+          targets=()
+          for arch in x86 x64 arm64; do
+            if [[ "$WINDOWS" == *"$arch"* ]]; then targets+=("windows-$arch"); fi
+          done
+          if [ "$MACOS" = true ]; then targets+=(macos-universal); fi
+          if [ "$LINUX" = true ]; then targets+=(linux-x86_64); fi
+          if [ "$WEB" = true ]; then targets+=(web); fi
+          : > "$RUNNER_TEMP/signing-notes.md"
+          for target in "${targets[@]}"; do
+            dir="artifacts/doc4me-$target-$SHA/"
+            if [ "${SIGN:-false}" = true ] && [[ "$target" == windows-* || "$target" == macos-* ]]; then
+              signing_dir="artifacts/doc4me-signing-$target-$SHA/"
+              if [ ! -d "$signing_dir" ]; then
+                echo "::error::Missing signing result for $target"
+                exit 1
+              fi
+              if [ -f "$signing_dir/SIGNING_SKIPPED.txt" ]; then
+                signing_files=("$signing_dir"*)
+                if [ "${#signing_files[@]}" -ne 1 ] ||
+                   [ "$(tr -d '\r\n' < "$signing_dir/SIGNING_SKIPPED.txt")" != missing-credentials ]; then
+                  echo "::error::Unexpected signing result for $target"
+                  exit 1
+                fi
+                printf -- "- \`%s\` uses the standard build because signing credentials were incomplete.\n" "$target" >> "$RUNNER_TEMP/signing-notes.md"
+              else
+                dir="$signing_dir"
+              fi
+            fi
+            if [ ! -d "$dir" ]; then
+              echo "::error::Missing release artifact for $target"
+              exit 1
+            fi
+            if [ "$(tr -d '\r\n' < "$dir/SOURCE_COMMIT.txt")" != "$SHA" ]; then
+              echo "::error::$dir was not built from $SHA"
+              exit 1
+            fi
+            if [ "$(tr -d '\r\n' < "$dir/VERSION.txt")" != "$VERSION" ]; then
+              echo "::error::$dir does not carry version $VERSION"
+              exit 1
+            fi
+            for file in "$dir"*; do
+              name=$(basename "$file")
+              case "$name" in
+                SOURCE_COMMIT.txt | VERSION.txt) continue ;;
+                BINARY_INFO.txt) build=$(basename "$dir"); build=${build#doc4me-}; name="BINARY_INFO-${build%-"$SHA"}.txt" ;;
+              esac
+              if [ -e "release/$name" ]; then
+                echo "::error::two builds produced $name"
+                exit 1
+              fi
+              cp "$file" "release/$name"
+            done
+          done
+          if [ -z "$(ls -A release)" ]; then
+            echo '::error::no build files to release'
+            exit 1
+          fi
+          printf '%s\n' "$SHA" > release/SOURCE_COMMIT.txt
+          (cd release && sha256sum -- * > "$RUNNER_TEMP/SHA256SUMS.txt" && mv "$RUNNER_TEMP/SHA256SUMS.txt" SHA256SUMS.txt)
+          ls -l release
+      - name: Write the release notes
+        shell: bash
+        env:
+          SHA: ${{ needs.prepare.outputs.sha }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+        run: |
+          python3 workflow/tools/release_notes.py "$SHA" "$RUNNER_TEMP/notes.md" \
+            --repo "$GITHUB_REPOSITORY" --server "$GITHUB_SERVER_URL" --commit "$SHA" \
+            --changelog source/CHANGELOG.md --unreleased-as "$VERSION · ${SHA:0:8}"
+          printf "\n\n---\n\nBuilt from commit \`%s\`. \`SHA256SUMS.txt\` lists the SHA-256 of every file.\n" "$SHA" >> "$RUNNER_TEMP/notes.md"
+          if [ -s "$RUNNER_TEMP/signing-notes.md" ]; then
+            printf '\n### Signing status\n\n' >> "$RUNNER_TEMP/notes.md"
+            cat "$RUNNER_TEMP/signing-notes.md" >> "$RUNNER_TEMP/notes.md"
+          fi
+      - name: Create the tag and the Release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHA: ${{ needs.prepare.outputs.sha }}
+          TAG: ${{ needs.prepare.outputs.tag }}
+          VERSION: ${{ needs.prepare.outputs.version }}
+          PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+        run: |
+          flags=(--latest)
+          if [ "$PRERELEASE" = true ]; then flags=(--prerelease --latest=false); fi
+          if gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --silent 2>/dev/null; then
+            echo "::error::tag $TAG was created while the builds ran; nothing was published"
+            exit 1
+          fi
+          gh release create "$TAG" release/* --repo "$GITHUB_REPOSITORY" --target "$SHA" \
+            --title "Doc4Me $VERSION" --notes-file "$RUNNER_TEMP/notes.md" "${flags[@]}"
+          printf '\nPublished [%s](%s/%s/releases/tag/%s)\n' "$TAG" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$TAG" >> "$GITHUB_STEP_SUMMARY"

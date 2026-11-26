@@ -1,0 +1,266 @@
+# File-format parity with Microsoft Word
+
+**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.3% excluding deferred; no criteria, references, exclusions or deferred rows changed.
+
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43804632296 on source `093eaba`; 93.4% overall / 95.3% without 22 deferred; pages 199/220, boundaries 104/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), source `093eaba`, report `15584f5`: **93.4% รวม / 95.3% ไม่นับ 22 deferred**; pages **199/220**, boundaries **104/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 21 page-count และ 116 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+
+
+Every format Word opens or saves, what Doc4Me does with it, and how it's tested. Fidelity is the
+share of a typical real-world file's content and formatting that survives (read: shows correctly;
+write: Word opens it showing the same). Summary in [`target-app-parity.md`](target-app-parity.md);
+the work items are in [`gaps.md`](gaps.md).
+
+**Dimension: ~60% (estimated), 179–290 h to full** (the sum of the rows below). The weighted table
+gives ~64%; we discount it to ~60% because DOCX formatting fidelity hasn't been compared directly
+with Word on real-world files. What is checked (latest official Windows run 43804632296 on source
+`093eaba`, report commit `15584f5`): all 220 documents open and remain stable and preserve measured
+structure through save and reopen, 191 match Word's page count, and the separate page-boundary check
+passes 104/220 (99/222 in run 43011248444, before zenodo-104 and govuk-003 were excluded); the aggregate
+measures page counts and endpoints rather than pixel-perfect formatting. A text box
+containing a picture previously changed to an image on round-trip; the structure check now passes.
+DOCX dominates the weight: a Word user sends and receives .docx; everything else is occasional.
+
+**Drawing order (2026-11-12):** DOCX anchors preserve `wp:relativeHeight` as an unsigned 32-bit stacking order through save/reopen. Equal or absent values keep document order; malformed or overflowing values fall back to zero. Older JSON documents load with zero, and the new value survives JSON saves. Rendering keeps a floating drawing, its text boxes and its selection area in one layer.
+
+## Formats
+
+Weights are the share of a Word user's file traffic (estimate). Read/write: ✅ yes, 🟡 partial,
+❌ no, — Word doesn't either.
+
+| Format | Weight | Word | Doc4Me read | Doc4Me write | Fidelity | Hours | How it's tested | Notes |
+|---|---|---|---|---|---|---|---|---|
+| `.docx` Word Document (ECMA-376 Transitional) | 70% | R/W | ✅ | ✅ | ~65% | 70–110 | `crates/docx/tests` and the 220-document corpus (`cargo xtask readiness --corpus`) | All open; 220/220 preserve measured structure through round-trip; formatting not directly compared with Word. Details below |
+| `.docx` Strict Open XML | 1% | R/W | ✅ (namespace mapping in `xml.rs`) | ❌ | ~60% | 2–4 | one fixture | Writing Strict is rare |
+| `.docm` / `.dotx` / `.dotm` | 3% | R/W | ✅ | ✅ | ~65% | incl. above | `macro_packages.rs` | Macros and signatures kept on save (#172); macros never run |
+| `.doc` Word 97-2003 (and `.dot`) | 8% | R/W | 🟡 | ❌ | ~60% | 25–40 | `crates/docbin/src/tests.rs`, `tests/drawing.rs` (56) | Spec-based reader ([MS-DOC]): text, formatting, styles, sections, headers/footers, tables, lists, notes, fields, bookmarks; inline and floating pictures (PNG, JPEG, DIB, TIFF, EMF, WMF; Macintosh PICT as a sized placeholder) with crop, alt text, position and wrap; basic shapes, lines, groups and text boxes ([MS-ODRAW]). Freeform shapes, z-order and Word 6/95 or encrypted files are dropped or refused. No writer |
+| PDF export | 8% | W | — | ✅ | ~80% | 6–10 | `crates/pdf/src/tests.rs` | krilla: embedded subsets, selectable text incl. field results (#133), links, outline, tagging. Fonts it can't subset become outlines (#132). Print Markup (#589): comments in balloons beside each page (scaled to its paper) and tracked changes; HTML/Markdown/text copies end with a comment list. No PDF/A option, no "best for printing/online" choice |
+| PDF open (PDF Reflow, Word for Windows) | 1% | R | ❌ | — | 0% | 30–50 | — | Converting a PDF into an editable document. A sibling app (PdfCraft) may supply the parser |
+| `.rtf` Rich Text Format | 3% | R/W | 🟡 | 🟡 | ~50% | 10–15 | `crates/formats/src/tests.rs` | ~1,500 lines: text, character/paragraph formatting, styles, lists, tables, pictures (`\shppict`, #154), fields, bookmarks. Thin: comments, notes, revisions, sections, RTL |
+| `.odt` OpenDocument Text | 2% | R/W | 🟡 | 🟡 | ~50% | 8–12 | `crates/formats/src/tests.rs` | Styles, lists (#87), tables, pictures, headers/footers, page breaks (#86). No footnotes, comments, tracked changes, fields or RTL |
+| `.txt` Plain text | 2% | R/W | ✅ | ✅ | ~95% | 1–2 | unit tests | Encoding detection. Files with other extensions (`.m3u`/`.m3u8` playlists, logs, config files, no extension) open as text when they are text, Word and RTF files by their signature; binary files are refused (#569). Word's encoding choice dialog and line-ending options missing; such files save only through Save As |
+| `.htm/.html` Web Page and Web Page, Filtered | 1% | R/W | 🟡 | 🟡 | ~60% | 6–10 | `crates/formats/src/tests.rs` | Tables (#102), relative pictures embedded (#113), missing `</head>` tolerated (#154). No Word "Web Page" (with `_files` folder) round-trip |
+| `.mht/.mhtml` Single File Web Page | <1% | R/W | ❌ | ❌ | 0% | 3–5 | — | |
+| `.xml` Word XML Document (Flat OPC) | <1% | R/W | ✅ | ✅ | ~65% | — | `crates/docx/tests/word_xml.rs`, `roundtrip.rs` (`flat_opc_round_trip_equals_docx`) | The DOCX package in one XML file, read and written by the DOCX code (#548); File › Export › Word XML Document. `.xml` files are told apart by their root element |
+| `.xml` Word 2003 XML (WordprocessingML 2003) | <1% | R/W | 🟡 | ❌ | ~55% | 2–3 | `crates/docx/tests/word_xml.rs` | Opened by rewriting it as a package for the DOCX reader (#548): styles, default fonts, lists, tables, sections, headers/footers, footnotes/endnotes, comments, bookmarks, tracked insertions/deletions, hyperlinks, `w:binData` pictures, document properties. Not read: formatting changes, `w:docPr` settings, smart tags. Saving as 2003 XML is not planned (legacy) |
+| `.wps` Works 6–9, WordPerfect `.wpd` (Windows) | <1% | R | ❌ | — | 0% | 10–20 | — | Windows-only converters; low value |
+| Encrypted/password-protected `.docx` | 1% | R/W | ✅ | ✅ | — | — | `crates/docx/src/crypt.rs` (unit tests), `crates/engine/tests/safe_save.rs` | ECMA-376 agile encryption ([MS-OFFCRYPTO]) opened with the password and written when saving with one (`crypt.rs`) |
+| Encrypted/password-protected `.doc` | <1% | R | ❌ | — | 0% | 6–10 | — | RC4/XOR detected and refused (`docbin` FIB); gap #9, issue #55 |
+| `.xlsx`/`.xlsm`/`.ods` as a mail-merge recipient list | — | R (data source) | ✅ | — | ~90% | 1–3 | `crates/formats/src/sheet.rs`, `cmd/mailings.rs` | Read-only, one sheet's cell values (#334): shared/inline/rich strings, numbers, booleans, cached formula results, dates and times as ISO 8601 (`yyyy-mm-dd`) from the cell's number format, sparse cells; ODS value types, repeated rows/columns, covered cells. Select Table picks the sheet. Capped (64 MiB per part, 100,000 rows, 1,000 columns, 2 M cells, 32,767 characters a cell). Not shown: number formats other than dates (currency, percent, thousands separators) in `.xlsx`; no `.xls`, Access or Outlook sources |
+| `.md` Markdown | — | (no) | ✅ | ✅ | — | — | `crates/formats/src/tests.rs` | Beyond Word |
+| `.tex` LaTeX | — | — | ✅ | ✅ | — | — | `crates/formats/src/tests.rs` | Beyond Word (#11), incl. math |
+| `.png` page images | — | (Save as picture, Mac) | — | ✅ | — | — | `io_ext.rs` | |
+| `.json` document model | — | — | ✅ | ✅ | — | — | engine tests | For agents |
+
+## DOCX in depth
+
+Measured by grepping `crates/docx/src/read` and `src/write` for the OOXML elements (2026-10-10).
+
+| Feature | Read | Write | Notes |
+|---|---|---|---|
+| Text, runs, paragraph and character properties, styles, numbering, sections | ✅ | ✅ | Including complex-script props (`w:rtl`, `w:cs`, `w:szCs`, `w:bCs`…), East Asian fonts kept apart from Latin (#111); independent complex-script formatting inherited through defaults/styles and preserved over repeated saves (`complex_script_inheritance.rs`), indents in characters (`w:firstLineChars`, `w:hangingChars`, `w:leftChars`, `w:rightChars`, #534); every ST_NumberFormat value of `w:numFmt` is kept on save, Chinese/Japanese/Korean, enclosed and full-width formats are drawn, the rest (Hebrew, Arabic, Hindi, Thai…) show decimal (#534). `w:beforeLines`/`w:afterLines` not kept (the points are) |
+| Tables incl. floating (`w:tblpPr`), table styles and conditional formatting | ✅ | ✅ | Custom table styles round-trip (#256); right-to-left tables (`w:bidiVisual`) and sections (`w:bidi`) round-trip (#362) |
+| Headers/footers (first, even/odd), page borders, line numbers, gutter, mirror margins | ✅ | ✅ | |
+| Hyphenation settings (`w:autoHyphenation`, `w:hyphenationZone`, `w:doNotHyphenateCaps`, `w:consecutiveHyphenLimit`) | ✅ | ✅ | Zone, capitals and limit kept and honoured by layout (#407) |
+| Footnotes, endnotes, comments | ✅ | ✅ | The document's own note separators and continuation notice (`w:type` `separator`, `continuationSeparator`, `continuationNotice`) round-trip as ids -1, 0 and 1 (#352); note options (`w:pos`, `w:numFmt`, `w:numStart`, `w:numRestart`) round-trip in the settings and in each `w:sectPr` (#385); `commentsExtended` written; `commentsIds`, modern threaded comments (`w16cex`) partly |
+| Tracked insertions and deletions (`w:ins`/`w:del`), paragraph-mark revisions | ✅ | ✅ | #125, #244 |
+| Formatting revisions (`w:rPrChange`, `w:pPrChange`, `w:sectPrChange`, `w:tblPrChange`, `w:trPrChange`, `w:tcPrChange`, `w:numberingChange`) | ✅ | ✅ | #41: kept on open and save, schema order (change element last); changes inside `styles.xml` are dropped. RTF/ODT ignore them |
+| Move tracking (`w:moveFrom`/`w:moveTo`, `w:moveFromRangeStart/End`, `w:moveToRangeStart/End`), moved paragraph marks | ✅ | ✅ | #400: both ends linked by the range name; ranges rewritten around each moved stretch (ids renumbered); a move missing an end or a range end opens as a plain deletion/insertion. RTF/ODT/PDF export the result (moved-away text hidden like deletions) |
+| Fields (`w:fldChar`, `w:fldSimple`), TOC, cross-references, `ADDIN` citations | ✅ | ✅ | Field codes Word supports but we don't evaluate keep their cached result. Imported TOCs preserve actual result boundaries, formatted entries and nested fields without relying on TOC styles. `EQ \o` (overstrike, enclosed characters) is drawn; enclosed characters are written as Word stores them, their style in the code's run sizes (#297); a cached picture (`INCLUDEPICTURE`) stays as the content of a range field (#465) |
+| Content controls (`w:sdt`) | ✅ | ✅ | Block, inline, row and cell level, nested; title, tag, id, lock, placeholder, temporary, rich/plain text, `w14:checkbox`, combo box, drop-down list, date, picture, building block gallery, `w15` repeating sections; other `w:sdtPr` children (data binding, appearance) kept verbatim (#381). A TOC's control is rebuilt by the TOC |
+| Restrict Editing (`w:documentProtection` edit/formatting/enforcement and password hash, `w:locked` styles, `w:permStart`/`w:permEnd` exceptions) | ✅ | ✅ | #412: SHA-512 hash with salt and spin count written; Word's legacy `w:cryptAlgorithmSid`/`w:hash` form (SHA-1/-256/-384/-512, ECMA-376 Part 4 §14.8.1) is kept and verified; MD2/MD4/MD5, `w:algIdExt` and other unsupported forms are refused, never unlocked; `w:colFirst`/`w:colLast` table-column ranges read as plain ranges |
+| Legacy form fields (`w:ffData`), check boxes, drop-downs | ❌ | ❌ | |
+| DrawingML pictures inline and anchored (`wp:anchor`), wrap square/tight/through/top-bottom | ✅ | ✅ | Tight/through read and written with their `wp:wrapPolygon` (and `edited`); without one, a shape's outline is written (a picture's rectangle). `wrapText` (both sides, left, right, largest) read and written for square, tight and through |
+| WordArt text effects (`w14:textFill`, `w14:textOutline`, `w14:shadow`, `w14:glow`, `w14:reflection` in `w:rPr`) | ✅ | ✅ | Solid, gradient (linear) and no fill, outline colour/width, shadow, glow, reflection (#416); `w14:scene3d`/`w14:props3d` dropped |
+| DrawingML shapes and text boxes (`wps:`) | ✅ | ✅ | Preset geometries subset (callouts and flowchart boxes drawn as the nearest shape, #611); fill and outline from the shape or from the theme through its style references (`a:fillRef`/`a:lnRef`, #611), scheme, preset, system, scRGB and HSL colours; rotation and flips (`a:xfrm` `rot`/`flipH`/`flipV`, pictures and groups too, #332), the effect extent covering the rotated bounds; `wps:bodyPr` `vert` and `anchor`, linked text boxes (`wps:txbx/@id`, `wps:linkedTxbx` `id`/`seq`, #369); text warps (`a:prstTxWarp` with adjust values, all 41 presets kept; unknown ones dropped), connectors (`straightConnector1`, `bentConnector2`–`5`, `curvedConnector2`–`5` read; 3-segment forms written) with glued ends (`wps:cNvCnPr` `a:stCxn`/`a:endCxn`; the glued shapes keep their drawing ids) and arrowheads (`a:headEnd`/`a:tailEnd`, drawn as triangles) (#416) |
+| Freeform shapes (`a:custGeom`: `a:moveTo`, `a:lnTo`, Bézier curves flattened) and Doc4Me ink | ✅ | ✅ | Ink is written as a freeform `wps:wsp` in a `wp:anchor` (round caps, alpha for highlighter) and recognised again by its drawing name (#307). It is saved as a custom-geometry shape, not as Word's own ink (InkML in `w14:contentPart`), so Word shows Doc4Me ink as a freeform shape it can move and recolour but not erase with its ink eraser; arcs drawn straight |
+| Group shapes (`wpg:`), drawing canvas (`wpc:`) | ✅ | ✅ | Groups (#267) and canvases (#344) with pictures, shapes and text boxes; nested groups flattened. The canvas schema has no transform, so a turned or flipped canvas keeps its turn in our own `wpc:extLst` extension (`urn:doc4me:canvas-xfrm`; Word shows it unturned). Legacy VML canvases (`v:group editas="canvas"`) aren't read as canvases |
+| VML (`w:pict`, `v:shape`, `v:textbox`) | 🟡 | ❌ | Pictures, text boxes, lines (with arrowheads), rectangles and ovals, best effort (#242, #611) |
+| Alt text of drawings (`wp:docPr`/`cNvPr` `descr` and `title`, decorative mark `adec:decorative` from [MS-ODRAWXML]) and tables (`w:tblCaption`, `w:tblDescription`) | ✅ | ✅ | Pictures, shapes, text boxes, groups and their members, charts and SmartArt; OLE objects get theirs written into the kept XML (#386) |
+| Charts (`c:chart`), SmartArt (`dgm`) | ✅ | ✅ | Drawn from the chart's cached data and SmartArt's stored drawing (#292), with data labels (`c:showVal`). Charts made in Doc4Me (Insert › Chart, #409) are written as a `c:chartSpace` part with their data as literals (`c:strLit`/`c:numLit`, no embedded workbook, so Word shows them and offers to create a workbook on Edit Data) and read back as editable; a chart part holding anything more (any chart from Word, or one re-saved by Word) stays read-only. Saved back as read, with every part they reach (chart, embedded workbook, colours and style; diagram data, layout, quick style, colours and drawing) and their content types; a moved or resized one keeps its new frame, and a pasted copy gets its own parts (#319). SmartArt made in Doc4Me (#497) is written from its model: data (`dgm:dataModel` points and connections), our own layout, quick-style and colour definitions under the built-in layout identifiers, and a `dsp:drawing` with every shape placed; it reads back editable only when its data part is exactly what Doc4Me writes |
+| OLE objects (`w:object`: embedded or linked files, ActiveX) | 🟡 | ✅ | Shown as their picture (VML or DrawingML); saved back whole with the embedding and picture parts, at the size, rotation and flips set in Doc4Me (#319, #332). Can't be opened or edited |
+| Word ink (`w14:contentPart`, InkML), 3D models | ❌ | ❌ | Dropped on read, not preserved on save |
+| Equations (OMML `m:oMath`) | ✅ | ✅ | #191; manual breaks (`m:brk`) and the settings' `m:mathPr` wrapping options (#326) |
+| Themes, font table, settings, compatibility mode | ✅ | ✅ | Embedded fonts (`w:embedRegular`) not read; attached template (`w:attachedTemplate` and its external relationship) and `w:linkStyles` round-trip (#377). The template path comes from the file, so opening never reads it: styles update from it only on an explicit Update Styles |
+| Custom XML parts, document properties, bibliography sources | 🟡 | 🟡 | Custom XML stores reached from the package/main document preserve opaque data, properties and relationships; binding evaluation remains absent. Custom properties round-trip; bibliography model I/O remains separate (#532 open) |
+| Section text direction (`w:textDirection` in `w:sectPr`, §17.6.20) | ✅ | ✅ | `tbRl`, `btLr` (and `tbRlV`/`tbLrV`, read as `tbRl`); `lrTbV` and unknown values read as horizontal (#491) |
+| Ruby (`w:ruby`: `w:rubyPr`, `w:rt`, `w:rubyBase`) | ✅ | ✅ | #288; base and ruby text with their run formatting, alignment, sizes, raise, language |
+| Document grid (`w:docGrid`: type, line pitch, `w:charSpace`), paragraph `w:snapToGrid` | ✅ | ✅ | #391; run-level `w:snapToGrid` not read |
+| `w:eastAsianLayout`, `w:fitText` | ❌ | ❌ | East Asian layout |
+| Glossary document (building blocks), `w:altChunk`, sub-documents | ❌ | ❌ | |
+| Hostile input | ✅ | — | `malformed.rs`, capped allocations, never-crash standard |
+| Document paragraph defaults (`w:pPrDefault`) | ✅ | ✅ | Omission and explicit empty defaults remain distinct across repeated saves; nonempty defaults and later default-spacing edits are written |
+
+## Opening files from the system
+
+Double-clicking a document, Open With, and making Doc4Me the default app (#295). The installers
+register Doc4Me for these types but never take over a default; File › Options › General has
+**Make Doc4Me the default for Word documents…** where the system allows it.
+
+| Platform | Registered types | Default app | Notes |
+|---|---|---|---|
+| Windows (MSI) | `.docx` `.docm` `.dotx` `.dotm` `.doc` `.dot` `.rtf` `.odt`; `.md` `.txt` under Open With only | Options button opens Settings › Default apps on Doc4Me's page | One ProgId per type, `OpenWithProgids`, Capabilities + `RegisteredApplications` (`packaging/windows/doc4me.wxs`). Not yet tried on a real install |
+| Linux, BSD (deb, rpm, Flatpak, AppImage) | Word, ODT, RTF, Markdown, LaTeX, HTML, text (`MimeType=` in the desktop entry, AppStream `mediatype`) | Options button runs `xdg-mime default` for the Word, RTF and ODT types | Not from inside Flatpak (the sandbox can't change host defaults); a bare AppImage needs desktop integration first |
+| macOS | `CFBundleDocumentTypes` as Alternate handler (Word, ODT, RTF, Markdown, HTML, text) | Finder › Get Info › Open with › Change All (the Options page says so) | Apple events open the files (#27) |
+
+## Paragraph-default preservation
+The styles reader records whether `w:pPrDefault` exists. The writer keeps an omitted
+container omitted when its modeled properties are still empty. An explicitly empty
+container stays present, and editing document-default spacing writes the new values.
+New documents and older serialized style sheets keep their explicit defaults.
+`crates/docx/tests/fixtures.rs` covers omitted `docDefaults`, omitted paragraph defaults,
+empty containers and populated defaults across two save/reopen cycles. This preserves
+application-defined defaults without assigning inferred Word spacing values to the model.
+Observed in Word for Mac 16.113.3 (26092714): three synthetic paragraph-default
+controls (omitted, explicitly empty, populated) and two reduced invoice controls retain
+identical text, glyph/image geometry, page sizes and embedded font-program hashes through
+two Doc4Me save/reopen cycles. All fifteen variants open without repair warnings.
+Word PDFs and measurements remain local under ignored `plan/word/`; they are not fixtures.
+These checks cover preservation on Word reopen, not Doc4Me pagination parity.
+The [public OOXML reference](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.paragraphpropertiesdefault?view=openxml-3.0.1)
+describes omission as leaving paragraph defaults application-defined. Real-world corpus
+round-trip is measured; direct comparison of Doc4Me's rendered formatting with Word remains a
+separate gap.
+## Custom XML store preservation
+A reduced original bound-control DOCX loses its backing data, item properties and relationship
+on main, both without editing and after unrelated edits. Main's content-control support (#381)
+preserves control metadata, including binding attributes, while this custom XML path keeps the
+backing store through the bounded opaque part graph: payload bytes, content types and
+related-part IDs survive two edited save/reopen cycles.
+The public [dataBinding contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.databinding?view=openxml-3.0.1)
+maps a control to a custom XML data part; its [item properties](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.customxmldataproperties.datastoreitem?view=openxml-3.0.1)
+identify the store. Keeping displayed text alone does not preserve that mapping. This change
+preserves stores without evaluating XPath or synchronizing control edits into XML.
+Focused original tests cover package/main roots, multiple/shared stores, cycles, external schema
+references, missing parts, UTF-16 payloads, strict relationship types and reserved filenames.
+The bibliography names used by #532 are reserved; bibliography already loaded into the source
+model belongs to its writer. Word-derived files are not fixtures. No readiness estimate rises
+from these synthetic package checks, and native Word rendering/binding behavior remains untested.
+## Native save-path guarantees
+Native `io::save_path_with` serializes (and, for password-protected DOCX, encrypts) before creating an exclusively owned sibling temporary file. It writes and synchronizes that file, closes it, then replaces the destination. Failed preparation or replacement keeps the original bytes; cleanup removes only the save's temporary file, on a best-effort basis. Existing `<name>.tmp` files, directories and links are untouched. A new document gets the default mode (`0666` less the umask). When replacing an existing regular file, the Unix temporary file starts with mode `0600` and then takes the existing file's basic permissions. Serialization and format support are unchanged.
+Synthetic CLI cases and `engine/tests/safe_save.rs` cover occupied names, links, blocked replacement, missing directories, Save As session state, password-protected saves and original-file protection on macOS. Unit tests inject preparation errors and interleave two prepared saves. Independent saves use separate files; the last successful replacement wins. This is not document locking or conflict detection.
+Windows/Linux runtime behavior, ACLs and extended metadata, real disk-full conditions, power loss and network filesystems are not verified by these tests. The containing directory is not explicitly synchronized. Cleanup can fail when storage or permissions change, and process termination can leave a temporary file. No Word observation was needed for this filesystem change; it makes no new format-fidelity claim.
+## What decides beta for formats
+
+1. **Close the measured real-world DOCX gaps**: compare formatting directly with Word locally and
+   fix proven discrepancies. The corpus now opens, preserves measured structure after round-trip,
+   and checks pagination for 222 Word-reference documents (see
+   [`readiness.md`](readiness.md)); Word output stays local and is never committed.
+2. **Preserve what we can't render**: ink and drawing canvases survive a round trip
+   (keep the parts and the run). Charts, SmartArt and OLE objects do (#292, #319).
+3. Move tracking (`w:moveFrom`/`w:moveTo`) read and written (formatting revisions: #41; content controls: #381).
+4. Encrypted `.docx` opens with a password.
+
+## Imported TOC result preservation
+
+Original synthetic TOCs without TOC paragraph styles lose their outer result range on main
+and #538. Main also flattens a nested page field in a single-paragraph result. Imported TOCs
+now use the existing range-field markers to retain the actual result boundaries, nested
+page-reference fields, formatting, links and locks through edited saves.
+
+The public [complex-field contract](https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.fieldchar?view=openxml-3.0.1)
+defines begin/separate/end delimiters and permits nested fields. Paragraph styles do not define
+those boundaries. A complete range is converted to the engine's styled TOC representation only
+when that writer can reproduce its exact extent; partial or custom-styled ranges stay explicit.
+
+Focused original regressions cover single/multiple paragraphs, partial ranges, adjacent styled
+text, multiple/simple fields, table cells, section breaks, missing ends and bounded nesting.
+The existing styled TOC write/read path remains supported. Update Table and Update Fields refresh
+unlocked top-level body TOC ranges in place through the engine's generator; one undo restores
+the imported range. Locked, nested and table-cell ranges remain preserved without regeneration.
+Preservation is separate from field evaluation. Native Word reopening and
+refresh, full schema validation and company documents remain untested. Synthetic checks do not
+raise readiness estimates. No Word-derived files are fixtures.
+
+
+
+
+
+
+
+
+
+**Margin leading and header wrapping (2026-11-12, Unreleased):** [The audit](readiness/margin-leading-2026-11-12.md) records the tested scope. Windows run [43333680851](https://github.com/veevie55/doc4me/actions/runs/43333680851) on `92025e8` (report `c098032`) confirms **95.3% without deferred**, **188/220 page counts and 108/220 boundaries**, from 184/102. All 220 open, round-trip and remain stable; no newly failing document in five sets. Linux is separately 189/220 pages and 104/220 boundaries. Six regressions and full CI 6/6 (2,505 native) cover the source changes. Table picture metrics, explicit spacing and grid metrics retain their prior rules; partial-width header reflow of a continued paragraph remains open. DOCX/JSON formats, assets and version are unchanged.
+
+The [justification review](readiness/justification-review-2026-11-13.md) records four rejected Mac-measured spacing trials. None of that code or its experimental test was retained; that audit measured layout source `92025e8`; v1.1.4 includes the later source. Native Windows probes are needed before changing those limits.
+
+**Body contextual spacing (2026-11-13, Unreleased):** [The audit](readiness/contextual-spacing-2026-11-13.md) records the ECMA-376 merged-gap correction, additive-spacing controls and three regressions. Full CI 6/6, native 2,508; Linux remains 189/220 pages and 104/220 boundaries, with all five failure sets identical. The broader box-spacing trial was withdrawn after corpus regressions, so table/header spacing retains its published behaviour. The later official run 43619305678 measured source `4ecc270`: 95.3% without deferred, 188/220 pages and 108/220 boundaries.
+
+## Revision history
+
+| Date | Change | Summary |
+|---|---|---|
+| 2026-11-16 | minor | Windows run 43804632296, engine 093eaba, report 15584f5: 199/220 page counts (zenodo-067 and zenodo-115 newly match after the Overpass line and Garamond metrics), 104/220 boundaries, 93.4% overall / 95.3% without deferred; no newly failing row versus report 3fca7cd. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows runs 43794297193 (engine 02a6aa9: 195/220 pages, govuk-068 and zenodo-091 newly match) and 43796305956 (engine df4f160, report 3fca7cd: 197/220 pages, 103/220 boundaries, zenodo-156 and govuk-043 newly match), 93.3% overall / 95.2% without deferred; no newly failing row in either. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43792165925, engine 6d4976c, report 5f362a3: 193/220 page counts (zenodo-082 newly matches after the Cambria Math line fix), 102/220 boundaries (zenodo-032/073/082 newly match), 93.2% overall / 95.1% without deferred; no newly failing row versus report 7e50321. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
+| 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
+| 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43541894863, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |
+| 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source `8797e66` in run 43609090751: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table changes are included in this measurement. |
+| 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `92025e8` is still 95.1% without deferred pending a new measurement. |
+| 2026-11-13 | minor | Windows run 43333680851 measured margin-leading/picture/header/blank-line Keep with next source `92025e8` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
+| 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
+| 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
+| 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
+| 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
+| 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
+| 2026-11-12 | minor | Preserve floating drawing stacking order across DOCX/JSON, paint and Arrange commands; handle standalone breaks before empty continuous-section ends; readiness criteria and excluded/deferred rows unchanged; new Windows measurement pending |
+| 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
+| 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |
+| 2026-11-11 | minor | Windows run 43051188273 measured `bd2d2d6`; report commit `5292abd`: 92.7% / 94.5% without 22 deferred on 220 documents (zenodo-104 and govuk-003 excluded by owner decision: their reference PDFs aren't of their .docx); page counts 181/220, boundaries 99/220, languages 95/95. Changes since run 42961322752: theme fonts, Helvetica/Times substitution, bundled metric-compatible fonts (Carlito, Caladea, Arimo, Tinos, Cousine; OFL 1.1) behind the platform's own fallbacks, mode-14 page-break mark, page numbering from 0, continuous sections below floats, digit-hyphen line breaks, grid in tables, Font spacing ▲▼ at 0.1 pt. v1.1.3 was deleted and released again from this code. |
+| 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
+| 2026-11-07 | minor | Latest official Windows run 42274814600: DOCX open, round-trip and stability remain 222/222; page counts are 174/222 and boundaries 96/222, each one below the preceding report. |
+| 2026-11-06 | minor | Previous official Windows run 42211564189: DOCX open, round-trip and stability were 222/222; page counts were 175/222 and page boundaries 97/222. DOCX `w:altName` font fallback passed all six CI steps before the next corpus run. |
+| 2026-11-01 | minor | Leading page breaks in table rows no longer add a blank page; corpus page-count checks rise to 162/222 while page-boundary checks remain 87/222; govuk-003 matches page count but not page boundaries |
+| 2026-11-01 | minor | Preserve omitted row grid columns (`w:gridBefore`/`w:gridAfter`) through DOCX round-trip; the corpus pagination checks rise to 161/222 page counts and 87/222 page breaks |
+| 2026-11-01 | minor | DOCX corpus round-trip 222/222 after reading text boxes before nested images; formatting comparison with Word remains open |
+| 2026-11-01 | minor | Full readiness corpus: all 222 documents open and remain stable, 221/222 retain measured structure, 160/222 page counts and 86/222 page breaks match; one text box is emitted as an image; formatting comparison remains open |
+| 2026-10-25 | trivial | Dimension note: 222 real-world documents open and 221 keep their text and make-up through save and reopen (`cargo xtask readiness`); formatting still not compared, estimate unchanged |
+| 2026-10-11 | trivial | Independent complex-script size, bold and italic inherit correctly through defaults and styles; explicit equal values survive; six synthetic multi-generation round-trip tests, including tracked formatting, added |
+| 2026-10-11 | minor | Opening files from the system: file associations and the default-app button (#295) |
+| 2026-10-11 | trivial | `.doc`: inline and floating pictures (BLIP store, PNG/JPEG/DIB/TIFF/EMF/WMF), basic shapes, groups and text boxes read from OfficeArt drawings (#551); fidelity ~55% → ~60% |
+| 2026-10-11 | trivial | Word XML Document (Flat OPC) read and written, Word 2003 XML read (#548) |
+| 2026-10-11 | trivial | #534: DOCX indents in characters read and written; `.doc` first-line indents (`sprmPDxaLeft1`, its two-byte operand, and `sprmPDxaLeft1_80`), indents in characters (`sprmPDxc*`) and exact/at-least line spacing (LSPD) read correctly |
+| 2026-10-11 | trivial | List and page number formats: all ST_NumberFormat values round-trip; Chinese, Japanese and Korean counting, legal and digit formats, stems/branches, kana, hangul, enclosed and full-width numbers drawn; unknown values are decimal; .doc number format codes mapped (#534) |
+| 2026-10-11 | trivial | SmartArt made in Doc4Me written as diagram parts (data, layout, quick style, colours, drawing) and read back editable (#497) |
+| 2026-10-11 | trivial | Attached template (`w:attachedTemplate`, external relationship of the settings part) and `w:linkStyles` read and written in schema order; opening never reads the template (#377) |
+| 2026-10-11 | trivial | A bookmark (or comment range) ending after the document's last table keeps its end, in the table's last cell (#464); a field whose cached result is a picture (`INCLUDEPICTURE`) is kept as a range field around the picture, so the picture survives save; the linked file is never read (#465) |
+| 2026-10-11 | trivial | Print Markup: comments exported in PDFs, prints, page images and HTML/Markdown/text copies (#589) |
+| 2026-10-11 | trivial | Files with an extension Doc4Me doesn't know open by content: text (`.m3u`/`.m3u8` playlists, logs…) through the encoding-detecting text import, misnamed Word/RTF files by signature, binary files refused with an error (#569) |
+| 2026-10-11 | trivial | Restrict Editing: Word's legacy password hash (`w:cryptAlgorithmSid`, `w:hash`, `w:salt`, `w:cryptSpinCount`) verified per ECMA-376 Part 4 §14.8.1; unsupported hash forms refused (#412) |
+| 2026-10-11 | trivial | Restrict Editing: `w:documentProtection` (edit, formatting, password hash), `w:locked` styles and `w:permStart`/`w:permEnd` exceptions read and written (#412) |
+| 2026-10-11 | trivial | DOCX diagrams (#611): shapes and connectors styled by the theme (`wps:style`) show their outline and fill; preset/system colours; VML lines and rectangles; lines run top-left to bottom-right as in DrawingML |
+| 2026-10-11 | trivial | WordArt text effects (`w14:` run properties), text warps (`a:prstTxWarp`) and connectors with glued ends read and written (#416) |
+| 2026-10-11 | trivial | Content controls read and written with their properties and nesting (#381) |
+| 2026-10-11 | trivial | Charts made in Doc4Me written as chart parts and read back as editable (#409) |
+| 2026-10-11 | trivial | Hyphenation zone, words in capitals and consecutive-hyphen limit read and written (#407) |
+| 2026-10-11 | trivial | Alt text, titles and the decorative mark for every drawing, table captions and descriptions round-trip (#386) |
+| 2026-10-11 | trivial | Document grid (`w:docGrid`) and paragraph `w:snapToGrid` read and written (#391) |
+| 2026-10-11 | trivial | Move tracking (`w:moveFrom`/`w:moveTo` and their ranges) read and written (#400) |
+| 2026-10-11 | trivial | DOCX text-box `bodyPr` `vert`/`anchor` and linked text boxes (`wps:linkedTxbx`) read and written (#369) |
+| 2026-10-10 | trivial | Right-to-left tables (`w:bidiVisual`) read and written (#362) |
+| 2026-10-10 | trivial | Drawing canvas (`wpc:wpc`) read and written (#344); group shapes row brought up to date (#267) |
+| 2026-10-11 | trivial | Spreadsheets (.xlsx/.xlsm/.ods) read as mail-merge recipient lists (#334) |
+| 2026-10-12 | minor | Preserve opaque custom XML stores and related properties; bindings and control support remain separate |
+| 2026-10-11 | trivial | Native saves protect existing temporary-name entries and originals on pre-replacement failure; synthetic macOS evidence, explicit durability/platform limits; readiness unchanged |
+| 2026-10-11 | minor | Preserve imported TOC ranges independently of paragraph styles, with explicit evaluation limits |
+| 2026-10-11 | trivial | Import/export fixes (#433–#440): TXT opens through the encoding-sniffing reader (Windows-1252, unmarked UTF-16) and saves list labels; RTF `\uN` in document info, bookmark names and field instructions; ODT common paragraph styles' text formatting and table-cell background colours; HTML borderless tables export without cell borders and `white-space:pre` keeps edge spaces; LaTeX brace groups scope `\centering`/`\raggedleft`/`\raggedright` |
+| 2026-10-11 | trivial | `.doc` import fixes per [MS-DOC]: piece Prm0/Prm1 decoding (#458), section-break kinds (#459), explicit orientation (#460), negative `sprmPIlfo` list references (#461), zero-based `istdBase` style inheritance (#462), font-table entries with alternate names (#463) |
+| 2026-10-11 | trivial | Formatting revisions (`w:rPrChange`, `w:pPrChange`, table, row, cell, section and numbering changes) read and written (#41) |
+| 2026-10-11 | trivial | Omitted `w:pPrDefault` stays omitted across saves; explicit empty/default properties and later spacing edits remain writable. Synthetic preservation checks only; readiness estimates unchanged |
+| 2026-10-10 | trivial | OLE objects turned or flipped in Doc4Me keep the turn on save (VML `rotation`/`flip`, DrawingML `a:xfrm` with the rotated effect extent); test counts refreshed |
+| 2026-10-11 | trivial | Section text direction read and written (#491) |
+| 2026-10-10 | trivial | Charts, SmartArt and OLE objects written back on save with their parts (#319); chart/SmartArt reading (#292) recorded |
+| 2026-10-10 | trivial | Footnote and endnote separators and continuation notices read and written (#352) |
+| 2026-10-11 | trivial | Enclosed characters (`EQ \o\ac`) read, drawn and written (#297) |
+| 2026-10-11 | trivial | Ruby (`w:ruby`) read and written (#288) |
+| 2026-10-10 | trivial | `wrapText` on square, tight and through wraps read and written (#354) |
+| 2026-10-10 | trivial | Wrap polygons for Tight and Through wrapping read and written (#354) |
+| 2026-10-10 | trivial | DrawingML rotation and flips read and written (#332) |
+| 2026-10-11 | trivial | Footnote and endnote options round-trip for the document and per section (#385) |
+| 2026-10-10 | trivial | Equation breaks and `m:mathPr` wrapping options round-trip (#326) |
+| 2026-10-10 | trivial | Custom table styles round-trip (#256 merged) |
+| 2026-10-10 | major | First version: Word's full format list, read/write status, DOCX element coverage from the source, fidelity and hours |
+| 2026-10-10 | trivial | Freeform shapes and ink as DrawingML custom geometry, read and written (#307) |

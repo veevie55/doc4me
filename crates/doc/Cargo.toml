@@ -1,0 +1,27 @@
+[package]
+name = "doc4me-doc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Doc4Me document model: stories, paragraphs, runs, tables, sections, styles, numbering, fields, notes, comments, revisions; edit primitives"
+
+[lints]
+workspace = true
+
+[dependencies]
+doc4me-geom = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+log = { workspace = true }
+thiserror = { workspace = true }
+unicode-segmentation = { workspace = true }
+icu_segmenter = { workspace = true }
+
+[features]
+# Test inputs other crates' tests share (`cfb_guard::repeating_difat_sample`,
+# `zip_guard::zip64_entry_count_sample`); turned on only as a
+# dev-dependency, so never built into the app.
+test-support = []
+
+[dev-dependencies]
+proptest = { workspace = true }

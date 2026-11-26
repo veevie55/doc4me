@@ -1,0 +1,193 @@
+//! Field results computed at layout time (page numbers) and note numbering.
+
+use std::collections::HashMap;
+use std::sync::Arc;
+
+use doc4me_doc::section::NumFormat;
+
+/// Context for fields that depend on where text lands.
+#[derive(Clone, Debug, Default)]
+pub struct FieldCtx {
+    /// Current page number (as numbered) and its format.
+    pub page: u32,
+    pub page_format: NumFormat,
+    /// Total pages in the document.
+    pub pages: u32,
+    /// Pages in the current section.
+    pub section_pages: u32,
+    pub section: u32,
+    /// Note part id → its number.
+    pub notes: Arc<HashMap<u32, NoteNum>>,
+    /// Document title / author for TITLE / AUTHOR fields.
+    pub title: Arc<str>,
+    pub author: Arc<str>,
+    pub filename: Arc<str>,
+    /// Styles the body's paragraphs use, by lower-case id and name, for STYLEREF; `None` when
+    /// not known (a STYLEREF then keeps its result).
+    pub styles_used: Option<Arc<std::collections::HashSet<String>>>,
+}
+
+/// A footnote's or endnote's number, as its section's options give it.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+pub struct NoteNum {
+    pub n: u32,
+    pub fmt: NumFormat,
+    /// Index of the section (`Document::sections`) its reference is in.
+    pub section: usize,
+    /// Place among the notes of its kind, in document order.
+    pub order: u32,
+}
+
+impl FieldCtx {
+    /// The mark of note `id` (its number in its format); `fmt` for a note not counted.
+    pub fn note_mark(&self, id: u32, fmt: NumFormat) -> String {
+        match self.notes.get(&id) {
+            Some(n) => n.fmt.format(n.n),
+            None => fmt.format(1),
+        }
+    }
+    /// A key for caches: the parts of the context a page-dependent paragraph depends on.
+    pub fn page_key(&self) -> (u32, u32, u32, u32) {
+        (self.page, self.pages, self.section_pages, self.section)
+    }
+}
+
+/// The field's name (first word of the instruction, upper-cased).
+pub fn field_name(instr: &str) -> String {
+    instr.split_whitespace().next().unwrap_or("").trim_start_matches('=').to_ascii_uppercase()
+}
+
+/// `\* FORMAT` switch value (Arabic, roman, ROMAN, alphabetic, ALPHABETIC, CardText, Ordinal…).
+pub fn format_switch(instr: &str) -> Option<NumFormat> {
+    let mut it = instr.split_whitespace();
+    while let Some(w) = it.next() {
+        if w == "\\*" {
+            let v = it.next()?;
+            return Some(match v {
+                "roman" => NumFormat::LowerRoman,
+                "ROMAN" | "Roman" => NumFormat::UpperRoman,
+                "alphabetic" => NumFormat::LowerLetter,
+                "ALPHABETIC" | "Alphabetic" => NumFormat::UpperLetter,
+                "CardText" | "cardtext" => NumFormat::CardinalText,
+                "OrdText" | "ordtext" => NumFormat::OrdinalText,
+                "Ordinal" | "ordinal" => NumFormat::Ordinal,
+                "Arabic" | "arabic" => NumFormat::Decimal,
+                // Chinese numerals: counting (一百零一), legal (壹佰零壹), digit by digit (一〇一).
+                v if v.eq_ignore_ascii_case("ChineseNum1") => NumFormat::ChineseCountingThousand,
+                v if v.eq_ignore_ascii_case("ChineseNum2") => NumFormat::ChineseLegalSimplified,
+                v if v.eq_ignore_ascii_case("ChineseNum3") => NumFormat::IdeographDigital,
+                // Thai digits (๑๒๓), counting words (หนึ่ง) and letters (ก ข ค), ECMA-376 §17.16.4.3.
+                v if v.eq_ignore_ascii_case("ThaiArabic") => NumFormat::ThaiNumbers,
+                v if v.eq_ignore_ascii_case("ThaiCardText") => NumFormat::ThaiCounting,
+                v if v.eq_ignore_ascii_case("ThaiLetter") => NumFormat::ThaiLetters,
+                _ => continue,
+            });
+        }
+    }
+    None
+}
+
+/// The light grey behind a field shown as its code.
+pub const FIELD_SHADING: doc4me_doc::props::Rgb = doc4me_doc::props::Rgb(0xD9, 0xD9, 0xD9);
+
+/// What a field shows in code view: its instruction in braces, `{ PAGE }`.
+pub fn field_code_text(instr: &str) -> String {
+    format!("{{ {} }}", instr.trim())
+}
+
+/// Display text for a field and whether it depends on the page it lands on.
+pub fn field_text(instr: &str, result: &str, ctx: &FieldCtx) -> (String, bool) {
+    let name = field_name(instr);
+    let fmt = format_switch(instr);
+    match name.as_str() {
+        "PAGE" => (fmt.unwrap_or(ctx.page_format).format(ctx.page), true),
+        "NUMPAGES" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.pages), true),
+        "SECTIONPAGES" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.section_pages), true),
+        "SECTION" => (fmt.unwrap_or(NumFormat::Decimal).format(ctx.section), true),
+        "TITLE" if result.is_empty() => (ctx.title.to_string(), false),
+        "AUTHOR" if result.is_empty() => (ctx.author.to_string(), false),
+        "FILENAME" if result.is_empty() => (ctx.filename.to_string(), false),
+        // A legacy form check box has no result: Word draws the box (its checked state is in the
+        // form field data, which isn't kept).
+        "FORMCHECKBOX" if result.is_empty() => ("\u{2610}".to_string(), false),
+        // A button field shows its display text, the words after the macro or bookmark name:
+        // zenodo-157's footnote `MACROBUTTON NoMacro author@institute.xxx`, written with no
+        // result, reads "author@institute.xxx" in Word's PDF.
+        "MACROBUTTON" | "GOTOBUTTON" if result.is_empty() => (button_text(instr).to_string(), false),
+        // A style no paragraph uses: Word's result when it updates the field (zenodo-021's
+        // captions number by `STYLEREF 1 \s`, but no paragraph is in Heading 1).
+        "STYLEREF" if ctx.styles_used.as_ref().is_some_and(|used| styleref_target(instr).is_some_and(|t| !used.contains(&t))) => {
+            ("Error! No text of specified style in document.".to_string(), false)
+        }
+        _ => (result.to_string(), false),
+    }
+}
+
+/// A `MACROBUTTON` or `GOTOBUTTON` field's display text: its code after the field name and the
+/// macro or bookmark name, trimmed.
+fn button_text(instr: &str) -> &str {
+    let mut rest = instr.trim_start();
+    for _ in 0..2 {
+        let end = rest.find(char::is_whitespace).unwrap_or(rest.len());
+        rest = rest.get(end..).unwrap_or("").trim_start();
+    }
+    rest.trim_end()
+}
+
+/// The style a STYLEREF field names, lower-case: `1`–`9` are the built-in headings by name
+/// ("heading 1"), otherwise the (quoted) style name.
+fn styleref_target(instr: &str) -> Option<String> {
+    let rest = instr.trim_start().get("STYLEREF".len()..)?.trim_start();
+    let name = if let Some(q) = rest.strip_prefix('"') {
+        q.split('"').next()?.to_string()
+    } else {
+        rest.split_whitespace().next().filter(|w| !w.starts_with('\\'))?.to_string()
+    };
+    if name.is_empty() {
+        return None;
+    }
+    Some(match name.parse::<u8>() {
+        Ok(n @ 1..=9) => format!("heading {n}"),
+        _ => name.to_lowercase(),
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn styleref_to_a_style_no_paragraph_uses_is_an_error() {
+        let used: std::collections::HashSet<String> = ["normal", "heading2", "heading 2"].into_iter().map(String::from).collect();
+        let ctx = FieldCtx { styles_used: Some(Arc::new(used)), ..Default::default() };
+        let err = "Error! No text of specified style in document.";
+        assert_eq!(field_text(" STYLEREF 1 \\s ", "8", &ctx).0, err);
+        assert_eq!(field_text(" STYLEREF 2 \\s ", "8", &ctx).0, "8");
+        assert_eq!(field_text(r#" STYLEREF "Heading 2" "#, "Intro", &ctx).0, "Intro");
+        assert_eq!(field_text(r#" STYLEREF "Title" \* MERGEFORMAT "#, "x", &ctx).0, err);
+        // Unknown styles in use (no context): the result stays.
+        assert_eq!(field_text(" STYLEREF 1 \\s ", "8", &FieldCtx::default()).0, "8");
+        assert_eq!(field_text(" STYLEREF ", "8", &ctx).0, "8");
+    }
+
+    #[test]
+    fn page_fields() {
+        let ctx = FieldCtx { page: 4, pages: 12, ..Default::default() };
+        assert_eq!(field_text("PAGE", "", &ctx), ("4".into(), true));
+        assert_eq!(field_text(" MACROBUTTON NoMacro author@institute.xxx ", "", &ctx), ("author@institute.xxx".into(), false));
+        assert_eq!(field_text("GOTOBUTTON  intro  Go to  the start", "", &ctx).0, "Go to  the start");
+        assert_eq!(field_text("MACROBUTTON NoMacro [Name]", "Kept", &ctx).0, "Kept");
+        assert_eq!(field_text("MACROBUTTON", "", &ctx).0, "");
+        assert_eq!(field_text(" PAGE \\* ROMAN ", "", &ctx).0, "IV");
+        assert_eq!(field_text("NUMPAGES \\* CardText", "", &ctx).0, "Twelve");
+        assert_eq!(field_text("NUMPAGES \\* CHINESENUM1", "", &ctx).0, "十二");
+        assert_eq!(field_text("PAGE \\* ChineseNum2", "", &ctx).0, "肆");
+        assert_eq!(field_text("NUMPAGES \\* ThaiArabic", "", &ctx).0, "๑๒");
+        assert_eq!(field_text("PAGE \\* THAIARABIC \\* MERGEFORMAT", "", &ctx).0, "๔");
+        assert_eq!(field_text("DATE \\@ \"M/d/yyyy\"", "1/2/2026", &ctx), ("1/2/2026".into(), false));
+        assert_eq!(field_name("=SUM(ABOVE)"), "SUM(ABOVE)");
+        assert_eq!(field_code_text(" PAGE \\* ROMAN "), "{ PAGE \\* ROMAN }");
+        assert_eq!(field_code_text(""), "{  }");
+        assert_eq!(field_text(" FORMCHECKBOX ", "", &ctx).0, "\u{2610}");
+    }
+}

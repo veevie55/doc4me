@@ -1,0 +1,235 @@
+//! Text boxes' text direction, alignment and linked boxes (Shape Format › Text).
+
+use super::*;
+use doc4me_doc::props::{TextVert, VAlign};
+use doc4me_doc::{PartKind, Pos, TextBody, para_block};
+
+/// Word's default text box margins: 0.1" left and right, 0.05" top and bottom.
+const BOX_INSET_X: f32 = 7.2;
+const BOX_INSET_Y: f32 = 3.6;
+
+fn lay(doc: &Document) -> DocLayout {
+    let mut c = LayoutCache::new();
+    layout(doc, &mut c, &LayoutOptions::default())
+}
+
+/// A text box `w` × `h` showing `text`, inline at the end of body paragraph `para`; its story id.
+fn text_box(d: &mut Document, para: usize, text: &str, w: f32, h: f32, body: TextBody) -> u32 {
+    let id = d.add_part(PartKind::TextBox, vec![para_block(Paragraph::with_text(text, Default::default()))]);
+    if let Some(p) = d.parts.get_mut(&id) {
+        p.body = body;
+    }
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float: Default::default(),
+        story: Some(id),
+        effects: Default::default(),
+        freeform: None,
+        extra: Default::default(),
+    };
+    let off = d.para(StoryRef::Body, &Path::top(para)).map_or(0, |p| p.len());
+    d.insert_object(&Pos::body(para, off), shape, &Default::default()).unwrap();
+    id
+}
+
+/// The lines of story `id` on the first page: (x, y, turn, l0, l1).
+fn lines(l: &DocLayout, id: u32) -> Vec<(f32, f32, TextDirection, usize, usize)> {
+    l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(s), x, y, turn, l0, l1, .. } if *s == id => Some((*x, *y, *turn, *l0, *l1)),
+            _ => None,
+        })
+        .collect()
+}
+
+fn frame_of(l: &DocLayout, id: u32) -> Rect {
+    l.find_object(0, |o| o.text_box == Some(id)).unwrap().rect
+}
+
+#[test]
+fn align_text_and_text_direction_place_the_text_in_the_box() {
+    let at = |body: TextBody| {
+        let mut d = Document::from_text("x");
+        let id = text_box(&mut d, 0, "Hi", 144.0, 144.0, body);
+        let l = lay(&d);
+        (lines(&l, id)[0], frame_of(&l, id))
+    };
+    let ((_, top, turn, ..), r) = at(TextBody::default());
+    assert_eq!(turn, TextDirection::Horizontal);
+    assert!((top - (r.y + BOX_INSET_Y)).abs() < 1.0, "top-aligned text starts under the top inset: {top} in {r:?}");
+    let ((_, mid, ..), _) = at(TextBody { anchor: VAlign::Center, ..Default::default() });
+    let ((_, bottom, ..), _) = at(TextBody { anchor: VAlign::Bottom, ..Default::default() });
+    assert!(mid > top + 40.0 && bottom > mid + 40.0, "{top} {mid} {bottom}");
+    assert!(bottom < r.bottom() - BOX_INSET_Y, "the line stays inside the box");
+    // Rotated 90°: lines run down from the top right corner; 270°: up from the bottom left.
+    let ((x, y, turn, ..), r) = at(TextBody { vert: TextVert::Vert, ..Default::default() });
+    assert_eq!(turn, TextDirection::Down);
+    assert!((x - (r.right() - BOX_INSET_X)).abs() < 1.0 && (y - (r.y + BOX_INSET_Y)).abs() < 1.0, "{x},{y} in {r:?}");
+    let ((x, y, turn, ..), r) = at(TextBody { vert: TextVert::Vert270, anchor: VAlign::Bottom, ..Default::default() });
+    assert_eq!(turn, TextDirection::Up);
+    assert!(x > r.x + 100.0 && (y - (r.bottom() - BOX_INSET_Y)).abs() < 1.0, "bottom-aligned turned text sits at the far side: {x},{y} in {r:?}");
+    // The box's own margins (`lIns`…): none at all puts the text at the box's corner.
+    let ((x, y, ..), r) = at(TextBody { insets: Some([0, 0, 0, 0]), ..Default::default() });
+    assert!((x - r.x).abs() < 0.5 && (y - r.y).abs() < 1.0, "{x},{y} in {r:?}");
+    let ((x, ..), r) = at(TextBody { insets: Some([254_000, 0, 0, 0]), ..Default::default() });
+    assert!((x - (r.x + 20.0)).abs() < 0.5, "a 20pt left margin: {x} in {r:?}");
+    // Stacked: one letter to a line, upright.
+    let mut d = Document::from_text("x");
+    let id = text_box(&mut d, 0, "Hi", 144.0, 144.0, TextBody { vert: TextVert::Stacked, ..Default::default() });
+    let l = lay(&d);
+    let (.., l0, l1) = lines(&l, id)[0];
+    assert_eq!(l1 - l0, 2, "two letters, two lines");
+}
+
+#[test]
+fn linked_boxes_continue_the_text() {
+    let mut d = Document::from_text("one\ntwo");
+    let text = "Words that run on well past the first little box. ".repeat(6);
+    let a = text_box(&mut d, 0, &text, 144.0, 48.0, TextBody::default());
+    let b = text_box(&mut d, 1, "", 144.0, 400.0, TextBody::default());
+    let unlinked = lay(&d);
+    let shown = |l: &DocLayout| lines(l, a).iter().map(|(.., l0, l1)| l1 - l0).sum::<usize>();
+    let in_a = shown(&unlinked);
+    d.parts.get_mut(&a).unwrap().body.next = Some(b);
+    let l = lay(&d);
+    // Both boxes show (and edit) the first box's story.
+    let frames: Vec<Rect> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Object { rect, text_box: Some(s), .. } if *s == a => Some(*rect),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(frames.len(), 2);
+    let rb = frames[1];
+    let ls = lines(&l, a);
+    // The first box shows what fits; the second picks up at the next line, at its top.
+    let (first, rest): (Vec<(f32, f32, TextDirection, usize, usize)>, Vec<_>) = ls.iter().partition(|(_, y, ..)| *y < rb.y);
+    assert_eq!(first.iter().map(|(.., l0, l1)| l1 - l0).sum::<usize>(), in_a);
+    let (_, y, _, l0, _) = rest[0];
+    assert_eq!(l0, in_a, "continues with the first line the first box couldn't show");
+    assert!((y - (rb.y + BOX_INSET_Y)).abs() < 1.0);
+    // Every line shows once.
+    let total = ls.iter().map(|(.., l0, l1)| l1 - l0).sum::<usize>();
+    let all = l.pages[0].items.iter().find_map(|it| match it {
+        Placed::Lines { story: StoryRef::Part(s), para, .. } if *s == a => Some(para.lines.len()),
+        _ => None,
+    });
+    assert_eq!(Some(total), all);
+}
+
+#[test]
+fn hostile_link_chains_stay_bounded() {
+    // Boxes linking in a circle show their own text; a box linking to itself too.
+    let mut d = Document::from_text("one\ntwo\nthree");
+    let a = text_box(&mut d, 0, "A", 72.0, 36.0, TextBody::default());
+    let b = text_box(&mut d, 1, "B", 72.0, 36.0, TextBody::default());
+    let c = text_box(&mut d, 2, "C", 72.0, 36.0, TextBody::default());
+    d.parts.get_mut(&a).unwrap().body.next = Some(b);
+    d.parts.get_mut(&b).unwrap().body.next = Some(a);
+    d.parts.get_mut(&c).unwrap().body.next = Some(c);
+    assert!(d.text_box_chains().is_empty());
+    let l = lay(&d);
+    for id in [a, b, c] {
+        assert_eq!(lines(&l, id).len(), 1, "box {id} shows its own text");
+    }
+}
+
+#[test]
+fn a_text_box_that_does_not_wrap_keeps_each_paragraph_on_one_line() {
+    // zenodo-163: a 207 pt footer box with wrap="none" shows its 30-word line whole, running past
+    // the box's right edge; wrapping, the same text takes several lines and loses its end.
+    let text = "RAQAMLI IQTISODIYOT ILMIY-ELEKTRON JURNALI | 15-SON | 2026 ".repeat(3);
+    let make = |no_wrap| {
+        let mut d = Document::from_text("anchor");
+        let id = text_box(&mut d, 0, text.trim_end(), 144.0, 120.0, TextBody { no_wrap, ..Default::default() });
+        (lay(&d), id)
+    };
+    let (unwrapped, uid) = make(true);
+    let (wrapped, wid) = make(false);
+    let count = |l: &DocLayout, id| lines(l, id).iter().map(|(.., a, b)| b - a).sum::<usize>();
+    assert_eq!(count(&unwrapped, uid), 1, "one line without wrapping");
+    assert!(count(&wrapped, wid) > 1, "the default box wraps");
+    let x = lines(&unwrapped, uid)[0].0;
+    assert!((x - frame_of(&unwrapped, uid).x - BOX_INSET_X).abs() < 0.5, "the line starts at the left margin");
+
+    // A centred line too (a watermark): it is measured by its own width, so it stays in the box.
+    let mut d = Document::from_text("anchor");
+    let id = text_box(&mut d, 0, "DRAFT", 300.0, 120.0, TextBody { no_wrap: true, ..Default::default() });
+    if let Some(Block::Para(p)) = d.parts.get_mut(&id).and_then(|p| p.blocks.first_mut()).map(Arc::make_mut) {
+        p.props.align = Some(doc4me_doc::props::Align::Center);
+    }
+    let l = lay(&d);
+    let frame = frame_of(&l, id);
+    let text_x: Vec<f32> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(s), x, para, l0, .. } if *s == id => {
+                para.lines.get(*l0).and_then(|line| line.xs.first()).map(|lx| x + lx)
+            }
+            _ => None,
+        })
+        .collect();
+    assert_eq!(text_x.len(), 1, "the centred line is shown");
+    assert!(text_x[0] >= frame.x - 0.5 && text_x[0] < frame.right(), "text at {} in {frame:?}", text_x[0]);
+}
+
+#[test]
+fn a_floating_auto_fit_text_box_grows_instead_of_losing_its_last_line() {
+    let make = |auto_fit| {
+        let mut d = Document::from_text("anchor");
+        let id = text_box(&mut d, 0, &"Words filling several lines. ".repeat(12), 144.0, 36.0, TextBody { auto_fit, ..Default::default() });
+        if let Some(InlineObject::Shape { float, .. }) = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().objects.first_mut() {
+            float.wrap = doc4me_doc::para::Wrap::InFrontOfText;
+        }
+        let l = lay(&d);
+        (l, id)
+    };
+    let (fixed, fixed_id) = make(false);
+    let (grown, grown_id) = make(true);
+    let count = |l: &DocLayout, id| lines(l, id).iter().map(|(.., a, b)| b - a).sum::<usize>();
+    assert!(frame_of(&grown, grown_id).h > frame_of(&fixed, fixed_id).h + 50.0);
+    assert!(count(&grown, grown_id) > count(&fixed, fixed_id));
+    let rendered = grown.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(id), para, l1, .. } if *id == grown_id => {
+                l1.checked_sub(1).and_then(|i| para.lines.get(i)).map(|l| l.end)
+            }
+            _ => None,
+        })
+        .next_back();
+    assert_eq!(rendered, Some(crate::para::LineEnd::Para));
+}
+
+#[test]
+fn auto_fit_does_not_measure_a_linked_boxes_unused_story() {
+    let mut d = Document::from_text("one\ntwo");
+    let a = text_box(&mut d, 0, "Short", 144.0, 36.0, TextBody::default());
+    let b = text_box(&mut d, 1, &"Unused story. ".repeat(50), 144.0, 36.0, TextBody { auto_fit: true, ..Default::default() });
+    d.parts.get_mut(&a).unwrap().body.next = Some(b);
+    let obj = d.para_mut(StoryRef::Body, &Path::top(1)).unwrap().objects.first_mut().unwrap();
+    if let InlineObject::Shape { float, .. } = obj {
+        float.wrap = doc4me_doc::para::Wrap::InFrontOfText;
+    }
+    let l = lay(&d);
+    let rect = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| match it {
+            Placed::Object { path, rect, .. } if *path == Path::top(1) => Some(*rect),
+            _ => None,
+        })
+        .unwrap();
+    assert!((rect.h - 36.0).abs() < 0.01);
+}

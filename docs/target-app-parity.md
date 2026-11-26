@@ -1,0 +1,347 @@
+# Doc4Me parity with Microsoft Word
+
+**Earlier font/section-marker study · 2026-11-15 (Windows confirmed):** [Font/section-marker audit](readiness/latin-metrics-2026-11-15.md): prepared-font corpus page-count matches improve 187→189/220, with zenodo-095 and zenodo-149 newly matching and no page-count regression among previously passing documents. Full CI passes 6/6 (2,554 native tests; one existing ignored); prepared-font tests 83/83. ALSA development setup is repaired. Windows run 43727351543 confirms 190/220 page-count matches and 95.3% excluding deferred; no criteria, references, exclusions or deferred rows changed.
+
+> **Last reviewed:** 2026-11-16 · **Last updated:** 2026-11-16 · **Change:** Windows readiness remeasured in run 43804632296 on source `093eaba`; 93.4% overall / 95.3% without 22 deferred; pages 199/220, boundaries 104/220. Blocker summaries and failure tables refreshed; criteria, corpus membership, exclusions and deferred rows unchanged.
+
+**Windows verification · 2026-11-16:** ผลทางการจาก [run 43804632296](https://github.com/veevie55/doc4me/actions/runs/43804632296), source `093eaba`, report `15584f5`: **93.4% รวม / 95.3% ไม่นับ 22 deferred**; pages **199/220**, boundaries **104/220**, open/round-trip/stability **220/220**. ไม่ผ่าน pagination 21 page-count และ 116 page-boundary rows; [รายการพร้อมผลวัดภาษาไทย](readiness/blockers-2026-11-14.th.md) และ [English](readiness/blockers-2026-11-14.md) ตรงกับ run นี้. เกณฑ์, deferred และ excluded คงเดิม; เป้าหมาย 100% ยังไม่ถึง.
+
+
+The authoritative assessment of how close Doc4Me is to Microsoft Word. [`ROADMAP.md`](../ROADMAP.md)
+summarizes it; [`gaps.md`](gaps.md) itemizes every shortfall; the deep checklists are
+[`file-format-parity.md`](file-format-parity.md), [`layout-parity.md`](layout-parity.md),
+[`typing-parity.md`](typing-parity.md), [`ui-parity.md`](ui-parity.md),
+[`hardware-parity.md`](hardware-parity.md) and [`localization-parity.md`](localization-parity.md).
+The generated ribbon checklist is [`parity-checklist.md`](parity-checklist.md).
+
+## Headline (latest readiness measured on Windows 2026-11-16; feature estimates retain their pre-fork baseline)
+
+| Number | Value | Kind |
+|---|---|---|
+| Ribbon/menu catalog coverage | **504 / 504 (100%)** | **measured** in Windows run 43804632296; matches the checked-in `parity-checklist.md` and the live registry. |
+| Feature breadth (weighted, beyond the ribbon: dialog options, citation styles, proofing languages, chart types, UI languages) | **~80%** | estimated |
+| Feature depth (weighted by use, table below) | **~68%** | estimated |
+| **Ready for real work** (full target) | **93.4%** | **latest official measurement**: Windows run 43804632296, source `093eaba`, report commit `15584f5` ([readiness.md](readiness.md)); 93.4% overall, all 220 documents, 95.3% without 22 deferred checks; page counts 199/220, page boundaries 104/220. |
+| **Mainstream practitioner** | **~55%** | estimated, same method |
+| **Essentials user** | **~63%** | estimated, same method |
+| Remaining effort to beta | **~150–230 h** of Opus 5.5 agent wall-clock: the blocking beta list ([gaps.md](gaps.md) #1–#7), which lifts file formats, layout, stability and UI enough to reach ~75% | estimated |
+| Remaining effort to full parity with Word desktop | **~750–1,250 h** | estimated |
+| Commands | 730 registered command specs | measured with CLI, 2026-11-14 |
+| Tests | 2,566 source attributes; 2,557 native passed, 1 originally ignored | stats and full CI, 2026-11-15 |
+| Code | 238,736 Rust lines | cargo xtask stats, 2026-11-15 |
+
+**Stage: alpha.** All six core workflows pass the [alpha gate](roadmap.md#alpha-gate-core-workflows); see [`ROADMAP.md`](../ROADMAP.md) for why it isn't beta, and the distance.
+
+## What we measured against
+
+- **The target since 2026-10-24 is Microsoft Word (Microsoft 365) for Windows** (the owner's build
+  is not recorded yet: File › Account › About Word). The measurements below were taken against
+  Word for Mac and stay the baseline until they are re-run on Windows. Where the two differ, Word
+  for Windows counts: the ribbon and Backstage (Home, New, Open, Info, Save As, Print, Share,
+  Export, Close, Account, Options) instead of the Mac menu bar; Ctrl shortcuts instead of ⌘;
+  File › Print in Backstage with the printer's own properties instead of the Mac print dialog and
+  its `WordPDE.plugin`; PDF Reflow (open a PDF to edit it) is Windows-only, Continuity Camera
+  Mac-only.
+- **Microsoft Word for Mac 16.113.4** (Microsoft 365 subscription build, installed on the owner's Mac
+  at `/Applications/Microsoft Word.app`; version read with `mdls`, bundle modified 2026-10-06).
+- Inspected black-box, by **file listing only**, as `AGENTS.md` § Clean room requires (no bundle file
+  was opened or read): 31 `.lproj` folders (30 interface languages plus Base), 120 proofing tools
+  under `SharedSupport/Proofing Tools` (spellers, grammars, hyphenators and thesauri for ~50
+  languages), 12 bibliography styles under `Resources/Style` (APA 6th, Chicago, GB 7714, GOST name
+  and title, Harvard Anglia, IEEE, ISO 690 author-date and numerical, MLA 7th, SIST02, Turabian),
+  11 Quick Style sets plus Word 2010, Office themes, a PDF print-dialog extension (`WordPDE.plugin`),
+  ink rendering (`InkRender.bundle`), a Copilot backstage bundle, and text converters (Excel 2.x–11,
+  Recover Text).
+- Word's file formats, ribbon, dialogs and keyboard shortcuts from Microsoft's public documentation
+  and our knowledge of Word for Windows and Mac (Microsoft 365). Windows-only features (PDF Reflow
+  open, Works/WordPerfect import) are counted, because a Word user on Windows expects them.
+- The latest official Windows readiness report (run 43804632296, source 093eaba, report commit
+  15584f5) measures all 220 corpus documents; the xtask diagnostic prints the exact first/last-word
+  pairs for each failing page. See [handoff.md](../handoff.md).
+- **Not done this pass:** opening the corpus in Word and Doc4Me side by side for direct UI/page
+  comparison. The readiness harness compares Doc4Me output with the saved Word-made PDFs; it does
+  not execute Word itself. Corpus scope and its limits are in [`gaps.md`](gaps.md).
+
+## Feature areas
+
+Percent is depth and fidelity against Word, not presence. Weight is our estimate of the share of a
+typical Word user's time spent in the area (sums to 100). Hours are Opus 5.5 agent wall-clock to
+full parity for the area. The feature-area percentages are subjective estimates last assessed against
+WordCraft before the Doc4Me fork; they are not code-derived readiness scores and have not been
+recalibrated against every later change. Use the official Windows readiness figures above for
+current measured status.
+
+| Area | Weight | Parity | Was (2026-10-06) | Hours | Evidence and what's missing |
+|---|---|---|---|---|---|
+| Typing, selection, clipboard, undo, find/replace | 12 | 85% | 85% | 8–12 | Typing parity pinned by `tests_typing.rs` ([typing-parity.md](typing-parity.md)). Clipboard pane (#264), Paste Special (#235), Advanced Find (#234) and Column Selection (#237) landed. |
+| Character and paragraph formatting | 11 | 82% | 85% | 8–12 | Nearly every property, Font/Paragraph dialogs, character border, Phonetic Guide (#288), Enclose Characters (#297). Missing: stylistic sets, number forms and number spacing in the Font dialog's Advanced tab (kerning and ligatures landed in Doc4Me 1.1.0; Asian Typography is in the catalog). |
+| Styles and themes | 8 | 74% | 75% | 8–12 | Gallery, pane, create/modify, style sets, themes. Style Inspector (#236) and Manage Styles (#270) landed. Missing: style separators, linked-style edge cases; Word ships 11 Quick Style sets plus dozens of themes, we ship our own smaller set. |
+| Lists | 6 | 78% | 75% | 5–8 | Bullets, numbering, multilevel, restart, `w:lvlOverride` levels (#134), Word's list AutoFormat and Enter/Backspace behaviour. Missing: Define New Multilevel List dialog depth, list styles, legal numbering edge cases. |
+| Tables | 8 | 76% | 72% | 10–16 | Merge/split, styles (cell text takes style formatting, #104), custom table styles saved in the .docx (#256), Word 2013 edge, floating tables, rows split across pages, sort, formula, cell gridlines (#243), Draw Table and Eraser (#303). Missing: splitting or erasing around vertically merged cells, nested-table polish, table column markers on the ruler (#49). Dragging column and row borders and the resize handle on the page landed (#217); cell text direction landed (#245). |
+| Page layout and sections | 7 | 70% | 72% | 12–20 | Margins, size, columns, breaks, page borders, line numbers, vertical alignment, drop caps, hyphenation. Columns don't balance; RTL sections missing. Vertical sections (tbRl/btLr) landed (#491). Detail: [layout-parity.md](layout-parity.md). |
+| Headers, footers, page numbers, fields | 5 | 70% | 70% | 8–12 | First/even/odd, link to previous, TOC as an updatable field (#52), cross-references to real bookmarks (#227). Field coverage is a subset of Word's ~90 field codes; Field dialog missing. |
+| Footnotes and endnotes | 3 | 60% | 60% | 3–5 | Placed and editable, numbers from Word files (#103); long notes continue onto the next page under the continuation separator (#352). Footnote and Endnote dialog with options per section: below text, end of section, number format, start at, restart each section or page, custom mark, convert (#385). |
+| References (TOC, citations, bibliography, captions, index, TOA) | 5 | 65% | 60% | 12–20 | Working first versions, Zotero integration (#189), Zotero/Mendeley `ADDIN` fields round-trip. Caption, Index, Mark Entry, Custom TOC and Create/Edit Source dialogs; updates honour the TOC (`\o \u \t \f \n\p \h`), INDEX (`\c \e \h \r`), XE (`\b \i \t \r`) and SEQ/STYLEREF chapter switches (#402). All 12 of Word's bibliography styles (APA, MLA, Chicago, IEEE, Harvard, ISO 690 author-date and numerical, Turabian, GB/T 7714, GOST name and title sort, SIST02; #383); bibliography sources round-trip in DOCX custom XML (#532). |
+| Review (proofing UI, comments, track changes, compare, protect) | 8 | 72% | 75% | 15–25 | Comment balloons, tracked insert/delete incl. paragraph marks (#244, #125), Compare / Combine with comparison settings (case, white space, formatting, tables, word or character level, #412), Restrict Editing pane with formatting and editing restrictions, exceptions for everyone and a password (#412). Formatting revisions (#41): kept in DOCX, recorded while tracking, accepted/rejected, "Formatted: …" balloons and change bars. Moves (#400): kept in DOCX, recorded on a tracked cut and paste, accepted/rejected at either end, green markup and "Moved from/to" balloons. Show revisions in balloons takes tracked deletions in the body out of the text into "Deleted: …" balloons (insertions stay inline, as in Word; deletions in headers, footers, notes and text boxes, and in print and PDF, stay inline). Missing: drag-and-drop moves, insert/delete balloons, modern comment threads/mentions, tracked style-definition changes, and table/section formatting changes initiated in Doc4Me. Translate works through free services (MyMemory or a LibreTranslate server). |
+| Proofing (spelling, grammar, thesaurus, languages) | 5 | 40% | (in Review) | 20–40 | English, Polish and Thai (spelling only: 105 common misspellings, since commit `260459d`), chosen per run from its language (`w:lang`): English word list (Moby plus our supplement of modern words such as "desktop", #520) and rule-based grammar; Polish against the installed Hunspell dictionary through a Hunspell-style affix engine, Polish grammar rules and TeX hyphenation patterns (2026-10-10). Other languages are left unmarked. Word ships 120 proofing tools for ~50 languages plus Editor (style refinements, similarity). Issues #25, #40, #100. |
+| Mailings | 2 | 70% | 70% | 6–10 | Mail merge from CSV, fields, rules (IF, SKIPIF, NEXT, NEXTIF, evaluated alike in preview and merge), fields in headers/footers (one section per letter), preview, envelopes, labels. Select Recipients takes a typed list, CSV (#247) or a sheet of an Excel (.xlsx/.xlsm) or OpenDocument (.ods) workbook, with Select Table to pick the sheet (#334); no Outlook/Contacts/Access data sources, no email merge. |
+| Pictures, shapes, text boxes, WordArt | 6 | 60% | 60% | 20–30 | Insert, crop, recolour, styles, floating placement like Word (#136), wrap (square/top-bottom/behind/front), text boxes edit and overflow (#46), VML text boxes (#242), free rotation and flips with a rotation handle (#332), text-box text direction (90°, 270°, stacked), Align Text and linked text boxes (#369), Icons: an original icon library drawn in code with a searchable picker, inserted as pictures and recoloured with Icon Color (#309), Drawing Canvas with Fit/Expand/Scale and DOCX `wpc:wpc` (#344; members edited by command, not yet dragged inside the canvas; the canvas rotates and flips as a whole). Missing: text in a freely rotated text box, shape effects, WordArt 3-D/bevel, connector routing around shapes, dragging members inside the Drawing Canvas, the Screenshot gallery's Available Windows (Screen Clipping works through the system's clipping), and interactive 3D models (Insert › 3D Models inserts a picture of a .glb/.stl/.obj model). |
+| Equations | 1 | 75% | 20% (with Draw) | 4–8 | OMML read/write, OpenType MATH layout, in-place editor with an Equation tab (#191). Missing: line breaking of long display equations. Ink to Math is available through the Draw workflow. |
+| Charts, SmartArt, Draw/ink, 3D models, icons | 4 | 3% | (20% with equations) | 70–110 | Icons landed (#309; an original library drawn in code). Draw: pens, pencil, highlighter, stroke eraser and Hide Ink (#307), ink saved as DrawingML freeforms; Lasso Select (move, recolour, delete), Add Pen gallery, Ink to Shape (line, rectangle, ellipse, triangle, polygon) and Ink Replay (#395); pressure and Word's own InkML missing; charts: Insert › Chart makes column, bar (clustered and stacked), line, area, pie, doughnut and scatter charts with Chart Design (change type, Edit Data grid, title, legend, data labels) and saves them as real chart parts (#409); charts from Word are drawn (#292) and kept on save (#319) but stay read-only; SmartArt is drawn and kept (#292, #319); Insert › SmartArt (#497) creates and edits list, process, cycle, hierarchy, pyramid, radial, matrix and Venn graphics with our own layouts, a Text Pane and the SmartArt Design tab, saved as diagram parts with the drawing; SmartArt from other programs stays read-only. |
+| View (modes, zoom, panes, windows) | 3 | 72% | 70% | 6–10 | Print/web/draft/read/focus, dark page (#194), pages side by side when zoomed out (#251), navigation pane; Outline view with the Outlining tab: levels, promote/demote, moving with collapsed content, expand/collapse, Show Level, first line only, text formatting (#493). View Side by Side, Synchronous Scrolling, Arrange All and Switch Windows are implemented; Master Document and Immersive Reader depth remain missing. |
+| Backstage, printing, options | 3 | 58% | 55% | 12–20 | New/Home pages (#254), save prompts (#151), web printing via the browser (#209). Desktop printing still goes through PDF; Options has a fraction of Word's panes. |
+| Right-to-left and complex scripts | 1 | 50% | 55% | 15–25 | UAX #9, Arabic shaping, RTL paragraphs (#207). No RTL sections/tables, kashida justification or mirrored UI; open bug reports (#215, #211, #199, #66, #63, #48, #19) need re-testing against #207. |
+| East Asian typography | 1 | 25% | not rated | 13–22 | IME input works; Japanese/Korean IME edge cases still need platform verification (#155–#164). Kinsoku, Enclose Characters (#297), Phonetic Guide (#288), document grid (#391), vertical text (#491) and `w:eastAsianLayout/@combine` (Two Lines in One / Horizontal in Vertical) are implemented. Full Word option coverage and vertical `vert` glyph alternates remain incomplete. |
+| Accessibility | 1 | 50% | not rated | 10–18 | AccessKit enabled in eframe. Alt Text pane for pictures, shapes, text boxes, groups, charts and tables with Mark as decorative, all round-tripping in DOCX (#386). The Accessibility pane groups errors, warnings and tips with jump-to and one-click fixes; rules for alt text, heading order, header rows, blank table rows/columns, merged cells, low contrast (WCAG ratio), floating objects and blank paragraphs. Screen-reader access to the document canvas is still untested (#18); no reading-order tools. The document canvas describes its text, headings, lists, tables, links, pictures and caret to screen readers through AccessKit (#488). |
+| Agent control (CLI, MCP, control channel, macro record/playback) | 0 | beyond Word | 100%+ | — | Every action is a command id usable from CLI, MCP and a keyed control port. Word has VBA and Office.js instead (see Ecosystem). |
+
+Weighted feature depth: **~68%** (Σ weight × parity / 100 over the table).
+
+## Readiness numbers: full, mainstream practitioner, essentials user
+
+Three numbers, each with its own hours (craftrules `standards/progress-docs.md`, "Numbers"). The
+**full** number is the additive weighted sum over the dimension table below. **Mainstream** and
+**essentials** average depth over the areas in scope, then multiply by written-down discounts for
+what still stops real work. The stage follows the full number and the core-workflow gate.
+
+| Audience | Ready | Opus 5.5 agent wall-clock hours to ~95% | Work that dominates |
+|---|---|---|---|
+| Full target (ready for real work) | **93.4%** (latest official report) | **~600–1,000 h** (70–80% parallelizes) | Pagination and document fidelity, dialog depth, native-speaker review of the AI-drafted catalogs, and owner-deferred hardware/service checks; language translation quality is not measured. |
+| Mainstream practitioner | **~55%** | **~300–500 h** (~65% parallelizes) | DOCX real-world fidelity and preserving charts/SmartArt, pagination fidelity, formatting revisions, dialog depth, objects, stability |
+| Essentials user | **~63%** | **~90–140 h** (~50% parallelizes) | Install/launch stability, opening files people send (corpus subset, chart fallbacks), native printing, picture handling, English spelling depth |
+
+Hours are calibrated as in [Calibration](#calibration-of-hours-from-this-repos-history) and are
+subsets: essentials ⊂ mainstream ⊂ full. Mainstream to ~95%: its areas' depth (~180–280 h) plus
+the file-exchange, stability and interaction work behind the discounts (~135–225 h). Essentials to
+~95%: launch/install stability (15–25 h), opening received files (30–50 h), native printing (6–10
+h), pictures and tables (12–18 h), spelling depth (8–12 h), polish (10–20 h).
+
+### The discounts (evidence)
+
+| Discount | Mainstream | Essentials | Evidence |
+|---|---|---|---|
+| Interaction fidelity | ×0.93 | — | Typing pinned to Word (`tests_typing.rs`), ribbon, keytips, mini-toolbar; 60 modal dialogs, and the latest official Windows shortcut set passes 276/280 rows with 4 deferred; picture/shape handling complaints (#82, #142) |
+| Discoverability and UI clarity | — | ×0.95 | Word-style ribbon a Word user already knows, command search, keytips; some newer pane strings and tooltips terse or untranslated |
+| Stability on real machines | ×0.90 | ×0.90 (launch and install) | Never-crash standard, hostile-param fuzzing, panic guard; but open startup crash on Intel UHD (#170), freezes (#77, #59, #31), Windows writes fail without admin (#218), installer conflicts with other Crafting Apps (#64, #73, #106, #51); 5 days of field history |
+| Exchanging files with Word users | ×0.90 | ×0.92 (opening files people send) | Word opens our .docx; `.doc` import; all 220 real-world documents open, stay stable and preserve their measured structure through save and reopen. The latest Windows run matches page count on 199/220 and every page's first/last word on 104/220; Word ink is still dropped silently (Aptos is drawn with the metric-compatible Intos since 2026-10-25). Simple documents, which are most of what a casual user receives, come through well; double-click open on macOS is fixed on main but not yet released (#223, #279) |
+| Product | **×0.753** | **×0.787** | |
+
+### Full target (ready for real work): 93.4% latest official measurement
+
+Measured 2026-11-16 on Windows (run 43804632296, source `093eaba`, report commit `15584f5`; see
+[readiness.md](readiness.md), check sets and rules in [readiness/README.md](readiness/README.md)):
+the weights of the dimension table over fixed pass/fail check sets and all 220 real-world documents.
+The report says 95.3% excluding 22 deferred rows; every dimension except pagination is at 100% without deferred rows. ARM64 `plat-002` passes after run 42262956358
+built and verified the MSI and portable ZIP. The language component is based on catalog key-row presence, not whether
+values translate English or on translation accuracy. Before the first measurement it was estimated
+as the additive weighted sum over the [dimension table](#by-dimension): **0.30·68 + 0.20·60 + 0.15·55 +
+0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 + 0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (range 55–63%). No
+multiplicative discounts: stability, file formats, layout and UI are weighted dimensions here.
+
+### Mainstream practitioner: ~55%
+
+The typical professional Word user (office, legal, academic, writing) in their own language, weekly
+work only. Left out: equations, mail merge, Draw/ink, East Asian and right-to-left typography,
+accessibility tools, proofing in other languages, add-ins/VBA, Copilot, cloud and co-authoring,
+dictation and pens.
+
+| Area | Weight | Depth |
+|---|---|---|
+| Typing, selection, clipboard, undo, find/replace | 17 | 85% |
+| Character and paragraph formatting | 16 | 82% |
+| Styles | 9 | 74% |
+| Tables | 9 | 76% |
+| Review (comments, track changes) | 9 | 72% |
+| Lists | 8 | 78% |
+| Page layout and sections | 6 | 70% |
+| Headers, footers, page numbers, fields | 5 | 70% |
+| Proofing in the user's language (English) | 5 | 55% |
+| Pictures, shapes, text boxes | 5 | 60% |
+| References (TOC, captions, citations) | 4 | 65% |
+| Footnotes | 2 | 60% |
+| Charts and SmartArt (pasted from Excel or received) | 2 | 3% |
+| Print and PDF | 2 | 65% |
+| View | 1 | 72% |
+
+Base ≈ **73%**; **73% × 0.753 ≈ 55%**.
+
+### Essentials user: ~63%
+
+Someone who uses only the core of Word: create or open a document, type and format it, a list, a
+picture, a simple table, spelling, undo, save, PDF or print, default settings. Advanced options,
+professional workflows and file-exchange edge cases are left out, as is everything left out of
+mainstream.
+
+| Feature | Weight | Depth |
+|---|---|---|
+| Typing, selection, copy/paste, undo | 20 | 85% |
+| Font, size, bold/italic/underline, colour, highlight | 15 | 88% |
+| New, open, save, AutoSave, templates | 12 | 80% |
+| Alignment, line spacing, indents | 8 | 85% |
+| Bullets and numbering | 8 | 85% |
+| Spelling (English) | 8 | 65% |
+| Insert, move and resize a picture | 7 | 65% |
+| Simple table | 6 | 78% |
+| Heading styles from the gallery | 5 | 78% |
+| Print and export PDF | 5 | 70% |
+| Find and replace | 3 | 85% |
+| Page numbers and a simple header | 3 | 75% |
+
+Base ≈ **80%**; **80% × 0.787 ≈ 63%**.
+
+### User evidence (GitHub, 2026-10-10; no issue was filed by a storytold org member)
+
+- **120 issues** filed by 80+ outside users in 5 days; about 60 closed, most fixed within a day.
+- **Praise:** 4 issues or comments ("Awesome job guys!" #28, "amazing how much it advanced" #146,
+  "appreciate the repo" #57, thanks in #73/#51). **"Switched from Word" reports: 0.**
+- **Open issues by kind** (hand-classified, ~56 open at classification): **~21 core-path bugs**
+  (install/launch: #64, #73, #106, #51, #47, #170, #218; hangs: #77, #59, #31; editing: #82, #142,
+  #44, #45, #217, #95; files and saving: #187, #195, #279, #18; printing #15; several may already
+  be fixed on main), **~11 right-to-left and language** reports (#19, #48, #63, #66, #199, #211,
+  #215, #25, #40, #56, #100), **~24 feature requests or minor bugs** (catalog parity, macros,
+  passwords, cloud, theming).
+- Reading: people are trying Doc4Me as a Word replacement and report core-path problems more
+  than niche ones; the install and stability discount is earned.
+
+## By dimension
+
+Weights are our estimate of how much each dimension decides whether a professional can switch from
+Word. Their weighted sum is the **full ready for real work** number.
+
+| Dimension | Weight | Parity | Hours to full | Doc | Evidence |
+|---|---|---|---|---|---|
+| Features (depth, table above) | 30% | 68% | 210–335 | this file | Weighted table above. Hours: the area table sums to 290–460 h; the Page layout, Footnotes, RTL and East Asian rows (~50–85 h) are counted under Layout and the Proofing row (25–45 h) under Localization, so they aren't counted twice |
+| File formats (DOCX fidelity first) | 20% | 60% | 185–300 | [file-format-parity.md](file-format-parity.md) | Windows run 43804632296 confirms all 220 real-world documents open and preserve measured structure through save and reopen; formatting not compared yet. Word-created charts and SmartArt are preserved but read-only; OLE parts are preserved while the object shows its picture; Word ink remains unsupported; agile-encrypted DOCX is supported and encrypted DOC is refused. |
+| Layout and pagination fidelity | 15% | 55% | 90–145 | [layout-parity.md](layout-parity.md) | Aptos is drawn with the metric-compatible Intos (2026-10-25); column balancing and full compatibility-mode coverage remain gaps; footnote continuation (#352) and document grid (#391) are implemented. |
+| UI/UX fidelity | 10% | 65% | 65–100 | [ui-parity.md](ui-parity.md) | Ribbon, keytips, mini-toolbar, Backstage, and the latest official Windows shortcut result of 276/280 with 4 deferred (all non-deferred rows pass); 60 modal dialogs against Word's ~100; keyboard/ribbon customization is present |
+| Stability | 10% | 50% | 25–45 | [gaps.md](gaps.md) | Never-crash standard and hostile-param fuzzing in place, but open reports of a startup crash on Intel UHD (#170), freezes (#77, #59, #31) and Windows write failure without admin (#218); no soak test; 5 days of field history |
+| Performance | 5% | 75% | 10–20 | [layout-parity.md](layout-parity.md) | 61 ms cold layout and 1.4 ms relayout on a 188-page document (measured 2026-10-06, not re-run); font picker freezes fixed in #233; no large real-world documents measured |
+| Localization | 4% | 45% | 60–100 + native review | [localization-parity.md](localization-parity.md) | 91 registered choices: English source plus 90 TSV catalogs, one English UK (`en-gb`) and 89 non-English language catalogs; all 11 non-English key-language rows map to 12 TSV catalogs. The latest report says 95/95. 26 AI-generated catalogs (Igbo, Setswana, Wolof, Yoruba and the 22 added in November 2026, Hindi, Arabic and Korean among them) are registered but need native review; the 19 RTL/Indic ones warn before use because the interface doesn't shape or mirror them yet. Key coverage does not measure translation quality; English, Polish and Thai proofing |
+| Platforms | 3% | 95% | 5–10 | [ROADMAP.md](../ROADMAP.md) | Doc4Me releases a Windows x64 MSI and portable zip (unsigned until the owner adds a certificate); the macOS, Linux, FreeBSD and web packaging scripts come from WordCraft and run locally, with no Doc4Me release yet. Beyond Word on Linux, BSD and the web once released; Word's iPad/iPhone/Android apps are out of scope |
+| Hardware | 1% | 40% | 20–40 | [hardware-parity.md](hardware-parity.md) | No native print-job path or physical pressure-pen test; Dictate is implemented with local whisper.cpp, but real-microphone verification remains deferred. GPU drawing and HiDPI work. Ink hours are in the Features row (Draw tab). |
+| Ecosystem and plugins | 2% | replacements in place | — | [gaps.md](gaps.md) | Microsoft's own systems are out of scope (owner decision, 2026-10-25): VBA execution, Office add-ins and the Office Store, OneDrive/SharePoint and Microsoft co-authoring. Open replacements: Zotero built in, macros record/play commands (`.docm` VBA kept, never run, #172), Doc4Me's own add-in catalog (Get Add-ins), cloud storage through folders synced by Nextcloud Desktop or Syncthing. No EndNote/Mendeley plugins |
+| AI features | 0% | beyond Word for external agents | — | [gaps.md](gaps.md) | Beyond Word for external agents (MCP, CLI). No in-app AI provider: out of scope (owner decision, 2026-10-25) |
+
+**Ready for real work ≈ 0.30·68 + 0.20·60 + 0.15·55 + 0.10·65 + 0.10·50 + 0.05·75 + 0.04·25 +
+0.03·95 + 0.01·40 + 0.02·15 ≈ 60%** (the estimate; measured: 66.1% at first, 73.4% in the 2026-10-25 report, 93.4% in the latest official Windows report, with each dimension's measured
+score in [readiness.md](readiness.md)).
+
+## Methodology
+
+- **Measured** numbers come from the source on origin/main: the catalog/registry diff (the same
+  computation as `cargo xtask parity`), `#[test]` counts, i18n catalog rows, reader/writer element
+  coverage (`grep` over `crates/docx`, `crates/docbin`, `crates/formats`) and the Word bundle
+  listing. Nothing was built or run this pass (disk budget).
+- **Estimated** numbers are judgements from that evidence plus Word's documented feature set. The
+  previous estimate (~62% "real feature parity", 2026-10-06) measured feature depth only. This pass
+  splits it into feature depth (67%, up: equations, .doc import, RTL, text boxes, Zotero landed) and
+  ready-for-real-work (60%, additive weighted sum), which adds file fidelity, stability,
+  localization and the rest. A multiplicative version (~47%) was briefly used the same day and
+  reverted to align with the standard; no new evidence.
+- **Why the hours went up** from "120–150 h to 100%" (2026-10-06): that figure left out
+  localization, multilingual proofing, ecosystem, hardware, PDF Reflow and `.doc` writing, and
+  priced DOCX corpus fidelity at 10 h. The evidence includes the Word bundle inventory (30 UI
+  languages, 120 proofing tools, 12 bibliography styles), the last available issue inventory (62
+  open reports, including crashes, freezes and RTL reports; issue tracking is now disabled) and
+  the size of comparable work actually done (below).
+
+### Calibration of hours (from this repo's history)
+
+The repo is five days old (first commit 2026-10-05 20:23, `40c5d51` 2026-10-10): 124
+commits, 95 merged PRs, ~85,600 lines of Rust. PRs are written by agents, so their size and
+open-to-merge time bound the agent time:
+
+| PR | Work | Lines added | PR open → merged |
+|---|---|---|---|
+| #191 | Equations: OMML import/export, math layout, editor and Equation tab | 9,666 | 5.2 h |
+| #145 | Word 97-2003 `.doc` reader (spec-based) | 4,488 | 10.2 h |
+| #189 | Zotero integration with a ribbon tab | 3,043 | 4.7 h |
+| #207 | Right-to-left and Persian text (bidi, shaping, DOCX) | 2,048 | 4.2 h |
+| #46 | Text boxes and floating objects (edit, drag, wrap, overflow) | 2,628 | 36.1 h (incl. review wait) |
+| #136 | Place floating objects the way Word does (fidelity work) | 574 | 10.8 h |
+
+Rule of thumb used: **a new, self-contained subsystem runs ~600–1,000 tested lines per agent hour**
+(equations, Zotero, RTL: 4–10 h each); **fidelity work against Word's observed behaviour runs
+~5–10× slower per line** (#136, #138, #104: 0.5–1 h per 100 lines, mostly comparing and testing).
+Most of the remaining gap is the second kind, which is why the hours are high relative to the
+code already written. About 70–80% of the hours parallelize across agents by area (formats, layout,
+objects, localization, proofing are independent crates). Human time is needed for: native-speaker
+review of translations and a real-world DOCX corpus that
+can be used without committing Word output.
+
+## Revision history
+
+| Date | Change | Summary |
+|---|---|---|
+| 2026-11-16 | minor | Windows run 43804632296, engine 093eaba, report 15584f5: 199/220 page counts (zenodo-067 and zenodo-115 newly match after the Overpass line and Garamond metrics), 104/220 boundaries, 93.4% overall / 95.3% without deferred; no newly failing row versus report 3fca7cd. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows runs 43794297193 (engine 02a6aa9: 195/220 pages, govuk-068 and zenodo-091 newly match) and 43796305956 (engine df4f160, report 3fca7cd: 197/220 pages, 103/220 boundaries, zenodo-156 and govuk-043 newly match), 93.3% overall / 95.2% without deferred; no newly failing row in either. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43792165925, engine 6d4976c, report 5f362a3: 193/220 page counts (zenodo-082 newly matches after the Cambria Math line fix), 102/220 boundaries (zenodo-032/073/082 newly match), 93.2% overall / 95.1% without deferred; no newly failing row versus report 7e50321. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43785505707, engine 55d0c37, report 7e50321: 192/220 page counts (govuk-036 newly matches after the restart-recto fix), 99/220 boundaries, 93.0% overall / 94.9% without deferred; no newly failing row versus report b6e1076. Criteria, corpus, exclusions and deferred unchanged. |
+| 2026-11-16 | minor | Windows run 43776538181, engine e00daf1, report b6e1076: 191/220 page counts, 99/220 boundaries, 93.0% overall / 94.9% without deferred; zenodo-136 newly matches, no newly failing corpus row. Prepare v1.1.4 refresh with unchanged criteria. |
+| 2026-11-15 | minor | Update current readiness documentation; publication cancelled by user. Windows run 43727351543 (f01f7b6, report 4d70b3c): 93.0% overall / 94.9% without deferred, pages 190/220, boundaries 99/220; bilingual blockers match; no criteria/exclusion changes. |
+| 2026-11-14 | minor | Table/clipboard and popup layering verified; CI 6/6, 2,543 native passed; Windows run 43609090751, source 97e1d6f, report 7a38383: 95.1% without 22 deferred; pages 188/220, boundaries 108/220. Target 100% remains open. |
+| 2026-11-14 | minor | Table/clipboard audit: 53 commands, 32 engine regressions plus raster and UI checks; CI 6/6, 2,543 native passed; 2,552 test attributes, 237,580 Rust lines, 730 commands, ribbon 504/504. Latest measured Windows source `8797e66` in run 43609090751: 95.1% without deferred, 188/220 pages and 108/220 boundaries; table changes are included in this measurement. |
+| 2026-11-13 | minor | Body contextual spacing follows ECMA-376 17.3.1.9: max(10,12)−10 leaves 2 pt, with additive-spacing and four-paragraph controls. Three regressions; CI 6/6, native 2,508; Linux corpus unchanged in all five sets. Full box-spacing trial withdrawn after govuk-020/zenodo-067 regressions; latest Windows source `8797e66` is still 95.1% without deferred pending a new measurement. |
+| 2026-11-13 | minor | Windows run 43609090751 measured margin-leading/picture/header/blank-line Keep with next source `8797e66` (report `c098032`): 95.1% without deferred; pages 184→188/220, boundaries 102→108/220, no newly failing document in five sets. Recheck full CI (2,505 native); withdraw all four Mac justification experiments after zenodo-165 regressed; retain fixed criteria and document the mirrored-restart/Arabic-fallback investigation. |
+| 2026-11-13 | minor | M14/G4 margin leading: allow trailing multiple-spacing leading in the page margin; font-leading for pictures outside cells and grids; header contours wrap body starts and clear full-width continuations; Keep with next fits a final plain blank mark. Six new regressions, CI 6/6 / native 2,505; Linux pages 184→189/220, boundaries 97→103/220, no newly failing documents. Latest source awaits Windows measurement; criteria and deferred/excluded unchanged. |
+| 2026-11-12 | minor | Port full-stop/open-parenthesis line breaking and pageBreakBefore at a continuous section’s top mid-page from accessible storytold/wordcraft. Two regressions; CI all 6 steps pass, native 2,499; Linux corpus unchanged with no regressions. Superscript half-point rounding was withdrawn after zenodo-093 regressed; no criteria or excluded/deferred changes. |
+| 2026-11-12 | minor | Alignment tabs do not add text descent to a pictures-only line, matching the existing image-only baseline rule. zenodo-156 now matches 2 pages and all boundaries; Linux corpus pages 183→184/220, boundaries 96→97/220, no regressions. One new regression retains descent for actual text; CI all six steps pass, native 2,497. Windows remeasurement pending; fixed criteria/excluded/deferred unchanged. |
+| 2026-11-12 | minor | Suppress contextual space after a paragraph before an in-flow table starting with the same paragraph style, including nested tables. Linux govuk-034 now matches 14 pages and all boundaries: corpus pages 182→183/220, boundaries 95→96/220, no regressions; two new regressions, CI all six steps pass (2,496 native tests). Windows run 43194683237 confirmed the earlier Unicode fix (94.6% without 22 deferred); table-spacing change awaits Windows measurement. |
+| 2026-11-12 | minor | Windows run 43190908818 measured `c030b15`, report `383646e`: 92.7% / 94.6% without 22 deferred, pages 182/220 and boundaries 100/220. Fix Unicode sans names selecting monospace; CI all 6 steps passed (2,494 native tests); Linux 220-document results unchanged. Audit reference metadata without changing criteria or excluded/deferred rows. Font change awaits Windows measurement. |
+| 2026-11-10 | minor | Windows run 42836913553 measured `1352238`; report commit `8fc9173`: 92.2% / 94.1% without 22 deferred, page counts 174/222, boundaries 95/222 and languages 95/95 (22 AI-drafted catalogs added, awaiting native review). Release 1.1.3. |
+| 2026-11-11 | minor | Windows run 42961322752 measured `9abf2d6`; report commit `1df7aae`: 92.2% / 94.1% without 22 deferred, page counts 175/222 (zenodo-103 now matches Word: table text no longer snaps to the document grid unless `w:adjustLineHeightInTable` is set), boundaries 95/222 and languages 95/95. v1.1.3 was deleted and released again from the latest code, adding the nested-table depth cap (18), control/MCP refusal to discard unsaved work, shared undo style sheets, the AccessKit focus guard, the Font spacing ▲▼ arrows and an About window that names the developer instead of linking the source. Headline numbers refreshed (503/503 catalog, 729 commands, 2,478 tests, 233,264 lines of Rust; 3,034 keys per catalog). |
+| 2026-11-11 | minor | Windows run 43051188273 measured `bd2d2d6`; report commit `5292abd`: 92.7% / 94.5% without 22 deferred on 220 documents (zenodo-104 and govuk-003 excluded by owner decision: their reference PDFs aren't of their .docx); page counts 181/220, boundaries 99/220, languages 95/95. Changes since run 42961322752: theme fonts, Helvetica/Times substitution, bundled metric-compatible fonts (Carlito, Caladea, Arimo, Tinos, Cousine; OFL 1.1) behind the platform's own fallbacks, mode-14 page-break mark, page numbering from 0, continuous sections below floats, digit-hyphen line breaks, grid in tables, Font spacing ▲▼ at 0.1 pt. v1.1.3 was deleted and released again from this code. |
+| 2026-11-07 | minor | Windows run 42334133340 measured `1868cb4`; report commit `ed787f9` confirms 91.3% / 93.2% without 22 deferred, page counts 174/222, boundaries 96/222 and languages 72/95, unchanged from the preceding official report. |
+| 2026-11-07 | minor | Latest official Windows run 42274814600 measured `ed4284d`; report commit `29e6672` records 91.3% / 93.2% without 22 deferred, dialogs 216/228, pages 174/222, boundaries 96/222, languages 72/95, shortcuts 276/280 and platforms 5/5. |
+| 2026-11-06 | minor | Previous official Windows run 42211564189 measured `84db9fc`: 90.5% / 93.1% without 23 deferred; dialogs 210/222, pages 175/222, boundaries 97/222, languages 68/95 and shortcuts 276/280. |
+| 2026-11-06 | minor | At the time, `manual.tsv` had changed ARM64 `plat-002` to pass after run 42262956358 verified MSI and portable ZIP; run 42262955486 was canceled before measuring that pass. The report was later refreshed by run 42274814600. |
+| 2026-11-01 | minor | Map classic New Toolbar, Customize Menu Bar and Customize Menus to the tested Customize Ribbon replacement; dialogs 187/228, readiness 86.0% (88.5% without deferred) |
+| 2026-11-01 | minor | Map legacy `wdDialogToolsAdvancedSettings` to the tested File › Options › Advanced pane; dialogs 184/228, readiness 85.8% (88.3% without deferred) |
+| 2026-11-01 | minor | Syncthing two-peer DOCX save-in-place and sync/reopen verified; ecosystem 5/6, readiness 85.7% (88.2% without deferred) |
+| 2026-11-01 | minor | Leading page breaks in table rows no longer add a blank page; page counts improve to 162/222, page-boundary checks remain 87/222; readiness 85.4% (87.8% without deferred) |
+| 2026-11-01 | minor | `w:gridBefore`/`w:gridAfter` support fixes govuk-009; corpus pagination rises to 161/222 page counts and 87/222 page breaks; readiness 85.4% (87.8% without deferred) |
+| 2026-11-01 | minor | Full readiness 85.3% on the complete corpus (87.7% without 26 deferred checks); dlg-040 excluded as Macintosh-only; DOCX round-trip 222/222; layout 55.4%, dialogs 183/228, shortcuts 268/280, localization 30/95; eco-003 remains untested after a failed Syncthing harness attempt |
+| 2026-11-01 | minor | Full readiness 85.2% on the complete corpus (87.6% without 26 deferred checks); DOCX round-trip 222/222; layout 55.4%, dialogs 183/229, shortcuts 268/280, localization 30/95 |
+| 2026-10-25 | trivial | Ready for real work measured again: 73.4% after stage C work (shortcuts, dialogs, languages, platforms, layout) |
+| 2026-10-25 | minor | Ready for real work measured: 66.1% (`cargo xtask readiness`, 222 real-world documents) replaces the ~60% estimate; file-format, layout and file-exchange evidence from the corpus |
+| 2026-10-25 | trivial | Layout and file-exchange rows: Aptos drawn with the metric-compatible Intos; Aptos substitute removed from the human-time list |
+| 2026-10-25 | trivial | Ecosystem: Microsoft's own systems out of scope, open replacements listed; AI: in-app provider out of scope; owner decisions list shortened |
+| 2026-10-11 | trivial | Proofing: runs in a language without a dictionary are skipped instead of flagged against the English dictionary (#100); no percentage change |
+| 2026-10-11 | minor | Polish interface (13 UI languages) and Polish proofing with per-run languages: Proofing 35% → 40% (25–45 h → 20–40 h), Localization 25% → 27%; feature depth and readiness unchanged at this precision |
+| 2026-10-11 | trivial | Tables: column and row borders and the resize handle drag on the page (#217); Tables row and interaction-fidelity evidence updated, no percentage change |
+| 2026-10-11 | trivial | Review: Show revisions in balloons takes tracked deletions in the body out of the text into "Deleted: …" balloons (it drew like the comments-and-formatting mode before); Review row updated, no percentage change |
+| 2026-10-11 | trivial | Insert › SmartArt (#497): charts/SmartArt row updated; catalog 429/451 → 437/458 (95.4%); no percentage change |
+| 2026-10-11 | trivial | Outline view depth (#493): View row updated; catalog 428/450 → 441/463 (95.2%) with the Outlining tab rows |
+| 2026-10-11 | trivial | Screen readers can read the document canvas (#488): Accessibility row updated; no percentage change |
+| 2026-10-11 | trivial | Compare settings, Restrict Editing pane and AutoCorrect Options (#412): Review row updated; no percentage change |
+| 2026-10-11 | trivial | Pictures, shapes, text boxes, WordArt: WordArt text effects and Transform warps, connectors glued to shapes (#416); catalog 423/448 → 428/453 (94.5%); no percentage change |
+| 2026-10-11 | trivial | Content controls kept, shown and edited, Developer › Controls (#381); catalog +11 rows, all live (402/434 → 413/445, 92.8%); no percentage change |
+| 2026-10-11 | trivial | Insert › Chart (#409): charts row updated, catalog 408/439; no percentage change |
+| 2026-10-11 | trivial | Accessibility 35% → 50%: Alt Text pane for every object and tables, decorative flag, deeper checker with an Accessibility pane (#386); weight 1, headline unchanged |
+| 2026-10-11 | trivial | References: Caption, Index, Mark Entry, Custom Table of Contents and Create/Edit Source dialogs, with the field switches they write honoured on update (#402); no percentage change |
+| 2026-10-11 | trivial | Move tracking (#400): Review row updated; no percentage change |
+| 2026-10-11 | trivial | Footnotes and endnotes: Footnote and Endnote dialog, options per section (position, format, start, restart each section/page), convert notes (#385); no percentage change |
+| 2026-10-11 | trivial | Pictures, shapes, text boxes: text direction, Align Text and linked text boxes (Create Link / Break Link), DOCX `bodyPr` `vert`/`anchor` and `wps:linkedTxbx` (#369); no percentage change |
+| 2026-10-10 | trivial | Drawing Canvas (#344): Insert › Shapes › New Drawing Canvas and Draw › Drawing Canvas live; catalog 402/434 → 404/434 (93.1%) |
+| 2026-10-11 | trivial | Mailings: Excel and OpenDocument spreadsheets as recipient lists (#334); score unchanged |
+| 2026-10-11 | trivial | Insert › Icons (#309): catalog 402/434 → 403/434 (92.9%); moved from missing to done under pictures and shapes |
+| 2026-10-11 | trivial | Enclose Characters (#297): catalog 402/434 → 403/434 (92.9%) |
+| 2026-10-11 | trivial | Phonetic Guide (ruby) landed (#288): catalog +1 feature |
+| 2026-10-11 | trivial | Shortcut count 101 → 125 (#330) |
+| 2026-10-11 | trivial | Equation fixes: removing numbers keeps every row (#444), caret moves keep imported OMML (#446), build-up on a caret move is an undoable edit (#447), LaTeX `\text{}` keeps its spaces (#448); no percentage change |
+| 2026-10-11 | trivial | English spelling (#520): common modern words ("desktop", "download", "email"…) recognised via our supplement list; Proofing row updated, no percentage change |
+| 2026-10-11 | trivial | References: all 12 of Word's bibliography styles (eight more: Harvard, ISO 690 ×2, Turabian, GB/T 7714, GOST ×2, SIST02) (#383); no percentage change |
+| 2026-10-11 | trivial | Mail merge fixes (#427–#430): SKIPIF drops matching records, NEXT advances later fields, IF previews, header/footer fields merge; Mailings row updated, no percentage change |
+| 2026-10-11 | trivial | Formatting revisions (#41): Review row updated; no percentage change |
+| 2026-10-11 | trivial | #395: Lasso Select, Add Pen, Ink to Shape and Ink Replay; catalog 423/448 → 427/448 (95.3%) |
+| 2026-10-10 | trivial | #307: Draw tab pens, eraser and Hide Ink; catalog 384/430 → 390/430 (90.7%) |
+| 2026-10-11 | trivial | Vertical sections (#491): Page layout and East Asian rows updated; no percentage change |
+| 2026-10-10 | trivial | Draw Table and Eraser (#303): catalog 384/430 → 387/430 (90.0%) |
+| 2026-10-10 | trivial | Pictures, shapes, text boxes: free rotation and flips, rotation handle, rotated wrap bounds, DOCX `a:xfrm` rot/flipH/flipV (#332); no percentage change |
+| 2026-10-10 | minor | Merged main (12 PRs): Paste Special, Advanced Find, Column Selection, Style Inspector, custom table styles, gridlines, zoom buttons, touchpad scrolling, File Info fields, Serbian. Catalog 378/428 → 384/430 (89.3%); typing 82→85%, styles 72→74%, tables 74→76%; feature depth 67→68%; mainstream 54→55%; full stays ~60%, essentials ~63% |
+| 2026-10-10 | minor | Readiness table: hours to ~95% per audience (full ~650–1,100 h, mainstream ~300–500 h, essentials ~90–140 h). Full number restored to the additive weighted sum, ~47% → ~60%: method aligned with the standard, no new evidence; beta distance back to ~15 points and ~150–230 h |
+| 2026-10-11 | trivial | East Asian typography 15% → 25%: document grid (#391); kinsoku and Asian Typography options already landed |
+| 2026-10-10 | minor | Added mainstream practitioner (~54%) and essentials user (~63%) numbers with written weights and discounts; full ready-for-real-work recomputed with the same multiplicative discounts: 60% → ~47% (method change, not new product evidence; stage stays alpha: above 40% and the gate passes); beta now ~450–700 h to the 75% bar; user-evidence counts from GitHub |
+| 2026-10-10 | minor | Stage checked against the core-workflow alpha gate: passes, stays alpha |
+| 2026-10-10 | major | Created from ROADMAP.md's "Parity by area" and "Estimate to 100%" sections; full re-measure against Word for Mac 16.113.4 (bundle listing, catalog diff from source, issue tracker); split into feature depth (67%) and ready for real work (60%); added proofing, East Asian, accessibility areas and the dimension table; hours re-calibrated from PR history |
+| 2026-10-06 | major | First estimate in ROADMAP.md: ~62% real feature parity, 120–150 h to 100% |

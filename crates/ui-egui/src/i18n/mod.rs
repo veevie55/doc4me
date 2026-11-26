@@ -1,0 +1,681 @@
+//! Interface languages (#8). Strings in the code stay English and are the lookup keys; a catalog
+//! per language (`*.tsv`, format in `zh-hans.tsv`) maps them to display text when the UI is drawn.
+//! Command ids, document text, file names, the control channel, the CLI and MCP never see
+//! translated text, so scripts and agents are unaffected. A string without a translation shows in
+//! English, so coverage can grow one entry at a time.
+//!
+//! The `language` setting is `auto` by default: the UI follows the operating system's language
+//! (Windows display language, macOS preferred languages, `LANG`/`LC_*` elsewhere) when there is a
+//! catalog for it, and English otherwise. File ▸ Options ▸ Interface language picks one by hand.
+//!
+//! This is the system PdfCraft and PhotoCraft use (`pdfcraft/crates/ui-egui/src/i18n`), so the
+//! catalog format and habits carry over between the Crafting Apps.
+//!
+//! # Adding a language
+//! 1. Add `xx.tsv` next to `zh-hans.tsv` (copy its header; translate from the *meaning* of the
+//!    English text, clean-room: never from Microsoft Word's or another product's localisation).
+//! 2. Add one row to [`LANGUAGES`]. Set its `editing_lang` only when `doc4me-proof` can proof
+//!    the language (Polish: `pl-PL`): new documents are then written in it.
+//!
+//! The Options dropdown, the system-language match and the catalog tests pick it up from there.
+//!
+//! # Looking strings up
+//! - [`tl!`](crate::tl) / [`t`]: a string in the current language. [`tr`]: in a given one.
+//! - [`tc`] / [`trc`]: worded for a context (`preview`), for text that must fit a tight spot.
+//! - [`location`]: a ribbon location such as `Home › Font`, segment by segment.
+//! - [`fmt`]: fill `{name}` placeholders after a lookup; translators may reorder them.
+
+mod catalog;
+
+use std::cell::Cell;
+use std::sync::OnceLock;
+
+use catalog::Catalog;
+
+/// Languages the interface draws only imperfectly ([`Lang::renders_imperfectly`]): Indic scripts
+/// need shaping and Arabic-script and Hebrew text needs right-to-left layout as well.
+const IMPERFECT_RENDERING: [&str; 19] =
+    ["ar", "as", "bn", "fa", "gu", "he", "hi", "kn", "kok", "ml", "mr", "ne", "or", "pa", "ps", "si", "ta", "te", "ur"];
+
+/// The `language` setting that follows the system.
+pub const AUTO: &str = "auto";
+
+/// One supported interface language.
+pub struct LangInfo {
+    /// BCP 47 code, lowercase (`ja`, `zh-hans`). Also the `language` setting's value.
+    pub code: &'static str,
+    /// The language's name in itself, shown in the Options dropdown.
+    pub name: &'static str,
+    /// Catalog file contents (empty for the built-in English).
+    pub source: &'static str,
+    /// Which CJK interface face comes first (Chinese text wants the Chinese face).
+    pub prefer_hans: bool,
+    /// The language (BCP 47) new blank documents are written in with this interface, for
+    /// languages Doc4Me can proof; `None` keeps Doc4Me's default, US English.
+    pub editing_lang: Option<&'static str>,
+    catalog: OnceLock<Catalog>,
+}
+
+/// The registry. English first: it is the fallback and the source language.
+pub static LANGUAGES: [LangInfo; 91] = [
+    LangInfo { code: "en", name: "English", source: "", prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // British English (colour, centre, customise); `en-GB` and `en_GB.UTF-8` resolve here, other
+    // English regions keep the built-in US English. New documents stay in Doc4Me's default
+    // language, as with every interface but Polish (English is proofed whatever the region).
+    LangInfo {
+        code: "en-gb",
+        name: "English (United Kingdom)",
+        source: include_str!("en-gb.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // Simplified Chinese; `zh`, `zh-CN`, `zh-SG` and `zh-Hans-*` resolve here (see `candidates`).
+    LangInfo {
+        code: "zh-hans",
+        name: "简体中文",
+        source: include_str!("zh-hans.tsv"),
+        prefer_hans: true,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // Traditional Chinese (Taiwan vocabulary); `zh-TW`, `zh-HK`, `zh-MO` and `zh-Hant-*` resolve here.
+    LangInfo {
+        code: "zh-hant",
+        name: "繁體中文",
+        source: include_str!("zh-hant.tsv"),
+        prefer_hans: true,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    LangInfo { code: "ja", name: "日本語", source: include_str!("ja.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "uk", name: "Українська", source: include_str!("uk.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // Spanish, neutral across Spain and Latin America; `es-ES`, `es-MX`, `es-419` … resolve here.
+    LangInfo { code: "es", name: "Español", source: include_str!("es.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Brazilian Portuguese; `pt-BR` and `pt-BR-*` resolve here. European Portuguese (`pt-PT`)
+    // has its own catalog (`pt-pt`); a plain `pt` names neither, so it stays in English.
+    LangInfo {
+        code: "pt-br",
+        name: "Português (Brasil)",
+        source: include_str!("pt-br.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // Serbian, Cyrillic script (the default per BCP 47 when no script is given); `sr`, `sr-RS`,
+    // `sr-Cyrl-*` (including Bosnia & Herzegovina) resolve here.
+    LangInfo { code: "sr", name: "Српски", source: include_str!("sr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Serbian, Latin script; `sr-Latn-*` resolves here (see `candidates`'s generic prefix
+    // matching — no special-casing needed, unlike Chinese's script-by-region fallback).
+    LangInfo {
+        code: "sr-latn",
+        name: "Srpski (latinica)",
+        source: include_str!("sr-latn.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // Polish; `pl`, `pl-PL` and `pl_PL.UTF-8` resolve here. Doc4Me proofs Polish (spelling,
+    // grammar, hyphenation), so new documents are written in Polish with this interface.
+    LangInfo {
+        code: "pl",
+        name: "Polski",
+        source: include_str!("pl.tsv"),
+        prefer_hans: false,
+        editing_lang: Some("pl-PL"),
+        catalog: OnceLock::new(),
+    },
+    LangInfo { code: "cs", name: "Čeština", source: include_str!("cs.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "et", name: "Eesti", source: include_str!("et.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // German, neutral across Germany, Austria and Switzerland; `de`, `de-DE`, `de-AT`, `de-CH` …
+    // resolve here.
+    LangInfo { code: "de", name: "Deutsch", source: include_str!("de.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Russian; `ru`, `ru-RU`, `ru_RU.UTF-8` and other regions resolve here.
+    LangInfo { code: "ru", name: "Русский", source: include_str!("ru.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "tr", name: "Türkçe", source: include_str!("tr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Italian; `it-IT`, `it-CH` and `it-*` resolve here.
+    LangInfo { code: "it", name: "Italiano", source: include_str!("it.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Hungarian; `hu`, `hu-HU` and `hu_HU.UTF-8` resolve here.
+    LangInfo { code: "hu", name: "Magyar", source: include_str!("hu.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Thai; `th`, `th-TH`, `th_TH.UTF-8` and `th-TH-u-nu-thai` resolve here. New documents keep
+    // US English as their editing language: Thai text is proofed whatever its run's language, and
+    // Latin words typed beside it stay checked as English.
+    LangInfo { code: "th", name: "ไทย", source: include_str!("th.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // French; `fr`, `fr-FR`, `fr-BE`, `fr-CH` and other regions but Canada resolve here.
+    LangInfo { code: "fr", name: "Français", source: include_str!("fr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Canadian French (the French catalog with "courriel" and no space before ; ? !); `fr-CA` and
+    // `fr_CA.UTF-8` resolve here.
+    LangInfo {
+        code: "fr-ca",
+        name: "Français (Canada)",
+        source: include_str!("fr-ca.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // Dutch; `nl`, `nl-NL`, `nl-BE` resolve here.
+    LangInfo { code: "nl", name: "Nederlands", source: include_str!("nl.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Swedish; `sv`, `sv-SE`, `sv-FI` resolve here.
+    LangInfo { code: "sv", name: "Svenska", source: include_str!("sv.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Danish; `da`, `da-DK` resolve here.
+    LangInfo { code: "da", name: "Dansk", source: include_str!("da.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Norwegian Bokmål; `nb`, `nb-NO`, and plain Norwegian `no`/`no-NO` resolve here (see `candidates`).
+    LangInfo { code: "nb", name: "Norsk bokmål", source: include_str!("nb.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Finnish; `fi`, `fi-FI` resolve here.
+    LangInfo { code: "fi", name: "Suomi", source: include_str!("fi.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Romanian; `ro`, `ro-RO`, `ro-MD` resolve here.
+    LangInfo { code: "ro", name: "Română", source: include_str!("ro.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Slovak; `sk`, `sk-SK` resolve here.
+    LangInfo { code: "sk", name: "Slovenčina", source: include_str!("sk.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // Croatian; `hr`, `hr-HR`, `hr-BA` resolve here.
+    LangInfo { code: "hr", name: "Hrvatski", source: include_str!("hr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "ha", name: "Hausa", source: include_str!("ha.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "ky", name: "Кыргызча", source: include_str!("ky.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo {
+        code: "lb", name: "Lëtzebuergesch", source: include_str!("lb.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo { code: "mi", name: "Te reo Māori", source: include_str!("mi.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "rm", name: "Rumantsch", source: include_str!("rm.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "gd", name: "Gàidhlig", source: include_str!("gd.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "tt", name: "Татар теле", source: include_str!("tt.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo { code: "uz", name: "Oʻzbekcha", source: include_str!("uz.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "kk", name: "Қазақ тілі", source: include_str!("kk.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo { code: "sw", name: "Kiswahili", source: include_str!("sw.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "mk", name: "Македонски", source: include_str!("mk.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo { code: "ms", name: "Bahasa Melayu", source: include_str!("ms.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "mt", name: "Malti", source: include_str!("mt.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "nn", name: "Norsk nynorsk", source: include_str!("nn.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "pt-pt",
+        name: "Português (Portugal)",
+        source: include_str!("pt-pt.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    LangInfo { code: "cy", name: "Cymraeg", source: include_str!("cy.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "az",
+        name: "Azərbaycan dili",
+        source: include_str!("az.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    LangInfo { code: "eu", name: "Euskara", source: include_str!("eu.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "ga", name: "Gaeilge", source: include_str!("ga.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "af", name: "Afrikaans", source: include_str!("af.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "sq", name: "Shqip", source: include_str!("sq.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "bs", name: "Bosanski", source: include_str!("bs.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "gl", name: "Galego", source: include_str!("gl.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "is", name: "Íslenska", source: include_str!("is.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "bg", name: "Български", source: include_str!("bg.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo { code: "ca", name: "Català", source: include_str!("ca.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "el", name: "Ελληνικά", source: include_str!("el.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    LangInfo {
+        code: "id",
+        name: "Bahasa Indonesia",
+        source: include_str!("id.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    LangInfo { code: "lv", name: "Latviešu", source: include_str!("lv.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "lt", name: "Lietuvių", source: include_str!("lt.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "sl", name: "Slovenščina", source: include_str!("sl.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "vi", name: "Tiếng Việt", source: include_str!("vi.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "xh", name: "isiXhosa", source: include_str!("xh.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "zu", name: "isiZulu", source: include_str!("zu.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo { code: "rw", name: "Ikinyarwanda", source: include_str!("rw.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    LangInfo {
+        code: "nso",
+        name: "Sesotho sa Leboa",
+        source: include_str!("nso.tsv"),
+        prefer_hans: false,
+        editing_lang: None,
+        catalog: OnceLock::new(),
+    },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "ig", name: "Asụsụ Igbo", source: include_str!("ig.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "yo", name: "Yorùbá", source: include_str!("yo.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "wo", name: "Wolof", source: include_str!("wo.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "tn", name: "Setswana", source: include_str!("tn.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "hy", name: "Հայերեն", source: include_str!("hy.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo {
+        code: "ka", name: "ქართული", source: include_str!("ka.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft from English source meanings; native-speaker review is still required.
+    LangInfo { code: "ko", name: "한국어", source: include_str!("ko.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; the interface draws Devanagari only imperfectly (no shaping yet), so
+    // picking it asks first ([`Lang::renders_imperfectly`]).
+    LangInfo {
+        code: "hi", name: "हिन्दी", source: include_str!("hi.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Hindi.
+    LangInfo {
+        code: "mr", name: "मराठी", source: include_str!("mr.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Hindi.
+    LangInfo {
+        code: "ne", name: "नेपाली", source: include_str!("ne.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Hindi.
+    LangInfo {
+        code: "kok", name: "कोंकणी", source: include_str!("kok.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft for Bangladesh and India; the Bengali script is drawn imperfectly.
+    LangInfo {
+        code: "bn", name: "বাংলা", source: include_str!("bn.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Bangla.
+    LangInfo {
+        code: "as", name: "অসমীয়া", source: include_str!("as.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; the Gujarati script is drawn imperfectly (no shaping yet).
+    LangInfo {
+        code: "gu", name: "ગુજરાતી", source: include_str!("gu.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft (Gurmukhi, India); drawn imperfectly, as Gujarati.
+    LangInfo {
+        code: "pa", name: "ਪੰਜਾਬੀ", source: include_str!("pa.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Gujarati.
+    LangInfo {
+        code: "or", name: "ଓଡ଼ିଆ", source: include_str!("or.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; the Tamil script is drawn imperfectly (no shaping yet).
+    LangInfo {
+        code: "ta", name: "தமிழ்", source: include_str!("ta.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Tamil.
+    LangInfo {
+        code: "te", name: "తెలుగు", source: include_str!("te.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Tamil.
+    LangInfo {
+        code: "kn", name: "ಕನ್ನಡ", source: include_str!("kn.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; the Malayalam script is drawn imperfectly (no shaping yet).
+    LangInfo {
+        code: "ml", name: "മലയാളം", source: include_str!("ml.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; drawn imperfectly, as Malayalam.
+    LangInfo {
+        code: "si", name: "සිංහල", source: include_str!("si.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new()
+    },
+    // AI-generated draft; right-to-left, which the interface does not lay out yet.
+    LangInfo { code: "he", name: "עברית", source: include_str!("he.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left with joined letters, which the interface does not lay out or shape yet.
+    LangInfo { code: "ar", name: "العربية", source: include_str!("ar.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "fa", name: "فارسی", source: include_str!("fa.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "ur", name: "اردو", source: include_str!("ur.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+    // AI-generated draft; right-to-left and joined, as Arabic.
+    LangInfo { code: "ps", name: "پښتو", source: include_str!("ps.tsv"), prefer_hans: false, editing_lang: None, catalog: OnceLock::new() },
+];
+
+impl LangInfo {
+    fn catalog(&self) -> &Catalog {
+        self.catalog.get_or_init(|| {
+            let (catalog, errors) = Catalog::parse(self.source);
+            for error in errors {
+                log::warn!("{} interface catalog: {error}; that entry shows in English", self.code);
+            }
+            catalog
+        })
+    }
+}
+
+/// A language the UI can be shown in (a handle into [`LANGUAGES`]).
+#[derive(Clone, Copy)]
+pub struct Lang(&'static LangInfo);
+
+impl std::fmt::Debug for Lang {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Lang({})", self.0.code)
+    }
+}
+
+impl PartialEq for Lang {
+    fn eq(&self, other: &Self) -> bool {
+        self.0.code == other.0.code
+    }
+}
+
+impl Eq for Lang {}
+
+impl Lang {
+    pub const EN: Lang = Lang(&LANGUAGES[0]);
+
+    pub fn code(self) -> &'static str {
+        self.0.code
+    }
+
+    pub fn name(self) -> &'static str {
+        self.0.name
+    }
+
+    pub fn prefers_hans(self) -> bool {
+        self.0.prefer_hans
+    }
+
+    /// The language new blank documents are written in with this interface ([`LangInfo::editing_lang`]).
+    pub fn editing_lang(self) -> Option<&'static str> {
+        self.0.editing_lang
+    }
+
+    /// Is the interface written in CJK script (its own name is), so it needs a CJK face?
+    pub fn uses_cjk(self) -> bool {
+        self.0.name.chars().any(|c| ('\u{2E80}'..='\u{9FFF}').contains(&c) || ('\u{AC00}'..='\u{D7AF}').contains(&c))
+    }
+
+    /// The CJK interface text the fonts must cover with the Chinese (`hans`) or other CJK fallback
+    /// order: the catalogs of the CJK languages using that order, and every language's own name (the
+    /// Options list). The interface fonts check the embedded faces against it (#486).
+    pub fn cjk_font_text(hans: bool) -> (Vec<&'static str>, String) {
+        let catalogs = Lang::all().filter(|l| l.uses_cjk() && l.prefers_hans() == hans).map(|l| l.0.source).collect();
+        (catalogs, Lang::all().map(Lang::name).collect::<Vec<_>>().join(" "))
+    }
+
+    /// Does the interface draw this language only imperfectly? Its text needs shaping (letters that
+    /// join or change order) or right-to-left layout, which the interface's text drawing doesn't do
+    /// yet. Picking one in File › Options asks first, and "Automatic" never chooses one.
+    pub fn renders_imperfectly(self) -> bool {
+        IMPERFECT_RENDERING.contains(&self.0.code)
+    }
+
+    /// A language by its exact code (any case).
+    pub fn from_code(code: &str) -> Option<Lang> {
+        LANGUAGES.iter().find(|l| l.code.eq_ignore_ascii_case(code)).map(Lang)
+    }
+
+    /// Resolve the `language` setting: a language code, or [`AUTO`] (and anything unknown, e.g. a
+    /// code from a newer version) to follow the system.
+    pub fn from_pref(pref: &str) -> Lang {
+        Lang::from_code(pref).unwrap_or_else(system_lang)
+    }
+
+    /// Every registered language.
+    pub fn all() -> impl Iterator<Item = Lang> {
+        LANGUAGES.iter().map(Lang)
+    }
+
+    /// Every registered language in the order a picker lists them: English first (the source
+    /// language and the fallback), then the rest by their own name with accents folded, so
+    /// Čeština sits under C rather than after Z. Names in other scripts follow the Latin ones in
+    /// code point order: Greek, Cyrillic, Arabic, then the CJK languages.
+    pub fn for_picker() -> Vec<Lang> {
+        let mut rest: Vec<Lang> = Lang::all().filter(|l| l.code() != Lang::EN.code()).collect();
+        rest.sort_by_cached_key(|l| name_sort_key(l.name()));
+        std::iter::once(Lang::EN).chain(rest).collect()
+    }
+
+    fn catalog(self) -> &'static Catalog {
+        self.0.catalog()
+    }
+}
+
+/// The canonical `language` setting for user input: [`AUTO`] or a registered code (any case).
+/// `None` for anything else, so callers keep the current setting.
+pub fn normalize_pref(pref: &str) -> Option<&'static str> {
+    if pref.eq_ignore_ascii_case(AUTO) {
+        return Some(AUTO);
+    }
+    Lang::from_code(pref).map(Lang::code)
+}
+
+/// Candidate codes for a locale tag, most specific first: `zh_TW.UTF-8` → `zh-tw`, `zh-hant`, `zh`.
+fn candidates(tag: &str) -> Vec<String> {
+    let base = tag.split(['.', '@']).next().unwrap_or("").replace('_', "-").to_ascii_lowercase();
+    let parts: Vec<&str> = base.split('-').filter(|p| !p.is_empty()).collect();
+    let Some(&primary) = parts.first() else { return Vec::new() };
+    let mut out = Vec::new();
+    for n in (1..=parts.len()).rev() {
+        out.push(parts.get(..n).unwrap_or_default().join("-"));
+    }
+    if primary == "zh" && !parts.iter().any(|p| matches!(*p, "hans" | "hant")) {
+        // Chinese by region when no script is given.
+        let script = if parts.iter().any(|p| matches!(*p, "tw" | "hk" | "mo")) { "zh-hant" } else { "zh-hans" };
+        out.insert(out.len().saturating_sub(1), script.to_string());
+    }
+    if primary == "no" {
+        // Plain Norwegian (`no`, `no_NO`) is written in Bokmål.
+        out.push("nb".to_string());
+    }
+    out
+}
+
+/// The registered language for a locale tag such as `ja_JP.UTF-8` or `zh-Hant-TW`; `None` when
+/// there is no catalog for it. `C`/`POSIX` mean English.
+pub fn lang_from_tag(tag: &str) -> Option<Lang> {
+    let cands = candidates(tag);
+    if matches!(cands.first().map(String::as_str), Some("c" | "posix")) {
+        return Some(Lang::EN);
+    }
+    cands.iter().find_map(|c| Lang::from_code(c))
+}
+
+/// The first of the system's preferred languages Doc4Me has, in the user's order: someone
+/// who prefers French, then Japanese, gets Japanese rather than English.
+/// Languages the interface draws only imperfectly are passed over: they are used only when picked
+/// (and confirmed) by hand.
+pub fn first_supported<'a>(tags: impl IntoIterator<Item = &'a str>) -> Option<Lang> {
+    tags.into_iter().find_map(|tag| lang_from_tag(tag).filter(|l| !l.renders_imperfectly()))
+}
+
+/// The system language (looked up once). English when it can't be determined or isn't supported.
+pub fn system_lang() -> Lang {
+    // Tests drive the UI by its English labels whatever the machine's language is.
+    if cfg!(test) {
+        return Lang::EN;
+    }
+    static SYSTEM: OnceLock<Lang> = OnceLock::new();
+    *SYSTEM.get_or_init(detect_system_lang)
+}
+
+fn detect_system_lang() -> Lang {
+    // An explicit override, then the platform's preferred UI languages (Windows display language,
+    // macOS preferred languages, `LC_ALL`/`LC_MESSAGES`/`LANG` on Unix, the browser on the web).
+    if let Some(l) = std::env::var("DOC4ME_LANGUAGE").ok().and_then(|v| lang_from_tag(&v)) {
+        return l;
+    }
+    let tags: Vec<String> = sys_locale::get_locales().take(16).collect();
+    first_supported(tags.iter().map(String::as_str)).unwrap_or(Lang::EN)
+}
+
+thread_local! {
+    // Per thread: parallel test harnesses must not change each other's language.
+    static CURRENT: Cell<Lang> = const { Cell::new(Lang::EN) };
+}
+
+/// Set the language the UI is drawn in (the app does this every frame from its setting).
+pub fn set_current(lang: Lang) {
+    CURRENT.set(lang);
+}
+
+/// The language the UI is drawn in.
+pub fn current() -> Lang {
+    CURRENT.get()
+}
+
+/// Does `lang` have a catalog entry for this string? (English never does: it is the source.)
+pub fn has(lang: Lang, s: &str) -> bool {
+    lang.catalog().plain(s).is_some()
+}
+
+/// `s` in the current language ([`tr`] with [`current`]).
+pub fn t(s: &str) -> &str {
+    tr(current(), s)
+}
+
+/// `s` in the current language as worded for `context` (one of `catalog::CONTEXTS`), falling
+/// back to the plain translation and then to English.
+pub fn tc<'a>(context: &str, s: &'a str) -> &'a str {
+    trc(current(), context, s)
+}
+
+/// [`tc`] in a given language.
+pub fn trc<'a>(lang: Lang, context: &str, s: &'a str) -> &'a str {
+    #[cfg(test)]
+    if pseudo::on() {
+        return pseudo::mark(s);
+    }
+    lang.catalog().in_context(context, s).unwrap_or(s)
+}
+
+/// Lowercase translated interface labels and UI search queries in the current language.
+/// Turkish has two distinct I pairs: `İ`/`i` and `I`/`ı`. Unicode's default casing turns `İ`
+/// into `i` plus a combining dot, which would prevent `italik` from finding `İtalik`.
+/// Command IDs and document text keep their own existing casing semantics.
+pub fn lowercase(s: &str) -> String {
+    if current().code() != "tr" {
+        return s.to_lowercase();
+    }
+    let mut out = String::with_capacity(s.len());
+    for c in s.chars() {
+        match c {
+            'İ' => out.push('i'),
+            'I' => out.push('ı'),
+            _ => out.extend(c.to_lowercase()),
+        }
+    }
+    out
+}
+
+/// `s` in `lang`; strings without a translation come back unchanged.
+pub fn tr(lang: Lang, s: &str) -> &str {
+    #[cfg(test)]
+    if pseudo::on() {
+        return pseudo::mark(s);
+    }
+    lang.catalog().plain(s).unwrap_or(s)
+}
+
+/// A style's name as the interface shows it: built-in styles (`Normal`, `Heading 2`, `TOC 3`) in
+/// the current language, styles the author made exactly as named. Display only: the document,
+/// commands and saved files keep the English name.
+pub fn style_name(style: &doc4me_doc::Style) -> String {
+    if style.builtin { builtin_style_name(&style.name) } else { style.name.clone() }
+}
+
+/// A built-in style's English name in the current language; numbered families go through one
+/// template each (`Heading {n}`), and names without a translation stay English.
+pub fn builtin_style_name(name: &str) -> String {
+    let direct = t(name);
+    if direct != name {
+        return direct.to_string();
+    }
+    for (prefix, template) in [("Heading ", "Heading {n}"), ("TOC ", "TOC {n}"), ("Index ", "Index {n}")] {
+        if let Some(n) = name.strip_prefix(prefix)
+            && !n.is_empty()
+            && n.chars().all(|c| c.is_ascii_digit())
+        {
+            return fmt(t(template), &[("n", n)]);
+        }
+    }
+    name.to_string()
+}
+
+/// A ribbon location (`Home › Font`) in the current language, segment by segment.
+pub fn location(loc: &str) -> String {
+    loc.split(" › ").map(t).collect::<Vec<_>>().join(" › ")
+}
+
+/// A label with an action after a fixed English prefix, e.g. `Undo Typing`: both parts translated
+/// where the catalog has them.
+pub fn prefixed(prefix: &str, rest: &str) -> String {
+    if rest.is_empty() {
+        return t(prefix).to_string();
+    }
+    fmt(t(&format!("{prefix} {{action}}")), &[("action", t(rest))])
+}
+
+/// Fill `{name}` placeholders in one pass. Unknown placeholders stay as written, and inserted
+/// values are never read as templates again, so a file name containing `{n}` stays intact.
+pub fn fmt(template: &str, args: &[(&str, &str)]) -> String {
+    let mut out = String::with_capacity(template.len());
+    let mut rest = template;
+    while let Some((before, after_open)) = rest.split_once('{') {
+        out.push_str(before);
+        let Some((name, after_close)) = after_open.split_once('}') else {
+            out.push('{');
+            out.push_str(after_open);
+            return out;
+        };
+        match args.iter().find(|(key, _)| *key == name) {
+            Some((_, value)) => out.push_str(value),
+            None => {
+                out.push('{');
+                out.push_str(name);
+                out.push('}');
+            }
+        }
+        rest = after_close;
+    }
+    out.push_str(rest);
+    out
+}
+
+#[cfg(test)]
+mod audit;
+#[cfg(test)]
+pub(crate) mod pseudo;
+#[cfg(test)]
+mod tests;
+
+/// `name` lowercased with the Latin accents that occur in language names folded away, so a
+/// byte-wise sort reads alphabetically. Other scripts are left as they are.
+fn name_sort_key(name: &str) -> String {
+    name.chars()
+        .flat_map(char::to_lowercase)
+        .map(|c| match c {
+            'à'..='å' | 'ā' | 'ă' | 'ą' => 'a',
+            'ç' | 'ć' | 'č' => 'c',
+            'è'..='ë' | 'ē' | 'ě' | 'ę' | 'ế' | 'ệ' => 'e',
+            'ì'..='ï' | 'ī' => 'i',
+            'ñ' | 'ń' | 'ň' => 'n',
+            'ò'..='ö' | 'ø' | 'ő' => 'o',
+            'ś' | 'š' => 's',
+            'ù'..='ü' | 'ū' | 'ů' | 'ű' => 'u',
+            'ý' | 'ÿ' => 'y',
+            'ź' | 'ż' | 'ž' => 'z',
+            c => c,
+        })
+        .collect()
+}
+
+#[cfg(test)]
+mod picker_order_tests {
+    use super::*;
+
+    #[test]
+    fn picker_lists_english_first_then_names_alphabetically() {
+        let order = Lang::for_picker();
+        assert_eq!(order.first().map(|l| l.code()), Some(Lang::EN.code()));
+        assert_eq!(order.len(), Lang::all().count());
+        let keys: Vec<String> = order[1..].iter().map(|l| name_sort_key(l.name())).collect();
+        assert!(keys.windows(2).all(|w| w[0] <= w[1]), "{keys:?}");
+        assert_eq!(name_sort_key("Čeština"), "cestina");
+        assert_eq!(name_sort_key("Türkçe"), "turkce");
+    }
+}

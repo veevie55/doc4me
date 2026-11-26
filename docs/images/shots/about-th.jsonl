@@ -1,0 +1,5 @@
+{"method": "ui.language", "params": {"value": "th"}}
+{"method": "ui.dialog", "params": {"name": "about"}}
+{"method": "ui.move", "params": {"x": 2000, "y": 2000}}
+{"steps": 10}
+{"shot": "docs/images/about-th.png"}

@@ -1,0 +1,8966 @@
+use super::*;
+use doc4me_doc::para::InlineObject;
+use doc4me_doc::props::{Align, Border, BorderStyle, Borders, FrameProps, FrameWrap, ParaProps, TextDirection};
+use doc4me_doc::{Pos, Table};
+
+fn lay(doc: &Document) -> DocLayout {
+    let mut c = LayoutCache::new();
+    layout(doc, &mut c, &LayoutOptions::default())
+}
+
+fn lines_of(l: &DocLayout) -> usize {
+    l.pages.iter().flat_map(|p| p.items.iter()).map(|it| if let Placed::Lines { l0, l1, .. } = it { l1 - l0 } else { 0 }).sum()
+}
+
+#[test]
+fn display_text_retains_a_tab_without_assigning_it_a_visible_glyph() {
+    let d = Document::from_text("Left\tRight");
+    let l = lay(&d);
+    let draws = display::page_display(&d, &l.pages[0], &Default::default());
+    let mut all = String::new();
+    for draw in draws {
+        if let display::Draw::Glyphs { text, ranges, .. } = draw {
+            assert!(ranges.iter().all(|r| text.get(r.clone()).is_some_and(|s| !s.contains('\t'))));
+            all.push_str(&text);
+        }
+    }
+    assert_eq!(all, "Left\tRight");
+}
+
+#[test]
+fn lowered_text_keeps_its_lines_height() {
+    // govuk-052: Arial 11 lowered 1 pt throughout steps as unlowered text does (12.6 pt in Word);
+    // a line mixing lowered and unlowered words grows by the lowering.
+    let pitch = |position: Option<f32>, first_plain: bool| {
+        let lowered = doc4me_doc::CharProps { position, ..Default::default() };
+        let text = "words to wrap onto several lines of a paragraph ".repeat(6);
+        let mut p = Paragraph::with_text(&text, lowered);
+        if first_plain {
+            p.runs.insert(0, doc4me_doc::Run { len: 0, props: Default::default() });
+            p.runs[0].len = 6;
+            p.runs[1].len -= 6;
+        }
+        let mut d = Document::from_text("");
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let para = l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clone()) } else { None }).unwrap();
+        (para.lines[0].height, para.lines[1].height)
+    };
+    let plain = pitch(None, false);
+    let lowered = pitch(Some(-1.0), false);
+    assert!((lowered.0 - plain.0).abs() < 0.01 && (lowered.1 - plain.1).abs() < 0.01, "plain {plain:?}, lowered {lowered:?}");
+    let mixed = pitch(Some(-1.0), true);
+    // (Scaled by the paragraph's multiple line spacing.)
+    assert!(mixed.0 - plain.0 > 0.99 && mixed.0 - plain.0 < 1.2 && (mixed.1 - plain.1).abs() < 0.01, "plain {plain:?}, mixed {mixed:?}");
+}
+
+#[test]
+fn a_list_label_passes_its_text_map_to_the_pdf() {
+    // zenodo-147: "12." set on Verdana's widths with Inter's narrower glyphs read as "1 2." without
+    // a glyph-to-text map; with one, the PDF keeps the label as one word.
+    let props = doc4me_doc::CharProps { font: Some("Verdana".into()), size: Some(10.0), ..Default::default() };
+    let mut d = Document::from_text("");
+    let mut p = Paragraph::with_text("Estimate", props.clone());
+    p.mark = props;
+    d.body = vec![doc4me_doc::para_block(p)];
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let draws = display::page_display(&d, &l.pages[0], &Default::default());
+    let label = draws
+        .iter()
+        .find_map(|draw| match draw {
+            display::Draw::Glyphs { text, ranges, glyphs, preserve_words, .. } if text.starts_with('1') => {
+                Some((ranges.len(), glyphs.len(), *preserve_words))
+            }
+            _ => None,
+        })
+        .expect("a label draw");
+    assert!(label.0 == label.1 && label.0 > 0, "ranges and glyphs: {label:?}");
+}
+
+#[test]
+fn verdana_substitution_wraps_at_the_requested_fonts_width() {
+    let mut d = Document::new();
+    d.last_section.page_w = 685.8; // 541.8 pt text width, as in the reference form.
+    let props = doc4me_doc::CharProps { font: Some("Verdana".into()), size: Some(11.0), ..Default::default() };
+    let text = "We normally keep copies of the information provided to us on a case for a period of one year following issue of the issue of the decision, and keep the decision itself for 5 years.";
+    let mut p = Paragraph::with_text(text, props.clone());
+    p.mark = props;
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let para = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| match it {
+            Placed::Lines { para, .. } => Some(para),
+            _ => None,
+        })
+        .unwrap();
+    let first = &para.lines[0];
+    assert_eq!(
+        text.get(first.start..first.stop).unwrap().trim(),
+        "We normally keep copies of the information provided to us on a case for a period of one year"
+    );
+}
+
+#[test]
+fn a_full_stop_and_adjacent_open_parenthesis_wrap_as_one_word() {
+    for (text, first) in [("Prefix 2023.(Example)", "Prefix"), ("Prefix 2023. (Example)", "Prefix 2023.")] {
+        let mut d = Document::new();
+        d.last_section.page_w = 244.0;
+        let props = doc4me_doc::CharProps { font: Some("Source Sans 3".into()), size: Some(12.0), ..Default::default() };
+        d.body = vec![doc4me_doc::para_block(Paragraph::with_text(text, props))];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        assert_eq!(para.lines.len(), 2, "{text}: {:?}", para.lines);
+        let line = &para.lines[0];
+        assert_eq!(text.get(line.start..line.stop).unwrap().trim(), first);
+    }
+}
+
+#[test]
+fn page_break_before_applies_at_a_continuous_sections_top_mid_page() {
+    for (start, break_before, expected) in
+        [(SectionStart::Continuous, false, 1), (SectionStart::Continuous, true, 2), (SectionStart::NextPage, true, 2)]
+    {
+        let mut d = Document::from_text("Before\nAfter");
+        d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().section = Some(Box::new(SectionProps::default()));
+        d.last_section.start = start;
+        d.para_mut(StoryRef::Body, &Path::top(1)).unwrap().props.page_break_before = Some(break_before);
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), expected, "{start:?}, break={break_before}");
+        assert_eq!(l.caret(&Pos::body(1, 0)).unwrap().page, expected - 1);
+    }
+    let mut d = Document::from_text("First");
+    d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().props.page_break_before = Some(true);
+    assert_eq!(lay(&d).pages.len(), 1, "a break before at the actual page top adds no blank page");
+}
+
+#[test]
+fn empty_doc_has_one_page() {
+    let d = Document::new();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    assert_eq!(lines_of(&l), 1);
+    let c = l.caret(&Pos::body(0, 0)).unwrap();
+    assert_eq!(c.page, 0);
+    assert!((c.x - 72.0).abs() < 0.5, "{c:?}");
+    assert!(c.top >= 72.0 && c.height > 8.0);
+}
+
+#[test]
+fn document_font_alt_name_is_used_only_when_the_requested_family_is_missing() {
+    let mut d = Document::new();
+    d.font_aliases.insert(
+        "missing font for alt-name test".into(),
+        doc4me_doc::FontAlias { font: "Missing Font for Alt-Name Test".into(), alternate: "Source Sans 3".into(), mac_charset: false },
+    );
+    let chosen = crate::para::font_for_document(&d, "Missing Font for Alt-Name Test");
+    assert_eq!(chosen, "Source Sans 3");
+    assert_eq!(doc4me_fonts::word::resolve(&chosen, false, false).face.family, "Source Sans 3");
+
+    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into(), mac_charset: false });
+    assert_eq!(crate::para::font_for_document(&d, "Sarabun"), "Sarabun");
+}
+
+/// A font the font table lists with the Macintosh character set (`w:charset="4D"`) is drawn
+/// with its alternate even where it is installed, as Word for Windows draws zenodo-022's and
+/// zenodo-069's Overpass (charset 4D, altName Calibri) with Calibri.
+#[test]
+fn a_mac_charset_font_is_drawn_with_its_alternate() {
+    let mut d = Document::new();
+    d.font_aliases.insert("sarabun".into(), doc4me_doc::FontAlias { font: "Sarabun".into(), alternate: "Source Sans 3".into(), mac_charset: true });
+    assert_eq!(crate::para::font_for_document(&d, "Sarabun"), "Source Sans 3");
+}
+
+#[test]
+fn paragraph_layout_uses_document_alt_name_and_keeps_the_requested_font() {
+    let requested = "Doc4Me Missing Paragraph Font 36A2";
+    assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+    let text = "Paragraph rendered with the alternate family";
+    let mut d = Document::from_text(text);
+    d.font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, text.len()), &|c| c.font = Some(requested.into())).unwrap();
+
+    let l = lay(&d);
+    let para =
+        l.pages.iter().flat_map(|p| p.items.iter()).find_map(|it| if let Placed::Lines { para, .. } = it { Some(para) } else { None }).unwrap();
+    let run = para.styles.iter().find(|style| style.rc.font == requested).expect("the requested run font is retained");
+    assert_eq!(run.face.family, "Source Sans 3");
+    assert!(run.substituted);
+    assert_eq!(run.rc.font, requested);
+}
+
+#[test]
+fn equation_layout_uses_document_alt_name_and_keeps_the_requested_font() {
+    use doc4me_doc::math::{MNode, MRun, Math};
+
+    let requested = "Doc4Me Missing Equation Font A17F";
+    assert!(!doc4me_fonts::FontDb::global().has_family(requested));
+    let mut d = Document::new();
+    d.font_aliases
+        .insert(requested.to_lowercase(), doc4me_doc::FontAlias { font: requested.into(), alternate: "Source Sans 3".into(), mac_charset: false });
+    let math = Math {
+        nodes: vec![MNode::Run(MRun { text: "Equation label".into(), nor: true, font: Some(requested.into()), ..Default::default() })],
+        ..Default::default()
+    };
+    d.insert_object(
+        &Pos::body(0, 0),
+        InlineObject::Equation { linear: "Equation label".into(), display: false, math: math.clone() },
+        &Default::default(),
+    )
+    .unwrap();
+
+    let layout = lay(&d);
+    let equation = layout
+        .pages
+        .iter()
+        .flat_map(|page| page.items.iter())
+        .find_map(|item| match item {
+            Placed::Lines { para, .. } => para.maths.first().map(|(_, math)| math),
+            _ => None,
+        })
+        .expect("equation is laid out");
+    let face = equation
+        .items
+        .iter()
+        .find_map(|item| if let crate::math::MItem::Glyphs { face, .. } = item { Some(face) } else { None })
+        .expect("normal math text has glyphs");
+    assert_eq!(face.family, "Source Sans 3");
+    let source = &d.para(StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().objects[0];
+    let InlineObject::Equation { math: saved, .. } = source else { panic!("the equation object is retained") };
+    assert_eq!(saved, &math, "the source font name remains unchanged");
+}
+
+#[test]
+fn long_paragraph_wraps_and_paginates() {
+    let text = "The quick brown fox jumps over the lazy dog. ".repeat(400);
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    assert!(l.pages.len() >= 3, "pages {}", l.pages.len());
+    // Every line fits the text width.
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, x, .. } = it {
+                for li in *l0..*l1 {
+                    let line = &para.lines[li];
+                    let w = para.x_of(li, line.stop).unwrap() + x;
+                    assert!(w <= 612.0 - 72.0 + 30.0, "line too wide: {w}");
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn zero_size_word_frame_markers_keep_paragraphs_in_page_flow() {
+    use doc4me_doc::para::Anchor;
+
+    let mut d = Document::new();
+    let marker = FrameProps { h_rel: Anchor::Column, v_rel: Anchor::Margin, wrap: FrameWrap::Auto, ..FrameProps::default() };
+    for i in 0..150 {
+        let mut p = doc4me_doc::Paragraph::with_text(&format!("Paragraph {i} stays in the document flow."), Default::default());
+        p.props.frame = Some(marker);
+        d.insert_block(StoryRef::Body, &Path::top(i), Block::Para(p)).unwrap();
+    }
+
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "frame-marked paragraphs should paginate, got {} page(s)", l.pages.len());
+    assert_eq!(lines_of(&l), 151);
+}
+
+#[test]
+fn reading_layout_reflows_into_viewport_height_pages_without_changing_print_layout() {
+    let d = Document::from_text(&"A moderately long sentence that should wrap across reading columns. ".repeat(250));
+    let opts = LayoutOptions { view: ViewMode::Read, web_width: 230.0, read_height: 390.0, ..Default::default() };
+    let read = layout(&d, &mut LayoutCache::new(), &opts);
+    assert!(read.pages.len() > 5, "reading column count: {}", read.pages.len());
+    assert!(read.pages.iter().all(|p| p.w == 230.0 && p.h == 390.0));
+    assert!(read.pages.iter().all(|p| p.body.w < p.w && p.body.h < p.h));
+    assert_eq!(
+        lines_of(&read),
+        lines_of(&layout(&d, &mut LayoutCache::new(), &LayoutOptions { view: ViewMode::Web, web_width: 230.0, ..Default::default() }))
+    );
+    let print = lay(&d);
+    assert_eq!(print.pages[0].w, d.sections()[0].1.page_w);
+    assert_eq!(print.pages[0].h, d.sections()[0].1.page_h);
+    // Window height changes page breaks, not the text, and a malformed dimension stays bounded.
+    let short = layout(&d, &mut LayoutCache::new(), &LayoutOptions { read_height: 260.0, ..opts.clone() });
+    assert!(short.pages.len() > read.pages.len());
+    let spaced = layout(&d, &mut LayoutCache::new(), &LayoutOptions { read_line_spacing: Some(2.0), ..opts.clone() });
+    assert!(spaced.pages.len() > read.pages.len(), "reader-only line spacing repaginates text");
+    let invalid = layout(&d, &mut LayoutCache::new(), &LayoutOptions { web_width: f32::NAN, read_height: f32::INFINITY, ..opts });
+    assert!(invalid.pages.iter().all(|p| p.w.is_finite() && p.h.is_finite()));
+}
+
+#[test]
+fn hit_and_caret_agree() {
+    let d = Document::from_text("Hello world, this is Doc4Me.\nSecond paragraph here.");
+    let l = lay(&d);
+    // The end of the first paragraph included.
+    for off in [0, 5, 12, "Hello world, this is Doc4Me.".len()] {
+        let pos = Pos::body(0, off);
+        let c = l.caret(&pos).unwrap();
+        let back = l.hit(c.page, c.x + 0.1, c.top + c.height / 2.0, StoryRef::Body).unwrap();
+        assert_eq!(back, pos, "off {off}");
+    }
+    let c1 = l.caret(&Pos::body(1, 0)).unwrap();
+    let (down, _) = l.vertical(&Pos::body(0, 0), None, 1, 0).unwrap();
+    assert_eq!(down.path, Path::top(1));
+    assert!(c1.top > l.caret(&Pos::body(0, 0)).unwrap().top);
+    let (up, _) = l.vertical(&Pos::body(1, 3), None, -1, 0).unwrap();
+    assert_eq!(up.path, Path::top(0));
+}
+
+#[test]
+fn deletions_leave_the_final_text_layout() {
+    // "Keep " + deleted "DELETEDTEXT " (5..17) + inserted "INSERTED".
+    let mut d = Document::from_text("Keep DELETEDTEXT INSERTED");
+    d.format_range(&Pos::body(0, 5), &Pos::body(0, 17), &|c| c.del = Some(0)).unwrap();
+    d.format_range(&Pos::body(0, 17), &Pos::body(0, 25), &|c| c.ins = Some(0)).unwrap();
+    let texts = |l: &DocLayout, markup: bool| -> (String, usize) {
+        let items = display::page_display(&d, &l.pages[0], &display::DisplayOptions { markup, ..Default::default() });
+        let text = items.iter().filter_map(|i| if let display::Draw::Glyphs { text, .. } = i { Some(text.as_str()) } else { None }).collect();
+        (text, items.iter().filter(|i| matches!(i, display::Draw::Line { .. })).count())
+    };
+    // Markup: the deletion is laid out and struck through, the insertion underlined, and the
+    // changed line has a bar in the margin.
+    let full = lay(&d);
+    assert_eq!(texts(&full, true), ("Keep DELETEDTEXT INSERTED".into(), 3));
+    // Without markup a full layout still never prints the deletion as plain text.
+    assert!(!texts(&full, false).0.contains("DELETED"));
+    // The final layout gives the deletion no width.
+    let fin = layout(&d, &mut LayoutCache::new(), &LayoutOptions { hide_deleted: true, ..Default::default() });
+    assert_eq!(texts(&fin, false), ("Keep INSERTED".into(), 0));
+    let at = |off| fin.caret(&Pos::body(0, off)).unwrap();
+    assert!((at(5).x - at(17).x).abs() < 0.01, "{:?} {:?}", at(5), at(17));
+    // Every offset maps to a caret, and clicks land outside the hidden text.
+    for off in 0..=25 {
+        let c = at(off);
+        let back = fin.hit(c.page, c.x + 0.1, c.top + c.height / 2.0, StoryRef::Body).unwrap();
+        assert!(back.off <= 5 || back.off >= 17, "off {off} hit {back:?}");
+    }
+}
+
+#[test]
+fn deleted_soft_hyphen_is_no_hyphenation_point_without_markup() {
+    // "ab\u{ad}cdef" in a column where "ab-" fits but the whole word does not; only the soft
+    // hyphen is track-deleted.
+    let mut d = Document::from_text("ab\u{ad}cdef");
+    d.format_range(&Pos::body(0, 2), &Pos::body(0, 4), &|c| c.del = Some(0)).unwrap();
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(468.0 - 26.0)).unwrap();
+    let hyphens = |hide_deleted: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { hide_deleted, ..Default::default() });
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.iter().filter(|l| l.hyphen.is_some()).count()
+    };
+    // With markup the deleted soft hyphen is still there, and the word breaks at it.
+    assert_eq!(hyphens(false), 1);
+    // Final text: the soft hyphen is gone, so is the hyphen.
+    assert_eq!(hyphens(true), 0);
+}
+
+#[test]
+fn deleted_text_adds_no_line_break_opportunity_without_markup() {
+    // "xx ab\u{ad}cdef" in a column where "xx ab-" and "abcdef" fit but "xx abcdef" does not; only
+    // the soft hyphen (5..7) is track-deleted.
+    let mut d = Document::from_text("xx ab\u{ad}cdef");
+    d.format_range(&Pos::body(0, 5), &Pos::body(0, 7), &|c| c.del = Some(0)).unwrap();
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(468.0 - 40.0)).unwrap();
+    let line_starts = |hide_deleted: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { hide_deleted, ..Default::default() });
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.iter().map(|l| para.clusters.get(l.c0).map_or(usize::MAX, |c| c.start)).collect::<Vec<_>>()
+    };
+    // With markup the word breaks at the (deleted) soft hyphen.
+    assert_eq!(line_starts(false), vec![0, 7]);
+    // Final text: "abcdef" is one word, so the line breaks at the space before it.
+    assert_eq!(line_starts(true), vec![0, 3]);
+}
+
+#[test]
+fn hidden_soft_hyphen_is_no_hyphenation_point_when_hidden_text_is_not_shown() {
+    // As with deletions: "ab\u{ad}cdef" where only the soft hyphen is hidden text.
+    let mut d = Document::from_text("ab\u{ad}cdef");
+    d.format_range(&Pos::body(0, 2), &Pos::body(0, 4), &|c| c.hidden = Some(true)).unwrap();
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(468.0 - 26.0)).unwrap();
+    let hyphens = |show_hidden: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.iter().filter(|l| l.hyphen.is_some()).count()
+    };
+    // Hidden text shown: the soft hyphen is there, and the word breaks at it.
+    assert_eq!(hyphens(true), 1);
+    // Not shown (as printed): no soft hyphen, so no hyphen. Word breaks "abc" / "def" here.
+    assert_eq!(hyphens(false), 0);
+}
+
+#[test]
+fn hidden_text_adds_no_line_break_opportunity_when_not_shown() {
+    // "xx ab" + hidden soft hyphen or space + "cdef", in a column where "xx ab-" and "abcdef" fit
+    // but "xx abcdef" does not. Measured in Word (hidden text not printed): "xx" / "abcdef" both times.
+    for hidden in ["\u{ad}", " "] {
+        let mut d = Document::from_text(&format!("xx ab{hidden}cdef"));
+        let end = 5 + hidden.len();
+        d.format_range(&Pos::body(0, 5), &Pos::body(0, end), &|c| c.hidden = Some(true)).unwrap();
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(468.0 - 40.0)).unwrap();
+        let line_starts = |show_hidden: bool| {
+            let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+            let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+            para.lines.iter().map(|l| para.clusters.get(l.c0).map_or(usize::MAX, |c| c.start)).collect::<Vec<_>>()
+        };
+        // Shown, the word breaks at the hidden soft hyphen or space.
+        assert_eq!(line_starts(true), vec![0, end], "{hidden:?}");
+        // Not shown, "abcdef" is one word, so the line breaks at the space before it.
+        assert_eq!(line_starts(false), vec![0, 3], "{hidden:?}");
+    }
+}
+
+/// How much bigger the second document is in the linear-time tests. At 8x a linear layout costs
+/// about 8x as much and a quadratic one about 64x, so a limit of 24x stays far from both.
+pub(crate) const SCALE: usize = 8;
+
+/// The CPU time `f` takes on this thread, in seconds. On Linux it is the scheduler's count of the
+/// time the thread actually ran, so the time it waits while other work on a busy machine has the
+/// CPU is left out; elsewhere, wall-clock time.
+fn cpu_cost(f: &mut impl FnMut()) -> f64 {
+    let ran = || {
+        let s = std::fs::read_to_string("/proc/thread-self/schedstat").ok()?;
+        s.split_whitespace().next()?.parse::<u64>().ok()
+    };
+    let (t, before) = (std::time::Instant::now(), ran());
+    f();
+    match (before, ran()) {
+        (Some(a), Some(b)) => b.saturating_sub(a) as f64 * 1e-9,
+        _ => t.elapsed().as_secs_f64(),
+    }
+}
+
+/// How much more `big` costs than `small`, for `big` an input `scale` times the size of `small`'s:
+/// (small, big, big / small), ~`scale` when linear and ~`scale`² when quadratic. Each is the
+/// cheapest of several runs after a warm-up, the runs alternating so a busy spell slows both sizes
+/// alike; `small` is timed `scale` times over per run, so both timings are long against the clock's
+/// resolution.
+pub(crate) fn cost_ratio(scale: usize, mut small: impl FnMut(), mut big: impl FnMut()) -> (f64, f64, f64) {
+    small();
+    big();
+    let mut small_scaled = || (0..scale).for_each(|_| small());
+    let (mut t1, mut tk) = (f64::INFINITY, f64::INFINITY);
+    for _ in 0..5 {
+        t1 = t1.min(cpu_cost(&mut small_scaled) / scale as f64);
+        tk = tk.min(cpu_cost(&mut big));
+    }
+    (t1, tk, tk / t1.max(1e-9))
+}
+
+/// [`cost_ratio`] of laying out `doc(SCALE * n)` against `doc(n)`.
+pub(crate) fn layout_time_ratio(doc: impl Fn(usize) -> Document, n: usize, opts: &LayoutOptions) -> (f64, f64, f64) {
+    let (small, big) = (doc(n), doc(SCALE * n));
+    cost_ratio(
+        SCALE,
+        || {
+            layout(&small, &mut LayoutCache::new(), opts);
+        },
+        || {
+            layout(&big, &mut LayoutCache::new(), opts);
+        },
+    )
+}
+
+#[test]
+fn hidden_separators_with_automatic_hyphenation_lay_out_in_linear_time() {
+    // "hyphenation " n times with every space hidden: one joined word of 11n letters reaches the
+    // hyphenator, whose limit checks once rescanned the word for every candidate point.
+    let doc = |n: usize| {
+        let mut d = Document::from_text(&"hyphenation ".repeat(n));
+        d.settings.auto_hyphenation = true;
+        for k in 0..n {
+            let at = 12 * k + 11;
+            d.format_range(&Pos::body(0, at), &Pos::body(0, at + 1), &|c| c.hidden = Some(true)).unwrap();
+        }
+        d
+    };
+    let (t1, tk, ratio) = layout_time_ratio(doc, 800, &LayoutOptions::default());
+    eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+    assert!(ratio < 24.0, "8x the text took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
+}
+
+#[test]
+fn many_hidden_float_anchors_lay_out_in_linear_time() {
+    // n square-wrapped shapes, each anchored in its own hidden run (bold alternating, so runs do not
+    // merge), markup on: finding each anchor's formatting once rescanned the runs from the start.
+    let doc = |n: usize| {
+        let float = doc4me_doc::para::Float {
+            wrap: doc4me_doc::para::Wrap::Square,
+            h_rel: doc4me_doc::para::Anchor::Column,
+            v_rel: doc4me_doc::para::Anchor::Paragraph,
+            x: 0.0,
+            y: 0.0,
+            dist: 9.0,
+            dist_top: 9.0,
+            dist_bottom: 9.0,
+            ..Default::default()
+        };
+        let shape = InlineObject::Shape {
+            kind: doc4me_doc::para::ShapeKind::Rectangle,
+            w: 20.0,
+            h: 20.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            freeform: None,
+            effects: Default::default(),
+            extra: Default::default(),
+        };
+        let obj = doc4me_doc::para::OBJ.to_string();
+        let mut p = doc4me_doc::Paragraph::with_text("Text ", Default::default());
+        p.text.push_str(&obj.repeat(n));
+        p.objects = vec![shape; n];
+        p.runs = std::iter::once(doc4me_doc::Run { len: 5, props: Default::default() })
+            .chain((0..n).map(|i| doc4me_doc::Run {
+                len: obj.len(),
+                props: doc4me_doc::CharProps { hidden: Some(true), bold: Some(i % 2 == 0), ..Default::default() },
+            }))
+            .collect();
+        let mut d = Document::from_text("");
+        d.body = vec![doc4me_doc::para_block(p)];
+        d
+    };
+    // Correct first: hidden anchors place no shape, shown ones do.
+    let shapes = |show_hidden: bool| {
+        let l = layout(&doc(50), &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        l.pages.iter().flat_map(|p| p.items.iter()).filter(|i| matches!(i, Placed::Shape { .. })).count()
+    };
+    assert_eq!((shapes(false), shapes(true)), (0, 50));
+    let (t1, tk, ratio) = layout_time_ratio(doc, 10_000, &LayoutOptions::default());
+    eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+    assert!(ratio < 24.0, "8x the anchors took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
+}
+
+#[test]
+fn fragmented_hidden_text_lays_out_like_the_visible_text() {
+    // Visible words with a hidden multi-byte char after every visible one, formatted in alternating
+    // runs (bold on and off) so no two left-out runs are adjacent or merge. The plain paragraph has
+    // the same visible runs without the hidden chars, so both lay out the same widths whatever font
+    // the default font resolves to.
+    let words = "Hyphenation wraps international words across narrow columns of text ".repeat(6);
+    let mut d = Document::from_text("");
+    d.settings.auto_hyphenation = true;
+    let mut plain = Document::from_text("");
+    plain.settings.auto_hyphenation = true;
+    let mut text = String::new();
+    let mut kept = Vec::new();
+    for (i, c) in words.chars().enumerate() {
+        kept.push(text.len());
+        text.push(c);
+        let at = text.len();
+        text.push('é');
+        let n = d.para(StoryRef::Body, &Path::top(0)).unwrap().len();
+        let bold = doc4me_doc::CharProps { bold: Some(i % 2 == 0), ..Default::default() };
+        d.insert_text(&Pos::body(0, n), &c.to_string(), &bold).unwrap();
+        let hidden = doc4me_doc::CharProps { hidden: Some(true), bold: Some(i % 2 == 1), ..Default::default() };
+        d.insert_text(&Pos::body(0, at), "é", &hidden).unwrap();
+        let n = plain.para(StoryRef::Body, &Path::top(0)).unwrap().len();
+        plain.insert_text(&Pos::body(0, n), &c.to_string(), &bold).unwrap();
+    }
+    assert_eq!(d.para(StoryRef::Body, &Path::top(0)).unwrap().text, text);
+    assert_eq!(plain.para(StoryRef::Body, &Path::top(0)).unwrap().text, words);
+    for doc in [&mut d, &mut plain] {
+        doc.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_right = Some(468.0 - 90.0)).unwrap();
+    }
+    // Line starts and hyphenation points, as paragraph offsets.
+    let shape = |d: &Document| {
+        let l = layout(d, &mut LayoutCache::new(), &LayoutOptions::default());
+        let paras: Vec<_> = l
+            .pages
+            .iter()
+            .flat_map(|p| p.items.iter())
+            .filter_map(|i| if let Placed::Lines { para, .. } = i { Some(para.clone()) } else { None })
+            .collect();
+        let para = &paras[0];
+        let starts: Vec<usize> = para.lines.iter().map(|l| para.clusters.get(l.c0).map_or(usize::MAX, |c| c.start)).collect();
+        let hyph: Vec<usize> = para.hyph_after.iter().map(|k| para.clusters[*k as usize].end).collect();
+        (starts, hyph)
+    };
+    let (starts, hyph) = shape(&plain);
+    assert!(starts.len() > 5 && !hyph.is_empty(), "{starts:?} {hyph:?}");
+    // Mapped to the fragmented paragraph: a line starts after the previous visible char (with the
+    // hidden one that follows it, which takes no room), a hyphen point is after its char.
+    let want_starts: Vec<usize> = starts.iter().map(|s| if *s == 0 { 0 } else { kept[s - 1] + 1 }).collect();
+    let want_hyph: Vec<usize> = hyph.iter().map(|e| kept[e - 1] + 1).collect();
+    assert_eq!(shape(&d), (want_starts, want_hyph));
+}
+
+#[test]
+fn automatic_hyphenation_sees_only_the_text_laid_out() {
+    // Paragraph-text ends of the clusters after which a line may end with a hyphen.
+    let hyph_ends = |d: &Document, opts: &LayoutOptions| {
+        let l = layout(d, &mut LayoutCache::new(), opts);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.hyph_after.iter().map(|k| para.clusters[*k as usize].end).collect::<Vec<_>>()
+    };
+    let doc = |text: &str| {
+        let mut d = Document::from_text(text);
+        d.settings.auto_hyphenation = true;
+        d
+    };
+    // (text, hidden bytes, deleted bytes, the text as laid out without them).
+    let cases = [
+        // A hidden prefix: "table" must not break after its first letter as "acceptable" may.
+        ("acceptable", 0..5, 0..0, "table"),
+        // A hidden separator joins two words into one.
+        ("foot ball", 4..5, 0..0, "football"),
+        // Hidden text and a tracked deletion together.
+        ("accXeptYable", 7..8, 3..4, "acceptable"),
+    ];
+    let hidden_opts = LayoutOptions { hide_deleted: true, ..Default::default() };
+    for (text, hidden, deleted, visible) in cases {
+        let mut d = doc(text);
+        d.format_range(&Pos::body(0, hidden.start), &Pos::body(0, hidden.end), &|c| c.hidden = Some(true)).unwrap();
+        if !deleted.is_empty() {
+            d.format_range(&Pos::body(0, deleted.start), &Pos::body(0, deleted.end), &|c| c.del = Some(0)).unwrap();
+        }
+        // The same points as the visible text alone, at the matching paragraph offsets.
+        let kept: Vec<usize> = (0..text.len()).filter(|i| !hidden.contains(i) && !deleted.contains(i)).collect();
+        let want: Vec<usize> = hyph_ends(&doc(visible), &hidden_opts).iter().map(|e| kept[e - 1] + 1).collect();
+        assert_eq!(hyph_ends(&d, &hidden_opts), want, "{text:?} as {visible:?}");
+        // Hidden text shown and markup shown: the whole text is hyphenated as before.
+        let all = LayoutOptions { show_hidden: true, ..Default::default() };
+        assert_eq!(hyph_ends(&d, &all), hyph_ends(&doc(text), &all), "{text:?} shown");
+    }
+}
+
+#[test]
+fn page_break_char_starts_new_page() {
+    let mut d = Document::from_text("one");
+    d.insert_text(&Pos::body(0, 3), "\u{000C}", &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+}
+
+#[test]
+fn center_and_right_alignment() {
+    let mut d = Document::from_text("abc\nabc\nabc");
+    d.format_paragraphs(&Pos::body(1, 0), &Pos::body(1, 0), &|p| p.align = Some(Align::Center)).unwrap();
+    d.format_paragraphs(&Pos::body(2, 0), &Pos::body(2, 0), &|p| p.align = Some(Align::Right)).unwrap();
+    let l = lay(&d);
+    let x0 = l.caret(&Pos::body(0, 0)).unwrap().x;
+    let x1 = l.caret(&Pos::body(1, 0)).unwrap().x;
+    let x2 = l.caret(&Pos::body(2, 3)).unwrap().x;
+    assert!((x0 - 72.0).abs() < 0.5);
+    assert!(x1 > 250.0 && x1 < 320.0, "{x1}");
+    assert!((x2 - 540.0).abs() < 1.0, "{x2}");
+}
+
+#[test]
+fn tabs_land_on_default_stops() {
+    let d = Document::from_text("a\tb");
+    let l = lay(&d);
+    let xb = l.caret(&Pos::body(0, 2)).unwrap().x;
+    assert!((xb - (72.0 + 36.0)).abs() < 0.5, "{xb}");
+}
+
+/// Left of the margin Word's next default tab stop is the first multiple of the interval at or
+/// after the position (its arithmetic truncates toward zero), so a tab already on a stop stays
+/// put. Measured on Word: "a\t\tX" at -60 pt puts X at -36 pt (not 0), "\tX" starting at -72 pt
+/// leaves X at -72, at -60 moves it to -36; right of the margin the stops are as usual.
+/// Letterheads that line up a footer with tabs under a negative indent rely on it.
+#[test]
+fn tabs_left_of_the_margin_stay_on_a_default_stop() {
+    let x_of = |text: &str, indent: f32, off: usize| {
+        let mut d = Document::from_text(text);
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.indent_left = Some(indent)).unwrap();
+        lay(&d).caret(&Pos::body(0, off)).unwrap().x - 72.0
+    };
+    assert!((x_of("a\t\tX", -60.0, 3) - -36.0).abs() < 0.5, "second tab from a stop left of the margin: {}", x_of("a\t\tX", -60.0, 3));
+    assert!((x_of("\tX", -72.0, 1) - -72.0).abs() < 0.5, "leading tab on a stop: {}", x_of("\tX", -72.0, 1));
+    assert!((x_of("\tX", -60.0, 1) - -36.0).abs() < 0.5, "leading tab between stops: {}", x_of("\tX", -60.0, 1));
+    assert!((x_of("\t \tX", -60.0, 3) - 0.0).abs() < 0.5, "a space between the tabs: {}", x_of("\t \tX", -60.0, 3));
+    assert!((x_of("a\t\tX", 0.0, 3) - 72.0).abs() < 0.5, "right of the margin: {}", x_of("a\t\tX", 0.0, 3));
+}
+
+#[test]
+fn right_tab_aligns_text_end() {
+    let mut d = Document::from_text("left\tright");
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.tabs = Some(vec![doc4me_doc::props::TabStop { pos: 400.0, align: doc4me_doc::props::TabAlign::Right, leader: Default::default() }])
+    })
+    .unwrap();
+    let l = lay(&d);
+    let end = l.caret(&Pos::body(0, 10)).unwrap().x;
+    assert!((end - 472.0).abs() < 1.0, "{end}");
+}
+
+#[test]
+fn lists_get_labels_and_indent() {
+    let mut d = Document::from_text("one\ntwo\nthree");
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(2, 5), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let labels: Vec<String> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Lines { para, .. } = it { para.label.as_ref().map(|x| x.text.clone()) } else { None })
+        .collect();
+    assert_eq!(labels, vec!["1.", "2.", "3."]);
+    let x = l.caret(&Pos::body(0, 0)).unwrap().x;
+    assert!((x - 108.0).abs() < 0.5, "{x}");
+}
+
+#[test]
+fn a_list_style_with_its_own_indents_keeps_them_over_the_list_levels() {
+    // govuk-046: style "Number 3" brings a list and indents 36 pt; its level says 56.55 pt. Word's
+    // wrapped lines start at the style's indent. zenodo-067: when the indents come from a base
+    // style above the one that brings the list, the list level's indents win.
+    use doc4me_doc::{ParaProps, Style, StyleKind};
+    let second_line_x = |own: bool| {
+        let mut d = Document::from_text(&"words to wrap onto a second line ".repeat(8));
+        let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+        let indents = ParaProps { indent_left: Some(60.0), indent_first: Some(-60.0), ..Default::default() };
+        let num = ParaProps { numbering: Some(doc4me_doc::props::NumRef { num: id, level: 0 }), ..Default::default() };
+        std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
+            id: "Base".into(),
+            name: "Base".into(),
+            kind: StyleKind::Paragraph,
+            para: if own { ParaProps::default() } else { indents.clone() },
+            ..Default::default()
+        });
+        let para = if own { ParaProps { numbering: num.numbering, ..indents } } else { num };
+        std::sync::Arc::make_mut(&mut d.styles).upsert(Style {
+            id: "List".into(),
+            name: "List".into(),
+            kind: StyleKind::Paragraph,
+            based_on: Some("Base".into()),
+            para,
+            ..Default::default()
+        });
+        d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.style = Some("List".into())).unwrap();
+        let l = lay(&d);
+        let line =
+            l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { para.lines.get(1).cloned() } else { None }).unwrap();
+        l.caret(&Pos::body(0, line.start)).unwrap().x
+    };
+    assert!((second_line_x(true) - 132.0).abs() < 0.5, "style's own indents: {}", second_line_x(true));
+    assert!((second_line_x(false) - 108.0).abs() < 0.5, "base style's indents: {}", second_line_x(false));
+}
+
+#[test]
+fn chinese_counting_list_labels_and_their_font_runs() {
+    // Issue #534: a "一、" list showed digits, drawn with glyph ids of another font.
+    use doc4me_doc::section::NumFormat;
+    let mut d = Document::from_text("甲\n乙\n丙");
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+        if let Some(l) = a.levels.first_mut() {
+            l.format = NumFormat::ChineseCounting;
+            l.text = "%1、".into();
+        }
+    }
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(2, 3), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let labels = |d: &Document| -> Vec<(String, Vec<(String, bool)>)> {
+        let l = lay(d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clone()) } else { None })
+            .filter_map(|pl| {
+                let lab = pl.label.clone()?;
+                // Every run draws glyphs of its own face.
+                let runs = lab
+                    .runs
+                    .iter()
+                    .map(|r| {
+                        let face = &pl.styles[r.style as usize].face;
+                        let gids: Vec<u32> = lab.glyphs[r.glyphs.clone()].iter().map(|g| g.gid).collect();
+                        (r.text.clone(), r.text.chars().all(|c| gids.contains(&face.glyph_for(c))))
+                    })
+                    .collect();
+                Some((lab.text, runs))
+            })
+            .collect()
+    };
+    let got = labels(&d);
+    assert_eq!(got.iter().map(|(t, _)| t.as_str()).collect::<Vec<_>>(), ["一、", "二、", "三、"]);
+    // A decimal label next to a CJK comma mixes faces when the Latin face lacks the comma.
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+        if let Some(l) = a.levels.first_mut() {
+            l.format = NumFormat::Decimal;
+        }
+    }
+    for (text, runs) in labels(&d).into_iter().chain(got) {
+        assert_eq!(runs.iter().map(|(t, _)| t.as_str()).collect::<String>(), text);
+        assert!(runs.iter().all(|(_, own)| *own), "{text}: {runs:?}");
+    }
+}
+
+#[test]
+fn symbol_font_bullet_without_the_font_draws_a_bullet() {
+    // Word's default bullet: U+F0B7 in Symbol.
+    let mut d = Document::from_text("one");
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::BulletChar('\u{F0B7}'));
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+        if let Some(l) = a.levels.first_mut() {
+            l.chr.font = Some("Symbol".into());
+        }
+    }
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let label = l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { para.label.clone() } else { None }).unwrap();
+    // Where a real Symbol font with the private-use code is installed (Windows), the code stays.
+    let symbol = doc4me_fonts::word::resolve("Symbol", false, false);
+    let expected = if symbol.substituted || !symbol.face.covers('\u{F0B7}') { "\u{2022}" } else { "\u{F0B7}" };
+    assert_eq!(label.text, expected);
+    assert_eq!(label.glyphs.len(), 1);
+}
+
+#[test]
+fn a_bigger_list_number_adds_only_what_sticks_out_above_the_text() {
+    // zenodo-165: 10 pt numbers on 8 pt Times New Roman at 1.15. The multiple scales the text's
+    // line; the number adds its ascent over the text's unscaled, and its descent fits below the
+    // baseline. Word's PDF steps the lines after such items 18.5 pt on, not 19.0 (zenodo-039 and
+    // zenodo-052 show the same with Symbol bullets).
+    use doc4me_doc::props::LineSpacing;
+    let props = doc4me_doc::CharProps { font: Some("Times New Roman".into()), size: Some(8.0), ..Default::default() };
+    let mut p = doc4me_doc::Paragraph::with_text("Normality test", props.clone());
+    p.mark = props;
+    p.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::para_block(p)];
+    let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+        for l in a.levels.iter_mut() {
+            l.chr.size = Some(10.0);
+            l.chr.font = Some("Times New Roman".into());
+        }
+    }
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 })).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+    let text = para.clusters.get(para.lines[0].c0).and_then(|c| para.styles.get(c.style as usize)).expect("the text's style");
+    let label = para.label.as_ref().and_then(|lab| lab.runs.first()).and_then(|r| para.styles.get(r.style as usize)).expect("a numbered label");
+    assert!(label.ascent > text.ascent, "the number stands taller than the text");
+    let expected = (text.ascent + text.descent) * 1.15 + (label.ascent - text.ascent);
+    let line = &para.lines[0];
+    assert!(
+        (line.height - expected).abs() < 0.01,
+        "line {} for text {}/{} and number {}/{}",
+        line.height,
+        text.ascent,
+        text.descent,
+        label.ascent,
+        label.descent
+    );
+    assert!((line.baseline - line.top - label.ascent).abs() < 0.01, "the number's ascent sets the baseline");
+}
+
+#[test]
+fn a_justified_line_takes_in_a_word_only_if_it_sticks_out_a_little() {
+    // zenodo-157: Word shrinks a justified line's spaces to take in a word sticking out by up to
+    // about 0.35 of it (with the space before), not more, even when the spaces could give it.
+    let text = "aa bb cc dd ee ff gg hh ii jj kk ll mm nn oo pp qq rr ss tt uu vv ww xx yy zz";
+    let lines = |frac: f32| {
+        let mut d = Document::from_text(text);
+        let width = d.last_section.text_width();
+        let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        p.props.align = Some(Align::Justify);
+        p.props.space_after = Some(0.0);
+        // The natural width of the text and of its last word with the space before it.
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        let total: f32 = para.clusters.iter().map(|c| c.adv).sum();
+        let space = para.clusters.iter().rposition(|c| c.kind == crate::para::ClKind::Space).unwrap();
+        let last: f32 =
+            para.clusters[space..].iter().filter(|c| matches!(c.kind, crate::para::ClKind::Space | crate::para::ClKind::Text)).map(|c| c.adv).sum();
+        assert!(total < width, "the test text fits one line: {total} in {width}");
+        // Room for all but `frac` of the last word: indent the right edge in.
+        let room = total - frac * last;
+        let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        p.props.indent_right = Some(width - room);
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.len()
+    };
+    assert_eq!(lines(0.30), 1, "sticking out by 0.30 of it, the last word is taken in");
+    assert_eq!(lines(0.40), 2, "sticking out by 0.40 of it, it goes to the next line");
+}
+
+#[test]
+fn a_rows_largest_cell_margins_frame_its_tallest_cell() {
+    // zenodo-173: the first two cells have 4 pt top and bottom margins and one line; the example
+    // cell has no margins and several lines. Word's row is the example's text plus 8 pt.
+    use doc4me_doc::props::LineSpacing;
+    let row_height = |margins: bool| {
+        let mut d = Document::from_text("Before");
+        let mut t = Table::new(1, 2, 300.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        let para = |text: &str| {
+            let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+            p.props.space_after = Some(0.0);
+            p.props.space_before = Some(0.0);
+            doc4me_doc::para_block(p)
+        };
+        t.rows[0].cells[0].blocks = vec![para("name")];
+        if margins {
+            t.rows[0].cells[0].props.margins = Some([4.0, 4.0, 4.0, 4.0]);
+        }
+        t.rows[0].cells[1].blocks = vec![para("one\ntwo\nthree")];
+        t.props.borders = None;
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        d.insert_block(StoryRef::Body, &Path::top(2), doc4me_doc::Block::Para(doc4me_doc::Paragraph::with_text("After", Default::default())))
+            .unwrap();
+        let l = lay(&d);
+        let y = |idx: u32| {
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [idx]).then_some(*y) } else { None }).unwrap()
+        };
+        y(2) - y(0)
+    };
+    let (with, without) = (row_height(true), row_height(false));
+    assert!((with - without - 8.0).abs() < 0.01, "the row is 8 pt taller with the first cell's margins: {with} vs {without}");
+}
+
+#[test]
+fn tables_lay_out_cells() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(2, 3, 468.0);
+    t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("cell text", Default::default()))];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let pos = Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 };
+    let c = l.caret(&pos).unwrap();
+    assert!(c.x > 72.0 + 150.0 && c.x < 72.0 + 170.0, "{c:?}");
+    let after = l.caret(&Pos::body(2, 0)).unwrap();
+    assert!(after.top > c.top + 20.0);
+    let rules = l.pages[0].items.iter().filter(|i| matches!(i, Placed::Rule { .. })).count();
+    assert!(rules >= 12, "rules {rules}");
+    assert!(l.cell_at(0, c.x, c.top + 2.0).is_some());
+}
+
+#[test]
+fn no_line_break_after_a_slash_before_a_sign_or_before_a_joined_bracket() {
+    // zenodo-022 "/~/media", zenodo-146 "/_Remarks", zenodo-168 "Ch.[arl]es": Word splits none.
+    let text: String = (0..120).map(|i| format!("w{} https://e.org/~/x{} Ch.[arl]es{} ", "x".repeat(i % 9), i, i % 7)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(
+                        !before.ends_with('/') && !(after.starts_with('[') && before.ends_with('.')),
+                        "line starts at {:?}",
+                        &text[line.start..line.stop]
+                    );
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn no_line_break_after_a_hyphen_joined_to_a_symbol_character() {
+    // zenodo-141: "π-π", Symbol's U+F070 either side of "-", stays whole in Word's PDF.
+    let text: String = (0..160).map(|i| format!("{}\u{F070}-\u{F070}{} ", "x".repeat(i % 61), "y".repeat(12))).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    assert!(!text[..line.start].ends_with('-'), "line starts at {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn no_line_break_after_a_query_mark_in_an_address_or_before_a_joined_em_dash() {
+    // Word keeps "watch?v=…" and "scenarios—adversarial" whole (zenodo-012, zenodo-083).
+    let text: String =
+        (0..120).map(|i| format!("w{} https://e.org/watch?v={} scenarios\u{2014}adversarial{} ", "x".repeat(i % 9), i, i % 7)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(!before.ends_with('?') && !after.starts_with('\u{2014}'), "line starts at {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn a_field_end_between_a_bracket_and_a_comma_is_no_line_break() {
+    // zenodo-174: a citation field ends between "2020)" and ", se convierte"; Word breaks as if the
+    // field's markers weren't there, so no line starts with the comma.
+    let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+    for i in 0..60 {
+        let at = p.text.len();
+        p.insert_text(at, &format!("w{} (Cite et al., {})", "x".repeat(i % 9), 2000 + i), &Default::default()).unwrap();
+        let at = p.text.len();
+        p.insert_object(at, InlineObject::FieldEnd, &Default::default()).unwrap();
+        let at = p.text.len();
+        p.insert_text(at, ", y mas ", &Default::default()).unwrap();
+    }
+    let text = p.text.clone();
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let start = text[line.start..].trim_start_matches(doc4me_doc::para::OBJ);
+                    assert!(!start.starts_with(','), "line starts with a comma: {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn a_percentage_table_width_counts_the_cell_margins_before_word_2013() {
+    // govuk-044 (compatibility mode 14): 97.76% of 453.15 pt plus the 5.4 pt side margins is
+    // 453.56 pt, the grid Word saved; from mode 15 the percentage is of the text width alone.
+    let width = |mode: u32| {
+        let mut d = Document::from_text("before\nafter");
+        d.settings.compat_mode = mode;
+        let mut t = Table::new(1, 2, 200.0);
+        t.props.width_pct = Some(100.0);
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let a = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 }).unwrap().x;
+        let b = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 }).unwrap().x;
+        2.0 * (b - a)
+    };
+    let text = 612.0 - 144.0;
+    assert!((width(15) - text).abs() < 0.5, "mode 15: {}", width(15));
+    assert!((width(14) - (text + 10.8)).abs() < 0.5, "mode 14: {}", width(14));
+}
+
+#[test]
+fn a_fixed_table_takes_its_first_rows_cell_widths_over_a_disagreeing_grid() {
+    // zenodo-115/-137: Word draws a fixed-layout table's columns at the first row's cell widths
+    // when the file's grid says otherwise.
+    let at = |cells: [Option<f32>; 2]| {
+        let mut d = Document::from_text("before\nafter");
+        let mut t = Table::new(1, 2, 453.6);
+        t.grid = vec![298.8, 154.8];
+        t.props.fixed = true;
+        for (cell, w) in t.rows[0].cells.iter_mut().zip(cells) {
+            cell.props.width = w;
+        }
+        t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("cell", Default::default()))];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 }).unwrap().x
+    };
+    let equal = at([Some(230.4), Some(230.4)]);
+    let grid = at([None, None]);
+    assert!((grid - equal - 68.4).abs() < 1.0, "cell widths {equal}, grid {grid}");
+    // Matching widths change nothing.
+    assert!((at([Some(298.8), Some(154.8)]) - grid).abs() < 0.01);
+}
+
+#[test]
+fn omitted_leading_grid_columns_offset_table_cells() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(1, 3, 468.0);
+    t.rows[0].cells.pop();
+    t.rows[0].props.grid_before = 1;
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("offset cell", Default::default()))];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+
+    let l = lay(&d);
+    let caret = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 }).unwrap();
+    assert!(caret.x > 72.0 + 150.0, "{caret:?}");
+}
+
+/// A vertical merge is one cell: its box spans the rows, a click anywhere in it finds it, and the
+/// continuation row's box is `covered` (no gridline, not a hit).
+#[test]
+fn a_vertical_merge_lays_out_as_one_cell() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(3, 3, 468.0);
+    for row in t.rows.iter_mut().take(2) {
+        row.cells.truncate(1);
+        row.props.grid_before = 1;
+    }
+    t.rows[0].cells[0].props.vmerge = doc4me_doc::props::VMerge::Restart;
+    t.rows[1].cells[0].props.vmerge = doc4me_doc::props::VMerge::Continue;
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let cells: Vec<_> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|i| if let Placed::Cell { rect, row, cell: 0, covered, .. } = i { Some((*row, *rect, *covered)) } else { None })
+        .collect();
+    let (r0, r1) = (cells[0].1, cells[1].1);
+    assert!(!cells[0].2 && cells[1].2 && !cells[2].2, "{cells:?}");
+    assert!((r0.bottom() - r1.bottom()).abs() < 0.01 && r0.h > r1.h, "{r0:?} {r1:?}");
+    // The lower half of the merge hits the restart cell (row 0), not the continuation row.
+    let hit = l.cell_at(0, r1.x + 5.0, r1.y + r1.h / 2.0).unwrap();
+    assert_eq!((hit.2, hit.3), (0, 0));
+}
+
+/// A 1×3 table after "before" whose middle cell holds `text` running `dir`.
+fn turned_table(dir: TextDirection, text: &str, row: Option<f32>) -> Document {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(1, 3, 468.0);
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("plain", Default::default()))];
+    t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))];
+    t.rows[0].cells[1].props.text_direction = dir;
+    if let Some(h) = row {
+        t.rows[0].props.height = Some(h);
+        t.rows[0].props.height_rule = doc4me_doc::props::HeightRule::Exact;
+    }
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    d
+}
+
+#[test]
+fn turned_text_does_not_widen_its_autofit_column() {
+    // zenodo-049: a 32.25 pt column of btLr "INDICE" cells beside 315.8 pt of text stays 32.25 pt
+    // wide in Word's PDF; measured along the line, the word would widen it to 55 pt.
+    let first_w = |dir: TextDirection| {
+        let mut d = Document::from_text("before\nafter");
+        let mut t = Table::new(1, 2, 348.05);
+        t.grid = vec![32.25, 315.8];
+        for (c, w) in t.rows[0].cells.iter_mut().zip([32.25, 315.8]) {
+            c.props.width = Some(w);
+        }
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("INDICEINDICE", Default::default()))];
+        t.rows[0].cells[0].props.text_direction = dir;
+        t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Some text beside it.", Default::default()))];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        l.pages[0].items.iter().find_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.w) } else { None }).unwrap()
+    };
+    assert!((first_w(TextDirection::Up) - 32.25).abs() < 0.01, "{}", first_w(TextDirection::Up));
+    assert!(first_w(TextDirection::Horizontal) > 40.0, "horizontal text still widens it: {}", first_w(TextDirection::Horizontal));
+}
+
+fn turned_lines(l: &DocLayout) -> &Placed {
+    l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [1, 0, 1, 0])).unwrap()
+}
+
+/// Table Layout › Text Direction (#226): turned cell text runs along the cell's height, the row
+/// grows to fit it, and caret, clicks and drawing follow the turn.
+#[test]
+fn turned_cell_text_runs_down_the_cell() {
+    let text = "Turned cell text";
+    let d = turned_table(TextDirection::Down, text, None);
+    let l = lay(&d);
+    let it = turned_lines(&l);
+    assert!(matches!(it, Placed::Lines { turn: TextDirection::Down, l0: 0, l1: 1, .. }), "one unwrapped line: {it:?}");
+    let b = it.turned_bounds().unwrap();
+    // Tall and narrow (one Sarabun line, 1.853 em: 22.2 pt at 12 pt), against the cell's right
+    // edge (cell 2 spans x 228..384, 5.4pt margins).
+    assert!(b.h > 60.0 && b.w < 24.0, "{b:?}");
+    assert!((b.right() - (72.0 + 312.0 - 5.4)).abs() < 1.0 && b.x > 72.0 + 156.0, "{b:?}");
+    // The row grew to hold the text: the next paragraph starts below it.
+    let after = l.caret(&Pos::body(2, 0)).unwrap();
+    assert!(after.top > b.bottom(), "{after:?} vs {b:?}");
+    let cell = l.pages[0].items.iter().find_map(|i| if let Placed::Cell { rect, cell: 1, .. } = i { Some(*rect) } else { None }).unwrap();
+    assert!(cell.h >= b.h, "{cell:?}");
+    // The caret lies across the page and moves down as the text goes on.
+    let pos = |off| Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off };
+    let c0 = l.caret(&pos(0)).unwrap();
+    let c1 = l.caret(&pos(text.len())).unwrap();
+    assert!(c0.width > 5.0 && c0.height == 0.0, "{c0:?}");
+    assert!((c0.top - b.y).abs() < 1.0 && c1.top > c0.top + 50.0, "{c0:?} {c1:?}");
+    assert!(c0.x >= b.x - 0.5 && c0.x + c0.width <= b.right() + 0.5, "{c0:?} {b:?}");
+    // A click on the turned text lands in it, by how far down the click is.
+    let hit = l.hit(0, b.x + b.w / 2.0, b.y + b.h * 0.6, StoryRef::Body).unwrap();
+    assert_eq!(hit.path, Path(vec![1, 0, 1, 0]));
+    assert!(hit.off > 3 && hit.off < text.len(), "{hit:?}");
+    // Selection highlights are turned too: tall, inside the text's area.
+    let sel = l.selection_rects(&d, &pos(0), &pos(text.len()), 0);
+    assert!(sel.iter().all(|(_, r)| r.h > r.w && r.x >= b.x - 1.0 && r.right() <= b.right() + 1.0), "{sel:?}");
+    // Drawn in a turned frame.
+    let draws = display::page_display(&d, &l.pages[0], &Default::default());
+    let turned = draws.iter().find_map(|x| if let display::Draw::Turned { turn, items, .. } = x { Some((*turn, items)) } else { None });
+    let (turn, items) = turned.expect("turned draw");
+    assert_eq!(turn, TextDirection::Down);
+    assert!(items.iter().any(|x| matches!(x, display::Draw::Glyphs { text, .. } if text.contains("Turned"))), "{items:?}");
+}
+
+#[test]
+fn turned_up_cell_text_reads_bottom_to_top() {
+    let text = "Bottom to top";
+    let d = turned_table(TextDirection::Up, text, None);
+    let l = lay(&d);
+    let b = turned_lines(&l).turned_bounds().unwrap();
+    // Against the cell's left edge; the text starts at the bottom and climbs.
+    assert!((b.x - (72.0 + 156.0 + 5.4)).abs() < 1.0, "{b:?}");
+    let pos = |off| Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off };
+    let (c0, c1) = (l.caret(&pos(0)).unwrap(), l.caret(&pos(text.len())).unwrap());
+    assert!((c0.top - b.bottom()).abs() < 1.0 && c1.top < c0.top - 50.0, "{c0:?} {c1:?} {b:?}");
+    let hit = l.hit(0, b.x + b.w / 2.0, b.bottom() - 2.0, StoryRef::Body).unwrap();
+    assert_eq!((hit.path, hit.off), (Path(vec![1, 0, 1, 0]), 0));
+}
+
+#[test]
+fn turned_text_wraps_in_an_exact_row() {
+    let d = turned_table(TextDirection::Down, &"word ".repeat(30), Some(72.0));
+    let l = lay(&d);
+    let it = turned_lines(&l);
+    let lines = if let Placed::Lines { l0, l1, .. } = it { l1 - l0 } else { 0 };
+    assert!(lines > 2, "the text wraps at the row height");
+    let b = it.turned_bounds().unwrap();
+    assert!(b.h <= 72.0 && b.w > 30.0, "{b:?}");
+    let after = l.caret(&Pos::body(2, 0)).unwrap();
+    assert!(after.top < b.y + 72.0 + 30.0, "the row keeps its exact height: {after:?}");
+}
+
+/// A minimum row height wraps turned text to it rather than growing (zenodo-138's header row of
+/// turned column names); a word longer than it breaks between characters, as across a narrow cell.
+#[test]
+fn turned_text_wraps_to_a_minimum_row_height() {
+    let at_least = |text: &str| {
+        let mut d = turned_table(TextDirection::Up, text, Some(72.0));
+        if let Some(doc4me_doc::Block::Table(t)) = d.body.get_mut(1).map(std::sync::Arc::make_mut) {
+            t.rows[0].props.height_rule = doc4me_doc::props::HeightRule::AtLeast;
+        }
+        let l = lay(&d);
+        let it = turned_lines(&l).clone();
+        let lines = if let Placed::Lines { l0, l1, .. } = &it { l1 - l0 } else { 0 };
+        (lines, it.turned_bounds().unwrap())
+    };
+    let (lines, b) = at_least(&"word ".repeat(30));
+    assert!(lines > 2 && b.h <= 72.0, "wraps at the minimum height: {lines} lines, {b:?}");
+    let (lines, b) = at_least(&"x".repeat(40));
+    assert!(lines > 1 && b.h <= 72.0, "a long word breaks to the minimum height: {lines}, {b:?}");
+}
+
+#[test]
+fn hostile_turned_cells_never_panic() {
+    // Empty, huge and nested turned cells, in exact rows too small for anything.
+    for dir in [TextDirection::Down, TextDirection::Up] {
+        for row in [None, Some(0.5), Some(1e9)] {
+            let mut d = turned_table(dir, "", row);
+            let l = lay(&d);
+            let _ = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 1, 0]), off: 0 });
+            let mut inner = Table::new(1, 1, 20.0);
+            inner.rows[0].cells[0].props.text_direction = dir;
+            if let Some(Block::Table(t)) = d.body.get_mut(1).map(Arc::make_mut) {
+                t.rows[0].cells[1].blocks.insert(0, Arc::new(Block::Table(inner)));
+            }
+            let l = lay(&d);
+            for p in &l.pages {
+                let _ = display::page_display(&d, p, &Default::default());
+            }
+        }
+    }
+    let l = lay(&turned_table(TextDirection::Down, &"long ".repeat(5000), None));
+    assert!(!l.pages.is_empty());
+}
+
+fn rules_on_page0(l: &DocLayout) -> Vec<f32> {
+    l.pages[0].items.iter().filter_map(|i| if let Placed::Rule { border, .. } = i { Some(border.width) } else { None }).collect()
+}
+
+#[test]
+fn table_style_borders_survive_empty_tbl_borders() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(2, 2, 468.0); // defaults to the TableGrid style
+    t.props.borders = Some(Borders::default()); // what an empty <w:tblBorders/> parses to
+    for r in &mut t.rows {
+        for c in &mut r.cells {
+            c.props.borders = Some(Borders::default());
+        }
+    }
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    assert!(rules_on_page0(&l).len() >= 8, "rules {:?}", rules_on_page0(&l));
+}
+
+#[test]
+fn table_own_border_overrides_only_that_side() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(2, 2, 468.0);
+    t.props.borders = Some(Borders { top: Some(Border::single(2.0)), ..Default::default() });
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let w = rules_on_page0(&l);
+    assert!(w.contains(&2.0), "own top missing: {w:?}");
+    assert!(w.iter().filter(|x| (**x - 0.5).abs() < 1e-6).count() >= 6, "style sides missing: {w:?}");
+}
+
+#[test]
+fn table_nil_border_hides_style_side() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(1, 1, 468.0); // 1×1: no inside edges
+    t.props.borders = Some(Borders::all(Border { style: BorderStyle::None, width: 0.0, color: None, space: 0.0 }));
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    assert!(rules_on_page0(&lay(&d)).is_empty());
+}
+
+#[test]
+fn table_without_style_stays_borderless() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(2, 2, 468.0);
+    t.props.style = None;
+    t.props.borders = Some(Borders::default());
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    assert!(rules_on_page0(&lay(&d)).is_empty());
+}
+
+#[test]
+fn headers_and_page_fields() {
+    let mut d = Document::from_text(&"para\n".repeat(120));
+    let mut hp = doc4me_doc::Paragraph::new();
+    hp.insert_object(
+        0,
+        InlineObject::Field { instr: "PAGE".into(), result: String::new(), locked: false, code: false, form: None },
+        &Default::default(),
+    )
+    .unwrap();
+    let id = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(hp)]);
+    d.last_section.footers.default = Some(id);
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    for (i, p) in l.pages.iter().enumerate() {
+        assert_eq!(p.footer_story, Some(id));
+        let label = p.footer.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clusters.len()) } else { None });
+        assert!(label.is_some(), "page {i}");
+    }
+    let c = l.caret_on(&Pos { story: StoryRef::Part(id), path: Path::top(0), off: 0 }, 1).unwrap();
+    assert_eq!(c.page, 1);
+    assert!(c.top > 700.0);
+}
+
+/// Spaces typed at the end of a line hang past the right margin (they don't wrap), but the caret
+/// after them stays at the margin, as in Word, instead of running off the page (#2146). A letter
+/// typed after them wraps to the next line. Same in the body and in a header.
+#[test]
+fn caret_after_hanging_spaces_stays_at_the_margin() {
+    let spaces = format!("a{}", " ".repeat(200));
+    for header in [false, true] {
+        for text in [spaces.clone(), format!("{spaces}b")] {
+            let mut d = Document::new();
+            let p = doc4me_doc::Paragraph::with_text(&text, Default::default());
+            let pos = if header {
+                let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(p)]);
+                d.last_section.headers.default = Some(id);
+                Pos { story: StoryRef::Part(id), path: Path::top(0), off: text.len() }
+            } else {
+                d.body = vec![doc4me_doc::para_block(p)];
+                Pos::body(0, text.len())
+            };
+            let right = d.last_section.page_w - d.last_section.margin_right;
+            let l = lay(&d);
+            let items = if header { &l.pages[0].header } else { &l.pages[0].items };
+            let lines = items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.lines.len()) } else { None }).unwrap();
+            let c = l.caret(&pos).unwrap();
+            let typed = text.ends_with('b');
+            assert_eq!(lines, if typed { 2 } else { 1 }, "header {header}, letter typed {typed}");
+            assert!(c.x <= right + 0.5, "header {header}, letter typed {typed}: caret at {} past the margin at {right}", c.x);
+            if !typed {
+                assert!(c.x >= right - 0.5, "header {header}: the caret sits at the margin, after the spaces ({})", c.x);
+            }
+        }
+    }
+}
+
+#[test]
+fn tall_first_page_header_pushes_body_down() {
+    let mut d = Document::from_text(&"para\n".repeat(120));
+    let tall: Vec<_> = (0..12).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::new())).collect();
+    let id = d.add_part(doc4me_doc::PartKind::Header, tall);
+    d.last_section.headers.first = Some(id);
+    d.last_section.title_page = true;
+    let l = lay(&d);
+    let first = l.caret(&Pos::body(0, 0)).unwrap();
+    assert!(first.top > d.last_section.margin_top + 50.0, "{first:?}");
+    // The first paragraph on page 2 (which has no header) sits higher than page 1's first line,
+    // whatever the installed fonts do to pagination.
+    let later = (0..120).filter_map(|i| l.caret(&Pos::body(i, 0))).find(|c| c.page == 1).unwrap();
+    assert!(later.top < first.top, "{later:?}");
+}
+
+/// A table in a cell clears a floating object that would cover any of its rows, not only one in
+/// the way of its top (zenodo-053's route sketch, anchored 146.6 pt below the paragraph before a
+/// nested table, puts the table under it in Word's PDF).
+#[test]
+fn a_nested_table_clears_a_float_that_would_cover_its_rows() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut cp = doc4me_doc::Paragraph::with_text("text", Default::default());
+    let f = Float { wrap: Wrap::TopAndBottom, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, y: 30.0, ..Default::default() };
+    cp.insert_object(0, rect_shape(100.0, 40.0, f), &Default::default()).unwrap();
+    let inner = Table::new(3, 1, 200.0);
+    let mut outer = Table::new(1, 1, 400.0);
+    outer.rows[0].cells[0].blocks =
+        vec![doc4me_doc::para_block(cp), doc4me_doc::Block::Table(inner).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::Block::Table(outer).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    let shape = shapes(&l.pages[0].items)[0];
+    let inner_top = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Cell { rect, table, .. } = it { (table.0.len() > 1).then_some(rect.y) } else { None })
+        .fold(f32::MAX, f32::min);
+    assert!(inner_top >= shape.bottom() - 0.01, "the nested table starts at {inner_top}, under the float ending at {}", shape.bottom());
+}
+
+/// An empty paragraph ending a continuous section takes no room even when it anchors floating
+/// objects, and they stand from where it is (zenodo-153's title and introduction boxes, anchored
+/// in an empty Heading 1 with 12 pt before, stand from the top margin in Word's PDF).
+#[test]
+fn a_section_mark_holding_only_float_anchors_takes_no_room() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let box_y = |with_float: bool| {
+        let mut d = Document::from_text("first\nafter");
+        let mut s1 = d.last_section.clone();
+        s1.start = doc4me_doc::section::SectionStart::NextPage;
+        d.last_section.start = doc4me_doc::section::SectionStart::Continuous;
+        {
+            let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+            p.text.clear();
+            p.props.space_before = Some(12.0);
+            p.section = Some(Box::new(s1));
+        }
+        if with_float {
+            let f = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, ..Default::default() };
+            d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().insert_object(0, rect_shape(50.0, 20.0, f), &Default::default()).unwrap();
+        }
+        let top = d.last_section.margin_top;
+        let l = lay(&d);
+        let after = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, y, .. } = it { (para.text_len == 5).then_some(*y) } else { None })
+            .unwrap();
+        let shape = shapes(&l.pages[0].items).first().map(|r| r.y - top);
+        (after - top, shape)
+    };
+    let (plain, _) = box_y(false);
+    let (with, shape) = box_y(true);
+    assert!((with - plain).abs() < 0.01, "the anchors take no room: {with} against {plain}");
+    assert!(shape.is_some_and(|y| y.abs() < 0.01), "the box stands from the top margin: {shape:?}");
+}
+
+/// A continuous section with a different first page shares its first page with the section
+/// before, so the next page it runs onto has the ordinary header, as in Word (zenodo-115's
+/// two-column section, continuous from page 1, shows the running header on page 2).
+#[test]
+fn a_continuous_sections_next_page_takes_the_ordinary_header() {
+    let mut d = Document::from_text(&"para\n".repeat(200));
+    let header = |d: &mut Document, text: &str| {
+        d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))])
+    };
+    let (first, default) = (header(&mut d, "FIRST"), header(&mut d, "DEFAULT"));
+    let mut s1 = d.last_section.clone();
+    s1.headers.first = Some(first);
+    s1.headers.default = Some(default);
+    s1.title_page = true;
+    d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().section = Some(Box::new(s1));
+    d.last_section.start = doc4me_doc::section::SectionStart::Continuous;
+    d.last_section.title_page = true;
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    let shows = |pg: usize, id: u32| l.pages[pg].header_story == Some(id);
+    assert!(shows(0, first), "page 1 is the first page");
+    assert!(shows(1, default) && !shows(1, first), "page 2 has the running header");
+}
+
+#[test]
+fn cache_reuses_unchanged_paragraphs() {
+    let d = Document::from_text(&"some text here\n".repeat(50));
+    let mut c = LayoutCache::new();
+    layout(&d, &mut c, &LayoutOptions::default());
+    let misses = c.misses;
+    let mut d2 = d.clone();
+    d2.insert_text(&Pos::body(10, 0), "x", &Default::default()).unwrap();
+    layout(&d2, &mut c, &LayoutOptions::default());
+    assert_eq!(c.misses, misses + 1);
+}
+
+#[test]
+fn selection_rects_cover_range() {
+    let d = Document::from_text("Hello world\nSecond line");
+    let l = lay(&d);
+    let r = l.selection_rects(&d, &Pos::body(0, 6), &Pos::body(1, 6), 0);
+    assert_eq!(r.len(), 2);
+    assert!(r[0].1.w > 20.0);
+}
+
+#[test]
+fn column_segments_take_the_same_x_range_on_every_line() {
+    let d = Document::from_text("abcdef\nabcdef\nab");
+    let l = lay(&d);
+    let left = l.caret(&Pos::body(0, 2)).unwrap().x;
+    let right = l.caret(&Pos::body(0, 4)).unwrap().x;
+    let segs = l.column_segments(&d, &Pos::body(2, 2), &Pos::body(0, 2), right, left, 0, 100);
+    let offs: Vec<(u32, usize, usize)> = segs.iter().map(|(a, b)| (a.path.0[0], a.off, b.off)).collect();
+    assert_eq!(offs, vec![(0, 2, 4), (1, 2, 4), (2, 2, 2)]);
+    // Capped, and junk x gives nothing.
+    assert_eq!(l.column_segments(&d, &Pos::body(0, 2), &Pos::body(2, 2), left, right, 0, 2).len(), 2);
+    assert!(l.column_segments(&d, &Pos::body(0, 2), &Pos::body(2, 2), f32::NAN, right, 0, 100).is_empty());
+}
+
+#[test]
+fn display_has_glyphs_and_marks() {
+    let mut d = Document::from_text("Hello\tworld");
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, 5), &|c| c.underline = Some(doc4me_doc::props::Underline::Single)).unwrap();
+    let l = lay(&d);
+    let items = display::page_display(&d, &l.pages[0], &display::DisplayOptions { marks: true, ..Default::default() });
+    assert!(items.iter().any(|i| matches!(i, display::Draw::Glyphs { .. })));
+    assert!(items.iter().any(|i| matches!(i, display::Draw::Line { .. })));
+    assert!(items.iter().any(|i| matches!(i, display::Draw::Mark { ch: '¶', .. })));
+    assert!(items.iter().any(|i| matches!(i, display::Draw::Mark { ch: '→', .. })));
+}
+
+#[test]
+fn a_tracked_paragraph_mark_shows_in_its_authors_colour() {
+    let mut d = Document::from_text("Split\nhere");
+    d.revisions.push(doc4me_doc::Revision {
+        kind: doc4me_doc::RevisionKind::Insert,
+        author: "Ana".into(),
+        date: String::new(),
+        date_utc: String::new(),
+        move_name: None,
+    });
+    d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().mark.ins = Some(0);
+    let l = lay(&d);
+    let marks = |markup: bool| -> Vec<Option<doc4me_doc::props::Rgb>> {
+        display::page_display(&d, &l.pages[0], &display::DisplayOptions { marks: true, markup, ..Default::default() })
+            .into_iter()
+            .filter_map(|i| if let display::Draw::Mark { ch: '¶', color, .. } = i { Some(color) } else { None })
+            .collect()
+    };
+    assert_eq!(marks(true), [Some(display::revision_color(0)), None]);
+    assert_eq!(marks(false), [None, None]);
+}
+
+#[test]
+fn a_bottom_aligned_section_keeps_its_alignment_when_the_next_starts_a_page() {
+    // zenodo-081: a title page whose section is bottom-aligned, then a top-aligned section on the
+    // next page. The title page's text goes to its foot, not the top.
+    use doc4me_doc::section::{SectionProps, SectionStart};
+    let mut d = Document::from_text("Title\nBody");
+    let first = SectionProps { valign: doc4me_doc::props::VAlign::Bottom, ..Default::default() };
+    d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().section = Some(Box::new(first));
+    d.last_section.start = SectionStart::NextPage;
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let title = l.caret(&Pos::body(0, 0)).unwrap().top;
+    let body = l.caret(&Pos::body(1, 0)).unwrap().top;
+    assert!(title > 600.0, "the title sits at the foot of its page: {title}");
+    assert!(body < 120.0, "the next section's text starts at the top: {body}");
+}
+
+/// An empty mark ending a continuous section that a paragraph's space after has pushed past the
+/// page's foot still takes no room on the next page, and the next section's text starts there at
+/// the top margin (zenodo-125: each page number fills its page to the bottom margin, and the
+/// two-column text after it starts the next page at the top margin in Word's PDF).
+#[test]
+fn a_continuous_section_mark_pushed_past_the_page_end_takes_no_room_on_the_next() {
+    use doc4me_doc::section::{SectionProps, SectionStart};
+    let mut d = Document::from_text("a\n\nb");
+    {
+        let first = d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap();
+        first.props.space_before = Some(560.0);
+        first.props.space_after = Some(200.0);
+    }
+    let ends = SectionProps { start: SectionStart::Continuous, ..Default::default() };
+    d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap().section = Some(Box::new(ends));
+    d.last_section.start = SectionStart::Continuous;
+    d.last_section.columns.count = 2;
+    let l = lay(&d);
+    let top = l.pages[0].body.y;
+    let b_top = l
+        .pages
+        .iter()
+        .skip(1)
+        .flat_map(|pg| &pg.items)
+        .find_map(|it| match it {
+            Placed::Lines { para, y, .. } if para.text_len == 1 => Some(*y),
+            _ => None,
+        })
+        .expect("b on a later page");
+    assert!((b_top - top).abs() < 0.5, "b starts at the top margin ({top}), not at {b_top}");
+}
+
+/// A paragraph with "page break before" that starts a new page drops its space before at the top,
+/// as one after a page break does (govuk-029's "ANNEX 2" sits at the top margin in Word's PDF).
+#[test]
+fn page_break_before_drops_the_space_before_at_the_new_page_top() {
+    let mut d = Document::from_text("a\nb");
+    {
+        let second = d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(1)).unwrap();
+        second.props.page_break_before = Some(true);
+        second.props.space_before = Some(18.0);
+    }
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let top = l.pages[1].body.y;
+    let y = l.pages[1].items.iter().find_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).unwrap();
+    assert!((y - top).abs() < 0.5, "b starts at the top margin ({top}), not {y}");
+}
+
+#[test]
+fn section_breaks_show_with_formatting_marks() {
+    use doc4me_doc::section::{SectionProps, SectionStart};
+    // Two sections: "One" ends the first; the second starts as `start`.
+    let doc = |start: SectionStart| {
+        let mut d = Document::from_text("One\nTwo");
+        d.para_mut(doc4me_doc::StoryRef::Body, &doc4me_doc::Path::top(0)).unwrap().section = Some(Box::new(SectionProps::default()));
+        d.last_section.start = start;
+        d
+    };
+    let labels = |d: &Document, marks: bool| -> (Vec<String>, usize) {
+        let l = lay(d);
+        let items = display::page_display(d, &l.pages[0], &display::DisplayOptions { marks, ..Default::default() });
+        let texts = items.iter().filter_map(|i| if let display::Draw::MarkText { text, .. } = i { Some(text.clone()) } else { None }).collect();
+        let pilcrows = items.iter().filter(|i| matches!(i, display::Draw::Mark { ch: '¶', .. })).count();
+        (texts, pilcrows)
+    };
+    let d = doc(SectionStart::Continuous);
+    // The break replaces the first paragraph's ¶; the last paragraph keeps its own.
+    assert_eq!(labels(&d, true), (vec!["Section Break (Continuous)".to_string()], 1));
+    assert_eq!(labels(&d, false), (vec![], 0));
+    assert_eq!(labels(&doc(SectionStart::NextPage), true).0, ["Section Break (Next Page)"]);
+    assert_eq!(labels(&doc(SectionStart::EvenPage), true).0, ["Section Break (Even Page)"]);
+    assert_eq!(labels(&doc(SectionStart::OddPage), true).0, ["Section Break (Odd Page)"]);
+    // A document with one section has no break.
+    assert_eq!(labels(&Document::from_text("One\nTwo"), true), (vec![], 2));
+}
+
+#[test]
+fn paragraph_marks_sit_past_text_running_the_other_way() {
+    // A left-to-right paragraph ending in Hebrew, and a right-to-left one ending in Latin: the
+    // logically last letters are at the wrong edge, but the ¶ still goes past every glyph.
+    let mut d = Document::from_text("Hello \u{5e9}\u{5dc}\u{5d5}\u{5dd}\n\u{5e9}\u{5dc}\u{5d5}\u{5dd} abc");
+    let at = Pos::body(1, 0);
+    d.format_paragraphs(&at, &at, &|p: &mut ParaProps| p.bidi = Some(true)).unwrap();
+    let l = lay(&d);
+    // Leftmost and rightmost glyph edges (page x) of each paragraph's single line.
+    let extents: Vec<(f32, f32)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Lines { para, x, .. } = it { Some((para, *x)) } else { None })
+        .map(|(pl, x)| {
+            let ln = &pl.lines[0];
+            let edges = (ln.c0..ln.c1).filter_map(|k| Some((ln.cl_left(k)?, ln.cl_right(k)?)));
+            edges.fold((f32::MAX, f32::MIN), |(a, b), (l, r)| (a.min(x + l), b.max(x + r)))
+        })
+        .collect();
+    let marks: Vec<(f32, f32)> = display::page_display(&d, &l.pages[0], &display::DisplayOptions { marks: true, ..Default::default() })
+        .into_iter()
+        .filter_map(|i| if let display::Draw::Mark { ch: '¶', x, size, .. } = i { Some((x, size)) } else { None })
+        .collect();
+    assert_eq!((extents.len(), marks.len()), (2, 2));
+    let ((ltr_x, _), (rtl_x, size)) = (marks[0], marks[1]);
+    assert!(ltr_x >= extents[0].1, "LTR ¶ at {ltr_x} should be right of all glyphs {:?}", extents[0]);
+    assert!(rtl_x + size * 0.5 <= extents[1].0, "RTL ¶ at {rtl_x} should be left of all glyphs {:?}", extents[1]);
+}
+
+fn border_lines(d: &Document) -> Vec<(f32, f32, f32, f32)> {
+    border_lines_in(d, &lay(d))
+}
+
+fn border_lines_in(d: &Document, l: &DocLayout) -> Vec<(f32, f32, f32, f32)> {
+    display::page_display(d, &l.pages[0], &display::DisplayOptions::default())
+        .into_iter()
+        .filter_map(|i| if let display::Draw::Line { x0, y0, x1, y1, .. } = i { Some((x0, y0, x1, y1)) } else { None })
+        .collect()
+}
+
+#[test]
+fn character_border_draws_one_box_around_run() {
+    use doc4me_doc::props::Border;
+    let mut d = Document::from_text("Hello world");
+    assert!(border_lines(&d).is_empty());
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, 5), &|c| c.border = Some(Border::single(0.5))).unwrap();
+    // One layout for both the draw list and the expected geometry: the background font scan can change metrics between layouts.
+    let l = lay(&d);
+    let lines = border_lines_in(&d, &l);
+    assert_eq!(lines.len(), 4, "{lines:?}");
+    let Some(Placed::Lines { para, x, y, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let (gx0, gx1) = (x + para.x_of(0, 0).unwrap(), x + para.x_of(0, 5).unwrap());
+    let (top, bottom) = (*y, y + para.lines[0].height);
+    let horiz: Vec<_> = lines.iter().filter(|l| l.1 == l.3).collect();
+    let vert: Vec<_> = lines.iter().filter(|l| l.0 == l.2).collect();
+    assert_eq!(horiz.len(), 2);
+    assert_eq!(vert.len(), 2);
+    assert!(horiz.iter().any(|h| (h.1 - top).abs() < 0.01) && horiz.iter().any(|h| (h.1 - bottom).abs() < 0.01), "{lines:?}");
+    assert!(horiz.iter().all(|h| (h.0 - gx0).abs() < 0.01 && (h.2 - gx1).abs() < 0.01), "{lines:?} {gx0} {gx1}");
+}
+
+#[test]
+fn equal_adjacent_borders_share_a_box() {
+    use doc4me_doc::props::Border;
+    let mut d = Document::from_text("ab");
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, 2), &|c| c.border = Some(Border::single(0.5))).unwrap();
+    d.format_range(&Pos::body(0, 1), &Pos::body(0, 2), &|c| c.bold = Some(true)).unwrap();
+    assert_eq!(border_lines(&d).len(), 4);
+    d.format_range(&Pos::body(0, 1), &Pos::body(0, 2), &|c| c.border = Some(Border::single(1.0))).unwrap();
+    assert_eq!(border_lines(&d).len(), 8);
+}
+
+#[test]
+fn wrapped_border_boxes_each_line() {
+    use doc4me_doc::props::Border;
+    let text = "boxed ".repeat(20);
+    let mut d = Document::from_text(text.trim_end());
+    let n = d.para_at(&Pos::body(0, 0)).unwrap().len();
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, n), &|c| c.border = Some(Border::single(0.5))).unwrap();
+    assert_eq!(lines_of(&lay(&d)), 2);
+    assert_eq!(border_lines(&d).len(), 8);
+}
+
+#[test]
+fn runs_differing_only_in_link_or_decoration_keep_their_own_style() {
+    let mut d = Document::from_text("Alpha Beta Gamma Delta");
+    let set = |d: &mut Document, a: usize, b: usize, f: &dyn Fn(&mut doc4me_doc::props::CharProps)| {
+        d.format_range(&Pos::body(0, a), &Pos::body(0, b), f).unwrap();
+    };
+    set(&mut d, 0, 5, &|c| c.link = Some("https://a.example/".into()));
+    set(&mut d, 6, 10, &|c| c.link = Some("https://b.example/".into()));
+    set(&mut d, 11, 16, &|c| c.strike = Some(true));
+    set(&mut d, 17, 22, &|c| c.double_strike = Some(true));
+    let l = lay(&d);
+    let items = display::page_display(&d, &l.pages[0], &display::DisplayOptions::default());
+    let link_of = |word: &str| {
+        items.iter().find_map(|i| if let display::Draw::Glyphs { text, link, .. } = i { text.contains(word).then(|| link.clone()) } else { None })
+    };
+    assert_eq!(link_of("Alpha"), Some(Some("https://a.example/".into())));
+    assert_eq!(link_of("Beta"), Some(Some("https://b.example/".into())));
+    let strokes: Vec<_> = items.iter().filter_map(|i| if let display::Draw::Line { stroke, .. } = i { Some(*stroke) } else { None }).collect();
+    assert!(strokes.contains(&display::Stroke::Solid) && strokes.contains(&display::Stroke::Double), "{strokes:?}");
+    // Underline colour is per run too.
+    let mut d = Document::from_text("Red Blue");
+    let red = doc4me_doc::props::Rgb(0xFF, 0, 0);
+    let blue = doc4me_doc::props::Rgb(0, 0, 0xFF);
+    for (a, b, c) in [(0, 3, red), (4, 8, blue)] {
+        d.format_range(&Pos::body(0, a), &Pos::body(0, b), &|p| {
+            p.underline = Some(doc4me_doc::props::Underline::Single);
+            p.underline_color = Some(c);
+        })
+        .unwrap();
+    }
+    let l = lay(&d);
+    let items = display::page_display(&d, &l.pages[0], &display::DisplayOptions::default());
+    let colors: Vec<_> = items.iter().filter_map(|i| if let display::Draw::Line { color, .. } = i { Some(*color) } else { None }).collect();
+    assert!(colors.contains(&red) && colors.contains(&blue), "{colors:?}");
+}
+
+#[test]
+fn web_view_is_one_page() {
+    let d = Document::from_text(&"text ".repeat(3000));
+    let mut c = LayoutCache::new();
+    let l = layout(&d, &mut c, &LayoutOptions { view: ViewMode::Web, web_width: 800.0, ..Default::default() });
+    assert_eq!(l.pages.len(), 1);
+    assert!(l.pages[0].h > 800.0);
+}
+
+#[test]
+fn hostile_props_do_not_panic() {
+    let mut d = Document::from_text("x\ny");
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(1, 0), &|p| {
+        *p = ParaProps { indent_left: Some(1e9), indent_right: Some(1e9), indent_first: Some(-1e9), ..Default::default() }
+    })
+    .unwrap();
+    d.last_section.page_w = 1.0;
+    d.last_section.margin_left = 500.0;
+    let l = lay(&d);
+    assert!(!l.pages.is_empty());
+}
+
+#[test]
+fn layout_is_fast() {
+    let d =
+        Document::from_text(&"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.\n".repeat(3000));
+    let mut c = LayoutCache::new();
+    let t0 = now_ms();
+    let l = layout(&d, &mut c, &LayoutOptions::default());
+    let cold = now_ms() - t0;
+    let mut d2 = d.clone();
+    d2.insert_text(&Pos::body(1500, 0), "x", &Default::default()).unwrap();
+    let t1 = now_ms();
+    let _ = layout(&d2, &mut c, &LayoutOptions::default());
+    let warm = now_ms() - t1;
+    eprintln!("3000 paragraphs, {} pages: cold {cold:.1} ms, warm {warm:.1} ms", l.pages.len());
+    assert!(warm < cold);
+}
+
+#[test]
+fn empty_center_tab_then_right_tab() {
+    let mut d = Document::from_text("left\t\tright");
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.style = Some("Header".into())).unwrap();
+    let l = lay(&d);
+    let end = l.caret(&Pos::body(0, 11)).unwrap().x;
+    assert!((end - (72.0 + 468.0)).abs() < 1.0, "{end}");
+}
+
+#[test]
+fn footnotes_sit_at_page_bottom() {
+    let mut d = Document::from_text(&"Body text line.\n".repeat(30));
+    let mut note = doc4me_doc::Paragraph::with_text("The note text.", Default::default()).styled("FootnoteText");
+    note.props.space_after = Some(0.0);
+    let id = d.add_part(doc4me_doc::PartKind::Footnote, vec![doc4me_doc::para_block(note)]);
+    d.insert_object(
+        &Pos::body(3, 4),
+        InlineObject::NoteRef { kind: doc4me_doc::para::NoteKind::Footnote, id, custom: String::new() },
+        &Default::default(),
+    )
+    .unwrap();
+    let eid =
+        d.add_part(doc4me_doc::PartKind::Endnote, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("An endnote.", Default::default()))]);
+    d.insert_object(
+        &Pos::body(5, 2),
+        InlineObject::NoteRef { kind: doc4me_doc::para::NoteKind::Endnote, id: eid, custom: String::new() },
+        &Default::default(),
+    )
+    .unwrap();
+    let l = lay(&d);
+    let c = l.caret_on(&Pos { story: StoryRef::Part(id), path: Path::top(0), off: 0 }, 0).unwrap();
+    assert_eq!(c.page, 0);
+    assert!(c.top > 650.0 && c.top < 720.0, "{c:?}");
+    let body_bottom = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Lines { story: StoryRef::Body, y, para, l0, l1, .. } = it { item_bottom(*y, para, *l0, *l1) } else { None })
+        .fold(0.0f32, f32::max);
+    assert!(body_bottom < c.top, "{body_bottom} {}", c.top);
+    assert!(l.caret_on(&Pos { story: StoryRef::Part(eid), path: Path::top(0), off: 0 }, 0).is_some());
+}
+
+#[test]
+fn deleted_note_anchors_take_no_number_and_print_no_note() {
+    use doc4me_doc::para::NoteKind;
+    let mut d = Document::from_text("Alpha Beta Gamma");
+    let mut ids = Vec::new();
+    // Footnotes after "Alpha" and "Beta", an endnote after "Gamma" (inserted back to front).
+    for (off, kind, part) in [
+        (16, NoteKind::Endnote, doc4me_doc::PartKind::Endnote),
+        (10, NoteKind::Footnote, doc4me_doc::PartKind::Footnote),
+        (5, NoteKind::Footnote, doc4me_doc::PartKind::Footnote),
+    ] {
+        let id = d.add_part(part, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("A note.", Default::default()))]);
+        d.insert_object(&Pos::body(0, off), InlineObject::NoteRef { kind, id, custom: String::new() }, &Default::default()).unwrap();
+        ids.push(id);
+    }
+    let [end_id, second, first] = ids[..] else { panic!() };
+    // Track-delete the first footnote's anchor and the endnote's anchor.
+    let obj = doc4me_doc::para::OBJ.len_utf8();
+    d.format_range(&Pos::body(0, 5), &Pos::body(0, 5 + obj), &|c| c.del = Some(0)).unwrap();
+    let end = d.para(StoryRef::Body, &Path::top(0)).unwrap().len();
+    d.format_range(&Pos::body(0, end - obj), &Pos::body(0, end), &|c| c.del = Some(0)).unwrap();
+    // The glyphs of each note mark in the body, and whether the endnote's text is placed.
+    let marks = |hide_deleted: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { hide_deleted, ..Default::default() });
+        let items: Vec<&Placed> = l.pages.iter().flat_map(|p| p.items.iter()).collect();
+        let mut marks = HashMap::new();
+        for it in &items {
+            if let Placed::Lines { story: StoryRef::Body, para, .. } = it {
+                for (ci, id) in &para.notes {
+                    let c = &para.clusters[*ci];
+                    marks.insert(*id, para.glyphs[c.g0 as usize..c.g1 as usize].iter().map(|g| g.gid).collect::<Vec<_>>());
+                }
+            }
+        }
+        let endnote = items.iter().any(|i| matches!(i, Placed::Lines { story: StoryRef::Part(p), .. } if *p == end_id));
+        (marks, endnote)
+    };
+    // Markup: footnotes 1 and 2, and the endnote prints.
+    let (full, endnote) = marks(false);
+    assert!(full[&first] != full[&second] && endnote, "{full:?}");
+    // Final text: the surviving footnote is number 1, and the deleted endnote anchor prints no note.
+    let (fin, endnote) = marks(true);
+    assert_eq!(fin.get(&second), full.get(&first), "the surviving footnote keeps number 2");
+    assert!(!endnote, "the endnote of a deleted anchor is printed");
+}
+
+#[test]
+fn hidden_note_anchors_keep_their_number_and_their_note() {
+    // Measured in Word (hidden text not printed): a hidden footnote or endnote reference mark still
+    // takes its number, so the visible footnote after it is 2, and both notes are still printed.
+    use doc4me_doc::para::NoteKind;
+    let mut d = Document::from_text("Alpha Beta Gamma");
+    let mut ids = Vec::new();
+    for (off, kind, part) in [
+        (16, NoteKind::Endnote, doc4me_doc::PartKind::Endnote),
+        (10, NoteKind::Footnote, doc4me_doc::PartKind::Footnote),
+        (5, NoteKind::Footnote, doc4me_doc::PartKind::Footnote),
+    ] {
+        let id = d.add_part(part, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("A note.", Default::default()))]);
+        d.insert_object(&Pos::body(0, off), InlineObject::NoteRef { kind, id, custom: String::new() }, &Default::default()).unwrap();
+        ids.push(id);
+    }
+    let [end_id, second, first] = ids[..] else { panic!() };
+    // Hide the first footnote's anchor and the endnote's anchor.
+    let obj = doc4me_doc::para::OBJ.len_utf8();
+    d.format_range(&Pos::body(0, 5), &Pos::body(0, 5 + obj), &|c| c.hidden = Some(true)).unwrap();
+    let end = d.para(StoryRef::Body, &Path::top(0)).unwrap().len();
+    d.format_range(&Pos::body(0, end - obj), &Pos::body(0, end), &|c| c.hidden = Some(true)).unwrap();
+    // The glyphs of each visible note mark in the body, and which notes' text is placed.
+    let marks = |show_hidden: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        let items: Vec<&Placed> = l.pages.iter().flat_map(|p| p.items.iter()).collect();
+        let mut marks = HashMap::new();
+        for it in &items {
+            if let Placed::Lines { story: StoryRef::Body, para, .. } = it {
+                for (ci, id) in &para.notes {
+                    let c = &para.clusters[*ci];
+                    marks.insert(*id, para.glyphs[c.g0 as usize..c.g1 as usize].iter().map(|g| g.gid).collect::<Vec<_>>());
+                }
+            }
+        }
+        let printed = |id: u32| items.iter().any(|i| matches!(i, Placed::Lines { story: StoryRef::Part(p), .. } if *p == id));
+        (marks, [first, second, end_id].map(printed))
+    };
+    let (shown, printed) = marks(true);
+    assert!(shown[&first] != shown[&second] && printed == [true; 3], "{shown:?} {printed:?}");
+    // Not shown: the visible footnote is still number 2, and every note is printed.
+    let (fin, printed) = marks(false);
+    assert_eq!(fin.get(&second), shown.get(&second), "the visible footnote is renumbered");
+    assert_eq!(printed, [true; 3], "a note whose reference is hidden is not printed");
+}
+
+#[test]
+fn text_wraps_around_square_float() {
+    let mut d = Document::from_text(&"Words flow around the picture here. ".repeat(30));
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Column,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 0.0,
+        dist: 9.0,
+        ..Default::default()
+    };
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 144.0,
+        h: 100.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    let l = lay(&d);
+    let Placed::Lines { para, x, .. } = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).unwrap() else { panic!() };
+    let first = &para.lines[0];
+    assert!(first.left >= 144.0, "first line starts beside the float: {}", first.left);
+    let later = para.lines.iter().find(|ln| ln.top > 120.0).unwrap();
+    assert!(later.left < 1.0, "lines below the float use the full width: {}", later.left);
+    assert!(x + first.left > 72.0 + 144.0);
+    assert!(l.pages[0].items.iter().any(|i| matches!(i, Placed::Shape { .. })));
+}
+
+#[test]
+fn deleted_float_leaves_no_wrap_area_without_markup() {
+    // A square-wrapped shape anchored at the start of the paragraph, its anchor track-deleted.
+    let text = "Words flow around the picture here. ".repeat(30);
+    let mut d = Document::from_text(&text);
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Column,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 0.0,
+        dist: 9.0,
+        dist_top: 9.0,
+        dist_bottom: 9.0,
+        ..Default::default()
+    };
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 144.0,
+        h: 100.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    let obj = doc4me_doc::para::OBJ.len_utf8();
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, obj), &|c| c.del = Some(0)).unwrap();
+    // Where the first line starts, and whether the shape is placed.
+    let first = |hide_deleted: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { hide_deleted, ..Default::default() });
+        let p = &l.pages[0];
+        let Some(Placed::Lines { para, .. }) = p.items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        (para.lines[0].left, p.items.iter().any(|i| matches!(i, Placed::Shape { .. })))
+    };
+    // With markup the deleted shape is shown and the text flows beside it.
+    let (left, shown) = first(false);
+    assert!(left >= 144.0 && shown, "{left} {shown}");
+    // Final text: no shape, and no gap where it was.
+    assert_eq!(first(true), (0.0, false));
+}
+
+#[test]
+fn hidden_float_leaves_no_wrap_area_when_hidden_text_is_not_shown() {
+    // A square-wrapped shape whose anchor is hidden text, through a character style (so only the
+    // resolved formatting says so). Measured in Word: not printed, and the text runs full width.
+    let text = "Words flow around the picture here. ".repeat(30);
+    let mut d = Document::from_text(&text);
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
+        id: "Secret".into(),
+        name: "Secret".into(),
+        kind: doc4me_doc::StyleKind::Character,
+        chr: doc4me_doc::CharProps { hidden: Some(true), ..Default::default() },
+        ..Default::default()
+    });
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Column,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 0.0,
+        dist: 9.0,
+        dist_top: 9.0,
+        dist_bottom: 9.0,
+        ..Default::default()
+    };
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 144.0,
+        h: 100.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    let obj = doc4me_doc::para::OBJ.len_utf8();
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, obj), &|c| c.style = Some("Secret".into())).unwrap();
+    // Where the first line starts, and whether the shape is placed.
+    let first = |show_hidden: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        let p = &l.pages[0];
+        let Some(Placed::Lines { para, .. }) = p.items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        (para.lines[0].left, p.items.iter().any(|i| matches!(i, Placed::Shape { .. })))
+    };
+    // Hidden text shown: the shape is placed and the text flows beside it.
+    let (left, shown) = first(true);
+    assert!(left >= 144.0 && shown, "{left} {shown}");
+    // Not shown: no shape, and no gap where it was.
+    assert_eq!(first(false), (0.0, false));
+}
+
+/// A page-number start or a line-number start near `u32::MAX` (accepted from files and commands)
+/// overflowed when the next page or line was counted: a panic with overflow checks on.
+#[test]
+fn extreme_page_and_line_number_starts_do_not_overflow() {
+    let mut d = Document::from_text("one\ntwo\nthree");
+    for b in d.body.iter_mut() {
+        if let doc4me_doc::Block::Para(p) = std::sync::Arc::make_mut(b) {
+            p.props.page_break_before = Some(true);
+        }
+    }
+    d.last_section.page_num_start = Some(u32::MAX);
+    d.last_section.line_numbers = Some(doc4me_doc::section::LineNumbering { start: u32::MAX, ..Default::default() });
+    let l = lay(&d);
+    assert!(l.pages.len() >= 3, "{} pages", l.pages.len());
+}
+
+#[test]
+fn line_numbers_borders_text_boxes() {
+    let mut d = Document::from_text("one\ntwo\nthree");
+    d.last_section.line_numbers = Some(Default::default());
+    d.last_section.page_borders = Some(doc4me_doc::props::Borders::box_(doc4me_doc::props::Border::single(1.0)));
+    let id = d.add_part(
+        doc4me_doc::PartKind::TextBox,
+        vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("inside the box", Default::default()))],
+    );
+    let tb = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w: 144.0,
+        h: 72.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float: Default::default(),
+        story: Some(id),
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(2, 5), tb, &Default::default()).unwrap();
+    let l = lay(&d);
+    let p = &l.pages[0];
+    let numbers = p.items.iter().filter(|i| matches!(i, Placed::Lines { story: StoryRef::Part(u32::MAX), .. })).count();
+    assert_eq!(numbers, 3);
+    assert!(p.items.iter().filter(|i| matches!(i, Placed::Rule { .. })).count() >= 4);
+    assert!(l.caret(&Pos { story: StoryRef::Part(id), path: Path::top(0), off: 0 }).is_some());
+}
+
+#[test]
+fn tall_rows_split_across_pages() {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(2, 2, 468.0);
+    let long = "Row text that keeps going and going so the cell grows taller than a page. ".repeat(120);
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&long, Default::default()))];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t.clone())).unwrap();
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "pages {}", l.pages.len());
+    // The cell's lines start on page 1 (row split, not moved) and continue on page 2.
+    let cell_lines = |p: &Page| p.items.iter().filter(|i| matches!(i, Placed::Lines { path, .. } if path.0 == vec![1, 0, 0, 0])).count();
+    assert!(cell_lines(&l.pages[0]) > 0);
+    assert!(cell_lines(&l.pages[1]) > 0);
+    // Nothing runs past the bottom margin.
+    for p in &l.pages[..l.pages.len() - 1] {
+        for it in &p.items {
+            if let Placed::Lines { y, para, l0, l1, .. } = it {
+                let b = item_bottom(*y, para, *l0, *l1).unwrap_or(0.0);
+                assert!(b <= 792.0 - 72.0 + 0.5, "line bottom {b}");
+            }
+        }
+    }
+    // Every line of the long paragraph is placed exactly once.
+    let total: usize = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .filter_map(|i| if let Placed::Lines { path, l0, l1, .. } = i { (path.0 == vec![1, 0, 0, 0]).then_some(l1 - l0) } else { None })
+        .sum();
+    let n = l
+        .pages
+        .iter()
+        .flat_map(|p| p.items.iter())
+        .find_map(|i| if let Placed::Lines { path, para, .. } = i { (path.0 == vec![1, 0, 0, 0]).then_some(para.lines.len()) } else { None })
+        .unwrap_or(0);
+    assert_eq!(total, n);
+    // "Can't split" rows move whole instead.
+    let mut d2 = Document::from_text("before\nafter");
+    t.rows[0].props.cant_split = true;
+    d2.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l2 = lay(&d2);
+    assert!(l2.pages.len() >= 2);
+}
+
+#[test]
+fn a_split_row_keeps_room_for_its_bottom_border() {
+    // The part of a row kept on a page closes with the row's bottom border under its last line:
+    // a line that fits only without the border goes to the next page (govuk-040).
+    use doc4me_doc::props::{Border, BorderStyle, Borders, LineSpacing};
+    let first_page_lines = |border: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 13.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(2, 1, 300.0);
+        let mut cell = doc4me_doc::Paragraph::with_text("one\ntwo\nthree\nfour", Default::default());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        cell.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        let line = Border { style: BorderStyle::Single, width: border, color: None, space: 0.0 };
+        // Only the rule between the rows: no top border band moves the text down.
+        t.props.borders = Some(Borders { between: Some(line), ..Default::default() });
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert_eq!(first_page_lines(0.5), 1, "a 12 pt line and a 0.5 pt border fit in 13 pt");
+    assert_eq!(first_page_lines(3.0), 0, "with a 3 pt border they don't");
+}
+
+#[test]
+fn a_paragraph_starting_a_split_rows_continuation_keeps_its_space_before() {
+    // zenodo-157: a heading (10 pt before) that goes on with a split cell to the next page stands
+    // 10 pt below the page's top in Word's PDF, as at the top of a page outside a table.
+    use doc4me_doc::props::LineSpacing;
+    let moved_y = |before: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 13.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        let mut one = doc4me_doc::Paragraph::with_text("one", Default::default());
+        one.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        one.props.space_after = Some(0.0);
+        let mut two = doc4me_doc::Paragraph::with_text("two", Default::default());
+        two.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        two.props.space_after = Some(0.0);
+        two.props.space_before = Some(before);
+        two.props.contextual_spacing = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(one), doc4me_doc::para_block(two)];
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "the second paragraph goes to the next page");
+        l.pages[1].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap()
+    };
+    let (with, without) = (moved_y(10.0), moved_y(0.0));
+    assert!((with - without - 10.0).abs() < 0.01, "10 pt before keeps the line 10 pt lower: {with} vs {without}");
+}
+
+/// A one-row table under a filler that leaves `room` points on the first page; its cells hold
+/// paragraphs of `lines` 12 pt lines with widow control on or off and the given bottom margin.
+/// Returns, per cell, the lines kept on the first page and the y of the first line moved on.
+fn split_row_case(room: f32, cells: &[(usize, bool)], bottom_margin: f32) -> Vec<(usize, Option<f32>)> {
+    use doc4me_doc::props::LineSpacing;
+    let mut d = Document::new();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - room));
+    filler.props.space_after = Some(0.0);
+    let mut t = Table::new(1, cells.len(), 300.0);
+    t.props.borders = None;
+    t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+    for (ci, (lines, widow)) in cells.iter().enumerate() {
+        let text = (0..*lines).map(|k| format!("line{k}")).collect::<Vec<_>>().join("\n");
+        let mut p = doc4me_doc::Paragraph::with_text(&text, Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_after = Some(0.0);
+        p.props.space_before = Some(0.0);
+        p.props.widow_control = Some(*widow);
+        t.rows[0].cells[ci].blocks = vec![doc4me_doc::para_block(p)];
+        if bottom_margin > 0.0 {
+            t.rows[0].cells[ci].props.margins = Some([0.0, 5.4, bottom_margin, 5.4]);
+        }
+    }
+    d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+    let l = lay(&d);
+    (0..cells.len())
+        .map(|ci| {
+            let kept = l.pages[0]
+                .items
+                .iter()
+                .filter_map(|i| {
+                    if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1 && path.0[2] == ci as u32).then_some(l1 - l0) } else { None }
+                })
+                .sum::<usize>();
+            let moved = l.pages.get(1).and_then(|pg| {
+                pg.items.iter().find_map(|i| {
+                    if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1 && path.0[2] == ci as u32).then_some(*y) } else { None }
+                })
+            });
+            (kept, moved)
+        })
+        .collect()
+}
+
+#[test]
+fn a_split_row_keeps_widow_and_orphan_control_in_its_cells() {
+    // zenodo-072: Word splits a 7-line cell paragraph 5/2, not 6/1; zenodo-123: a row whose
+    // 3-line cell paragraph could keep only its first line moves on whole.
+    assert_eq!(split_row_case(37.5, &[(4, false)], 0.0)[0].0, 3, "without widow control 3 of 4 lines stay");
+    assert_eq!(split_row_case(37.5, &[(4, true)], 0.0)[0].0, 2, "with it the last two lines go on together");
+    assert_eq!(split_row_case(13.5, &[(3, true)], 0.0)[0].0, 0, "one line alone doesn't stay: the row moves on");
+}
+
+#[test]
+fn a_split_row_keeps_room_for_its_bottom_cell_margin() {
+    // zenodo-173: a row's second line that fits only without the cells' 4 pt bottom margin goes on.
+    assert_eq!(split_row_case(26.5, &[(4, false)], 0.0)[0].0, 2);
+    assert_eq!(split_row_case(26.5, &[(4, false)], 4.0)[0].0, 1, "the 4 pt bottom margin takes the second line's room");
+}
+
+#[test]
+fn each_cell_of_a_split_row_goes_on_from_the_top() {
+    // zenodo-072 page 8: a cell that sent two lines on (widow control) and one that sent one start
+    // the next page level with each other in Word's PDF.
+    let r = split_row_case(37.5, &[(4, true), (4, false)], 0.0);
+    assert_eq!((r[0].0, r[1].0), (2, 3), "the cells split at different lines");
+    let (a, b) = (r[0].1.unwrap(), r[1].1.unwrap());
+    assert!((a - b).abs() < 0.01, "both continuations start at the top: {a} vs {b}");
+}
+
+/// A row kept with the next one goes on with it when that row has one line per cell and so
+/// can't leave any for the next page, even though its first line would fit (govuk-046's
+/// "Table 2.6" title row moves to page 11 with its one-line row in Word's PDF).
+#[test]
+fn a_row_kept_with_a_one_line_row_goes_on_with_it_whole() {
+    use doc4me_doc::props::LineSpacing;
+    let title_page = |lines: &str| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 30.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(2, 1, 300.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        let cell = |text: &str, keep: bool| {
+            let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+            p.props.space_after = Some(0.0);
+            p.props.widow_control = Some(false);
+            p.props.keep_next = Some(keep);
+            doc4me_doc::para_block(p)
+        };
+        t.rows[0].cells[0].blocks = vec![cell("Title", true)];
+        t.rows[1].cells[0].blocks = vec![cell(lines, false)];
+        // The row's bottom margin: its first line fits under the title, the whole row doesn't.
+        t.rows[1].cells[0].props.margins = Some([0.0, 5.4, 10.0, 5.4]);
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .position(|pg| pg.items.iter().any(|it| matches!(it, Placed::Lines { para, .. } if para.text_len == 5 && it_is_cell(it))))
+            .unwrap()
+    };
+    assert_eq!(title_page("one"), 1, "the title goes on with its one-line row");
+    assert_eq!(title_page("one\ntwo"), 0, "a row that can split keeps the title here");
+}
+
+/// A nested table's preferred width is what it would like, not the least it needs: a cell with a
+/// width of its own keeps it though the table inside asks for more, as in Word (zenodo-157's
+/// 453.05 pt page-frame cell holding a 444 pt table stays at its grid instead of widening to the
+/// margins).
+#[test]
+fn a_nested_tables_preferred_width_does_not_widen_its_cell() {
+    let mut inner = Table::new(1, 1, 250.0);
+    inner.props.width = Some(250.0);
+    let mut outer = Table::new(1, 1, 200.0);
+    outer.rows[0].cells[0].props.width = Some(200.0);
+    outer.rows[0].cells[0].blocks = vec![doc4me_doc::Block::Table(inner).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::Block::Table(outer).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    let w = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| if let Placed::Cell { rect, table, .. } = it { (table.0.len() == 1).then_some(rect.w) } else { None })
+        .unwrap();
+    assert!((w - 200.0).abs() < 0.01, "the outer cell keeps its 200 pt: {w}");
+}
+
+/// A table with its own top and bottom borders (and none between rows) that runs onto another
+/// page gets its bottom border under its part on the first page and its top border above the
+/// rows continued on the next, as in Word (zenodo-103's appendix tables: a 1.5 pt rule at the
+/// top of page 5, the rows there 1.5 pt below it).
+#[test]
+fn a_split_table_repeats_its_outer_borders_at_the_page_break() {
+    use doc4me_doc::props::{Border, Borders, LineSpacing};
+    let pages = |borders: bool| {
+        let mut t = Table::new(80, 1, 300.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        if borders {
+            t.props.borders = Some(Borders { top: Some(Border::single(1.5)), bottom: Some(Border::single(1.5)), ..Default::default() });
+        }
+        for r in &mut t.rows {
+            let mut p = doc4me_doc::Paragraph::with_text("row", Default::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+            p.props.space_after = Some(0.0);
+            r.cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        }
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let s = d.last_section.clone();
+        (lay(&d), s.margin_top)
+    };
+    let first_text = |l: &DocLayout, pg: usize| {
+        l.pages[pg].items.iter().filter_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).fold(f32::MAX, f32::min)
+    };
+    let rules = |l: &DocLayout, pg: usize| -> Vec<f32> {
+        l.pages[pg]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Rule { y0, y1, border, .. } = it { (y0 == y1 && border.width > 1.0).then_some(*y0) } else { None })
+            .collect()
+    };
+    let ((plain, _), (boxed, top)) = (pages(false), pages(true));
+    assert!(plain.pages.len() >= 2 && boxed.pages.len() >= 2);
+    let shift = first_text(&boxed, 1) - first_text(&plain, 1);
+    assert!((shift - 1.5).abs() < 0.01, "the continued rows stand 1.5 pt lower: {shift}");
+    assert!(rules(&boxed, 1).iter().any(|y| (y - (top + 0.75)).abs() < 0.01), "the top border at the next page's top: {:?}", rules(&boxed, 1));
+    // The first page: the table's top border, and its bottom border under the last row there.
+    assert!(rules(&boxed, 0).len() >= 2, "{:?}", rules(&boxed, 0));
+}
+
+/// After a next-page section break, a paragraph of the same style as the one that ended the
+/// section keeps the part of its space before that is more than that paragraph's space after:
+/// zenodo-138's "References" (Heading 1, 12 pt before) starts 6 pt down in Word's PDF under an
+/// empty Heading 1 (6 pt after) that ended the section.
+#[test]
+fn a_section_starts_with_what_its_space_before_has_over_the_last_space_after() {
+    let first_y = |after: f32| {
+        let mut end = doc4me_doc::Paragraph::with_text("end", Default::default());
+        end.props.space_after = Some(after);
+        end.section = Some(Box::new(SectionProps::default()));
+        let mut next = doc4me_doc::Paragraph::with_text("next", Default::default());
+        next.props.space_before = Some(12.0);
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(end), doc4me_doc::para_block(next)];
+        let top = d.last_section.margin_top;
+        let l = lay(&d);
+        let y = l.pages[1]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, y, .. } = it { (para.text_len == 4).then_some(*y) } else { None })
+            .unwrap();
+        y - top
+    };
+    assert!((first_y(6.0) - 6.0).abs() < 0.01, "{}", first_y(6.0));
+    assert!(first_y(12.0).abs() < 0.01, "{}", first_y(12.0));
+}
+
+/// A row's own bottom border counts toward its minimum height when the row below sets no visible
+/// top border of its own (`w:val="nil"` holds nothing): zenodo-138's 19 pt step rows with a
+/// 0.5 pt bottom border step 19.5 pt in Word's PDF.
+#[test]
+fn a_nil_top_border_below_leaves_the_rows_own_bottom_border_its_band() {
+    use doc4me_doc::props::{Border, Borders, HeightRule};
+    let pitch = |nil_below: bool| {
+        let mut t = Table::new(3, 1, 200.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        // Only the cells' own borders, as in zenodo-138's tables.
+        let off = Some(Border { style: doc4me_doc::props::BorderStyle::None, ..Default::default() });
+        t.props.borders = Some(Borders { top: off, left: off, bottom: off, right: off, between: off, inside_v: off });
+        for r in &mut t.rows {
+            r.props.height = Some(19.0);
+            r.props.height_rule = HeightRule::AtLeast;
+            let top = nil_below.then_some(Border { style: doc4me_doc::props::BorderStyle::None, ..Default::default() });
+            r.cells[0].props.borders = Some(Borders { top, bottom: Some(Border::single(0.5)), ..Default::default() });
+            let mut p = doc4me_doc::Paragraph::with_text("x", Default::default());
+            p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(10.0));
+            p.props.space_after = Some(0.0);
+            p.props.space_before = Some(0.0);
+            r.cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        }
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        let ys: Vec<f32> = l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, .. } = it { Some(rect.y) } else { None }).collect();
+        ys[1] - ys[0]
+    };
+    assert!((pitch(true) - 19.5).abs() < 0.01, "a nil top border below holds nothing: {}", pitch(true));
+}
+
+/// The part of a row with a minimum height (`w:trHeight` at least) that goes on to the next page
+/// is at least that tall again, as in Word (zenodo-103's row [61], 1278 twips at least, stands
+/// 63.9 pt tall on page 11 with two lines in it).
+#[test]
+fn a_split_rows_continuation_keeps_its_minimum_height() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let mut d = Document::new();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 110.0));
+    filler.props.space_after = Some(0.0);
+    let mut t = Table::new(2, 1, 300.0);
+    t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+    let mut cell = doc4me_doc::Paragraph::with_text("1\n2\n3\n4\n5\n6\n7\n8\n9\n10", Default::default());
+    cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+    cell.props.space_after = Some(0.0);
+    cell.props.widow_control = Some(false);
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+    t.rows[0].props.height = Some(100.0);
+    t.rows[0].props.height_rule = HeightRule::AtLeast;
+    t.rows[1].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("next", Default::default()))];
+    d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let top = d.last_section.margin_top;
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    let next_row = l.pages[1].items.iter().find_map(|it| if let Placed::Cell { row: 1, rect, .. } = it { Some(rect.y) } else { None }).unwrap();
+    assert!(next_row >= top + 100.0 - 0.01, "the continuation is at least 100 pt tall: the next row starts at {next_row}");
+}
+
+/// A paragraph kept with the table after it needs room for its own space after as well as the
+/// table's start: zenodo-069's "Tableau 3" caption (10 pt after) goes to page 11 with its table
+/// in Word's PDF, where the caption and the first row fit only without that space.
+#[test]
+fn a_caption_kept_with_a_table_counts_its_space_after() {
+    use doc4me_doc::props::LineSpacing;
+    let caption_page = |after: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 30.0));
+        filler.props.space_after = Some(0.0);
+        let one = |text: &str, keep: bool, after: f32| {
+            let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+            p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+            p.props.space_before = Some(0.0);
+            p.props.space_after = Some(after);
+            p.props.keep_next = Some(keep);
+            p
+        };
+        let mut t = Table::new(1, 1, 300.0);
+        t.props.cell_margins = Some([0.0, 5.4, 0.0, 5.4]);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(one("Cell", false, 0.0))];
+        d.body = vec![
+            doc4me_doc::para_block(filler),
+            doc4me_doc::para_block(one("Caption", true, after)),
+            doc4me_doc::Block::Table(t).into(),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::new()),
+        ];
+        let l = lay(&d);
+        l.pages.iter().position(|pg| pg.items.iter().any(|it| matches!(it, Placed::Lines { para, .. } if para.text_len == 7))).unwrap()
+    };
+    assert_eq!(caption_page(0.0), 0, "the caption and the row fit");
+    assert_eq!(caption_page(10.0), 1, "with its space after they don't: the caption goes on with the table");
+}
+
+#[test]
+fn a_row_does_not_split_into_less_room_than_its_minimum_height() {
+    // zenodo-173: a row at least 29.45pt tall moves whole to the next page when about 28pt are
+    // left, though its first lines would fit there. With room for its minimum height it splits.
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let first_page_lines = |min: Option<f32>| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - 40.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        let mut cell = doc4me_doc::Paragraph::with_text("one\ntwo\nthree\nfour\nfive\nsix", Default::default());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        cell.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        t.rows[0].props.height = min;
+        t.rows[0].props.height_rule = HeightRule::AtLeast;
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { path, l0, l1, .. } = i { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert!(first_page_lines(None) > 0, "without a minimum height the row splits");
+    assert!(first_page_lines(Some(30.0)) > 0, "30pt fit in the 40pt left");
+    assert_eq!(first_page_lines(Some(50.0)), 0, "50pt don't: the row moves whole");
+}
+
+#[test]
+fn repeated_header_is_followed_by_the_next_row_even_when_it_overflows() {
+    // A one-column table at the top of a letter page (body 648 pt), then an empty paragraph. Returns
+    // the table rows on each page, in order.
+    let rows_per_page = |t: Table| -> Vec<Vec<usize>> {
+        let mut d = Document::new();
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .map(|p| p.items.iter().filter_map(|i| if let Placed::Cell { row, cell: 0, .. } = i { Some(*row) } else { None }).collect())
+            .collect()
+    };
+    // A header row of `header` points and body rows of `rows` points (at least), one line of text each.
+    let table = |header: f32, rows: &[f32]| {
+        let mut t = Table::new(rows.len() + 1, 1, 468.0);
+        t.rows[0].props.header = true;
+        for (row, h) in t.rows.iter_mut().zip(std::iter::once(&header).chain(rows)) {
+            row.props.height = Some(*h);
+            row.props.height_rule = doc4me_doc::props::HeightRule::AtLeast;
+        }
+        t
+    };
+    // Header and row fit together: one row per page, under the header.
+    assert_eq!(rows_per_page(table(100.0, &[400.0; 3])), vec![vec![0, 1], vec![0, 2], vec![0, 3]]);
+    // A 300 pt header and 400 pt rows never fit together. As in Word, the first row moves to a new
+    // page, goes under the repeated header and runs into the bottom margin; so does every later row.
+    assert_eq!(rows_per_page(table(300.0, &[400.0; 4])), vec![vec![0], vec![0, 1], vec![0, 2], vec![0, 3], vec![0, 4], vec![]]);
+    // A header that almost fills the page still repeats, with one row under it on each page.
+    assert_eq!(rows_per_page(table(640.0, &[100.0; 3])), vec![vec![0], vec![0, 1], vec![0, 2], vec![0, 3], vec![]]);
+    // A 20-row table under a 640 pt header: one page per row, never a runaway.
+    assert_eq!(rows_per_page(table(640.0, &[12.0; 19])).len(), 21);
+    // A row of text that is taller than the room under the header still splits across pages.
+    let mut t = table(100.0, &[12.0]);
+    let long = "Row text that keeps going and going so the cell grows taller than a page. ".repeat(120);
+    t.rows[1].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&long, Default::default()))];
+    let pages = rows_per_page(t);
+    assert!(pages.len() >= 3, "{pages:?}");
+    // (A last page may hold only the empty paragraph after the table.)
+    assert!(pages.iter().filter(|p| !p.is_empty()).all(|p| p.first() == Some(&0) && p.contains(&1)), "{pages:?}");
+    // An ordinary header still repeats on every page the table reaches.
+    let mut t = Table::new(80, 2, 468.0);
+    t.rows[0].props.header = true;
+    let pages = rows_per_page(t);
+    assert!(pages.len() >= 2, "{pages:?}");
+    assert!(pages.iter().all(|p| p.first() == Some(&0)), "{pages:?}");
+}
+
+/// A drop-cap paragraph in a font larger than 1000 pt used to panic in layout (`clamp` with min > max).
+#[test]
+fn drop_cap_with_a_huge_font_lays_out() {
+    for size in [999.0, 1000.0, 1001.0, 1638.0] {
+        let cp = doc4me_doc::CharProps { size: Some(size), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("Hello drop cap world", cp);
+        p.props.drop_cap = Some(3);
+        let mut d = Document::from_text("x");
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(pl) = l.pages[0].items.iter().find_map(|i| if let Placed::Lines { para, .. } = i { Some(para.clone()) } else { None }) else {
+            panic!("no lines at size {size}")
+        };
+        let (nc, lines, _) = pl.drop_cap.unwrap_or((0, 0, 0.0));
+        assert_eq!((nc, lines), (1, 3), "size {size}");
+    }
+}
+
+#[test]
+fn drop_cap_indents_its_lines() {
+    let mut p = doc4me_doc::Paragraph::with_text(&"Every line of this paragraph wraps around a large first letter. ".repeat(6), Default::default());
+    p.props.drop_cap = Some(3);
+    let mut d = Document::from_text("x");
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let Some(pl) = l.pages[0].items.iter().find_map(|i| if let Placed::Lines { para, .. } = i { Some(para.clone()) } else { None }) else {
+        panic!("no lines")
+    };
+    let (nc, lines, w) = pl.drop_cap.unwrap_or((0, 0, 0.0));
+    assert_eq!((nc, lines), (1, 3));
+    assert!(w > 20.0, "drop cap width {w}");
+    assert!(pl.lines.len() > 4);
+    for (k, line) in pl.lines.iter().enumerate() {
+        let x = line.xs.first().copied().unwrap_or(0.0);
+        if k < 3 {
+            assert!(x >= w - 0.5, "line {k} at {x}");
+        } else {
+            assert!(x < 1.0, "line {k} at {x}");
+        }
+    }
+    // The letter's glyphs are lowered toward the third line's baseline.
+    let g = pl.glyphs.first().map(|g| g.dy).unwrap_or(0.0);
+    assert!(g < -20.0, "dy {g}");
+}
+
+/// The capital reaches from the first line's caps to the last spanned line's baseline at the
+/// paragraph's real line pitch. It used to assume lines 1.2 em apart, so once lines took Word's
+/// height for the font (Sarabun 1.853 em) a three-line cap reached only two lines down.
+#[test]
+fn drop_cap_spans_its_lines_at_their_pitch() {
+    use doc4me_doc::props::LineSpacing;
+    let cases = [
+        ("Sarabun", LineSpacing::Multiple(1.0)),
+        ("Sarabun", LineSpacing::Multiple(1.5)),
+        ("Sarabun", LineSpacing::AtLeast(40.0)),
+        ("Liberation Serif", LineSpacing::Exactly(30.0)),
+    ];
+    for (font, spacing) in cases {
+        let cp = doc4me_doc::CharProps { font: Some(font.into()), size: Some(14.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text(&"Every line of this paragraph wraps around a large first letter. ".repeat(6), cp);
+        p.props.drop_cap = Some(3);
+        p.props.line_spacing = Some(spacing);
+        let mut d = Document::from_text("x");
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(pl) = l.pages[0].items.iter().find_map(|i| if let Placed::Lines { para, .. } = i { Some(para.clone()) } else { None }) else {
+            panic!("no lines")
+        };
+        assert!(pl.lines.len() > 3, "{font} {spacing:?}");
+        let pitch = pl.lines[2].baseline - pl.lines[1].baseline;
+        let size = |k: usize| pl.clusters.get(k).and_then(|c| pl.styles.get(c.style as usize)).map_or(0.0, |s| s.size);
+        // Capital height ~0.7 em, as the sizing assumes.
+        let want = (2.0 * pitch + 0.7 * size(1)) / 0.7;
+        assert!((size(0) - want).abs() < 0.5, "{font} {spacing:?}: cap {} pt, want {want} pt (pitch {pitch})", size(0));
+    }
+}
+
+#[test]
+fn auto_hyphenation_breaks_long_words() {
+    let text = "Internationalization considerations notwithstanding, administrators systematically reconsidered extraordinarily uncharacteristic responsibilities. ".repeat(4);
+    let mut d = Document::from_text(&text);
+    let off = lay(&d);
+    let hyphens = |l: &DocLayout| {
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { para, .. } = i { Some(para.lines.iter().filter(|x| x.hyphen.is_some()).count()) } else { None })
+            .sum::<usize>()
+    };
+    assert_eq!(hyphens(&off), 0);
+    d.settings.auto_hyphenation = true;
+    let on = lay(&d);
+    assert!(hyphens(&on) > 0, "no hyphenated lines");
+    // Hyphenated lines stay inside the margins.
+    for it in &on.pages[0].items {
+        if let Placed::Lines { para, .. } = it {
+            for l in para.lines.iter().filter(|l| l.hyphen.is_some()) {
+                assert!(l.xs.last().copied().unwrap_or(0.0) <= l.right + 0.5, "{} > {}", l.xs.last().copied().unwrap_or(0.0), l.right);
+            }
+        }
+    }
+    // Soft hyphens break even without auto hyphenation, and show a hyphen.
+    let soft = format!("{}extra\u{ad}ordinary", "word ".repeat(13));
+    let d2 = Document::from_text(&soft);
+    let l2 = lay(&d2);
+    let _ = hyphens(&l2);
+}
+
+/// Hyphenation Options (#407): a consecutive-hyphen limit of 1 never lets two lines in a row end
+/// with a hyphen, and words in capitals stay whole when the document says so.
+#[test]
+fn hyphenation_options_limit_hyphens_and_spare_capitals() {
+    let text = "Internationalization considerations notwithstanding, administrators systematically reconsidered extraordinarily uncharacteristic responsibilities. ".repeat(6);
+    let lines = |d: &Document| -> Vec<bool> {
+        lay(d).pages[0]
+            .items
+            .iter()
+            .filter_map(|i| {
+                if let Placed::Lines { para, .. } = i { Some(para.lines.iter().map(|x| x.hyphen.is_some()).collect::<Vec<_>>()) } else { None }
+            })
+            .flatten()
+            .collect()
+    };
+    let mut d = Document::from_text(&text);
+    d.settings.auto_hyphenation = true;
+    d.settings.consecutive_hyphen_limit = 1;
+    let hy = lines(&d);
+    assert!(hy.windows(2).all(|w| !(w[0] && w[1])), "two hyphenated lines in a row: {hy:?}");
+    let mut caps = Document::from_text(&text.to_uppercase());
+    caps.settings.auto_hyphenation = true;
+    caps.settings.hyphenate_caps = false;
+    assert!(lines(&caps).iter().all(|h| !h), "a word in capitals was hyphenated");
+}
+
+/// A table of `rows` x 2 with text in every cell, after a "before" paragraph.
+fn styled_table_doc(style: Option<&str>, rows: usize) -> Document {
+    let mut d = Document::from_text("before\nafter");
+    let mut t = Table::new(rows, 2, 468.0);
+    t.props.style = style.map(str::to_string);
+    for (r, row) in t.rows.iter_mut().enumerate() {
+        for (c, cell) in row.cells.iter_mut().enumerate() {
+            cell.blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("R{r} C{c}"), Default::default()))];
+        }
+    }
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    d
+}
+
+fn row_height(l: &DocLayout, row: usize) -> f32 {
+    l.pages[0].items.iter().find_map(|i| if let Placed::Cell { rect, row: r, .. } = i { (*r == row).then_some(rect.h) } else { None }).unwrap()
+}
+
+/// The laid-out paragraph in cell (row, col) of the table at body index 1.
+fn cell_para(l: &DocLayout, row: u32, col: u32) -> Arc<ParaLayout> {
+    l.pages[0]
+        .items
+        .iter()
+        .find_map(|i| if let Placed::Lines { path, para, .. } = i { (path.0 == vec![1, row, col, 0]).then(|| para.clone()) } else { None })
+        .unwrap()
+}
+
+/// Text in a table cell takes its table style's paragraph and run formatting over the document
+/// defaults (ECMA-376 §17.7.2): Table Grid's single spacing and no space after, not the defaults'
+/// 8 pt after and 1.15 lines.
+#[test]
+fn table_style_paragraph_props_beat_document_defaults() {
+    let d = styled_table_doc(Some("TableGrid"), 3);
+    let plain = styled_table_doc(None, 3);
+    let (lg, lp) = (lay(&d), lay(&plain));
+    let p = cell_para(&lg, 1, 0);
+    assert_eq!((p.rp.space_after, p.rp.line_spacing), (0.0, doc4me_doc::props::LineSpacing::Multiple(1.0)));
+    let q = cell_para(&lp, 1, 0);
+    assert_eq!((q.rp.space_after, q.rp.line_spacing), (8.0, doc4me_doc::props::LineSpacing::Multiple(1.15)));
+    let (g, n) = (row_height(&lg, 1), row_height(&lp, 1));
+    assert!(g + 8.0 < n, "Table Grid row {g}, unstyled row {n}");
+    // One 12 pt Sarabun line, single spaced: 1.853 em (Word for Windows' win metrics) = 22.2 pt.
+    assert!(g < 24.0, "one 12 pt line, single spaced: {g}");
+}
+
+/// The paragraph's own style (Normal included) and direct formatting beat the table style; the
+/// table style only fills in what they leave unset.
+#[test]
+fn paragraph_style_and_direct_formatting_beat_table_style() {
+    let mut d = styled_table_doc(Some("TableGrid"), 3);
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
+        id: "Spaced".into(),
+        name: "Spaced".into(),
+        based_on: Some("Normal".into()),
+        para: ParaProps { space_after: Some(12.0), ..Default::default() },
+        ..Default::default()
+    });
+    d.format_paragraphs(
+        &Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 },
+        &Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 },
+        &|p| p.style = Some("Spaced".into()),
+    )
+    .unwrap();
+    d.format_paragraphs(
+        &Pos { story: StoryRef::Body, path: Path(vec![1, 1, 0, 0]), off: 0 },
+        &Pos { story: StoryRef::Body, path: Path(vec![1, 1, 0, 0]), off: 0 },
+        &|p| p.space_after = Some(3.0),
+    )
+    .unwrap();
+    let l = lay(&d);
+    let styled = cell_para(&l, 0, 0);
+    assert_eq!(styled.rp.space_after, 12.0, "paragraph style");
+    assert_eq!(styled.rp.line_spacing, doc4me_doc::props::LineSpacing::Multiple(1.0), "unset by the style: from the table style");
+    assert_eq!(cell_para(&l, 1, 0).rp.space_after, 3.0, "direct formatting");
+    assert_eq!(cell_para(&l, 2, 0).rp.space_after, 0.0, "table style");
+    // Normal setting its own spacing wins too, even where it equals nothing in the defaults.
+    if let Some(n) = std::sync::Arc::make_mut(&mut d.styles).get_mut("Normal") {
+        n.para.space_after = Some(10.0);
+    }
+    assert_eq!(cell_para(&lay(&d), 2, 0).rp.space_after, 10.0, "Normal");
+}
+
+/// A table style based on another keeps the base style's borders and cell text formatting, and
+/// adds its own run formatting and conditional formats.
+#[test]
+fn derived_table_style_merges_its_base() {
+    use doc4me_doc::styles::TableStyleParts;
+    let red = doc4me_doc::Rgb(0xC0, 0, 0);
+    let mut d = styled_table_doc(Some("RedGrid"), 3);
+    std::sync::Arc::make_mut(&mut d.styles).upsert(doc4me_doc::Style {
+        id: "RedGrid".into(),
+        name: "Red Grid".into(),
+        kind: doc4me_doc::StyleKind::Table,
+        based_on: Some("TableGrid".into()),
+        chr: CharProps { bold: Some(true), color: Some(doc4me_doc::TextColor::Rgb(red)), ..Default::default() },
+        table: Some(TableStyleParts { header_chr: CharProps { italic: Some(true), ..Default::default() }, ..Default::default() }),
+        ..Default::default()
+    });
+    let l = lay(&d);
+    let rules = l.pages[0].items.iter().filter(|i| matches!(i, Placed::Rule { .. })).count();
+    assert!(rules >= 18, "Table Grid's borders: {rules}");
+    let body = cell_para(&l, 1, 1);
+    let rc = &body.styles[0].rc;
+    assert!(rc.bold && !rc.italic, "{rc:?}");
+    assert_eq!(rc.color, doc4me_doc::TextColor::Rgb(red));
+    assert_eq!(body.rp.space_after, 0.0, "Table Grid's paragraph formatting");
+    let head = &cell_para(&l, 0, 0).styles[0].rc;
+    assert!(head.bold && head.italic, "{head:?}");
+    // Direct formatting still wins over the table style.
+    let mut d2 = d.clone();
+    let path = Path(vec![1, 2, 0, 0]);
+    d2.format_range(&Pos { story: StoryRef::Body, path: path.clone(), off: 0 }, &Pos { story: StoryRef::Body, path, off: 5 }, &|c| {
+        c.bold = Some(false)
+    })
+    .unwrap();
+    assert!(!cell_para(&lay(&d2), 2, 0).styles[0].rc.bold);
+}
+
+fn text_box(d: &mut Document, at: usize, text: &str, w: f32, h: f32, float: doc4me_doc::para::Float) -> u32 {
+    text_box_at(d, &Pos::body(0, at), text, w, h, float)
+}
+
+fn text_box_at(d: &mut Document, pos: &Pos, text: &str, w: f32, h: f32, float: doc4me_doc::para::Float) -> u32 {
+    let id = d.add_part(doc4me_doc::PartKind::TextBox, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))]);
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 0.75,
+        float,
+        story: Some(id),
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(pos, shape, &Default::default()).unwrap();
+    id
+}
+
+fn box_rect(l: &DocLayout, id: u32) -> doc4me_geom::Rect {
+    l.pages[0]
+        .items
+        .iter()
+        .find_map(|i| if let Placed::Object { rect, text_box, .. } = i { (*text_box == Some(id)).then_some(*rect) } else { None })
+        .unwrap()
+}
+
+#[test]
+fn clicks_inside_a_text_box_hit_its_story() {
+    let mut d = Document::from_text("Before after");
+    let id = text_box(&mut d, 7, "Inside the box", 144.0, 72.0, Default::default());
+    let l = lay(&d);
+    let r = box_rect(&l, id);
+    assert!((r.w - 144.0).abs() < 0.5 && (r.h - 72.0).abs() < 0.5, "{r:?}");
+    let box_story = StoryRef::Part(id);
+    // Anywhere inside the box, even below its text, is the box.
+    for (x, y) in [(r.x + 20.0, r.y + 10.0), (r.x + r.w - 4.0, r.y + r.h - 4.0)] {
+        assert_eq!(l.story_at(0, x, y), Some(box_story), "({x}, {y}) in {r:?}");
+        assert_eq!(l.hit(0, x, y, box_story).map(|p| p.story), Some(box_story));
+    }
+    // The body text beside it is the body; so is the margin just right of the box, although the
+    // box's own lines are within reach there.
+    let c = l.caret(&Pos::body(0, 2)).unwrap();
+    assert_eq!(l.story_at(0, c.x, c.top + c.height / 2.0), Some(StoryRef::Body));
+    assert_ne!(l.story_at(0, r.right() + 8.0, r.y + 10.0), Some(box_story));
+    // The caret in the box sits inside it.
+    let bc = l.caret(&Pos { story: box_story, path: Path::top(0), off: 0 }).unwrap();
+    assert!(r.contains(doc4me_geom::Point::new(bc.x, bc.top)), "{bc:?} outside {r:?}");
+}
+
+#[test]
+fn body_text_wins_over_a_text_box_behind_it() {
+    let mut d = Document::from_text("Hi");
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::BehindText,
+        h_rel: doc4me_doc::para::Anchor::Column,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 0.0,
+        dist: 0.0,
+        ..Default::default()
+    };
+    let id = text_box(&mut d, 0, "Behind", 200.0, 150.0, float);
+    let l = lay(&d);
+    let r = box_rect(&l, id);
+    let c = l.caret(&Pos::body(0, 0)).unwrap();
+    assert!(r.contains(doc4me_geom::Point::new(c.x + 2.0, c.top + 2.0)), "box covers the text: {r:?} {c:?}");
+    assert_eq!(l.story_at(0, c.x + 2.0, c.top + c.height / 2.0), Some(StoryRef::Body));
+    assert_eq!(l.story_at(0, r.right() - 10.0, r.bottom() - 10.0), Some(StoryRef::Part(id)));
+}
+
+#[test]
+fn presses_grab_pictures_anywhere_and_text_boxes_by_their_border() {
+    let mut d = Document::from_text("Words before the objects.");
+    let id = text_box(&mut d, 0, "Inside", 144.0, 72.0, Default::default());
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 60.0,
+        h: 40.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float: Default::default(),
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    let l = lay(&d);
+    let b = box_rect(&l, id);
+    // The text box: its border grabs it, inside is its text.
+    let edge = l.object_at(0, b.x + 1.0, b.y + b.h / 2.0, 4.0).unwrap();
+    assert_eq!(edge.text_box, Some(id));
+    assert_eq!(l.object(&edge.pos(), 0).map(|o| o.rect), Some(b));
+    assert_eq!(l.text_box(id, 5).map(|o| o.rect), Some(b), "a bad hint still finds it");
+    assert!(l.object_at(0, b.x + b.w / 2.0, b.y + b.h / 2.0, 4.0).is_none());
+    // The shape: anywhere on it.
+    let s = l.find_object(0, |o| o.text_box.is_none()).unwrap();
+    let hit = l.object_at(0, s.rect.x + s.rect.w / 2.0, s.rect.y + s.rect.h / 2.0, 4.0).unwrap();
+    assert_eq!((hit.off, hit.text_box, hit.floating()), (0, None, false));
+    // Plain text: nothing.
+    let c = l.caret(&Pos::body(0, 10)).unwrap();
+    assert!(l.object_at(0, c.x, c.top + 2.0, 4.0).is_none());
+}
+
+/// (lines placed, lines laid out) of a text box's story, and its area.
+fn box_lines(l: &DocLayout, id: u32) -> (usize, usize, doc4me_geom::Rect) {
+    let mut shown = 0;
+    let mut total = 0;
+    for it in &l.pages[0].items {
+        if let Placed::Lines { story: StoryRef::Part(p), para, l0, l1, y, .. } = it
+            && *p == id
+        {
+            shown += l1 - l0;
+            total += para.lines.len();
+            let first = &para.lines[*l0];
+            let last = &para.lines[l1 - 1];
+            let bottom = y + last.top + last.height - first.top;
+            let r = box_rect(l, id);
+            assert!(bottom <= r.bottom() + 0.5 || shown == 1, "a placed line overflows: {bottom} > {}", r.bottom());
+        }
+    }
+    (shown, total, box_rect(l, id))
+}
+
+#[test]
+fn text_box_hides_text_that_does_not_fit() {
+    let long = "The quick brown fox jumps over the lazy dog. ".repeat(12);
+    let mut d = Document::from_text("Body");
+    let id = text_box(&mut d, 0, &long, 144.0, 72.0, Default::default());
+    let (shown, total, r) = box_lines(&lay(&d), id);
+    assert!(shown >= 2 && shown < total, "{shown} of {total} lines shown in {r:?}");
+    // Nothing below the box belongs to it.
+    let l = lay(&d);
+    assert_ne!(l.story_at(0, r.x + 20.0, r.bottom() + 6.0), Some(StoryRef::Part(id)));
+    // A taller box shows more; a tiny one still shows its first line.
+    let mut d2 = Document::from_text("Body");
+    let id2 = text_box(&mut d2, 0, &long, 144.0, 1500.0, Default::default());
+    let (shown2, total2, _) = box_lines(&lay(&d2), id2);
+    assert_eq!(shown2, total2);
+    let mut d3 = Document::from_text("Body");
+    let id3 = text_box(&mut d3, 0, &long, 144.0, 18.0, Default::default());
+    assert_eq!(box_lines(&lay(&d3), id3).0, 1);
+}
+
+#[test]
+fn square_wrap_flows_text_on_both_sides() {
+    let float = |x: f32| doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Column,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x,
+        y: 0.0,
+        dist: 9.0,
+        ..Default::default()
+    };
+    let text = "Words flow on both sides of the box in the middle here. ".repeat(20);
+    let mut d = Document::from_text(&text);
+    let id = text_box(&mut d, 0, "Middle", 144.0, 100.0, float(160.0));
+    let l = lay(&d);
+    let r = box_rect(&l, id);
+    let Placed::Lines { para, x, y, .. } = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { story: StoryRef::Body, .. })).unwrap() else {
+        panic!()
+    };
+    let beside: Vec<&para::Line> = para.lines.iter().filter(|ln| ln.beside).collect();
+    assert!(beside.len() >= 4, "{} rows have text on the far side", beside.len());
+    for (k, ln) in para.lines.iter().enumerate().filter(|(_, ln)| ln.beside) {
+        let prev = &para.lines[k - 1];
+        assert_eq!((prev.top, prev.height), (ln.top, ln.height), "one row");
+        assert!(x + ink_end(para, prev) <= r.x + 0.01, "left part stops before the box");
+        assert!(x + ln.xs[0] >= r.right(), "right part starts after it");
+        assert_eq!(prev.stop, ln.start, "text runs left part, then right part");
+    }
+    // Below the box: full-width rows again.
+    let below = para.lines.iter().find(|ln| y + ln.top > r.bottom() + 10.0).unwrap();
+    assert!(!below.beside && below.right - below.left > 400.0);
+    // The right-hand part is hittable and has a caret.
+    let ln = beside[0];
+    let pos = l.hit(0, x + ln.xs[1], y + ln.top + 2.0, StoryRef::Body).unwrap();
+    assert!(pos.off >= ln.start && pos.off <= ln.stop, "{pos:?}");
+    assert!(l.caret(&pos).unwrap().x >= r.right());
+    // A gap too narrow for text stays empty.
+    let mut d2 = Document::from_text(&text);
+    let id2 = text_box(&mut d2, 0, "Edge", 144.0, 100.0, float(468.0 - 144.0 - 20.0));
+    let l2 = lay(&d2);
+    let r2 = box_rect(&l2, id2);
+    let Placed::Lines { para, x, .. } = l2.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { story: StoryRef::Body, .. })).unwrap() else {
+        panic!()
+    };
+    assert!(para.lines.iter().all(|ln| !ln.beside && ink_end(para, ln) <= (r2.x - x).max(ln.right) + 0.01));
+}
+
+/// #1376: a word too long for the strip beside a square-wrapped object moves on whole (to the
+/// row's next strip, or the next row) instead of being split across the strip; words that fit
+/// still use it, and a word wider than the whole line still breaks where it is.
+#[test]
+fn a_word_too_wide_for_the_strip_beside_a_float_moves_on_whole() {
+    use doc4me_doc::para::{Anchor, Float, ShapeKind, Wrap};
+    // A `w` x 150pt square at `x` in the 468pt column, leaving a 32pt strip on its right. Each
+    // line: (top, left, beside the object's far side, ends inside a word, where its text ends).
+    let lines = |text: &str, x: f32, w: f32| {
+        let mut d = Document::from_text(&text.repeat(6));
+        let float = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x, ..Default::default() };
+        let shape = InlineObject::Shape {
+            kind: ShapeKind::Rectangle,
+            w,
+            h: 150.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            effects: Default::default(),
+            freeform: None,
+            extra: Default::default(),
+        };
+        d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { story: StoryRef::Body, .. })) else {
+            panic!()
+        };
+        let split = |ln: &para::Line| ln.end == para::LineEnd::Wrap && ln.c1 > ln.c0 && !para.clusters[ln.c1 - 1].break_after;
+        para.lines.iter().map(|ln| (ln.top, ln.left, ln.beside, split(ln), ink_end(para, ln))).collect::<Vec<_>>()
+    };
+    let long = "La presente procedura descrive le modalità della documentazione sanitaria del reparto e delle responsabilità degli operatori. ";
+    // The strip right of the object, after the text on its left.
+    let right = lines(long, 468.0 - 150.0 - 32.0, 150.0);
+    assert!(right.iter().all(|l| !l.3 && l.4 <= 468.01), "{right:?}");
+    let short = lines("It is so, as it is to be, if we go on. ", 468.0 - 150.0 - 32.0, 150.0);
+    assert!(short.iter().any(|l| l.2) && short.iter().all(|l| !l.3), "{short:?}");
+    // The strip is the row's only span: long words go below the object.
+    let only = lines(long, 0.0, 468.0 - 32.0);
+    assert!(only.iter().all(|l| !l.3 && (l.0 >= 150.0 - 0.01 || l.1 >= 468.0 - 32.0 - 0.01)), "{only:?}");
+    assert!(only.iter().any(|l| l.0 >= 150.0 - 0.01 && l.1 < 1.0), "{only:?}");
+    // A word wider than the whole line breaks where it is, beside the object.
+    let huge = lines(&format!("{} ", "x".repeat(120)), 468.0 - 150.0 - 32.0, 150.0);
+    assert!(huge[0].0 < 1.0 && huge.iter().any(|l| l.3), "{huge:?}");
+    // The strip left of the object: a skipped strip leaves the row's other span its first line.
+    let left = lines(long, 32.0, 150.0);
+    assert!(left.iter().all(|l| !l.3) && left.iter().any(|l| l.0 < 150.0 && l.1 >= 182.0 - 0.01 && !l.2), "{left:?}");
+    // Rows go down the page, and a line beside the object shares its row with the line before it.
+    for ls in [&right, &short, &only, &huge, &left] {
+        assert!(ls.windows(2).all(|w| if w[1].2 { w[1].0 == w[0].0 } else { w[1].0 > w[0].0 }), "{ls:?}");
+    }
+}
+
+/// Where a line's text ends (its last non-space cluster's right edge; trailing spaces may hang
+/// past the margin), relative to the column.
+fn ink_end(pl: &ParaLayout, ln: &para::Line) -> f32 {
+    (ln.c0..ln.c1)
+        .filter_map(|k| {
+            let c = pl.clusters.get(k)?;
+            (c.kind != para::ClKind::Space).then_some(ln.xs.get(k - ln.c0)? + c.adv)
+        })
+        .fold(0.0, f32::max)
+}
+
+fn footnote(d: &mut Document, pos: &Pos, text: &str) -> u32 {
+    let id = d.add_part(doc4me_doc::PartKind::Footnote, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))]);
+    d.insert_object(pos, InlineObject::NoteRef { kind: doc4me_doc::para::NoteKind::Footnote, id, custom: String::new() }, &Default::default())
+        .unwrap();
+    id
+}
+
+/// A footnote reference joined to the word before it never starts a line (govuk-037's
+/// "Director¹⁵" moves on whole in Word's PDF).
+#[test]
+fn a_note_reference_stays_with_the_word_before_it() {
+    let words: String = (0..400).map(|i| format!("{}word ", "x".repeat(i % 37))).collect();
+    let mut d = Document::from_text(&words);
+    // A note after every word (inserted from the end, so the offsets stay right).
+    let ends: Vec<usize> = words.match_indices(' ').map(|(i, _)| i).collect();
+    for &at in ends.iter().rev() {
+        footnote(&mut d, &Pos::body(0, at), "n");
+    }
+    let l = lay(&d);
+    let mut lines = 0;
+    for page in &l.pages {
+        for it in &page.items {
+            if let Placed::Lines { story: StoryRef::Body, para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let text = &d.para(StoryRef::Body, &Path::top(0)).unwrap().text;
+                    let starts_with_ref = text.get(line.start..).is_some_and(|t| t.starts_with(doc4me_doc::para::OBJ));
+                    assert!(!starts_with_ref, "a line starts with a note reference at {}", line.start);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+/// From Word 2013 layout (compatibility mode 15) any paragraph on a page with notes leaves room
+/// for its space after above them, and a heading keeping with it goes on with it: govuk-036's
+/// Heading 3 and two-line paragraph (12 pt after) go on to page 18 in Word's PDF. Before mode 15
+/// only a paragraph citing a note does (govuk-044).
+#[test]
+fn on_a_page_with_notes_a_paragraph_keeps_its_space_after_clear_of_them() {
+    use doc4me_doc::props::LineSpacing;
+    let pages_of = |filler: f32, after: f32, mode: u32| {
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        let mut f = doc4me_doc::Paragraph::with_text("Fill", Default::default());
+        f.props.line_spacing = Some(LineSpacing::Exactly(filler));
+        f.props.space_after = Some(0.0);
+        let mut h = doc4me_doc::Paragraph::with_text("Heading", Default::default());
+        h.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        h.props.space_before = Some(0.0);
+        h.props.space_after = Some(0.0);
+        h.props.keep_next = Some(true);
+        let mut p = doc4me_doc::Paragraph::with_text("plain", Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(after);
+        let mut c = doc4me_doc::Paragraph::with_text("c", Default::default());
+        c.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        c.props.space_before = Some(0.0);
+        c.props.space_after = Some(0.0);
+        d.body = vec![
+            doc4me_doc::para_block(f),
+            doc4me_doc::para_block(c),
+            doc4me_doc::para_block(h),
+            doc4me_doc::para_block(p),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::new()),
+        ];
+        footnote(&mut d, &Pos::body(1, 1), "note");
+        let l = lay(&d);
+        let page = |len: usize| {
+            l.pages
+                .iter()
+                .position(|pg| pg.items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, para, .. } if para.text_len == len)))
+                .unwrap()
+        };
+        (page(7), page(5))
+    };
+    // The tallest filler that still leaves the heading and the paragraph on the first page.
+    let fits = (400..648).rev().map(|f| f as f32).find(|&f| pages_of(f, 0.0, 15) == (0, 0)).unwrap();
+    assert_eq!(pages_of(fits, 12.0, 15), (1, 1), "mode 15: with 12 pt after both go on");
+    assert_eq!(pages_of(fits, 12.0, 14), (0, 0), "mode 14: the paragraph's space after may reach past the notes");
+}
+
+/// A paragraph with a footnote of its own leaves room for its space after above the notes
+/// (govuk-037's bullets citing notes 4 and 9 go on to the next page in Word's PDF though their
+/// lines and notes alone fit).
+#[test]
+fn a_paragraph_citing_a_note_keeps_its_space_after_clear_of_the_notes() {
+    use doc4me_doc::props::LineSpacing;
+    let page_of = |filler: f32, after: f32| {
+        let mut d = Document::new();
+        let mut f = doc4me_doc::Paragraph::with_text("Fill", Default::default());
+        f.props.line_spacing = Some(LineSpacing::Exactly(filler));
+        f.props.space_after = Some(0.0);
+        let mut p = doc4me_doc::Paragraph::with_text("cited", Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(after);
+        d.body = vec![doc4me_doc::para_block(f), doc4me_doc::para_block(p), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        footnote(&mut d, &Pos::body(1, 5), "note");
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .position(|pg| pg.items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, para, .. } if para.text_len > 4)))
+            .unwrap()
+    };
+    // The tallest filler that still leaves the cited line and its note on the first page.
+    let fits = (400..648).rev().map(|f| f as f32).find(|&f| page_of(f, 0.0) == 0).unwrap();
+    assert_eq!(page_of(fits, 0.0), 0);
+    assert_eq!(page_of(fits, 12.0), 1, "with 12 pt after it goes on with its note");
+}
+
+fn page_float(x: f32, y: f32) -> doc4me_doc::para::Float {
+    doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::InFrontOfText,
+        h_rel: doc4me_doc::para::Anchor::Page,
+        v_rel: doc4me_doc::para::Anchor::Page,
+        x,
+        y,
+        dist: 0.0,
+        ..Default::default()
+    }
+}
+
+#[test]
+fn text_boxes_show_in_headers_footers_cells_and_notes() {
+    let mut d = Document::from_text(&"Body paragraph.\n".repeat(4));
+    // Header: an inline box and a box placed on the page.
+    let hid = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Head", Default::default()))]);
+    d.last_section.headers.default = Some(hid);
+    let e = d.end_of(StoryRef::Part(hid));
+    let inline = text_box_at(&mut d, &e, "Inline in header", 100.0, 30.0, Default::default());
+    let e = d.end_of(StoryRef::Part(hid));
+    let placed = text_box_at(&mut d, &e, "On the page", 100.0, 40.0, page_float(400.0, 20.0));
+    // Footer: a box placed on the page (the footer is laid out twice to find it).
+    let fid = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Foot", Default::default()))]);
+    d.last_section.footers.default = Some(fid);
+    let e = d.end_of(StoryRef::Part(fid));
+    let in_footer = text_box_at(&mut d, &e, "Footer box", 100.0, 30.0, page_float(300.0, 740.0));
+    // A table cell and a footnote.
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(doc4me_doc::Table::new(1, 1, 300.0))).unwrap();
+    let cell = Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 };
+    let in_cell = text_box_at(&mut d, &cell, "In a cell", 120.0, 30.0, Default::default());
+    let note = footnote(&mut d, &Pos::body(0, 4), "Note: ");
+    let e = d.end_of(StoryRef::Part(note));
+    let in_note = text_box_at(&mut d, &e, "In a note", 120.0, 30.0, Default::default());
+    let l = lay(&d);
+    let p = &l.pages[0];
+    let shows =
+        |id: u32| p.header.iter().chain(&p.footer).chain(&p.items).any(|i| matches!(i, Placed::Lines { story: StoryRef::Part(s), .. } if *s == id));
+    for (name, id) in
+        [("inline header box", inline), ("page header box", placed), ("footer box", in_footer), ("cell box", in_cell), ("note box", in_note)]
+    {
+        assert!(shows(id), "{name}: no text");
+        assert!(l.caret(&d.start_of(StoryRef::Part(id))).is_some(), "{name}: no caret");
+    }
+    // Page-anchored boxes land where they say, header and footer alike; their shapes are drawn.
+    assert_eq!(l.text_box(placed, 0).map(|o| (o.rect.x, o.rect.y)), Some((400.0, 20.0)));
+    assert_eq!(l.text_box(in_footer, 0).map(|o| (o.rect.x, o.rect.y)), Some((300.0, 740.0)));
+    assert!(p.header.iter().any(|i| matches!(i, Placed::Shape { rect, .. } if rect.x == 400.0)));
+    // Header boxes are found for clicks while editing the header.
+    let r = l.text_box(inline, 0).unwrap().rect;
+    assert_eq!(l.header_footer_text_box_at(0, r.x + 5.0, r.y + 5.0), Some(inline));
+}
+
+#[test]
+fn footnotes_inside_text_boxes_are_numbered_and_placed() {
+    let mut d = Document::from_text(&"Body text line.\n".repeat(30));
+    let id = text_box_at(&mut d, &Pos::body(2, 0), "Box text", 144.0, 40.0, Default::default());
+    let e = d.end_of(StoryRef::Part(id));
+    let in_box = footnote(&mut d, &e, "Note from the box.");
+    let after = footnote(&mut d, &Pos::body(5, 4), "Note from the body.");
+    let l = lay(&d);
+    // Both notes are at the bottom of page 1, the box's first (reading order).
+    let a = l.caret(&d.start_of(StoryRef::Part(in_box))).expect("the box's footnote is placed");
+    let b = l.caret(&d.start_of(StoryRef::Part(after))).unwrap();
+    assert_eq!((a.page, b.page), (0, 0));
+    assert!(a.top > 600.0 && a.top < b.top, "{a:?} {b:?}");
+    let nums = note_numbers(&d, false);
+    assert_eq!((nums.get(&in_box), nums.get(&after)), (Some(&1), Some(&2)));
+}
+
+/// A document whose text box `ids[k]` holds `fan` shapes showing `ids[k + 1]` (the last one shows
+/// itself, `fan` times): crafted, since the app never builds these.
+fn box_fan_out(levels: usize, fan: usize) -> Document {
+    let (w, h) = (40.0, 20.0);
+    let mut d = Document::from_text("Body");
+    let ids: Vec<u32> = (0..levels)
+        .map(|k| {
+            d.add_part(
+                doc4me_doc::PartKind::TextBox,
+                vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Level {k}"), Default::default()))],
+            )
+        })
+        .collect();
+    let shape = |story| InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 0.0,
+        float: Default::default(),
+        story: Some(story),
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    for (k, id) in ids.iter().enumerate() {
+        let next = *ids.get(k + 1).unwrap_or(id);
+        for _ in 0..fan {
+            d.insert_object(&Pos { story: StoryRef::Part(*id), path: Path::top(0), off: 0 }, shape(next), &Default::default()).unwrap();
+        }
+    }
+    d.insert_object(&Pos::body(0, 0), shape(ids[0]), &Default::default()).unwrap();
+    d
+}
+
+#[test]
+fn self_showing_and_fanned_out_text_boxes_stay_bounded() {
+    // A box whose 30 shapes all show itself: laid out once.
+    assert_eq!(lay(&box_fan_out(1, 30)).text_boxes, 1);
+    // Chains of boxes each showing the next 30 times (30^4 expansions unbounded).
+    let d = box_fan_out(5, 30);
+    let l = lay(&d);
+    assert!(l.text_boxes <= 1 + doc4me_doc::BoxBudget::MAX_NESTED, "{} boxes laid out", l.text_boxes);
+    // Footnote numbering's walk is bounded the same way.
+    let mut visits = 0usize;
+    d.objects_in_reading_order(&mut |_| visits += 1);
+    assert!(visits < 5_000, "{visits} visits");
+}
+
+#[test]
+fn many_text_boxes_and_a_header_box_all_show() {
+    // Outermost boxes aren't budgeted: a long document's boxes, and its header's on every page,
+    // all get their text.
+    let mut d = Document::from_text("Paragraph with a box.");
+    for _ in 1..400 {
+        let end = d.end_of(StoryRef::Body);
+        d.split_paragraph(&end).unwrap();
+    }
+    let ids: Vec<u32> = (0..400).map(|k| text_box_at(&mut d, &Pos::body(k, 0), &format!("Box {k}"), 100.0, 30.0, Default::default())).collect();
+    let hid = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Head", Default::default()))]);
+    d.last_section.headers.default = Some(hid);
+    let e = d.end_of(StoryRef::Part(hid));
+    let in_header = text_box_at(&mut d, &e, "Header box", 100.0, 30.0, Default::default());
+    let l = lay(&d);
+    assert!(l.pages.len() >= 10, "{} pages", l.pages.len());
+    for id in ids {
+        assert!(l.caret(&d.start_of(StoryRef::Part(id))).is_some(), "box {id} has no text");
+    }
+    for (i, p) in l.pages.iter().enumerate() {
+        let shown = p.header.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Part(s), .. } if *s == in_header));
+        assert!(shown, "page {i}: the header box has no text");
+    }
+}
+
+#[test]
+fn a_text_box_inside_a_text_box_still_shows_its_text() {
+    let mut d = Document::from_text("Body");
+    let outer = text_box(&mut d, 0, "Outer ", 300.0, 200.0, Default::default());
+    let e = d.end_of(StoryRef::Part(outer));
+    let inner = text_box_at(&mut d, &e, "Inner", 120.0, 40.0, Default::default());
+    let l = lay(&d);
+    assert_eq!(l.text_boxes, 2);
+    assert!(l.caret(&d.start_of(StoryRef::Part(inner))).is_some(), "the inner box's text is laid out");
+}
+
+fn picture(w: f32, h: f32, float: doc4me_doc::para::Float) -> InlineObject {
+    InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    }
+}
+
+#[test]
+fn line_spacing_does_not_scale_pictures() {
+    use doc4me_doc::props::LineSpacing;
+    let mut d = Document::from_text("");
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+        p.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+        p.insert_object(0, picture(144.0, 144.0, Default::default()), &Default::default()).unwrap();
+    }
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let line = &para.lines[0];
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    // Word's measured picture line keeps the picture's size and adds only the font's share
+    // of the multiple spacing (dc388cfa); it has no text descent below the picture.
+    assert!((line.height - (144.0 + 0.15 * natural)).abs() < 0.01, "line {} for a 144pt picture", line.height);
+    assert!((line.baseline - line.top - 144.0).abs() < 0.01, "the picture stands on the baseline");
+    // With text on the line, the text's descent stays below the picture.
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+        let props = p.mark.clone();
+        p.insert_text(0, "x", &props).unwrap();
+    }
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let (line, desc) = (&para.lines[0], para.styles[0].descent);
+    assert!((line.height - (144.0 + desc + 0.15 * natural)).abs() < 0.01, "line {} for a 144pt picture and text (descent {desc})", line.height);
+}
+
+#[test]
+fn a_picture_line_in_a_table_cell_adds_the_fonts_share_of_multiple_spacing() {
+    // zenodo-157: each row of a table whose cells hold an 11 pt heading and an inline picture
+    // (1.15 spacing) is 1.9 pt (0.15 of the font's 12.64 pt line) taller in Word's PDF than the
+    // picture alone, as in the body.
+    use doc4me_doc::props::LineSpacing;
+    let mut d = Document::from_text("Body");
+    let mut t = Table::new(1, 1, 300.0);
+    let mut cp = doc4me_doc::Paragraph::with_text("", Default::default());
+    cp.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    cp.insert_object(0, picture(100.0, 80.0, Default::default()), &Default::default()).unwrap();
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { path, .. } if path.0.len() > 1)) else {
+        panic!("no cell line")
+    };
+    let line = &para.lines[0];
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    assert!((line.height - (80.0 + 0.15 * natural)).abs() < 0.01, "line {} for an 80 pt picture in a cell", line.height);
+}
+
+#[test]
+fn alignment_tabs_between_inline_pictures_do_not_add_text_descent() {
+    use doc4me_doc::props::LineSpacing;
+
+    let mut d = Document::from_text("\t\t");
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.props.line_spacing = Some(LineSpacing::Multiple(1.15));
+    p.insert_object(0, picture(100.0, 40.0, Default::default()), &Default::default()).unwrap();
+    p.insert_object(p.text.len(), picture(60.0, 20.0, Default::default()), &Default::default()).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let line = &para.lines[0];
+    let natural = para.styles[0].ascent + para.styles[0].descent;
+    assert!((line.height - (40.0 + 0.15 * natural)).abs() < 0.01, "alignment tabs don't add descent below the logos: {line:?}");
+    assert!((line.baseline - line.top - 40.0).abs() < 0.01);
+
+    // An actual letter following the same tabs still needs its font's descent.
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.insert_text(p.text.len(), "y", &Default::default()).unwrap();
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let (line, desc) = (&para.lines[0], para.styles[0].descent);
+    assert!((line.height - (40.0 + desc + 0.15 * natural)).abs() < 0.01, "text below the baseline keeps its room: {line:?}");
+}
+
+#[test]
+fn picture_line_leading_uses_the_font_and_whitespace_takes_no_descent_outside_cells() {
+    use doc4me_doc::props::LineSpacing;
+
+    for multiple in [1.0, 1.15, 1.5, 2.0] {
+        for lead in ["", "   ", "\t", "Text "] {
+            let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+            let mut p = doc4me_doc::Paragraph::with_text(lead, props.clone());
+            p.mark = props.clone();
+            p.props.line_spacing = Some(LineSpacing::Multiple(multiple));
+            p.insert_object(p.len(), picture(40.0, 30.0, Default::default()), &props).unwrap();
+            let mut d = Document::new();
+            d.body = vec![doc4me_doc::para_block(p)];
+            let l = lay(&d);
+            let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+            let st = &para.styles[0];
+            let natural = st.ascent + st.descent;
+            let desc = if lead == "Text " { st.descent } else { 0.0 };
+            assert!((para.lines[0].height - (30.0 + desc + (multiple - 1.0) * natural)).abs() < 0.01, "{multiple}, {lead:?}");
+            assert!((para.lines[0].baseline - para.lines[0].top - 30.0).abs() < 0.01);
+            assert!((para.lines[0].text_desc - desc).abs() < 0.01);
+
+            // In a table cell the line gets the same share of the font's height (zenodo-157's
+            // picture rows in Word's PDF); the whitespace rule there awaits its own comparison.
+            let mut table = doc4me_doc::Table::new(1, 1, 468.0);
+            table.rows[0].cells[0].blocks = d.body.clone();
+            d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(table))];
+            let l = lay(&d);
+            let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+            let desc = if lead.is_empty() || lead == "\t" { 0.0 } else { para.styles[0].descent };
+            assert!((para.lines[0].height - (30.0 + desc + (multiple - 1.0) * natural)).abs() < 0.01, "table: {multiple}, {lead:?}");
+        }
+        // A picture shorter than the font ends at the font's bottom, without adding descent.
+        let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("", props.clone());
+        p.mark = props.clone();
+        p.props.line_spacing = Some(LineSpacing::Multiple(multiple));
+        p.insert_object(0, picture(40.0, 6.0, Default::default()), &props).unwrap();
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { .. })) else { panic!() };
+        let natural = para.styles[0].ascent + para.styles[0].descent;
+        assert!((para.lines[0].height - natural * multiple).abs() < 0.01);
+        assert!((para.lines[0].baseline - para.lines[0].top - natural).abs() < 0.01);
+    }
+}
+
+#[test]
+fn multiple_line_spacing_adds_its_leading_below_the_text() {
+    use doc4me_doc::props::LineSpacing;
+    // (spacing, expected baseline below the line top as a share of the ascent)
+    for (spacing, share) in [(LineSpacing::Multiple(1.15), 1.0), (LineSpacing::Multiple(2.0), 1.0), (LineSpacing::Multiple(0.8), 0.8)] {
+        let mut d = Document::from_text(&"Several words wrap onto more lines. ".repeat(30));
+        if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+            p.props.line_spacing = Some(spacing);
+        }
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        let asc = para.styles[0].ascent;
+        assert!(para.lines.len() > 1);
+        for line in &para.lines {
+            // Word's 1.15-spaced Times New Roman 12pt sits one ascent below the line top; the
+            // 0.15 extra goes below the descent (docxide-pdf's hyphenation fixtures).
+            assert!(
+                (line.baseline - line.top - asc * share).abs() < 0.01,
+                "{spacing:?}: baseline {} below the top, ascent {asc}",
+                line.baseline - line.top
+            );
+        }
+    }
+    // Exact spacing still keeps the descent below the baseline.
+    let mut d = Document::from_text("Exact");
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+        p.props.line_spacing = Some(LineSpacing::Exactly(30.0));
+    }
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let line = &para.lines[0];
+    assert!((line.top + line.height - line.baseline - para.styles[0].descent).abs() < 0.01);
+}
+
+#[test]
+fn body_starts_right_below_a_tall_header() {
+    let mut d = Document::from_text("Body");
+    let mut hp = doc4me_doc::Paragraph::with_text("", Default::default());
+    hp.insert_object(0, picture(100.0, 80.0, Default::default()), &Default::default()).unwrap();
+    hp.props.space_after = Some(0.0);
+    let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(hp)]);
+    d.last_section.headers.default = Some(id);
+    let l = lay(&d);
+    let Some(Placed::Lines { para, y, .. }) = l.pages[0].header.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let header_bottom = y + para.height;
+    assert!(header_bottom > d.last_section.margin_top, "the header reaches past the top margin");
+    // No gap: the body's first paragraph starts where the header ends (Word).
+    let body = l.pages[0].items.iter().find_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).unwrap();
+    assert!((body - header_bottom).abs() < 0.01, "body at {body}, header ends at {header_bottom}");
+}
+
+#[test]
+fn inline_picture_keeps_room_for_its_effects() {
+    let mut d = Document::from_text("");
+    let shadow = doc4me_doc::para::Float { effect: [6.0, 12.0, 18.0, 27.0], ..Default::default() };
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+        p.insert_object(0, picture(100.0, 50.0, shadow.clone()), &Default::default()).unwrap();
+    }
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let c = para.clusters.iter().find(|c| matches!(c.kind, para::ClKind::Object(_))).unwrap();
+    assert_eq!((c.adv, c.obj_h), (124.0, 89.0), "picture plus effect extents");
+    // Drawn inside that room.
+    let obj = picture(100.0, 50.0, shadow);
+    let r = display::inline_rect(Some(&obj), 10.0, 200.0, c.adv, c.obj_h);
+    assert_eq!((r.x, r.y, r.w, r.h), (16.0, 123.0, 100.0, 50.0));
+}
+
+/// Tops of the body text lines drawn on page one, in order.
+fn line_tops(l: &DocLayout) -> Vec<f32> {
+    l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect()
+}
+
+#[test]
+fn the_larger_of_space_after_and_space_before_separates_paragraphs() {
+    let gap = |after: f32, before: f32, add: bool| {
+        let mut d = Document::new();
+        d.settings.add_para_spacing = add;
+        let p = |props| {
+            let mut p = doc4me_doc::Paragraph::with_text("Line", Default::default());
+            p.props = props;
+            doc4me_doc::para_block(p)
+        };
+        d.body =
+            vec![p(ParaProps { space_after: Some(after), ..Default::default() }), p(ParaProps { space_before: Some(before), ..Default::default() })];
+        let tops = line_tops(&lay(&d));
+        tops[1] - tops[0]
+    };
+    let line = gap(0.0, 0.0, false);
+    // Word since 2007 (measured on the corpus's Word PDFs): the larger of the two.
+    assert!((gap(8.0, 3.0, false) - line - 8.0).abs() < 0.01, "{}", gap(8.0, 3.0, false) - line);
+    assert!((gap(8.0, 12.0, false) - line - 12.0).abs() < 0.01);
+    // Don't use HTML paragraph auto spacing: both.
+    assert!((gap(8.0, 3.0, true) - line - 11.0).abs() < 0.01);
+}
+
+/// Table cells (and other boxes) separate paragraphs as the body does: the larger of the space
+/// after and the space before, both only with Don't use HTML paragraph auto spacing. zenodo-091's
+/// cells put two 11 pt Arial paragraphs with 3 pt before and after 15.72 pt apart in Word's PDF.
+#[test]
+fn table_cells_put_the_larger_of_space_after_and_space_before_between_paragraphs() {
+    let gap = |after: f32, before: f32, add: bool| {
+        let mut d = Document::from_text("before\nafter");
+        d.settings.add_para_spacing = add;
+        let p = |props| {
+            let mut p = doc4me_doc::Paragraph::with_text("Line", Default::default());
+            p.props = props;
+            doc4me_doc::para_block(p)
+        };
+        let mut t = Table::new(1, 1, 468.0);
+        t.rows[0].cells[0].blocks = vec![
+            p(ParaProps { space_before: Some(3.0), space_after: Some(after), ..Default::default() }),
+            p(ParaProps { space_before: Some(before), space_after: Some(3.0), ..Default::default() }),
+        ];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let top = |i: u32| l.caret(&Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, i]), off: 0 }).unwrap().top;
+        top(1) - top(0)
+    };
+    let line = gap(0.0, 0.0, false);
+    assert!((gap(3.0, 3.0, false) - line - 3.0).abs() < 0.01, "{}", gap(3.0, 3.0, false) - line);
+    assert!((gap(8.0, 3.0, false) - line - 8.0).abs() < 0.01);
+    assert!((gap(3.0, 12.0, false) - line - 12.0).abs() < 0.01);
+    // Inside a box, a later paragraph's negative space before stays clamped at zero, as before.
+    assert!((gap(8.0, -2.0, false) - line - 8.0).abs() < 0.01, "{}", gap(8.0, -2.0, false) - line);
+    // Don't use HTML paragraph auto spacing: both.
+    assert!((gap(3.0, 3.0, true) - line - 6.0).abs() < 0.01);
+    assert!((gap(8.0, 3.0, true) - line - 11.0).abs() < 0.01);
+}
+
+/// A tab in a bigger font doesn't make a line of text taller: Word's PDF of zenodo-091 steps its
+/// contents lines, Arial 11 pt text around a 12 pt Calibri tab, by Arial's 12.6 pt line. A line
+/// of nothing but tabs keeps their height.
+#[test]
+fn a_bigger_tab_does_not_raise_a_line_of_text() {
+    let height = |runs: &[(&str, f32)]| {
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        for (text, size) in runs {
+            let props = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(*size), ..Default::default() };
+            let at = p.text.len();
+            p.insert_text(at, text, &props).unwrap();
+        }
+        p.props.space_before = Some(0.0);
+        p.props.space_after = Some(0.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        p.mark = doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(11.0), ..Default::default() };
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, l0, .. }) = l.pages[0].items.iter().find(|it| matches!(it, Placed::Lines { story: StoryRef::Body, .. }))
+        else {
+            panic!("missing body lines")
+        };
+        para.lines[*l0].height
+    };
+    let text = height(&[("1.1", 11.0), ("Data summary", 11.0)]);
+    let with_tab = height(&[("1.1", 11.0), ("\t", 24.0), ("Data summary", 11.0)]);
+    assert!((with_tab - text).abs() < 0.01, "a 24 pt tab between 11 pt words: {with_tab} against {text}");
+    let tabs_only = height(&[("\t\t", 24.0)]);
+    assert!(tabs_only > text + 5.0, "a line of 24 pt tabs keeps their height: {tabs_only} against {text}");
+}
+
+/// A manual break with the next line's larger formatting does not raise the preceding text
+/// (govuk-024). Empty lines retain their own break formatting, including inside cells.
+#[test]
+fn a_manual_break_uses_its_font_height_only_on_a_blank_line() {
+    let lines = |mode, cell, first: &str, break_size, extra_break, next_size| {
+        let props = |size| doc4me_doc::CharProps { font: Some("Arial".into()), size: Some(size), ..Default::default() };
+        let mut p = Paragraph::with_text(first, props(8.0));
+        let br = doc4me_doc::para::LINE_BREAK.to_string();
+        p.insert_text(p.len(), &br, &props(break_size)).unwrap();
+        if extra_break {
+            p.insert_text(p.len(), &br, &props(break_size)).unwrap();
+        }
+        p.insert_text(p.len(), "Next", &props(next_size)).unwrap();
+        p.mark = props(8.0);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        d.body = if cell {
+            let mut table = Table::new(1, 1, 300.0);
+            table.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(p)];
+            vec![Arc::new(doc4me_doc::Block::Table(table))]
+        } else {
+            vec![doc4me_doc::para_block(p)]
+        };
+        let l = lay(&d);
+        let para = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| match it {
+                Placed::Lines { para, .. } => Some(para),
+                _ => None,
+            })
+            .unwrap();
+        para.lines.iter().map(|line| (line.height, line.baseline)).collect::<Vec<_>>()
+    };
+    for mode in [14, 15] {
+        for cell in [false, true] {
+            let plain = lines(mode, cell, "First", 8.0, false, 24.0);
+            let large_break = lines(mode, cell, "First", 24.0, false, 24.0);
+            assert_eq!(plain.len(), 2);
+            assert_eq!(large_break.len(), 2);
+            for (a, b) in plain.iter().zip(&large_break) {
+                assert!((a.0 - b.0).abs() < 0.01 && (a.1 - b.1).abs() < 0.01, "mode {mode}, cell {cell}: {plain:?} / {large_break:?}");
+            }
+            assert!(plain[1].0 > plain[0].0 + 5.0, "the next line keeps its larger text");
+            let blank = lines(mode, cell, "", 24.0, false, 8.0);
+            assert!(blank[0].0 > plain[0].0 + 5.0, "a blank line keeps its 24 pt break");
+            let consecutive = lines(mode, cell, "First", 24.0, true, 8.0);
+            assert_eq!(consecutive.len(), 3);
+            assert!((consecutive[0].0 - plain[0].0).abs() < 0.01);
+            assert!(consecutive[1].0 > consecutive[0].0 + 5.0);
+            assert!((consecutive[2].0 - plain[0].0).abs() < 0.01);
+        }
+    }
+}
+
+#[test]
+fn a_page_break_ending_a_paragraph_keeps_the_mark_on_its_page() {
+    let top_of_b = |split: bool, mode: u32| {
+        let mut d = Document::new();
+        d.settings.split_page_break_mark = split;
+        d.settings.compat_mode = mode;
+        let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+        let b = doc4me_doc::Paragraph::with_text("B", Default::default());
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b)];
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 2);
+        let tops: Vec<f32> =
+            l.pages[1].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        (tops[0], *tops.last().unwrap())
+    };
+    // Word 2013 and later: B starts page two.
+    let (first, b) = top_of_b(false, doc4me_doc::COMPAT_MODE_CURRENT);
+    assert!((first - b).abs() < 0.01, "only B on page two: {first} {b}");
+    // splitPgBreakAndParaMark (Word 2010): the mark takes a line there first.
+    let (first, b) = top_of_b(true, doc4me_doc::COMPAT_MODE_CURRENT);
+    assert!(b > first + 5.0, "the mark's line comes first: {first} {b}");
+    // A Word 2010 document (compatibility mode 14) without the setting lays out like the rest:
+    // Word's own layout of such documents in the corpus has no empty line there (govuk-034,
+    // govuk-043, govuk-045, govuk-054).
+    let (first, b) = top_of_b(false, 14);
+    assert!((first - b).abs() < 0.01, "mode 14 without the setting: only B on page two: {first} {b}");
+    // The space after a paragraph ending with a page break stays behind, so a heading that starts
+    // a page of its own (page break before) doesn't add another page.
+    let mut d = Document::new();
+    let mut a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    a.props.space_after = Some(24.0);
+    let mut b = doc4me_doc::Paragraph::with_text("B", Default::default());
+    b.props.page_break_before = Some(true);
+    d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b)];
+    assert_eq!(lay(&d).pages.len(), 2);
+}
+
+#[test]
+fn a_continuous_section_starts_below_the_objects_text_wraps_around() {
+    use doc4me_doc::section::SectionStart;
+    // Section one: one paragraph anchoring a square-wrapped box 80pt below it, as wide as the
+    // text. Section two (continuous) starts below the box, not in the gap above it (zenodo-153).
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::Square,
+        h_rel: doc4me_doc::para::Anchor::Margin,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        x: 0.0,
+        y: 80.0,
+        ..Default::default()
+    };
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w: 468.0,
+        h: 60.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    let mut a = doc4me_doc::Paragraph::with_text("A", Default::default());
+    a.text.push(doc4me_doc::para::OBJ);
+    a.objects = vec![shape];
+    if let Some(r) = a.runs.last_mut() {
+        r.len += doc4me_doc::para::OBJ.len_utf8();
+    }
+    a.section = Some(Box::new(doc4me_doc::SectionProps::default()));
+    let b = doc4me_doc::Paragraph::with_text("B", Default::default());
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b)];
+    // Two columns, as in zenodo-153: the new column layout's top used to ignore the box.
+    d.last_section.start = SectionStart::Continuous;
+    d.last_section.columns.count = 2;
+    let l = lay(&d);
+    let items = &l.pages[0].items;
+    let box_bottom = items.iter().find_map(|i| if let Placed::Shape { rect, .. } = i { Some(rect.bottom()) } else { None }).expect("the box");
+    let tops: Vec<f32> = items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+    let b_top = *tops.last().expect("B's line");
+    assert!(b_top >= box_bottom - 0.01, "B starts below the box: {b_top} < {box_bottom} ({tops:?})");
+}
+
+#[test]
+fn a_hyphen_between_digits_is_a_break_opportunity() {
+    // Word breaks a phone number or a year range after its hyphen (zenodo-012: "98173-" | "4097"),
+    // where UAX #14 reads the hyphen as a minus sign. A minus before a number, a hyphen between
+    // letters and an en dash are left as they were.
+    assert_eq!(para::digit_hyphen_breaks("16 98173-4097;"), vec![9]);
+    assert_eq!(para::digit_hyphen_breaks("2010-2015 and 1-2-3"), vec![5, 16, 18]);
+    assert!(para::digit_hyphen_breaks("-5 well-known 5–6 5-").is_empty());
+    assert_eq!(para::digit_hyphen_breaks("post-COVID-19"), vec![11]);
+    // In a line too narrow for the number, it breaks right after the hyphen, not at whatever
+    // character the width runs out at.
+    let mut d = Document::from_text("98173-4097");
+    d.last_section.page_w = d.last_section.margin_left + d.last_section.margin_right + 45.0;
+    let l = lay(&d);
+    let first_line_end = l.pages[0]
+        .items
+        .iter()
+        .find_map(|i| if let Placed::Lines { para, l0, .. } = i { para.lines.get(*l0).map(|ln| para.clusters[ln.c1 - 1].end) } else { None })
+        .expect("a line");
+    assert_eq!(first_line_end, 6, "the first line is \"98173-\"");
+}
+
+#[test]
+fn restart_at_one_with_even_odd_headers_keeps_a_recto_start() {
+    for previous in [0, 1, 2, 3, u32::MAX] {
+        for even_odd in [false, true] {
+            for restart in [None, Some(0), Some(1), Some(2)] {
+                let mut d = Document::new();
+                d.settings.even_odd_headers = even_odd;
+                let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+                cover.section = Some(Box::new(SectionProps { page_num_start: Some(previous), ..Default::default() }));
+                d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+                d.last_section.page_num_start = restart;
+                let l = lay(&d);
+                let extra = even_odd && restart == Some(1) && !previous.is_multiple_of(2);
+                assert_eq!(l.pages.len(), if extra { 3 } else { 2 }, "previous={previous}, even_odd={even_odd}, restart={restart:?}");
+                let last = l.pages.last().unwrap();
+                assert_eq!(last.number, restart.unwrap_or_else(|| previous.wrapping_add(1)));
+                assert!(!last.parity_filler);
+                if extra {
+                    let blank = &l.pages[1];
+                    assert!(blank.parity_filler && blank.items.is_empty() && blank.header.is_empty() && blank.footer.is_empty());
+                    assert_eq!(blank.section, 0);
+                    assert_eq!(blank.number, previous.wrapping_add(1));
+                    assert_eq!(last.section, 1);
+                }
+            }
+        }
+    }
+}
+
+#[test]
+fn restart_at_one_with_mirror_margins_keeps_a_recto_start() {
+    // zenodo-114: mirrored margins and a Next Column break (one column) restarting at 1 after
+    // page vii: Word leaves a blank verso so page 1 is a recto.
+    for (mirror, start, extra) in [
+        (true, SectionStart::NextColumn, true),
+        (true, SectionStart::NextPage, true),
+        (false, SectionStart::NextColumn, false),
+        (true, SectionStart::Continuous, false),
+    ] {
+        let mut d = Document::new();
+        d.settings.mirror_margins = mirror;
+        let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+        cover.section = Some(Box::new(SectionProps { page_num_start: Some(7), ..Default::default() }));
+        d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+        d.last_section.page_num_start = Some(1);
+        d.last_section.start = start;
+        let l = lay(&d);
+        let fillers = l.pages.iter().filter(|p| p.parity_filler).count();
+        assert_eq!(fillers, usize::from(extra), "mirror={mirror}, start={start:?}");
+    }
+}
+
+#[test]
+fn a_restart_parity_page_does_not_take_the_first_page_header() {
+    let mut d = Document::new();
+    d.settings.even_odd_headers = true;
+    let mut cover = doc4me_doc::Paragraph::with_text("Cover", Default::default());
+    cover.section = Some(Box::new(SectionProps::default()));
+    d.body = vec![doc4me_doc::para_block(cover), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Body", Default::default()))];
+    let first = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("First", Default::default()))]);
+    let even = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Even", Default::default()))]);
+    let footer = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Foot", Default::default()))]);
+    d.last_section.page_num_start = Some(1);
+    d.last_section.title_page = true;
+    d.last_section.headers.first = Some(first);
+    d.last_section.headers.even = Some(even);
+    d.last_section.footers.default = Some(footer);
+    d.last_section.footers.first = Some(footer);
+    let cover_note = footnote(&mut d, &Pos::body(0, 3), "Cover note.");
+    let body_note = footnote(&mut d, &Pos::body(1, 2), "Body note.");
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 3);
+    assert!(l.pages[1].parity_filler && l.pages[1].header.is_empty() && l.pages[1].footer.is_empty());
+    assert_eq!(l.pages[2].header_story, Some(first));
+    assert_eq!(l.pages[2].footer_story, Some(footer));
+    assert_eq!(l.caret(&d.start_of(StoryRef::Part(cover_note))).unwrap().page, 0);
+    assert_eq!(l.caret(&d.start_of(StoryRef::Part(body_note))).unwrap().page, 2);
+    // A continuous section stays on the page; a Next Column break in one column starts a page
+    // like Next Page and takes the recto too (zenodo-114).
+    d.last_section.start = SectionStart::Continuous;
+    assert!(lay(&d).pages.iter().all(|p| !p.parity_filler));
+    d.last_section.start = SectionStart::NextColumn;
+    assert!(lay(&d).pages.iter().any(|p| p.parity_filler));
+    d.last_section.start = SectionStart::NextPage;
+    let web = layout(&d, &mut LayoutCache::new(), &LayoutOptions { view: ViewMode::Web, ..Default::default() });
+    assert!(web.pages.iter().all(|p| !p.parity_filler));
+}
+
+#[test]
+fn page_numbers_can_restart_at_zero() {
+    // `w:pgNumType w:start="0"`: a title page counted as page 0, so the page after it shows 1
+    // (corpus govuk-032, zenodo-096, zenodo-097, zenodo-140, zenodo-147). It used to start at 1.
+    let mut d = Document::new();
+    d.last_section.page_num_start = Some(0);
+    let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    let b = doc4me_doc::Paragraph::with_text(&format!("B{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    d.body =
+        vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("C", Default::default()))];
+    let numbers: Vec<u32> = lay(&d).pages.iter().map(|p| p.number).collect();
+    assert_eq!(numbers, [0, 1, 2]);
+    d.last_section.page_num_start = Some(5);
+    let numbers: Vec<u32> = lay(&d).pages.iter().map(|p| p.number).collect();
+    assert_eq!(numbers, [5, 6, 7], "other starts are unchanged");
+}
+
+#[test]
+fn space_before_after_a_page_break_is_dropped_in_every_compatibility_mode() {
+    // A heading with space before starts the page after a page break that ended the paragraph
+    // before. Word drops that space at the top of the new page in every compatibility mode
+    // (zenodo-022, -123 and govuk-046's headings after page breaks sit at the top margin).
+    let heading_top = |mode: u32| {
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+        let mut b = doc4me_doc::Paragraph::with_text("B", Default::default());
+        b.props.space_before = Some(24.0);
+        let mut c = doc4me_doc::Paragraph::with_text("C", Default::default());
+        c.props.space_before = Some(24.0);
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(b), doc4me_doc::para_block(c)];
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 2);
+        let tops: Vec<f32> =
+            l.pages[1].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        (tops[0], tops[1])
+    };
+    let (b14, c14) = heading_top(14);
+    let (b15, c15) = heading_top(doc4me_doc::COMPAT_MODE_CURRENT);
+    assert!((b15 - b14).abs() < 0.01, "both modes drop B's space before: {b14} {b15}");
+    let top = lay(&Document::new()).pages[0].body.y;
+    assert!((b15 - top).abs() < 0.01, "B starts at the top margin: {b15} vs {top}");
+    // Only the first paragraph on the page: C keeps its space before in both.
+    assert!(((c15 - b15) - (c14 - b14)).abs() < 0.01, "C's space before is kept: {c14} {c15}");
+}
+
+#[test]
+fn space_before_at_the_top_of_a_next_page_section_is_dropped() {
+    // zenodo-022's annex heading (12pt before) opens a landscape Next Page section under an empty
+    // heading of its style with as much space after; Word puts it at the top margin, and the
+    // document's first paragraph keeps its space before.
+    let mut d = Document::new();
+    let mut first = doc4me_doc::Paragraph::with_text("A", Default::default());
+    first.props.space_before = Some(24.0);
+    first.props.space_after = Some(24.0);
+    let mut sect = d.last_section.clone();
+    sect.start = doc4me_doc::section::SectionStart::NextPage;
+    first.section = Some(Box::new(sect));
+    let mut b = doc4me_doc::Paragraph::with_text("B", Default::default());
+    b.props.space_before = Some(24.0);
+    d.body = vec![doc4me_doc::para_block(first), doc4me_doc::para_block(b)];
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let first_y = |p: &Page| p.items.iter().find_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None });
+    let (a, b) = (first_y(&l.pages[0]).unwrap(), first_y(&l.pages[1]).unwrap());
+    assert!((a - l.pages[0].body.y - 24.0).abs() < 0.01, "the first page keeps it: {a}");
+    assert!((b - l.pages[1].body.y).abs() < 0.01, "the new section's page drops it: {b}");
+}
+
+#[test]
+fn a_superscript_paragraph_mark_keeps_the_full_line_height() {
+    // zenodo-022: empty paragraphs whose mark is superscript are as tall as plain ones in Word.
+    let height = |va: doc4me_doc::props::VertAlign| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        p.mark.vert_align = Some(va);
+        d.body = vec![
+            doc4me_doc::para_block(p.clone()),
+            doc4me_doc::para_block(p),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("x", Default::default())),
+        ];
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        ys[2] - ys[0]
+    };
+    let plain = height(doc4me_doc::props::VertAlign::Baseline);
+    assert!(plain > 20.0, "two lines: {plain}");
+    assert!((height(doc4me_doc::props::VertAlign::Superscript) - plain).abs() < 0.01);
+    assert!((height(doc4me_doc::props::VertAlign::Subscript) - plain).abs() < 0.01);
+}
+
+#[test]
+fn at_least_rows_add_cell_margins_and_border_bands() {
+    use doc4me_doc::props::{Border, BorderStyle, Borders, HeightRule};
+    let mut d = Document::from_text("");
+    let line = Some(Border { style: BorderStyle::Single, width: 0.5, color: None, space: 0.0 });
+    let mut t = Table::new(2, 1, 200.0);
+    t.props.borders = Some(Borders { top: line, left: line, bottom: line, right: line, between: line, inside_v: line });
+    t.props.cell_margins = Some([5.0, 5.4, 5.0, 5.4]);
+    for (r, text) in t.rows.iter_mut().zip(["one", "two"]) {
+        r.props.height = Some(30.0);
+        r.props.height_rule = HeightRule::AtLeast;
+        r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))];
+    }
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t))];
+    let tops = line_tops(&lay(&d));
+    // Word: a 30pt at-least row with 5pt margins and 0.5pt borders steps 40.5pt, and the text
+    // starts below the top border and the top margin.
+    assert!((tops[1] - tops[0] - 40.5).abs() < 0.01, "row pitch {}", tops[1] - tops[0]);
+    assert!((tops[0] - (72.0 + 0.5 + 5.0)).abs() < 0.01, "first cell text at {}", tops[0]);
+}
+
+/// Line count and, per line, how far the text (trailing spaces excluded) reaches.
+fn justified_lines(text: &str, compat_mode: u32, align: Align) -> (usize, Vec<f32>) {
+    let mut d = Document::from_text(text);
+    d.settings.compat_mode = compat_mode;
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.align = Some(align)).unwrap();
+    let l = lay(&d);
+    let mut ends = Vec::new();
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, x, .. } = it {
+                for li in *l0..*l1 {
+                    let line = &para.lines[li];
+                    let content = text[line.start..line.stop].trim_end().len();
+                    ends.push(para.x_of(li, line.start + content).unwrap() + x);
+                }
+            }
+        }
+    }
+    (lines_of(&l), ends)
+}
+
+#[test]
+fn justified_lines_shrink_spaces_in_word_2013_mode() {
+    let text = "We tie the spend to a pipe and to the books, so it is in an ad hoc view of all of it. ".repeat(40);
+    let (modern, ends) = justified_lines(&text, 15, Align::Justify);
+    let (legacy, legacy_ends) = justified_lines(&text, 14, Align::Justify);
+    assert!(modern < legacy, "mode 15 fits more per line: {modern} vs {legacy} lines");
+    // Shrinking only ever pulls a line back inside the margin.
+    for e in ends.iter().chain(&legacy_ends) {
+        assert!(*e <= 540.0 + 0.05, "line ends past the right margin: {e}");
+    }
+    // Justified lines still reach the margin; the last line is the only short one.
+    for e in &ends[..ends.len() - 1] {
+        assert!((*e - 540.0).abs() < 0.05, "justified line ends at {e}");
+    }
+}
+
+#[test]
+fn space_shrinking_is_only_for_justified_text() {
+    let text = "We tie the spend to a pipe and to the books, so it is in an ad hoc view of all of it. ".repeat(40);
+    for align in [Align::Left, Align::Center, Align::Right] {
+        assert_eq!(justified_lines(&text, 15, align).0, justified_lines(&text, 14, align).0, "{align:?}");
+    }
+}
+
+#[test]
+fn lines_with_tabs_never_shrink() {
+    let text = "Item\tWe tie the spend to a pipe and to the books, so it is in an ad hoc view of all of it. ".repeat(30);
+    let (modern, _) = justified_lines(&text, 15, Align::Justify);
+    let (legacy, _) = justified_lines(&text, 14, Align::Justify);
+    assert!(modern <= legacy);
+    let (_, ends) = justified_lines(&text, 15, Align::Justify);
+    for e in &ends {
+        assert!(*e <= 540.0 + 0.05, "{e}");
+    }
+}
+
+fn rect_shape(w: f32, h: f32, float: doc4me_doc::para::Float) -> InlineObject {
+    InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    }
+}
+
+fn shapes(items: &[Placed]) -> Vec<Rect> {
+    items.iter().filter_map(|i| if let Placed::Shape { rect, .. } = i { Some(*rect) } else { None }).collect()
+}
+
+/// Top of the first body line drawn on a page.
+fn first_line_top(items: &[Placed]) -> f32 {
+    items.iter().find_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).unwrap()
+}
+
+#[test]
+fn floats_align_within_their_reference_area() {
+    use doc4me_doc::para::{Anchor, Float, FloatAlign, Wrap};
+    let mut d = Document::from_text("Some text beside the pictures.");
+    let centred = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Margin, h_align: Some(FloatAlign::Center), x: 999.0, ..Default::default() };
+    let right = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Page, h_align: Some(FloatAlign::End), ..Default::default() };
+    let in_left_margin = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::LeftMargin, x: 10.0, ..Default::default() };
+    let bottom = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::BottomMargin, v_align: Some(FloatAlign::Start), ..Default::default() };
+    for f in [centred, right, in_left_margin, bottom] {
+        d.insert_object(&Pos::body(0, 0), rect_shape(100.0, 50.0, f), &Default::default()).unwrap();
+    }
+    let l = lay(&d);
+    // Objects are inserted at the start, so they come out in reverse order.
+    let r = shapes(&l.pages[0].items);
+    assert_eq!(r.len(), 4, "{r:?}");
+    assert!((r[3].x - (72.0 + (468.0 - 100.0) / 2.0)).abs() < 0.01, "centred in the margins: {:?}", r[3]);
+    assert!((r[2].right() - 612.0).abs() < 0.01, "right edge of the page: {:?}", r[2]);
+    assert!((r[1].x - 10.0).abs() < 0.01, "measured from the page's left edge: {:?}", r[1]);
+    assert!((r[0].y - (792.0 - 72.0)).abs() < 0.01, "top of the bottom margin: {:?}", r[0]);
+}
+
+#[test]
+fn top_and_bottom_float_pushes_its_own_first_line_down() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text(&"Text that starts below the picture. ".repeat(10));
+    let f = Float { wrap: Wrap::TopAndBottom, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist_bottom: 6.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 0), rect_shape(144.0, 100.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    let r = shapes(&l.pages[0].items)[0];
+    let top = first_line_top(&l.pages[0].items);
+    assert!(top >= r.bottom() + 6.0 - 0.01, "first line {top} drawn under the picture ending at {}", r.bottom());
+    // The caret agrees with what is drawn.
+    let c = l.caret(&Pos::body(0, 4)).unwrap();
+    assert!((c.top - top).abs() < 2.0, "{c:?} vs {top}");
+}
+
+#[test]
+fn float_follows_its_paragraph_to_the_next_page() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text(&format!("First page.\n{}", "Text beside the picture on page two. ".repeat(20)));
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(1, 0), rect_shape(144.0, 100.0, f), &Default::default()).unwrap();
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(1).map(std::sync::Arc::make_mut) {
+        p.props.page_break_before = Some(true);
+    }
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    assert!(shapes(&l.pages[0].items).is_empty());
+    let r = shapes(&l.pages[1].items)[0];
+    assert!((r.y - 72.0).abs() < 0.5, "at the top of page two: {r:?}");
+    let Placed::Lines { para, .. } = l.pages[1].items.iter().find(|i| matches!(i, Placed::Lines { .. })).unwrap() else { panic!() };
+    assert!(para.lines[0].left >= 144.0, "text wraps beside it: {}", para.lines[0].left);
+}
+
+/// Page-relative cover art stays on the paragraph's first page even after a page break.
+#[test]
+fn a_float_anchored_after_a_page_break_stays_on_its_paragraph_s_first_page() {
+    let mut d = Document::from_text(&format!("{}\nAfter the cover", doc4me_doc::para::PAGE_BREAK));
+    d.insert_object(&Pos::body(0, 1), rect_shape(200.0, 100.0, page_float(100.0, 300.0)), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let on_cover = shapes(&l.pages[0].items);
+    assert_eq!(on_cover.len(), 1, "the shape is drawn on the cover: {on_cover:?}");
+    assert!((on_cover[0].y - 300.0).abs() < 0.5, "{:?}", on_cover[0]);
+    assert!(shapes(&l.pages[1].items).is_empty(), "and not again on page two");
+}
+
+/// Paragraph-relative non-wrapping objects after a page break belong to the new page, at
+/// offsets from its paragraph continuation (govuk-001's explainer and zenodo-097's back cover).
+#[test]
+fn paragraph_relative_art_follows_explicit_page_breaks() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText] {
+        let mut d = Document::from_text(&format!("Before{PAGE_BREAK}Middle{PAGE_BREAK}After\nNext"));
+        let f = Float { wrap, h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 15.0, ..Default::default() };
+        // Insert backwards so the byte offsets still refer to the original text.
+        for (off, w) in [(14, 33.0), (7, 22.0), (0, 11.0)] {
+            d.insert_object(&Pos::body(0, off), rect_shape(w, 10.0, f.clone()), &Default::default()).unwrap();
+        }
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 3);
+        for (page, w) in l.pages.iter().zip([11.0, 22.0, 33.0]) {
+            let rs = shapes(&page.items);
+            assert_eq!(rs.len(), 1, "each segment places its own art once: {rs:?}");
+            assert!((rs[0].w - w).abs() < 0.01, "{rs:?}");
+            assert!((rs[0].y - 87.0).abs() < 0.01, "offset from the continuation's top: {rs:?}");
+        }
+    }
+}
+
+#[test]
+fn paragraph_relative_art_follows_an_explicit_column_break() {
+    use doc4me_doc::para::{Anchor, COLUMN_BREAK, Float, Wrap};
+    let mut d = Document::from_text(&format!("First{COLUMN_BREAK}Second"));
+    d.last_section.columns.count = 2;
+    let f = Float { wrap: Wrap::BehindText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 5.0, y: 12.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 6), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    let rs = shapes(&l.pages[0].items);
+    assert_eq!(rs.len(), 1);
+    let col = d.last_section.column_boxes()[1].0;
+    assert!((rs[0].x - (72.0 + col + 5.0)).abs() < 0.01, "in the second column: {rs:?}");
+    assert!((rs[0].y - 84.0).abs() < 0.01, "{rs:?}");
+}
+
+#[test]
+fn paragraph_relative_art_stays_on_its_segments_first_page_when_text_wraps() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let text = format!("Before{PAGE_BREAK}{}", "continued text ".repeat(100));
+    let mut d = Document::from_text(&text);
+    d.last_section.page_h = 240.0;
+    d.last_section.margin_bottom = 72.0;
+    let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, y: 7.0, ..Default::default() };
+    let off = text.len();
+    d.insert_object(&Pos::body(0, off), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert!(l.page_of(&Pos::body(0, off)).unwrap() > 1, "the anchor line is on a later page");
+    for (i, page) in l.pages.iter().enumerate() {
+        let rs = shapes(&page.items);
+        assert_eq!(rs.len(), usize::from(i == 1), "art belongs to segment start, page {i}: {rs:?}");
+        if let Some(r) = rs.first() {
+            assert!((r.y - 79.0).abs() < 0.01, "{r:?}");
+        }
+    }
+}
+
+#[test]
+fn a_hidden_page_break_does_not_move_paragraph_relative_art() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut d = Document::from_text(&format!("A{PAGE_BREAK}B"));
+    d.format_range(&Pos::body(0, 1), &Pos::body(0, 2), &|c| c.hidden = Some(true)).unwrap();
+    let f = Float { wrap: Wrap::BehindText, v_rel: Anchor::Paragraph, y: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 2), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    let rs = shapes(&l.pages[0].items);
+    assert_eq!(rs.len(), 1);
+    assert!((rs[0].y - 81.0).abs() < 0.01, "{rs:?}");
+}
+
+#[test]
+fn deferred_art_uses_the_column_origin_with_mirrored_indents() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut d = Document::from_text(&format!("Before{PAGE_BREAK}After"));
+    d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| {
+        p.mirror_indents = Some(true);
+        p.indent_left = Some(36.0);
+        p.indent_right = Some(12.0);
+    })
+    .unwrap();
+    let f = Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 5.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 7), rect_shape(40.0, 20.0, f), &Default::default()).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let rs = shapes(&l.pages[1].items);
+    assert_eq!(rs.len(), 1);
+    assert!((rs[0].x - 77.0).abs() < 0.01, "relative to the column, not the mirrored text origin: {rs:?}");
+}
+
+#[test]
+fn a_text_box_after_a_page_break_uses_its_destination_page_number() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    for start in [0, 7] {
+        let mut d = Document::from_text(&format!("Before{PAGE_BREAK}"));
+        d.last_section.page_num_start = Some(start);
+        let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, ..Default::default() };
+        let id = text_box_at(&mut d, &Pos::body(0, 7), "", 100.0, 40.0, f);
+        let p = d.para_mut(StoryRef::Part(id), &Path::top(0)).unwrap();
+        p.insert_object(
+            0,
+            InlineObject::Field { instr: "PAGE".into(), result: "stale".into(), locked: false, code: false, form: None },
+            &Default::default(),
+        )
+        .unwrap();
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), 2);
+        let shown: Vec<String> = l.pages[1]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { story: StoryRef::Part(s), para, .. } = it { (*s == id).then_some(para) } else { None })
+            .flat_map(|para| para.shown.iter().map(|s| s.1.clone()))
+            .collect();
+        assert_eq!(shown, [format!("{}", start + 1)], "the box evaluates PAGE on its own page");
+    }
+}
+
+#[test]
+fn floats_in_headers_and_table_cells_are_drawn() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text("Body text.");
+    let logo = Float { wrap: Wrap::BehindText, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 400.0, y: 20.0, ..Default::default() };
+    let mut hp = doc4me_doc::Paragraph::with_text("Header", Default::default());
+    hp.insert_object(0, rect_shape(120.0, 60.0, logo), &Default::default()).unwrap();
+    let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(hp)]);
+    d.last_section.headers.default = Some(id);
+    let mut t = Table::new(1, 2, 468.0);
+    let mut cp = doc4me_doc::Paragraph::with_text("cell", Default::default());
+    let in_cell = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 5.0, ..Default::default() };
+    cp.insert_object(0, rect_shape(40.0, 20.0, in_cell), &Default::default()).unwrap();
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let h = shapes(&l.pages[0].header);
+    assert_eq!(h.len(), 1, "header float drawn");
+    assert!((h[0].x - 400.0).abs() < 0.01 && (h[0].y - 20.0).abs() < 0.01, "page coordinates: {:?}", h[0]);
+    assert!(matches!(l.pages[0].header.first(), Some(Placed::Shape { .. })), "behind the header text");
+    let c = shapes(&l.pages[0].items);
+    assert_eq!(c.len(), 1, "cell float drawn");
+    assert!(c[0].x > 72.0 && c[0].x < 72.0 + 234.0, "inside the first cell: {:?}", c[0]);
+}
+
+#[test]
+fn floating_drawings_stack_across_paragraphs_and_hit_the_topmost() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText, Wrap::Square] {
+        let mut doc = Document::from_text("first\nsecond\nthird");
+        for (block, z_order) in [30, 10, 20].into_iter().enumerate() {
+            let float = Float { wrap, z_order, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 300.0, y: 400.0, ..Default::default() };
+            doc.insert_object(&Pos::body(block, 0), rect_shape(30.0 + block as f32, 20.0, float), &Default::default()).unwrap();
+        }
+        let layout = lay(&doc);
+        let page = &layout.pages[0];
+        let widths: Vec<_> = shapes(&page.items).iter().map(|r| r.w).collect();
+        assert_eq!(widths, [31.0, 32.0, 30.0], "higher relativeHeight is above lower values: {wrap:?}");
+        let top = layout.object_at(0, 310.0, 410.0, 0.0).unwrap();
+        assert_eq!(top.pos(), Pos::body(0, 0));
+        let shape = page.items.iter().position(|item| matches!(item, Placed::Shape { .. })).unwrap();
+        let text = page.items.iter().rposition(|item| matches!(item, Placed::Lines { story: StoryRef::Body, .. })).unwrap();
+        assert_eq!(shape < text, wrap == Wrap::BehindText, "front layers paint above all body paragraphs");
+    }
+}
+
+#[test]
+fn floating_text_boxes_keep_their_text_with_their_layer_in_body_and_header() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    for wrap in [Wrap::InFrontOfText, Wrap::BehindText] {
+        let mut doc = Document::from_text("first\nsecond");
+        let mut ids = Vec::new();
+        for (block, z_order) in [u32::MAX, 0].into_iter().enumerate() {
+            let float = Float { wrap, z_order, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 100.0, y: 100.0, ..Default::default() };
+            ids.push(text_box_at(&mut doc, &Pos::body(block, 0), "box", 100.0, 40.0, float));
+        }
+        for in_header in [false, true] {
+            let mut d = doc.clone();
+            if in_header {
+                let header = d.add_part(doc4me_doc::PartKind::Header, d.body.clone());
+                d.body = Document::from_text("body").body;
+                d.last_section.headers.default = Some(header);
+            }
+            let l = lay(&d);
+            let items = if in_header { &l.pages[0].header } else { &l.pages[0].items };
+            let text: Vec<_> = items
+                .iter()
+                .filter_map(|item| match item {
+                    Placed::Lines { story: StoryRef::Part(id), .. } if ids.contains(id) => Some(*id),
+                    _ => None,
+                })
+                .collect();
+            assert_eq!(text, [ids[1], ids[0]], "box text follows its shape's order");
+            let lower_text = items.iter().position(|item| matches!(item, Placed::Lines { story: StoryRef::Part(id), .. } if *id == ids[1])).unwrap();
+            let upper_shape = items.iter().rposition(|item| matches!(item, Placed::Shape { .. })).unwrap();
+            assert!(lower_text < upper_shape, "a lower box's text cannot cover the upper box");
+        }
+    }
+}
+
+#[test]
+fn equal_stacking_values_keep_source_order_after_a_page_break() {
+    use doc4me_doc::para::{Anchor, Float, PAGE_BREAK, Wrap};
+    let mut doc = Document::from_text(&format!("before{PAGE_BREAK}after"));
+    for off in [7, 10] {
+        let f = Float { wrap: Wrap::InFrontOfText, v_rel: Anchor::Paragraph, ..Default::default() };
+        doc.insert_object(&Pos::body(0, off), rect_shape(off as f32, 20.0, f), &Default::default()).unwrap();
+    }
+    let l = lay(&doc);
+    assert_eq!(l.pages.len(), 2);
+    assert!(shapes(&l.pages[0].items).is_empty());
+    assert_eq!(shapes(&l.pages[1].items).iter().map(|r| r.w).collect::<Vec<_>>(), [7.0, 10.0]);
+}
+
+#[test]
+fn wrap_area_uses_each_distance() {
+    use doc4me_doc::para::{Float, Wrap};
+    let f = Float { wrap: Wrap::Square, dist: 9.0, dist_top: 0.0, dist_bottom: 4.0, ..Default::default() };
+    let (r, tb, ..) = wrap_area(Rect::new(10.0, 20.0, 100.0, 50.0), &f, None).unwrap();
+    assert_eq!((r.x, r.y, r.w, r.h, tb), (1.0, 20.0, 118.0, 54.0, false));
+    let hostile = Float { wrap: Wrap::TopAndBottom, dist: f32::NAN, dist_top: -5.0, dist_bottom: f32::INFINITY, ..Default::default() };
+    let (r, tb, ..) = wrap_area(Rect::new(0.0, 0.0, 10.0, 10.0), &hostile, None).unwrap();
+    assert!(r.w.is_finite() && r.h.is_finite() && tb, "{r:?}");
+    assert!(wrap_area(Rect::new(0.0, 0.0, 10.0, 10.0), &Float { wrap: Wrap::BehindText, ..Default::default() }, None).is_none());
+}
+
+#[test]
+fn float_moved_to_a_new_page_sits_at_its_paragraph_top() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text(&format!("First page.\n{}", "Text beside the picture on page two. ".repeat(20)));
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(1, 0), rect_shape(144.0, 100.0, f), &Default::default()).unwrap();
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(1).map(std::sync::Arc::make_mut) {
+        p.props.page_break_before = Some(true);
+        p.props.space_before = Some(24.0);
+    }
+    let l = lay(&d);
+    let r = shapes(&l.pages[1].items)[0];
+    let top = first_line_top(&l.pages[1].items);
+    // The space before counts once: the picture and the text both start below it.
+    assert!((r.y - top).abs() < 0.5, "picture at {} but its paragraph's text starts at {top}", r.y);
+}
+
+#[test]
+fn page_relative_header_float_wraps_where_it_is_drawn() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let body_top = |wrap| {
+        let mut d = Document::from_text("Body text.");
+        let logo = Float { wrap, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 72.0, y: 0.0, ..Default::default() };
+        let mut hp = doc4me_doc::Paragraph::with_text("Header", Default::default());
+        hp.insert_object(0, rect_shape(400.0, 20.0, logo), &Default::default()).unwrap();
+        let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(hp)]);
+        d.last_section.headers.default = Some(id);
+        first_line_top(&lay(&d).pages[0].items)
+    };
+    // The logo sits at the top edge of the page, above the header text, so wrapping text around
+    // it must not make the header taller (and push the body down) compared with no wrapping.
+    let (wrapped, in_front) = (body_top(Wrap::TopAndBottom), body_top(Wrap::InFrontOfText));
+    assert!((wrapped - in_front).abs() < 0.5, "body starts at {wrapped} with wrapping, {in_front} without");
+}
+
+/// Issue #149: a tall text box floating behind the text in the header (placed relative to the
+/// page, no wrapping) neither makes the header taller nor pushes the body down: the body starts
+/// at the top margin and paginates exactly as without the box.
+#[test]
+fn floating_header_text_box_leaves_the_body_at_the_top_margin() {
+    use doc4me_doc::para::{Anchor, Float, ShapeKind, Wrap};
+    let body: Vec<String> = (1..=40).map(|i| format!("Body paragraph {i}: synthetic public test content.")).collect();
+    let make = |float: Option<Float>| {
+        let mut d = Document::from_text(&body.join("\n"));
+        // The header starts 18pt from the top, so its two lines end well above the 72pt top
+        // margin whatever font the default text gets (the line height differs between the
+        // installed fonts and the bundled fallback: a header at 36pt overflows the margin there).
+        d.last_section.header = 18.0;
+        // A label, then the paragraph the box is anchored to (empty in the control).
+        let tight = ParaProps { space_before: Some(0.0), space_after: Some(0.0), ..Default::default() };
+        let mut label = doc4me_doc::Paragraph::with_text("Header label", Default::default());
+        label.props = tight.clone();
+        let mut anchor = doc4me_doc::Paragraph { props: tight, ..Default::default() };
+        if let Some(float) = float {
+            let text = doc4me_doc::Paragraph::with_text("WATERMARK", Default::default());
+            let story = d.add_part(doc4me_doc::PartKind::TextBox, vec![doc4me_doc::para_block(text)]);
+            let tb = InlineObject::Shape {
+                kind: ShapeKind::TextBox,
+                w: 405.0,
+                h: 491.4,
+                fill: None,
+                stroke: None,
+                stroke_width: 0.75,
+                float,
+                story: Some(story),
+                freeform: None,
+                effects: Default::default(),
+                extra: Default::default(),
+            };
+            anchor.insert_object(0, tb, &Default::default()).unwrap();
+        }
+        let id = d.add_part(doc4me_doc::PartKind::Header, vec![doc4me_doc::para_block(label), doc4me_doc::para_block(anchor)]);
+        d.last_section.headers.default = Some(id);
+        let l = lay(&d);
+        (l.pages.len(), first_line_top(&l.pages[0].items))
+    };
+    let (control_pages, control_top) = make(None);
+    let behind = Float { wrap: Wrap::BehindText, h_rel: Anchor::Page, v_rel: Anchor::Page, x: 0.0, y: 80.0, ..Default::default() };
+    let (pages, top) = make(Some(behind));
+    assert!(control_pages > 1, "the control needs more than one page: {control_pages}");
+    assert!((control_top - 72.0).abs() < 0.5, "control body starts at the top margin: {control_top}");
+    assert!((top - control_top).abs() < 0.5, "body starts at {top} with the floating box, {control_top} without");
+    assert_eq!(pages, control_pages);
+    // The same box inline does take room in the header, which is what the reader used to make of it.
+    let (inline_pages, inline_top) = make(Some(Float::default()));
+    assert!(inline_top > 400.0 && inline_pages > control_pages, "inline box: body at {inline_top}, {inline_pages} pages");
+}
+
+/// List labels drawn, in page order (each paragraph's first line).
+fn labels(l: &DocLayout) -> Vec<String> {
+    l.pages
+        .iter()
+        .flat_map(|p| &p.items)
+        .filter_map(|i| if let Placed::Lines { para, l0: 0, .. } = i { para.label.as_ref().map(|lb| lb.text.clone()) } else { None })
+        .collect()
+}
+
+fn numbered(d: &mut Document, texts: &[&str], props: ParaProps) -> Vec<doc4me_doc::Paragraph> {
+    let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::Numbered);
+    texts
+        .iter()
+        .map(|t| {
+            let mut p = doc4me_doc::Paragraph::with_text(t, Default::default());
+            p.props = ParaProps { numbering: Some(doc4me_doc::props::NumRef { num, level: 0 }), ..props.clone() };
+            p
+        })
+        .collect()
+}
+
+/// Thai lists: Thai digits, Thai letters (no ฃ ฅ ฆ) and Thai number words, with เอ็ด for a
+/// final 1 after other digits.
+#[test]
+fn thai_list_labels() {
+    for (kind, want) in [
+        (doc4me_doc::ListKind::ThaiNumbers, ["๑.", "๒.", "๓.", "๔."]),
+        (doc4me_doc::ListKind::ThaiLetters, ["ก.", "ข.", "ค.", "ง."]),
+        (doc4me_doc::ListKind::ThaiCounting, ["หนึ่ง.", "สอง.", "สาม.", "สี่."]),
+    ] {
+        let mut d = Document::new();
+        let num = std::sync::Arc::make_mut(&mut d.numbering).add_list(kind);
+        d.body = (0..4)
+            .map(|i| {
+                let mut p = doc4me_doc::Paragraph::with_text(&format!("ข้อ {i}"), Default::default());
+                p.props.numbering = Some(doc4me_doc::props::NumRef { num, level: 0 });
+                doc4me_doc::para_block(p)
+            })
+            .collect();
+        assert_eq!(labels(&lay(&d)), want, "{kind:?}");
+    }
+    assert_eq!(doc4me_doc::ListKind::parse("thaiCounting"), Some(doc4me_doc::ListKind::ThaiCounting));
+}
+
+#[test]
+fn list_items_are_counted_once_when_laid_out_again() {
+    // Contextual spacing drops the space before, so each item's top differs from the first guess.
+    let mut d = Document::new();
+    let props = ParaProps { space_before: Some(6.0), contextual_spacing: Some(true), ..Default::default() };
+    let mut items = numbered(&mut d, &["one", "two", "three"], props);
+    // A page break before moves the last item after its first layout.
+    items[2].props.page_break_before = Some(true);
+    d.body = items.into_iter().map(doc4me_doc::para_block).collect();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    assert_eq!(labels(&l), ["1.", "2.", "3."]);
+}
+
+#[test]
+fn contextual_space_after_a_heading_does_not_push_a_same_style_table_to_the_next_page() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+
+    for (contextual, cell_style, expected_pages) in [(true, "Normal", 1), (false, "Normal", 2), (true, "Other", 2)] {
+        let mut d = Document::from_text("Heading");
+        let heading = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        heading.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        heading.props.space_after = Some(20.0);
+        heading.props.contextual_spacing = Some(contextual);
+        let page = &mut d.last_section;
+        page.page_h = 100.0;
+        page.margin_top = 10.0;
+        page.margin_bottom = 10.0;
+        let mut t = Table::new(1, 1, 200.0);
+        t.props.cell_margins = Some([0.0; 4]);
+        t.rows[0].props.height = Some(60.0);
+        t.rows[0].props.height_rule = HeightRule::Exact;
+        let mut cell = Paragraph::with_text("Table text", Default::default());
+        cell.props.style = Some(cell_style.into());
+        cell.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        cell.props.space_after = Some(0.0);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cell)];
+        d.body.push(std::sync::Arc::new(Block::Table(t)));
+        let l = lay(&d);
+        assert_eq!(l.pages.len(), expected_pages, "contextual={contextual}, cell={cell_style}");
+        let cell_pos = Pos { story: StoryRef::Body, path: Path(vec![1, 0, 0, 0]), off: 0 };
+        assert_eq!(l.caret(&cell_pos).unwrap().page, expected_pages - 1);
+    }
+}
+
+#[test]
+fn contextual_spacing_reaches_an_in_flow_nested_table() {
+    use doc4me_doc::props::LineSpacing;
+
+    let gap = |contextual| {
+        let mut heading = Paragraph::with_text("Heading", Default::default());
+        heading.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        heading.props.space_after = Some(20.0);
+        heading.props.contextual_spacing = Some(contextual);
+        let mut inner = Table::new(1, 1, 180.0);
+        inner.props.cell_margins = Some([0.0; 4]);
+        let mut outer = Table::new(1, 1, 200.0);
+        outer.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(heading), std::sync::Arc::new(Block::Table(inner))];
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(Block::Table(outer))];
+        let l = lay(&d);
+        let pos = |path| Pos { story: StoryRef::Body, path: Path(path), off: 0 };
+        l.caret(&pos(vec![0, 0, 0, 1, 0, 0, 0])).unwrap().top - l.caret(&pos(vec![0, 0, 0, 0])).unwrap().top
+    };
+    let (with_context, without_context) = (gap(true), gap(false));
+    assert!((without_context - with_context - 20.0).abs() < 0.5, "contextual={with_context}, ordinary={without_context}");
+}
+
+#[test]
+fn contextual_spacing_suppresses_trailing_space_between_cell_paragraphs() {
+    use doc4me_doc::props::LineSpacing;
+
+    let caret_gap = |contextual| {
+        let props = ParaProps {
+            line_spacing: Some(LineSpacing::Exactly(12.0)),
+            space_after: Some(8.0),
+            contextual_spacing: Some(contextual),
+            ..Default::default()
+        };
+        let mut table = Table::new(1, 1, 200.0);
+        table.rows[0].cells[0].blocks = ["first", "second"]
+            .into_iter()
+            .map(|text| {
+                let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+                p.props = props.clone();
+                doc4me_doc::para_block(p)
+            })
+            .collect();
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(Block::Table(table))];
+        let l = lay(&d);
+        let pos = |block| Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, block]), off: 0 };
+        l.caret(&pos(1)).unwrap().top - l.caret(&pos(0)).unwrap().top
+    };
+
+    let with_context = caret_gap(true);
+    let without_context = caret_gap(false);
+    assert!((without_context - with_context - 8.0).abs() < 0.5, "contextual {with_context}, ordinary {without_context}");
+}
+
+fn body_spacing_probe(props: &[ParaProps], additive: bool) -> Vec<f32> {
+    let mut d = Document::new();
+    d.settings.add_para_spacing = additive;
+    d.body = props
+        .iter()
+        .map(|props| {
+            let mut p = Paragraph::with_text("Spacing probe", doc4me_doc::CharProps { size: Some(12.0), ..Default::default() });
+            p.props = props.clone();
+            doc4me_doc::para_block(p)
+        })
+        .collect();
+    let l = lay(&d);
+    let baselines: Vec<_> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|item| match item {
+            Placed::Lines { para, y, .. } => Some(y + para.lines[0].baseline),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(baselines.len(), props.len());
+    baselines.windows(2).map(|pair| pair[1] - pair[0] - 24.0).collect()
+}
+
+#[test]
+fn contextual_spacing_subtracts_each_paragraphs_own_side_of_the_merged_gap() {
+    let plain = ParaProps {
+        space_before: Some(0.0),
+        space_after: Some(0.0),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    // ECMA-376 17.3.1.9's worked example leaves max(10, 12) - 10 = 2 pt.
+    // The one-sided cases distinguish the preceding paragraph's flag from this one's.
+    for (after, before, first, second, different, expected) in [
+        (10.0, 12.0, true, false, false, 2.0),
+        (12.0, 8.0, true, false, false, 0.0),
+        (12.0, 8.0, false, true, false, 12.0),
+        (12.0, 8.0, true, true, false, 0.0),
+        (12.0, 8.0, false, false, false, 12.0),
+        (12.0, 8.0, true, true, true, 12.0),
+    ] {
+        let a = ParaProps { space_after: Some(after), contextual_spacing: Some(first), ..plain.clone() };
+        let b = ParaProps { style: different.then(|| "Other".into()), space_before: Some(before), contextual_spacing: Some(second), ..plain.clone() };
+        let gap = body_spacing_probe(&[a, b], false)[0];
+        assert!((gap - expected).abs() < 0.01, "{after}/{before} {first}/{second} different={different}: {gap}");
+    }
+}
+
+#[test]
+fn merged_paragraph_spacing_keeps_the_additive_compatibility_option() {
+    let plain = ParaProps {
+        space_before: Some(0.0),
+        space_after: Some(0.0),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    for (first, second, expected) in [(false, false, 20.0), (true, false, 8.0), (false, true, 12.0), (true, true, 0.0)] {
+        let a = ParaProps { space_after: Some(12.0), contextual_spacing: Some(first), ..plain.clone() };
+        let b = ParaProps { space_before: Some(8.0), contextual_spacing: Some(second), ..plain.clone() };
+        let gap = body_spacing_probe(&[a, b], true)[0];
+        assert!((gap - expected).abs() < 0.01, "{first}/{second}: {gap}");
+    }
+}
+
+#[test]
+fn contextual_spacing_drops_every_internal_gap_in_a_four_paragraph_run() {
+    let props = ParaProps {
+        space_before: Some(6.0),
+        space_after: Some(6.0),
+        contextual_spacing: Some(true),
+        line_spacing: Some(doc4me_doc::props::LineSpacing::Exactly(24.0)),
+        ..Default::default()
+    };
+    let gaps = body_spacing_probe(&[props.clone(), props.clone(), props.clone(), props.clone()], false);
+    assert!(gaps.iter().all(|gap| gap.abs() < 0.01), "{gaps:?}");
+}
+
+#[test]
+fn list_items_beside_a_float_in_a_cell_are_counted_once() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text("Body.");
+    let mut items = numbered(&mut d, &["first item", "second item", "third item"], ParaProps::default());
+    // The float makes the cell's paragraphs wrap, so they are laid out a second time.
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, ..Default::default() };
+    items[0].insert_object(0, rect_shape(40.0, 60.0, f), &Default::default()).unwrap();
+    let mut t = Table::new(1, 1, 468.0);
+    t.rows[0].cells[0].blocks = items.into_iter().map(doc4me_doc::para_block).collect();
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    assert_eq!(labels(&lay(&d)), ["1.", "2.", "3."]);
+}
+
+#[test]
+fn compatibility_mode_decides_where_a_table_s_edge_sits() {
+    use doc4me_doc::props::{Border, BorderStyle, Borders};
+    let cell_text_x = |mode: u32| {
+        let mut d = Document::from_text("");
+        d.settings.compat_mode = mode;
+        let line = Some(Border { style: BorderStyle::Single, width: 0.5, color: None, space: 0.0 });
+        let mut t = Table::new(1, 1, 200.0);
+        t.props.borders = Some(Borders { top: line, left: line, bottom: line, right: line, between: line, inside_v: line });
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("cell", Default::default()))];
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t))];
+        let l = lay(&d);
+        l.pages[0].items.iter().find_map(|i| if let Placed::Lines { x, .. } = i { Some(*x) } else { None }).unwrap()
+    };
+    // Word 2013+: the border at the margin (moved in by half its width), the text a cell margin
+    // inside it. Earlier modes: the text at the margin, the border a cell margin outside it.
+    assert!((cell_text_x(15) - (72.0 + 0.25 + 5.4)).abs() < 0.01, "{}", cell_text_x(15));
+    assert!((cell_text_x(12) - 72.0).abs() < 0.01, "{}", cell_text_x(12));
+}
+
+#[test]
+fn floating_tables_take_no_room_and_text_wraps_beside_them() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let mut d = Document::from_text("Body text beside the narrow table.");
+    let cell = |t: &mut Table, text: &str| {
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))]
+    };
+    let mut wide = Table::new(1, 1, 468.0);
+    cell(&mut wide, "Wide");
+    wide.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, overlap: false, ..Default::default() });
+    let mut narrow = Table::new(1, 1, 200.0);
+    cell(&mut narrow, "Narrow");
+    narrow.props.float =
+        Some(TableFloat { h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: [9.0, 0.0, 9.0, 0.0], overlap: false, ..Default::default() });
+    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(wide)).unwrap();
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(narrow)).unwrap();
+    let l = lay(&d);
+    let lines: Vec<(f32, f32, f32)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|i| if let Placed::Lines { x, y, para, .. } = i { Some((*x, *y, para.lines[0].left)) } else { None })
+        .collect();
+    let [(wx, wy, _), (nx, ny, _), (bx, by, bleft)] = lines.as_slice() else { panic!("{lines:?}") };
+    // The wide table stands where the text is; the narrow one may not overlap it, so it goes
+    // right below, keeping its 9pt from the text's left edge.
+    assert!(*wy >= 72.0 && *wy < 80.0, "wide at {wy}");
+    assert!(*ny > *wy + 10.0, "narrow at {ny}, below the wide table at {wy}");
+    assert!((nx - wx - 9.0).abs() < 0.01, "narrow text at {nx}, wide text at {wx}");
+    // The paragraph doesn't wait below them: it runs beside the narrow table, level with it.
+    assert!((by - ny).abs() < 2.0, "body at {by}, narrow table text at {ny}");
+    assert!(bx + bleft > nx + 200.0, "body text at {}, right of the narrow table", bx + bleft);
+}
+
+#[test]
+fn page_sized_floating_table_keeps_cover_text_on_the_same_page() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    for v_rel in [Anchor::Page, Anchor::Margin] {
+        for blank in [true, false] {
+            let mut d = Document::from_text("Cover beside the background panel.");
+            let mut t = Table::new(1, 1, 100.0);
+            t.rows[0].props.height = Some(791.9);
+            t.props.cell_margins = Some([5.0, 5.4, 5.0, 5.4]);
+            if !blank {
+                t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Inside", Default::default()))];
+            }
+            t.props.float =
+                Some(TableFloat { h_rel: Anchor::Page, v_rel, y: if v_rel == Anchor::Margin { -72.0 } else { 0.0 }, ..Default::default() });
+            d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+            let l = lay(&d);
+            let page = usize::from(!blank);
+            assert_eq!(l.pages.len(), page + 1, "{v_rel:?}, blank={blank}: only a blank panel may bleed its insets beyond the page");
+            assert!(l.pages[page].items.iter().any(|it| matches!(it, Placed::Lines { story: StoryRef::Body, path, .. } if path.0 == [1])));
+        }
+    }
+}
+
+#[test]
+fn a_floating_table_taller_than_a_page_runs_across_pages() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    for v_rel in [Anchor::Paragraph, Anchor::Page, Anchor::Margin] {
+        let mut d = Document::from_text("After the table.");
+        let mut t = Table::new(80, 1, 300.0);
+        for (i, r) in t.rows.iter_mut().enumerate() {
+            r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel, x: -30.0, overlap: false, ..Default::default() });
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "{} page(s)", l.pages.len());
+        // Every row is drawn on a page, none past a page's bottom margin, and all from the table's
+        // own left edge.
+        let mut rows = 0;
+        for p in &l.pages {
+            for it in &p.items {
+                if let Placed::Lines { x, y, story: StoryRef::Body, path, .. } = it
+                    && path.0.len() > 1
+                {
+                    rows += 1;
+                    assert!(*y < 792.0 - 72.0, "row drawn at {y}, below the bottom margin");
+                    assert!(*x < 72.0, "row text at {x}, not from the table's edge 30pt left of the margin");
+                }
+            }
+        }
+        assert_eq!(rows, 80);
+    }
+}
+
+#[test]
+fn a_floating_table_taller_than_a_page_starts_at_its_own_offset() {
+    // zenodo-053: an activity table placed 2411 twips from the page top, longer than a page,
+    // begins there in Word's PDF (not at the top margin) and runs on to the next page.
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    for (v_rel, y, top) in [(Anchor::Page, 120.0, 120.0), (Anchor::Margin, 50.0, 122.0)] {
+        let mut d = Document::from_text("After the table.");
+        let mut t = Table::new(80, 1, 300.0);
+        for (i, r) in t.rows.iter_mut().enumerate() {
+            r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel, y, overlap: false, ..Default::default() });
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2);
+        let first = l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { y, story: StoryRef::Body, path, .. } = it { (path.0.len() > 1).then_some(*y) } else { None })
+            .fold(f32::MAX, f32::min);
+        assert!(first >= top - 0.01 && first < top + 20.0, "{v_rel:?}: first row text at {first}, the table starts at {top}");
+    }
+}
+
+/// #534: a table placed on the page (`w:tblpPr w:vertAnchor="page"`) whose anchor comes after a
+/// page full of text goes to the next page with it, like Word, instead of covering that text.
+#[test]
+fn a_page_anchored_floating_table_after_a_full_page_moves_to_the_next() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    // 19 paragraphs of 12 pt Sarabun (1.853 em lines, 1.15 spacing, 8 pt after) fill the page.
+    let text: Vec<String> = (0..19).map(|i| format!("Paragraph {i} before the table.")).collect();
+    let mut d = Document::from_text(&(text.join("\n") + "\nAfter the table."));
+    let mut t = Table::new(15, 1, 300.0);
+    for (i, r) in t.rows.iter_mut().enumerate() {
+        r.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("Row {i}"), Default::default()))];
+    }
+    t.props.float = Some(TableFloat { h_rel: Anchor::Page, v_rel: Anchor::Page, x: 70.0, y: 71.0, ..Default::default() });
+    d.insert_block(StoryRef::Body, &Path::top(19), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let page_of = |want: &dyn Fn(&Path) -> bool| -> Vec<usize> {
+        l.pages
+            .iter()
+            .enumerate()
+            .flat_map(|(i, p)| p.items.iter().map(move |it| (i, it)))
+            .filter_map(|(i, it)| if let Placed::Lines { story: StoryRef::Body, path, .. } = it { want(path).then_some(i) } else { None })
+            .collect()
+    };
+    // The text before the table fills page 1; the table and the text after it are on page 2.
+    assert_eq!(page_of(&|p| p.0 == [18]), vec![0]);
+    let rows = page_of(&|p| p.0.first() == Some(&19) && p.0.len() > 1);
+    assert!(rows.len() == 15 && rows.iter().all(|pg| *pg == 1), "table rows on pages {rows:?}");
+    assert_eq!(page_of(&|p| p.0 == [20]), vec![1]);
+}
+
+/// #534: a paragraph that starts with a page break right where the page is full keeps the break
+/// on that page: no blank page between the two tables around it.
+#[test]
+fn a_page_break_at_the_bottom_of_a_full_page_leaves_no_blank_page() {
+    use doc4me_doc::props::LineSpacing;
+    let props = ParaProps { line_spacing: Some(LineSpacing::Exactly(24.0)), space_before: Some(0.0), space_after: Some(0.0), ..Default::default() };
+    let para = |text: &str| {
+        let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+        p.props = props.clone();
+        doc4me_doc::para_block(p)
+    };
+    let mut d = Document::from_text("");
+    // 27 lines of 24pt fill the 648pt of text on a Letter page.
+    d.body = (0..27).map(|i| para(&format!("Line {i}"))).collect();
+    d.body.push(para("\u{000C}Next page"));
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2, "pages: {}", l.pages.len());
+    let last_on_2 = l.pages[1].items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [27]));
+    assert!(last_on_2, "the text after the break is on page 2");
+}
+
+/// A line holding only a page break at the foot of a page stays there although it runs past the
+/// bottom margin (#534), but not past a footer reaching above that margin, which lines keep clear
+/// of: govuk-016's break paragraph, 0.7 pt into the footer's place, goes on to page 6 in Word's
+/// PDF, which stays blank.
+#[test]
+fn a_page_break_line_running_into_a_footer_goes_on_to_the_next_page() {
+    use doc4me_doc::props::LineSpacing;
+    let para = |text: &str, line: f32| {
+        let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+        p.props = ParaProps { line_spacing: Some(LineSpacing::Exactly(line)), space_before: Some(0.0), space_after: Some(0.0), ..Default::default() };
+        doc4me_doc::para_block(p)
+    };
+    // For each count of 24 pt lines before a 30 pt line holding only a page break: whether the
+    // break went on to a page after the last of those lines.
+    let moved = |footer: bool| -> Vec<bool> {
+        (20..28)
+            .map(|n| {
+                let mut d = Document::from_text("");
+                d.body = (0..n).map(|i| para(&format!("Line {i}"), 24.0)).collect();
+                d.body.push(para("\u{000C}", 30.0));
+                d.body.push(para("Next page", 24.0));
+                if footer {
+                    let id = d.add_part(doc4me_doc::PartKind::Footer, vec![para("Footer", 100.0)]);
+                    d.last_section.footers.default = Some(id);
+                }
+                let l = lay(&d);
+                let page_of =
+                    |b: u32| l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [b])));
+                page_of(n as u32) > page_of(n as u32 - 1)
+            })
+            .collect()
+    };
+    let at_margin = moved(false);
+    assert!(at_margin.iter().all(|m| !m), "at the bottom margin the break stays with the line before it: {at_margin:?}");
+    let footer = moved(true);
+    assert!(footer.iter().any(|m| *m), "running into the footer, the break goes on to the next page: {footer:?}");
+}
+
+#[test]
+fn a_standalone_break_before_an_empty_continuous_section_end_needs_its_line() {
+    use doc4me_doc::props::LineSpacing;
+    for next_section in [None, Some(SectionStart::Continuous), Some(SectionStart::NextPage)] {
+        let mut d = Document::from_text(if next_section.is_some() { "Fill\n\u{000C}\n\nAfter" } else { "Fill\n\u{000C}\nAfter" });
+        d.last_section.page_h = 300.0;
+        d.last_section.margin_top = 20.0;
+        d.last_section.margin_bottom = 20.0;
+        let before = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+        before.props.line_spacing = Some(LineSpacing::Exactly(241.0));
+        before.props.space_after = Some(0.0);
+        let paragraph = d.para_mut(StoryRef::Body, &Path::top(1)).unwrap();
+        paragraph.props.space_before = Some(0.0);
+        paragraph.props.space_after = Some(0.0);
+        paragraph.mark.size = Some(26.0);
+        d.format_range(&Pos::body(1, 0), &Pos::body(1, 1), &|c| c.size = Some(26.0)).unwrap();
+        if let Some(start) = next_section {
+            let first = SectionProps { start: SectionStart::Continuous, ..d.last_section.clone() };
+            let end = d.para_mut(StoryRef::Body, &Path::top(2)).unwrap();
+            end.mark.size = Some(26.0);
+            end.section = Some(Box::new(first));
+            d.last_section.start = start;
+        }
+        let l = lay(&d);
+        let blank = next_section == Some(SectionStart::Continuous);
+        assert_eq!(l.pages.len(), if blank { 3 } else { 2 }, "{next_section:?}");
+        if blank {
+            let page = &l.pages[1];
+            assert!(page.items.iter().any(|item| matches!(item, Placed::Lines { path, .. } if path.0 == [1])));
+            assert!(
+                display::page_display(&d, page, &Default::default())
+                    .iter()
+                    .all(|draw| !matches!(draw, display::Draw::Glyphs { text, .. } if text.chars().any(char::is_alphanumeric)))
+            );
+        }
+    }
+}
+
+#[test]
+fn a_leading_page_break_in_a_table_row_does_not_leave_a_blank_page() {
+    use doc4me_doc::props::LineSpacing;
+    let props = ParaProps { line_spacing: Some(LineSpacing::Exactly(24.0)), space_before: Some(0.0), space_after: Some(0.0), ..Default::default() };
+    let para = |text: &str| {
+        let mut p = doc4me_doc::Paragraph::with_text(text, Default::default());
+        p.props = props.clone();
+        doc4me_doc::para_block(p)
+    };
+    let mut d = Document::from_text("");
+    d.body = (0..27).map(|i| para(&format!("Line {i}"))).collect();
+    let mut table = Table::new(1, 1, 468.0);
+    table.rows[0].cells[0].blocks = vec![para("\u{000C}Next page")];
+    d.insert_block(StoryRef::Body, &Path::top(27), doc4me_doc::Block::Table(table)).unwrap();
+
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2, "pages: {}", l.pages.len());
+    assert!(
+        l.pages[1].items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if path.0 == [27, 0, 0, 0])),
+        "the cell text should start on page 2"
+    );
+}
+
+/// #534: indents in characters (`w:firstLineChars`) are measured in the paragraph mark's font
+/// size and win over the indent in points.
+#[test]
+fn character_indents_use_the_paragraph_mark_size() {
+    let mut p = doc4me_doc::Paragraph::with_text(&"字".repeat(80), Default::default());
+    p.props.indent_first = Some(5.0);
+    p.props.indent_first_chars = Some(2.0);
+    p.props.indent_left_chars = Some(1.0);
+    p.mark.size = Some(20.0);
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let para = l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clone()) } else { None }).unwrap();
+    assert!((para.lines[0].left - 60.0).abs() < 0.01, "first line at {}", para.lines[0].left);
+    assert!((para.lines[1].left - 20.0).abs() < 0.01, "second line at {}", para.lines[1].left);
+}
+
+#[test]
+fn no_line_break_right_after_a_slash() {
+    // Word keeps "and/or" and web addresses whole on a line when they fit.
+    let text = "word and/or https://example.org/keepers/log/winter ".repeat(40);
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    assert!(!text[..line.start].ends_with('/'), "line starts after a slash: {:?}", &text[line.start..line.stop]);
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn no_line_break_between_a_closing_and_an_opening_bracket() {
+    // Word keeps "2022)(Adams," whole (zenodo-092); a space between the brackets still breaks.
+    let text: String = (0..120).map(|i| format!("w{} conflict(Adams, {})(Adams, 2022) [a{}][b] ", "x".repeat(i % 9), 2000 + i, i % 4)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut lines = 0;
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                for line in &para.lines[*l0..*l1] {
+                    lines += 1;
+                    let (before, after) = (&text[..line.start], &text[line.start..]);
+                    assert!(
+                        !(before.ends_with([')', ']']) && after.starts_with(['(', '['])),
+                        "line starts between brackets: {:?}",
+                        &text[line.start..line.stop]
+                    );
+                }
+            }
+        }
+    }
+    assert!(lines > 10, "{lines} lines");
+}
+
+#[test]
+fn a_line_may_start_at_a_bracket_after_a_quote_and_a_space() {
+    // Unicode 15.1 dropped LB15 (`QU SP* × OP`): Word breaks in `estratégicos” (según` after the
+    // space, as anywhere else (zenodo-025 wrapped a table row one line earlier than Word).
+    let text: String = (0..80).map(|i| format!("w{} “q{}” (p{}) ", "x".repeat(i % 7), "y".repeat(i % 5), i)).collect();
+    let d = Document::from_text(&text);
+    let l = lay(&d);
+    let mut starts = Vec::new();
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                starts.extend(para.lines[*l0..*l1].iter().map(|line| text[line.start..].chars().next().unwrap_or(' ')));
+            }
+        }
+    }
+    assert!(starts.len() > 5, "{} lines", starts.len());
+    assert!(starts.contains(&'('), "no line starts at a bracket: {starts:?}");
+    assert_eq!(super::para::quote_space_open_breaks("a” (b \"c\" [d x (e"), vec![5, 12]);
+}
+
+#[test]
+fn a_run_of_dots_after_a_space_may_start_a_line() {
+    // govuk-065: "(2) ......" (a dot run too long for what is left of the line) puts "(2)" alone
+    // on its line in Word's PDF; UAX #14 alone (LB13) keeps the space and the dots together.
+    assert_eq!(super::para::space_dot_breaks("(2) ..... and . x ...."), vec![4, 18]);
+    assert_eq!(super::para::space_dot_breaks("Jo Widdicombe ,María and , x"), vec![14]);
+    let mut d = Document::from_text(&format!("(2) {}", ".".repeat(200)));
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.first_mut().map(std::sync::Arc::make_mut) {
+        p.props.align = Some(doc4me_doc::props::Align::Justify);
+    }
+    let l = lay(&d);
+    let text = &d.body[0].as_para().unwrap().text;
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no lines") };
+    assert_eq!(&text[para.lines[0].start..para.lines[0].stop], "(2) ", "the dots start the next line");
+}
+
+/// A line break right after a display equation ends the equation's line rather than taking a line
+/// of its own: one empty line follows, as in Word's PDF of zenodo-056.
+#[test]
+fn a_break_after_a_display_equation_leaves_one_empty_line() {
+    use doc4me_doc::math::{MNode, MRun, Math};
+    let lines = |brk: bool| {
+        let mut d = Document::new();
+        let math = Math { nodes: vec![MNode::Run(MRun::new("x"))], ..Default::default() };
+        d.insert_object(&Pos::body(0, 0), InlineObject::Equation { linear: "x".into(), display: true, math }, &Default::default()).unwrap();
+        if brk {
+            let end = d.para(StoryRef::Body, &Path::top(0)).unwrap().text.len();
+            d.insert_text(&Pos::body(0, end), "\n", &Default::default()).unwrap();
+        }
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines.len()
+    };
+    assert_eq!(lines(false), 1);
+    assert_eq!(lines(true), 2, "the equation's line and one empty line after the break");
+}
+
+/// DengXian (等线) holds its own CJK punctuation: a full-width colon a fallback face draws keeps
+/// DengXian's line, as zenodo-056's "Abstract：" line in Word's PDF.
+#[test]
+fn dengxian_cjk_punctuation_keeps_dengxians_line() {
+    let height = |text: &str| {
+        let mut d = Document::new();
+        let p = doc4me_doc::Paragraph::with_text(text, doc4me_doc::CharProps { font: Some("等线".into()), size: Some(11.0), ..Default::default() });
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    let (latin, colon) = (height("Abstract"), height("Abstract\u{FF1A}"));
+    assert!((colon - latin).abs() < 0.01, "{colon} vs {latin}");
+}
+
+#[test]
+fn a_bigger_space_hanging_at_a_lines_end_leaves_its_height_alone() {
+    // govuk-065: 11 pt paragraphs end with a space in the 12 pt default size; Word's last lines
+    // are as tall as the others.
+    let height = |space_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("text", doc4me_doc::CharProps { size: Some(11.0), ..Default::default() });
+        let end = p.text.len();
+        p.insert_text(end, " ", &doc4me_doc::CharProps { size: Some(space_size), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    assert!((height(24.0) - height(11.0)).abs() < 0.01, "{} vs {}", height(24.0), height(11.0));
+    // Nor a bigger space followed by en spaces (an empty form field's), as in govuk-048's
+    // "Contact for enquiries:" line.
+    let with_en = |space_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("text", doc4me_doc::CharProps { size: Some(11.0), ..Default::default() });
+        let end = p.text.len();
+        p.insert_text(end, " ", &doc4me_doc::CharProps { size: Some(space_size), ..Default::default() }).unwrap();
+        let end = p.text.len();
+        p.insert_text(end, "\u{2002}\u{2002}\u{2002}", &doc4me_doc::CharProps { size: Some(11.0), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!("no line") };
+        para.lines[0].height
+    };
+    assert!((with_en(24.0) - with_en(11.0)).abs() < 0.01, "{} vs {}", with_en(24.0), with_en(11.0));
+}
+
+#[test]
+fn the_empty_rest_of_a_paragraph_after_its_page_break_is_not_a_numbered_line() {
+    // zenodo-106: keywords ending with a page break; Word's next page goes on with the next number.
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Keywords\u{000C}", Default::default())),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Introduction", Default::default())),
+    ];
+    d.last_section.line_numbers = Some(doc4me_doc::section::LineNumbering { start: 1, count_by: 1, ..Default::default() });
+    let l = lay(&d);
+    // Line numbers are the decoration story's lines with an empty path.
+    let numbers = |i: usize| {
+        l.pages[i]
+            .items
+            .iter()
+            .filter(|it| matches!(it, Placed::Lines { story, path, .. } if *story == crate::DECOR_STORY && path.0.is_empty()))
+            .count()
+    };
+    assert_eq!(l.pages.len(), 2);
+    assert_eq!((numbers(0), numbers(1)), (1, 1), "one numbered line on each page");
+}
+
+#[test]
+fn unequal_formats_lay_out_in_linear_time() {
+    // Runs whose formats never compare equal (NaN spacing from a hostile file) each get a style;
+    // finding a run's style must not compare it against every earlier one.
+    let doc = |n: usize| {
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        p.text = "ab ".repeat(n);
+        p.runs = (0..n)
+            .map(|i| doc4me_doc::Run {
+                len: 3,
+                props: doc4me_doc::CharProps { spacing: Some(f32::NAN), bold: Some(i % 2 == 0), ..Default::default() },
+            })
+            .collect();
+        let mut d = Document::from_text("");
+        d.body = vec![doc4me_doc::para_block(p)];
+        d
+    };
+    let (t1, tk, ratio) = layout_time_ratio(doc, 5_000, &LayoutOptions::default());
+    eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+    assert!(ratio < 24.0, "8x the runs took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
+}
+
+#[test]
+fn hidden_float_in_a_table_cell_takes_no_room() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    // A square-wrapped shape anchored in hidden text inside a table cell, beside wrapping text.
+    let mut d = Document::from_text("Body text.");
+    let mut t = Table::new(1, 2, 468.0);
+    let mut cp = doc4me_doc::Paragraph::with_text(&"Cell words wrap around it. ".repeat(8), Default::default());
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: 9.0, ..Default::default() };
+    let hidden = doc4me_doc::CharProps { hidden: Some(true), ..Default::default() };
+    cp.insert_object(0, rect_shape(60.0, 40.0, f), &hidden).unwrap();
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+    // (shapes placed, the cell text's widest first-line indent)
+    let run = |show_hidden: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        let items = &l.pages[0].items;
+        let left = items
+            .iter()
+            .filter_map(|i| if let Placed::Lines { para, .. } = i { para.lines.first().map(|l| l.left) } else { None })
+            .fold(0.0f32, f32::max);
+        (shapes(items).len(), left)
+    };
+    let (n, left) = run(true);
+    assert!(n == 1 && left >= 60.0, "shown: placed and wrapped around ({n}, {left})");
+    assert_eq!(run(false), (0, 0.0), "hidden: not placed, no wrap area");
+}
+
+#[test]
+fn objects_left_out_through_the_table_style_formatting() {
+    // The table style's character formatting sits under the runs' own, as the cell is laid out.
+    let mut p = doc4me_doc::Paragraph::with_text("ab", Default::default());
+    p.insert_object(1, rect_shape(10.0, 10.0, Default::default()), &Default::default()).unwrap();
+    let d = Document::from_text("");
+    let hidden = doc4me_doc::CharProps { hidden: Some(true), ..Default::default() };
+    assert!(!left_out_objects(&d, &p, None, false, false)(0));
+    assert!(left_out_objects(&d, &p, Some(&hidden), false, false)(0));
+    assert!(!left_out_objects(&d, &p, Some(&hidden), true, false)(0), "hidden text shown");
+}
+
+#[test]
+fn hidden_float_in_a_text_box_is_not_placed() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    // A shape anchored in hidden text inside a text box: no drawing, no hit area.
+    let mut d = Document::from_text("Body text.");
+    let id = text_box(&mut d, 0, "Box words.", 200.0, 120.0, Default::default());
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, ..Default::default() };
+    let hidden = doc4me_doc::CharProps { hidden: Some(true), ..Default::default() };
+    let at = Pos { story: StoryRef::Part(id), path: Path::top(0), off: 0 };
+    d.insert_object(&at, rect_shape(30.0, 20.0, f), &hidden).unwrap();
+    let count = |show_hidden: bool| {
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions { show_hidden, ..Default::default() });
+        let items = &l.pages[0].items;
+        let areas = items.iter().filter(|i| matches!(i, Placed::Object { story: StoryRef::Part(_), .. })).count();
+        (shapes(items).len(), areas)
+    };
+    let (shown, shown_areas) = count(true);
+    let (hidden_n, hidden_areas) = count(false);
+    assert_eq!((shown - hidden_n, shown_areas - hidden_areas), (1, 1), "shown {shown}/{shown_areas}, hidden {hidden_n}/{hidden_areas}");
+}
+
+#[test]
+fn inline_graphic_reserves_its_height() {
+    let mut d = Document::from_text("Chart\nAfter");
+    let obj = InlineObject::Graphic { w: 216.0, h: 144.0, alt: String::new(), float: Default::default(), graphic: Arc::new(Default::default()) };
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let l = lay(&d);
+    let tops: Vec<f32> = l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, .. } = i { Some(*y) } else { None }).collect();
+    assert_eq!(tops.len(), 2);
+    assert!(tops[1] - tops[0] >= 144.0, "the next paragraph starts below the chart: {tops:?}");
+}
+
+#[test]
+fn graphic_items_draw_inside_the_object() {
+    use doc4me_doc::graphic::{Graphic, GraphicItem, GraphicKind, PathSeg, TextAlign};
+    use doc4me_doc::props::Rgb;
+    let items = vec![
+        GraphicItem::Shape {
+            rect: [10.0, 5.0, 20.0, 20.0],
+            kind: doc4me_doc::para::ShapeKind::Rectangle,
+            fill: Some(Rgb::BLACK),
+            stroke: None,
+            stroke_width: 0.0,
+        },
+        GraphicItem::Path {
+            segs: vec![PathSeg::Move(1.0, 2.0), PathSeg::Line(30.0, 40.0), PathSeg::Close],
+            fill: None,
+            stroke: Some(Rgb::BLACK),
+            stroke_width: 0.0,
+        },
+        GraphicItem::Text {
+            rect: [0.0, 100.0, 216.0, 20.0],
+            text: "Q1".into(),
+            size: 10.0,
+            color: Rgb::BLACK,
+            bold: false,
+            align: TextAlign::Center,
+            font: None,
+        },
+    ];
+    let mut d = Document::from_text("Chart");
+    let graphic = Graphic { kind: GraphicKind::Chart, items, ..Default::default() };
+    let obj = InlineObject::Graphic { w: 216.0, h: 144.0, alt: String::new(), float: Default::default(), graphic: Arc::new(graphic) };
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let l = lay(&d);
+    // The chart's draws sit inside its figure.
+    let draws = flat(display::page_display(&d, &l.pages[0], &Default::default()));
+    let shape = draws.iter().find_map(|x| if let display::Draw::Shape { rect, .. } = x { Some(*rect) } else { None }).expect("a shape");
+    let first = draws.iter().find_map(|x| if let display::Draw::Path { segs, .. } = x { segs.first().copied() } else { None }).expect("a path");
+    let PathSeg::Move(mx, my) = first else { panic!("{first:?}") };
+    // Path points are page coordinates, moved with the object like the shape's rectangle.
+    assert_eq!((mx - shape.x, my - shape.y), (1.0 - 10.0, 2.0 - 5.0));
+    assert!(draws.iter().any(|x| matches!(x, display::Draw::Glyphs { text, .. } if text == "Q1")));
+}
+
+#[test]
+fn graphic_text_in_a_degenerate_rectangle_is_not_drawn() {
+    use doc4me_doc::graphic::{Graphic, GraphicItem, GraphicKind, TextAlign};
+    use doc4me_doc::props::Rgb;
+    let text = |rect: [f32; 4], size: f32| GraphicItem::Text {
+        rect,
+        text: "Q1".into(),
+        size,
+        color: Rgb::BLACK,
+        bold: false,
+        align: TextAlign::Center,
+        font: None,
+    };
+    let items = vec![text([f32::NAN, 0.0, 10.0, 10.0], 10.0), text([0.0, 0.0, f32::INFINITY, 10.0], 10.0), text([0.0, 0.0, 10.0, 10.0], f32::NAN)];
+    let graphic = Graphic { kind: GraphicKind::Diagram, items, ..Default::default() };
+    let obj = InlineObject::Graphic { w: 216.0, h: 144.0, alt: String::new(), float: Default::default(), graphic: Arc::new(graphic) };
+    let mut d = Document::from_text("Chart");
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let draws = flat(display::page_display(&d, &lay(&d).pages[0], &Default::default()));
+    assert!(!draws.iter().any(|x| matches!(x, display::Draw::Glyphs { text, .. } if text == "Q1")));
+}
+
+/// The draws with figures opened up.
+fn flat(draws: Vec<display::Draw>) -> Vec<display::Draw> {
+    draws.into_iter().flat_map(|x| if let display::Draw::Figure { draws, .. } = x { draws } else { vec![x] }).collect()
+}
+
+#[test]
+fn inline_chart_is_a_figure_with_its_alt_text() {
+    use doc4me_doc::graphic::{Graphic, GraphicItem, GraphicKind, PathSeg};
+    use doc4me_doc::props::Rgb;
+    let items = vec![GraphicItem::Path {
+        segs: vec![PathSeg::Move(1.0, 1.0), PathSeg::Line(2.0, 2.0)],
+        fill: None,
+        stroke: Some(Rgb::BLACK),
+        stroke_width: 1.0,
+    }];
+    let graphic = Graphic { kind: GraphicKind::Chart, items, ..Default::default() };
+    let obj = InlineObject::Graphic { w: 216.0, h: 144.0, alt: "Sales by quarter".into(), float: Default::default(), graphic: Arc::new(graphic) };
+    let mut d = Document::from_text("Chart");
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let draws = display::page_display(&d, &lay(&d).pages[0], &Default::default());
+    let figure = draws.iter().find_map(|x| if let display::Draw::Figure { alt, draws, .. } = x { Some((alt.clone(), draws.len())) } else { None });
+    assert_eq!(figure, Some(("Sales by quarter".to_string(), 1)));
+}
+
+#[test]
+fn graphic_paths_drop_segments_that_cannot_be_drawn() {
+    use doc4me_doc::graphic::{Graphic, GraphicItem, GraphicKind, PathSeg};
+    use doc4me_doc::props::Rgb;
+    // The line before the first move, the move with a NaN, the infinite line and the line after the
+    // close are all dropped.
+    let segs = vec![
+        PathSeg::Line(5.0, 5.0),
+        PathSeg::Move(f32::NAN, 1.0),
+        PathSeg::Move(1.0, 2.0),
+        PathSeg::Line(3.0, 4.0),
+        PathSeg::Line(f32::INFINITY, 0.0),
+        PathSeg::Close,
+        PathSeg::Line(9.0, 9.0),
+    ];
+    let items = vec![GraphicItem::Path { segs, fill: None, stroke: Some(Rgb::BLACK), stroke_width: 1.0 }];
+    let graphic = Graphic { kind: GraphicKind::Chart, items, ..Default::default() };
+    let obj = InlineObject::Graphic { w: 216.0, h: 144.0, alt: String::new(), float: Default::default(), graphic: Arc::new(graphic) };
+    let mut d = Document::from_text("Chart");
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let draws = flat(display::page_display(&d, &lay(&d).pages[0], &Default::default()));
+    let segs: Vec<PathSeg> =
+        draws.iter().find_map(|x| if let display::Draw::Path { segs, .. } = x { Some(segs.clone()) } else { None }).expect("a path");
+    assert!(matches!(segs.as_slice(), [PathSeg::Move(x, y), PathSeg::Line(..), PathSeg::Close] if x.is_finite() && y.is_finite()), "{segs:?}");
+}
+
+#[test]
+fn graphic_items_scale_with_their_frame() {
+    use doc4me_doc::graphic::{Graphic, GraphicItem, GraphicKind};
+    use doc4me_doc::props::Rgb;
+    // A chart drawn for 1000 x 500 pt in a 500 x 250 pt frame: its items and strokes scale by half.
+    let items = vec![GraphicItem::Shape {
+        rect: [0.0, 0.0, 1000.0, 500.0],
+        kind: doc4me_doc::para::ShapeKind::Rectangle,
+        fill: None,
+        stroke: Some(Rgb::BLACK),
+        stroke_width: 4.0,
+    }];
+    let graphic = Graphic { kind: GraphicKind::Chart, items, w: 1000.0, h: 500.0, source: None, chart: None, smart_art: None };
+    let obj = InlineObject::Graphic { w: 500.0, h: 250.0, alt: String::new(), float: Default::default(), graphic: Arc::new(graphic) };
+    let mut d = Document::from_text("Chart");
+    d.insert_object(&Pos::body(0, 0), obj, &Default::default()).unwrap();
+    let draws = flat(display::page_display(&d, &lay(&d).pages[0], &Default::default()));
+    let (r, stroke) = draws
+        .iter()
+        .find_map(|x| if let display::Draw::Shape { rect, stroke_width, .. } = x { Some((*rect, *stroke_width)) } else { None })
+        .expect("a shape");
+    assert!((r.w - 500.0).abs() < 1e-3 && (r.h - 250.0).abs() < 1e-3, "{r:?}");
+    assert!((stroke - 2.0).abs() < 1e-5, "stroke {stroke}");
+}
+
+#[test]
+fn inline_picture_wider_than_a_text_box_is_fitted_to_it() {
+    // Text boxes don't clip what runs past their sides, so a 400 x 100 pt picture in a 144 pt box
+    // is fitted to the box's 129.6 pt inside its margins instead of spilling over the page.
+    let mut d = Document::from_text("Before");
+    let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+    p.insert_object(0, picture(400.0, 100.0, Default::default()), &Default::default()).unwrap();
+    let id = d.add_part(doc4me_doc::PartKind::TextBox, vec![doc4me_doc::para_block(p)]);
+    let shape = InlineObject::Shape {
+        kind: doc4me_doc::para::ShapeKind::TextBox,
+        w: 144.0,
+        h: 72.0,
+        fill: None,
+        stroke: None,
+        stroke_width: 0.75,
+        float: Default::default(),
+        story: Some(id),
+        freeform: None,
+        effects: Default::default(),
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    let l = lay(&d);
+    let draws = flat(display::page_display(&d, &l.pages[0], &Default::default()));
+    let r = draws
+        .iter()
+        .find_map(|x| match x {
+            display::Draw::Shape { rect, kind: doc4me_doc::para::ShapeKind::Rectangle, .. } => Some(*rect),
+            _ => None,
+        })
+        .expect("the picture");
+    assert!((r.w - 129.6).abs() < 0.1 && (r.h - 32.4).abs() < 0.1, "{r:?}");
+}
+
+#[test]
+fn inline_picture_wider_than_the_text_keeps_its_size() {
+    // A 1000 x 100 pt picture in 468 pt of text: Word draws it at its size, past the margin, and the
+    // page edge clips it; the line is as tall as the picture (docxide-pdf's case179).
+    let mut d = Document::from_text("");
+    if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(std::sync::Arc::make_mut) {
+        p.insert_object(0, picture(1000.0, 100.0, Default::default()), &Default::default()).unwrap();
+    }
+    let l = lay(&d);
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+    let line = &para.lines[0];
+    assert!((line.baseline - line.top - 100.0).abs() < 0.01, "the picture keeps its height: {line:?}");
+    let draws = flat(display::page_display(&d, &l.pages[0], &Default::default()));
+    let r = draws.iter().find_map(|x| if let display::Draw::Shape { rect, .. } = x { Some(*rect) } else { None }).expect("the picture");
+    assert!((r.w - 1000.0).abs() < 0.01 && (r.h - 100.0).abs() < 0.01, "{r:?}");
+}
+
+/// The paragraph at `path` on page 0: its first line's x, its y and its line count.
+fn para_at(l: &DocLayout, path: &[u32]) -> Vec<(f32, f32, usize)> {
+    l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { x, y, para, path: p, .. } if p.0 == path => Some((*x + para.lines.first().map_or(0.0, |l| l.left), *y, para.lines.len())),
+            _ => None,
+        })
+        .collect()
+}
+
+#[test]
+fn a_floating_table_in_a_cell_takes_no_room_and_the_cell_holds_it() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let text = |s: &str| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(s, Default::default()));
+    let mut inner = Table::new(3, 1, 200.0);
+    for (i, r) in inner.rows.iter_mut().enumerate() {
+        r.cells[0].blocks = vec![text(&format!("Inner {i}"))];
+    }
+    inner.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, dist: [9.0, 0.0, 9.0, 0.0], ..Default::default() });
+    let mut outer = Table::new(1, 1, 468.0);
+    outer.rows[0].cells[0].blocks = vec![std::sync::Arc::new(doc4me_doc::Block::Table(inner)), text("Beside")];
+    let mut d = Document::from_text("Below");
+    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(outer)).unwrap();
+    let l = lay(&d);
+    let (&[(ix, iy, _)], &[(_, last_y, _)], &[(bx, by, _)], &[(_, below_y, _)]) =
+        (&para_at(&l, &[0, 0, 0, 0, 0, 0, 0])[..], &para_at(&l, &[0, 0, 0, 0, 2, 0, 0])[..], &para_at(&l, &[0, 0, 0, 1])[..], &para_at(&l, &[1])[..])
+    else {
+        panic!("lines missing")
+    };
+    // The paragraph after the floating table runs beside it, level with its top.
+    assert!((by - iy).abs() < 2.0, "beside at {by}, inner table at {iy}");
+    assert!(bx > ix + 200.0, "beside text at {bx}, inner table text at {ix}");
+    // The cell grows to hold the whole floating table.
+    assert!(below_y > last_y + 10.0, "text below the outer table at {below_y}, the inner table's last row at {last_y}");
+}
+
+#[test]
+fn autofit_sizes_columns_by_their_content() {
+    let text = |s: &str| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(s, Default::default()));
+    // No width anywhere: the columns come from their content.
+    let mut t = Table::new(1, 2, 468.0);
+    t.rows[0].cells[0].blocks = vec![text("Short")];
+    t.rows[0].cells[1].blocks = vec![text(&"A long cell that needs most of the width. ".repeat(4))];
+    t.rows[0].cells.iter_mut().for_each(|c| c.props.width = None);
+    let mut d = Document::from_text("After");
+    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let (&[(sx, _, _)], &[(lx, _, _)]) = (&para_at(&l, &[0, 0, 0, 0])[..], &para_at(&l, &[0, 0, 1, 0])[..]) else { panic!("lines missing") };
+    assert!(lx - sx < 80.0, "the short column is {}pt wide", lx - sx);
+    // A grid column narrower than its longest word grows; the others give up the difference.
+    let mut t = Table::new(1, 3, 468.0);
+    t.grid = vec![400.0, 20.0, 48.0];
+    t.rows[0].cells[1].blocks = vec![text("Unbreakable")];
+    let mut d = Document::from_text("After");
+    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+    let l = lay(&d);
+    let [(_, _, n)] = para_at(&l, &[0, 0, 1, 0])[..] else { panic!("line missing") };
+    assert_eq!(n, 1, "the word is broken over {n} lines");
+}
+
+#[test]
+fn autofit_handles_spanning_cells_long_words_and_empty_tables() {
+    let text = |s: &str| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(s, Default::default()));
+    let table_x = |t: Table, path: &[u32]| {
+        let mut d = Document::from_text("After");
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        para_at(&lay(&d), path)
+    };
+    let automatic = |rows: usize, cols: usize| {
+        let mut t = Table::new(rows, cols, 468.0);
+        t.rows.iter_mut().flat_map(|r| r.cells.iter_mut()).for_each(|c| c.props.width = None);
+        t
+    };
+    // A title cell spanning both columns needs its width shared between them: it stays on one line.
+    let mut t = automatic(2, 2);
+    t.rows[0].cells.truncate(1);
+    t.rows[0].cells[0].props.span = 2;
+    t.rows[0].cells[0].blocks = vec![text("A title that spans both columns")];
+    t.rows[1].cells[0].blocks = vec![text("A")];
+    t.rows[1].cells[1].blocks = vec![text("B")];
+    let [(_, _, n)] = table_x(t, &[0, 0, 0, 0])[..] else { panic!("title missing") };
+    assert_eq!(n, 1, "the title wraps over {n} lines");
+    // An unbreakable string longer than the page doesn't widen the table past it.
+    let mut t = automatic(1, 2);
+    t.rows[0].cells[0].blocks = vec![text(&"x".repeat(300))];
+    t.rows[0].cells[1].blocks = vec![text("Second")];
+    let [(x, _, _)] = table_x(t, &[0, 0, 1, 0])[..] else { panic!("second cell missing") };
+    assert!(x < 72.0 + 468.0, "the second column starts at {x}, past the margin");
+    // A table of empty cells keeps its grid.
+    let [(x, _, _)] = table_x(automatic(1, 2), &[0, 0, 1, 0])[..] else { panic!("second cell missing") };
+    assert!(x > 72.0 + 200.0, "the second empty column starts at {x}");
+    // Cells asking for a share of the table's width keep their grid too.
+    let mut t = automatic(1, 2);
+    for (c, s) in t.rows[0].cells.iter_mut().zip(["A", "B"]) {
+        c.props.width_pct = Some(50.0);
+        c.blocks = vec![text(s)];
+    }
+    let [(x, _, _)] = table_x(t, &[0, 0, 1, 0])[..] else { panic!("second cell missing") };
+    assert!(x > 72.0 + 200.0, "the second 50% column starts at {x}");
+}
+
+#[test]
+fn a_floating_table_in_the_footer_leaves_the_footer_where_it_is() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let footer_y = |float: bool| {
+        let mut d = Document::from_text("Body");
+        let mut t = Table::new(1, 1, 100.0);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Float", Default::default()))];
+        if float {
+            t.props.float = Some(TableFloat { h_rel: Anchor::Page, v_rel: Anchor::Page, y: 720.0, ..Default::default() });
+        }
+        let blocks = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Footer", Default::default())),
+            std::sync::Arc::new(doc4me_doc::Block::Table(t)),
+        ];
+        let id = d.add_part(doc4me_doc::PartKind::Footer, blocks);
+        d.last_section.footers.default = Some(id);
+        let l = lay(&d);
+        l.pages[0].footer.iter().find_map(|it| if let Placed::Lines { y, path, .. } = it { (path.0 == [0]).then_some(*y) } else { None }).unwrap()
+    };
+    // A floating table in the footer doesn't push the footer's text up.
+    assert!(footer_y(true) >= footer_y(false) - 0.01, "footer text at {} with the float, {} without", footer_y(true), footer_y(false));
+}
+
+#[test]
+fn a_split_row_moves_shading_below_the_cut_with_it() {
+    use crate::table::{RowLayout, split_row};
+    let line_row = |y: f32| {
+        let d = Document::from_text("Line");
+        let l = lay(&d);
+        let Some(Placed::Lines { story, path, para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+            panic!("no line")
+        };
+        Placed::Lines { story, path, para, l0: 0, l1: 1, x: 0.0, y, turn: TextDirection::Horizontal }
+    };
+    let fill = |y: f32, h: f32| Placed::Fill { rect: doc4me_geom::Rect::new(0.0, y, 100.0, h), color: doc4me_doc::props::Rgb(200, 0, 0) };
+    // The row's own shading (from its top) and a nested cell's shading starting below the cut.
+    let row = RowLayout {
+        height: 200.0,
+        items: vec![line_row(0.0), line_row(150.0), fill(0.0, 200.0), fill(150.0, 50.0)],
+        merged: Vec::new(),
+        lifts: Vec::new(),
+    };
+    let (a, b) = split_row(&row, 100.0).expect("splits");
+    let fills = |r: &RowLayout| {
+        r.items.iter().filter_map(|i| if let Placed::Fill { rect, .. } = i { Some((rect.y, rect.h)) } else { None }).collect::<Vec<_>>()
+    };
+    assert_eq!(fills(&a), vec![(0.0, 100.0)], "only the row's shading above the cut stays");
+    let moved = fills(&b);
+    assert_eq!(moved.first().map(|f| f.0), Some(0.0), "the row's shading starts the continuation: {moved:?}");
+    let nested = moved.get(1).copied().unwrap_or_default();
+    assert!(nested.0 > 0.0 && (nested.1 - 50.0).abs() < 0.01, "the nested shading keeps its place and size: {moved:?}");
+}
+
+#[test]
+fn a_split_row_keeps_a_keep_with_next_paragraph_with_the_next_one() {
+    // zenodo-144: a heading kept with the next paragraph goes to the next page with it when a
+    // row splits between them; at the row's top the row moves on whole.
+    use crate::table::{RowLayout, split_row, split_row_keeping};
+    let d = Document::from_text("Line");
+    let l = lay(&d);
+    let Some(Placed::Lines { story, para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let mut heading = (*para).clone();
+    heading.rp.keep_next = true;
+    let heading = std::sync::Arc::new(heading);
+    let line = |i: u32, p: &std::sync::Arc<crate::ParaLayout>, y: f32| Placed::Lines {
+        story,
+        path: doc4me_doc::Path(vec![0, 0, 0, i]),
+        para: p.clone(),
+        l0: 0,
+        l1: 1,
+        x: 0.0,
+        y,
+        turn: TextDirection::Horizontal,
+    };
+    let h = para.lines[0].height;
+    let lines = |r: &RowLayout| r.items.iter().filter(|i| matches!(i, Placed::Lines { .. })).count();
+    // Text, the heading, then the paragraph it introduces, which doesn't fit above the cut.
+    let row = RowLayout {
+        height: 200.0,
+        items: vec![line(0, &para, 0.0), line(1, &heading, 50.0), line(2, &para, 50.0 + h + 2.0)],
+        merged: Vec::new(),
+        lifts: Vec::new(),
+    };
+    let cut = 50.0 + h + 1.0;
+    let (a, _) = split_row(&row, cut).expect("splits");
+    assert_eq!(lines(&a), 2, "without the keep the heading stays");
+    let (a, b) = split_row_keeping(&row, cut).expect("splits");
+    assert_eq!((lines(&a), lines(&b)), (1, 2), "the heading goes on with its paragraph");
+    // The heading starts the row: nothing stays, the row moves on whole.
+    let row = RowLayout { height: 200.0, items: vec![line(1, &heading, 0.0), line(2, &para, h + 2.0)], merged: Vec::new(), lifts: Vec::new() };
+    assert!(split_row_keeping(&row, h + 1.0).is_none());
+    assert!(split_row(&row, h + 1.0).is_some(), "at a page's top the row still splits");
+}
+
+#[test]
+fn a_split_row_moves_on_whole_when_a_cell_would_keep_none_of_its_text() {
+    // govuk-031: a two-line cell (widow control) beside one-line cells; Word moves the row.
+    use crate::table::{RowLayout, split_row, split_row_keeping};
+    let d = Document::from_text(&"words wrap onto a second line ".repeat(6));
+    let l = lay(&d);
+    let Some(Placed::Lines { story, para: two, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let d = Document::from_text("One");
+    let l = lay(&d);
+    let Some(Placed::Lines { para: one, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })).cloned() else {
+        panic!("no line")
+    };
+    let mut two = (*two).clone();
+    two.rp.widow_control = true;
+    let two = std::sync::Arc::new(two);
+    assert!(two.lines.len() >= 2, "two lines");
+    let line = |cell: u32, p: &std::sync::Arc<crate::ParaLayout>| Placed::Lines {
+        story,
+        path: doc4me_doc::Path(vec![0, 0, cell, 0]),
+        para: p.clone(),
+        l0: 0,
+        l1: p.lines.len(),
+        x: 0.0,
+        y: 0.0,
+        turn: TextDirection::Horizontal,
+    };
+    let h = one.lines[0].height;
+    let row = RowLayout { height: 3.0 * h, items: vec![line(0, &one), line(1, &two)], merged: Vec::new(), lifts: Vec::new() };
+    // The first line of each fits; widow control moves the two-line cell's paragraph on whole.
+    let cut = h + 1.0;
+    assert!(split_row(&row, cut).is_some(), "at a page's top the row still splits");
+    assert!(split_row_keeping(&row, cut).is_none(), "elsewhere it moves on whole");
+}
+
+#[test]
+fn cell_spacing_insets_cells_and_the_table_content() {
+    // zenodo-036: with 0.75 pt between cells Word's rows are 1.5 pt taller and the first cell's
+    // text 1.5 pt further from the table's edge, both ways. (Its tables have no borders; with
+    // borders the cells' and the frame's add to that: `cell_spacing_rows_hold_both_cell_borders_and_the_frame`.)
+    let text_at = |spacing: Option<f32>| {
+        let mut d = Document::new();
+        let mut t = Table::new(2, 1, 200.0);
+        t.props.style = None;
+        for row in &mut t.rows {
+            row.cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Cell", Default::default()))];
+        }
+        t.props.cell_spacing = spacing;
+        d.body.insert(0, std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+        let l = lay(&d);
+        let mut ys: Vec<(f32, f32)> = l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { path, x, y, .. } = it { (path.0.len() == 4).then_some((*x, *y)) } else { None })
+            .collect();
+        ys.sort_by(|a, b| a.1.total_cmp(&b.1));
+        ys
+    };
+    let (a, b) = (text_at(None), text_at(Some(0.75)));
+    assert_eq!((a.len(), b.len()), (2, 2), "{a:?} {b:?}");
+    assert!((b[0].0 - a[0].0 - 1.5).abs() < 0.01, "x {a:?} {b:?}");
+    assert!((b[0].1 - a[0].1 - 1.5).abs() < 0.01, "first row y {a:?} {b:?}");
+    assert!(((b[1].1 - b[0].1) - (a[1].1 - a[0].1) - 1.5).abs() < 0.01, "row pitch {a:?} {b:?}");
+}
+
+#[test]
+fn a_line_a_fraction_of_a_point_past_the_page_bottom_stays() {
+    // zenodo-049: Word keeps a page's last line that runs under 0.1 pt into the footer's room.
+    use doc4me_doc::props::LineSpacing;
+    let pages = |exact: f32| {
+        let mut d = Document::new();
+        let room = d.last_section.page_h - d.last_section.margin_top - d.last_section.margin_bottom;
+        let n = 40usize;
+        // One paragraph of `n` lines (manual line breaks).
+        let text: Vec<String> = (0..n).map(|i| format!("line {i}")).collect();
+        let mut p = doc4me_doc::Paragraph::with_text(&text.join("\n"), Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(room / n as f32 + exact));
+        p.props.space_after = Some(0.0);
+        p.props.space_before = Some(0.0);
+        p.props.widow_control = Some(false);
+        d.body = vec![doc4me_doc::para_block(p)];
+        lay(&d).pages.len()
+    };
+    assert_eq!(pages(0.0), 1, "exactly full");
+    assert_eq!(pages(0.2 / 40.0), 1, "0.2 pt over: still one page");
+    // zenodo-083: Word moves on a list item whose last line runs 0.28 pt past the margin.
+    assert_eq!(pages(0.29 / 40.0), 2, "0.29 pt over: the last line moves on");
+    assert_eq!(pages(1.0 / 40.0), 2, "1 pt over: the last line moves on");
+}
+
+#[test]
+fn an_empty_paragraph_ending_a_section_before_a_continuous_break_takes_no_room() {
+    // zenodo-155: the abstract's single-column section (begun on a new page) ends with an empty
+    // paragraph before a continuous two-column section; Word gives that paragraph no room.
+    use doc4me_doc::section::SectionStart;
+    let gap = |next: SectionStart| {
+        let mut d = Document::new();
+        let a = doc4me_doc::Paragraph::with_text("Abstract", Default::default());
+        let mut mark = doc4me_doc::Paragraph::new();
+        mark.section = Some(Box::new(d.last_section.clone()));
+        let b = doc4me_doc::Paragraph::with_text("Introduction", Default::default());
+        d.last_section.start = next;
+        d.last_section.columns.count = 2;
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(mark), doc4me_doc::para_block(b)];
+        let l = lay(&d);
+        let y = |i: u32| {
+            l.pages
+                .iter()
+                .flat_map(|p| &p.items)
+                .find_map(|it| if let Placed::Lines { path, y, .. } = it { (path.0 == [i]).then_some(*y) } else { None })
+        };
+        (y(2).unwrap_or(0.0) - y(0).unwrap_or(0.0), l.pages.len())
+    };
+    let (continuous, pages) = gap(SectionStart::Continuous);
+    assert_eq!(pages, 1);
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Abstract", Default::default())),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Introduction", Default::default())),
+    ];
+    let l = lay(&d);
+    let ys: Vec<f32> = l.pages[0].items.iter().filter_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).collect();
+    let plain = ys[1] - ys[0];
+    assert!((continuous - plain).abs() < 0.5, "the empty mark adds nothing: {continuous} vs {plain}");
+}
+
+#[test]
+fn kinsoku_keeps_a_manual_line_break_before_a_closing_bracket() {
+    // #269: kinsoku forbids a line starting with 」, but a manual line break (Shift+Enter) right
+    // before one still ends the line there.
+    let text = "日本語\n」テスト";
+    let mut d = Document::from_text("");
+    d.body = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, Default::default()))];
+    let l = lay(&d);
+    let mut lines = Vec::new();
+    for p in &l.pages {
+        for it in &p.items {
+            if let Placed::Lines { para, l0, l1, .. } = it {
+                lines.extend(para.lines[*l0..*l1].iter().map(|line| (line.start, line.end)));
+            }
+        }
+    }
+    let bracket = text.find('」').unwrap();
+    assert_eq!(lines.len(), 2, "{lines:?}");
+    assert_eq!(lines[0].1, LineEnd::LineBreak, "{lines:?}");
+    assert_eq!(lines[1].0, bracket, "the second line starts at the bracket: {lines:?}");
+}
+
+/// #332: a rotated floating shape keeps text clear of its rotated bounds (it reaches further at
+/// the side), its frame stays put (rotation is about the centre) and it is drawn turned; hit
+/// testing follows the turned shape, not its frame.
+#[test]
+fn rotated_float_wraps_around_its_rotated_bounds() {
+    let text = "Words flow around the turned shape here. ".repeat(30);
+    let place = |rot: f32| {
+        let mut d = Document::from_text(&text);
+        let float = doc4me_doc::para::Float {
+            wrap: doc4me_doc::para::Wrap::Square,
+            h_rel: doc4me_doc::para::Anchor::Column,
+            v_rel: doc4me_doc::para::Anchor::Paragraph,
+            x: 0.0,
+            y: 40.0,
+            rot,
+            ..Default::default()
+        };
+        let shape = InlineObject::Shape {
+            kind: doc4me_doc::para::ShapeKind::Rectangle,
+            w: 144.0,
+            h: 40.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            freeform: None,
+            effects: Default::default(),
+            extra: Default::default(),
+        };
+        d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+        let l = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+        let p = &l.pages[0];
+        let Some(Placed::Lines { para, .. }) = p.items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        // The widest indent of a line beside the shape.
+        let left = para.lines.iter().map(|l| l.left).fold(0.0f32, f32::max);
+        let hit = l.object(&Pos::body(0, 0), 0).unwrap();
+        let drawn = crate::display::page_display(&d, p, &Default::default()).iter().any(|d| matches!(d, crate::display::Draw::Rotated { .. }));
+        (left, hit, drawn, l)
+    };
+    let (flat, frame, flat_drawn, _) = place(0.0);
+    let (turned, hit, drawn, l) = place(30.0);
+    // 144 × 40 turned 30° is 144.7 wide: 0.36 pt further out on each side, the centre kept.
+    let bounds = hit.bounds();
+    assert!((bounds.w - (144.0 * 30f32.to_radians().cos() + 40.0 * 0.5)).abs() < 0.01, "{bounds:?}");
+    assert_eq!(hit.rect, frame.rect);
+    assert!(turned > flat && turned >= bounds.right() - hit.origin.x, "{flat} → {turned} ({bounds:?})");
+    assert!(drawn && !flat_drawn);
+    // Its frame's top-right corner turns away from where it was: no longer on the shape.
+    let r = hit.rect;
+    assert!(l.object_at(0, r.right() - 2.0, r.y + 2.0, 0.0).is_none());
+    assert!(l.object_at(0, r.x + r.w / 2.0, r.y + r.h / 2.0, 0.0).is_some());
+}
+
+/// #332: a group turns as a whole: each member's centre is carried round the group's centre and
+/// the member drawn with the group's turn on top of its own; hit testing follows the turned
+/// group. A shadow that doesn't rotate with its shape (`rotWithShape="0"`, Word's presets) keeps
+/// its page direction inside the turn; one that does turns with the shape.
+#[test]
+fn rotated_group_turns_its_members_and_their_shadows() {
+    use doc4me_doc::effects::{Shadow, ShapeEffects};
+    use doc4me_doc::para::{Anchor, Float, GroupChild, ShapeKind, Wrap};
+    let member = |rot_with_shape: bool, rot: f32| InlineObject::Shape {
+        kind: ShapeKind::Rectangle,
+        w: 60.0,
+        h: 40.0,
+        fill: Some(doc4me_doc::props::Rgb(1, 2, 3)),
+        stroke: None,
+        stroke_width: 0.0,
+        float: Float { rot, ..Default::default() },
+        story: None,
+        freeform: None,
+        effects: ShapeEffects { shadow: Some(Shadow { angle: 0.0, rot_with_shape, ..Default::default() }), ..Default::default() },
+        extra: Default::default(),
+    };
+    let float =
+        Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 100.0, y: 100.0, rot: 90.0, ..Default::default() };
+    let group = InlineObject::Group {
+        w: 120.0,
+        h: 40.0,
+        float,
+        ch_w: 120.0,
+        ch_h: 40.0,
+        children: vec![GroupChild { x: 0.0, y: 0.0, obj: member(false, 0.0) }, GroupChild { x: 60.0, y: 0.0, obj: member(true, 10.0) }],
+        canvas: None,
+    };
+    let mut d = Document::from_text("Text under the group.");
+    d.insert_object(&Pos::body(0, 0), group, &Default::default()).unwrap();
+    let l = lay(&d);
+    let p = &l.pages[0];
+    let hit = l.object(&Pos::body(0, 0), 0).unwrap();
+    let g = hit.rect;
+    let (cx, cy) = (g.x + g.w / 2.0, g.y + g.h / 2.0);
+    assert_eq!(hit.spin.deg, 90.0);
+    // Turned a quarter clockwise, the left member is now above the centre, the right one below.
+    let shapes: Vec<(Rect, Spin)> =
+        p.items.iter().filter_map(|i| if let Placed::Shape { rect, spin, .. } = i { Some((*rect, *spin)) } else { None }).collect();
+    assert_eq!(shapes.len(), 2, "{shapes:?}");
+    let centre = |r: Rect| (r.x + r.w / 2.0, r.y + r.h / 2.0);
+    let near = |a: (f32, f32), b: (f32, f32)| (a.0 - b.0).abs() < 0.01 && (a.1 - b.1).abs() < 0.01;
+    assert!(near(centre(shapes[0].0), (cx, cy - 30.0)), "{shapes:?} about ({cx}, {cy})");
+    assert!(near(centre(shapes[1].0), (cx, cy + 30.0)), "{shapes:?}");
+    assert_eq!((shapes[0].1.deg, shapes[1].1.deg), (90.0, 100.0));
+    // Drawn turned: the page-fixed shadow still falls to the right on the page (270° in the
+    // quarter-turned frame); the other turns with its shape (still 0° in its own frame).
+    let shadows: Vec<f32> = crate::display::page_display(&d, p, &Default::default())
+        .iter()
+        .filter_map(|d| match d {
+            crate::display::Draw::Rotated { items, .. } => items.iter().find_map(|i| match i {
+                crate::display::Draw::Shape { effects, .. } => effects.shadow.map(|s| s.angle),
+                _ => None,
+            }),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(shadows.len(), 2, "{shadows:?}");
+    assert!((shadows[0] - 270.0).abs() < 0.01 && shadows[1].abs() < 0.01, "{shadows:?}");
+    // Grabbed on the turned group: its frame's left end is empty now, above the centre isn't.
+    assert!(l.object_at(0, g.x + 5.0, cy, 0.0).is_none());
+    assert!(l.object_at(0, cx, cy - 50.0, 0.0).is_some());
+}
+
+/// The pieces of footnote `id` as (page, first line, end line, top).
+fn note_pieces(l: &DocLayout, id: u32) -> Vec<(usize, usize, usize, f32)> {
+    let mut v = Vec::new();
+    for (pi, p) in l.pages.iter().enumerate() {
+        for it in &p.items {
+            if let Placed::Lines { story: StoryRef::Part(s), l0, l1, y, .. } = it
+                && *s == id
+            {
+                v.push((pi, *l0, *l1, *y));
+            }
+        }
+    }
+    v
+}
+
+/// Lengths of the horizontal rules on page `pi` below `y`.
+fn rules_below(l: &DocLayout, pi: usize, y: f32) -> Vec<f32> {
+    l.pages[pi]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Rule { x0, y0, x1, y1, .. } = it { (*y0 == *y1 && *y0 > y).then_some(x1 - x0) } else { None })
+        .collect()
+}
+
+#[test]
+fn long_footnotes_continue_on_the_next_page() {
+    let mut d = Document::from_text(&"Body text line.\n".repeat(16));
+    let long = footnote(&mut d, &Pos::body(4, 4), &"A long footnote that runs on and on. ".repeat(60));
+    let own = footnote(&mut d, &Pos::body(14, 4), "The second page's own note.");
+    let l = lay(&d);
+    let refs = l.caret(&Pos::body(4, 4)).unwrap();
+    assert_eq!(refs.page, 0, "the reference stays where it was");
+    let pieces = note_pieces(&l, long);
+    assert!(pieces.len() >= 2, "{pieces:?}");
+    let (p0, p1) = (&pieces[0], &pieces[1]);
+    assert_eq!((p0.0, p1.0), (0, 1), "split over pages 1 and 2: {pieces:?}");
+    assert_eq!(p0.1, 0);
+    assert_eq!(p0.2, p1.1, "continues at the next line");
+    // Every line of the note is placed once.
+    let lines = pieces.iter().map(|p| p.2 - p.1).sum::<usize>();
+    let para = l.pages[0]
+        .items
+        .iter()
+        .find_map(|it| if let Placed::Lines { story: StoryRef::Part(s), para, .. } = it { (*s == long).then(|| para.lines.len()) } else { None })
+        .unwrap();
+    assert_eq!(lines, para);
+    // Page 1: the note fills the space under the text, which ends above it.
+    let body_bottom = |pi: usize| {
+        l.pages[pi]
+            .items
+            .iter()
+            .filter_map(
+                |it| if let Placed::Lines { story: StoryRef::Body, y, para, l0, l1, .. } = it { item_bottom(*y, para, *l0, *l1) } else { None },
+            )
+            .fold(0.0f32, f32::max)
+    };
+    assert!(body_bottom(0) <= p0.3, "{} {}", body_bottom(0), p0.3);
+    assert_eq!(rules_below(&l, 0, body_bottom(0)), vec![144.0], "a normal separator on page 1");
+    // Page 2: the continuation separator spans the text width, the rest of the long note comes
+    // first and the page's own note follows it.
+    assert!(body_bottom(1) <= p1.3, "{} {}", body_bottom(1), p1.3);
+    assert_eq!(rules_below(&l, 1, body_bottom(1)), vec![468.0], "continuation separator");
+    let own_ref = l.caret(&Pos::body(14, 4)).unwrap();
+    let own_note = l.caret(&d.start_of(StoryRef::Part(own))).unwrap();
+    assert_eq!((own_ref.page, own_note.page), (1, 1));
+    assert!(own_note.top > p1.3, "own note after the continued one: {own_note:?} {p1:?}");
+}
+
+/// A footnote paragraph with widow control never leaves one line on either side of a page end
+/// (govuk-059's three-line footnote 3 moves to the next page whole with its reference's line).
+#[test]
+fn a_split_footnote_keeps_two_lines_on_each_side() {
+    let mut seen_split = false;
+    for n in 40..60 {
+        let mut d = Document::from_text(&"Body text line.\n".repeat(n));
+        let id = footnote(&mut d, &Pos::body(n - 2, 4), &"A footnote line that wraps around. ".repeat(14));
+        let l = lay(&d);
+        let pieces = note_pieces(&l, id);
+        if pieces.len() > 1 {
+            seen_split = true;
+        }
+        for p in &pieces {
+            if pieces.len() > 1 {
+                assert!(p.2 - p.1 >= 2, "{n}: a piece of one line: {pieces:?}");
+            }
+        }
+    }
+    assert!(seen_split, "some layout splits the note");
+}
+
+#[test]
+fn short_footnotes_stay_whole() {
+    let mut d = Document::from_text(&"Body text line.\n".repeat(60));
+    let id = footnote(&mut d, &Pos::body(10, 4), "A short note, two lines long. ".repeat(4).as_str());
+    let l = lay(&d);
+    let pieces = note_pieces(&l, id);
+    assert_eq!(pieces.len(), 1, "{pieces:?}");
+    assert_eq!(pieces[0].0, l.caret(&Pos::body(10, 4)).unwrap().page);
+}
+
+#[test]
+fn footnote_longer_than_pages_ends() {
+    // A note several pages long after a one-line body: it continues on pages of its own.
+    let mut d = Document::from_text("Body");
+    let id = footnote(&mut d, &Pos::body(0, 4), &"Words in a very long note. ".repeat(1500));
+    let l = lay(&d);
+    let pieces = note_pieces(&l, id);
+    assert!(pieces.len() >= 3 && l.pages.len() == pieces.len(), "{} pages, {pieces:?}", l.pages.len());
+    assert!(pieces.windows(2).all(|w| w[0].2 == w[1].1 && w[1].0 == w[0].0 + 1), "{pieces:?}");
+}
+
+/// A comment by `author` saying `text` on body paragraph `para`, bytes `a..b`; its id.
+fn comment_on(d: &mut Document, para: usize, a: usize, b: usize, author: &str, text: &str, parent: Option<u32>) -> u32 {
+    let part = d.add_part(doc4me_doc::PartKind::Comment, vec![doc4me_doc::para_block(Paragraph::with_text(text, CharProps::default()))]);
+    let id = d.comments.keys().next_back().map_or(0, |k| k + 1);
+    d.comments.insert(id, doc4me_doc::Comment { author: author.into(), part, parent, ..Default::default() });
+    if parent.is_none() {
+        let p = CharProps::default();
+        d.insert_object(&Pos::body(para, b), InlineObject::CommentEnd { id }, &p).unwrap();
+        d.insert_object(&Pos::body(para, a), InlineObject::CommentStart { id }, &p).unwrap();
+    }
+    id
+}
+
+fn balloon_layout(d: &Document) -> DocLayout {
+    layout(d, &mut LayoutCache::new(), &LayoutOptions { comment_balloons: true, ..Default::default() })
+}
+
+/// The comment text lines placed on page `pi` (story, top-left).
+fn comment_lines(l: &DocLayout, pi: usize) -> Vec<(StoryRef, f32, f32)> {
+    l.pages[pi]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: s @ StoryRef::Part(_), x, y, .. } => Some((*s, *x, *y)),
+            _ => None,
+        })
+        .collect()
+}
+
+/// Print Markup (#589): each page grows by the markup area, and the comment, its author and its
+/// reply are laid out there beside the line they comment on.
+#[test]
+fn comment_balloons_widen_pages_beside_their_anchors() {
+    let mut d = Document::from_text("Intro line.\nThe quarterly figures look strong.\nClosing line.");
+    let id = comment_on(&mut d, 1, 4, 13, "Ada Reviewer", "Check the totals", None);
+    comment_on(&mut d, 0, 0, 0, "Ben Editor", "Totals checked", Some(id));
+    let plain = lay(&d);
+    let l = balloon_layout(&d);
+    assert_eq!(l.pages.len(), plain.pages.len());
+    let (w, pw) = (l.pages[0].w, plain.pages[0].w);
+    assert_eq!(l.pages[0].markup, balloons::MARKUP_AREA);
+    assert!((w - pw - balloons::MARKUP_AREA).abs() < 0.01, "{w} vs {pw}");
+    assert_eq!(plain.pages[0].markup, 0.0);
+    // Author + text for the comment, then for the reply: four lines, all in the markup area.
+    let lines = comment_lines(&l, 0);
+    assert_eq!(lines.len(), 4, "{lines:?}");
+    assert!(lines.iter().all(|(_, x, _)| *x > pw && *x < w), "{lines:?}");
+    assert!(lines.windows(2).all(|p| p[0].2 < p[1].2), "stacked top to bottom: {lines:?}");
+    // The card sits by the commented line.
+    let anchor = l.caret(&Pos::body(1, 5)).unwrap();
+    assert!((lines[0].2 - anchor.top).abs() < 30.0, "{lines:?} vs {anchor:?}");
+    // The body is laid out exactly as without balloons.
+    assert_eq!(lines_of(&plain), lines_of(&l) - 4);
+    // The leader starts at the anchor.
+    assert!(l.pages[0].items.iter().any(|it| matches!(it, Placed::Rule { x0, x1, .. } if (*x0 - anchor.x).abs() < 0.5 && (*x1 - pw).abs() < 0.5)));
+}
+
+#[test]
+fn no_balloons_without_anchored_comments() {
+    let d = Document::from_text("No comments here.");
+    let l = balloon_layout(&d);
+    assert_eq!(l.pages[0].markup, 0.0);
+    assert_eq!(l.pages[0].w, lay(&d).pages[0].w);
+    // A web view never gets a markup area.
+    let mut d = Document::from_text("Hello there.");
+    comment_on(&mut d, 0, 0, 5, "A", "x", None);
+    let opts = LayoutOptions { view: ViewMode::Web, web_width: 500.0, comment_balloons: true, ..Default::default() };
+    let l = layout(&d, &mut LayoutCache::new(), &opts);
+    assert_eq!(l.pages[0].markup, 0.0);
+}
+
+/// Hostile comments: parent cycles, a missing text part, and far more comments than fit beside
+/// one page. Nothing panics or hangs, and the cards stay on the page.
+#[test]
+fn comment_balloons_survive_hostile_comments() {
+    let mut d = Document::from_text(&"Commented words here. ".repeat(20));
+    let mut ids = Vec::new();
+    for i in 0..120 {
+        ids.push(comment_on(&mut d, 0, 0, 9, &format!("Author {i}"), &"A long remark that wraps over lines. ".repeat(4), None));
+    }
+    // A reply cycle and a comment whose text part is gone.
+    let a = comment_on(&mut d, 0, 0, 0, "R", "one", Some(ids[0]));
+    let b = comment_on(&mut d, 0, 0, 0, "R", "two", Some(a));
+    d.comments.get_mut(&a).unwrap().parent = Some(b);
+    d.comments.get_mut(&ids[1]).unwrap().parent = Some(ids[1]);
+    d.comments.get_mut(&ids[2]).unwrap().part = 9_999_999;
+    let l = balloon_layout(&d);
+    let page = &l.pages[0];
+    for (_, _, y) in comment_lines(&l, 0) {
+        assert!(y.is_finite() && y >= 0.0 && y <= page.h, "{y}");
+    }
+    for it in &page.items {
+        if let Placed::Fill { rect, .. } = it {
+            assert!(rect.y >= 0.0 && rect.bottom() <= page.h + 0.5, "{rect:?}");
+        }
+    }
+}
+
+/// The first paragraph's lines on page one: (top, bottom, left, right), relative to its column.
+fn line_spans(l: &DocLayout) -> Vec<(f32, f32, f32, f32)> {
+    let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { return Vec::new() };
+    para.lines.iter().map(|ln| (ln.top, ln.top + ln.height, ln.left, ln.right)).collect()
+}
+
+/// A shape floating at the column's top-left with `wrap`, beside a long paragraph.
+fn wrapped_shape_doc(kind: doc4me_doc::para::ShapeKind, w: f32, h: f32, float: doc4me_doc::para::Float) -> Document {
+    let mut d = Document::from_text(&"Words flow around the shape here. ".repeat(40));
+    let float = doc4me_doc::para::Float { h_rel: doc4me_doc::para::Anchor::Column, v_rel: doc4me_doc::para::Anchor::Paragraph, dist: 9.0, ..float };
+    let shape = InlineObject::Shape {
+        kind,
+        w,
+        h,
+        fill: None,
+        stroke: None,
+        stroke_width: 1.0,
+        float,
+        story: None,
+        effects: Default::default(),
+        freeform: None,
+        extra: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+    d
+}
+
+#[test]
+fn tight_wrap_follows_an_ellipse() {
+    use doc4me_doc::para::{Float, ShapeKind, Wrap};
+    let spans = |wrap| line_spans(&lay(&wrapped_shape_doc(ShapeKind::Ellipse, 160.0, 160.0, Float { wrap, ..Default::default() })));
+    let (square, tight, through) = (spans(Wrap::Square), spans(Wrap::Tight), spans(Wrap::Through));
+    // Square: every line beside the shape starts past its frame and distance from text.
+    assert!(square.iter().filter(|l| l.0 < 160.0).all(|l| l.2 >= 169.0 - 0.01), "{square:?}");
+    // Tight: no line runs into the ellipse (a 160pt circle at 80, 80) or its distance from text.
+    // Where a line from `top` to `bottom` meets the circle plus that distance: (left, right) edges.
+    let contour = |top: f32, bottom: f32| {
+        let y = if bottom < 80.0 {
+            80.0 - bottom
+        } else if top > 80.0 {
+            top - 80.0
+        } else {
+            0.0
+        };
+        let half = (80.0f32 * 80.0 - y.min(80.0).powi(2)).sqrt();
+        (80.0 - half - 9.0, 80.0 + half + 9.0)
+    };
+    for &(top, bottom, left, right) in tight.iter().filter(|l| l.0 < 160.0) {
+        let (a, b) = contour(top, bottom);
+        assert!(right <= a + 1.5 || left >= b - 1.5, "line {top}..{bottom} at {left}..{right} runs into {a}..{b}: {tight:?}");
+    }
+    // Lines near the ellipse's top and bottom start at the curve, well inside its frame; beside
+    // the middle they don't. Measured against each line's own contour edge, so the check holds
+    // whatever line height the test machine's fonts give.
+    let line = |pred: &dyn Fn(f32) -> bool| *tight.iter().find(|l| pred(l.0) && l.2 > 60.0).unwrap();
+    for (what, l) in [("first line", line(&|top| top < 1.0)), ("near the bottom", line(&|top| top > 140.0 && top < 160.0))] {
+        let edge = contour(l.0, l.1).1;
+        assert!(l.2 <= edge + 3.0 && l.2 < 169.0 - 10.0, "{what} hugs the curve at {edge}: {l:?} in {tight:?}");
+    }
+    assert!(line(&|top| top > 65.0 && top < 80.0).2 >= 160.0, "beside the widest part: {tight:?}");
+    // A convex shape has no gaps for Through to use: it wraps as Tight.
+    assert_eq!(through, tight);
+}
+
+#[test]
+fn contour_wrap_turns_with_the_object() {
+    use doc4me_doc::para::{Float, ShapeKind, Wrap};
+    use doc4me_doc::wrap::WrapPolygon;
+    // A wrap polygon covering the left half of a 200 × 100 frame.
+    let poly = WrapPolygon::new(true, [(0, 0), (10_800, 0), (10_800, 21_600), (0, 21_600)]).map(Arc::new);
+    // Where text goes on the first row: (left, right) of each line there.
+    let first_row = |wrap: Wrap, rot: f32, flip_h: bool| {
+        let f = Float { wrap, rot, flip_h, wrap_polygon: poly.clone(), ..Default::default() };
+        let l = line_spans(&lay(&wrapped_shape_doc(ShapeKind::Rectangle, 200.0, 100.0, f)));
+        l.iter().filter(|s| s.0 < 1.0).map(|s| (s.2.round(), s.3.round())).collect::<Vec<_>>()
+    };
+    // Unturned, text comes up to the polygon (half the frame) plus the distance from text.
+    assert_eq!(first_row(Wrap::Tight, 0.0, false)[0].0, 109.0);
+    // Turned half a turn or mirrored, the polygon covers the frame's right half: text goes to
+    // its left and past the frame.
+    for (rot, flip) in [(180.0, false), (0.0, true)] {
+        let row = first_row(Wrap::Tight, rot, flip);
+        assert_eq!((row[0].0, row[0].1, row[1].0), (0.0, 91.0, 209.0), "{rot} {flip}");
+    }
+    // Square wrapping ignores the polygon.
+    assert_eq!(first_row(Wrap::Square, 0.0, false)[0].0, 209.0);
+}
+
+/// Enclosed characters (#297, an `EQ \o\ac` field): the shape is drawn as a vector around the text,
+/// whatever the font has; "shrink text" draws the text smaller inside a one-em shape, "enlarge
+/// symbol" a bigger shape around text at its own size. Plain `\o` overstrikes its arguments.
+#[test]
+fn enclosed_characters_draw_a_shape_around_the_text() {
+    use doc4me_doc::eq::{EncloseShape, EncloseStyle, Enclosure};
+    let draw = |shape: EncloseShape, style: EncloseStyle| {
+        let mut d = Document::from_text("a  b");
+        let e = Enclosure { shape, style, text: "A".into() };
+        d.insert_object(
+            &Pos::body(0, 2),
+            InlineObject::Field { instr: e.instr(), result: "A".into(), locked: false, code: false, form: None },
+            &Default::default(),
+        )
+        .unwrap();
+        let l = lay(&d);
+        let items = display::page_display(&d, &l.pages[0], &Default::default());
+        let shape = items
+            .iter()
+            .find_map(|i| if let display::Draw::Shape { rect, kind, stroke, .. } = i { Some((*rect, *kind, stroke.is_some())) } else { None });
+        // Each glyph's character, size and x.
+        let mut chars = Vec::new();
+        for i in &items {
+            if let display::Draw::Glyphs { text, size, glyphs, ranges, .. } = i {
+                for (g, r) in glyphs.iter().zip(ranges) {
+                    chars.push((text.get(r.clone()).unwrap_or("").to_string(), *size, g.1));
+                }
+            }
+        }
+        let at = |c: &str| chars.iter().find(|x| x.0 == c).map(|x| (x.1, x.2)).unwrap_or_else(|| panic!("{c}: {items:?}"));
+        (shape.expect("a shape"), at("A"), at("b"))
+    };
+    let ((rect, kind, stroked), (size, gx), (base, bx)) = draw(EncloseShape::Circle, EncloseStyle::Shrink);
+    assert_eq!(kind, doc4me_doc::para::ShapeKind::Ellipse);
+    assert!(stroked);
+    assert!(size < base * 0.8, "the text shrinks: {size} vs {base}");
+    assert!((rect.h - base * 1.05).abs() < 0.1 && (rect.w - rect.h).abs() < 0.1, "{rect:?}");
+    assert!(gx > rect.x && gx < rect.x + rect.w, "the text is inside: {gx} {rect:?}");
+    assert!(bx >= rect.x + rect.w, "the next text follows the shape: {bx} {rect:?}");
+    let ((rect, kind, _), (size, _), (base, _)) = draw(EncloseShape::Diamond, EncloseStyle::Enlarge);
+    assert_eq!(kind, doc4me_doc::para::ShapeKind::Diamond);
+    assert!((size - base).abs() < 0.01 && rect.h > base * 1.5, "the shape grows: {rect:?}");
+
+    // A general overstrike: both arguments at the same place, no shape.
+    let mut d = Document::from_text("x");
+    d.insert_object(
+        &Pos::body(0, 1),
+        InlineObject::Field { instr: "eq \\o(=,/)".into(), result: String::new(), locked: false, code: false, form: None },
+        &Default::default(),
+    )
+    .unwrap();
+    let l = lay(&d);
+    let items = display::page_display(&d, &l.pages[0], &Default::default());
+    assert!(!items.iter().any(|i| matches!(i, display::Draw::Shape { .. })));
+    assert!(items.iter().any(|i| matches!(i, display::Draw::Glyphs { text, .. } if text.contains("=/"))), "{items:?}");
+}
+
+#[test]
+fn ruby_text_sits_over_its_base_and_the_line_grows_to_fit() {
+    use doc4me_doc::para::RubyAlign;
+    let plain = Document::from_text("Plain words here");
+    let mut d = Document::from_text("Plain  here");
+    let ruby = InlineObject::Ruby {
+        base: "words".into(),
+        ruby: "a much longer reading".into(),
+        align: RubyAlign::Center,
+        size: 6.0,
+        raise: 12.0,
+        base_size: 12.0,
+        lang: String::new(),
+        props: Default::default(),
+    };
+    d.insert_object(&Pos::body(0, 6), ruby, &Default::default()).unwrap();
+    let height = |l: &DocLayout| {
+        l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { para.lines.first().map(|x| x.height) } else { None }).unwrap()
+    };
+    let (lp, lr) = (lay(&plain), lay(&d));
+    assert!(height(&lr) > height(&lp) + 3.0, "ruby line {} vs plain {}", height(&lr), height(&lp));
+    let items = display::page_display(&d, &lr.pages[0], &Default::default());
+    let glyphs_of = |want: &str| {
+        items.iter().find_map(|i| match i {
+            display::Draw::Glyphs { text, glyphs, size, .. } if text.contains(want) => Some((*size, glyphs.clone())),
+            _ => None,
+        })
+    };
+    let (_, line) = glyphs_of("Plain words").expect("base text drawn");
+    let (size, over) = glyphs_of("a much longer reading").expect("ruby text drawn");
+    let w = line[6]; // "Plain " then the base's first letter
+    // Smaller, 12 pt above the base text's baseline, and (being wider) centred over it: it starts
+    // at the base's slot, the base letters move in.
+    assert_eq!(size, 6.0);
+    assert!((w.2 - over[0].2 - 12.0).abs() < 0.01, "{w:?} {over:?}");
+    let slot = lr.caret(&Pos::body(0, 6)).unwrap().x;
+    assert!((over[0].1 - slot).abs() < 0.5 && w.1 > slot + 1.0, "{slot} {w:?} {over:?}");
+    // The plain text reads the base, and the caret steps over the ruby as one character.
+    assert_eq!(d.body[0].as_para().unwrap().plain_text(), "Plain words here");
+    let (a, b) = (lr.caret(&Pos::body(0, 6)).unwrap(), lr.caret(&Pos::body(0, 9)).unwrap());
+    assert!(b.x - a.x > 30.0, "{a:?} {b:?}");
+}
+
+/// #354: `wrapText`. Left: text only to the left of a centred object (Square or Tight); Right:
+/// only to its right; Largest: only on its wider side.
+#[test]
+fn wrap_text_keeps_text_on_one_side() {
+    use doc4me_doc::para::{Float, ShapeKind, Wrap, WrapText};
+    // A 100pt shape at `x` in the 468pt column; the lines beside it.
+    let beside = |kind, wrap, x: f32, side| {
+        let f = Float { wrap, wrap_text: side, x, ..Default::default() };
+        line_spans(&lay(&wrapped_shape_doc(kind, 100.0, 100.0, f))).into_iter().filter(|l| l.0 < 100.0).collect::<Vec<_>>()
+    };
+    for (kind, wrap) in [(ShapeKind::Rectangle, Wrap::Square), (ShapeKind::Ellipse, Wrap::Tight)] {
+        let both = beside(kind, wrap, 184.0, WrapText::BothSides);
+        assert!(both.iter().any(|l| l.2 < 1.0) && both.iter().any(|l| l.2 > 200.0), "{both:?}");
+        let left = beside(kind, wrap, 184.0, WrapText::Left);
+        // Nothing right of the object (Tight: lines come up to the outline, short of its middle).
+        let mid = if wrap == Wrap::Square { 175.0 } else { 234.0 };
+        assert!(!left.is_empty() && left.iter().all(|l| l.2 < 1.0 && l.3 <= mid + 0.01), "{wrap:?}: {left:?}");
+        let right = beside(kind, wrap, 184.0, WrapText::Right);
+        let mid = if wrap == Wrap::Square { 293.0 } else { 234.0 };
+        assert!(!right.is_empty() && right.iter().all(|l| l.2 >= mid - 0.01), "{wrap:?}: {right:?}");
+    }
+    // Nearer the left edge the right side is wider, nearer the right edge the left.
+    let near_left = beside(ShapeKind::Rectangle, Wrap::Square, 100.0, WrapText::Largest);
+    assert!(!near_left.is_empty() && near_left.iter().all(|l| l.2 >= 209.0 - 0.01), "{near_left:?}");
+    let near_right = beside(ShapeKind::Rectangle, Wrap::Square, 268.0, WrapText::Largest);
+    assert!(!near_right.is_empty() && near_right.iter().all(|l| l.2 < 1.0 && l.3 <= 259.0 + 0.01), "{near_right:?}");
+}
+
+#[test]
+fn document_note_separators_and_continuation_notice() {
+    let mut d = Document::from_text(&"Body text line.\n".repeat(16));
+    let long = footnote(&mut d, &Pos::body(4, 4), &"A long footnote that runs on and on. ".repeat(60));
+    let sep = |cont: bool| {
+        let mut p = doc4me_doc::Paragraph::new();
+        p.props.space_after = Some(0.0);
+        p.insert_object(0, InlineObject::note_separator(cont), &Default::default()).unwrap();
+        Some(vec![doc4me_doc::para_block(p)])
+    };
+    let mut notice = doc4me_doc::Paragraph::with_text("(continued)", Default::default());
+    notice.props.space_after = Some(0.0);
+    d.footnote_separators = doc4me_doc::NoteSeparators {
+        separator: sep(false),
+        continuation_separator: sep(true),
+        continuation_notice: Some(vec![doc4me_doc::para_block(notice)]),
+    };
+    let l = lay(&d);
+    let pieces = note_pieces(&l, long);
+    assert!(pieces.len() >= 2 && (pieces[0].0, pieces[1].0) == (0, 1), "{pieces:?}");
+    // The document's separators are paragraphs: their lines are drawn across the separator's
+    // place, short on page 1 and across the text on page 2.
+    let decor = |pi: usize| -> Vec<(f32, f32)> {
+        l.pages[pi]
+            .items
+            .iter()
+            .filter_map(|it| match it {
+                Placed::Lines { story, y, para, l0, l1, .. } if *story == DECOR_STORY => Some((*y, item_bottom(*y, para, *l0, *l1).unwrap())),
+                _ => None,
+            })
+            .collect()
+    };
+    let (d0, d1) = (decor(0), decor(1));
+    assert_eq!((d0.len(), d1.len()), (2, 1), "separator and notice on page 1, continuation separator on page 2");
+    assert_eq!(rules_below(&l, 0, 0.0), vec![144.0]);
+    assert_eq!(rules_below(&l, 1, 0.0), vec![468.0]);
+    // The notice sits right under the part of the note on page 1, inside the page.
+    let note_bottom = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { story: StoryRef::Part(s), y, para, l0, l1, .. } if *s == long => item_bottom(*y, para, *l0, *l1),
+            _ => None,
+        })
+        .fold(0.0f32, f32::max);
+    let (ny, nb) = d0[1];
+    assert!((ny - note_bottom).abs() < 0.01, "notice at {ny}, note ends at {note_bottom}");
+    assert!(nb <= 720.01, "notice inside the page: {nb}");
+    // The separators and notice aren't text anyone clicks into.
+    assert_ne!(l.story_at(0, 80.0, ny + 2.0), Some(DECOR_STORY));
+}
+
+/// #344 with #332: a Drawing Canvas turns as a whole, like a group: its background and outline,
+/// then its members clipped to its frame, all drawn inside its turn (the clip in the unturned
+/// frame, so the clip turns too); floating or inline. Hit testing follows the turned canvas.
+#[test]
+fn rotated_canvas_draws_its_clipped_members_inside_the_turn() {
+    use crate::display::Draw;
+    use doc4me_doc::para::{Anchor, CanvasStyle, Float, GroupChild, ShapeKind, Wrap};
+    let member = InlineObject::Shape {
+        kind: ShapeKind::Rectangle,
+        w: 60.0,
+        h: 40.0,
+        fill: Some(doc4me_doc::props::Rgb(1, 2, 3)),
+        stroke: None,
+        stroke_width: 0.0,
+        float: Float { rot: 10.0, ..Default::default() },
+        story: None,
+        effects: Default::default(),
+        freeform: None,
+        extra: Default::default(),
+    };
+    let canvas = |float: Float| InlineObject::Group {
+        w: 200.0,
+        h: 100.0,
+        float,
+        ch_w: 200.0,
+        ch_h: 100.0,
+        children: vec![GroupChild { x: 20.0, y: 30.0, obj: member.clone() }],
+        canvas: Some(CanvasStyle { fill: Some(doc4me_doc::props::Rgb(0xF0, 0xF4, 0xFF)), stroke: None, stroke_width: 0.0 }),
+    };
+    // Turned draws: (turn, background rect, clip rect, member rect and its own turn).
+    let turned = |draws: &[Draw]| -> (Vec<f32>, Vec<Rect>, Vec<(Rect, Vec<(Rect, f32)>)>) {
+        let (mut turns, mut bgs, mut clips) = (Vec::new(), Vec::new(), Vec::new());
+        for d in draws {
+            let Draw::Rotated { spin, items, .. } = d else { continue };
+            turns.push(spin.deg);
+            for i in items {
+                match i {
+                    Draw::Shape { rect, fill: Some(c), .. } if c.0 == 0xF0 => bgs.push(*rect),
+                    Draw::Clip { rect, items } => {
+                        let members = items
+                            .iter()
+                            .map(|m| match m {
+                                Draw::Rotated { spin, items, .. } => match items.first() {
+                                    Some(Draw::Shape { rect, .. }) => (*rect, spin.deg),
+                                    o => panic!("{o:?}"),
+                                },
+                                o => panic!("{o:?}"),
+                            })
+                            .collect();
+                        clips.push((*rect, members));
+                    }
+                    _ => {}
+                }
+            }
+        }
+        (turns, bgs, clips)
+    };
+    for floating in [true, false] {
+        let float = if floating {
+            Float { wrap: Wrap::InFrontOfText, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 100.0, y: 100.0, rot: 90.0, ..Default::default() }
+        } else {
+            Float { rot: 90.0, ..Default::default() }
+        };
+        let mut d = Document::from_text("Text by the canvas.");
+        d.insert_object(&Pos::body(0, 0), canvas(float), &Default::default()).unwrap();
+        let l = lay(&d);
+        let p = &l.pages[0];
+        let hit = l.object(&Pos::body(0, 0), 0).unwrap();
+        assert_eq!(hit.spin.deg, 90.0);
+        let f = hit.rect;
+        let (turns, bgs, clips) = turned(&crate::display::page_display(&d, p, &Default::default()));
+        assert!(turns.contains(&90.0), "floating {floating}: {turns:?}");
+        // Background and clip are the canvas's unturned frame; the member sits in it, unturned
+        // but for its own 10°.
+        assert_eq!(bgs.len(), 1, "floating {floating}");
+        assert!((bgs[0].x - f.x).abs() < 0.01 && (bgs[0].w - 200.0).abs() < 0.01, "{bgs:?} vs {f:?}");
+        assert_eq!(clips.len(), 1, "floating {floating}");
+        let (clip, members) = &clips[0];
+        assert!((clip.x - bgs[0].x).abs() < 0.01 && (clip.y - bgs[0].y).abs() < 0.01 && (clip.h - 100.0).abs() < 0.01, "{clip:?}");
+        assert_eq!(members.len(), 1, "{members:?}");
+        let (m, own) = members[0];
+        assert!((m.x - (clip.x + 20.0)).abs() < 0.01 && (m.y - (clip.y + 30.0)).abs() < 0.01, "{m:?} in {clip:?}");
+        assert_eq!(own, 10.0);
+        if floating {
+            // Turned a quarter, the canvas's frame's left end is empty; above its centre isn't.
+            let (cx, cy) = (f.x + f.w / 2.0, f.y + f.h / 2.0);
+            assert!(l.object_at(0, f.x + 5.0, cy, 0.0).is_none());
+            assert!(l.object_at(0, cx, cy - 80.0, 0.0).is_some());
+        }
+    }
+}
+
+#[test]
+fn mirror_indents_swap_sides_on_even_pages() {
+    // #512: with mirrored indents the left indent is the inside one, on the right of an even page.
+    let mut d = Document::from_text("odd page\neven page");
+    let last = Pos::body(1, 0);
+    d.format_paragraphs(&Pos::body(0, 0), &last, &|p| {
+        p.indent_left = Some(72.0);
+        p.mirror_indents = Some(true);
+    })
+    .unwrap();
+    d.format_paragraphs(&last, &last, &|p| p.page_break_before = Some(true)).unwrap();
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 2);
+    let odd = l.caret(&Pos::body(0, 0)).unwrap();
+    let even = l.caret(&last).unwrap();
+    assert_eq!(even.page, 1);
+    assert!((odd.x - 144.0).abs() < 0.5, "odd page: inside indent on the left, {odd:?}");
+    assert!((even.x - 72.0).abs() < 0.5, "even page: the left side has the outside indent (0), {even:?}");
+}
+
+/// Ten short paragraphs in a two-column section (`widths`: unequal columns), then one paragraph
+/// in a one-column section starting `start`.
+fn two_column_section(start: doc4me_doc::section::SectionStart, widths: Vec<(f32, f32)>) -> Document {
+    use doc4me_doc::section::SectionProps;
+    let text: Vec<String> = (0..10).map(|i| format!("Short paragraph {i}")).chain(["After the break".to_string()]).collect();
+    let mut d = Document::from_text(&text.join("\n"));
+    let mut s = SectionProps::default();
+    s.columns.count = 2;
+    s.columns.widths = widths;
+    d.para_mut(StoryRef::Body, &Path::top(9)).unwrap().section = Some(Box::new(s));
+    d.last_section.start = start;
+    d
+}
+
+/// Each top-level paragraph's first piece: (page, x, top, bottom).
+fn para_boxes(l: &DocLayout) -> Vec<(usize, f32, f32, f32)> {
+    let mut v: Vec<(usize, usize, f32, f32, f32)> = Vec::new();
+    for (pi, p) in l.pages.iter().enumerate() {
+        for it in &p.items {
+            if let Placed::Lines { story: StoryRef::Body, path, para, l0, l1, x, y, .. } = it
+                && let [b] = path.0[..]
+                && !v.iter().any(|e| e.0 == b as usize)
+            {
+                v.push((b as usize, pi, *x, *y, item_bottom(*y, para, *l0, *l1).unwrap()));
+            }
+        }
+    }
+    v.sort_by_key(|e| e.0);
+    v.into_iter().map(|(_, pi, x, t, b)| (pi, x, t, b)).collect()
+}
+
+/// Bottoms of the two columns (paragraphs 0–9 by their x) and the top of paragraph 10.
+fn column_bottoms(l: &DocLayout) -> (usize, f32, usize, f32, (usize, f32)) {
+    let b = para_boxes(l);
+    let x0 = b[0].1;
+    let (left, right): (Vec<_>, Vec<_>) = b[..10].iter().partition(|e| (e.1 - x0).abs() < 1.0);
+    let bottom = |v: &[&(usize, f32, f32, f32)]| v.iter().map(|e| e.3).fold(0.0f32, f32::max);
+    (left.len(), bottom(&left), right.len(), bottom(&right), (b[10].0, b[10].2))
+}
+
+#[test]
+fn columns_before_a_continuous_break_are_balanced() {
+    use doc4me_doc::section::SectionStart;
+    for widths in [vec![], vec![(150.0, 36.0), (282.0, 0.0)]] {
+        let l = lay(&two_column_section(SectionStart::Continuous, widths.clone()));
+        let (nl, bl, nr, br, (page, after)) = column_bottoms(&l);
+        // Filled left to right, level: five paragraphs each (the left one may hold one more).
+        assert!(nl == 5 || nl == 6, "{widths:?}: {nl} left, {nr} right");
+        assert!(bl >= br - 0.5 && bl - br < 20.0, "{widths:?}: columns end at {bl} and {br}");
+        // The next section starts right below, on the same page.
+        assert_eq!(page, 0);
+        assert!(after >= bl - 0.5 && after < bl + 30.0, "{widths:?}: next section at {after}, columns end at {bl}");
+    }
+}
+
+#[test]
+fn columns_before_a_page_break_or_a_column_break_are_not_balanced() {
+    use doc4me_doc::section::SectionStart;
+    // Next-page break: the ten paragraphs fill the first column; the next section is on page 2.
+    let l = lay(&two_column_section(SectionStart::NextPage, vec![]));
+    let (nl, _, nr, _, (page, _)) = column_bottoms(&l);
+    assert_eq!((nl, nr, page), (10, 0, 1));
+    // An explicit column break after paragraph 1 decides where the first column ends.
+    let mut d = two_column_section(SectionStart::Continuous, vec![]);
+    let p = d.para_mut(StoryRef::Body, &Path::top(1)).unwrap();
+    let end = p.text.len();
+    p.insert_text(end, &doc4me_doc::para::COLUMN_BREAK.to_string(), &Default::default()).unwrap();
+    let l = lay(&d);
+    let (nl, bl, nr, br, (page, after)) = column_bottoms(&l);
+    assert_eq!((nl, nr, page), (2, 8, 0));
+    // The next section starts below the taller column.
+    assert!(br > bl + 50.0 && after >= br - 0.5, "columns end at {bl} and {br}, next section at {after}");
+}
+
+/// The glyphs of each note reference mark in the body, by note id.
+fn note_marks(l: &DocLayout) -> HashMap<u32, Vec<u32>> {
+    let mut marks = HashMap::new();
+    for it in l.pages.iter().flat_map(|p| p.items.iter()) {
+        if let Placed::Lines { story: StoryRef::Body, para, .. } = it {
+            for (ci, id) in &para.notes {
+                let c = &para.clusters[*ci];
+                marks.insert(*id, para.glyphs[c.g0 as usize..c.g1 as usize].iter().map(|g| g.gid).collect::<Vec<_>>());
+            }
+        }
+    }
+    marks
+}
+
+#[test]
+fn footnotes_restart_on_each_page_and_section() {
+    use doc4me_doc::section::{NoteProps, NoteRestart};
+    let mut d = Document::from_text(&"Body text line.\n".repeat(120));
+    let a = footnote(&mut d, &Pos::body(2, 4), "First note.");
+    let b = footnote(&mut d, &Pos::body(4, 4), "Second note.");
+    let c = footnote(&mut d, &Pos::body(110, 4), "A later page's note.");
+    let l = lay(&d);
+    let page = |l: &DocLayout, id: u32| l.caret(&d.start_of(StoryRef::Part(id))).unwrap().page;
+    assert!(page(&l, c) > page(&l, a), "the third note is on a later page");
+    let marks = note_marks(&l);
+    assert_ne!(marks[&c], marks[&a], "numbered on: 3 is not 1");
+    // Restart each page: the later page's note is 1 again; the first page counts 1, 2.
+    d.settings.footnote_pr = NoteProps { num_restart: Some(NoteRestart::EachPage), ..Default::default() };
+    let marks = note_marks(&lay(&d));
+    assert_eq!(marks[&c], marks[&a]);
+    assert_ne!(marks[&b], marks[&a]);
+    // Restart each section, starting at 5, in a second section that starts at paragraph 50.
+    d.settings.footnote_pr = NoteProps::default();
+    d.para_mut(StoryRef::Body, &Path::top(49)).unwrap().section = Some(Box::new(SectionProps::default()));
+    d.last_section.footnote_pr = NoteProps { num_restart: Some(NoteRestart::EachSect), num_start: Some(5), ..Default::default() };
+    let nums = note_numbers(&d, false);
+    assert_eq!((nums[&a], nums[&b], nums[&c]), (1, 2, 5));
+}
+
+#[test]
+fn endnotes_at_section_end_and_footnotes_below_text() {
+    use doc4me_doc::section::{NotePos, NoteProps};
+    let mut d = Document::from_text("Alpha\nBeta\nGamma\nDelta");
+    let eid =
+        d.add_part(doc4me_doc::PartKind::Endnote, vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("An endnote.", Default::default()))]);
+    d.insert_object(
+        &Pos::body(0, 5),
+        InlineObject::NoteRef { kind: doc4me_doc::para::NoteKind::Endnote, id: eid, custom: String::new() },
+        &Default::default(),
+    )
+    .unwrap();
+    // Two sections, the second on a new page.
+    d.para_mut(StoryRef::Body, &Path::top(1)).unwrap().section = Some(Box::new(SectionProps::default()));
+    let end_page = |d: &Document| {
+        let l = lay(d);
+        (l.caret(&d.start_of(StoryRef::Part(eid))).unwrap().page, l.caret(&Pos::body(2, 0)).unwrap().page)
+    };
+    assert_eq!(end_page(&d), (1, 1), "end of document: after the second section's text");
+    d.settings.endnote_pr = NoteProps { pos: Some(NotePos::SectEnd), ..Default::default() };
+    assert_eq!(end_page(&d), (0, 1), "end of section: on the first section's page");
+    // A footnote below the text sits right under the last line, above where it'd be at the bottom.
+    let fid = footnote(&mut d, &Pos::body(0, 2), "A footnote.");
+    let top = |d: &Document| lay(d).caret(&d.start_of(StoryRef::Part(fid))).unwrap().top;
+    let bottom = top(&d);
+    d.settings.footnote_pr = NoteProps { pos: Some(NotePos::BeneathText), ..Default::default() };
+    let below = top(&d);
+    let text = lay(&d).caret(&Pos::body(1, 0)).unwrap();
+    assert!(below > text.top + text.height && below < bottom - 100.0, "{below} {bottom} {text:?}");
+}
+
+/// Each run is hyphenated and proofed in its own language (`w:lang`, resolved through the
+/// styles): Polish patterns and dictionary for Polish runs, English ones for English runs.
+#[test]
+fn hyphenation_and_proofing_follow_each_runs_language() {
+    // A tiny synthetic Polish dictionary (real ones are installed on the system, not bundled).
+    doc4me_proof::pl::install_dictionary("SET UTF-8\nSFX B Y 1\nSFX B y ego y\n", "2\nkonstytucyjny/B\npłynie\n").unwrap();
+    let text = "Konstytucyjnego żeka typography beautifull";
+    let mut d = Document::from_text(text);
+    d.settings.auto_hyphenation = true;
+    let eng = text.find("typography").unwrap();
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, eng), &|c| c.lang = Some("pl-PL".into())).unwrap();
+    d.format_range(&Pos::body(0, eng), &Pos::body(0, text.len()), &|c| c.lang = Some("en-US".into())).unwrap();
+    let mut c = LayoutCache::new();
+    let l = layout(&d, &mut c, &LayoutOptions { proofing: true, ..LayoutOptions::default() });
+    let para = l.pages[0].items.iter().find_map(|i| if let Placed::Lines { para, .. } = i { Some(para.clone()) } else { None }).expect("a paragraph");
+    // Byte offsets after which a hyphen may go.
+    let ends: Vec<usize> = para.hyph_after.iter().filter_map(|&k| para.clusters.get(k as usize).map(|c| c.end)).collect();
+    for prefix in ["Kon", "Konsty", "Konstytu", "Konstytucyj", "Konstytucyjne"] {
+        assert!(ends.contains(&prefix.len()), "Polish kon-sty-tu-cyj-ne-go: no break after {prefix:?} in {ends:?}");
+    }
+    for prefix in ["ty", "typog", "typogra"] {
+        assert!(ends.contains(&(eng + prefix.len())), "English ty-pog-ra-phy: no break after {prefix:?} in {ends:?}");
+    }
+    // Spelling: the Polish misspelling and the English one; Polish words aren't English errors.
+    let flagged: Vec<&str> = para.issues.iter().filter(|i| !i.2).map(|i| &text[i.0..i.1]).collect();
+    assert_eq!(flagged, ["żeka", "beautifull"]);
+    // The layout and the Review commands report the same issues.
+    let p = d.para(StoryRef::Body, &Path::top(0)).unwrap();
+    let issues = para::paragraph_issues(p, &para::proof_runs(&d, p, None), &Default::default(), true);
+    assert_eq!(issues.iter().map(|i| (i.start, i.end, i.kind == doc4me_proof::IssueKind::Grammar)).collect::<Vec<_>>(), para.issues);
+    assert_eq!(issues[0].lang, doc4me_proof::ProofLang::Pl);
+    assert_eq!(issues[1].lang, doc4me_proof::ProofLang::En);
+}
+
+/// Text in a language Doc4Me can't proof gets no spelling marks, and "Do not check spelling
+/// or grammar" text none either; the document default language applies to text without its own.
+#[test]
+fn unproofed_languages_and_no_proof_runs_are_not_marked() {
+    // A tiny synthetic Polish dictionary (real ones are installed on the system, not bundled).
+    doc4me_proof::pl::install_dictionary("SET UTF-8\nSFX B Y 1\nSFX B y ego y\n", "2\nkonstytucyjny/B\npłynie\n").unwrap();
+    let opts = LayoutOptions { proofing: true, ..LayoutOptions::default() };
+    let issues = |d: &Document| -> usize {
+        let l = layout(d, &mut LayoutCache::new(), &opts);
+        l.pages[0].items.iter().map(|i| if let Placed::Lines { para, .. } = i { para.issues.len() } else { 0 }).sum()
+    };
+    let text = "Nous écrivons beaucoup aujourd'hui.";
+    let mut d = Document::from_text(text);
+    assert!(issues(&d) > 0, "French words are English misspellings in an English document");
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some("fr-FR".into());
+    assert_eq!(issues(&d), 0, "no French dictionary: no marks");
+    std::sync::Arc::make_mut(&mut d.styles).default_chr.lang = Some("pl-PL".into());
+    let mut pl = Document::from_text("Płynie żeka.");
+    std::sync::Arc::make_mut(&mut pl.styles).default_chr.lang = Some("pl-PL".into());
+    assert_eq!(issues(&pl), 1);
+    pl.format_range(&Pos::body(0, 0), &Pos::body(0, "Płynie żeka.".len()), &|c| c.no_proof = Some(true)).unwrap();
+    assert_eq!(issues(&pl), 0);
+}
+
+/// #451: page totals in the body show the document's page count (the stale cached result is
+/// ignored), on every page, like the same fields in the footer.
+#[test]
+fn body_page_totals_count_every_page() {
+    let mut d = Document::from_text("Body-1\nBody-2\nBody-3");
+    let field = |instr: &str| InlineObject::Field { instr: instr.into(), result: "9".into(), locked: false, code: false, form: None };
+    for i in 0..3 {
+        let p = d.para_mut(StoryRef::Body, &Path::top(i)).unwrap();
+        p.props.page_break_before = Some(i > 0);
+        let n = p.len();
+        p.insert_object(n, field("NUMPAGES"), &Default::default()).unwrap();
+        let n = p.len();
+        p.insert_object(n, field("SECTIONPAGES"), &Default::default()).unwrap();
+    }
+    let mut fp = doc4me_doc::Paragraph::new();
+    fp.insert_object(0, field("NUMPAGES"), &Default::default()).unwrap();
+    let id = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(fp)]);
+    d.last_section.footers.default = Some(id);
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 3);
+    let shown = |items: &[Placed]| -> Vec<String> {
+        items
+            .iter()
+            .flat_map(|it| if let Placed::Lines { para, .. } = it { para.shown.iter().map(|s| s.1.clone()).collect() } else { vec![] })
+            .collect()
+    };
+    for (i, p) in l.pages.iter().enumerate() {
+        assert_eq!(shown(&p.items), ["3", "3"], "body of page {}", i + 1);
+        assert_eq!(shown(&p.footer), ["3"], "footer of page {}", i + 1);
+    }
+    // One page: one pass, total 1.
+    let mut d1 = Document::from_text("Only");
+    let p = d1.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.insert_object(4, field("NUMPAGES"), &Default::default()).unwrap();
+    assert_eq!(shown(&lay(&d1).pages[0].items), ["1"]);
+}
+
+/// #450: a footnote referenced in a table cell is placed at the bottom of its page, like one in
+/// a body paragraph.
+#[test]
+fn table_cell_footnotes_are_placed() {
+    let mut d = Document::from_text("After the table.");
+    d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(doc4me_doc::Table::new(1, 1, 300.0))).unwrap();
+    let cell = Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 0]), off: 0 };
+    d.para_mut(StoryRef::Body, &cell.path).unwrap().insert_text(0, "Table reference", &Default::default()).unwrap();
+    let id = footnote(&mut d, &Pos { off: "Table reference".len(), ..cell }, "Table note payload.");
+    let l = lay(&d);
+    assert_eq!(l.pages.len(), 1);
+    let c = l.caret(&d.start_of(StoryRef::Part(id))).expect("the cell's footnote is placed");
+    assert_eq!(c.page, 0);
+    let body = l.caret(&Pos::body(1, 0)).unwrap();
+    assert!(c.top > body.top + 100.0, "at the page bottom: {c:?} {body:?}");
+}
+
+#[test]
+fn east_asian_text_takes_the_asian_font_and_latin_text_the_latin_font() {
+    // #505: one run with a Latin font and an Asian font (w:eastAsia) of its own sets each script in
+    // its font. Prefer an installed CJK font other than the one fallback would pick anyway.
+    let resolve = |f: &str| doc4me_fonts::word::resolve(f, false, false);
+    let fallback = doc4me_fonts::FontDb::global().fallback_for('你', 0).map(|f| f.family.clone());
+    let mut fonts: Vec<String> = doc4me_fonts::FontDb::global()
+        .east_asian_families()
+        .into_iter()
+        .filter(|f| {
+            let r = resolve(f);
+            !r.substituted && r.face.covers('你') && r.face.covers('好')
+        })
+        .collect();
+    fonts.sort_by_key(|f| Some(f) == fallback.as_ref());
+    let Some(asian) = fonts.first().cloned() else {
+        eprintln!("skipped: no Chinese font installed");
+        return;
+    };
+    let latin = doc4me_doc::styles::BODY_FONT;
+    let text = "Hello 你好 World";
+    let mut d = Document::from_text(text);
+    d.format_range(&Pos::body(0, 0), &Pos::body(0, text.len()), &|c| {
+        c.font = Some(latin.into());
+        c.font_ea = Some(asian.clone());
+    })
+    .unwrap();
+    let l = lay(&d);
+    let para =
+        l.pages.iter().flat_map(|p| p.items.iter()).find_map(|it| if let Placed::Lines { para, .. } = it { Some(para) } else { None }).unwrap();
+    let (latin_face, asian_face) = (resolve(latin).face.id(), resolve(&asian).face.id());
+    for c in &para.clusters {
+        let Some(ch) = text.get(c.start..c.end).and_then(|s| s.chars().next()).filter(|ch| !ch.is_whitespace()) else { continue };
+        let face = para.styles[c.style as usize].face.id();
+        let want = if ch.is_ascii() { latin_face } else { asian_face };
+        assert_eq!(face, want, "{ch:?} in {}", if ch.is_ascii() { latin } else { &asian });
+    }
+}
+
+/// A page total in the footer ("Page X of Y") is filled in after pagination, so it doesn't make
+/// the body lay out a second time; one in the body still does.
+#[test]
+fn footer_page_total_needs_one_body_pass() {
+    let field = || InlineObject::Field { instr: "NUMPAGES".into(), result: "9".into(), locked: false, code: false, form: None };
+    let mut d = Document::from_text("Body-1\nBody-2\nBody-3");
+    for i in 1..3 {
+        d.para_mut(StoryRef::Body, &Path::top(i)).unwrap().props.page_break_before = Some(true);
+    }
+    let mut fp = doc4me_doc::Paragraph::new();
+    fp.insert_object(0, field(), &Default::default()).unwrap();
+    let id = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(fp)]);
+    d.last_section.footers.default = Some(id);
+    let first = |d: &Document| {
+        let totals = Totals::first_guess(d.sections().len());
+        layout_pass(d, &mut LayoutCache::new(), &LayoutOptions::default(), &HashMap::new(), &totals, true)
+    };
+    assert!(matches!(first(&d), Pass::Done(l) if l.pages.len() == 3), "the footer's total asked for another pass");
+    // The same field in the body is only known once every page is laid out.
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    let n = p.len();
+    p.insert_object(n, field(), &Default::default()).unwrap();
+    assert!(matches!(first(&d), Pass::Again(t) if t.pages == 3));
+}
+
+/// The tops of the body's laid-out paragraphs on the first page, in order.
+fn para_tops(l: &DocLayout) -> Vec<f32> {
+    l.pages[0].items.iter().filter_map(|it| if let Placed::Lines { y, .. } = it { Some(*y) } else { None }).collect()
+}
+
+/// A paragraph's top and bottom borders take their width plus their distance from the text above
+/// and below it, as in Word (govuk-029's boxed note, 1.5pt + 4pt); paragraphs in a row with the
+/// same borders make one box, with nothing between them unless they have a between border.
+#[test]
+fn paragraph_borders_take_room_and_join_into_boxes() {
+    let plain = Document::from_text("before\nfirst boxed\nsecond boxed\nafter");
+    let mut boxed = plain.clone();
+    let line = Border { style: BorderStyle::Single, width: 1.5, color: None, space: 4.0 };
+    for i in [1, 2] {
+        if let Some(doc4me_doc::Block::Para(p)) = boxed.body.get_mut(i).map(Arc::make_mut) {
+            p.props.borders = Some(Borders::box_(line));
+        }
+    }
+    let (a, b) = (para_tops(&lay(&plain)), para_tops(&lay(&boxed)));
+    assert_eq!((a.len(), b.len()), (4, 4));
+    let shift: Vec<f32> = a.iter().zip(&b).map(|(x, y)| y - x).collect();
+    assert!(shift[0].abs() < 0.01, "{shift:?}");
+    // Below the top border: the box's first paragraph, and the second one with it.
+    assert!((shift[1] - 5.5).abs() < 0.01 && (shift[2] - 5.5).abs() < 0.01, "{shift:?}");
+    // Below the bottom border too.
+    assert!((shift[3] - 11.0).abs() < 0.01, "{shift:?}");
+    let l = lay(&boxed);
+    let rules: Vec<_> = l.pages[0].items.iter().filter_map(|it| if let Placed::Rule { y0, y1, .. } = it { Some((*y0, *y1)) } else { None }).collect();
+    // One box: a top and a bottom rule, and each side as two pieces running into each other.
+    let across = rules.iter().filter(|(y0, y1)| (y0 - y1).abs() < 0.01).count();
+    assert_eq!(across, 2, "{rules:?}");
+    let mut sides: Vec<(f32, f32)> = rules.iter().copied().filter(|(y0, y1)| (y0 - y1).abs() >= 0.01).collect();
+    sides.sort_by(|p, q| p.0.total_cmp(&q.0));
+    assert_eq!(sides.len(), 4, "{rules:?}");
+    let (top, bottom) = (sides[0].0, sides[3].1);
+    assert!(top < b[1] - 5.0 && bottom > b[2] + 5.0, "{rules:?} {b:?}");
+    for w in sides.windows(2) {
+        assert!(w[1].0 <= w[0].1 + 0.01, "the sides have no gap: {sides:?}");
+    }
+    // A between border separates the two paragraphs with its own room, and the bottom border's
+    // distance from the text above it (Word: zenodo-011's references step 2.4 pt more across a
+    // 0.5 pt between border 1 pt from the text, with a bottom border 1 pt from the text).
+    let mut between = boxed.clone();
+    for i in [1, 2] {
+        if let Some(doc4me_doc::Block::Para(p)) = between.body.get_mut(i).map(Arc::make_mut) {
+            p.props.borders = Some(Borders { between: Some(line), ..Borders::box_(line) });
+        }
+    }
+    let c = para_tops(&lay(&between));
+    assert!((c[2] - b[2] - 9.5).abs() < 0.01 && (c[3] - b[3] - 9.5).abs() < 0.01, "{b:?} {c:?}");
+    // Without a bottom border, just the between border's own room.
+    let mut no_bottom = boxed.clone();
+    for i in [1, 2] {
+        if let Some(doc4me_doc::Block::Para(p)) = no_bottom.body.get_mut(i).map(Arc::make_mut) {
+            p.props.borders = Some(Borders { between: Some(line), bottom: None, ..Borders::box_(line) });
+        }
+    }
+    let e = para_tops(&lay(&no_bottom));
+    assert!((e[2] - b[2] - 5.5).abs() < 0.01, "{b:?} {e:?}");
+}
+
+/// A last line of nothing but a tab is as tall as a bigger paragraph mark after it (govuk-015's
+/// title page: a 26pt mark after a tab); a line with text keeps its text's height.
+#[test]
+fn a_bigger_mark_sets_the_height_of_a_blank_last_line() {
+    let height = |text: &str, mark: f32| {
+        let mut d = Document::from_text(&format!("{text}\nnext"));
+        if let Some(doc4me_doc::Block::Para(p)) = d.body.get_mut(0).map(Arc::make_mut) {
+            p.mark.size = Some(mark);
+        }
+        let t = para_tops(&lay(&d));
+        t[1] - t[0]
+    };
+    assert!(height("\t", 26.0) > height("\t", 11.0) + 10.0);
+    assert!((height("words", 26.0) - height("words", 11.0)).abs() < 0.01);
+}
+
+/// A page number in a frame centred on the footer's margins (Word's classic footer): it stands
+/// beside the footer's next paragraph, on its line (the frame takes no room of its own), and that
+/// paragraph's tab goes on past the frame to its stop.
+#[test]
+fn a_footer_page_number_frame_stands_beside_the_text() {
+    use doc4me_doc::para::{Anchor, FloatAlign};
+    use doc4me_doc::props::{FrameProps, TabAlign, TabLeader, TabStop};
+    let mut d = Document::from_text("Body");
+    let mut num = doc4me_doc::Paragraph::new();
+    num.insert_object(
+        0,
+        InlineObject::Field { instr: "PAGE".into(), result: String::new(), locked: false, code: false, form: None },
+        &Default::default(),
+    )
+    .unwrap();
+    num.props.frame =
+        Some(FrameProps { h_rel: Anchor::Margin, h_align: Some(FloatAlign::Center), v_rel: Anchor::Paragraph, y: 0.05, ..Default::default() });
+    let mut text = doc4me_doc::Paragraph::with_text("IER\tOctober 2018", Default::default());
+    text.props.tabs = Some(vec![TabStop { pos: 340.0, align: TabAlign::Left, leader: TabLeader::None }]);
+    let id = d.add_part(doc4me_doc::PartKind::Footer, vec![doc4me_doc::para_block(num), doc4me_doc::para_block(text)]);
+    d.last_section.footers.default = Some(id);
+    let l = lay(&d);
+    let s = &d.last_section;
+    let lines: Vec<(u32, f32, f32, f32)> = l.pages[0]
+        .footer
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { path, para, l0, l1, x, y, .. } => {
+                Some((*l0..*l1).filter_map(|k| para.lines.get(k).map(|ln| (path.0[0], *x + ln.xs[0], *y + ln.top, ln.top))))
+            }
+            _ => None,
+        })
+        .flatten()
+        .collect();
+    let num_line = lines.iter().find(|l| l.0 == 0).copied().expect("the page number is drawn");
+    let centre = s.margin_left + s.gutter + s.text_width() / 2.0;
+    assert!((num_line.1 - centre).abs() < 6.0, "centred on the margins: {num_line:?} (centre {centre})");
+    let text_lines: Vec<_> = lines.iter().filter(|l| l.0 == 1).collect();
+    assert!(text_lines.iter().all(|l| (l.2 - num_line.2).abs() < 1.0), "on the page number's line: {lines:?}");
+    // "October 2018" on the far side of the frame, at its tab stop.
+    let stop = s.margin_left + s.gutter + 340.0;
+    let at_stop = l.pages[0].footer.iter().any(|it| match it {
+        Placed::Lines { path, para, x, .. } if path.0 == [1] => para.lines.iter().any(|ln| ln.xs.iter().any(|v| (x + v - stop).abs() < 0.5)),
+        _ => false,
+    });
+    assert!(at_stop, "{lines:?}");
+}
+
+/// An empty paragraph that only ends its section stays at the foot of the page even when it
+/// doesn't fit there, when the next section starts on a new page: the page after it holds the
+/// next section, never a page of its own (zenodo-135). For a continuous break it still moves.
+#[test]
+fn an_empty_section_break_paragraph_at_the_foot_of_a_page_leaves_no_blank_page() {
+    for (keep_next, keep_lines) in [(false, false), (true, false), (false, true), (true, true)] {
+        for fillers in 40..60 {
+            let mut d = Document::from_text(&format!("{}\nNext", "Filler line\n".repeat(fillers)));
+            let n = fillers;
+            // Empty section markers can inherit heading keep flags (zenodo-149). They must
+            // never move onto their own page merely to stay with a new-page section.
+            let mut marker = doc4me_doc::Paragraph::new();
+            marker.section = Some(Box::new(SectionProps::default()));
+            marker.props.keep_next = Some(keep_next);
+            marker.props.keep_lines = Some(keep_lines);
+            marker.props.space_before = Some(12.0);
+            d.insert_block(StoryRef::Body, &Path::top(n), doc4me_doc::Block::Para(marker)).unwrap();
+            d.last_section.start = SectionStart::NextPage;
+            let l = lay(&d);
+            let last_filler = l.page_of(&Pos::body(n - 1, 0)).unwrap();
+            let next = l.page_of(&Pos::body(n + 1, 0)).unwrap();
+            assert_eq!(next, last_filler + 1, "{fillers} fillers, keep_next={keep_next}, keep_lines={keep_lines}");
+        }
+    }
+}
+
+/// In Word's GOV.UK ASF1 reference, two empty 7pt paragraphs follow a table; the second carries
+/// a continuous section break. Word leaves only one blank line before the next paragraph. The
+/// section marker stays navigable, but its empty paragraph mark does not add another line.
+#[test]
+fn an_empty_continuous_section_break_does_not_add_a_blank_line() {
+    let mut d = Document::new();
+    let before = doc4me_doc::Paragraph::with_text("Before", Default::default());
+    let mut marker = doc4me_doc::Paragraph::new();
+    let section = SectionProps { start: SectionStart::Continuous, ..Default::default() };
+    marker.section = Some(Box::new(section));
+    let after = doc4me_doc::Paragraph::with_text("After", Default::default());
+    d.body = vec![doc4me_doc::para_block(before), doc4me_doc::para_block(marker), doc4me_doc::para_block(after)];
+    d.last_section.start = SectionStart::Continuous;
+
+    let l = lay(&d);
+    let line = |path: &[u32]| {
+        l.pages
+            .iter()
+            .flat_map(|p| &p.items)
+            .find_map(|it| match it {
+                Placed::Lines { story: StoryRef::Body, path: p, para, l0, x: _, y, .. } if p.0 == path => {
+                    para.lines.get(*l0).map(|line| (*y + line.top, line.height))
+                }
+                _ => None,
+            })
+            .expect("paragraph line is placed")
+    };
+    let marker_line = line(&[1]);
+    let (after_top, _) = line(&[2]);
+    assert_eq!(marker_line.1, 0.0, "an empty continuous section marker contributes no line height");
+    assert!(
+        (0.0..15.0).contains(&(after_top - marker_line.0)),
+        "the next section begins at the marker's first line inset, without a second blank line: {:?} then {after_top}",
+        marker_line
+    );
+}
+
+/// A page break ending the paragraph before an empty paragraph that only ends its section leaves
+/// no blank page when the next section starts on a new page: that paragraph stays on the break's
+/// page and the next section starts the page after it (zenodo-160, as in Word). Before a
+/// continuous section the break still starts a page, where that section goes on.
+#[test]
+fn a_page_break_before_an_empty_section_break_paragraph_leaves_no_blank_page() {
+    // (pages, page of the section's end, page of B)
+    let pages = |start: SectionStart| {
+        let mut d = Document::new();
+        let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+        let mut end = doc4me_doc::Paragraph::new();
+        end.section = Some(Box::new(SectionProps::default()));
+        let b = doc4me_doc::Paragraph::with_text("B", Default::default());
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(end), doc4me_doc::para_block(b)];
+        d.last_section.start = start;
+        let l = lay(&d);
+        (l.pages.len(), l.page_of(&Pos::body(1, 0)).unwrap(), l.page_of(&Pos::body(2, 0)).unwrap())
+    };
+    for start in [SectionStart::NextPage, SectionStart::NextColumn, SectionStart::EvenPage] {
+        assert_eq!(pages(start), (2, 0, 1), "{start:?}: A and the section's end on page 1, B on page 2");
+    }
+    // An odd page: page 2 is left blank for the parity, as before.
+    assert_eq!(pages(SectionStart::OddPage), (3, 0, 2));
+    assert_eq!(pages(SectionStart::Continuous), (2, 1, 1));
+    // A page break in the middle of the paragraph, or a section's end holding text, still starts
+    // a page.
+    let mut d = Document::new();
+    let a = doc4me_doc::Paragraph::with_text(&format!("A{}C", doc4me_doc::para::PAGE_BREAK), Default::default());
+    let mut end = doc4me_doc::Paragraph::new();
+    end.section = Some(Box::new(SectionProps::default()));
+    d.body = vec![
+        doc4me_doc::para_block(a),
+        doc4me_doc::para_block(end),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("B", Default::default())),
+    ];
+    let l = lay(&d);
+    assert_eq!((l.pages.len(), l.page_of(&Pos::body(1, 0)).unwrap()), (3, 1), "C and the section's end on page 2");
+    let mut d = Document::new();
+    let a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+    let mut end = doc4me_doc::Paragraph::with_text("End", Default::default());
+    end.section = Some(Box::new(SectionProps::default()));
+    d.body = vec![
+        doc4me_doc::para_block(a),
+        doc4me_doc::para_block(end),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("B", Default::default())),
+    ];
+    let l = lay(&d);
+    assert_eq!((l.pages.len(), l.page_of(&Pos::body(1, 0)).unwrap()), (3, 1), "End on page 2");
+}
+
+/// A one-column table of `rows` (each a cell of paragraphs) followed by a paragraph "after".
+fn table_then_after(rows: Vec<(doc4me_doc::props::RowProps, doc4me_doc::props::CellProps, Vec<doc4me_doc::Paragraph>)>) -> Document {
+    let mut t = Table::new(rows.len(), 1, 200.0);
+    for (r, (rp, cp, paras)) in t.rows.iter_mut().zip(rows) {
+        r.props = rp;
+        r.cells[0].props = doc4me_doc::props::CellProps { span: 1, ..cp };
+        r.cells[0].blocks = paras.into_iter().map(doc4me_doc::para_block).collect();
+    }
+    let mut d = Document::new();
+    d.body =
+        vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("after", Default::default()))];
+    d
+}
+
+/// The top of the caret at the start of body block 1 (the paragraph after the table).
+fn top_after(d: &Document, opts: &LayoutOptions) -> f32 {
+    layout(d, &mut LayoutCache::new(), opts).caret(&Pos::body(1, 0)).unwrap().top
+}
+
+/// An empty body paragraph whose mark is hidden (holding only a bookmark) takes no room while
+/// hidden text isn't shown, as in Word (govuk-048's paragraph between two tables), and does with
+/// hidden text shown.
+#[test]
+fn an_empty_paragraph_with_a_hidden_mark_takes_no_room() {
+    use doc4me_doc::props::CharProps;
+    let build = |hidden: bool| {
+        let mut d = Document::from_text("one");
+        let mut mid = doc4me_doc::Paragraph::new();
+        if hidden {
+            mid.mark = CharProps { hidden: Some(true), ..Default::default() };
+        }
+        mid.insert_object(0, InlineObject::BookmarkStart { name: "b".into() }, &Default::default()).unwrap();
+        d.body.push(doc4me_doc::para_block(mid));
+        d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("three", Default::default())));
+        d
+    };
+    let top = |d: &Document, show: bool| {
+        let opts = LayoutOptions { show_hidden: show, ..Default::default() };
+        layout(d, &mut LayoutCache::new(), &opts).caret(&Pos::body(2, 0)).unwrap().top
+    };
+    let (shown, hidden) = (build(false), build(true));
+    let two = {
+        let mut d = Document::from_text("one");
+        d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("three", Default::default())));
+        layout(&d, &mut LayoutCache::new(), &LayoutOptions::default()).caret(&Pos::body(1, 0)).unwrap().top
+    };
+    assert!((top(&hidden, false) - two).abs() < 0.01, "hidden: as if it weren't there ({} vs {two})", top(&hidden, false));
+    assert!(top(&shown, false) > two + 5.0, "a visible mark keeps its line");
+    assert!(top(&hidden, true) > two + 5.0, "hidden text shown: it shows");
+}
+
+/// A table row whose end-of-row mark is hidden (`w:trPr/w:hidden`) and whose content is all
+/// hidden text takes no room while hidden text isn't shown, as in Word (govuk-066's forms hide 58
+/// rows); a bookmark in it (a zero-width marker without the hidden formatting) doesn't make it
+/// show. It shows with hidden text shown, when its text isn't hidden, and without the hidden mark.
+#[test]
+fn a_hidden_table_row_takes_no_room() {
+    use doc4me_doc::props::{CellProps, CharProps, RowProps};
+    let hidden = CharProps { hidden: Some(true), ..Default::default() };
+    let plain = |s: &str| doc4me_doc::Paragraph::with_text(s, Default::default());
+    let middle = |text_hidden: bool| {
+        let mut p = doc4me_doc::Paragraph::with_text("two", if text_hidden { hidden.clone() } else { Default::default() });
+        p.mark = hidden.clone();
+        p.insert_object(0, InlineObject::BookmarkStart { name: "b".into() }, &Default::default()).unwrap();
+        p
+    };
+    let three = |row_hidden: bool, text_hidden: bool| {
+        table_then_after(vec![
+            (RowProps::default(), CellProps::default(), vec![plain("one")]),
+            (RowProps { hidden: row_hidden, ..Default::default() }, CellProps::default(), vec![middle(text_hidden)]),
+            (RowProps::default(), CellProps::default(), vec![plain("three")]),
+        ])
+    };
+    let two = table_then_after(vec![
+        (RowProps::default(), CellProps::default(), vec![plain("one")]),
+        (RowProps::default(), CellProps::default(), vec![plain("three")]),
+    ]);
+    let normal = LayoutOptions::default();
+    let shown = LayoutOptions { show_hidden: true, ..Default::default() };
+    let without = top_after(&two, &normal);
+    assert!((top_after(&three(true, true), &normal) - without).abs() < 0.01, "the hidden row takes no room");
+    let full = top_after(&three(false, true), &normal);
+    assert!(full > without + 4.0, "without the hidden end-of-row mark the row shows: {full} vs {without}");
+    assert!((top_after(&three(true, false), &normal) - full).abs() < 0.01, "text that isn't hidden shows the row");
+    assert!((top_after(&three(true, true), &shown) - top_after(&three(false, true), &shown)).abs() < 0.01, "hidden text shown");
+}
+
+/// With the end-of-cell mark ignored (`w:hideMark`), an empty last paragraph in a cell doesn't
+/// count towards the row's height (govuk-066: a 28.25pt row holding a line, a 15pt line and the
+/// empty mark is 29pt tall in Word, not 44pt). The caret can still go into it. A last paragraph
+/// holding text counts, and so does the empty mark without `hideMark`.
+#[test]
+fn hide_mark_leaves_an_empty_last_paragraph_out_of_the_row_height() {
+    use doc4me_doc::props::{CellProps, RowProps};
+    let plain = |s: &str| doc4me_doc::Paragraph::with_text(s, Default::default());
+    let cell = |hide_mark: bool, last: &str| {
+        table_then_after(vec![(RowProps::default(), CellProps { hide_mark, ..Default::default() }, vec![plain("text"), plain(last)])])
+    };
+    let normal = LayoutOptions::default();
+    let one = top_after(&table_then_after(vec![(RowProps::default(), CellProps::default(), vec![plain("text")])]), &normal);
+    let d = cell(true, "");
+    assert!((top_after(&d, &normal) - one).abs() < 0.01, "the empty end-of-cell mark takes no room");
+    let l = lay(&d);
+    let mark = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 1]), off: 0 }).unwrap();
+    let text = l.caret(&Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 0]), off: 0 }).unwrap();
+    assert!(mark.top > text.top, "the empty paragraph is laid out below the text: {mark:?}");
+    assert!(top_after(&cell(false, ""), &normal) > one + 5.0, "without hideMark the mark's line counts");
+    assert!(top_after(&cell(true, "more"), &normal) > one + 5.0, "a last paragraph with text counts");
+    let legacy = |mut doc: Document| {
+        doc.settings.compat_mode = 14;
+        doc
+    };
+    let legacy_hidden = legacy(cell(true, ""));
+    let legacy_shown = legacy(cell(false, ""));
+    assert!((top_after(&legacy_hidden, &normal) - top_after(&legacy_shown, &normal)).abs() < 0.01);
+    let lone_mark = |hide_mark| legacy(table_then_after(vec![(RowProps::default(), CellProps { hide_mark, ..Default::default() }, vec![plain("")])]));
+    assert!(top_after(&lone_mark(false), &normal) > top_after(&lone_mark(true), &normal) + 5.0);
+}
+
+/// The compulsory final mark after a nested table does not add a blank line in modern layout
+/// (govuk-017/018), but it remains available to the caret. Text and additional blank lines count.
+#[test]
+fn a_modern_nested_tables_final_mark_keeps_the_caret_without_growing_the_row() {
+    let doc = |mode, tail: Option<&str>, extra_blank| {
+        let props = doc4me_doc::CharProps { size: Some(24.0), ..Default::default() };
+        let inner = Table::new(1, 1, 180.0);
+        let mut outer = Table::new(1, 1, 200.0);
+        let blocks = &mut outer.rows[0].cells[0].blocks;
+        *blocks = vec![Arc::new(doc4me_doc::Block::Table(inner))];
+        if extra_blank {
+            blocks.push(doc4me_doc::para_block(Paragraph::with_text("", props.clone())));
+        }
+        if let Some(text) = tail {
+            blocks.push(doc4me_doc::para_block(Paragraph::with_text(text, props)));
+        }
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        d.body = vec![Arc::new(doc4me_doc::Block::Table(outer)), doc4me_doc::para_block(Paragraph::with_text("After", Default::default()))];
+        d
+    };
+    let opts = LayoutOptions::default();
+    let bare = top_after(&doc(15, None, false), &opts);
+    let d = doc(15, Some(""), false);
+    assert!((top_after(&d, &opts) - bare).abs() < 0.01);
+    assert!(lay(&d).caret(&Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 1]), off: 0 }).is_some());
+    assert!(top_after(&doc(15, Some("More"), false), &opts) > bare + 10.0);
+    assert!(top_after(&doc(15, Some(""), true), &opts) > bare + 10.0);
+    assert!(top_after(&doc(14, Some(""), false), &opts) > bare + 10.0, "legacy layout is unchanged");
+}
+
+/// A vertical merge running into or out of hidden rows keeps its borders on the rows shown: its
+/// bottom border on the last row shown, its top border on the first.
+#[test]
+fn a_vertical_merge_through_hidden_rows_keeps_its_borders() {
+    use doc4me_doc::props::{CharProps, VMerge};
+    let hidden = CharProps { hidden: Some(true), ..Default::default() };
+    // Horizontal rules drawn on page one.
+    let rules = |hide: usize| {
+        let mut t = Table::new(2, 1, 200.0);
+        t.props.borders = Some(Borders::all(Border::single(0.5)));
+        t.rows[0].cells[0].props.vmerge = VMerge::Restart;
+        t.rows[1].cells[0].props.vmerge = VMerge::Continue;
+        t.rows[hide].props.hidden = true;
+        let mut p = doc4me_doc::Paragraph::with_text(if hide == 0 { "a" } else { "" }, hidden.clone());
+        p.mark = hidden.clone();
+        t.rows[hide].cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        lay(&d).pages[0].items.iter().filter(|it| matches!(it, Placed::Rule { y0, y1, .. } if (y0 - y1).abs() < 0.01)).count()
+    };
+    assert_eq!(rules(1), 2, "the merge's top and bottom borders, the hidden last row drawing nothing");
+    assert_eq!(rules(0), 2, "the merge's top and bottom borders, the hidden first row drawing nothing");
+}
+
+/// A page break ending a paragraph that itself ends its section, when the next section starts on a
+/// new page, makes no page of its own: the section break starts the next page (zenodo-149's title
+/// page). A continuous next section goes on on the page the break starts.
+#[test]
+fn a_page_break_ending_a_sections_last_paragraph_leaves_no_blank_page() {
+    // (pages, page of the next section's paragraph)
+    let pages = |start: SectionStart| {
+        let mut d = Document::new();
+        let mut a = doc4me_doc::Paragraph::with_text(&format!("A{}", doc4me_doc::para::PAGE_BREAK), Default::default());
+        a.section = Some(Box::new(SectionProps::default()));
+        d.body = vec![doc4me_doc::para_block(a), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("B", Default::default()))];
+        d.last_section.start = start;
+        let l = lay(&d);
+        (l.pages.len(), l.page_of(&Pos::body(1, 0)).unwrap())
+    };
+    assert_eq!(pages(SectionStart::NextPage), (2, 1));
+    assert_eq!(pages(SectionStart::EvenPage), (2, 1));
+    assert_eq!(pages(SectionStart::OddPage), (3, 2), "page 2 is left blank for the parity");
+    assert_eq!(pages(SectionStart::Continuous), (2, 1));
+}
+
+/// A line holding a page break and floating objects anchored there (no text) stays at the foot of
+/// the page even when it doesn't fit, like a line holding only a page break: the objects take no
+/// room in the line (zenodo-149's title page ends with a logo anchored beside its break).
+#[test]
+fn a_page_break_line_with_a_floating_object_stays_at_the_foot_of_the_page() {
+    let float = doc4me_doc::para::Float {
+        wrap: doc4me_doc::para::Wrap::InFrontOfText,
+        h_rel: doc4me_doc::para::Anchor::Margin,
+        v_rel: doc4me_doc::para::Anchor::Paragraph,
+        ..Default::default()
+    };
+    for fillers in 40..60 {
+        let mut d = Document::from_text(&format!("{}\nNext", "Filler line\n".repeat(fillers)));
+        // Before "Next": a paragraph holding a floating picture and a page break.
+        let mut p = doc4me_doc::Paragraph::with_text(&doc4me_doc::para::PAGE_BREAK.to_string(), Default::default());
+        p.insert_object(0, picture(40.0, 20.0, float.clone()), &Default::default()).unwrap();
+        d.insert_block(StoryRef::Body, &Path::top(fillers), doc4me_doc::Block::Para(p)).unwrap();
+        let l = lay(&d);
+        let last_filler = l.page_of(&Pos::body(fillers - 1, 0)).unwrap();
+        let next = l.page_of(&Pos::body(fillers + 1, 0)).unwrap();
+        assert_eq!(next, last_filler + 1, "{fillers} fillers: Next starts the page after the last filler's");
+    }
+}
+
+/// A legacy text form field's result wraps after its spaces like ordinary text (govuk-024: a
+/// long FORMTEXT result used to be one unbreakable word that stretched its table column); a blank
+/// field and a result without spaces stay whole.
+#[test]
+fn form_text_field_result_wraps_between_words() {
+    let lines_of = |result: &str| {
+        let mut d = Document::from_text("");
+        let form = doc4me_doc::form::FormField::text();
+        let field = InlineObject::Field { instr: " FORMTEXT ".into(), result: result.into(), locked: false, code: false, form: Some(Box::new(form)) };
+        d.para_mut(StoryRef::Body, &Path::top(0)).unwrap().insert_object(0, field, &Default::default()).unwrap();
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { para, l0, l1, .. } = it { Some((para.clone(), *l0, *l1)) } else { None })
+            .map(|(_, a, b)| b - a)
+            .sum::<usize>()
+    };
+    let long = "word ".repeat(200);
+    assert!(lines_of(&long) > 1, "a long result wraps");
+    assert_eq!(lines_of("short result"), 1);
+    assert_eq!(lines_of(&"x".repeat(30)), 1);
+}
+
+/// The laid-out clusters of the first body paragraph.
+fn first_para_clusters(l: &DocLayout) -> Arc<crate::para::ParaLayout> {
+    l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, .. } = it { Some(para.clone()) } else { None }).expect("a paragraph")
+}
+
+/// Fit Text (`w:fitText`): the fitted characters together take the width asked for, widened or
+/// narrowed alike; the text around them keeps its own width.
+#[test]
+fn fit_text_sets_the_run_to_its_width() {
+    for width in [120.0f32, 12.0] {
+        let mut d = Document::from_text("ab fit me cd");
+        let plain = first_para_clusters(&lay(&d)).clusters.clone();
+        d.format_range(&Pos::body(0, 3), &Pos::body(0, 9), &|c| c.fit_text = Some(doc4me_doc::props::FitText { width, id: Some(1) })).unwrap();
+        let pl = first_para_clusters(&lay(&d));
+        let fitted: f32 = pl.clusters.iter().filter(|c| c.start >= 3 && c.end <= 9).map(|c| c.adv).sum();
+        let natural: f32 = plain.iter().filter(|c| c.start >= 3 && c.end <= 9).map(|c| c.adv).sum();
+        assert!(natural > 12.0 && natural < 120.0, "{natural}");
+        if width > natural {
+            assert!((fitted - width).abs() < 0.01, "{fitted} for {width}");
+        } else {
+            assert!(fitted <= natural && fitted >= 0.0, "{fitted} for {width}");
+        }
+        // Outside the fitted text nothing moves.
+        let others = |cs: &[crate::para::Cluster]| -> Vec<f32> { cs.iter().filter(|c| c.end <= 3 || c.start >= 9).map(|c| c.adv).collect() };
+        assert_eq!(others(&pl.clusters), others(&plain));
+    }
+}
+
+/// Two Lines in One (`w:eastAsianLayout/@w:combine`): the text becomes one piece about half as
+/// wide (two half-size lines), the first half above; brackets come at full size and the line
+/// never breaks inside.
+#[test]
+fn two_lines_in_one_stacks_the_text_in_one_piece() {
+    use doc4me_doc::props::{CombineBrackets, EastAsianLayout};
+    let mut d = Document::from_text("xx ABCDEFGH yy");
+    let plain: f32 = first_para_clusters(&lay(&d)).clusters.iter().filter(|c| c.start >= 3 && c.end <= 11).map(|c| c.adv).sum();
+    let combine = |brackets| EastAsianLayout { combine: true, brackets, ..Default::default() };
+    d.format_range(&Pos::body(0, 3), &Pos::body(0, 11), &|c| c.east_asian = Some(combine(CombineBrackets::None))).unwrap();
+    let pl = first_para_clusters(&lay(&d));
+    let pieces: Vec<&crate::para::Cluster> = pl.clusters.iter().filter(|c| c.start == 3 && c.end == 11).collect();
+    assert_eq!(pieces.len(), 1, "{:?}", pl.clusters);
+    let w = pieces[0].adv;
+    // Four letters at half size: about a quarter of the eight at full size.
+    assert!(w > plain * 0.15 && w < plain * 0.4, "{w} of {plain}");
+    assert!(pieces[0].obj_h > 0.0, "the line makes room for the raised line");
+    let raised: Vec<f32> = pl.glyphs.get(pieces[0].g0 as usize..pieces[0].g1 as usize).unwrap().iter().map(|g| g.dy).collect();
+    assert!(raised.iter().take(4).all(|dy| *dy > 0.0) && raised.iter().skip(4).all(|dy| *dy < 0.0), "{raised:?}");
+    // Brackets: an opening one, the text and a closing one; no break before the closing bracket.
+    d.format_range(&Pos::body(0, 3), &Pos::body(0, 11), &|c| c.east_asian = Some(combine(CombineBrackets::Round))).unwrap();
+    let pl = first_para_clusters(&lay(&d));
+    let pieces: Vec<&crate::para::Cluster> = pl.clusters.iter().filter(|c| c.start == 3 && c.end == 11).collect();
+    assert_eq!(pieces.len(), 3, "{:?}", pl.clusters);
+    assert!(!pieces[0].break_after && !pieces[1].break_after, "{pieces:?}");
+}
+
+/// Character spacing control "compress punctuation": where two full-width marks meet, the blank
+/// half of one goes ("。」" and "」「" close up); other text and the setting's default keep widths.
+#[test]
+fn compress_punctuation_closes_up_neighbouring_marks() {
+    let text = "日本。」「語」";
+    let width = |spacing| {
+        let mut d = Document::from_text(text);
+        d.settings.char_spacing = spacing;
+        let pl = first_para_clusters(&lay(&d));
+        (pl.clusters.iter().map(|c| c.adv).sum::<f32>(), pl.clusters.iter().map(|c| c.adv).collect::<Vec<f32>>())
+    };
+    let (plain, each) = width(doc4me_doc::CharSpacing::DoNotCompress);
+    let (tight, each_tight) = width(doc4me_doc::CharSpacing::CompressPunctuation);
+    // The em: an ideograph's width.
+    let size = each.first().copied().unwrap_or(0.0);
+    if each.get(2).is_some_and(|a| *a > size * 0.75) {
+        // 。」 → 。 loses half; 」「 → 」 loses half: one em in all.
+        assert!((plain - tight - size).abs() < 0.5, "{plain} → {tight}: {each:?} {each_tight:?}");
+        assert_eq!(each[0], each_tight[0], "an ideograph keeps its width");
+        assert_eq!(each.last(), each_tight.last(), "a closing mark with nothing after it keeps its width");
+    } else {
+        // No full-width CJK face here: nothing is compressed.
+        assert_eq!(plain, tight);
+    }
+}
+
+/// A document that is one word with no break opportunity in it, laid out beside a floating
+/// object: the word is wider than the span the object leaves, so the measurement that asks
+/// whether it would fit the full line runs for every line the word takes.
+fn long_word_beside_a_float(n: usize) -> Document {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text(&"a".repeat(n));
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 0), rect_shape(144.0, 100.0, f), &Default::default()).unwrap();
+    d
+}
+
+/// A word with no break opportunity in it: measuring the word for every line it takes scanned
+/// the whole paragraph each time, so the layout was quadratic in the word's length.
+#[test]
+fn a_long_unbreakable_word_lays_out_in_linear_time() {
+    let (t1, tk, ratio) = layout_time_ratio(long_word_beside_a_float, 50_000, &LayoutOptions::default());
+    eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+    assert!(ratio < 24.0, "8x the word took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
+}
+
+/// A word a megabyte long lays out in a fraction of a second: it used to take half a minute.
+#[test]
+fn a_megabyte_long_word_lays_out_quickly() {
+    let d = long_word_beside_a_float(1_000_000);
+    let t = std::time::Instant::now();
+    lay(&d);
+    assert!(t.elapsed().as_secs() < 15, "a megabyte-long word took {:?}", t.elapsed());
+}
+
+/// A cluster with the given advance and kind, for the tests that measure a word by hand.
+fn word_cluster(kind: para::ClKind, adv: f32, break_after: bool) -> para::Cluster {
+    para::Cluster { start: 0, end: 1, adv, kind, style: 0, g0: 0, g1: 1, break_after, obj_h: 0.0, obj_d: 0.0, dot: false, blank: false }
+}
+
+/// A word that a negative advance makes narrower still fits beside a float: the width of a word
+/// is the sum of its advances, and a font that pulls a glyph back takes the width off again.
+#[test]
+fn a_word_a_negative_advance_narrows_still_fits() {
+    // A hundred points, then a font that pulls the last glyph back by sixty: the word is forty
+    // wide, and fits in sixty.
+    let clusters = vec![word_cluster(para::ClKind::Text, 100.0, false), word_cluster(para::ClKind::Text, -60.0, true)];
+    let widths = para::word_widths(&clusters, &[]);
+    assert_eq!(widths[0], 40.0, "the word is the sum of its advances");
+    assert!(widths[0] <= 60.0, "a word of forty points fits in sixty");
+    assert!(widths[0] > 30.0, "a word of forty points does not fit in thirty");
+
+    // The same word in a document: a font that pulls one glyph back takes the width off the
+    // rest of the word too, and the strip a floating object leaves is the row's only span, so
+    // the word is measured against it.
+    use doc4me_doc::para::{Anchor, Float, ShapeKind, Wrap};
+    // Twelve characters, the sixth of them pulled back by thirty points.
+    let word = |pull: f32| {
+        let mut d = Document::from_text(&"a".repeat(12));
+        if pull != 0.0 {
+            d.format_range(&Pos::body(0, 5), &Pos::body(0, 6), &|c| c.spacing = Some(pull)).unwrap();
+        }
+        d
+    };
+    fn body(l: &DocLayout) -> &ParaLayout {
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { story: StoryRef::Body, .. })) else {
+            panic!("no body text on the page")
+        };
+        para
+    }
+    // The width of the word: the sum of its advances, its last glyph's right edge.
+    let width = |d: &Document| {
+        let l = lay(d);
+        let para = body(&l);
+        let ln = &para.lines[0];
+        let last = ln.c1 - 1;
+        ln.xs[last - ln.c0] + para.clusters[last].adv
+    };
+    let plain = width(&word(0.0));
+    let pulled = width(&word(-30.0));
+    assert!(pulled < plain, "a font that pulls a glyph back makes the word narrower: {pulled} against {plain}");
+    // The strip the object leaves is half way between the two widths: the word fits it with the
+    // glyph pulled back, and does not fit it without.
+    let strip = (plain + pulled) / 2.0;
+    // The lines of the word laid out beside an object that leaves a strip of that width: (top,
+    // left, the clusters it covers, where its text ends, whether it ends inside a word).
+    let beside = |d: Document| {
+        let float = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 0.0, ..Default::default() };
+        let shape = InlineObject::Shape {
+            kind: ShapeKind::Rectangle,
+            w: 468.0 - strip,
+            h: 150.0,
+            fill: None,
+            stroke: None,
+            stroke_width: 1.0,
+            float,
+            story: None,
+            effects: Default::default(),
+            freeform: None,
+            extra: Default::default(),
+        };
+        let mut d = d;
+        d.insert_object(&Pos::body(0, 0), shape, &Default::default()).unwrap();
+        let l = lay(&d);
+        let para = body(&l);
+        para.lines
+            .iter()
+            .map(|ln| {
+                let inside = ln.c1 > ln.c0 && ln.end == para::LineEnd::Wrap && !para.clusters[ln.c1 - 1].break_after;
+                (ln.top, ln.left, ln.c1, ink_end(para, ln), inside)
+            })
+            .collect::<Vec<_>>()
+    };
+    // The narrower word fits the strip beside the object and stays there.
+    let fits = beside(word(-30.0));
+    assert_eq!(fits.len(), 1, "the word fits the strip beside the object: {fits:?}");
+    assert!(fits[0].1 >= 468.0 - strip - 0.01, "the word is in the strip beside the object: {fits:?}");
+    assert!(fits[0].3 <= 468.0 + 0.01, "the word ends inside the strip: {fits:?}");
+    assert!(!fits[0].4, "the word is not split across the strip: {fits:?}");
+    // The wider one does not: it moves on whole, below the object, rather than being split
+    // across the strip.
+    let moves_on = beside(word(0.0));
+    assert!(moves_on.iter().any(|l| l.0 >= 150.0 - 0.01 && l.1 < 1.0), "the wider word is laid out below the object: {moves_on:?}");
+    assert!(moves_on.iter().all(|l| !l.4), "the word is not split across the strip: {moves_on:?}");
+}
+
+/// The words after a break are words of their own: their advances are not counted in the word
+/// before them, or a long word followed by a word that pulls the width back would be measured
+/// as if the two were one.
+#[test]
+fn the_words_after_a_break_are_not_counted_in_the_word_before_it() {
+    // A word of two ordinary clusters, then a break, then a word that pulls a hundred points
+    // back.
+    let clusters = vec![
+        word_cluster(para::ClKind::Text, 10.0, false),
+        word_cluster(para::ClKind::Text, 10.0, true),
+        word_cluster(para::ClKind::Text, -100.0, true),
+    ];
+    let widths = para::word_widths(&clusters, &[]);
+    assert_eq!(widths[0], 20.0, "the word after the break must not hold up the word before it");
+    assert_eq!(widths[1], 10.0, "the word that ends at the break is a word of its own");
+    assert_eq!(widths[2], -100.0);
+}
+
+/// A word whose advances alternate in sign is measured by their sum: a font that pulls some
+/// glyphs back must not make the measurement walk the word to find out how wide it is.
+#[test]
+fn a_word_whose_advances_alternate_is_measured_by_its_sum() {
+    // A thousand points forward, nine hundred and ninety-nine back: the word is one point wider
+    // per pair, so it is far wider than the room even though it is never wider than a thousand
+    // points at a time.
+    let mut clusters = Vec::new();
+    for i in 0..1_000 {
+        clusters.push(word_cluster(para::ClKind::Text, if i % 2 == 0 { 1000.0 } else { -999.0 }, false));
+    }
+    clusters.push(word_cluster(para::ClKind::Text, 0.0, true));
+    let widths = para::word_widths(&clusters, &[]);
+    assert_eq!(widths[0], 500.0, "the word is the sum of its advances");
+}
+
+/// The width of a word is the sum of its advances: the same sum the scan this replaces took, over
+/// every shape of word — negative advances, spaces, break opportunities and hyphenation points
+/// included.
+#[test]
+fn a_word_is_measured_by_the_sum_of_its_advances() {
+    // The measurement as the scan this replaces took it: the clusters up to the first break
+    // opportunity that isn't a hyphenation point, their advance, spaces aside.
+    let scan = |clusters: &[para::Cluster], hyph: &[u32], c0: usize| -> f32 {
+        let mut done = false;
+        let mut word = 0.0f32;
+        for (k, c) in (c0..clusters.len()).map(|k| (k, &clusters[k])) {
+            let end = c.break_after && hyph.binary_search(&(k as u32)).is_err();
+            if done {
+                break;
+            }
+            done = end;
+            if c.kind != para::ClKind::Space {
+                word += c.adv;
+            }
+        }
+        word
+    };
+    // A deterministic spread of advances, spaces, breaks and hyphenation points.
+    let mut seed = 0x2545_f491_4f6c_dd1du64;
+    let mut next = move || {
+        seed = seed.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+        (seed >> 33) as i32
+    };
+    for _ in 0..2_000 {
+        let n = 1 + next().unsigned_abs() as usize % 40;
+        let clusters: Vec<para::Cluster> = (0..n)
+            .map(|_| {
+                let kind = if next() % 7 == 0 { para::ClKind::Space } else { para::ClKind::Text };
+                word_cluster(kind, (next() % 4000) as f32 / 100.0 - 20.0, next() % 3 == 0)
+            })
+            .collect();
+        let mut hyph = Vec::new();
+        if next() % 2 == 0 {
+            for _ in 0..next().unsigned_abs() as usize % 4 {
+                hyph.push(next().unsigned_abs() % n as u32);
+            }
+            hyph.sort_unstable();
+            hyph.dedup();
+        }
+        let widths = para::word_widths(&clusters, &hyph);
+        for (c0, &width) in widths.iter().enumerate().take(n) {
+            // The two sums are the same number, added in a different order: one adds the word's
+            // advances from its start and the other from its end, and a float sum depends on
+            // the order it is added in. The difference is far below the tenth of a point the
+            // comparison that uses the width allows.
+            let scan = scan(&clusters, &hyph, c0);
+            assert!((width - scan).abs() < 0.001, "the word at cluster {c0} of {clusters:?} is {width}, the scan says {scan}");
+        }
+    }
+}
+
+/// A word with no break opportunity in it whose advances alternate in sign: a run with wide
+/// character spacing and a run with condensed spacing, so that half the glyphs are pulled back.
+/// The word is wider than the line it is laid out on, so it takes a line per few characters, and
+/// measuring it must not walk it again for every one of those lines.
+fn long_word_with_alternating_advances_beside_a_float(n: usize) -> Document {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::from_text(&"a".repeat(n));
+    // One run per block of characters, alternating the spacing: half the glyphs are pulled back.
+    let block = 64;
+    let p = d.para_mut(StoryRef::Body, &Path::top(0)).unwrap();
+    p.runs = (0..n.div_ceil(block))
+        .map(|i| doc4me_doc::Run {
+            len: block.min(n - i * block),
+            props: doc4me_doc::CharProps { spacing: Some(if i % 2 == 0 { 50.0 } else { -50.0 }), ..Default::default() },
+        })
+        .collect();
+    let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, dist: 9.0, ..Default::default() };
+    d.insert_object(&Pos::body(0, 0), rect_shape(144.0, 100.0, f), &Default::default()).unwrap();
+    d
+}
+
+/// A word whose advances alternate in sign lays out in linear time: the measurement that asks
+/// whether it would fit the full line must not walk the word again for every line it takes.
+#[test]
+fn a_word_with_alternating_advances_lays_out_in_linear_time() {
+    let (t1, tk, ratio) = layout_time_ratio(long_word_with_alternating_advances_beside_a_float, 50_000, &LayoutOptions::default());
+    eprintln!("t(n) {t1:.4} s, t(8n) {tk:.4} s, ratio {ratio:.1}");
+    assert!(ratio < 24.0, "8x the word took {ratio:.1}x the time ({t1:.4} s → {tk:.4} s): not linear");
+}
+
+/// Word keeps a text-wrapping picture placed at an offset from the column inside its table cell:
+/// one that would run past the cell's right edge moves back until it ends a border's width inside
+/// the cell's right border line (zenodo-157's Square pictures end at 523.9 pt in Word's PDF, 0.48
+/// pt inside the 524.38 pt border). In front of text it keeps its offset. So does one placed from
+/// the margin, which the cell measures from its text too (zenodo-053's photo ends at its cell's
+/// right edge in Word's PDF).
+#[test]
+fn wrapping_floats_in_a_cell_stay_inside_the_cell() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let place_from = |wrap: Wrap, x: f32, h_rel: Anchor| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 468.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("cell text that wraps around the picture", Default::default());
+        let f = Float { wrap, h_rel, v_rel: Anchor::Paragraph, x, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 40.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let s = shapes(&l.pages[0].items);
+        assert_eq!(s.len(), 1, "{wrap:?} drawn");
+        s[0]
+    };
+    let place = |wrap: Wrap, x: f32| place_from(wrap, x, Anchor::Column);
+    // The cell's text starts 5.4 pt (its left margin) inside the cell; the cell is 468 pt wide.
+    let text_left = place(Wrap::Square, 0.0).x;
+    let cell_right = text_left - 5.4 + 468.0;
+    // (The default table's borders are 0.5 pt.)
+    let inner = cell_right - 0.5;
+    for wrap in [Wrap::Square, Wrap::Tight, Wrap::TopAndBottom] {
+        let r = place(wrap, 400.0);
+        assert!((r.x + r.w - inner).abs() < 0.01, "{wrap:?} ends inside the cell's border: {r:?}, border {cell_right}");
+    }
+    let inside = place(Wrap::Square, 300.0);
+    assert!((inside.x - (text_left + 300.0)).abs() < 0.01, "one that fits keeps its offset: {inside:?}");
+    let front = place(Wrap::InFrontOfText, 400.0);
+    assert!((front.x - (text_left + 400.0)).abs() < 0.01, "in front of text keeps its offset: {front:?}");
+    let margin = place_from(Wrap::Square, 400.0, Anchor::Margin);
+    assert!((margin.x + margin.w - inner).abs() < 0.01, "placed from the margin, it ends inside the cell's border: {margin:?}");
+}
+
+#[test]
+fn a_page_break_in_a_bigger_run_does_not_make_its_line_taller() {
+    // zenodo-049: 11 pt text ends with a page break in a 12 pt run; Word steps that line like the
+    // others, so it still fits above the footer.
+    let line_h = |break_size: f32| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("Some text", CharProps { size: Some(11.0), ..Default::default() });
+        let at = p.text.len();
+        p.insert_text(at, &doc4me_doc::para::PAGE_BREAK.to_string(), &CharProps { size: Some(break_size), ..Default::default() }).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|i| if let Placed::Lines { para, l0, .. } = i { para.lines.get(*l0).map(|ln| ln.height) } else { None })
+            .unwrap()
+    };
+    assert!((line_h(24.0) - line_h(11.0)).abs() < 0.01, "{} vs {}", line_h(24.0), line_h(11.0));
+}
+
+#[test]
+fn emoji_drawn_by_a_fallback_face_keep_the_requested_fonts_line() {
+    // zenodo-123: 10 pt Arial lines starting with ✅ or 🚫 step 12.42 pt in Word's PDF, like the
+    // plain ones, though another face (Segoe UI Symbol there) draws the signs.
+    let height = |text: &str| {
+        let mut d = Document::new();
+        let props = CharProps { font: Some("Arial".into()), size: Some(10.0), ..Default::default() };
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(text, props.clone())),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("x", props)),
+        ];
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|i| if let Placed::Lines { y, story: StoryRef::Body, .. } = i { Some(*y) } else { None }).collect();
+        ys[1] - ys[0]
+    };
+    let plain = height("Atribucion");
+    for e in ["\u{2705} Atribucion", "\u{1F6AB} Atribucion"] {
+        assert!((height(e) - plain).abs() < 0.01, "{e}: {} vs {plain}", height(e));
+    }
+}
+
+#[test]
+fn a_table_cell_grows_to_hold_a_picture_its_text_wraps_around() {
+    // zenodo-053: the row after a cell whose short text wraps around a 128 pt picture starts
+    // below the picture in Word's PDF, not under it.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let after_y = |wrap: Wrap| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 400.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Beside", Default::default());
+        let f = Float { wrap, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 0.0, y: 0.0, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 120.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        d.insert_block(StoryRef::Body, &Path::top(2), doc4me_doc::Block::Para(doc4me_doc::Paragraph::with_text("After", Default::default())))
+            .unwrap();
+        let l = lay(&d);
+        let shape = shapes(&l.pages[0].items)[0];
+        let y =
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [2]).then_some(*y) } else { None }).unwrap();
+        (y, shape.bottom())
+    };
+    let (y, bottom) = after_y(Wrap::Square);
+    assert!(y >= bottom - 0.01, "the paragraph after the table at {y}, the picture ends at {bottom}");
+    // A picture in front of the text takes no room.
+    let (y, bottom) = after_y(Wrap::InFrontOfText);
+    assert!(y < bottom - 50.0, "in front of the text: paragraph at {y}, picture to {bottom}");
+}
+
+#[test]
+fn a_table_cell_grows_to_hold_a_picture_placed_from_the_margin_inside_it() {
+    // govuk-021: a Square logo 3.7 pt below the margin in the first cell of a table at the page's
+    // top makes that row as tall as the logo in Word's PDF.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let after_y = |v_rel: Anchor| {
+        let mut d = Document::new();
+        let mut t = Table::new(1, 1, 400.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Beside", Default::default());
+        let f = Float { wrap: Wrap::Square, h_rel: Anchor::Margin, v_rel, x: 200.0, y: 3.7, ..Default::default() };
+        cp.insert_object(0, rect_shape(70.0, 71.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.body = vec![
+            std::sync::Arc::new(doc4me_doc::Block::Table(t)),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+        ];
+        let l = lay(&d);
+        let shape = shapes(&l.pages[0].items)[0];
+        let y =
+            l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0 == [1]).then_some(*y) } else { None }).unwrap();
+        (y, shape.bottom())
+    };
+    let (y, bottom) = after_y(Anchor::Margin);
+    assert!(y >= bottom - 0.01, "the paragraph after the table at {y}, the logo ends at {bottom}");
+    // One placed from the page's top (above the cell) isn't the cell's to hold.
+    let (y, bottom) = after_y(Anchor::Page);
+    assert!(y < bottom - 20.0, "from the page: paragraph at {y}, picture to {bottom}");
+}
+
+#[test]
+fn a_tall_floating_table_runs_on_below_one_placed_at_the_same_spot() {
+    // govuk-067: "Role details" (longer than a page) follows "Personal details", both floating
+    // 1 twip below the same paragraph; Word runs the long one on below the other, not over it.
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let table = |rows: usize, text: &str| {
+        let mut t = Table::new(rows, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text(text, Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, ..Default::default() });
+        doc4me_doc::Block::Table(t).into()
+    };
+    let mut d = Document::new();
+    d.body = vec![
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Before", Default::default())),
+        table(5, "Short"),
+        table(60, "Long"),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+    ];
+    let l = lay(&d);
+    let ys = |idx: u32| {
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(
+                |i| if let Placed::Lines { path, y, .. } = i { (path.0.first() == Some(&idx) && path.0.len() > 1).then_some(*y) } else { None },
+            )
+            .collect::<Vec<_>>()
+    };
+    let short_bottom = ys(1).into_iter().fold(f32::MIN, f32::max) + 14.0;
+    let long_top = ys(2).into_iter().fold(f32::MAX, f32::min);
+    assert!(long_top >= short_bottom - 0.01, "the long table starts at {long_top}, the short one ends at {short_bottom}");
+}
+
+#[test]
+fn a_floating_table_too_tall_for_a_page_starts_at_its_own_place_on_a_fresh_page() {
+    // zenodo-053: activity tables 1324 twips (66.2 pt) from the page top and longer than a page
+    // start at 66.2 pt in Word's PDF, above the 72 pt top margin.
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let mut d = Document::new();
+    let mut t = Table::new(60, 1, 300.0);
+    for row in &mut t.rows {
+        let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+        cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+        cp.props.space_after = Some(0.0);
+        row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+    }
+    t.props.borders = None;
+    t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Page, y: 50.0, ..Default::default() });
+    d.body = vec![doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default()))];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "the table runs on to the next page");
+    let y =
+        l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap();
+    assert!(y < 60.0, "first row's text at {y}, the table placed 50 pt from the page top");
+}
+
+/// A floating table placed from the text and too tall for a page starts its offset below where it
+/// stands in the text: zenodo-068's checklist table 353 twips below the text starts 17.65 pt under
+/// the heading before it in Word's PDF.
+#[test]
+fn a_floating_table_too_tall_for_a_page_keeps_its_offset_from_the_text() {
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let first_row_y = |y_off: f32| {
+        let mut d = Document::new();
+        let mut t = Table::new(60, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.borders = None;
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: y_off, ..Default::default() });
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Heading", Default::default())),
+            doc4me_doc::Block::Table(t).into(),
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default())),
+        ];
+        let l = lay(&d);
+        assert!(l.pages.len() >= 2, "the table runs on to the next page");
+        l.pages[0].items.iter().find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.len() > 1).then_some(*y) } else { None }).unwrap()
+    };
+    let (none, offset) = (first_row_y(0.0), first_row_y(17.65));
+    assert!((offset - none - 17.65).abs() < 0.01, "{offset} vs {none}");
+}
+
+/// A floating table placed from the text, too tall for a page and pushed to the next one by a
+/// table already standing where it would start, begins there below its anchor's first line
+/// (govuk-067's "Role details" table, 14.5 pt under the top margin in Word's PDF).
+#[test]
+fn a_tall_text_floating_table_pushed_to_the_next_page_clears_its_anchor_line() {
+    use doc4me_doc::props::{LineSpacing, TableFloat};
+    let table = |rows: usize| {
+        let mut t = Table::new(rows, 1, 300.0);
+        for row in &mut t.rows {
+            let mut cp = doc4me_doc::Paragraph::with_text("Row", Default::default());
+            cp.props.line_spacing = Some(LineSpacing::Exactly(14.0));
+            cp.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        }
+        t.props.borders = None;
+        t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, ..Default::default() });
+        t
+    };
+    let top = |line: f32| {
+        let mut d = Document::new();
+        let mut anchor = doc4me_doc::Paragraph::new();
+        anchor.props.line_spacing = Some(LineSpacing::Exactly(line));
+        d.body = vec![
+            doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Before", Default::default())),
+            doc4me_doc::Block::Table(table(42)).into(),
+            doc4me_doc::Block::Table(table(60)).into(),
+            doc4me_doc::para_block(anchor),
+        ];
+        let l = lay(&d);
+        l.pages[1]
+            .items
+            .iter()
+            .find_map(|i| if let Placed::Lines { path, y, .. } = i { (path.0.first() == Some(&2) && path.0.len() > 1).then_some(*y) } else { None })
+            .expect("the second table goes on on page 2")
+    };
+    let (short, tall) = (top(20.0), top(40.0));
+    assert!((tall - short - 20.0).abs() < 0.5, "starts below its anchor's line: {short} vs {tall}");
+}
+
+#[test]
+fn a_cell_floats_offset_counts_from_above_its_paragraphs_space_before() {
+    // zenodo-157: a picture 23.25 pt below a heading (10 pt before) that opens a cell stands
+    // 23.25 pt below the row's top in Word's PDF, not below the heading's space before.
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let top = |before: f32| {
+        let mut d = Document::from_text("Body text.");
+        let mut t = Table::new(1, 1, 468.0);
+        let mut cp = doc4me_doc::Paragraph::with_text("Heading", Default::default());
+        cp.props.space_before = Some(before);
+        let f = Float { wrap: Wrap::Square, h_rel: Anchor::Column, v_rel: Anchor::Paragraph, x: 200.0, y: 20.0, ..Default::default() };
+        cp.insert_object(0, rect_shape(100.0, 40.0, f), &Default::default()).unwrap();
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(cp)];
+        d.insert_block(StoryRef::Body, &Path::top(1), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        shapes(&l.pages[0].items)[0].y
+    };
+    assert!((top(10.0) - top(0.0)).abs() < 0.01, "{} vs {}", top(10.0), top(0.0));
+}
+
+/// A bookmark isn't content: a picture slightly wider than the column right after one at the
+/// start of a paragraph stays on the paragraph's first line, as Word keeps zenodo-128's 471 pt
+/// pictures after a bookmark in a 468 pt column, instead of leaving an empty line above it.
+#[test]
+fn a_bookmark_before_an_oversized_picture_leaves_no_empty_line() {
+    use doc4me_doc::para::{Float, Wrap};
+    let width = Document::new().last_section.text_width();
+    let lines = |bookmark: bool| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("", Default::default());
+        p.insert_object(0, rect_shape(width + 3.0, 50.0, Float { wrap: Wrap::Inline, ..Default::default() }), &Default::default()).unwrap();
+        if bookmark {
+            p.insert_object(0, InlineObject::BookmarkEnd { name: "b".into() }, &Default::default()).unwrap();
+        }
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let n: usize = l.pages[0].items.iter().map(|it| if let Placed::Lines { para, .. } = it { para.lines.len() } else { 0 }).sum();
+        n
+    };
+    assert_eq!(lines(true), lines(false), "the bookmark adds no line");
+}
+
+/// A word too long for its line breaks within itself on the paragraph's first line, even after
+/// a zero-width mark: zenodo-103's citation fields in 17 pt wide cells show "[42" on the cell's
+/// first line in Word's PDF, not after an empty one.
+#[test]
+fn a_too_long_word_after_a_mark_breaks_on_the_first_line() {
+    let width = Document::new().last_section.text_width();
+    let lines = |mark: bool| {
+        let mut d = Document::new();
+        let mut p = doc4me_doc::Paragraph::with_text("[42]", Default::default());
+        p.props.indent_right = Some(width - 14.0);
+        if mark {
+            p.insert_object(0, InlineObject::BookmarkEnd { name: "b".into() }, &Default::default()).unwrap();
+        }
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let Some(Placed::Lines { para, .. }) = l.pages[0].items.iter().find(|i| matches!(i, Placed::Lines { .. })) else { panic!() };
+        para.lines.len()
+    };
+    assert!(lines(false) >= 2, "the word is too long for its line");
+    assert_eq!(lines(true), lines(false), "the mark adds no line");
+}
+
+/// Automatic (HTML) spacing isn't put above a table cell's first paragraph nor below its last
+/// (zenodo-021: Word steps single-line cells with automatic spacing 33 pt apart, not 61); between
+/// two paragraphs of a cell it is.
+#[test]
+fn automatic_spacing_skips_a_cells_first_and_last_paragraph() {
+    let row_gap = |paras: usize, auto: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            row.cells[0].blocks = (0..paras)
+                .map(|k| {
+                    let mut p = doc4me_doc::Paragraph::with_text(&format!("cell {k}"), Default::default());
+                    p.props.space_before_auto = Some(auto);
+                    p.props.space_after_auto = Some(auto);
+                    p.props.space_before = Some(0.0);
+                    p.props.space_after = Some(0.0);
+                    doc4me_doc::para_block(p)
+                })
+                .collect();
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let tops: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        tops
+    };
+    let plain = row_gap(1, false);
+    let auto = row_gap(1, true);
+    assert_eq!(plain.len(), 2, "two rows: {plain:?}");
+    assert!(((auto[1] - auto[0]) - (plain[1] - plain[0])).abs() < 0.01, "no automatic space in single-paragraph cells: {auto:?} vs {plain:?}");
+    let two_plain = row_gap(2, false);
+    let two_auto = row_gap(2, true);
+    assert!(((two_auto[1] - two_auto[0]) - (two_plain[1] - two_plain[0]) - 14.0).abs() < 0.5, "14 pt between a cell's two paragraphs");
+    // A list item ending a cell keeps its automatic space after (zenodo-021: rows ending in a
+    // bulleted question are 14 pt taller in Word's PDF).
+    let list_gap = |list: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            let mut p = doc4me_doc::Paragraph::with_text("item", Default::default());
+            p.props.space_before_auto = Some(true);
+            p.props.space_after_auto = Some(true);
+            p.props.space_before = Some(0.0);
+            p.props.space_after = Some(0.0);
+            if list {
+                p.props.numbering = Some(doc4me_doc::props::NumRef { num: 1, level: 0 });
+            }
+            row.cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let tops: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        tops[1] - tops[0]
+    };
+    assert!((list_gap(true) - list_gap(false) - 14.0).abs() < 0.5, "list {} vs plain {}", list_gap(true), list_gap(false));
+    // A cell ending in a hidden empty mark (govuk-068) keeps the space after the paragraph before it.
+    let marked = |auto: bool| {
+        let mut d = Document::from_text("after");
+        let mut t = Table::new(2, 1, 300.0);
+        for row in &mut t.rows {
+            let mut p = doc4me_doc::Paragraph::with_text("cell", Default::default());
+            p.props.space_after_auto = Some(auto);
+            p.props.space_after = Some(0.0);
+            let mut mark = doc4me_doc::Paragraph::with_text("", Default::default());
+            mark.props.space_after = Some(0.0);
+            row.cells[0].blocks = vec![doc4me_doc::para_block(p), doc4me_doc::para_block(mark)];
+            row.cells[0].props.hide_mark = true;
+        }
+        d.insert_block(StoryRef::Body, &Path::top(0), doc4me_doc::Block::Table(t)).unwrap();
+        let l = lay(&d);
+        let ys: Vec<f32> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(rect.y) } else { None }).collect();
+        ys[1] - ys[0]
+    };
+    assert!(
+        (marked(true) - marked(false) - 14.0).abs() < 0.5,
+        "14 pt after the paragraph before a hidden end mark: {} vs {}",
+        marked(true),
+        marked(false)
+    );
+}
+
+#[test]
+fn initial_table_headers_stay_with_the_first_body_row() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let check = |filler_height: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(filler_height));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(2, 1, 300.0);
+        t.rows[0].props.header = true;
+        for (row, h) in t.rows.iter_mut().zip([40.0, 20.0]) {
+            row.props.height = Some(h);
+            row.props.height_rule = HeightRule::Exact;
+            row.props.cant_split = true;
+        }
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages
+            .iter()
+            .map(|p| {
+                p.items
+                    .iter()
+                    .filter_map(|it| match it {
+                        Placed::Cell { row, cell: 0, .. } => Some(*row),
+                        _ => None,
+                    })
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>()
+    };
+    // A letter page has 648 pt of body. Forty-eight points fit the header alone.
+    assert_eq!(check(600.0), vec![vec![], vec![0, 1]]);
+    // With enough room both rows remain on the current page.
+    assert_eq!(check(540.0), vec![vec![0, 1]]);
+}
+
+#[test]
+fn a_caption_keeps_with_the_header_and_first_body_row() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let mut d = Document::new();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.line_spacing = Some(LineSpacing::Exactly(580.0));
+    filler.props.space_after = Some(0.0);
+    let mut caption = doc4me_doc::Paragraph::with_text("Caption", Default::default());
+    caption.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+    caption.props.space_after = Some(0.0);
+    caption.props.keep_next = Some(true);
+    let mut t = Table::new(2, 1, 300.0);
+    t.rows[0].props.header = true;
+    for (row, h) in t.rows.iter_mut().zip([40.0, 20.0]) {
+        row.props.height = Some(h);
+        row.props.height_rule = HeightRule::Exact;
+        row.props.cant_split = true;
+    }
+    d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::para_block(caption), doc4me_doc::Block::Table(t).into()];
+    let l = lay(&d);
+    let caption_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if *path == Path::top(1))));
+    assert_eq!(caption_page, Some(1));
+    assert!(l.pages[0].items.iter().all(|it| !matches!(it, Placed::Cell { .. })));
+    assert_eq!(l.pages[1].items.iter().filter(|it| matches!(it, Placed::Cell { .. })).count(), 2);
+}
+
+/// A table whose last row keeps with the next keeps with the paragraph after the table: zenodo-051's
+/// one-cell table holding a picture (Keep with next) goes to the next page with its caption.
+#[test]
+fn a_tables_last_row_keeping_with_next_keeps_with_the_paragraph_after() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let build = |keep: bool| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(580.0));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        t.rows[0].props.height = Some(40.0);
+        t.rows[0].props.height_rule = HeightRule::Exact;
+        t.rows[0].props.cant_split = true;
+        let mut pic = doc4me_doc::Paragraph::with_text("Picture", Default::default());
+        pic.props.keep_next = Some(keep);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(pic)];
+        let mut caption = doc4me_doc::Paragraph::with_text("Caption", Default::default());
+        caption.props.line_spacing = Some(LineSpacing::Exactly(40.0));
+        caption.props.space_before = Some(0.0);
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into(), doc4me_doc::para_block(caption)];
+        let l = lay(&d);
+        let cell_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Cell { .. })));
+        let caption_page = l.pages.iter().position(|p| p.items.iter().any(|it| matches!(it, Placed::Lines { path, .. } if *path == Path::top(2))));
+        (cell_page, caption_page)
+    };
+    // 580 + 40 fits the 648 pt page, the caption's 40 more doesn't.
+    assert_eq!(build(false), (Some(0), Some(1)), "without keep with next the table stays");
+    assert_eq!(build(true), (Some(1), Some(1)), "with it the table goes with the caption");
+}
+
+/// A centred vertical merge whose last row moves to the next page centres its text in the part
+/// of the merge on this page, as Word does (zenodo-003's author table), not in the whole merge.
+#[test]
+fn a_centred_merge_broken_by_the_page_centres_its_text_on_the_page() {
+    use doc4me_doc::props::{HeightRule, VAlign, VMerge};
+    let mut t = Table::new(3, 2, 300.0);
+    for (ri, h) in [40.0, 40.0, 800.0].into_iter().enumerate() {
+        t.rows[ri].props.height = Some(h);
+        t.rows[ri].props.height_rule = HeightRule::Exact;
+        t.rows[ri].props.cant_split = true;
+        t.rows[ri].cells[0].props.vmerge = if ri == 0 { VMerge::Restart } else { VMerge::Continue };
+        t.rows[ri].cells[0].props.valign = VAlign::Center;
+    }
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("M", Default::default()))];
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    let top = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Cell { rect, row: 0, cell: 0, .. } = it { Some(rect.y) } else { None })
+        .next()
+        .unwrap();
+    let ys: Vec<(f32, f32)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { para, l0, l1, y, .. } if para.lines[*l0..*l1].iter().any(|ln| ln.start < ln.stop) => Some((*y, para.lines[*l0].height)),
+            _ => None,
+        })
+        .collect();
+    assert_eq!(ys.len(), 1, "{ys:?}");
+    let mid = ys[0].0 + ys[0].1 / 2.0 - top;
+    assert!((mid - 40.0).abs() < 4.0, "the text's middle {mid} pt below the merge's top, not 40");
+}
+
+/// The text of a top-aligned vertical merge that runs past the part of the merge on the page
+/// goes on in the merge's rows on the next page, as in Word (zenodo-068's website questions),
+/// instead of running past the page's bottom over the footer.
+#[test]
+fn a_merged_cell_broken_by_the_page_carries_its_text_to_the_next_page() {
+    use doc4me_doc::props::{HeightRule, VMerge};
+    let mut t = Table::new(3, 2, 300.0);
+    for (ri, row) in t.rows.iter_mut().enumerate() {
+        row.cells[0].props.vmerge = if ri == 0 { VMerge::Restart } else { VMerge::Continue };
+        row.cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Y", Default::default()))];
+    }
+    // The last row moves on whole: it needs more room than the page has left.
+    t.rows[2].props.height = Some(300.0);
+    t.rows[2].props.height_rule = HeightRule::AtLeast;
+    t.rows[0].cells[0].blocks = (0..20).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("xx", Default::default()))).collect();
+    let mut d = Document::new();
+    d.body = (0..10).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("p", Default::default()))).collect();
+    d.body.push(std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+    d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::new()));
+    let s = d.last_section.clone();
+    let bottom = s.page_h - s.margin_bottom;
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2);
+    let merged = |pg: usize| -> Vec<(f32, f32)> {
+        l.pages[pg]
+            .items
+            .iter()
+            .filter_map(|it| match it {
+                Placed::Lines { para, l0, l1, y, .. } if para.text_len == 2 && l1 > l0 => Some((*y, para.lines[*l0].height)),
+                _ => None,
+            })
+            .collect()
+    };
+    let (first, next) = (merged(0), merged(1));
+    assert!(!first.is_empty(), "the merge starts on the first page");
+    assert!(first.iter().all(|(y, h)| y + h <= bottom + 0.5), "nothing runs past the page's bottom {bottom}: {first:?}");
+    assert_eq!(first.len() + next.len(), 20, "the rest goes on on the next page: {first:?} {next:?}");
+    // It starts at the top of the merge's row there, level with that row's own text.
+    let y_row = l.pages[1]
+        .items
+        .iter()
+        .filter_map(|it| match it {
+            Placed::Lines { para, y, .. } if para.text_len == 1 && it_is_cell(it) => Some(*y),
+            _ => None,
+        })
+        .next();
+    if let (Some(yr), Some((y0, _))) = (y_row, next.first()) {
+        assert!((yr - y0).abs() < 1.0, "the carried text at {y0}, the row's at {yr}");
+    }
+}
+
+/// A turned vertical merge wraps to the rows on its first page and clips at their edges.
+#[test]
+fn a_turned_merge_wraps_within_its_first_page() {
+    use doc4me_doc::props::{HeightRule, VMerge};
+    let mut t = Table::new(2, 2, 300.0);
+    for (index, row) in t.rows.iter_mut().enumerate() {
+        row.props.height = Some(55.0);
+        row.props.height_rule = HeightRule::AtLeast;
+        row.props.cant_split = true;
+        row.cells[0].props.vmerge = if index == 0 { VMerge::Restart } else { VMerge::Continue };
+    }
+    t.rows[0].cells[0].props.text_direction = TextDirection::Up;
+    let text = "Other contributors";
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(Paragraph::with_text(text, Default::default()))];
+    let mut d = Document::new();
+    d.last_section.page_h = 224.0;
+    d.body = vec![std::sync::Arc::new(Block::Table(t))];
+    let layout = lay(&d);
+    assert_eq!(layout.pages.len(), 2);
+    let clip = layout.pages[0].items.iter().find_map(|item| match item {
+        Placed::Clip { rect, items, .. } => Some((rect, items)),
+        _ => None,
+    });
+    let (rect, items) = clip.expect("clip inside the first page");
+    assert!((55.0..56.0).contains(&rect.h), "{rect:?}");
+    assert!(items.iter().any(|item| matches!(item,
+        Placed::Lines { l0, l1, turn: TextDirection::Up, .. } if l1 - l0 > 1)));
+    let start = Pos { story: StoryRef::Body, path: Path(vec![0, 0, 0, 0]), off: 0 };
+    assert_eq!(layout.caret(&start).unwrap().page, 0);
+}
+
+fn it_is_cell(it: &Placed) -> bool {
+    matches!(it, Placed::Lines { path, .. } if path.0.len() > 1)
+}
+
+/// A row of one height whose centred cell would sit lower than the room left on the page still
+/// splits there, its centred text aligned within the part kept on the page, as in Word
+/// (zenodo-136's publication row: Word keeps two lines and the centred "Yes" on page 15).
+#[test]
+fn a_row_with_a_centred_cell_splits_with_the_cell_aligned_on_the_page() {
+    use doc4me_doc::props::VAlign;
+    let mut t = Table::new(1, 2, 300.0);
+    t.rows[0].cells[0].blocks = (0..20).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("xx", Default::default()))).collect();
+    t.rows[0].cells[1].props.valign = VAlign::Center;
+    t.rows[0].cells[1].blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("YYY", Default::default()))];
+    let mut d = Document::new();
+    d.body = (0..15).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("p", Default::default()))).collect();
+    d.body.push(std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+    d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::new()));
+    let l = lay(&d);
+    // The paragraphs by their length: 1 the body's, 2 the long cell's, 3 the centred cell's.
+    let lens = |pg: usize| -> Vec<usize> {
+        l.pages[pg].items.iter().filter_map(|it| if let Placed::Lines { para, .. } = it { Some(para.text_len) } else { None }).collect()
+    };
+    let first = lens(0);
+    assert!(first.contains(&3), "the centred cell stays on the first page: {first:?}");
+    assert!(first.contains(&2), "the row splits: {first:?}");
+    assert!(lens(1).contains(&2), "the rest of the row goes on");
+}
+
+/// A table set wider than 100% of the text width stands out past the margins, as in Word
+/// (zenodo-136's 104.1% publication table is 728.4 pt wide in 700.1 pt of text width).
+#[test]
+fn a_table_over_a_hundred_percent_wide_stands_out_past_the_margins() {
+    let width = |pct: f32| {
+        let mut t = Table::new(1, 2, 300.0);
+        t.props.width_pct = Some(pct);
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        let rects: Vec<Rect> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, row: 0, .. } = it { Some(*rect) } else { None }).collect();
+        rects.iter().map(|r| r.right()).fold(f32::MIN, f32::max) - rects.iter().map(|r| r.x).fold(f32::MAX, f32::min)
+    };
+    let (full, wide) = (width(100.0), width(104.0));
+    assert!((wide / full - 1.04).abs() < 0.005, "{wide} pt is 104% of {full} pt");
+}
+
+/// Rows of the floating table at the page foot (left: page 0, right: page 1).
+fn float_rows_by_page(l: &DocLayout) -> (Vec<usize>, Vec<usize>) {
+    let rows = |pg: usize| -> Vec<usize> {
+        let mut v: Vec<usize> =
+            l.pages[pg].items.iter().filter_map(|it| if let Placed::Cell { row, .. } = it { Some(row.to_owned()) } else { None }).collect();
+        v.dedup();
+        v
+    };
+    (rows(0), if l.pages.len() > 1 { rows(1) } else { Vec::new() })
+}
+
+/// A floating table placed from the text that would run past the page's end splits there like
+/// a table in the text (Word's multi-page floating tables: zenodo-136's last activity table
+/// keeps its heading rows at the foot of page 24), instead of moving on whole.
+#[test]
+fn a_floating_table_running_past_the_page_end_splits_across_pages() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let mut t = Table::new(12, 2, 300.0);
+    t.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, overlap: false, ..Default::default() });
+    let mut d = Document::new();
+    d.body = (0..14).map(|_| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("p", Default::default()))).collect();
+    d.body.push(std::sync::Arc::new(doc4me_doc::Block::Table(t)));
+    d.body.push(doc4me_doc::para_block(doc4me_doc::Paragraph::new()));
+    let (first, second) = float_rows_by_page(&lay(&d));
+    assert!(first.contains(&0) && !first.contains(&11), "its first rows stay on the first page: {first:?}");
+    assert!(second.contains(&11) && !second.contains(&0), "the rest goes on: {second:?}");
+}
+
+/// A table in the text right after a floating table placed just below the text (1 twip) starts
+/// below it rather than over it (govuk-067's "E3" table after the floating "E" table).
+#[test]
+fn a_table_after_a_floating_table_just_below_the_text_starts_below_it() {
+    use doc4me_doc::para::Anchor;
+    use doc4me_doc::props::TableFloat;
+    let mut f = Table::new(3, 2, 300.0);
+    f.props.float = Some(TableFloat { h_rel: Anchor::Margin, v_rel: Anchor::Paragraph, y: 0.05, overlap: false, ..Default::default() });
+    let flow = Table::new(1, 2, 300.0);
+    let mut d = Document::new();
+    d.body = vec![
+        std::sync::Arc::new(doc4me_doc::Block::Table(f)),
+        std::sync::Arc::new(doc4me_doc::Block::Table(flow)),
+        doc4me_doc::para_block(doc4me_doc::Paragraph::new()),
+    ];
+    let l = lay(&d);
+    let cells: Vec<(usize, Rect)> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Cell { rect, table, .. } = it { Some((table.0.first().copied().unwrap_or(0) as usize, *rect)) } else { None })
+        .collect();
+    let float_bottom = cells.iter().filter(|c| c.0 == 0).map(|c| c.1.bottom()).fold(f32::MIN, f32::max);
+    let flow_top = cells.iter().filter(|c| c.0 == 1).map(|c| c.1.y).fold(f32::MAX, f32::min);
+    assert!(flow_top >= float_bottom - 0.01, "the table in the text starts at {flow_top}, under the floating one ending at {float_bottom}");
+}
+
+/// Text taller than its exact line spacing shares the line between its ascent and descent, and
+/// lowering it (`w:position`) then moves it down: govuk-044's page number, 20 pt lowered 12 pt
+/// in a 10 pt exact line, is drawn 12 pt lower than unlowered text in Word's PDF.
+#[test]
+fn lowered_text_in_a_short_exact_line_keeps_its_baseline_and_moves_down() {
+    let baseline = |position: f32| {
+        let chr = CharProps { size: Some(20.0), position: Some(position), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("9", chr);
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Exactly(10.0));
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let line = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].clone()) } else { None })
+            .unwrap();
+        line.baseline - line.top
+    };
+    let (plain, lowered) = (baseline(0.0), baseline(-12.0));
+    assert!((plain - lowered).abs() < 0.01, "the line's baseline stays put ({plain} vs {lowered}); the text moves");
+    // The line is shared by the font's ascent and descent (about 7 to 8 pt of 10 for 20 pt
+    // text), not put a whole descent above the line's bottom (under 6 pt).
+    assert!(plain > 6.0 && plain < 10.0, "{plain}");
+}
+
+/// Contextual spacing compares a cell's paragraph with the cells beside it in its row: two
+/// cells in one style, 3 pt before and after, make a row 3 pt shorter than without it.
+#[test]
+fn contextual_spacing_looks_at_the_cells_beside_a_cell() {
+    let row_h = |contextual: bool| {
+        let mut t = Table::new(1, 2, 300.0);
+        for c in t.rows[0].cells.iter_mut() {
+            let mut p = doc4me_doc::Paragraph::with_text("x", Default::default());
+            p.props.space_before = Some(3.0);
+            p.props.space_after = Some(3.0);
+            p.props.contextual_spacing = Some(contextual);
+            c.blocks = vec![doc4me_doc::para_block(p)];
+        }
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        lay(&d).pages[0].items.iter().find_map(|it| if let Placed::Cell { rect, row: 0, cell: 0, .. } = it { Some(rect.h) } else { None }).unwrap()
+    };
+    let (off, on) = (row_h(false), row_h(true));
+    assert!((off - on - 3.0).abs() < 0.05, "{off} vs {on}");
+}
+
+/// A list label bigger than its text makes the line taller above the baseline only: its descent
+/// doesn't count. Word steps zenodo-083's 11 pt Times New Roman items with 10 pt Courier New "o"
+/// bullets (descent 3.0 pt against 2.4) 12.65 pt apart, like the text alone, and so do
+/// zenodo-107's, zenodo-156's, zenodo-067's and govuk-037's lists.
+#[test]
+fn a_bullets_descent_doesnt_make_its_line_taller() {
+    let height = |text: f32, label: Option<f32>| {
+        let props = doc4me_doc::CharProps { size: Some(text), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("Scikit-learn", props.clone());
+        p.mark = props;
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        if let Some(size) = label {
+            let id = std::sync::Arc::make_mut(&mut d.numbering).add_list(doc4me_doc::ListKind::BulletChar('o'));
+            for a in &mut std::sync::Arc::make_mut(&mut d.numbering).abstracts {
+                for l in a.levels.iter_mut() {
+                    l.chr.size = Some(size);
+                }
+            }
+            d.format_paragraphs(&Pos::body(0, 0), &Pos::body(0, 0), &|p| p.numbering = Some(doc4me_doc::props::NumRef { num: id, level: 0 }))
+                .unwrap();
+        }
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| {
+                if let Placed::Lines { para, l0, .. } = it {
+                    Some((para.lines[*l0].height, para.lines[*l0].baseline - para.lines[*l0].top))
+                } else {
+                    None
+                }
+            })
+            .unwrap()
+    };
+    let (small, big) = (height(11.0, None), height(20.0, None));
+    let bulleted = height(11.0, Some(20.0));
+    // The label's ascent counts in full; the line below the baseline stays the text's.
+    assert!((bulleted.1 - big.1).abs() < 0.05, "baseline {bulleted:?} vs {big:?}");
+    assert!((bulleted.0 - (big.1 + (small.0 - small.1))).abs() < 0.05, "line {bulleted:?}: {small:?} {big:?}");
+}
+
+/// A legacy check box is drawn as a square the size of the box (crossed when checked), as Word
+/// draws it, not as a ☐ character: no glyph shows text for it, and it keeps the line of the
+/// run's font. A box bigger than its text makes the line as tall as that font's line at the box's
+/// size (govuk-031's 12 pt boxes in 11 pt Arial).
+#[test]
+fn a_form_check_box_is_a_drawn_square_on_its_texts_line() {
+    use doc4me_doc::form::{FormField, FormKind};
+    let lay_box = |size: Option<f32>, checked: bool| {
+        let props = CharProps { size: Some(11.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("Yes", props.clone());
+        p.mark = props.clone();
+        let mut f = FormField::check_box();
+        if let FormKind::CheckBox { size: s, checked: c, .. } = &mut f.kind {
+            *s = size;
+            *c = Some(checked);
+        }
+        p.insert_object(
+            0,
+            InlineObject::Field { instr: " FORMCHECKBOX ".into(), result: String::new(), locked: false, code: false, form: Some(Box::new(f)) },
+            &props,
+        )
+        .unwrap();
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        let draws = display::page_display(&d, &l.pages[0], &display::DisplayOptions::default());
+        let line = l.pages[0]
+            .items
+            .iter()
+            .find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].clone()) } else { None })
+            .unwrap();
+        (draws, line)
+    };
+    let plain = {
+        let props = CharProps { size: Some(11.0), ..Default::default() };
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Yes", props))];
+        let l = lay(&d);
+        l.pages[0].items.iter().find_map(|it| if let Placed::Lines { para, l0, .. } = it { Some(para.lines[*l0].height) } else { None }).unwrap()
+    };
+    let squares = |draws: &[display::Draw]| {
+        draws
+            .iter()
+            .filter_map(|d| match d {
+                display::Draw::Shape { rect, kind: doc4me_doc::para::ShapeKind::Rectangle, stroke: Some(_), .. } => Some(*rect),
+                _ => None,
+            })
+            .collect::<Vec<_>>()
+    };
+    let crosses = |draws: &[display::Draw]| draws.iter().filter(|d| matches!(d, display::Draw::Line { .. })).count();
+    let (draws, line) = lay_box(None, false);
+    let sq = squares(&draws);
+    assert_eq!(sq.len(), 1, "one square");
+    assert!((sq[0].w - 11.0 * 0.96).abs() < 0.01 && (sq[0].h - sq[0].w).abs() < 0.01, "{:?}", sq[0]);
+    assert_eq!(crosses(&draws), 0);
+    let text: String = draws.iter().filter_map(|d| if let display::Draw::Glyphs { text, .. } = d { Some(text.as_str()) } else { None }).collect();
+    assert!(!text.contains('\u{2610}') && text.contains("Yes"), "{text:?}");
+    assert!((line.height - plain).abs() < 0.01, "a box the text's size keeps its line: {} vs {plain}", line.height);
+    // Checked: crossed corner to corner.
+    let (draws, _) = lay_box(None, true);
+    assert_eq!(crosses(&draws), 2);
+    // A 12 pt box: drawn 12 pt, the line as tall as 12 pt text's.
+    let (draws, big) = lay_box(Some(12.0), false);
+    assert!((squares(&draws)[0].w - 12.0 * 0.96).abs() < 0.01);
+    assert!((big.height - plain * 12.0 / 11.0).abs() < 0.05, "{} vs {}", big.height, plain * 12.0 / 11.0);
+    assert!((big.baseline - big.top - (line.baseline - line.top)).abs() < 0.01, "standing on the text's baseline");
+}
+
+/// With spacing between cells (the table's own or its style's) each cell has its own top and
+/// bottom borders inside the row, and the table's frame border stands outside the first and last
+/// rows: govuk-031's rows are 24.6 pt apart in Word's PDF, 21.05 pt + two 0.75 pt borders + 2 pt.
+#[test]
+fn cell_spacing_rows_hold_both_cell_borders_and_the_frame() {
+    // 0: no spacing; 1: the table's own; 2: its style's. Every table has the style.
+    let cells = |mode: u8| {
+        let mut t = Table::new(3, 1, 200.0);
+        let b = Border::single(0.75);
+        t.props.borders = Some(Borders { top: Some(b), bottom: Some(b), left: Some(b), right: Some(b), between: Some(b), inside_v: Some(b) });
+        let mut d = Document::new();
+        let mut st =
+            doc4me_doc::styles::Style { id: "Web".into(), name: "Web".into(), kind: doc4me_doc::styles::StyleKind::Table, ..Default::default() };
+        st.table = Some(doc4me_doc::styles::TableStyleParts { cell_spacing: (mode == 2).then_some(1.0), ..Default::default() });
+        std::sync::Arc::make_mut(&mut d.styles).styles.push(st);
+        t.props.style = Some("Web".into());
+        if mode == 1 {
+            t.props.cell_spacing = Some(1.0);
+        }
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(*rect) } else { None }).collect::<Vec<Rect>>()
+    };
+    let (none, own, styled) = (cells(0), cells(1), cells(2));
+    let pitch = |c: &[Rect]| c[2].y - c[1].y;
+    assert!((pitch(&own) - pitch(&styled)).abs() < 0.01, "the style's spacing counts like the table's: {own:?} vs {styled:?}");
+    // An inner row: 2 × 1 pt of spacing and its cells' bottom border (0.75 pt) more.
+    assert!((pitch(&own) - pitch(&none) - 2.75).abs() < 0.01, "{own:?} vs {none:?}");
+    // The first row also holds the frame border and 1 pt more spacing above its cells.
+    assert!(((own[1].y - own[0].y) - pitch(&own) - 1.75).abs() < 0.01, "{own:?}");
+}
+
+/// A cell's own bottom border between rows that the row below doesn't share (no inside border,
+/// no top border of its own) adds to its row's height: zenodo-108's header cells with a 1 pt
+/// bottom border start the next row 1 pt further down in Word's PDF; a bottom margin at least as
+/// wide holds it (Table S10). With an inside border the row below holds the shared border, as
+/// before.
+#[test]
+fn a_cells_unshared_bottom_border_adds_to_its_row() {
+    let pitch_m = |own_bottom: bool, inside: bool, margin: f32| {
+        let mut t = Table::new(3, 1, 200.0);
+        t.props.style = None;
+        t.rows[0].cells[0].props.margins = Some([margin, 5.4, margin, 5.4]);
+        if inside {
+            t.props.borders = Some(Borders { between: Some(Border::single(1.0)), ..Default::default() });
+        }
+        if own_bottom {
+            t.rows[0].cells[0].props.borders = Some(Borders { bottom: Some(Border::single(1.0)), ..Default::default() });
+        }
+        let mut d = Document::new();
+        d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+        let l = lay(&d);
+        let c: Vec<Rect> =
+            l.pages[0].items.iter().filter_map(|it| if let Placed::Cell { rect, cell: 0, .. } = it { Some(*rect) } else { None }).collect();
+        c[1].y - c[0].y
+    };
+    let pitch = |own_bottom: bool, inside: bool| pitch_m(own_bottom, inside, 0.0);
+    // Inside a bottom margin at least as wide (zenodo-108's Table S10, 1.5 pt margins): no more room.
+    assert!((pitch_m(true, false, 1.5) - pitch_m(false, false, 1.5)).abs() < 0.01, "{} vs {}", pitch_m(true, false, 1.5), pitch_m(false, false, 1.5));
+    assert!((pitch(true, false) - pitch(false, false) - 1.0).abs() < 0.01, "{} vs {}", pitch(true, false), pitch(false, false));
+    assert!((pitch(true, true) - pitch(false, true)).abs() < 0.01, "shared with the inside border: {} vs {}", pitch(true, true), pitch(false, true));
+}
+
+/// Every cell's text in a row starts below the row's largest top margin: zenodo-173's cells
+/// without top margins of their own share the baselines of the cells with 4 pt margins in Word's
+/// PDF. A split row's continuation keeps that, and its height.
+#[test]
+fn a_rows_cells_start_below_its_largest_top_margin() {
+    let mut t = Table::new(1, 2, 300.0);
+    t.rows[0].cells[0].props.margins = Some([4.0, 4.0, 4.0, 4.0]);
+    for c in t.rows[0].cells.iter_mut() {
+        c.blocks = vec![doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("Cell", Default::default()))];
+    }
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    let ys: Vec<f32> = l.pages[0]
+        .items
+        .iter()
+        .filter_map(|it| if let Placed::Lines { path, y, .. } = it { (path.0.len() == 4).then_some(*y) } else { None })
+        .collect();
+    assert_eq!(ys.len(), 2, "{ys:?}");
+    assert!((ys[0] - ys[1]).abs() < 0.01, "both cells' text on one line: {ys:?}");
+}
+
+/// A row that can't split but is taller than a page splits all the same, as in Word, instead of
+/// running past the bottom of the page (govuk-006's form panel).
+#[test]
+fn a_cant_split_row_taller_than_a_page_splits() {
+    let mut t = Table::new(1, 1, 300.0);
+    t.rows[0].props.cant_split = true;
+    t.rows[0].cells[0].blocks =
+        (0..120).map(|i| doc4me_doc::para_block(doc4me_doc::Paragraph::with_text(&format!("line {i}"), Default::default()))).collect();
+    let mut d = Document::new();
+    d.body = vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::new())];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "{} pages", l.pages.len());
+    let page_h = d.last_section.page_h;
+    for (i, page) in l.pages.iter().enumerate() {
+        for it in &page.items {
+            if let Placed::Lines { para, l0, y, .. } = it {
+                assert!(y + para.lines[*l0].height <= page_h, "page {i}: a line at {y} runs past the page");
+            }
+        }
+    }
+}
+
+/// A row's at-least height counts with its cells' top and bottom margins for the room it needs to
+/// start on a page: zenodo-140's 21 pt row with 5 pt margins moves on whole with 27 pt left in
+/// Word's PDF, though its first line would fit.
+#[test]
+fn a_rows_minimum_height_with_its_margins_must_fit_to_start_a_page() {
+    use doc4me_doc::props::{HeightRule, LineSpacing};
+    let first_page_lines = |room: f32| {
+        let mut d = Document::new();
+        let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+        filler.props.line_spacing = Some(LineSpacing::Exactly(792.0 - 144.0 - room));
+        filler.props.space_after = Some(0.0);
+        let mut t = Table::new(1, 1, 300.0);
+        t.props.borders = None;
+        t.rows[0].props.height = Some(21.0);
+        t.rows[0].props.height_rule = HeightRule::AtLeast;
+        t.rows[0].cells[0].props.margins = Some([5.0, 5.0, 5.0, 5.0]);
+        let mut p = doc4me_doc::Paragraph::with_text("one\ntwo\nthree", Default::default());
+        p.props.line_spacing = Some(LineSpacing::Exactly(12.0));
+        p.props.space_after = Some(0.0);
+        p.props.widow_control = Some(false);
+        t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(p)];
+        d.body = vec![doc4me_doc::para_block(filler), doc4me_doc::Block::Table(t).into()];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| if let Placed::Lines { path, l0, l1, .. } = it { (path.0.len() > 1).then_some(l1 - l0) } else { None })
+            .sum::<usize>()
+    };
+    assert_eq!(first_page_lines(27.0), 0, "21 + 5 + 5 pt don't fit in 27: the row moves on");
+    assert!(first_page_lines(33.0) > 0, "they fit in 33: the row starts here");
+}
+
+/// A subscript drops 0.14 of its own (shrunk) size, as in Word: 11 pt Times New Roman's
+/// subscripts 0.96 pt in zenodo-113's PDF, not 0.14 of the full size.
+#[test]
+fn a_subscript_drops_by_its_own_size() {
+    let rc = doc4me_doc::resolve::ResolvedChar {
+        size: 11.0,
+        vert_align: doc4me_doc::props::VertAlign::Subscript,
+        ..doc4me_doc::styles::StyleSheet::default().resolve_char(None, &Default::default())
+    };
+    assert!((rc.baseline_shift() + 11.0 * 0.65 * 0.14).abs() < 0.001, "{}", rc.baseline_shift());
+    let sup = doc4me_doc::resolve::ResolvedChar { vert_align: doc4me_doc::props::VertAlign::Superscript, ..rc };
+    assert!((sup.baseline_shift() - 11.0 * 0.33).abs() < 0.001, "superscripts unchanged");
+}
+
+/// A metafile picture's text runs: [`display::page_display`] draws them as glyphs over the picture
+/// (text Word's PDF has, zenodo-047's gel labels), and an EMF+ dual file's from outlines, which
+/// are no text (zenodo-141's chemistry figures).
+#[test]
+fn metafile_text_is_drawn_as_glyphs_and_dual_files_as_outlines() {
+    fn rec(typ: u32, p: &[u8]) -> Vec<u8> {
+        let mut p = p.to_vec();
+        while !p.len().is_multiple_of(4) {
+            p.push(0);
+        }
+        let mut v = typ.to_le_bytes().to_vec();
+        v.extend(((8 + p.len()) as u32).to_le_bytes());
+        v.extend(p);
+        v
+    }
+    fn le(v: &[i32]) -> Vec<u8> {
+        v.iter().flat_map(|x| x.to_le_bytes()).collect()
+    }
+    let emf = |dual: bool| {
+        let mut h = vec![0u8; 88];
+        h[0..4].copy_from_slice(&1u32.to_le_bytes());
+        h[4..8].copy_from_slice(&88u32.to_le_bytes());
+        h[8..24].copy_from_slice(&le(&[0, 0, 100, 100]));
+        h[24..40].copy_from_slice(&le(&[0, 0, 2500, 2500]));
+        h[40..44].copy_from_slice(&0x464D_4520u32.to_le_bytes());
+        h[72..88].copy_from_slice(&le(&[1000, 1000, 250, 250]));
+        let mut font = le(&[1, -20, 0, 0, 0, 400, 0, 0]);
+        let mut name: Vec<u8> = "Arial".encode_utf16().flat_map(|u| u.to_le_bytes()).collect();
+        name.resize(64, 0);
+        font.extend(name);
+        let mut text = le(&[0, 0, 0, 0, 1, 0, 0, 10, 50, 2, 76, 0, 0, 0, 0, 0, 0]);
+        text.extend("Hi".encode_utf16().flat_map(|u| u.to_le_bytes()));
+        let mut recs = vec![h];
+        if dual {
+            recs.push(rec(70, &[le(&[8]), b"EMF+".to_vec(), vec![0; 4]].concat()));
+        }
+        recs.extend([rec(82, &font), rec(37, &le(&[1])), rec(84, &text), rec(14, &[0; 12])]);
+        recs.concat()
+    };
+    let draws = |dual: bool| {
+        let mut d = Document::new();
+        let media = d.add_media(emf(dual), "emf");
+        let mut p = doc4me_doc::Paragraph::new();
+        let obj =
+            InlineObject::Image { media, w: 70.0, h: 70.0, alt: String::new(), float: Default::default(), crop: [0.0; 4], ole: None, video: None };
+        p.insert_object(0, obj, &Default::default()).unwrap();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        display::page_display(&d, &l.pages[0], &display::DisplayOptions::default())
+    };
+    fn find(items: &[display::Draw], glyphs: &mut Vec<String>, art: &mut usize) {
+        for it in items {
+            match it {
+                display::Draw::Glyphs { text, .. } => glyphs.push(text.clone()),
+                display::Draw::Art { .. } => *art += 1,
+                display::Draw::Clip { items, .. } | display::Draw::Rotated { items, .. } => find(items, glyphs, art),
+                _ => {}
+            }
+        }
+    }
+    let (mut glyphs, mut art) = (Vec::new(), 0);
+    find(&draws(false), &mut glyphs, &mut art);
+    assert!(glyphs.iter().any(|t| t == "Hi") && art == 0, "{glyphs:?} {art}");
+    let (mut glyphs, mut art) = (Vec::new(), 0);
+    find(&draws(true), &mut glyphs, &mut art);
+    assert!(!glyphs.iter().any(|t| t == "Hi") && art == 1, "{glyphs:?} {art}");
+}
+
+/// A picture placed from its paragraph in a table cell that runs past the page's end goes on to
+/// the next page with the line holding its anchor, stands where that part of the paragraph puts
+/// it, and the lines kept on the first page run full width (zenodo-157's lens picture: page 2
+/// keeps three full-width lines of its paragraph in Word's PDF, page 3 wraps the rest beside it).
+#[test]
+fn a_cell_picture_running_past_the_page_goes_on_with_its_anchor_line() {
+    use doc4me_doc::para::{Anchor, Float, Wrap};
+    let mut d = Document::new();
+    let mut t = Table::new(1, 1, 400.0);
+    let mut p = doc4me_doc::Paragraph::with_text(&"word ".repeat(90), Default::default());
+    let f = Float {
+        wrap: Wrap::Square,
+        h_rel: Anchor::Column,
+        v_rel: Anchor::Paragraph,
+        x: 0.0,
+        y: 9.0,
+        dist_top: 9.0,
+        dist_bottom: 9.0,
+        ..Default::default()
+    };
+    let obj = InlineObject::Image { media: "pic".into(), w: 150.0, h: 188.0, alt: String::new(), float: f, crop: [0.0; 4], ole: None, video: None };
+    p.insert_object(p.len(), obj, &Default::default()).unwrap();
+    let mut filler = doc4me_doc::Paragraph::with_text("Filler", Default::default());
+    filler.props.space_after = Some(520.0);
+    t.rows[0].cells[0].blocks = vec![doc4me_doc::para_block(filler), doc4me_doc::para_block(p)];
+    d.body =
+        vec![std::sync::Arc::new(doc4me_doc::Block::Table(t)), doc4me_doc::para_block(doc4me_doc::Paragraph::with_text("After", Default::default()))];
+    let l = lay(&d);
+    assert!(l.pages.len() >= 2, "{} pages", l.pages.len());
+    let image = |pi: usize| l.pages[pi].items.iter().find_map(|i| if let Placed::Image { rect, .. } = i { Some(*rect) } else { None });
+    let cell_lines = |pi: usize| {
+        l.pages[pi].items.iter().find_map(|i| match i {
+            Placed::Lines { path, para, l0, l1, y, .. } if path.0.len() > 1 && path.0.last() == Some(&1) => Some((para.clone(), *l0, *l1, *y)),
+            _ => None,
+        })
+    };
+    assert!(image(0).is_none(), "the picture stays off the first page");
+    let pic = image(1).expect("the picture on the second page");
+    let (para, l0, l1, _) = cell_lines(0).expect("lines kept on the first page");
+    assert!(l1 > l0 + 1, "lines {l0}..{l1} kept on the first page");
+    for line in &para.lines[l0..l1] {
+        assert!(line.left < 0.5, "a line kept on the first page starts {} in, clear of the picture", line.left);
+    }
+    let (para2, m0, m1, y2) = cell_lines(1).expect("the paragraph goes on to the second page");
+    assert!(m1 > m0 && m0 == l1);
+    assert!((pic.y - (y2 + 9.0)).abs() < 1.0, "picture at {}, the paragraph's part starts at {y2}", pic.y);
+    assert!(para2.lines[m0].left > 140.0, "the next page's lines wrap beside the picture ({})", para2.lines[m0].left);
+}
+
+/// A line holding an equation is at least as tall as Cambria Math's line, which Word sets
+/// equations in: zenodo-044's display equations stand 11.44 pt below the 12 pt Times New Roman
+/// line above them in Word's PDF (1948/2048 em), not Times New Roman's 11.2 pt.
+#[test]
+fn a_line_with_an_equation_keeps_cambria_maths_line() {
+    use doc4me_doc::math::{MNode, MRun, Math};
+    let ascent = |with_math: bool| {
+        let props = CharProps { font: Some("Times New Roman".into()), size: Some(12.0), ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("x ", props.clone());
+        p.mark = props.clone();
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        if with_math {
+            let math = Math { nodes: vec![MNode::Run(MRun { text: "a".into(), ..Default::default() })], ..Default::default() };
+            let at = p.len();
+            p.insert_object(at, InlineObject::Equation { linear: "a".into(), display: false, math }, &props).unwrap();
+        }
+        let mut d = Document::new();
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|i| if let Placed::Lines { para, l0, .. } = i { para.lines.get(*l0).map(|ln| ln.baseline - ln.top) } else { None })
+            .unwrap()
+    };
+    let cambria = 12.0 * 1946.0 / 2048.0;
+    assert!(ascent(false) < cambria - 0.1, "plain Times New Roman line: {}", ascent(false));
+    assert!(ascent(true) >= cambria - 0.01, "with an equation: {} against {cambria}", ascent(true));
+}
+
+/// An equation reaching above Cambria Math's ascent has its line gap above its own height, as in
+/// Word: zenodo-044's display fractions and sums with limits stand 2.07 pt (353/2048 em at 12 pt)
+/// further below the text above them in Word's PDF than their height alone would put them.
+#[test]
+fn a_tall_equation_keeps_cambria_maths_line_gap_above_it() {
+    use doc4me_doc::math::{FracKind, MNode, MRun, Math};
+    let props = CharProps { font: Some("Times New Roman".into()), size: Some(12.0), ..Default::default() };
+    let x = |t: &str| vec![MNode::Run(MRun::new(t))];
+    let math = Math { nodes: vec![MNode::Frac { kind: FracKind::Bar, num: x("a"), den: x("b") }], ..Default::default() };
+    let mut p = doc4me_doc::Paragraph::with_text("", props.clone());
+    p.mark = props.clone();
+    p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+    p.insert_object(0, InlineObject::Equation { linear: String::new(), display: true, math }, &props).unwrap();
+    let mut d = Document::new();
+    d.body = vec![doc4me_doc::para_block(p)];
+    let l = lay(&d);
+    let (ascent, math_ascent) = l.pages[0]
+        .items
+        .iter()
+        .find_map(|i| match i {
+            Placed::Lines { para, l0, .. } => Some((para.lines[*l0].baseline - para.lines[*l0].top, para.maths.first()?.1.ascent)),
+            _ => None,
+        })
+        .unwrap();
+    let gap = 12.0 * 353.0 / 2048.0;
+    assert!(math_ascent > 12.0 * 1595.0 / 2048.0, "the fraction reaches above Cambria Math's ascent ({math_ascent})");
+    assert!((ascent - (math_ascent + gap)).abs() < 0.05, "line ascent {ascent}, fraction {math_ascent} + gap {gap}");
+}
+
+/// Before Word 2013 layout (compatibility mode 15) a tall equation's line is the equation's bare
+/// height: zenodo-108 (mode 14) has its display sums and fractions, and its lines holding 10⁻¹⁰
+/// and x², with no line gap above them in Word's PDF.
+#[test]
+fn legacy_layout_puts_no_line_gap_above_a_tall_equation() {
+    use doc4me_doc::math::{FracKind, MNode, MRun, Math};
+    let line_and_math_ascent = |mode: u32| {
+        let props = CharProps { font: Some("Times New Roman".into()), size: Some(12.0), ..Default::default() };
+        let x = |t: &str| vec![MNode::Run(MRun::new(t))];
+        let math = Math { nodes: vec![MNode::Frac { kind: FracKind::Bar, num: x("a"), den: x("b") }], ..Default::default() };
+        let mut p = doc4me_doc::Paragraph::with_text("", props.clone());
+        p.mark = props.clone();
+        p.props.line_spacing = Some(doc4me_doc::props::LineSpacing::Multiple(1.0));
+        p.insert_object(0, InlineObject::Equation { linear: String::new(), display: true, math }, &props).unwrap();
+        let mut d = Document::new();
+        d.settings.compat_mode = mode;
+        d.body = vec![doc4me_doc::para_block(p)];
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .find_map(|i| match i {
+                Placed::Lines { para, l0, .. } => Some((para.lines[*l0].baseline - para.lines[*l0].top, para.maths.first()?.1.ascent)),
+                _ => None,
+            })
+            .unwrap()
+    };
+    let (legacy, math_ascent) = line_and_math_ascent(14);
+    let (current, _) = line_and_math_ascent(15);
+    assert!(math_ascent > 12.0 * 1946.0 / 2048.0, "the fraction reaches above Cambria Math's line ({math_ascent})");
+    assert!((legacy - math_ascent).abs() < 0.05, "mode 14: line ascent {legacy}, fraction {math_ascent}");
+    assert!(current > legacy + 1.5, "mode 15 keeps the gap: {current} vs {legacy}");
+}
+
+/// Before Word 2013 layout (compatibility mode 15) Word keeps room for the continuation notice
+/// below every page's notes, whether or not one continues: govuk-059 (mode 14, an empty 12 pt
+/// notice) ends its notes 13.7 pt above the bottom margin in Word's PDF; in mode 15 they end at it.
+#[test]
+fn legacy_layout_keeps_room_for_the_continuation_notice_below_the_notes() {
+    let note_bottom = |mode: u32| {
+        let mut d = Document::from_text(&"Body text line.\n".repeat(4));
+        d.settings.compat_mode = mode;
+        let id = footnote(&mut d, &Pos::body(1, 4), "A short note.");
+        let mut notice = doc4me_doc::Paragraph::new();
+        notice.props.space_after = Some(0.0);
+        d.footnote_separators.continuation_notice = Some(vec![doc4me_doc::para_block(notice)]);
+        let l = lay(&d);
+        l.pages[0]
+            .items
+            .iter()
+            .filter_map(|it| match it {
+                Placed::Lines { story: StoryRef::Part(s), y, para, l0, l1, .. } if *s == id => item_bottom(*y, para, *l0, *l1),
+                _ => None,
+            })
+            .fold(0.0f32, f32::max)
+    };
+    let (legacy, current) = (note_bottom(14), note_bottom(15));
+    assert!(current - legacy > 5.0, "mode 14 ends the notes a notice's height higher: {legacy} against {current}");
+}

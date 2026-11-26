@@ -1,0 +1,220 @@
+id	pagination_accepted	open	roundtrip	page_count	boundaries	stability	page_count_reason	boundary_reason
+govuk-001	false	pass	pass	pass	pass	pass	-	-
+govuk-002	false	pass	pass	pass	pass	pass	-	-
+govuk-005	false	pass	pass	pass	fail	pass	-	"page 12 starts or ends differently: Doc4Me first=Some(""do""), last=Some(""account""); Word first=Some(""yes""), last=Some(""account"")"
+govuk-006	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""place""), last=Some(""either""); Word first=Some(""place""), last=Some(""applicable"")"
+govuk-007	false	pass	pass	pass	pass	pass	-	-
+govuk-008	false	pass	pass	pass	pass	pass	-	-
+govuk-009	false	pass	pass	pass	pass	pass	-	-
+govuk-010	false	pass	pass	pass	pass	pass	-	-
+govuk-015	false	pass	pass	pass	pass	pass	-	-
+govuk-016	false	pass	pass	pass	pass	pass	-	-
+govuk-017	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""for""), last=Some(""post""); Word first=Some(""for""), last=Some(""2019"")"
+govuk-018	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""for""), last=Some(""post""); Word first=Some(""for""), last=Some(""authority"")"
+govuk-019	false	pass	pass	pass	pass	pass	-	-
+govuk-020	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""rhowch""), last=Some(""ai""); Word first=Some(""rhowch""), last=Some(""gymwys"")"
+govuk-021	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""department""), last=Some(""complete""); Word first=Some(""department""), last=Some(""sensitive"")"
+govuk-024	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""annex""), last=Some(""n""); Word first=Some(""rule""), last=Some(""n"")"
+govuk-026	true	pass	pass	pass	pass	pass	-	-
+govuk-028	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""tyneside""), last=Some(""met""); Word first=Some(""lancaster""), last=Some(""met"")"
+govuk-029	false	pass	pass	pass	fail	pass	-	"page 13 starts or ends differently: Doc4Me first=Some(""c""), last=Some(""13""); Word first=Some(""6""), last=Some(""13"")"
+govuk-031	false	pass	pass	pass	fail	pass	-	"page 8 starts or ends differently: Doc4Me first=Some(""1137""), last=Some(""16""); Word first=Some(""6""), last=Some(""16"")"
+govuk-032	false	pass	pass	pass	pass	pass	-	-
+govuk-033	false	pass	pass	pass	pass	pass	-	-
+govuk-034	false	pass	pass	pass	pass	pass	-	-
+govuk-035	false	pass	pass	pass	pass	pass	-	-
+govuk-036	false	pass	pass	pass	fail	pass	-	"page 8 starts or ends differently: Doc4Me first=Some(""header""), last=Some(""individuals""); Word first=Some(""header""), last=Some(""6"")"
+govuk-037	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""rights""), last=Some(""62""); Word first=Some(""rights""), last=Some(""63"")"
+govuk-038	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""area""), last=Some(""2022""); Word first=Some(""area""), last=Some(""f"")"
+govuk-040	false	pass	pass	pass	pass	pass	-	-
+govuk-043	false	pass	pass	pass	fail	pass	-	"page 7 starts or ends differently: Doc4Me first=Some(""we""), last=Some(""7""); Word first=Some(""please""), last=Some(""7"")"
+govuk-044	false	pass	pass	pass	fail	pass	-	"page 9 starts or ends differently: Doc4Me first=Some(""yes""), last=Some(""9""); Word first=Some(""the""), last=Some(""9"")"
+govuk-045	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""london""), last=Some(""4""); Word first=Some(""4th""), last=Some(""4"")"
+govuk-046	false	pass	pass	pass	fail	pass	-	"page 11 starts or ends differently: Doc4Me first=Some(""0""), last=Some(""11""); Word first=Some(""table""), last=Some(""11"")"
+govuk-047	false	pass	pass	pass	fail	pass	-	"page 12 starts or ends differently: Doc4Me first=Some(""35""), last=Some(""12""); Word first=Some(""less""), last=Some(""12"")"
+govuk-048	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""annex""), last=Some(""1""); Word first=Some(""impact""), last=Some(""a"")"
+govuk-052	false	pass	pass	pass	pass	pass	-	-
+govuk-053	false	pass	pass	pass	fail	pass	-	"page 8 starts or ends differently: Doc4Me first=Some(""1""), last=Some(""7""); Word first=Some(""appendix""), last=Some(""7"")"
+govuk-054	false	pass	pass	pass	fail	pass	-	"page 11 starts or ends differently: Doc4Me first=Some(""figure""), last=Some(""10""); Word first=Some(""process""), last=Some(""10"")"
+govuk-056	false	pass	pass	pass	pass	pass	-	-
+govuk-057	false	pass	pass	pass	pass	pass	-	-
+govuk-058	false	pass	pass	pass	fail	pass	-	"page 16 starts or ends differently: Doc4Me first=Some(""graddau""), last=Some(""16""); Word first=Some(""yr""), last=Some(""16"")"
+govuk-059	false	pass	pass	pass	fail	pass	-	"page 7 starts or ends differently: Doc4Me first=Some(""2""), last=Some(""7""); Word first=Some(""focus""), last=Some(""7"")"
+govuk-060	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""affecting""), last=Some(""3""); Word first=Some(""excuses""), last=Some(""3"")"
+govuk-061	false	pass	pass	pass	pass	pass	-	-
+govuk-062	false	pass	pass	pass	pass	pass	-	-
+govuk-065	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""you""), last=Some(""20""); Word first=Some(""place""), last=Some(""20"")"
+govuk-066	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""small""), last=Some(""no""); Word first=Some(""small""), last=Some(""100"")"
+govuk-067	false	pass	pass	pass	fail	pass	-	"page 7 starts or ends differently: Doc4Me first=Some(""this""), last=Some(""7""); Word first=Some(""b2""), last=Some(""7"")"
+govuk-068	false	pass	pass	fail	fail	pass	16 pages, Word 15	page count differs
+govuk-072	false	pass	pass	pass	pass	pass	-	-
+zenodo-001	false	pass	pass	pass	pass	pass	-	-
+zenodo-002	false	pass	pass	pass	pass	pass	-	-
+zenodo-003	false	pass	pass	pass	fail	pass	-	"page 13 starts or ends differently: Doc4Me first=Some(""como""), last=Some(""contributed""); Word first=Some(""como""), last=Some(""contributorship"")"
+zenodo-004	false	pass	pass	pass	pass	pass	-	-
+zenodo-005	false	pass	pass	pass	pass	pass	-	-
+zenodo-006	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""peningkatan""), last=Some(""1""); Word first=Some(""sinau""), last=Some(""1"")"
+zenodo-007	false	pass	pass	pass	pass	pass	-	-
+zenodo-008	false	pass	pass	pass	fail	pass	-	"page 15 starts or ends differently: Doc4Me first=Some(""b""), last=Some(""15""); Word first=Some(""c""), last=Some(""15"")"
+zenodo-009	false	pass	pass	pass	pass	pass	-	-
+zenodo-010	false	pass	pass	pass	pass	pass	-	-
+zenodo-011	false	pass	pass	pass	fail	pass	-	"page 31 starts or ends differently: Doc4Me first=Some(""johnson""), last=Some(""9781849775930""); Word first=Some(""johnson""), last=Some(""0"")"
+zenodo-012	false	pass	pass	pass	fail	pass	-	"page 22 starts or ends differently: Doc4Me first=Some(""foram""), last=Some(""nos""); Word first=Some(""foram""), last=Some(""legalmente"")"
+zenodo-013	false	pass	pass	pass	pass	pass	-	-
+zenodo-014	false	pass	pass	pass	pass	pass	-	-
+zenodo-015	false	pass	pass	pass	pass	pass	-	-
+zenodo-016	false	pass	pass	pass	pass	pass	-	-
+zenodo-017	false	pass	pass	pass	pass	pass	-	-
+zenodo-018	false	pass	pass	pass	fail	pass	-	"page 12 starts or ends differently: Doc4Me first=Some(""12""), last=Some(""atau""); Word first=Some(""12""), last=Some(""berfikir"")"
+zenodo-019	false	pass	pass	fail	fail	pass	10 pages, Word 11	page count differs
+zenodo-020	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""bay""), last=Some(""2023""); Word first=Some(""bay""), last=Some(""memo"")"
+zenodo-021	false	pass	pass	pass	fail	pass	-	"page 6 starts or ends differently: Doc4Me first=Some(""following""), last=Some(""6""); Word first=Some(""ethics""), last=Some(""6"")"
+zenodo-022	false	pass	pass	pass	fail	pass	-	"page 15 starts or ends differently: Doc4Me first=Some(""dresser""), last=Some(""20""); Word first=Some(""quelles""), last=Some(""20"")"
+zenodo-023	false	pass	pass	pass	fail	pass	-	"page 52 starts or ends differently: Doc4Me first=None, last=None; Word first=Some(""first""), last=Some(""1"")"
+zenodo-024	false	pass	pass	pass	pass	pass	-	-
+zenodo-025	false	pass	pass	pass	pass	pass	-	-
+zenodo-026	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""4""), last=Some(""5""); Word first=Some(""every""), last=Some(""5"")"
+zenodo-027	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""this""), last=Some(""2""); Word first=Some(""dataset""), last=Some(""2"")"
+zenodo-028	false	pass	pass	pass	pass	pass	-	-
+zenodo-029	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""2""), last=Some(""mamic""); Word first=Some(""acknowledgements""), last=Some(""2"")"
+zenodo-030	false	pass	pass	pass	fail	pass	-	"page 16 starts or ends differently: Doc4Me first=Some(""available""), last=Some(""containers""); Word first=Some(""certificate""), last=Some(""containers"")"
+zenodo-031	false	pass	pass	pass	pass	pass	-	-
+zenodo-032	false	pass	pass	pass	pass	pass	-	-
+zenodo-033	false	pass	pass	pass	pass	pass	-	-
+zenodo-034	false	pass	pass	pass	pass	pass	-	-
+zenodo-035	false	pass	pass	pass	pass	pass	-	-
+zenodo-036	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""7""), last=Some(""table""); Word first=Some(""7""), last=Some(""precisely"")"
+zenodo-037	false	pass	pass	pass	pass	pass	-	-
+zenodo-038	false	pass	pass	pass	pass	pass	-	-
+zenodo-039	false	pass	pass	pass	pass	pass	-	-
+zenodo-040	false	pass	pass	pass	pass	pass	-	-
+zenodo-042	false	pass	pass	pass	pass	pass	-	-
+zenodo-043	false	pass	pass	pass	pass	pass	-	-
+zenodo-044	false	pass	pass	pass	fail	pass	-	"page 10 starts or ends differently: Doc4Me first=Some(""4""), last=Some(""10""); Word first=Some(""the""), last=Some(""10"")"
+zenodo-046	false	pass	pass	pass	pass	pass	-	-
+zenodo-047	false	pass	pass	pass	fail	pass	-	"page 3 starts or ends differently: Doc4Me first=Some(""experimental""), last=Some(""purification""); Word first=Some(""experimental""), last=Some(""kda"")"
+zenodo-048	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""constats""), last=Some(""5""); Word first=Some(""la""), last=Some(""5"")"
+zenodo-049	false	pass	pass	pass	fail	pass	-	"page 35 starts or ends differently: Doc4Me first=Some(""organismes""), last=Some(""34""); Word first=Some(""des""), last=Some(""34"")"
+zenodo-050	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""brief""), last=Some(""ca""); Word first=Some(""storage""), last=Some(""ca"")"
+zenodo-051	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""abraham""), last=Some(""qualitative""); Word first=Some(""abraham""), last=Some(""2026"")"
+zenodo-052	false	pass	pass	pass	pass	pass	-	-
+zenodo-053	false	pass	pass	pass	fail	pass	-	"page 14 starts or ends differently: Doc4Me first=Some(""resolution""), last=Some(""13""); Word first=Some(""6""), last=Some(""13"")"
+zenodo-054	false	pass	pass	pass	pass	pass	-	-
+zenodo-055	false	pass	pass	pass	pass	pass	-	-
+zenodo-056	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""electromagnetic""), last=Some(""air""); Word first=Some(""electromagnetic""), last=Some(""degrees"")"
+zenodo-057	false	pass	pass	pass	fail	pass	-	"page 26 starts or ends differently: Doc4Me first=Some(""table""), last=Some(""everolimus""); Word first=Some(""table""), last=Some(""tumors"")"
+zenodo-058	false	pass	pass	pass	pass	pass	-	-
+zenodo-059	false	pass	pass	pass	pass	pass	-	-
+zenodo-060	false	pass	pass	pass	fail	pass	-	"page 6 starts or ends differently: Doc4Me first=Some(""the""), last=Some(""2022""); Word first=Some(""want""), last=Some(""2022"")"
+zenodo-061	false	pass	pass	pass	pass	pass	-	-
+zenodo-062	false	pass	pass	pass	pass	pass	-	-
+zenodo-063	false	pass	pass	pass	pass	pass	-	-
+zenodo-065	false	pass	pass	pass	pass	pass	-	-
+zenodo-066	false	pass	pass	pass	pass	pass	-	-
+zenodo-067	false	pass	pass	pass	pass	pass	-	-
+zenodo-068	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""what""), last=Some(""10453935""); Word first=Some(""have""), last=Some(""10453935"")"
+zenodo-069	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""théoriques""), last=Some(""24""); Word first=Some(""3""), last=Some(""24"")"
+zenodo-070	false	pass	pass	pass	fail	pass	-	"page 10 starts or ends differently: Doc4Me first=Some(""infraestructura""), last=Some(""banco""); Word first=Some(""infraestructura""), last=Some(""80"")"
+zenodo-071	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""8""), last=Some(""21791723""); Word first=Some(""con""), last=Some(""21791723"")"
+zenodo-072	false	pass	pass	pass	fail	pass	-	"page 6 starts or ends differently: Doc4Me first=Some(""herramienta""), last=Some(""6""); Word first=Some(""diseño""), last=Some(""6"")"
+zenodo-073	false	pass	pass	pass	pass	pass	-	-
+zenodo-074	false	pass	pass	pass	pass	pass	-	-
+zenodo-075	false	pass	pass	pass	pass	pass	-	-
+zenodo-076	false	pass	pass	pass	pass	pass	-	-
+zenodo-077	false	pass	pass	pass	pass	pass	-	-
+zenodo-078	false	pass	pass	pass	pass	pass	-	-
+zenodo-079	false	pass	pass	pass	pass	pass	-	-
+zenodo-080	false	pass	pass	pass	pass	pass	-	-
+zenodo-081	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""la""), last=Some(""appui""); Word first=Some(""s""), last=Some(""appui"")"
+zenodo-082	false	pass	pass	pass	pass	pass	-	-
+zenodo-083	false	pass	pass	pass	fail	pass	-	"page 19 starts or ends differently: Doc4Me first=Some(""7""), last=Some(""detection""); Word first=Some(""7""), last=Some(""classifiers"")"
+zenodo-084	false	pass	pass	pass	pass	pass	-	-
+zenodo-085	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""2""), last=Some(""simply""); Word first=Some(""2""), last=Some(""models"")"
+zenodo-086	false	pass	pass	pass	pass	pass	-	-
+zenodo-087	false	pass	pass	pass	pass	pass	-	-
+zenodo-089	false	pass	pass	pass	pass	pass	-	-
+zenodo-090	false	pass	pass	pass	pass	pass	-	-
+zenodo-091	false	pass	pass	pass	pass	pass	-	-
+zenodo-092	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""african""), last=Some(""in""); Word first=Some(""african""), last=Some(""union"")"
+zenodo-093	false	pass	pass	pass	pass	pass	-	-
+zenodo-095	false	pass	pass	pass	fail	pass	-	"page 9 starts or ends differently: Doc4Me first=Some(""la""), last=Some(""8""); Word first=Some(""en""), last=Some(""8"")"
+zenodo-096	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""yes""), last=Some(""4""); Word first=Some(""6""), last=Some(""4"")"
+zenodo-097	false	pass	pass	pass	pass	pass	-	-
+zenodo-098	false	pass	pass	pass	pass	pass	-	-
+zenodo-099	false	pass	pass	pass	pass	pass	-	-
+zenodo-100	false	pass	pass	pass	pass	pass	-	-
+zenodo-101	false	pass	pass	pass	pass	pass	-	-
+zenodo-102	false	pass	pass	pass	pass	pass	-	-
+zenodo-103	false	pass	pass	pass	fail	pass	-	"page 4 starts or ends differently: Doc4Me first=Some(""17""), last=Some(""crack""); Word first=Some(""17""), last=Some(""integration"")"
+zenodo-105	false	pass	pass	pass	pass	pass	-	-
+zenodo-106	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""32""), last=Some(""2""); Word first=Some(""31""), last=Some(""2"")"
+zenodo-107	false	pass	pass	pass	pass	pass	-	-
+zenodo-108	false	pass	pass	pass	fail	pass	-	"page 10 starts or ends differently: Doc4Me first=Some(""sinusoidal""), last=Some(""10""); Word first=Some(""views""), last=Some(""10"")"
+zenodo-109	false	pass	pass	pass	pass	pass	-	-
+zenodo-110	false	pass	pass	pass	pass	pass	-	-
+zenodo-111	false	pass	pass	pass	pass	pass	-	-
+zenodo-112	false	pass	pass	pass	pass	pass	-	-
+zenodo-113	false	pass	pass	pass	fail	pass	-	"page 3 starts or ends differently: Doc4Me first=Some(""figure""), last=Some(""figure""); Word first=Some(""figure""), last=Some(""literature"")"
+zenodo-114	false	pass	pass	fail	fail	pass	72 pages, Word 71	page count differs
+zenodo-115	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""african""), last=Some(""has""); Word first=Some(""african""), last=Some(""regional"")"
+zenodo-116	false	pass	pass	pass	pass	pass	-	-
+zenodo-117	false	pass	pass	pass	pass	pass	-	-
+zenodo-118	false	pass	pass	pass	pass	pass	-	-
+zenodo-119	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""quadrilingual""), last=Some(""zusammenfassung""); Word first=Some(""quadrilingual""), last=Some(""crisis"")"
+zenodo-120	false	pass	pass	pass	pass	pass	-	-
+zenodo-121	false	pass	pass	pass	pass	pass	-	-
+zenodo-122	false	pass	pass	pass	pass	pass	-	-
+zenodo-123	false	pass	pass	pass	fail	pass	-	"page 29 starts or ends differently: Doc4Me first=Some(""dra""), last=Some(""c""); Word first=Some(""dra""), last=Some(""declarado"")"
+zenodo-124	false	pass	pass	pass	pass	pass	-	-
+zenodo-125	false	pass	pass	pass	fail	pass	-	"page 3 starts or ends differently: Doc4Me first=Some(""ikeneri""), last=Some(""is""); Word first=Some(""ikeneri""), last=Some(""2012"")"
+zenodo-126	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""instruction""), last=Some(""2""); Word first=Some(""safer""), last=Some(""2"")"
+zenodo-127	false	pass	pass	pass	pass	pass	-	-
+zenodo-128	false	pass	pass	pass	pass	pass	-	-
+zenodo-129	false	pass	pass	pass	pass	pass	-	-
+zenodo-130	false	pass	pass	pass	pass	pass	-	-
+zenodo-131	false	pass	pass	pass	pass	pass	-	-
+zenodo-132	false	pass	pass	pass	pass	pass	-	-
+zenodo-133	false	pass	pass	pass	pass	pass	-	-
+zenodo-134	false	pass	pass	pass	pass	pass	-	-
+zenodo-135	false	pass	pass	pass	pass	pass	-	-
+zenodo-136	false	pass	pass	pass	fail	pass	-	"page 15 starts or ends differently: Doc4Me first=Some(""this""), last=Some(""access""); Word first=Some(""this""), last=Some(""yes"")"
+zenodo-137	false	pass	pass	pass	fail	pass	-	"page 6 starts or ends differently: Doc4Me first=Some(""panelists""), last=Some(""6""); Word first=Some(""one""), last=Some(""6"")"
+zenodo-138	false	pass	pass	pass	fail	pass	-	"page 19 starts or ends differently: Doc4Me first=Some(""eb""), last=Some(""19""); Word first=Some(""to""), last=Some(""19"")"
+zenodo-139	false	pass	pass	pass	pass	pass	-	-
+zenodo-140	false	pass	pass	pass	fail	pass	-	"page 9 starts or ends differently: Doc4Me first=Some(""if""), last=Some(""8""); Word first=Some(""typical""), last=Some(""8"")"
+zenodo-141	false	pass	pass	pass	pass	pass	-	-
+zenodo-142	false	pass	pass	pass	pass	pass	-	-
+zenodo-143	false	pass	pass	pass	pass	pass	-	-
+zenodo-144	false	pass	pass	pass	fail	pass	-	"page 9 starts or ends differently: Doc4Me first=Some(""lors""), last=Some(""9""); Word first=Some(""important""), last=Some(""9"")"
+zenodo-145	false	pass	pass	pass	pass	pass	-	-
+zenodo-146	false	pass	pass	pass	fail	pass	-	"page 12 starts or ends differently: Doc4Me first=Some(""12""), last=Some(""collation""); Word first=Some(""12""), last=Some(""new"")"
+zenodo-147	false	pass	pass	pass	fail	pass	-	"page 23 starts or ends differently: Doc4Me first=Some(""two""), last=Some(""22""); Word first=Some(""providing""), last=Some(""22"")"
+zenodo-148	false	pass	pass	pass	pass	pass	-	-
+zenodo-149	false	pass	pass	pass	fail	pass	-	"page 6 starts or ends differently: Doc4Me first=Some(""introduction""), last=Some(""6""); Word first=Some(""introduc""), last=Some(""6"")"
+zenodo-150	false	pass	pass	pass	pass	pass	-	-
+zenodo-151	false	pass	pass	pass	pass	pass	-	-
+zenodo-152	false	pass	pass	pass	pass	pass	-	-
+zenodo-153	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""six""), last=Some(""university""); Word first=Some(""examples""), last=Some(""license"")"
+zenodo-154	false	pass	pass	pass	pass	pass	-	-
+zenodo-155	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""are""), last=Some(""2""); Word first=Some(""pressure""), last=Some(""2"")"
+zenodo-156	false	pass	pass	pass	pass	pass	-	-
+zenodo-157	false	pass	pass	pass	fail	pass	-	"page 2 starts or ends differently: Doc4Me first=Some(""i""), last=Some(""lente""); Word first=Some(""i""), last=Some(""un"")"
+zenodo-158	false	pass	pass	pass	pass	pass	-	-
+zenodo-159	false	pass	pass	pass	pass	pass	-	-
+zenodo-160	false	pass	pass	pass	fail	pass	-	"page 8 starts or ends differently: Doc4Me first=Some(""table""), last=Some(""62""); Word first=Some(""table""), last=Some(""etc"")"
+zenodo-161	false	pass	pass	pass	pass	pass	-	-
+zenodo-162	false	pass	pass	pass	pass	pass	-	-
+zenodo-163	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""1038""), last=Some(""elektron""); Word first=Some(""1038""), last=Some(""2026"")"
+zenodo-164	false	pass	pass	pass	pass	pass	-	-
+zenodo-165	false	pass	pass	pass	pass	pass	-	-
+zenodo-166	false	pass	pass	pass	fail	pass	-	"page 3 starts or ends differently: Doc4Me first=Some(""context""), last=Some(""on""); Word first=Some(""context""), last=Some(""by"")"
+zenodo-167	false	pass	pass	pass	pass	pass	-	-
+zenodo-168	false	pass	pass	pass	pass	pass	-	-
+zenodo-169	false	pass	pass	pass	pass	pass	-	-
+zenodo-170	false	pass	pass	pass	pass	pass	-	-
+zenodo-171	false	pass	pass	pass	pass	pass	-	-
+zenodo-172	false	pass	pass	pass	pass	pass	-	-
+zenodo-173	false	pass	pass	pass	fail	pass	-	"page 5 starts or ends differently: Doc4Me first=Some(""5""), last=Some(""scientifique""); Word first=Some(""5""), last=Some(""003"")"
+zenodo-174	false	pass	pass	pass	fail	pass	-	"page 1 starts or ends differently: Doc4Me first=Some(""formación""), last=Some(""ejercer""); Word first=Some(""formación""), last=Some(""en"")"
+zenodo-175	false	pass	pass	pass	pass	pass	-	-
+zenodo-178	false	pass	pass	pass	pass	pass	-	-
