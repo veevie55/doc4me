@@ -5,8 +5,8 @@
 //!   public-domain Moby word list (~160k words, the same list that drives hyphenation) plus our
 //!   supplement of modern words it lacks (`assets/spelling/en-extra.txt`: `desktop`, `email`,
 //!   `download`…), with inflections (`-s`, `-es`, `-ed`, `-ing`, `-ly`, `'s`…), a user dictionary and ignore lists;
-//!   suggestions by edit distance. Grammar checks that are cheap and reliable: repeated words,
-//!   `a`/`an`, capital letter after a sentence end, spaces before punctuation, doubled spaces.
+//!   suggestions by edit distance. Grammar checks include repeated words, `a`/`an`, capital
+//!   letters after sentence ends, spaces before punctuation and doubled spaces.
 //! - **Polish** ([`ProofLang::Pl`], module [`pl`]): spelling against the Hunspell `pl_PL`
 //!   dictionary installed on the system ([`hunspell`]; not bundled, so without it Polish has no
 //!   spelling marks), read by the affix engine ([`affix`]), suggestions tuned for Polish
@@ -17,8 +17,9 @@
 //!   order no Thai word has (`เเ` for `แ`, a tone mark before its vowel), each with its
 //!   correction; unknown words are never marked. Messages in Thai. No Thai grammar rules.
 //! - **Portuguese, Italian, Croatian, Turkish, Russian and Czech**: spelling and suggestions use
-//!   the matching system Hunspell dictionary when installed. No dictionary files are bundled;
-//!   without one, words are left unmarked. Turkish also uses its syllable rules.
+//!   the matching system Hunspell dictionary when installed. These languages also have built-in
+//!   grammar checks. No dictionary files are bundled; without one, words are left unmarked.
+//!   Turkish also uses its syllable rules.
 //! - **Bulgarian**: language-specific syllable hyphenation, without spelling marks.
 //! - **Other languages** ([`ProofLang::Other`]): no spelling or grammar marks, like Word without
 //!   the language's proofing tools.
@@ -69,7 +70,7 @@ impl Default for Options {
     }
 }
 
-/// Grammar Settings: which kinds of grammar rule are checked, in every language Doc4Me proofs.
+/// Grammar Settings: which kinds of grammar rule are checked in languages with grammar rules.
 /// Word's defaults: all on.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
 pub struct GrammarRules {
@@ -77,9 +78,9 @@ pub struct GrammarRules {
     pub capitalization: bool,
     /// The same word twice ("the the").
     pub repeated: bool,
-    /// Word forms that depend on the next word: English "a"/"an", Polish "w"/"we", "z"/"ze".
+    /// Word forms that depend on the next word, such as English "a"/"an" and Italian forms.
     pub word_forms: bool,
-    /// Punctuation: a space before it, doubled marks, Polish commas before conjunctions.
+    /// Punctuation: spaces before marks, doubled marks, and language-specific comma rules.
     pub punctuation: bool,
     /// Extra spaces between words.
     pub spacing: bool,
@@ -483,19 +484,68 @@ pub fn suggest_in(word: &str, max: usize, lang: ProofLang) -> Vec<String> {
     }
 }
 
-/// Grammar issues in a paragraph of text in `lang`: the English rules, the Polish ones
-/// ([`pl::grammar`]), or none for a language Doc4Me doesn't proof.
+/// Grammar issues in a paragraph of text in `lang`: built-in rules for English, Polish,
+/// Portuguese, Italian, Croatian, Turkish, Russian and Czech. Bulgarian and Thai have no grammar
+/// checks yet.
 pub fn check_grammar_in(text: &str, lang: ProofLang) -> Vec<Issue> {
     check_grammar_in_with(text, lang, &GrammarRules::default())
 }
 
 /// [`check_grammar_in`] with only the rules Grammar Settings keeps on.
 pub fn check_grammar_in_with(text: &str, lang: ProofLang, rules: &GrammarRules) -> Vec<Issue> {
-    match lang {
+    let issues = match lang {
         ProofLang::En => check_grammar_with(text, rules),
         ProofLang::Pl => pl::grammar::check_with(text, rules),
-        ProofLang::Th | ProofLang::Bg | ProofLang::Pt | ProofLang::It | ProofLang::Hr | ProofLang::Tr | ProofLang::Ru | ProofLang::Cs | ProofLang::Other => Vec::new(),
-    }
+        ProofLang::Pt => pt::grammar::check(text),
+        ProofLang::It => it::grammar::check(text),
+        ProofLang::Hr => hr::grammar::check(text),
+        ProofLang::Tr => tr::grammar::check(text),
+        ProofLang::Ru => ru::grammar::check(text),
+        ProofLang::Cs => cs::grammar::check(text),
+        ProofLang::Th | ProofLang::Bg | ProofLang::Other => Vec::new(),
+    };
+    issues.into_iter().filter(|issue| grammar_rule_enabled(issue, rules)).collect()
+}
+
+/// The imported language checkers return localized messages rather than rule identifiers.
+/// Classify their stable message prefixes here so Writing Style settings still apply.
+fn grammar_rule_enabled(issue: &Issue, rules: &GrammarRules) -> bool {
+    let m = issue.message.as_str();
+    let category = match issue.lang {
+        ProofLang::Hr if m.starts_with("Ponovljena riječ") => rules.repeated,
+        ProofLang::Hr if m.starts_with("Dvostruki razmak") => rules.spacing,
+        ProofLang::Hr if m.starts_with("Rečenica treba") => rules.capitalization,
+        ProofLang::Hr => rules.punctuation,
+        ProofLang::Pt if m.starts_with("Palavra repetida") => rules.repeated,
+        ProofLang::Pt if m.starts_with("Espaço duplo") => rules.spacing,
+        ProofLang::Pt if m.starts_with("Letra maiúscula") => rules.capitalization,
+        ProofLang::Pt => rules.punctuation,
+        ProofLang::It if m.starts_with("Parola ripetuta") => rules.repeated,
+        ProofLang::It if m.starts_with("Spazio doppio") => rules.spacing,
+        ProofLang::It if m.starts_with("Maiuscola") => rules.capitalization,
+        ProofLang::It
+            if m.starts_with("Si scrive")
+                || m.starts_with("«Qual è»")
+                || m.starts_with("«È»")
+                || m.starts_with("Davanti") =>
+        {
+            rules.word_forms
+        }
+        ProofLang::It => rules.punctuation,
+        ProofLang::Ru if m.starts_with("Повтор слова") => rules.repeated,
+        ProofLang::Ru if m.starts_with("Двойной пробел") => rules.spacing,
+        ProofLang::Ru if m.starts_with("Предложение начинается") => rules.capitalization,
+        ProofLang::Ru => rules.punctuation,
+        ProofLang::Tr if m.starts_with("Yinelenen sözcük") => rules.repeated,
+        ProofLang::Tr if m.starts_with("Fazladan boşluk") => rules.spacing,
+        ProofLang::Tr if m.starts_with("Cümle büyük harfle") => rules.capitalization,
+        ProofLang::Tr => rules.punctuation,
+        ProofLang::Cs if m.starts_with("Opakované slovo") => rules.repeated,
+        ProofLang::Cs if m.starts_with("Dvojitá mezera") => rules.spacing,
+        ProofLang::Cs => rules.punctuation,
+        _ => true,
+    };
+    category
 }
 
 /// Spelling and grammar issues in a paragraph whose text is in several languages, in order.
