@@ -17,6 +17,20 @@ pub enum ProofLang {
     /// typed in an order no Thai word has ([`crate::th`]). Thai text is checked that way whatever
     /// its run's language; this tag also checks Latin words in Thai runs as English.
     Th,
+    /// Bulgarian (`bg`, `bg-BG`): syllable based hyphenation; no spelling dictionary.
+    Bg,
+    /// Portuguese (`pt`, `pt-BR`): spelling and suggestions when a Hunspell dictionary is installed.
+    Pt,
+    /// Italian (`it`, `it-IT`): spelling and suggestions when a Hunspell dictionary is installed.
+    It,
+    /// Croatian (`hr`, `hr-HR`): spelling and suggestions when a Hunspell dictionary is installed.
+    Hr,
+    /// Turkish (`tr`, `tr-TR`): spelling, suggestions and TDK syllable rules when available.
+    Tr,
+    /// Russian (`ru`, `ru-RU`): spelling and suggestions when a Hunspell dictionary is installed.
+    Ru,
+    /// Czech (`cs`, `cs-CZ`): spelling and suggestions when a Hunspell dictionary is installed.
+    Cs,
     /// A language without proofing tools here (`fr-FR`, `ja-JP`, `x-none`…). Like Word without
     /// the language's proofing tools: no spelling or grammar marks, so its words are never
     /// flagged as English misspellings. Hyphenation keeps using the English patterns, as before
@@ -25,8 +39,11 @@ pub enum ProofLang {
 }
 
 impl ProofLang {
-    /// Every language with a spelling dictionary, in display order.
-    pub const PROOFED: [ProofLang; 3] = [ProofLang::En, ProofLang::Pl, ProofLang::Th];
+    /// Languages with spelling support, in display order (Hunspell dictionaries may need to be installed).
+    pub const PROOFED: [ProofLang; 9] = [
+        ProofLang::En, ProofLang::Pl, ProofLang::Th, ProofLang::Pt, ProofLang::It,
+        ProofLang::Hr, ProofLang::Tr, ProofLang::Ru, ProofLang::Cs,
+    ];
 
     /// The proofing language of a BCP 47 tag (`pl-PL`, `en_GB`, `PL`…). Only the primary subtag
     /// counts. No tag (or an empty one) is English, Doc4Me's default editing language.
@@ -39,24 +56,46 @@ impl ProofLang {
             ProofLang::Pl
         } else if primary.eq_ignore_ascii_case("th") || primary.eq_ignore_ascii_case("tha") {
             ProofLang::Th
+        } else if primary.eq_ignore_ascii_case("bg") || primary.eq_ignore_ascii_case("bul") {
+            ProofLang::Bg
+        } else if primary.eq_ignore_ascii_case("pt") || primary.eq_ignore_ascii_case("por") {
+            ProofLang::Pt
+        } else if primary.eq_ignore_ascii_case("it") || primary.eq_ignore_ascii_case("ita") {
+            ProofLang::It
+        } else if primary.eq_ignore_ascii_case("hr") || primary.eq_ignore_ascii_case("hrv") {
+            ProofLang::Hr
+        } else if primary.eq_ignore_ascii_case("tr") || primary.eq_ignore_ascii_case("tur") {
+            ProofLang::Tr
+        } else if primary.eq_ignore_ascii_case("ru") || primary.eq_ignore_ascii_case("rus") {
+            ProofLang::Ru
+        } else if primary.eq_ignore_ascii_case("cs") || primary.eq_ignore_ascii_case("ces") || primary.eq_ignore_ascii_case("cze") {
+            ProofLang::Cs
         } else {
             ProofLang::Other
         }
     }
 
-    /// The primary language subtag (`en`, `pl`); empty for [`ProofLang::Other`].
+    /// The primary language subtag (`en`, `pl`, `bg`, `pt`, `it`, `hr`, `tr`, `ru`, `cs`);
+    /// empty for [`ProofLang::Other`].
     pub fn code(self) -> &'static str {
         match self {
             ProofLang::En => "en",
             ProofLang::Pl => "pl",
             ProofLang::Th => "th",
+            ProofLang::Bg => "bg",
+            ProofLang::Pt => "pt",
+            ProofLang::It => "it",
+            ProofLang::Hr => "hr",
+            ProofLang::Tr => "tr",
+            ProofLang::Ru => "ru",
+            ProofLang::Cs => "cs",
             ProofLang::Other => "",
         }
     }
 
-    /// Does Doc4Me check spelling and grammar in this language?
+    /// Does Doc4Me have spelling proofing for this language?
     pub fn is_proofed(self) -> bool {
-        self != ProofLang::Other
+        Self::PROOFED.contains(&self)
     }
 }
 

@@ -16,21 +16,34 @@
 //!   misspellings with the Royal Society of Thailand's spelling, and characters typed in an
 //!   order no Thai word has (`เเ` for `แ`, a tone mark before its vowel), each with its
 //!   correction; unknown words are never marked. Messages in Thai. No Thai grammar rules.
+//! - **Portuguese, Italian, Croatian, Turkish, Russian and Czech**: spelling and suggestions use
+//!   the matching system Hunspell dictionary when installed. No dictionary files are bundled;
+//!   without one, words are left unmarked. Turkish also uses its syllable rules.
+//! - **Bulgarian**: language-specific syllable hyphenation, without spelling marks.
 //! - **Other languages** ([`ProofLang::Other`]): no spelling or grammar marks, like Word without
 //!   the language's proofing tools.
-//! - **Hyphenation** ([`hyphen`]): dictionary, Liang patterns (English, Polish), heuristic.
+//! - **Hyphenation** ([`hyphen`]): dictionary and Liang patterns (English, Polish, Portuguese,
+//!   Italian), plus Bulgarian, Turkish and Russian syllable rules and a general fallback.
 //!
 //! [`check_text`] checks a paragraph whose runs are in different languages.
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 
 pub mod affix;
+pub mod bg;
+pub mod cs;
 pub mod dict;
+pub mod hr;
 pub mod hunspell;
 pub mod hyphen;
+pub mod it;
 pub mod lang;
 pub mod patterns;
 pub mod pl;
+pub mod pt;
+pub mod ru;
 pub mod th;
+pub mod tr;
+mod vi;
 
 use std::collections::HashSet;
 use std::ops::Range;
@@ -217,11 +230,12 @@ fn known_core(w: &str) -> bool {
     false
 }
 
-/// Is there a proofing dictionary for this BCP 47 language tag? `None` (and empty tags) mean the
-/// document default, which is en-US. Runs in a language without one are skipped (#100) instead
-/// of flagging every word against another language's dictionary; see [`ProofLang::from_tag`].
+/// Does Doc4Me support spelling proofing for this BCP 47 language tag? `None` (and empty tags)
+/// mean the document default, which is en-US. This reports code support; languages using Hunspell
+/// still need a matching `.aff`/`.dic` pair installed. Unsupported languages are skipped instead
+/// of checked against another language's dictionary; see [`ProofLang::from_tag`].
 pub fn has_dictionary(lang: Option<&str>) -> bool {
-    ProofLang::from_tag(lang) != ProofLang::Other
+    ProofLang::from_tag(lang).is_proofed()
 }
 
 /// Is `word` spelled correctly in the run's proofing language? A language without a dictionary
@@ -412,11 +426,17 @@ fn spelling_issue(text: &str, a: usize, b: usize, lang: ProofLang, opts: &Option
     let te = text.get(b..).and_then(|t| t.find(char::is_whitespace)).map(|i| b + i).unwrap_or(text.len());
     let token = text.get(ts..te).unwrap_or("");
     let internet = token.contains("://") || token.contains('@') || token.starts_with("www.");
-    if (opts.ignore_internet && internet) || is_correct_in_with(w, lang, opts) {
+    if (opts.ignore_internet && internet) || (lang == ProofLang::En && vi::is_vietnamese_word(w)) || is_correct_in_with(w, lang, opts) {
         return None;
     }
     let message = match lang {
         ProofLang::Pl => "Możliwy błąd pisowni",
+        ProofLang::Hr => "Moguća pravopisna pogreška",
+        ProofLang::Pt => "Possível erro de ortografia",
+        ProofLang::It => "Possibile errore di ortografia",
+        ProofLang::Tr => "Olası yazım hatası",
+        ProofLang::Ru => "Возможна орфографическая ошибка",
+        ProofLang::Cs => "Možná pravopisná chyba",
         _ => "Possible spelling mistake",
     };
     Some(Issue { start: a, end: b, kind: IssueKind::Spelling, message: message.into(), suggestions: Vec::new(), lang })
@@ -432,8 +452,15 @@ pub fn is_correct_in_with(word: &str, lang: ProofLang, opts: &Options) -> bool {
     match lang {
         ProofLang::En => is_correct_with(word, opts),
         ProofLang::Pl => accepted_by_options(word, opts) || pl::is_correct(word),
+        ProofLang::Hr => accepted_by_options(word, opts) || hr::is_correct(word),
+        ProofLang::Pt => accepted_by_options(word, opts) || pt::is_correct(word),
+        ProofLang::It => accepted_by_options(word, opts) || it::is_correct(word),
+        ProofLang::Tr => accepted_by_options(word, opts) || tr::is_correct(word),
+        ProofLang::Ru => accepted_by_options(word, opts) || ru::is_correct(word),
+        ProofLang::Cs => accepted_by_options(word, opts) || cs::is_correct(word),
         // Thai words are checked by `th::check` over the paragraph; Latin ones as English.
         ProofLang::Th => is_correct_with(word, opts),
+        ProofLang::Bg => true,
         ProofLang::Other => true,
     }
 }
@@ -443,6 +470,13 @@ pub fn suggest_in(word: &str, max: usize, lang: ProofLang) -> Vec<String> {
     match lang {
         ProofLang::En => suggest(word, max),
         ProofLang::Pl => pl::suggest(word, max),
+        ProofLang::Hr => hr::suggest(word, max),
+        ProofLang::Pt => pt::suggest(word, max),
+        ProofLang::It => it::suggest(word, max),
+        ProofLang::Tr => tr::suggest(word, max),
+        ProofLang::Ru => ru::suggest(word, max),
+        ProofLang::Cs => cs::suggest(word, max),
+        ProofLang::Bg => Vec::new(),
         ProofLang::Th if word.chars().any(th::is_thai) => th::suggest(word).into_iter().take(max).collect(),
         ProofLang::Th => suggest(word, max),
         ProofLang::Other => Vec::new(),
@@ -460,7 +494,7 @@ pub fn check_grammar_in_with(text: &str, lang: ProofLang, rules: &GrammarRules) 
     match lang {
         ProofLang::En => check_grammar_with(text, rules),
         ProofLang::Pl => pl::grammar::check_with(text, rules),
-        ProofLang::Th | ProofLang::Other => Vec::new(),
+        ProofLang::Th | ProofLang::Bg | ProofLang::Pt | ProofLang::It | ProofLang::Hr | ProofLang::Tr | ProofLang::Ru | ProofLang::Cs | ProofLang::Other => Vec::new(),
     }
 }
 

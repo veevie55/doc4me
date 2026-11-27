@@ -1,7 +1,8 @@
 //! Hunspell dictionaries installed on the system, read at runtime.
 //!
 //! Doc4Me doesn't bundle large spelling dictionaries. For languages with an affix dictionary
-//! (Polish), it reads the standard Hunspell `.aff`/`.dic` pair installed by the operating system,
+//! (Polish, Portuguese, Italian, Croatian, Turkish, Russian and Czech), it reads the standard
+//! Hunspell `.aff`/`.dic` pair installed by the operating system,
 //! a package manager or LibreOffice, with [`crate::affix::AffixDict::from_hunspell`]. When none is
 //! installed the language has no spelling check (no marks, no errors), like Word without the
 //! language's proofing tools.
@@ -48,7 +49,9 @@ pub fn search_dirs() -> Vec<PathBuf> {
         }
         for var in ["ProgramFiles", "ProgramFiles(x86)"] {
             if let Some(base) = std::env::var_os(var).filter(|v| !v.is_empty()).map(PathBuf::from) {
-                dirs.push(base.join("LibreOffice").join("share").join("extensions").join("dict-pl"));
+                for lang in ["pl", "pt", "it", "hr", "ru", "cs", "tr"] {
+                    dirs.push(base.join("LibreOffice").join("share").join("extensions").join(format!("dict-{lang}")));
+                }
             }
         }
     } else if cfg!(target_os = "macos") {
@@ -58,7 +61,9 @@ pub fn search_dirs() -> Vec<PathBuf> {
         dirs.push(PathBuf::from("/Library/Spelling"));
         dirs.push(PathBuf::from("/opt/homebrew/share/hunspell"));
         dirs.push(PathBuf::from("/usr/local/share/hunspell"));
-        dirs.push(PathBuf::from("/Applications/LibreOffice.app/Contents/Resources/extensions/dict-pl"));
+        for lang in ["pl", "pt", "it", "hr", "ru", "cs", "tr"] {
+            dirs.push(PathBuf::from(format!("/Applications/LibreOffice.app/Contents/Resources/extensions/dict-{lang}")));
+        }
     } else {
         if let Some(h) = &home {
             dirs.push(h.join(".local/share/hunspell"));
@@ -69,10 +74,13 @@ pub fn search_dirs() -> Vec<PathBuf> {
             "/usr/share/myspell/dicts",
             "/usr/local/share/hunspell",
             "/usr/local/share/myspell",
-            "/usr/lib/libreoffice/share/extensions/dict-pl",
-            "/opt/libreoffice/share/extensions/dict-pl",
         ] {
             dirs.push(PathBuf::from(d));
+        }
+        for base in ["/usr/lib/libreoffice/share/extensions", "/opt/libreoffice/share/extensions"] {
+            for lang in ["pl", "pt", "it", "hr", "ru", "cs", "tr"] {
+                dirs.push(PathBuf::from(base).join(format!("dict-{lang}")));
+            }
         }
     }
     dirs

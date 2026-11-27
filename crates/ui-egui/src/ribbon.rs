@@ -452,8 +452,19 @@ fn mi_text(ui: &mut Ui, app: &mut WordApp, text: &str, id: &str, params: Value) 
 }
 
 /// The proofing languages the Language menu offers: tag and English name (translated when drawn).
-pub(crate) const PROOFING_LANGUAGES: [(&str, &str); 4] =
-    [("en-US", "English (United States)"), ("en-GB", "English (United Kingdom)"), ("pl-PL", "Polish"), ("th-TH", "Thai")];
+pub(crate) const PROOFING_LANGUAGES: [(&str, &str); 11] = [
+    ("en-US", "English (United States)"),
+    ("en-GB", "English (United Kingdom)"),
+    ("pl-PL", "Polish"),
+    ("th-TH", "Thai"),
+    ("bg-BG", "Bulgarian"),
+    ("pt-BR", "Portuguese (Brazil)"),
+    ("it-IT", "Italian"),
+    ("hr-HR", "Croatian"),
+    ("tr-TR", "Turkish"),
+    ("ru-RU", "Russian"),
+    ("cs-CZ", "Czech"),
+];
 
 /// The English name of a proofing language tag, as the status bar shows it (no tag: Doc4Me's
 /// default, US English; a tag without a name here: the tag).
@@ -465,6 +476,13 @@ pub(crate) fn language_name(tag: Option<&str>) -> String {
     match doc4me_engine::proof::ProofLang::from_tag(Some(tag)) {
         doc4me_engine::proof::ProofLang::Pl => "Polish".into(),
         doc4me_engine::proof::ProofLang::Th => "Thai".into(),
+        doc4me_engine::proof::ProofLang::Bg => "Bulgarian".into(),
+        doc4me_engine::proof::ProofLang::Pt => "Portuguese".into(),
+        doc4me_engine::proof::ProofLang::It => "Italian".into(),
+        doc4me_engine::proof::ProofLang::Hr => "Croatian".into(),
+        doc4me_engine::proof::ProofLang::Tr => "Turkish".into(),
+        doc4me_engine::proof::ProofLang::Ru => "Russian".into(),
+        doc4me_engine::proof::ProofLang::Cs => "Czech".into(),
         doc4me_engine::proof::ProofLang::En if tag.eq_ignore_ascii_case("en") => "English (United States)".into(),
         _ => tag.to_string(),
     }

@@ -27,8 +27,12 @@ pub use patterns::Patterns;
 
 static EN_US_DIC: &[u8] = include_bytes!("../../../assets/hyphenation/en-us.dic");
 static EN_US_PAT: &str = include_str!("../../../assets/hyphenation/en-us.pat");
-/// hyph-utf8's `hyph-pl.tex`, unmodified (its licence header is in the file).
+/// hyph-utf8's `hyph-pl.tex`, unmodified (its license header is in the file).
 static PL_PAT: &str = include_str!("../../../assets/hyphenation/pl.pat");
+/// hyph-utf8's `hyph-pt.tex`, unmodified (its BSD license header is in the file).
+static PT_PAT: &str = include_str!("../../../assets/hyphenation/pt.pat");
+/// hyph-utf8's `hyph-it.tex`, unmodified (its MIT license header is in the file).
+static IT_PAT: &str = include_str!("../../../assets/hyphenation/it.pat");
 
 impl Dictionary {
     /// The bundled US English dictionary (decoded on first use).
@@ -57,6 +61,18 @@ impl Patterns {
     pub fn pl() -> &'static Patterns {
         static P: OnceLock<Patterns> = OnceLock::new();
         P.get_or_init(|| Patterns::parse(PL_PAT))
+    }
+
+    /// The bundled Portuguese patterns and exception words.
+    pub fn pt() -> &'static Patterns {
+        static P: OnceLock<Patterns> = OnceLock::new();
+        P.get_or_init(|| Patterns::parse(PT_PAT))
+    }
+
+    /// The bundled Italian patterns.
+    pub fn it() -> &'static Patterns {
+        static P: OnceLock<Patterns> = OnceLock::new();
+        P.get_or_init(|| Patterns::parse(IT_PAT))
     }
 }
 
@@ -101,6 +117,21 @@ fn core_breaks(core: &[char], lang: ProofLang) -> (Vec<usize>, Source) {
     if lang == ProofLang::Pl {
         return core_breaks_pl(core);
     }
+    if lang == ProofLang::Bg && core.iter().all(|&c| crate::bg::is_letter(c)) {
+        return (crate::bg::points(core), Source::Heuristic);
+    }
+    if lang == ProofLang::Tr && core.iter().all(|&c| crate::tr::hyphen::is_letter(c)) {
+        return (crate::tr::hyphen::points(core), Source::Heuristic);
+    }
+    if lang == ProofLang::Pt {
+        return core_breaks_patterns(core, Patterns::pt());
+    }
+    if lang == ProofLang::It {
+        return core_breaks_patterns(core, Patterns::it());
+    }
+    if lang == ProofLang::Ru && core.iter().all(|&c| crate::ru::is_cyrillic(c)) {
+        return (crate::ru::hyphen::points(core), Source::Heuristic);
+    }
     let dict = Dictionary::en_us();
     let s: String = core.iter().collect();
     let from_mask = |m: u64, len: usize| (1..len.min(64)).filter(|&i| m & (1 << i) != 0).collect::<Vec<_>>();
@@ -120,6 +151,17 @@ fn core_breaks(core: &[char], lang: ProofLang) -> (Vec<usize>, Source) {
     if !pats.is_empty()
         && let Some(p) = pats.points(core)
     {
+        return (p, Source::Patterns);
+    }
+    (heuristic_points(core), Source::Heuristic)
+}
+
+fn core_breaks_patterns(core: &[char], pats: &Patterns) -> (Vec<usize>, Source) {
+    let s: String = core.iter().collect();
+    if let Some(p) = pats.exception(&s) {
+        return (p.to_vec(), Source::Dictionary);
+    }
+    if !pats.is_empty() && let Some(p) = pats.points(core) {
         return (p, Source::Patterns);
     }
     (heuristic_points(core), Source::Heuristic)
