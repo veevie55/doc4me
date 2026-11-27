@@ -118,6 +118,16 @@ fn ensure_model(model: &Model, dir: &Path, online: bool, stop: &AtomicBool, send
         Err(e) => return Err(format!("couldn't inspect the speech model: {e}")),
     }
     let part = dir.join(format!("{}.part", model.file));
+    // A partial download is untrusted too: remove the directory entry itself, then let the fetch
+    // hook create it exclusively so a symlink planted between these operations is never followed.
+    match std::fs::symlink_metadata(&part) {
+        Ok(meta) if meta.file_type().is_file() || meta.file_type().is_symlink() => {
+            std::fs::remove_file(&part).map_err(|e| format!("couldn't replace the partial speech model: {e}"))?;
+        }
+        Ok(_) => return Err("the partial speech model path is not a file".into()),
+        Err(e) if e.kind() == std::io::ErrorKind::NotFound => {}
+        Err(e) => return Err(format!("couldn't inspect the partial speech model: {e}")),
+    }
     let progress = Arc::new(AtomicU64::new(0));
     let mut req = FetchRequest::get(format!("{MODEL_URL}{}", model.file), model.size);
     req.to_file = Some(part.clone());

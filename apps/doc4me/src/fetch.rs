@@ -4,11 +4,14 @@
 //! certificates and the `HTTPS_PROXY` setting. Requests are `https` only (redirects too), time
 //! out, and their answers are capped in size while they are read.
 
+use std::fs::OpenOptions;
 use std::io::{Read, Write};
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::atomic::Ordering;
 use std::sync::mpsc;
+#[cfg(unix)]
+use std::os::unix::fs::OpenOptionsExt;
 
 use doc4me_ui_egui::net::{FetchAnswer, FetchRequest};
 
@@ -89,6 +92,16 @@ pub(crate) fn fetch(req: &FetchRequest) -> FetchAnswer {
         return Err("only https addresses can be used".into());
     }
     let curl = curl().ok_or("the system's curl isn't installed (it is needed for online features)")?;
+    let mut file = match &req.to_file {
+        Some(path) => {
+            let mut options = OpenOptions::new();
+            options.write(true).create_new(true);
+            #[cfg(unix)]
+            options.mode(0o600);
+            Some(options.open(path).map_err(|e| format!("couldn't create download {}: {e}", path.display()))?)
+        }
+        None => None,
+    };
     let mut cmd = Command::new(&curl);
     cmd.args(args(req)).stdin(if req.body.is_some() { Stdio::piped() } else { Stdio::null() }).stdout(Stdio::piped()).stderr(Stdio::piped());
     #[cfg(target_os = "windows")]
@@ -103,10 +116,6 @@ pub(crate) fn fetch(req: &FetchRequest) -> FetchAnswer {
         let _ = stdin.write_all(body);
     }
     let mut stdout = child.stdout.take().ok_or("no output from curl")?;
-    let mut file = match &req.to_file {
-        Some(path) => Some(std::fs::File::create(path).map_err(|e| format!("couldn't write {}: {e}", path.display()))?),
-        None => None,
-    };
     let mut body = Vec::new();
     let mut total = 0u64;
     let mut buf = vec![0u8; 64 << 10];
