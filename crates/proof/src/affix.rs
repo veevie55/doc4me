@@ -171,6 +171,7 @@ pub struct AffixDict {
     /// Longest appended suffix, in chars.
     max_sfx_chars: usize,
     try_chars: String,
+    key: String,
     map: Vec<Vec<char>>,
     rep: Vec<(String, String)>,
     /// Provenance and licence lines, kept through [`AffixDict::to_bytes`].
@@ -235,6 +236,7 @@ struct Rules {
     prefixes: Vec<(char, bool, String, String, String)>,
     suffixes: Vec<(char, bool, String, String, String)>,
     try_chars: String,
+    key: String,
     map: Vec<Vec<char>>,
     rep: Vec<(String, String)>,
 }
@@ -278,7 +280,8 @@ fn parse_aff(aff: &str) -> Result<Rules, String> {
         }
         let at = |k: usize| f.get(k).copied().unwrap_or("");
         match dir {
-            "SET" | "LANG" | "NAME" | "VERSION" | "HOME" | "WORDCHARS" | "KEY" | "MAXNGRAMSUGS" | "MAXDIFF" | "ONLYMAXDIFF" | "NOSPLITSUGS"
+            "KEY" => r.key = at(1).to_string(),
+            "SET" | "LANG" | "NAME" | "VERSION" | "HOME" | "WORDCHARS" | "MAXNGRAMSUGS" | "MAXDIFF" | "ONLYMAXDIFF" | "NOSPLITSUGS"
             | "SUGSWITHDOTS" | "NOSUGGEST" | "WARN" | "FORBIDWARN" | "MAXCPDSUGS" => {}
             "FLAG" => return Err(format!("line {}: FLAG {} is not supported (one-character flags only)", n + 1, at(1))),
             "TRY" => r.try_chars = cap_try(at(1)),
@@ -384,6 +387,7 @@ impl AffixDict {
             offs: Vec::with_capacity(stems.len() + 1),
             flag_chars: flag_chars.clone(),
             try_chars: rules.try_chars,
+            key: rules.key,
             map: rules.map,
             rep: rules.rep,
             comments,
@@ -637,6 +641,11 @@ impl AffixDict {
         &self.try_chars
     }
 
+    /// The Hunspell `KEY` keyboard rows, separated with `|`.
+    pub fn key(&self) -> &str {
+        &self.key
+    }
+
     /// The `MAP` groups: letters often confused with each other (`aą`, `zżź`, `oóu`…).
     pub fn map(&self) -> &[Vec<char>] {
         &self.map
@@ -667,6 +676,9 @@ impl AffixDict {
         }
         if !self.try_chars.is_empty() {
             out.push_str(&format!("TRY {}\n", self.try_chars));
+        }
+        if !self.key.is_empty() {
+            out.push_str(&format!("KEY {}\n", self.key));
         }
         for m in &self.map {
             out.push_str(&format!("MAP {}\n", m.iter().collect::<String>()));
@@ -727,6 +739,7 @@ impl AffixDict {
             let at = |k: usize| f.get(k).copied().unwrap_or("");
             match at(0) {
                 "TRY" => rules.try_chars = cap_try(at(1)),
+                "KEY" => rules.key = at(1).to_string(),
                 "MAP" => rules.map.push(at(1).chars().collect()),
                 "REP" => rules.rep.push((at(1).replace('_', " "), at(2).replace('_', " "))),
                 kind @ ("PFX" | "SFX") => {
@@ -803,7 +816,7 @@ mod tests {
         assert_eq!(AffixDict::from_bytes(&bytes).unwrap().try_chars(), want);
     }
 
-    const AFF: &str = "SET UTF-8\nTRY aeoiułkr\n\nPFX b Y 1\nPFX b   0   nie   .\n\nSFX a Y 3\nSFX a   0   y     [^y]\nSFX a   ek  ka    ek\nSFX a   0   em    .\n\nSFX c N 1\nSFX c   a   ą     a\n\nMAP 2\nMAP aą\nMAP oóu\nREP 2\nREP ż rz\nREP u ó\n";
+    const AFF: &str = "SET UTF-8\nTRY aeoiułkr\nKEY qwerty|asdf|zxcv\n\nPFX b Y 1\nPFX b   0   nie   .\n\nSFX a Y 3\nSFX a   0   y     [^y]\nSFX a   ek  ka    ek\nSFX a   0   em    .\n\nSFX c N 1\nSFX c   a   ą     a\n\nMAP 2\nMAP aą\nMAP oóu\nREP 2\nREP ż rz\nREP u ó\n";
     const DIC: &str = "4\nkot/ab\npiesek/a\nkrowa/c\nWarszawa/c\n";
 
     fn dict() -> AffixDict {
@@ -860,6 +873,7 @@ mod tests {
         assert_eq!(back.rep(), d.rep());
         assert_eq!(back.map(), d.map());
         assert_eq!(back.try_chars(), "aeoiułkr");
+        assert_eq!(back.key(), "qwerty|asdf|zxcv");
         for w in ["kotem", "niekoty", "pieska", "krową", "Warszawą"] {
             assert!(back.contains(w), "{w}");
         }

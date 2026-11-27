@@ -523,12 +523,7 @@ fn grammar_rule_enabled(issue: &Issue, rules: &GrammarRules) -> bool {
         ProofLang::It if m.starts_with("Parola ripetuta") => rules.repeated,
         ProofLang::It if m.starts_with("Spazio doppio") => rules.spacing,
         ProofLang::It if m.starts_with("Maiuscola") => rules.capitalization,
-        ProofLang::It
-            if m.starts_with("Si scrive")
-                || m.starts_with("«Qual è»")
-                || m.starts_with("«È»")
-                || m.starts_with("Davanti") =>
-        {
+        ProofLang::It if m.starts_with("Si scrive") || m.starts_with("«Qual è»") || m.starts_with("«È»") || m.starts_with("Davanti") => {
             rules.word_forms
         }
         ProofLang::It => rules.punctuation,

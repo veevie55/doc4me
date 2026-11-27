@@ -44,11 +44,11 @@ impl Collector<'_> {
         let mut words = Vec::new();
         let mut cost = cost;
         for part in cand.split(' ') {
-            if self.d.contains_suggestible(part) {
+            if self.d.contains(part) {
                 words.push(part.to_string());
             } else {
                 let c = capitalize(part);
-                if !self.d.contains_suggestible(&c) {
+                if !self.d.contains(&c) {
                     return;
                 }
                 words.push(c);
@@ -61,7 +61,7 @@ impl Collector<'_> {
 
     /// Keep a suggestion known to be correct.
     fn keep(&mut self, text: String, cost: u32) {
-        if !text.split(' ').all(|part| self.d.can_suggest(part)) {
+        if !text.split(' ').all(|part| self.d.contains(part)) {
             return;
         }
         self.seq += 1;
@@ -351,4 +351,3 @@ fn scan(col: &mut Collector, chars: &[char]) {
         }
     }
 }
-
