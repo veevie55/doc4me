@@ -1725,6 +1725,19 @@
 	Recolor Selected Ink	เปลี่ยนสีหมึกที่เลือก
 	Record Macro	บันทึกแมโคร
 	Recover Unsaved Documents	กู้คืนเอกสารที่ยังไม่ได้บันทึก
+	Recover documents	กู้คืนเอกสาร
+	Recovery copy	สำเนากู้คืน
+	Recovery is disabled while this document has a password.	ปิดการกู้คืนไว้ขณะที่เอกสารนี้ตั้งรหัสผ่าน
+	Restore an unsaved copy after Doc4Me closes unexpectedly.	กู้คืนสำเนาที่ยังไม่ได้บันทึกหลัง Doc4Me ปิดโดยไม่คาดคิด
+	Restore opens an unsaved copy. Your original file stays unchanged.	กู้คืนเป็นสำเนาที่ยังไม่ได้บันทึก โดยไฟล์ต้นฉบับจะไม่เปลี่ยนแปลง
+	Local recovery is unavailable or still loading.	การกู้คืนในเครื่องยังไม่พร้อมใช้งานหรือกำลังโหลด
+	No recovery copies.	ไม่มีสำเนาสำหรับกู้คืน
+	Open recovery copies…	เปิดสำเนาสำหรับกู้คืน…
+	Unsaved copies can be recovered from File › Recover.	กู้คืนสำเนาที่ยังไม่ได้บันทึกได้จาก ไฟล์ › กู้คืน
+	Continue without restoring	ดำเนินการต่อโดยไม่กู้คืน
+	Discard recovery copy	ทิ้งสำเนากู้คืน
+	Discard the recovery copy of {name}?	ต้องการทิ้งสำเนากู้คืนของ {name} หรือไม่?
+	This cannot be undone. Your original file stays unchanged.	การดำเนินการนี้เลิกทำไม่ได้ ไฟล์ต้นฉบับจะไม่เปลี่ยนแปลง
 	Rectangle	สี่เหลี่ยมผืนผ้า
 	Red:	แดง:
 	Redo	ทำซ้ำ

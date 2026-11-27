@@ -496,6 +496,8 @@ pub struct WordApp {
     /// keystroke, so one visit's keystrokes make a single undo step (and anything else in
     /// between, such as an Undo, starts a new one).
     pub(crate) info_editing: Option<(&'static str, u64)>,
+    /// Whether the local recovery store has finished its first scan.
+    recovery_seen: bool,
 }
 
 /// The answer to "Do you want to save changes?" (`ui.saveChanges`).
@@ -603,6 +605,7 @@ impl WordApp {
             #[cfg(not(target_arch = "wasm32"))]
             file_browser: file_browser::State::default(),
             info_editing: None,
+            recovery_seen: false,
         }
     }
 
@@ -667,6 +670,10 @@ impl WordApp {
     /// Close, Envelopes, Labels and Finish & Merge on a document with unsaved changes first ask
     /// Save / Don't Save / Cancel, and the command runs once that is answered (`ui.saveChanges`).
     pub fn run(&mut self, id: &str, params: Value) -> Result<Value, String> {
+        if id == "file.recover" && params.as_object().is_none_or(|p| p.is_empty()) {
+            self.ui.backstage = true;
+            self.ui.backstage_page = "recover".into();
+        }
         // Insert › Text from File asks for a document when the user hasn't supplied a path.
         if id == "insert.textFromFile" && params.get("path").is_none() && widgets::enabled(self, id) {
             self.pick_text_from_file();
@@ -888,7 +895,12 @@ impl WordApp {
         }
         let go = match choice {
             SaveChoice::Cancel => false,
-            SaveChoice::DontSave => true,
+            SaveChoice::DontSave => {
+                if let Err(e) = self.session.discard_recovery_copy() {
+                    log::warn!("recovery: {e}");
+                }
+                true
+            }
             // A new document: ask where through Save As; the command runs once that has saved,
             // which with the desktop's non-blocking dialog is on a later frame (#94).
             SaveChoice::Save if self.session.path.is_none() && self.services.download.is_none() => {
@@ -1226,6 +1238,26 @@ impl WordApp {
                 };
                 return Some(self.answer_save_changes(choice));
             }
+            "ui.recoveryDiscard" => {
+                let Some(answer) = s("answer") else { return Some(Err("`answer` must be discard or cancel".into())) };
+                let Some(dialogs::Dialog::DiscardRecovery { id, .. }) = self.dialog.clone() else {
+                    return Some(Err("no recovery discard is pending".into()));
+                };
+                match answer {
+                    "cancel" => {
+                        self.dialog = None;
+                        json!({"discarded": false})
+                    }
+                    "discard" => {
+                        let result = self.execute("file.recover", json!({"discard": id}));
+                        if result.is_ok() {
+                            self.dialog = None;
+                        }
+                        return Some(result);
+                    }
+                    _ => return Some(Err("`answer` must be discard or cancel".into())),
+                }
+            }
             "ui.openFileDialog" => {
                 self.open_dialog();
                 json!({})
@@ -1504,6 +1536,28 @@ impl WordApp {
         let _ = self.poll_file_dialog();
         self.drain_inbox();
         self.watch_fonts(ctx);
+        let document = self.session.document_id();
+        self.session.recovery_tick();
+        if self.session.document_id() != document {
+            self.autosave_path = None;
+            self.dialog = None;
+            self.ui.backstage = false;
+            self.canvas.want_focus = true;
+        }
+        if !self.recovery_seen && self.session.recovery_ready() {
+            self.recovery_seen = true;
+            if !self.session.recovery_documents().is_empty() && !self.session.dirty {
+                if self.session.path.is_none() {
+                    self.ui.backstage = true;
+                    self.ui.backstage_page = "recover".into();
+                } else {
+                    self.status(tl!("Unsaved copies can be recovered from File › Recover."));
+                }
+            }
+        }
+        if let Some(wait) = self.session.recovery_wait() {
+            ctx.request_repaint_after(wait);
+        }
         self.autosave_tick(now_ms());
         if self.autosaves() && self.session.dirty {
             ctx.request_repaint_after(std::time::Duration::from_millis(1000));

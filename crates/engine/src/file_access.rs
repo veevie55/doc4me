@@ -500,6 +500,7 @@ mod tests {
             // `io` and this module are the checked gateway; `tests*.rs` are test-only modules.
             if path.parent() == Some(src.as_path()) && (name == "io.rs" || name == "file_access.rs" || name.starts_with("tests"))
                 || path.starts_with(src.join("io"))
+                || path == src.join("recovery/desktop.rs")
             {
                 continue;
             }

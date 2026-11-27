@@ -408,10 +408,8 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"save"?: label, "restore"?: index}"#)
         .pure(),
-        CommandSpec::new("file.recover", "Recover Unsaved Documents", "File › Info", |s, _| {
-            Ok(Value::Array(s.versions.iter().enumerate().map(|(i, (l, d, _))| json!({"index": i, "label": l, "date": d})).collect()))
-        })
-        .pure(),
+        CommandSpec::new("file.recover", "Recover Unsaved Documents", "File › Info", |s, v| s.recover(v))
+            .params(r#"{"restore"?: recoveryId, "discard"?: recoveryId, "refresh"?: true}; desktop only"#),
         CommandSpec::new("file.newFromTemplate", "New from Template", "File › New", |s, v| {
             let path = p::req_str(v, "path")?;
             let doc = crate::io::open_path(std::path::Path::new(path)).map_err(CmdError::Failed)?;

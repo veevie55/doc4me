@@ -366,6 +366,11 @@ pub enum Dialog {
         #[serde(skip)]
         document: u64,
     },
+    /// Confirm before permanently removing an unsaved recovery copy.
+    DiscardRecovery {
+        id: String,
+        name: String,
+    },
     /// Mailings › Select Recipients / Edit Recipient List: a table of recipients to type or
     /// edit (field names on top), or a file to load instead (#240).
     RecipientList {
@@ -922,6 +927,7 @@ impl Dialog {
             Dialog::PasteSpecial { .. } => "pasteSpecial",
             Dialog::About { .. } => "about",
             Dialog::SaveChanges { .. } => "saveChanges",
+            Dialog::DiscardRecovery { .. } => "discardRecovery",
             Dialog::RecipientList { .. } => "recipientList",
             Dialog::SelectTable { .. } => "selectTable",
             Dialog::InsertMergeField { .. } => "insertMergeField",
@@ -1446,6 +1452,7 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
         Dialog::PasteSpecial { .. } => "Paste Special",
         Dialog::About { .. } => "About Doc4Me",
         Dialog::SaveChanges { .. } => "Doc4Me",
+        Dialog::DiscardRecovery { .. } => "Discard recovery copy",
         Dialog::RecipientList { .. } => "Recipient List",
         Dialog::SelectTable { .. } => "Select Table",
         Dialog::InsertMergeField { .. } => "Insert Merge Field",
@@ -2854,6 +2861,32 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             app.dialog = Some(d.clone());
             let _ = app.run("ui.saveChanges", json!({"answer": answer}));
             true
+        }
+        Dialog::DiscardRecovery { name, .. } => {
+            ui.label(crate::i18n::fmt(tl!("Discard the recovery copy of {name}?"), &[("name", name)]));
+            ui.label(tl!("This cannot be undone. Your original file stays unchanged."));
+            let answer = ui
+                .horizontal(|ui| {
+                    let cancel = ui.button(tl!("Cancel"));
+                    let discard = ui.button(tl!("Discard"));
+                    if cancel.clicked() || ui.input(|i| i.key_pressed(egui::Key::Escape)) {
+                        Some("cancel")
+                    } else if discard.clicked() {
+                        Some("discard")
+                    } else {
+                        None
+                    }
+                })
+                .inner;
+            if let Some(answer) = answer {
+                app.dialog = Some(d.clone());
+                let result = app.run("ui.recoveryDiscard", json!({"answer": answer}));
+                if let Err(e) = &result {
+                    app.status(e.clone());
+                }
+                return result.is_ok();
+            }
+            false
         }
         Dialog::RecipientList { fields, rows, message } => recipient_list(app, ui, fields, rows, message),
         Dialog::InsertMergeField { fields, field } => {

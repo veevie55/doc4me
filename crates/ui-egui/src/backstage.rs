@@ -123,6 +123,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             "open" => open_page(app, ui),
             "saveAs" => save_as_page(app, ui),
             "info" => info_page(app, ui),
+            "recover" => recovery_page(app, ui),
             "print" | "export" => export_page(app, ui),
             "options" => crate::options::page(app, ui),
             _ => home_page(app, ui),
@@ -356,6 +357,12 @@ fn info_page(app: &mut WordApp, ui: &mut Ui) {
             }
         });
         versions(app, ui);
+        ui.add_space(18.0);
+        ui.label(egui::RichText::new(tl!("Recover Unsaved Documents")).font(semibold(15.0)));
+        ui.label(tl!("Restore an unsaved copy after Doc4Me closes unexpectedly."));
+        if ui.button(tl!("Open recovery copies…")).clicked() {
+            let _ = app.run("file.recover", json!({}));
+        }
         let ui = &mut cols[1];
         ui.label(egui::RichText::new(tl!("Statistics")).font(semibold(15.0)));
         for (l, k) in [("Pages", "pages"), ("Words", "words"), ("Paragraphs", "paragraphs"), ("Sections", "sections"), ("Comments", "comments")] {
@@ -363,6 +370,58 @@ fn info_page(app: &mut WordApp, ui: &mut Ui) {
         }
         let path = info.get("path").and_then(|v| v.as_str()).unwrap_or(tl!("Not saved yet"));
         ui.label(crate::i18n::fmt(tl!("Location: {path}"), &[("path", path)]));
+    });
+}
+
+fn recovery_page(app: &mut WordApp, ui: &mut Ui) {
+    heading(ui, "Recover documents");
+    ui.label(tl!("Restore opens an unsaved copy. Your original file stays unchanged."));
+    ui.add_space(20.0);
+    if app.session.password.is_some() {
+        ui.label(tl!("Recovery is disabled while this document has a password."));
+    }
+    if let Some(error) = app.session.recovery_error() {
+        ui.label(error);
+    }
+    if !app.session.recovery_ready() {
+        ui.label(tl!("Local recovery is unavailable or still loading."));
+    }
+    let documents = app.session.recovery_documents();
+    if documents.is_empty() && app.session.recovery_ready() {
+        ui.label(tl!("No recovery copies."));
+    }
+    let busy = app.session.recovery_busy();
+    egui::Grid::new("recovery_documents").min_col_width(180.0).spacing(vec2(24.0, 16.0)).show(ui, |ui| {
+        if !documents.is_empty() {
+            ui.strong(tl!("Document"));
+            ui.strong(tl!("Recovery copy"));
+            ui.end_row();
+        }
+        for doc in documents {
+            ui.label(&doc.name);
+            ui.label(&doc.saved_at);
+            ui.add_enabled_ui(!busy, |ui| {
+                ui.horizontal(|ui| {
+                    if ui.button(tl!("Restore")).clicked() {
+                        let _ = app.run("file.recover", json!({"restore": doc.id}));
+                    }
+                    if ui.button(tl!("Discard…")).clicked() {
+                        app.dialog = Some(crate::dialogs::Dialog::DiscardRecovery { id: doc.id, name: doc.name });
+                    }
+                });
+            });
+            ui.end_row();
+        }
+    });
+    ui.add_space(20.0);
+    ui.horizontal(|ui| {
+        if ui.button(tl!("Continue without restoring")).clicked() {
+            let _ = app.run("ui.backstage", json!({"value": false}));
+            app.canvas.want_focus = true;
+        }
+        if ui.add_enabled(!busy && app.session.recovery_ready(), egui::Button::new(tl!("Refresh"))).clicked() {
+            let _ = app.run("file.recover", json!({"refresh": true}));
+        }
     });
 }
 

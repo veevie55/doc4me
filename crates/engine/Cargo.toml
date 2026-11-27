@@ -35,6 +35,7 @@ quick-xml = { workspace = true }
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
 # The system time zone for `now_local` (the web reads the browser's instead).
 chrono = { workspace = true }
+getrandom = { workspace = true }
 
 [target.'cfg(unix)'.dependencies]
 # O_NONBLOCK, so a path swapped for a named pipe can't block `open` (WordCraft #3666).
