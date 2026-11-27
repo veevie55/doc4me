@@ -1,0 +1,182 @@
+# Build a selected Doc4Me Web App revision and publish it to this repository's
+# GitHub Pages site. Deployments are manual; pushes, tags and PRs do not publish.
+name: Build Web App on GitHub Pages
+run-name: "Publish Web App · ${{ inputs.ref }}${{ inputs.version && format(' · {0}', inputs.version) || '' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA to build (main = latest code)'
+        required: true
+        type: string
+        default: main
+      version:
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1: shown in About when chosen below (empty = none)'
+        required: false
+        type: string
+        default: ''
+      about:
+        description: 'Line under the name in About: Commit <commit>, Version <version>, Version <version> (<commit>), or nothing (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options:
+          - commit
+          - version
+          - version-commit
+          - none
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA to build'
+        required: true
+        type: string
+      version:
+        description: 'Version number shown in About (empty = none)'
+        required: false
+        type: string
+        default: ''
+      about:
+        description: 'About line: commit, version, version-commit or none'
+        required: false
+        type: string
+        default: commit
+      deploy-pages:
+        description: 'Deploy the built site to GitHub Pages'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    if: (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || inputs.deploy-pages
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          ABOUT: ${{ inputs.about }}
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          # Bake the source commit into the build (crates/engine/src/build_info.rs), as build-web.yml does.
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/web
+          # The version typed in the form: checked here (never pasted into a script), then given to
+          # the build as DOC4ME_VERSION. Numbers fit the MSI ProductVersion (255.255.65535).
+          version="${REQUESTED_VERSION#v}"
+          if [ -n "$REQUESTED_VERSION" ]; then
+            semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+            if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+              [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+              echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+              exit 1
+            fi
+            printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
+          fi
+          # The About line (build_info::about_line): commit (default), version, version-commit or
+          # none; the version choices need a version. No download files here, so no file-name field.
+          about="${ABOUT:-commit}"
+          case "$about" in
+            commit | none) ;;
+            version | version-commit)
+              if [ -z "$version" ]; then
+                echo "::error::about $about needs a version number"
+                exit 1
+              fi
+              ;;
+            *)
+              echo '::error::about must be commit, version, version-commit or none'
+              exit 1
+              ;;
+          esac
+          printf 'DOC4ME_ABOUT=%s\n' "$about" >> "$GITHUB_ENV"
+          printf '%s\n' "$commit" > dist/web/SOURCE_COMMIT.txt
+          printf '### GitHub Pages deployment\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+          printf '\nAbout: %s\n' "$about" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check out the About tool (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .doc4me-workflow
+          sparse-checkout: |
+            tools/about_label.py
+            crates/ui-egui/src/i18n/*.tsv
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Sources older than DOC4ME_ABOUT (build_info::about_line) don't follow the about choice:
+      # tools/about_label.py patches their About dialog to match and leaves newer sources unchanged.
+      - name: Show the chosen version or commit in About
+        shell: bash
+        run: |
+          python3 .doc4me-workflow/tools/about_label.py . .doc4me-workflow/crates/ui-egui/src/i18n
+          rm -rf .doc4me-workflow
+
+      - name: Install Rust and the WebAssembly target
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: wasm32-unknown-unknown
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: web
+
+      - name: Install pinned Trunk
+        run: |
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/trunk.tar.gz" \
+            https://github.com/trunk-rs/trunk/releases/download/v0.22.1/trunk-x86_64-unknown-linux-gnu.tar.gz
+          printf '2ab8d548fd5ed9cda50906f61fd8654204e7893bd52ebbfd90533862b7d71ee1  %s\n' "$RUNNER_TEMP/trunk.tar.gz" | sha256sum --check
+          mkdir -p "$RUNNER_TEMP/doc4me-tools"
+          tar -xzf "$RUNNER_TEMP/trunk.tar.gz" -C "$RUNNER_TEMP/doc4me-tools" trunk
+          printf '%s\n' "$RUNNER_TEMP/doc4me-tools" >> "$GITHUB_PATH"
+
+      - name: Build the selected Web App
+        env:
+          CARGO_NET_OFFLINE: 'false'
+        run: |
+          (cd apps/doc4me-web && trunk build --release --locked)
+          printf '%s\n' "${{ steps.source.outputs.sha }}" > dist/web/SOURCE_COMMIT.txt
+          touch dist/web/.nojekyll
+          bash packaging/web/package.sh --skip-build
+
+      - name: Upload the Pages site artifact
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: dist/web
+
+  deploy:
+    if: (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') || inputs.deploy-pages
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

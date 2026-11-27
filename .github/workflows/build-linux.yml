@@ -1,0 +1,202 @@
+# Manual builds only. The workflow definition comes from the branch selected in Actions;
+# `ref` selects the source code to build and `version` the version number it shows (optional).
+# No push/tag/PR/schedule triggers; the Release workflow (release.yml) may call it.
+name: Build Linux
+run-name: "Build Linux · ${{ inputs.ref }}${{ inputs.version && format(' · {0}', inputs.version) || '' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+      version:
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1: shown in --version, and in About / file names when chosen below (empty = none)'
+        required: false
+        type: string
+        default: ''
+      file-name:
+        description: 'Download file names: doc4me-<commit>-..., doc4me-<version>-..., doc4me-<version>-<commit>-... or doc4me-... (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options:
+          - commit
+          - version
+          - version-commit
+          - none
+      about:
+        description: 'Line under the name in About: Commit <commit>, Version <version>, Version <version> (<commit>), or nothing (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options:
+          - commit
+          - version
+          - version-commit
+          - none
+  # The Release workflow (release.yml) calls this build with the commit and version it resolved.
+  workflow_call:
+    inputs:
+      ref:
+        description: 'Source commit SHA to build'
+        required: true
+        type: string
+      version:
+        description: 'Version number shown in --version, and in About / file names when chosen (empty = none)'
+        required: false
+        type: string
+        default: ''
+      file-name:
+        description: 'Download file names: commit, version, version-commit or none'
+        required: false
+        type: string
+        default: commit
+      about:
+        description: 'About line: commit, version, version-commit or none'
+        required: false
+        type: string
+        default: commit
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          FILE_NAME: ${{ inputs.file-name }}
+          ABOUT: ${{ inputs.about }}
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          # The version typed in the form: checked here (never pasted into a script), then given to
+          # the build as DOC4ME_VERSION. Numbers fit the MSI ProductVersion (255.255.65535).
+          version="${REQUESTED_VERSION#v}"
+          if [ -n "$REQUESTED_VERSION" ]; then
+            semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+            if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+              [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+              echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+              exit 1
+            fi
+            printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
+            printf '%s\n' "$version" > "dist/release/VERSION.txt"
+          fi
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          # File names (packaging/env.sh, package.ps1) and the About line (build_info::about_line):
+          # commit (default), version, version-commit or none; the version choices need a version.
+          file_name="${FILE_NAME:-commit}"
+          about="${ABOUT:-commit}"
+          for choice in "file-name=$file_name" "about=$about"; do
+            case "${choice#*=}" in
+              commit | none) ;;
+              version | version-commit)
+                if [ -z "$version" ]; then
+                  echo "::error::${choice%%=*} ${choice#*=} needs a version number"
+                  exit 1
+                fi
+                ;;
+              *)
+                echo "::error::${choice%%=*} must be commit, version, version-commit or none"
+                exit 1
+                ;;
+            esac
+          done
+          # Older sources: before DOC4ME_FILE_NAME they keep their own file names; before
+          # version-commit/none they name files by commit or version only.
+          if ! grep -q 'DOC4ME_FILE_NAME' packaging/env.sh 2>/dev/null; then
+            if [ "$file_name" != commit ]; then
+              echo "::warning::this source ignores file-name; its files keep the names it gives them"
+            fi
+          elif ! grep -q 'version-commit)' packaging/env.sh; then
+            case "$file_name" in
+              version-commit) file_name=version ;;
+              none) file_name=commit ;;
+            esac
+            if [ "$file_name" != "${FILE_NAME:-commit}" ]; then
+              echo "::warning::this source cannot name files '${FILE_NAME}'; using '$file_name'"
+            fi
+          fi
+          printf 'DOC4ME_FILE_NAME=%s\n' "$file_name" >> "$GITHUB_ENV"
+          printf 'DOC4ME_ABOUT=%s\n' "$about" >> "$GITHUB_ENV"
+          printf '### Build Linux\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+          printf '\nFile names: %s\n\nAbout: %s\n' "$file_name" "$about" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check out the About tool (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .doc4me-workflow
+          sparse-checkout: |
+            tools/about_label.py
+            crates/ui-egui/src/i18n/*.tsv
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      # Sources older than DOC4ME_ABOUT (build_info::about_line) don't follow the about choice:
+      # tools/about_label.py patches their About dialog to match and leaves newer sources unchanged.
+      - name: Show the chosen version or commit in About
+        shell: bash
+        run: |
+          python3 .doc4me-workflow/tools/about_label.py . .doc4me-workflow/crates/ui-egui/src/i18n
+          rm -rf .doc4me-workflow
+
+      - name: Install native build and packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake ninja-build pkg-config libclang-dev \
+            libasound2-dev libxkbcommon-dev libwayland-dev libx11-dev libxcursor-dev \
+            libxrandr-dev libxi-dev libgl1-mesa-dev libssl-dev desktop-file-utils appstream zsync
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          shared-key: linux-x86_64
+
+      - name: Install pinned packaging tools
+        run: |
+          mkdir -p "$RUNNER_TEMP/doc4me-tools"
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/nfpm.tar.gz" \
+            https://github.com/goreleaser/nfpm/releases/download/v2.49.0/nfpm_2.49.0_Linux_x86_64.tar.gz
+          printf '2afaa5ffb5e3493402e31e7c67a5a1fb42133e3f66fc315ca0051934125561c7  %s\n' "$RUNNER_TEMP/nfpm.tar.gz" | sha256sum --check
+          tar -xzf "$RUNNER_TEMP/nfpm.tar.gz" -C "$RUNNER_TEMP/doc4me-tools" nfpm
+          curl --fail --location --retry 3 -o "$RUNNER_TEMP/doc4me-tools/appimagetool" \
+            https://github.com/AppImage/appimagetool/releases/download/1.9.1/appimagetool-x86_64.AppImage
+          printf 'ed4ce84f0d9caff66f50bcca6ff6f35aae54ce8135408b3fa33abfc3cb384eb0  %s\n' "$RUNNER_TEMP/doc4me-tools/appimagetool" | sha256sum --check
+          chmod +x "$RUNNER_TEMP/doc4me-tools/appimagetool"
+          printf '%s\n' "$RUNNER_TEMP/doc4me-tools" >> "$GITHUB_PATH"
+          printf 'APPIMAGETOOL=%s\n' "$RUNNER_TEMP/doc4me-tools/appimagetool" >> "$GITHUB_ENV"
+
+      - name: Build AppImage, DEB, RPM, and tar archive
+        run: bash packaging/linux/package.sh
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-linux-x86_64-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14

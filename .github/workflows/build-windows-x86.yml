@@ -1,0 +1,196 @@
+# Manual build only. This produces downloadable artifacts; it never publishes a Release itself.
+# `ref` selects the source code and `version` the version number it shows (optional); the Release
+# workflow (release.yml) may call it.
+name: Build Windows x86
+run-name: "Build Windows x86 · ${{ inputs.ref }}${{ inputs.version && format(' · {0}', inputs.version) || '' }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: 'Source branch, tag, or commit SHA (main = latest code)'
+        required: true
+        type: string
+        default: main
+      version:
+        description: 'Version number, e.g. 1.2.0 or 1.2.0-rc.1: shown in --version, and in About / file names when chosen below (empty = none)'
+        required: false
+        type: string
+        default: ''
+      file-name:
+        description: 'Download file names: doc4me-<commit>-..., doc4me-<version>-..., doc4me-<version>-<commit>-... or doc4me-... (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options: [commit, version, version-commit, none]
+      about:
+        description: 'Line under the name in About: Commit <commit>, Version <version>, Version <version> (<commit>), or nothing (none); version choices need a version'
+        required: false
+        type: choice
+        default: commit
+        options: [commit, version, version-commit, none]
+  workflow_call:
+    inputs:
+      disable-cache:
+        description: 'Build without a shared Rust cache for a signed release'
+        type: boolean
+        default: false
+      ref:
+        description: 'Source commit SHA to build'
+        required: true
+        type: string
+      version:
+        description: 'Version number shown in --version, and in About / file names when chosen (empty = none)'
+        required: false
+        type: string
+        default: ''
+      file-name:
+        description: 'Download file names: commit, version, version-commit or none'
+        required: false
+        type: string
+        default: commit
+      about:
+        description: 'About line: commit, version, version-commit or none'
+        required: false
+        type: string
+        default: commit
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the selected source
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ inputs.ref }}
+          persist-credentials: false
+
+      - name: Check out the pinned open font set
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: storytold/craft-fonts
+          ref: c1db6d1a8ed772191241c3d185e2104be84d8691
+          path: craft-fonts
+          persist-credentials: false
+
+      - name: Prepare pinned corpus fonts
+        shell: bash
+        run: python tools/prepare_corpus_fonts.py craft-fonts
+
+      - name: Require the open fonts for Windows documents
+        shell: pwsh
+        run: |
+          Add-Content -Path $env:GITHUB_ENV -Value "CRAFT_FONTS_DIR=$env:GITHUB_WORKSPACE\craft-fonts"
+          Add-Content -Path $env:GITHUB_ENV -Value 'CRAFT_FONTS_REQUIRED=1'
+
+      - name: Record the actual source commit
+        id: source
+        shell: bash
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          FILE_NAME: ${{ inputs.file-name }}
+          ABOUT: ${{ inputs.about }}
+        run: |
+          commit=$(git rev-parse HEAD)
+          printf 'sha=%s\n' "$commit" >> "$GITHUB_OUTPUT"
+          printf 'DOC4ME_BUILD_SHA=%s\n' "$commit" >> "$GITHUB_ENV"
+          mkdir -p dist/release
+          version="${REQUESTED_VERSION#v}"
+          if [ -n "$REQUESTED_VERSION" ]; then
+            semver='^(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})\.(0|[1-9][0-9]{0,4})(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+            if [ "${#version}" -gt 64 ] || ! [[ "$version" =~ $semver ]] ||
+              [ "${BASH_REMATCH[1]}" -gt 255 ] || [ "${BASH_REMATCH[2]}" -gt 255 ] || [ "${BASH_REMATCH[3]}" -gt 65535 ]; then
+              echo '::error::version must look like 1.2.3 or 1.2.3-rc.1 (major and minor up to 255, patch up to 65535)'
+              exit 1
+            fi
+            printf 'DOC4ME_VERSION=%s\n' "$version" >> "$GITHUB_ENV"
+            printf '%s\n' "$version" > "dist/release/VERSION.txt"
+          fi
+          printf '%s\n' "$commit" > dist/release/SOURCE_COMMIT.txt
+          file_name="${FILE_NAME:-commit}"
+          about="${ABOUT:-commit}"
+          for choice in "file-name=$file_name" "about=$about"; do
+            case "${choice#*=}" in
+              commit | none) ;;
+              version | version-commit)
+                if [ -z "$version" ]; then
+                  echo "::error::${choice%%=*} ${choice#*=} needs a version number"
+                  exit 1
+                fi
+                ;;
+              *)
+                echo "::error::${choice%%=*} must be commit, version, version-commit or none"
+                exit 1
+                ;;
+            esac
+          done
+          if ! grep -q 'DOC4ME_FILE_NAME' packaging/env.sh 2>/dev/null; then
+            if [ "$file_name" != commit ]; then
+              echo "::warning::this source ignores file-name; its files keep the names it gives them"
+            fi
+          elif ! grep -q 'version-commit)' packaging/env.sh; then
+            case "$file_name" in
+              version-commit) file_name=version ;;
+              none) file_name=commit ;;
+            esac
+            if [ "$file_name" != "${FILE_NAME:-commit}" ]; then
+              echo "::warning::this source cannot name files '${FILE_NAME}'; using '$file_name'"
+            fi
+          fi
+          printf 'DOC4ME_FILE_NAME=%s\n' "$file_name" >> "$GITHUB_ENV"
+          printf 'DOC4ME_ABOUT=%s\n' "$about" >> "$GITHUB_ENV"
+          printf '### Build Windows x86\n\nSource commit: `%s`\n' "$commit" >> "$GITHUB_STEP_SUMMARY"
+          if [ -n "$version" ]; then printf '\nVersion: `%s`\n' "$version" >> "$GITHUB_STEP_SUMMARY"; fi
+          printf '\nFile names: %s\n\nAbout: %s\n' "$file_name" "$about" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Check out the About tool (this workflow's revision)
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          ref: ${{ github.workflow_sha }}
+          path: .doc4me-workflow
+          sparse-checkout: |
+            tools/about_label.py
+            crates/ui-egui/src/i18n/*.tsv
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+
+      - name: Show the chosen version or commit in About
+        shell: bash
+        run: |
+          python .doc4me-workflow/tools/about_label.py . .doc4me-workflow/crates/ui-egui/src/i18n
+          rm -rf .doc4me-workflow
+
+      - name: Install Rust and the x86 target
+        uses: dtolnay/rust-toolchain@686976e191b89faba57d3206551f0f330d8cb249 # stable branch
+        with:
+          toolchain: stable
+          targets: i686-pc-windows-msvc
+
+      - uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        if: ${{ !inputs.disable-cache }}
+        with:
+          shared-key: windows-x86
+
+      - name: Install WiX v5 and extensions
+        shell: pwsh
+        run: |
+          dotnet tool install --global wix --version 5.0.2
+          wix extension add -g WixToolset.UI.wixext/5.0.2
+          wix extension add -g WixToolset.Util.wixext/5.0.2
+
+      - name: Build MSI and portable ZIP
+        shell: pwsh
+        run: pwsh packaging/windows/package.ps1 -Arch x86
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: doc4me-windows-x86-${{ steps.source.outputs.sha }}
+          path: dist/release/*
+          if-no-files-found: error
+          retention-days: 14
