@@ -144,6 +144,10 @@ fn general(app: &mut WordApp, ui: &mut Ui) {
     {
         let _ = app.run("view.darkMode", json!({"value": dark_page}));
     }
+    let mut text_boundaries = app.session.view.text_boundaries;
+    if ui.checkbox(&mut text_boundaries, tl!("Text boundaries around the page text")).changed() {
+        let _ = app.run("view.textBoundaries", json!({"value": text_boundaries}));
+    }
     default_app_button(app, ui);
     ui.add_space(8.0);
     section(ui, "Personalize");

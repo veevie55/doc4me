@@ -659,6 +659,14 @@ fn lines(
         if let Some((ob, x0, x1)) = open {
             char_box(&ob, x0, x1, top, bottom, alpha, out);
         }
+        // With formatting marks on, show the paragraph's pagination constraint in the margin.
+        if li == 0 && opts.always.shown(opts.marks).paragraphs && (pl.rp.keep_next || pl.rp.keep_lines || pl.rp.page_break_before) {
+            let size = pl.styles.first().map(|style| style.size).unwrap_or(11.0);
+            let side = (size * 0.28).clamp(2.5, 6.0);
+            let sx = if line.rtl { x + line.right + 4.0 } else { x - 4.0 - side };
+            let sy = base - size * 0.3 - side / 2.0;
+            out.push(Draw::Fill { rect: Rect::new(sx, sy, side, side), color: KEEP_MARK, alpha });
+        }
         // Label.
         if li == 0
             && let Some(lab) = &pl.label
@@ -1120,6 +1128,9 @@ fn section_break_after(doc: &Document, story: StoryRef, path: &Path) -> Option<S
     let k = secs.iter().position(|(end, _)| *end == i)?;
     secs.get(k + 1).map(|(_, s)| s.start)
 }
+
+/// The square beside a paragraph with pagination constraints (formatting marks on).
+const KEEP_MARK: Rgb = Rgb(0x20, 0x20, 0x20);
 
 /// On-screen name of a section break.
 pub fn section_break_label(start: SectionStart) -> &'static str {

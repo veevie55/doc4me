@@ -502,6 +502,7 @@
 	CONFIDENTIAL	CONFIDENTIAL
 	Confirm password:	ยืนยันรหัสผ่าน:
 	Connect Shapes	เชื่อมต่อรูปร่าง
+	Continue Numbering	กำหนดลำดับเลขต่อเนื่อง
 	Container Title	ชื่อแหล่งที่ตีพิมพ์
 	Content Control at Selection	ตัวควบคุมเนื้อหาที่ส่วนที่เลือก
 	Content Control Properties	คุณสมบัติตัวควบคุมเนื้อหา
@@ -836,6 +837,7 @@
 	Extend Selection	ขยายส่วนที่เลือก
 	Extend Selection by Units	ขยายส่วนที่เลือกทีละหน่วย
 	Extra space	ช่องว่างเกิน
+	Facing pages	หน้าคู่
 	Field	เขตข้อมูล
 	Field code:	รหัสเขตข้อมูล:
 	Field Codes	รหัสเขตข้อมูล
@@ -1481,6 +1483,7 @@
 	n×n Identity Matrix	เมทริกซ์เอกลักษณ์ n×n
 	n×n Matrix	เมทริกซ์ n×n
 	Object	วัตถุ
+	Objects	วัตถุ
 	Odd Page	หน้าคี่
 	Odd pages only	เฉพาะหน้าคี่
 	Off	ปิด
@@ -2009,6 +2012,7 @@
 	Sine Function	ฟังก์ชันไซน์
 	Sine theta	ไซน์ทีตา
 	Single	เดี่ยว
+	Single pages	หน้าเดี่ยว
 	Single Brackets	วงเล็บเดี่ยว
 	Single Closing Quote	อัญประกาศเดี่ยวปิด
 	Single label	ฉลากเดี่ยว
@@ -2199,6 +2203,8 @@
 	Text Box	กล่องข้อความ
 	Text boxes	กล่องข้อความ
 	Text Direction	ทิศทางข้อความ
+	Text Boundaries	ขอบเขตข้อความ
+	Text boundaries around the page text	แสดงกรอบรอบพื้นที่ข้อความบนหน้า
 	Text Effects	เอฟเฟกต์ข้อความ
 	Text Effects and Typography	เอฟเฟกต์ข้อความและรูปแบบตัวอักษร
 	Text Fill	สีเติมข้อความ

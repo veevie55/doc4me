@@ -70,6 +70,8 @@ pub struct CanvasState {
     pub focused: bool,
     pub render_ms: f64,
     pub ime_preedit: String,
+    /// A list number selected by clicking it, formatted at its whole list level.
+    pub(crate) number_sel: Option<(StoryRef, doc4me_doc::Path)>,
     /// Document faces added to the interface fonts to draw the input method's composition (#565).
     pub(crate) ime_faces: Vec<std::sync::Arc<doc4me_fonts::FontFace>>,
     pub want_focus: bool,
@@ -193,6 +195,7 @@ impl Default for CanvasState {
             focused: false,
             render_ms: 0.0,
             ime_preedit: String::new(),
+            number_sel: None,
             ime_faces: Vec::new(),
             want_focus: true,
             context_issue: None,
@@ -1150,6 +1153,14 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                     painter.line_segment([pos2(x0, sy), pos2(x1, sy)], stroke);
                 }
             }
+            // View › Text Boundaries: outline the page's text area (screen only).
+            if app.session.view.text_boundaries && app.session.view.mode == doc4me_layout::ViewMode::Print && !app.session.view.read_mode {
+                let area = Rect::from_min_max(
+                    pos2(visual_sr.min.x + page.body.x * page_scale, visual_sr.min.y + page.body.y * page_scale),
+                    pos2(visual_sr.min.x + page.body.right() * page_scale, visual_sr.min.y + page.body.bottom() * page_scale),
+                );
+                painter.rect_stroke(area, 0.0, Stroke::new(1.0, t.border_strong), egui::StrokeKind::Outside);
+            }
             // Table Layout › View Gridlines: table cell outlines (on screen only).
             if app.session.view.table_gridlines {
                 for rect in gridline_cells(page) {
@@ -1217,6 +1228,13 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         } else {
             app.canvas.mini_anchor = None;
         }
+        crate::number_select::paint(
+            app,
+            &layout,
+            &rects,
+            |page| layout.pages.get(page).zip(rects.get(page)).map_or(geo.scale, |(pg, rect)| page_screen_scale(*rect, pg, geo.scale)),
+            &painter,
+        );
         // Content controls: the frame of the one the caret is in (all of them in Design Mode).
         crate::content_controls::paint(app, &painter, &t, &layout, &rects, geo.scale);
         // Legacy form fields: where they are, and a protected form's text box.
@@ -1401,6 +1419,10 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         && let Some((page, x, y)) = page_at(&rects, &layout, geo.scale, p)
     {
         if crate::objects::select_at(app, &layout, &rects, geo.scale, p) {
+            app.canvas.context_issue = None;
+            app.canvas.context_synonyms = None;
+        } else if let Some((story, path)) = layout.label_at(page, x, y) {
+            crate::number_select::select(app, story, path);
             app.canvas.context_issue = None;
             app.canvas.context_synonyms = None;
         } else if let Some(pos) = layout.hit(page, x, y, app.session.sel.focus.story) {
@@ -2067,6 +2089,7 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
         let clicks = press_count(app.canvas.last_press, now, p, delay, dist);
         app.canvas.last_press = Some((now, p, clicks));
         app.canvas.unit_drag = None;
+        app.canvas.number_sel = None;
         // A double-click that enters or leaves a header/footer is handled on release.
         let hf_switch = (layout.header_footer_at(page, y).is_some() && story == StoryRef::Body)
             || (matches!(story, StoryRef::Part(_)) && !in_text_box(app) && layout.header_footer_at(page, y).is_none());
@@ -2087,6 +2110,15 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
                 _ => story,
             }
         };
+        if !mods.shift
+            && clicks == 1
+            && let Some((label_story, path)) = layout.label_at(page, x, y)
+        {
+            crate::number_select::select(app, label_story, path);
+            app.session.page_hint = page;
+            app.canvas.want_focus = true;
+            return;
+        }
         if !mods.shift
             && let Some((at, inner)) = layout.equation_hit(page, x, y, story)
         {
@@ -2674,6 +2706,14 @@ fn context_menu(app: &mut WordApp, ui: &mut Ui) {
     }
     item(ui, app, "Paste", "edit.paste", json!({}));
     ui.separator();
+    if crate::number_select::active(app).is_some() {
+        item(ui, app, "Continue Numbering", "para.continueNumbering", json!({}));
+        item(ui, app, "Restart at 1", "para.restartNumbering", json!({}));
+        item(ui, app, "Modify Multilevel List…", "ui.dialog", json!({"name": "defineList"}));
+        item(ui, app, "Increase Indent", "para.indent", json!({}));
+        item(ui, app, "Decrease Indent", "para.outdent", json!({}));
+        ui.separator();
+    }
     if let Some(syn) = app.canvas.context_synonyms.clone().and_then(|v| v.as_array().cloned()).filter(|a| !a.is_empty()) {
         crate::ribbon_keys::sub_menu(ui, tl!("Synonyms"), |ui| {
             for w in syn.iter().filter_map(|x| x.as_str()) {

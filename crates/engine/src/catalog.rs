@@ -319,6 +319,7 @@ View|Page Movement|Vertical|view.vertical
 View|Page Movement|Side to Side|view.sideToSide
 View|Show|Ruler|view.ruler
 View|Show|Gridlines|view.gridlines
+View|Show|Text Boundaries|view.textBoundaries
 View|Show|Navigation Pane|view.navigationPane
 View|Zoom|Zoom|view.zoom
 View|Zoom|100%|view.zoom100

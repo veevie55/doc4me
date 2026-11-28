@@ -72,6 +72,7 @@ pub mod keys;
 pub mod keytips;
 pub mod mini_toolbar;
 pub mod net;
+pub mod number_select;
 pub mod numfield;
 pub mod objects;
 pub mod online_pictures;
@@ -250,6 +251,8 @@ pub struct UiState {
     /// View › Switch Modes: show pages dark (white text on black), kept between runs. Only the
     /// pages: the interface follows [`UiState::theme`] (#312).
     pub dark_page: bool,
+    /// View › Text Boundaries: outline the text area of each page on screen.
+    pub text_boundaries: bool,
     /// File › Options › Advanced › Animation: the caret glides to its new place and its blink
     /// fades, as Word's does on Windows (on, the default), or it jumps and blinks on and off
     /// (off).
@@ -334,6 +337,7 @@ impl Default for UiState {
             alt_pressed: false,
             alt_chord_used: false,
             dark_page: false,
+            text_boundaries: false,
             caret_animation: true,
             keyboard: doc4me_engine::KeyMap::default(),
             wp_help: dialogs_wphelp::HelpOptions::default(),
@@ -640,6 +644,7 @@ impl WordApp {
         ui.read_aloud_rate = self.session.read_aloud.rate();
         ui.read_aloud_skip_citations = self.session.read_aloud.skip_citations;
         ui.dark_page = self.session.view.dark_mode;
+        ui.text_boundaries = self.session.view.text_boundaries;
         ui.keyboard = self.session.keymap.clone();
         ui.ribbon = self.session.ribbon.clone();
         ui.ink_pens = self.session.view.draw.pens.clone();
@@ -670,6 +675,7 @@ impl WordApp {
         self.session.read_aloud.set_rate(self.ui.read_aloud_rate);
         self.session.read_aloud.skip_citations = self.ui.read_aloud_skip_citations;
         self.session.view.dark_mode = self.ui.dark_page;
+        self.session.view.text_boundaries = self.ui.text_boundaries;
         // Keys for commands this version doesn't have are dropped.
         self.session.keymap = std::mem::take(&mut self.ui.keyboard);
         let reg = self.session.registry.clone();
@@ -685,6 +691,9 @@ impl WordApp {
     /// Close, Envelopes, Labels and Finish & Merge on a document with unsaved changes first ask
     /// Save / Don't Save / Cancel, and the command runs once that is answered (`ui.saveChanges`).
     pub fn run(&mut self, id: &str, params: Value) -> Result<Value, String> {
+        if let Some(result) = number_select::route(self, id, &params) {
+            return result;
+        }
         if id == "file.recover" && params.as_object().is_none_or(|p| p.is_empty()) {
             self.ui.backstage = true;
             self.ui.backstage_page = "recover".into();
@@ -745,7 +754,11 @@ impl WordApp {
         {
             return r;
         }
+        let previous_selection = self.session.sel.clone();
         let r = self.execute_user(id, params);
+        if self.session.sel != previous_selection {
+            self.canvas.number_sel = None;
+        }
         // Copy and Cut hand the copy to the system clipboard, whatever ran them (keys, ribbon,
         // context menu, command search).
         if matches!(id, "edit.copy" | "edit.cut") && r.as_ref().is_ok_and(|v| v.get("copied").and_then(Value::as_bool) == Some(true)) {

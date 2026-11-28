@@ -156,23 +156,19 @@ fn nav(app: &mut WordApp, ui: &mut Ui) {
     }
     ui.add_space(4.0);
     ui.horizontal(|ui| {
-        for (k, l) in [("headings", "Headings"), ("pages", "Pages"), ("results", "Results")] {
+        for (k, l) in [("headings", "Headings"), ("pages", "Pages"), ("objects", "Objects"), ("results", "Results")] {
             if ui.selectable_label(app.ui.nav_tab == k, tl!(l)).clicked() {
                 app.ui.nav_tab = k.into();
             }
         }
     });
     ui.separator();
+    if app.ui.nav_tab == "pages" {
+        pages_columns_toggle(app, ui);
+    }
     egui::ScrollArea::vertical().show(ui, |ui| match app.ui.nav_tab.as_str() {
-        "pages" => {
-            let l = app.session.layout();
-            for (i, p) in l.pages.iter().enumerate() {
-                let label = crate::i18n::fmt(tl!("Page {page}"), &[("page", &p.number.to_string())]);
-                if ui.selectable_label(app.session.page_hint == i, label).clicked() {
-                    let _ = app.run("edit.goto", json!({"page": i + 1}));
-                }
-            }
-        }
+        "pages" => page_thumbnails(app, ui),
+        "objects" => navigation_objects(app, ui),
         "results" => {
             let results = app.session.find.results.clone();
             ui.label(egui::RichText::new(format!("{} results", results.len())).small().weak());
@@ -201,6 +197,20 @@ fn nav(app: &mut WordApp, ui: &mut Ui) {
             let caret = app.session.sel.focus.clone();
             let mut current: Option<usize> = None;
             let mut items = Vec::new();
+            // Read numbered heading labels from the rendered first line, as the page shows them.
+            let numbers: std::collections::HashMap<doc4me_doc::Path, String> = app
+                .session
+                .layout()
+                .pages
+                .iter()
+                .flat_map(|page| &page.items)
+                .filter_map(|item| match item {
+                    doc4me_layout::Placed::Lines { story: StoryRef::Body, path, para, l0: 0, .. } => {
+                        para.label.as_ref().map(|label| (path.clone(), label.text.trim().to_string())).filter(|(_, text)| !text.is_empty())
+                    }
+                    _ => None,
+                })
+                .collect();
             for path in app.session.doc.para_paths(StoryRef::Body) {
                 let Some(p) = app.session.doc.para(StoryRef::Body, &path) else { continue };
                 let rp = app.session.doc.styles.resolve_para(&p.props);
@@ -212,6 +222,10 @@ fn nav(app: &mut WordApp, ui: &mut Ui) {
                     if path <= caret.path {
                         current = Some(items.len());
                     }
+                    let txt = match numbers.get(&path) {
+                        Some(number) => format!("{number} {txt}"),
+                        None => txt,
+                    };
                     items.push((path, lv, txt));
                 }
             }
@@ -230,6 +244,242 @@ fn nav(app: &mut WordApp, ui: &mut Ui) {
             }
         }
     });
+}
+
+/// Navigate to body tables, pictures, drawings and bookmarks using their document positions.
+fn navigation_objects(app: &mut WordApp, ui: &mut Ui) {
+    let mut tables = Vec::new();
+    let mut figures = Vec::new();
+    let mut drawings = Vec::new();
+    let mut seen_tables = std::collections::HashSet::new();
+    for path in app.session.doc.para_paths(StoryRef::Body) {
+        for len in (1..path.0.len()).step_by(3) {
+            let Some(prefix) = path.0.get(..len) else { continue };
+            let table = doc4me_doc::Path(prefix.to_vec());
+            if app.session.doc.table(StoryRef::Body, &table).is_some() && seen_tables.insert(table) {
+                tables.push((format!("{} {}", tl!("Table"), tables.len() + 1), Pos { story: StoryRef::Body, path: path.clone(), off: 0 }));
+            }
+        }
+        let Some(p) = app.session.doc.para(StoryRef::Body, &path) else { continue };
+        for off in p.object_offsets() {
+            let (items, label, alt) = match p.object_at(off) {
+                Some(doc4me_doc::para::InlineObject::Image { alt, .. }) => (&mut figures, "Image", Some(alt.as_str())),
+                Some(doc4me_doc::para::InlineObject::Graphic { alt, .. }) => (&mut drawings, "Drawing Object", Some(alt.as_str())),
+                Some(doc4me_doc::para::InlineObject::Shape { .. } | doc4me_doc::para::InlineObject::Group { .. }) => {
+                    (&mut drawings, "Drawing Object", None)
+                }
+                _ => continue,
+            };
+            let name = alt.filter(|s| !s.trim().is_empty()).map(str::to_string).unwrap_or_else(|| format!("{} {}", tl!(label), items.len() + 1));
+            items.push((name, Pos { story: StoryRef::Body, path: path.clone(), off }));
+        }
+    }
+    let bookmarks = app.session.doc.bookmarks();
+    for (label, items) in [("Tables", tables), ("Images", figures), ("Drawing Objects", drawings), ("Bookmarks", bookmarks)] {
+        egui::CollapsingHeader::new(format!("{} ({})", tl!(label), items.len())).default_open(true).show(ui, |ui| {
+            for (name, pos) in items {
+                if ui.add(egui::Button::new(name).truncate()).clicked() {
+                    let _ = app.run("caret.set", json!({"pos": pos}));
+                    app.canvas.nav_to_caret = true;
+                    app.canvas.scroll_to_caret = false;
+                    app.canvas.want_focus = true;
+                }
+            }
+        });
+    }
+}
+
+const THUMBS_PER_FRAME: usize = 2;
+type ThumbCache = std::collections::HashMap<usize, (u64, egui::TextureHandle)>;
+
+/// Navigation › Pages: visible pages are rendered as small previews, with page spreads available
+/// for documents that use mirror margins. Page selection keeps using `edit.goto` as before.
+fn page_thumbnails(app: &mut WordApp, ui: &mut Ui) {
+    let layout = app.session.layout();
+    let cache_id = egui::Id::new("doc4me_nav_page_thumbs");
+    let mut cache: ThumbCache = ui.ctx().data_mut(|d| d.get_temp(cache_id)).unwrap_or_default();
+    cache.retain(|i, _| *i < layout.pages.len());
+    let mut budget = THUMBS_PER_FRAME;
+    let mut go = None;
+    let formats: Vec<doc4me_doc::section::NumFormat> = app.session.doc.sections().iter().map(|(_, s)| s.page_num_format).collect();
+    let number = |page: &doc4me_layout::Page| {
+        let text = formats.get(page.section).copied().unwrap_or_default().format(page.number);
+        if text.trim().is_empty() { page.number.to_string() } else { text }
+    };
+    if two_columns(app, ui.ctx()) {
+        const GAP: f32 = 8.0;
+        let width = ((ui.available_width() - 24.0 - GAP) / 2.0).clamp(40.0, 160.0);
+        let indent = ((ui.available_width() - 2.0 * width - GAP) / 2.0).max(0.0);
+        for row in spread_rows(layout.pages.len()) {
+            ui.horizontal_top(|ui| {
+                ui.spacing_mut().item_spacing.x = 0.0;
+                ui.add_space(indent);
+                for (column, slot) in row.into_iter().enumerate() {
+                    if column == 1 {
+                        ui.add_space(GAP);
+                    }
+                    let Some((index, page)) = slot.and_then(|i| layout.pages.get(i).map(|p| (i, p))) else {
+                        ui.add_space(width);
+                        continue;
+                    };
+                    let size = vec2(width, width * page.h / page.w.max(1.0) + 30.0);
+                    let corner = if column == 0 { egui::Align::Min } else { egui::Align::Max };
+                    ui.allocate_ui_with_layout(size, egui::Layout::top_down(corner), |ui| {
+                        if thumbnail(app, ui, (index, page), width, &number(page), Some(corner), &mut cache, &mut budget).is_some_and(|r| r.clicked())
+                        {
+                            go = Some(index);
+                        }
+                    });
+                }
+            });
+        }
+    } else {
+        let width = (ui.available_width() - 40.0).clamp(60.0, 150.0);
+        for (index, page) in layout.pages.iter().enumerate() {
+            ui.vertical_centered(|ui| {
+                if thumbnail(app, ui, (index, page), width, &number(page), None, &mut cache, &mut budget).is_some_and(|r| r.clicked()) {
+                    go = Some(index);
+                }
+            });
+        }
+    }
+    if let Some(index) = go {
+        let _ = app.run("edit.goto", json!({"page": index + 1}));
+    }
+    ui.add_space(6.0);
+    ui.ctx().data_mut(|d| d.insert_temp(cache_id, cache));
+}
+
+const TWO_COLUMNS: &str = "doc4me_nav_pages_two_columns";
+
+fn two_columns(app: &WordApp, ctx: &egui::Context) -> bool {
+    ctx.data_mut(|d| d.get_persisted::<bool>(egui::Id::new(TWO_COLUMNS))).unwrap_or(app.session.doc.settings.mirror_margins)
+}
+
+fn set_two_columns(ctx: &egui::Context, two: bool) {
+    ctx.data_mut(|d| d.insert_persisted(egui::Id::new(TWO_COLUMNS), two));
+}
+
+fn pages_columns_toggle(app: &WordApp, ui: &mut Ui) {
+    let two = two_columns(app, ui.ctx());
+    ui.horizontal(|ui| {
+        ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+            if ui.selectable_label(two, tl!("Facing pages")).clicked() {
+                set_two_columns(ui.ctx(), true);
+            }
+            if ui.selectable_label(!two, tl!("Single pages")).clicked() {
+                set_two_columns(ui.ctx(), false);
+            }
+        });
+    });
+    ui.add_space(2.0);
+}
+
+fn spread_rows(n: usize) -> Vec<[Option<usize>; 2]> {
+    let mut rows = Vec::new();
+    if n > 0 {
+        rows.push([None, Some(0)]);
+    }
+    let mut i = 1;
+    while i < n {
+        rows.push([Some(i), (i + 1 < n).then_some(i + 1)]);
+        i += 2;
+    }
+    rows
+}
+
+#[allow(clippy::too_many_arguments)]
+fn thumbnail(
+    app: &WordApp,
+    ui: &mut Ui,
+    (index, page): (usize, &doc4me_layout::Page),
+    width: f32,
+    number: &str,
+    corner: Option<egui::Align>,
+    cache: &mut ThumbCache,
+    budget: &mut usize,
+) -> Option<egui::Response> {
+    use std::hash::{Hash, Hasher};
+    if page.w <= 0.0 || page.h <= 0.0 {
+        return None;
+    }
+    let theme = Tokens::get(ui.ctx());
+    let ppp = ui.ctx().pixels_per_point();
+    let size = vec2(width, width * page.h / page.w);
+    let current = app.session.page_hint == index;
+    ui.add_space(6.0);
+    let (rect, response) = ui.allocate_exact_size(size, egui::Sense::click());
+    if ui.is_rect_visible(rect) {
+        let mut hasher = std::collections::hash_map::DefaultHasher::new();
+        (page_content_key(page), width.to_bits(), ppp.to_bits(), app.session.view.dark_mode).hash(&mut hasher);
+        let key = hasher.finish();
+        let fresh = cache.get(&index).is_some_and(|(cached, _)| *cached == key);
+        if !fresh && *budget > 0 {
+            *budget -= 1;
+            let max_tex = ui.ctx().input(|i| i.max_texture_side).min(doc4me_render::MAX_SIDE as usize).max(2) as f32 - 1.0;
+            let scale = (width / page.w * ppp).clamp(0.05, 4.0).min(max_tex / page.w).min(max_tex / page.h);
+            let image = doc4me_render::render_page(&app.session.doc, page, scale, &crate::canvas::screen_render_options());
+            let texture = ui.ctx().load_texture(
+                format!("doc4me nav page {index}"),
+                egui::ColorImage::from_rgba_unmultiplied([image.width as usize, image.height as usize], &image.to_straight()),
+                egui::TextureOptions::LINEAR,
+            );
+            cache.insert(index, (key, texture));
+        } else if !fresh {
+            ui.ctx().request_repaint();
+        }
+        ui.painter().rect_filled(rect, 0.0, egui::Color32::WHITE);
+        if let Some((_, texture)) = cache.get(&index) {
+            let uv = egui::Rect::from_min_max(egui::pos2(0.0, 0.0), egui::pos2(1.0, 1.0));
+            ui.painter().image(texture.id(), rect, uv, egui::Color32::WHITE);
+        }
+        let (stroke_width, color) = if current {
+            (3.0, theme.accent)
+        } else if response.hovered() {
+            (2.0, theme.accent.linear_multiply(0.6))
+        } else {
+            (1.0, theme.border_strong)
+        };
+        ui.painter().rect_stroke(rect.expand(if current { 2.0 } else { 0.0 }), 2.0, Stroke::new(stroke_width, color), egui::StrokeKind::Outside);
+    }
+    let label = crate::i18n::fmt(tl!("Page {page}"), &[("page", number)]);
+    ui.add_space(if current { 5.0 } else { 3.0 });
+    let shown = if corner.is_some() { number } else { label.as_str() };
+    let font = if current { semibold(11.5) } else { regular(11.5) };
+    ui.add(egui::Label::new(egui::RichText::new(shown).font(font).color(if current { theme.accent_text } else { theme.text_dim })).truncate());
+    response.widget_info(|| egui::WidgetInfo::selected(egui::WidgetType::SelectableLabel, true, current, &label));
+    Some(response)
+}
+
+fn page_content_key(page: &doc4me_layout::Page) -> u64 {
+    use std::hash::{Hash, Hasher};
+    let mut hasher = std::collections::hash_map::DefaultHasher::new();
+    (page.w.to_bits(), page.h.to_bits()).hash(&mut hasher);
+    for items in [&page.items, &page.header, &page.footer] {
+        items.len().hash(&mut hasher);
+        for item in items {
+            match item {
+                doc4me_layout::Placed::Lines { para, l0, l1, x, y, turn, .. } => {
+                    (std::sync::Arc::as_ptr(para) as usize, l0, l1, x.to_bits(), y.to_bits(), turn).hash(&mut hasher);
+                }
+                doc4me_layout::Placed::Fill { rect, color } => format!("{rect:?}{color:?}").hash(&mut hasher),
+                doc4me_layout::Placed::Rule { x0, y0, x1, y1, border } => format!("{x0}{y0}{x1}{y1}{border:?}").hash(&mut hasher),
+                doc4me_layout::Placed::Image { rect, media, spin, .. } => format!("{rect:?}{media}{spin:?}").hash(&mut hasher),
+                doc4me_layout::Placed::Shape { rect, kind, fill, stroke, stroke_width, effects, freeform, spin, extra } => {
+                    format!("{rect:?}{kind:?}{fill:?}{stroke:?}{stroke_width}{effects:?}{spin:?}{extra:?}").hash(&mut hasher);
+                    freeform.as_ref().map(|shape| std::sync::Arc::as_ptr(shape) as usize).hash(&mut hasher);
+                }
+                doc4me_layout::Placed::Graphic { rect, graphic, spin, .. } => {
+                    (std::sync::Arc::as_ptr(graphic) as usize, rect.x.to_bits(), rect.y.to_bits(), rect.w.to_bits(), rect.h.to_bits())
+                        .hash(&mut hasher);
+                    format!("{spin:?}").hash(&mut hasher);
+                }
+                doc4me_layout::Placed::Clip { rect, spin, items } => format!("{rect:?}{spin:?}{items:?}").hash(&mut hasher),
+                doc4me_layout::Placed::Cell { .. } | doc4me_layout::Placed::Object { .. } => {}
+            }
+        }
+    }
+    hasher.finish()
 }
 
 /// Constrain each heading to the available pane width so long document text cannot

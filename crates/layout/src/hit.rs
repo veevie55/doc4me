@@ -610,6 +610,43 @@ impl DocLayout {
         out
     }
 
+    /// The box of a list paragraph's number in one placed piece (page coordinates), including
+    /// the gap up to the first character of its text. Turned text has no clickable number box.
+    fn label_box(it: &Placed) -> Option<Rect> {
+        let Placed::Lines { para, l0, l1, x, y, turn: TextDirection::Horizontal, .. } = it else { return None };
+        let label = para.label.as_ref()?;
+        let li = 0;
+        if li < *l0 || li >= *l1 {
+            return None;
+        }
+        let first = para.lines.get(*l0)?;
+        let line = para.lines.get(li)?;
+        let (mut x0, mut x1) = (label.x, label.x + label.width);
+        if let Some(text_x) = para.x_of(li, line.start) {
+            if line.rtl {
+                x0 = x0.min(text_x);
+            } else {
+                x1 = x1.max(text_x);
+            }
+        }
+        Some(Rect::new(*x + x0, *y + (line.top - first.top), (x1 - x0).max(0.0), line.height))
+    }
+
+    /// Where the list number of `story`/`path` is drawn: its page and box.
+    pub fn label_rect(&self, story: StoryRef, path: &Path, page_hint: usize) -> Option<(usize, Rect)> {
+        self.pieces(story, path, page_hint).into_iter().find_map(|(page, item)| Self::label_box(item).map(|rect| (page, rect)))
+    }
+
+    /// The paragraph whose list number is at (`x`, `y`) on page `page`.
+    pub fn label_at(&self, page: usize, x: f32, y: f32) -> Option<(StoryRef, Path)> {
+        let page = self.pages.get(page)?;
+        page.items.iter().find_map(|item| {
+            let rect = Self::label_box(item)?;
+            let Placed::Lines { story, path, .. } = item else { return None };
+            (x >= rect.x && x <= rect.x + rect.w && y >= rect.y && y <= rect.y + rect.h).then(|| (*story, path.clone()))
+        })
+    }
+
     /// Highlight rectangles for the selection `a..b`, per page.
     pub fn selection_rects(&self, doc: &Document, a: &Pos, b: &Pos, page_hint: usize) -> Vec<(usize, Rect)> {
         let (a, b) = if a <= b { (a, b) } else { (b, a) };

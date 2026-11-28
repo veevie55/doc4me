@@ -1867,6 +1867,10 @@ fn view(app: &mut WordApp, ui: &mut Ui) {
             if ui.checkbox(&mut g, tl!("Gridlines")).changed() {
                 let _ = app.run("view.gridlines", json!({"value": g}));
             }
+            let mut b = v.text_boundaries;
+            if ui.checkbox(&mut b, tl!("Text Boundaries")).changed() {
+                let _ = app.run("view.textBoundaries", json!({"value": b}));
+            }
             let mut n = v.nav_pane;
             if ui.checkbox(&mut n, tl!("Navigation Pane")).changed() {
                 let _ = app.run("view.navigationPane", json!({"value": n}));

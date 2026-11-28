@@ -134,6 +134,7 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"level": 0-8}"#),
         CommandSpec::new("para.restartNumbering", "Restart at 1", "Home › Paragraph › Numbering", restart_numbering),
+        CommandSpec::new("para.continueNumbering", "Continue Numbering", "Home › Paragraph › Numbering", continue_numbering),
         CommandSpec::new("para.moveUp", "Move Paragraph Up", "Home › Paragraph", |s, _| move_paras(s, true))
             .key(if cfg!(target_os = "macos") { "Ctrl+Shift+Up" } else { "Alt+Shift+Up" }),
         CommandSpec::new("para.moveDown", "Move Paragraph Down", "Home › Paragraph", |s, _| move_paras(s, false))
@@ -528,6 +529,34 @@ fn restart_numbering(s: &mut Session, _: &Value) -> CmdResult {
                     break;
                 }
             }
+        }
+    }
+    sel_result(s)
+}
+
+/// Join this list instance to the nearest earlier instance of the same list definition.
+fn continue_numbering(s: &mut Session, _: &Value) -> CmdResult {
+    let f = s.sel.focus.clone();
+    let current =
+        s.doc.para_at(&f).and_then(|p| p.props.numbering).filter(|n| n.num != 0).ok_or_else(|| CmdError::Failed("not in a numbered list".into()))?;
+    let abstract_id = s.doc.numbering.num(current.num).map(|n| n.abstract_id).ok_or_else(|| CmdError::Failed("bad list".into()))?;
+    let paths = s.doc.para_paths(f.story);
+    let previous = paths
+        .iter()
+        .rev()
+        .filter(|path| **path < f.path)
+        .filter_map(|path| s.doc.para(f.story, path).and_then(|p| p.props.numbering).filter(|n| n.num != 0))
+        .find(|n| s.doc.numbering.num(n.num).is_some_and(|instance| instance.abstract_id == abstract_id))
+        .ok_or_else(|| CmdError::Failed("no previous compatible list".into()))?;
+    for path in paths.into_iter().filter(|path| *path >= f.path) {
+        let para = s.doc.para_mut(f.story, &path)?;
+        match para.props.numbering {
+            Some(n) if n.num == current.num => {
+                para.props.numbering = Some(NumRef { num: previous.num, level: n.level });
+                para.touch();
+            }
+            _ if !para.is_empty() => break,
+            _ => {}
         }
     }
     sel_result(s)

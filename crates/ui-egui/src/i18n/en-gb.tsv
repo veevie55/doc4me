@@ -561,6 +561,7 @@
 	CONFIDENTIAL	CONFIDENTIAL
 	Confirm password:	Confirm password:
 	Connect Shapes	Connect Shapes
+	Continue Numbering	Continue Numbering
 	Constitutional Provisions	Constitutional Provisions
 	Container Title	Container Title
 	Contains	Contains
@@ -941,6 +942,7 @@
 	Extend Selection by Units	Extend Selection by Units
 	Extra space	Extra space
 	Extra spaces between words.	Extra spaces between words.
+	Facing pages	Facing pages
 	Field	Field
 	Field Click	Field Click
 	Field code:	Field code:
@@ -1705,6 +1707,7 @@
 	n×n Identity Matrix	n×n Identity Matrix
 	n×n Matrix	n×n Matrix
 	Object	Object
+	Objects	Objects
 	Odd Page	Odd Page
 	Odd pages only	Odd pages only
 	Off	Off
@@ -2304,6 +2307,7 @@
 	Sine Function	Sine Function
 	Sine theta	Sine theta
 	Single	Single
+	Single pages	Single pages
 	Single Brackets	Single Brackets
 	Single Closing Quote	Single Closing Quote
 	Single label	Single label
@@ -2515,6 +2519,8 @@
 	Text Box	Text Box
 	Text boxes	Text boxes
 	Text Direction	Text Direction
+	Text Boundaries	Text Boundaries
+	Text boundaries around the page text	Text boundaries around the page text
 	Text Effects	Text Effects
 	Text Effects and Typography	Text Effects and Typography
 	Text Fill	Text Fill
