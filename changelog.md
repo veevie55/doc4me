@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:35 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `f462f427708ab600cf782a30563960bfed956426`
+อัปเดตเมื่อ **28 November 2026 21:58 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -58,6 +58,7 @@ flowchart LR
 | `2caed36` | 2026-11-28 21:02:35 ICT | แปลง Symbol, Wingdings 1–3 และ Webdings เป็น Unicode เมื่อแสดงผลหรือ export ข้อความ | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
 | `d2943cf` | 2026-11-28 21:18:38 ICT | เพิ่มการติดตามผล save picker แบบ async; New/Open รอจนเขียนและปิดไฟล์สำเร็จ และแสดง prompt เมื่อผู้ใช้ยกเลิกหรือบันทึกผิดพลาด | push 2026-11-28 21:18:48 ICT; `origin/main` ยืนยัน SHA `d2943cf16f81785dda1fb8999bfe2707a35675ae` |
 | `f462f42` | 2026-11-28 21:35:45 ICT | เพิ่มการตรวจ GitHub release แบบขออนุญาตและรายวันบน desktop, คำสั่งตรวจเองจาก Help, แถบรุ่นใหม่และตัวเลือกข้ามรุ่น | push 2026-11-28 21:35:55 ICT; `origin/main` ยืนยัน SHA `f462f427708ab600cf782a30563960bfed956426` |
+| `3a88721` | 2026-11-28 21:58:00 ICT | ขยาย Character dialog ให้มี Effects, Position, Background และ Border; เพิ่ม complex-script font/language, preview และ reset/cancel workflow | push 2026-11-28 21:58:10 ICT; `origin/main` ยืนยัน SHA `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); ทุก SHA ในรายการข้างต้นตรวจยืนยันกับ `origin/main` แล้วด้วย `git ls-remote origin refs/heads/main`.
 
@@ -80,6 +81,25 @@ flowchart LR
   F --> G[เปิดหน้า release]
   F --> H[ข้ามรุ่น หรือปิดแถบ]
   E -->|ไม่| I[แจ้งว่าเป็นรุ่นล่าสุด]
+```
+
+### รายการความสามารถที่เพิ่มใน `3a88721`
+
+- **Font:** คงหน้า Font และ Advanced เดิม เพิ่มฟอนต์/ขนาด/ตัวหนา/ตัวเอียง/ภาษาแยกสำหรับ complex script พร้อมตัวเลือกภาษาของข้อความ bidi.
+- **Effects:** ตั้ง underline และสี underline, single/double strike, all caps/small caps, hidden, outline, shadow, emboss และ engrave.
+- **Position:** ตั้ง superscript/subscript, ยก/กดตัวอักษร, scale, character spacing และ kerning.
+- **Background และ Border:** ตั้ง character shading แยกจาก text highlight และเลือกเส้นขอบ สี และความหนา.
+- **Preview และการยืนยัน:** preview แสดงสี/ขนาด/underline/strike/shading/ตำแหน่ง/border; Reset คืนค่าเริ่มต้นของฟอร์ม, Cancel ไม่ใช้การแก้ไข และ OK รวมการเปลี่ยนแปลงเป็น action เดียว.
+- **คำสั่ง:** ใช้ `format.fontDialog` และ `format.state`; `format.set` รับรายการ `clear` สำหรับล้าง `shading`, `border` หรือ `underlineColor` โดยยังรักษาค่าเดิมของ field ที่ไม่ได้แก้.
+
+```mermaid
+flowchart LR
+  A[เปิด Character dialog] --> B[เลือก Font / Effects / Position / Background / Border]
+  B --> C[แก้ค่าและดู Preview]
+  C -->|Reset| D[คืนค่าเริ่มต้นของฟอร์ม]
+  D --> B
+  C -->|Cancel| E[ปิดโดยไม่ใช้การแก้ไข]
+  C -->|OK| F[ใช้ค่าที่เปลี่ยนเป็น action เดียว]
 ```
 
 ### รายการความสามารถที่เพิ่มใน `6215d03`
@@ -805,7 +825,7 @@ flowchart LR
 | Emboss | <code>format.emboss</code> | — | <code>{}</code> | เปลี่ยนสถานะ |
 | Engrave | <code>format.engrave</code> | — | <code>{}</code> | เปลี่ยนสถานะ |
 | Hidden | <code>format.hidden</code> | Mod+Shift+H | <code>{}</code> | เปลี่ยนสถานะ |
-| Set Character Formatting | <code>format.set</code> | — | <code>{&quot;props&quot;: CharProps}</code> | เปลี่ยนสถานะ |
+| Set Character Formatting | <code>format.set</code> | — | <code>{&quot;props&quot;: CharProps, &quot;clear&quot;?: [&quot;shading&quot;&#124;&quot;border&quot;&#124;&quot;underlineColor&quot;]}</code> | เปลี่ยนสถานะ |
 | Small Caps | <code>format.smallCaps</code> | Mod+Shift+K | <code>{}</code> | เปลี่ยนสถานะ |
 </details>
 
