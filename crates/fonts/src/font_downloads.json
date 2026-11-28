@@ -1,0 +1,48 @@
+{
+  "about": "Fonts a Thai document may ask for, and where to get them. KhianKrub links to the publisher's own page; it never downloads, bundles or redistributes the fonts, and the user is responsible for the publisher's licence terms. 'family' also covers every name that continues it after a space. 'url' is the publisher's download page (https only). An entry with 'windows': true and no 'url' names a font that comes with Windows and is not offered on its own: the app says so instead of linking. Ported from WordCraft 8331f2e6 (#6826), with KhianKrub's Thai list; the pages were checked on 2026-11-20.",
+  "downloads": [
+    {
+      "family": "TH Sarabun New",
+      "publisher": "SIPA",
+      "url": "https://www.f0nt.com/release/th-sarabun-new/",
+      "note": "SIPA's release page on f0nt.com (version 1.35, 2019). GPL 2.0 with a font exception."
+    },
+    { "family": "TH SarabunPSK", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/", "note": "SIPA's 13 national fonts, one page." },
+    { "family": "TH Sarabun PSK", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Charmonman", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Krub", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Srisakdi", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Niramit AS", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Charm of AU", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Kodchasal", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Kodchasan", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH K2D July8", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Mali Grade6", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Mali Grade 6", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Chakra Petch", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Baijam", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Bai Jamjuree CP", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH KoHo", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "TH Fah kwang", "publisher": "SIPA", "url": "https://www.f0nt.com/release/13-free-fonts-from-sipa/" },
+    { "family": "Angsana New", "publisher": "Microsoft", "windows": true },
+    { "family": "AngsanaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "Cordia New", "publisher": "Microsoft", "windows": true },
+    { "family": "CordiaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "Browallia New", "publisher": "Microsoft", "windows": true },
+    { "family": "BrowalliaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "DilleniaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "EucrosiaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "FreesiaUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "IrisUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "JasmineUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "KodchiangUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "LilyUPC", "publisher": "Microsoft", "windows": true },
+    { "family": "Leelawadee", "publisher": "Microsoft", "windows": true },
+    {
+      "family": "Aptos",
+      "publisher": "Microsoft",
+      "url": "https://www.microsoft.com/download/details.aspx?id=106087",
+      "note": "Kept from upstream: recent Word documents use Aptos for their Latin text."
+    }
+  ]
+}

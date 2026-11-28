@@ -278,6 +278,7 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
         return;
     }
     let events = ctx.input(|i| i.events.clone());
+    let alt_codes = alt_codes_supported(ctx);
     if app.session.view.read_mode {
         // Read Mode is for navigation and selection, not typing into the document. The ribbon's
         // Edit Document button or Escape returns to Print Layout before editing.
@@ -324,6 +325,25 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
         return;
     }
     for e in events {
+        match &e {
+            egui::Event::Key { pressed: true, .. } => {
+                app.canvas.swallow_text = false;
+                app.canvas.alt_code_echo = None;
+            }
+            egui::Event::Text(_) if std::mem::take(&mut app.canvas.swallow_text) => continue,
+            egui::Event::Text(t) => {
+                if let Some(echo) = app.canvas.alt_code_echo.take()
+                    && alt_code_echoed(app, &echo, t)
+                {
+                    continue;
+                }
+            }
+            egui::Event::WindowFocused(false) => app.canvas.alt_code.clear(),
+            _ => {}
+        }
+        if alt_codes && app.session.math.is_none() && alt_code_event(app, &e) {
+            continue;
+        }
         // egui-winit uses physical Num0 as a sentinel for the physical keypad-subtract key while
         // preserving `key: Minus`. Word assigns Ctrl+Alt+keypad-minus to Em Dash; the main-row
         // Ctrl+Alt+Minus remains the Optional Hyphen command in the regular keymap.
@@ -579,6 +599,209 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
 }
 
 /// Command shortcuts when the canvas isn't focused but no text field is either.
+fn alt_codes_supported(ctx: &egui::Context) -> bool {
+    !cfg!(target_os = "macos") && ctx.os() != egui::os::OperatingSystem::Mac
+}
+
+fn alt_code_digit(key: Key) -> Option<char> {
+    char::from_digit(
+        match key {
+            Key::Num0 => 0,
+            Key::Num1 => 1,
+            Key::Num2 => 2,
+            Key::Num3 => 3,
+            Key::Num4 => 4,
+            Key::Num5 => 5,
+            Key::Num6 => 6,
+            Key::Num7 => 7,
+            Key::Num8 => 8,
+            Key::Num9 => 9,
+            _ => return None,
+        },
+        10,
+    )
+}
+
+fn alt_only(m: &Modifiers) -> bool {
+    m.alt && !m.ctrl && !m.shift && !m.command && !m.mac_cmd
+}
+
+fn alt_code_event(app: &mut WordApp, e: &egui::Event) -> bool {
+    match e {
+        egui::Event::Key { key, pressed: true, repeat, modifiers, .. } if alt_only(modifiers) => match alt_code_digit(*key) {
+            Some(_) if *repeat => {
+                app.canvas.swallow_text = true;
+                true
+            }
+            Some(d) => {
+                if app.canvas.alt_code.len() < 8 {
+                    app.canvas.alt_code.push(d);
+                }
+                app.canvas.swallow_text = true;
+                true
+            }
+            None => {
+                app.canvas.alt_code.clear();
+                false
+            }
+        },
+        egui::Event::Key { key: Key::AltLeft | Key::AltRight, pressed: false, .. } => {
+            finish_alt_code(app);
+            false
+        }
+        egui::Event::ModifiersChanged(m) if !m.alt => {
+            finish_alt_code(app);
+            false
+        }
+        egui::Event::Key { pressed: true, .. } => {
+            app.canvas.alt_code.clear();
+            false
+        }
+        _ => false,
+    }
+}
+
+#[derive(Clone, Debug)]
+pub(crate) struct AltCodeEcho {
+    typed: String,
+    system_composes: bool,
+    byte_code: bool,
+}
+
+fn finish_alt_code(app: &mut WordApp) {
+    let code = std::mem::take(&mut app.canvas.alt_code);
+    if code.is_empty() {
+        return;
+    }
+    crate::objects::enter_text_box(app);
+    let system_composes = cfg!(target_os = "windows");
+    let mut params = json!({"code": code});
+    if system_composes {
+        let (ansi, oem) = doc4me_engine::cmd::text::system_code_pages();
+        params = json!({"code": code, "ansi": ansi, "oem": oem});
+        app.canvas.swallow_text = false;
+    }
+    if let Ok(result) = app.run("text.typeCode", params) {
+        let byte_code = code.trim_start_matches('0').parse::<u32>().is_ok_and(|v| v <= 255);
+        app.canvas.alt_code_echo =
+            result.get("char").and_then(Value::as_str).map(|c| AltCodeEcho { typed: c.to_string(), system_composes, byte_code });
+    }
+}
+
+fn alt_code_echoed(app: &mut WordApp, echo: &AltCodeEcho, text: &str) -> bool {
+    if echo.typed == text {
+        return true;
+    }
+    if !echo.system_composes {
+        return false;
+    }
+    if echo.byte_code && text.chars().count() == 1 {
+        let session = &app.session;
+        let focus = session.sel.focus.clone();
+        let start = focus.off.checked_sub(echo.typed.len());
+        let ours = start
+            .filter(|_| session.sel.is_collapsed())
+            .filter(|start| session.doc.para_at(&focus).and_then(|p| p.text.get(*start..focus.off)) == Some(echo.typed.as_str()));
+        if let Some(start) = ours {
+            app.session.sel = doc4me_engine::Selection { anchor: doc4me_doc::Pos { off: start, ..focus.clone() }, focus };
+            let _ = app.run("text.insert", json!({"text": text}));
+        }
+    }
+    true
+}
+
+#[derive(Clone, Debug, Default)]
+pub(crate) struct FieldAltCode {
+    code: String,
+    swallow_text: bool,
+    echo: Option<AltCodeEcho>,
+}
+
+fn field_code_char(code: &str) -> Option<char> {
+    use doc4me_engine::cmd::text::{alt_code_char, system_code_pages, system_oem_code_page};
+    let (ansi, oem) = if cfg!(target_os = "windows") { system_code_pages() } else { (1252, system_oem_code_page()) };
+    alt_code_char(code, ansi, oem)
+}
+
+fn alt_released(e: &egui::Event) -> bool {
+    match e {
+        egui::Event::Key { key: Key::AltLeft | Key::AltRight, pressed: false, .. } => true,
+        egui::Event::ModifiersChanged(m) => !m.alt,
+        _ => false,
+    }
+}
+
+/// Rewrite this frame's events so Alt-code digits don't enter an egui text field, then add the
+/// composed character on Alt release.
+pub(crate) fn field_alt_codes(app: &mut WordApp, ctx: &egui::Context) {
+    if !alt_codes_supported(ctx) || app.canvas.focused || !ctx.text_edit_focused() {
+        app.canvas.field_alt_code = FieldAltCode::default();
+        return;
+    }
+    let st = &mut app.canvas.field_alt_code;
+    let events = ctx.input(|i| i.events.clone());
+    let mut out = Vec::with_capacity(events.len() + 1);
+    let mut changed = false;
+    for e in events {
+        match &e {
+            egui::Event::Key { key, pressed: true, repeat, modifiers, .. } => {
+                st.swallow_text = false;
+                st.echo = None;
+                match alt_code_digit(*key).filter(|_| alt_only(modifiers)) {
+                    Some(d) => {
+                        if !*repeat && st.code.len() < 8 {
+                            st.code.push(d);
+                        }
+                        st.swallow_text = true;
+                    }
+                    None => st.code.clear(),
+                }
+            }
+            egui::Event::Text(_) if std::mem::take(&mut st.swallow_text) => {
+                changed = true;
+                continue;
+            }
+            egui::Event::Text(t) => {
+                if let Some(echo) = st.echo.take()
+                    && (echo.typed == *t || echo.system_composes)
+                {
+                    changed = true;
+                    if echo.typed != *t && echo.byte_code && t.chars().count() == 1 {
+                        out.push(egui::Event::Key {
+                            key: Key::Backspace,
+                            physical_key: None,
+                            pressed: true,
+                            repeat: false,
+                            modifiers: Modifiers::NONE,
+                        });
+                        out.push(e);
+                    }
+                    continue;
+                }
+            }
+            egui::Event::PointerButton { pressed: true, .. } => st.echo = None,
+            egui::Event::WindowFocused(false) => st.code.clear(),
+            _ => {}
+        }
+        let released = alt_released(&e);
+        out.push(e);
+        if released && !st.code.is_empty() {
+            let code = std::mem::take(&mut st.code);
+            let system_composes = cfg!(target_os = "windows");
+            st.swallow_text = false;
+            if let Some(c) = field_code_char(&code) {
+                let byte_code = code.trim_start_matches('0').parse::<u32>().is_ok_and(|v| v <= 255);
+                st.echo = Some(AltCodeEcho { typed: c.to_string(), system_composes, byte_code });
+                out.push(egui::Event::Text(c.to_string()));
+                changed = true;
+            }
+        }
+    }
+    if changed {
+        ctx.input_mut(|i| i.events = out);
+    }
+}
+
 pub fn global_shortcuts(app: &mut WordApp, ctx: &egui::Context) {
     // Customize Keyboard records the keys pressed; they never run commands meanwhile.
     if crate::windows::any_canvas_focused(app)

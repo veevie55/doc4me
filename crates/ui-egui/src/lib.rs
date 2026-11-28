@@ -60,6 +60,7 @@ pub mod equation_tab;
 #[cfg(not(target_arch = "wasm32"))]
 pub mod file_browser;
 pub mod file_dialogs;
+pub mod font_download;
 mod font_notice;
 pub mod form_fields;
 pub mod frame;
@@ -289,6 +290,8 @@ pub struct UiState {
     /// File › Options › Trust Center: Doc4Me may connect to online services (Online Pictures,
     /// Translate, Get Add-ins, Dictate's speech model). Off, it makes no connection of its own.
     pub online_services: bool,
+    /// Tell the user where to get fonts that a document needs but this computer lacks.
+    pub font_download_notice: bool,
 }
 
 /// Most recent documents kept (File › Options › Advanced offers 0–50, as Word does).
@@ -347,6 +350,7 @@ impl Default for UiState {
             translator: translator::Settings::default(),
             addins: Vec::new(),
             online_services: true,
+            font_download_notice: true,
         }
     }
 }
@@ -386,6 +390,10 @@ pub struct WordApp {
     pub(crate) dictation: Option<dictate::Active>,
     /// The notice that an opened document's font isn't installed and is drawn with Sarabun.
     pub(crate) font_notice: Option<String>,
+    /// Documents already checked for the optional missing-font notice.
+    pub(crate) font_notice_seen: Vec<u64>,
+    /// Whether the host asked to show the missing-font notice on opened files.
+    pub(crate) font_notices: bool,
     /// Content control frames, check boxes and lists on the page.
     pub controls: content_controls::ControlUi,
     /// Legacy form fields on the page: clicks, lists and text boxes in a protected form.
@@ -467,6 +475,8 @@ pub struct WordApp {
     pub quit_requested: bool,
     pub autosave: bool,
     pub word_count: (u64, usize),
+    /// Missing fonts for the current layout, shared by the status bar and font boxes.
+    pub missing_fonts: crate::chrome::MissingFontsMemo,
     last_autosave: f64,
     /// When AutoSave first saw the current unsaved changes ([`AUTOSAVE_MAX_WAIT_MS`]).
     dirty_since: Option<f64>,
@@ -547,6 +557,8 @@ impl WordApp {
             addins_store: None,
             dictation: None,
             font_notice: None,
+            font_notice_seen: Vec::new(),
+            font_notices: false,
             controls: Default::default(),
             forms: Default::default(),
             dialog: None,
@@ -586,6 +598,7 @@ impl WordApp {
             quit_requested: false,
             autosave: true,
             word_count: (0, 0),
+            missing_fonts: Default::default(),
             last_autosave: 0.0,
             dirty_since: None,
             equation_prev_tab: None,
@@ -1527,6 +1540,7 @@ impl WordApp {
             self.ctx = Some(ctx.clone());
         }
         self.drain_control(ctx);
+        font_download::tick(self);
         zotero::poll(self, ctx);
         read_aloud::poll(self, ctx);
         screen_clip::poll(self, ctx);
@@ -1697,6 +1711,7 @@ impl WordApp {
         // Keytips are read before layout so the frame paints the new state; badges paint after
         // the ribbon so they sit on top of it.
         crate::keytips::logic(self, &ctx);
+        crate::keys::field_alt_codes(self, &ctx);
         crate::ribbon_keys::logic(self, &ctx);
         if self.ui.backstage {
             backstage::show(self, ui);
@@ -1796,6 +1811,7 @@ impl WordApp {
                 log::debug!("control request {} dropped: its caller gave up", req.method);
                 continue;
             }
+            let before = self.session.document_id();
             match control::handle(self, ctx, &req) {
                 control::Outcome::Done(v) => {
                     let _ = reply.send(v);
@@ -1806,6 +1822,10 @@ impl WordApp {
                     self.queued_shots.push((token, now_ms() + 120.0, 0));
                     self.pending_shots.push((token, path, reply, now_ms() + 8000.0));
                 }
+            }
+            let after = self.session.document_id();
+            if after != before {
+                font_download::skip(self, after);
             }
         }
         self.control_rx = Some(rx);

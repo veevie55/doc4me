@@ -18,6 +18,7 @@ pub mod math;
 mod metafile_text;
 pub mod outline;
 pub mod para;
+mod substituted;
 mod table;
 mod textbox;
 mod vertical;

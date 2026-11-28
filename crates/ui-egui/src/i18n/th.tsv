@@ -3082,3 +3082,25 @@ spacing	Normal	ปกติ
 	A booklet is printed on landscape sheets with two pages side by side, then folded.	พิมพ์เป็นแผ่นแนวนอนที่มีสองหน้าอยู่ข้างกัน แล้วพับครึ่งเป็นเล่ม
 	Dot-dot-dash	เส้นจุดจุดประ
 	More Underlines…	เส้นใต้เพิ่มเติม…
+	1 font not installed	ไม่ได้ติดตั้งฟอนต์ 1 ตัว
+	{n} fonts not installed	ไม่ได้ติดตั้งฟอนต์ {n} ตัว
+	Shown in substitute fonts. Click for details.	แสดงด้วยฟอนต์อื่นแทน คลิกเพื่อดูรายละเอียด
+	Not installed — shown as	ไม่ได้ติดตั้ง — แสดงด้วย
+	…and {n} more	…และอีก {n} ตัว
+	Get the Missing Fonts…	หาฟอนต์ที่ขาด…
+	Get the Missing Fonts	หาฟอนต์ที่ขาด
+	No downloadable fonts are listed for this document.	ไม่มีรายการฟอนต์ที่ดาวน์โหลดได้สำหรับเอกสารนี้
+	This document uses fonts that aren't installed	เอกสารนี้ใช้ฟอนต์ที่ยังไม่ได้ติดตั้ง
+	Their text is shown in another font, so it may not look as it was written.	ข้อความในฟอนต์เหล่านี้จึงแสดงด้วยฟอนต์อื่น และอาจดูไม่ตรงกับต้นฉบับ
+	Font in the document	ฟอนต์ในเอกสาร
+	Shown with	แสดงด้วย
+	Get it from	ดาวน์โหลดได้ที่
+	Download from {publisher}	ดาวน์โหลดจาก {publisher}
+	Comes with Windows; not offered on its own	มากับ Windows ไม่มีให้ดาวน์โหลดแยก
+	Its licence limits who may use it: read the terms first.	สัญญาอนุญาตจำกัดผู้ใช้ไว้ โปรดอ่านเงื่อนไขก่อน
+	Fonts come with licence terms. Read the publisher's terms on the download page: following them is up to you.	ฟอนต์มีเงื่อนไขการใช้งาน โปรดอ่านข้อกำหนดของผู้เผยแพร่ในหน้าดาวน์โหลดและปฏิบัติตาม
+	Download the font, unpack the .zip file, then pick the font files:	ดาวน์โหลดฟอนต์ แตกไฟล์ .zip แล้วเลือกไฟล์ฟอนต์ที่ต้องการเพิ่ม:
+	Or install it for every app: select the font files, right-click and choose Install, then restart Doc4Me.	หรือติดตั้งให้ทุกแอป: เลือกไฟล์ฟอนต์ คลิกขวาแล้วเลือก Install จากนั้นเปิด Doc4Me ใหม่
+	Or install it for every app: double-click each font file and choose Install in Font Book, then restart Doc4Me.	หรือติดตั้งให้ทุกแอป: ดับเบิลคลิกไฟล์ฟอนต์แต่ละไฟล์แล้วเลือก Install ใน Font Book จากนั้นเปิด Doc4Me ใหม่
+	Or install it for every app: copy the font files to the .local/share/fonts folder in your home folder, then restart Doc4Me.	หรือติดตั้งให้ทุกแอป: คัดลอกไฟล์ฟอนต์ไปไว้ในโฟลเดอร์ .local/share/fonts ในโฟลเดอร์บ้าน จากนั้นเปิด Doc4Me ใหม่
+	Tell me where to get a document's missing fonts	บอกแหล่งดาวน์โหลดเมื่อเอกสารขาดฟอนต์

@@ -130,6 +130,12 @@ pub struct CanvasState {
     /// The last key ran an Alt shortcut: the text its key sends (it may arrive a frame later)
     /// isn't typed. The next key press clears it.
     pub(crate) swallow_text: bool,
+    /// Decimal digits collected while Alt is held for a Windows Alt code.
+    pub(crate) alt_code: String,
+    /// The composed character that may follow the Alt key release.
+    pub(crate) alt_code_echo: Option<crate::keys::AltCodeEcho>,
+    /// Alt-code state for focused egui text fields (Find, dialogs and ribbon controls).
+    pub(crate) field_alt_code: crate::keys::FieldAltCode,
     /// Word's Ctrl+accent keys (Ctrl+' then e types é): the accent waiting for its letter.
     pub(crate) dead_accent: Option<crate::keys::Accent>,
     /// Create Link is waiting for a click on the text box to link to: the linking box's object.
@@ -203,6 +209,9 @@ impl Default for CanvasState {
             mini_anchor: None,
             pasted: false,
             swallow_text: false,
+            alt_code: String::new(),
+            alt_code_echo: None,
+            field_alt_code: Default::default(),
             dead_accent: None,
             wheel: Default::default(),
             scroll_offset: egui::Vec2::ZERO,

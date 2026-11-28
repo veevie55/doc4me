@@ -11,6 +11,10 @@ pub fn set_system_locale(tag: &str) {
     let _ = SYSTEM_LOCALE.set(tag.to_string());
 }
 
+pub(crate) fn system_locale() -> Option<&'static str> {
+    SYSTEM_LOCALE.get().map(String::as_str)
+}
+
 use doc4me_doc::edit::Fragment;
 use doc4me_doc::props::CharProps;
 use doc4me_doc::{Document, Path, Pos, StoryRef};

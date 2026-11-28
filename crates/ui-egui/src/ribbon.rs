@@ -5,7 +5,7 @@ use serde_json::{Value, json};
 
 use crate::colors::{Remember, Target};
 use crate::theme::{Tokens, medium, regular, semibold};
-use crate::widgets::{CONTENT_H, LABEL_H, big, big_toggle, combo, font_combo, group, menu_button, small, split};
+use crate::widgets::{CONTENT_H, LABEL_H, big, big_toggle, combo, group, menu_button, small, split};
 use crate::{WordApp, icons};
 
 pub const TABS: [&str; 13] = doc4me_engine::ribbon::TABS;
@@ -646,11 +646,12 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
     group(ui, "Font", Some("format.fontDialog"), app, |ui, app| {
         stack(ui, |ui| {
             crate::widgets::row(ui, |ui| {
-                let font = st.get("font").and_then(Value::as_str).unwrap_or("").to_string();
-                let font = app.previews.font_shown(&font);
+                let stored_font = st.get("font").and_then(Value::as_str).unwrap_or("").to_string();
+                let warning = app.font_box_warning(&stored_font);
+                let font = app.previews.font_shown(&stored_font);
                 let fams = app.previews.families();
                 let prev = app.previews.font_preview_fn();
-                if let Some(f) = font_combo(ui, "font", 150.0, &font, &fams, Some(&*prev)) {
+                if let Some(f) = crate::widgets::font_combo_warned(ui, "font", 150.0, &font, &fams, Some(&*prev), warning.as_deref()) {
                     let _ = if f == crate::widgets::ADD_FONT {
                         app.run("font.add", json!({}))
                     } else {

@@ -298,6 +298,8 @@ pub struct LabelRun {
 #[derive(Clone, Debug)]
 pub struct ParaLayout {
     pub rp: ResolvedPara,
+    /// Fonts the shown text and list label use that aren't installed, with the faces drawn instead.
+    pub substituted: Vec<(String, FaceRef)>,
     pub styles: Vec<StyleRun>,
     pub glyphs: Vec<Glyph>,
     pub clusters: Vec<Cluster>,
@@ -494,12 +496,43 @@ struct Builder<'a> {
     levels: Vec<u8>,
     /// Text drawn by clusters that stand for an object, by cluster index (see `ParaLayout::shown`).
     shown: Vec<(usize, String, Vec<std::ops::Range<usize>>)>,
+    /// Requested fonts absent from this system, and the faces each segment was drawn in.
+    substituted: Vec<(String, FaceRef)>,
     /// Clusters that may end a line though their object's text has no break opportunity (the
     /// words of a form field's text, see `shape_wrappable`).
     wrap_after: Vec<usize>,
     /// Clusters that never end a line: a bracket of combined text, and the combined text before
     /// its closing bracket (see `shape_combined`).
     keep_with_next: Vec<usize>,
+}
+
+/// Missing fonts named by the run's Latin, complex-script and East Asian properties.
+struct MissingFonts<'a> {
+    latin: Option<&'a str>,
+    complex: Option<&'a str>,
+    east_asian: Option<&'a str>,
+    names_east_asian: bool,
+}
+
+/// Cap names recorded from a document, which may contain hostile unbounded strings.
+fn reported_font_name(font: &str) -> &str {
+    font.char_indices().nth(256).and_then(|(i, _)| font.get(..i)).unwrap_or(font)
+}
+
+fn is_symbol_font(font: &str) -> bool {
+    matches!(font.trim().to_ascii_lowercase().as_str(), "symbol" | "wingdings" | "wingdings 2" | "wingdings 3" | "webdings")
+}
+
+/// Whether this character produces visible glyphs in the current layout.
+fn draws_something(c: char) -> bool {
+    !c.is_whitespace()
+        && !c.is_control()
+        && c != OBJ
+        && !matches!(c,
+            '\u{00AD}' | '\u{034F}' | '\u{061C}' | '\u{115F}'..='\u{1160}' | '\u{17B4}'..='\u{17B5}' | '\u{180B}'..='\u{180F}'
+            | '\u{200B}'..='\u{200F}' | '\u{202A}'..='\u{202E}' | '\u{2060}'..='\u{206F}' | '\u{3164}' | '\u{FE00}'..='\u{FE0F}'
+            | '\u{FEFF}' | '\u{FFA0}' | '\u{FFF0}'..='\u{FFF8}' | '\u{1BCA0}'..='\u{1BCA3}' | '\u{1D173}'..='\u{1D17A}'
+            | '\u{E0000}'..='\u{E0FFF}')
 }
 
 /// Use a DOCX font-table alternate only when the requested family is unavailable. Keep the
@@ -818,6 +851,47 @@ impl<'a> Builder<'a> {
         self.shape_with(text, base, rc, kind_override, true);
     }
 
+    fn note_substituted(&mut self, font: &str, drawn: FaceRef) {
+        if font.trim().is_empty() || is_symbol_font(font) {
+            return;
+        }
+        let font = reported_font_name(font);
+        if !self.substituted.iter().any(|(f, d)| d.id() == drawn.id() && f == font) && self.substituted.len() < 64 {
+            self.substituted.push((font.to_string(), drawn));
+        }
+    }
+
+    fn note_missing_fonts(
+        &mut self,
+        text: &str,
+        segs: &[(usize, usize, SegKey)],
+        (primary, primary_cs, primary_ea): (FaceRef, Option<FaceRef>, Option<FaceRef>),
+        missing: &MissingFonts,
+    ) {
+        if missing.latin.is_none() && missing.complex.is_none() && missing.east_asian.is_none() {
+            return;
+        }
+        for &(a, b, key) in segs {
+            let Some(sub) = text.get(a..b).filter(|t| t.chars().any(draws_something)) else { continue };
+            let drawn = key.face.unwrap_or(if key.complex { primary_cs.unwrap_or(primary) } else { primary });
+            if key.complex {
+                if let Some(font) = missing.complex {
+                    self.note_substituted(font, drawn);
+                }
+                continue;
+            }
+            let in_ea_font = key.face.zip(primary_ea).is_some_and(|(face, ea)| face.id() == ea.id());
+            let latin_chars = sub.chars().any(|c| draws_something(c) && !east_asian(c));
+            let asks_latin = latin_chars || (!missing.names_east_asian && !in_ea_font);
+            if let Some(font) = missing.latin.filter(|_| asks_latin) {
+                self.note_substituted(font, drawn);
+            }
+            if let Some(font) = missing.east_asian.filter(|_| !in_ea_font && sub.chars().any(east_asian)) {
+                self.note_substituted(font, drawn);
+            }
+        }
+    }
+
     /// `para_text`: `text` is paragraph text at `base`, so the paragraph's bidi levels apply
     /// (false for field results and list labels, which are shaped on their own).
     fn shape_with(&mut self, text: &str, base: usize, rc: &Arc<ResolvedChar>, kind_override: Option<ClKind>, para_text: bool) {
@@ -839,22 +913,23 @@ impl<'a> Builder<'a> {
             Some(u) if symbol_sub || !primary.covers(c) => u,
             _ => c,
         };
-        let primary_cs = rc_cs.as_ref().map(|r| {
+        let resolved_cs: Option<(FaceRef, bool)> = rc_cs.as_ref().map(|r| {
             let family = font_for_document(self.env.doc, &r.font);
-            doc4me_fonts::word::resolve(&family, r.bold, r.italic).face
+            let resolved = doc4me_fonts::word::resolve(&family, r.bold, r.italic);
+            (resolved.face, resolved.substituted || !family.eq_ignore_ascii_case(&r.font))
         });
+        let primary_cs = resolved_cs.map(|(face, _)| face);
         // Chinese, Japanese and Korean characters use the run's East Asian font (`w:eastAsia`) when
         // it is installed and has them.
-        let primary_ea = rc
+        let wanted_ea: Option<(&str, doc4me_fonts::word::Resolved)> = rc
             .font_ea
-            .as_ref()
+            .as_deref()
             .filter(|f| !f.eq_ignore_ascii_case(&rc.font) && text.chars().any(|c| east_asian(c) || (rc.hint_ea && east_asian_when_hinted(c))))
             .map(|f| {
                 let family = font_for_document(self.env.doc, f);
-                doc4me_fonts::word::resolve(&family, rc.bold, rc.italic)
-            })
-            .filter(|r| !r.substituted)
-            .map(|r| r.face);
+                (f, doc4me_fonts::word::resolve(&family, rc.bold, rc.italic))
+            });
+        let primary_ea = wanted_ea.filter(|(_, r)| !r.substituted).map(|(_, r)| r.face);
         let use_levels = para_text && !self.levels.is_empty();
         let context = if self.env.numeral == NumeralMode::Context && use_levels { context_digit_dirs(text, &self.levels, base) } else { Vec::new() };
         // One fallback face for the run's East Asian characters: the first face in fallback order
@@ -944,6 +1019,13 @@ impl<'a> Builder<'a> {
         if let Some(p) = cur {
             segs.push((seg_start, text.len(), p));
         }
+        let missing = MissingFonts {
+            latin: (primary_r.substituted || !primary_family.eq_ignore_ascii_case(&rc.font)).then_some(rc.font.as_str()),
+            complex: rc_cs.as_ref().filter(|_| resolved_cs.is_some_and(|(_, missing)| missing)).map(|r| r.font.as_str()),
+            east_asian: wanted_ea.filter(|(_, r)| r.substituted).map(|(font, _)| font),
+            names_east_asian: wanted_ea.is_some(),
+        };
+        self.note_missing_fonts(text, &segs, (primary, primary_cs, primary_ea), &missing);
         for (a, b, key) in segs {
             let Some(sub) = text.get(a..b) else { continue };
             let rc = match (&rc_cs, key.complex) {
@@ -1499,6 +1581,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         clusters: Vec::new(),
         levels,
         shown: Vec::new(),
+        substituted: Vec::new(),
         wrap_after: Vec::new(),
         keep_with_next: Vec::new(),
     };
@@ -2049,6 +2132,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
 
     let mut pl = ParaLayout {
         rp,
+        substituted: b.substituted,
         styles: b.styles,
         glyphs: b.glyphs,
         clusters: b.clusters,

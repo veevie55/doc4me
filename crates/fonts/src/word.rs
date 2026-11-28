@@ -497,6 +497,37 @@ pub fn same_widths(requested: &str, face: &str) -> bool {
     stand_ins.contains(&f.as_str())
 }
 
+/// The font named by a document and its substitute have the same advances, so line breaks stay
+/// put. This includes documented metric twins used for font warnings.
+pub fn metric_compatible(requested: &str, substitute: &str) -> bool {
+    const GROUPS: &[&[&str]] = &[
+        &["Arial", "Liberation Sans", "Helvetica", "Arimo"],
+        &["Times New Roman", "Liberation Serif", "Tinos"],
+        &["Courier New", "Liberation Mono", "Cousine"],
+        &["Calibri", "Carlito"],
+        &["Cambria", "Caladea"],
+        &["Palatino Linotype", "Palatino", "Book Antiqua", "TeX Gyre Pagella", "P052", "URW Palladio L", "Palladio"],
+        &["TH SarabunPSK", "TH Sarabun New"],
+    ];
+    let requested = charset_base_family(requested.trim());
+    let (requested, substitute) = (requested.trim(), substitute.trim());
+    requested.eq_ignore_ascii_case(substitute)
+        || GROUPS.iter().any(|group| {
+            group.iter().any(|name| name.eq_ignore_ascii_case(requested)) && group.iter().any(|name| name.eq_ignore_ascii_case(substitute))
+        })
+}
+
+/// Windows' legacy charset suffixes stand for the base family (`Arial CE`, `Times New Roman Cyr`).
+pub(crate) fn charset_base_family(family: &str) -> &str {
+    const SUFFIXES: &[&str] = &[" cyr", " ce", " greek", " tur", " baltic", " (arabic)", " (hebrew)", " (vietnamese)"];
+    let lower = family.trim_end().to_ascii_lowercase();
+    SUFFIXES
+        .iter()
+        .find(|suffix| lower.ends_with(*suffix) && lower.len() > suffix.len())
+        .and_then(|suffix| family.trim_end().get(..lower.len() - suffix.len()))
+        .map_or(family, str::trim_end)
+}
+
 /// Whether `family` is drawn by itself or by an open stand-in made to its metrics (Carlito for
 /// Calibri), not by a generic substitute.
 pub fn is_known_face(family: &str) -> bool {

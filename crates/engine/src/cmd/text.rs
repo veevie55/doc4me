@@ -52,6 +52,8 @@ pub fn specs() -> Vec<CommandSpec> {
         } else {
             "Alt+X"
         }),
+        CommandSpec::new("text.typeCode", "Type Character Code", "Editing", insert_code)
+            .params(r#"{"code": string (decimal digits), "ansi"?: 874 | 1250–1258, "oem"?: 437 | 737 | 850 | 852 | 857 | 866}"#),
         CommandSpec::new("text.emDash", "Em Dash", "Insert › Symbols", |s, _| ins_char(s, '—')),
         CommandSpec::new("text.enDash", "En Dash", "Insert › Symbols", |s, _| ins_char(s, '–')),
         // On macOS Option+G / R / 2 / ; type these directly, so Word for Mac has no Cmd shortcut.
@@ -391,6 +393,87 @@ fn toggle_unicode(s: &mut Session, _: &Value) -> CmdResult {
     s.pending = None;
     type_text(s, &replacement)?;
     sel_result(s)
+}
+
+/// Type a Windows Alt+numpad decimal code using the selected ANSI/OEM pages.
+fn insert_code(s: &mut Session, v: &Value) -> CmdResult {
+    use doc4me_doc::encoding::{OEM_CODE_PAGES, SINGLE_BYTE_CODE_PAGES};
+    let code = p::req_str(v, "code")?;
+    let page = |key: &str, known: &[u16], default: u16| match p::u64(v, key) {
+        Some(cp) => u16::try_from(cp).ok().filter(|cp| known.contains(cp)).ok_or_else(|| CmdError::Params(format!("{key} must be one of {known:?}"))),
+        None => Ok(default),
+    };
+    let ansi = page("ansi", &SINGLE_BYTE_CODE_PAGES, 1252)?;
+    let oem = page("oem", &OEM_CODE_PAGES, system_oem_code_page())?;
+    let c = alt_code_char(code, ansi, oem).ok_or_else(|| CmdError::Failed(format!("{code:?} isn't a character code")))?;
+    let mut result = insert(s, &serde_json::json!({"text": c.to_string()}))?;
+    if let Value::Object(object) = &mut result {
+        object.insert("char".into(), Value::String(c.to_string()));
+    }
+    Ok(result)
+}
+
+pub fn alt_code_char(code: &str, ansi: u16, oem: u16) -> Option<char> {
+    if code.is_empty() || !code.bytes().all(|b| b.is_ascii_digit()) {
+        return None;
+    }
+    let digits = code.trim_start_matches('0');
+    if digits.len() > 7 {
+        return None;
+    }
+    let value: u32 = if digits.is_empty() { 0 } else { digits.parse().ok()? };
+    let c = match u8::try_from(value) {
+        Ok(0) => return None,
+        Ok(b) if code.starts_with('0') => doc4me_doc::encoding::windows_byte(ansi, b),
+        Ok(b) => doc4me_doc::encoding::oem_byte(oem, b),
+        Err(_) => char::from_u32(value)?,
+    };
+    Some(c).filter(|c| codeable(*c) && *c != '\u{FFFD}')
+}
+
+pub fn system_oem_code_page() -> u16 {
+    oem_code_page(crate::session::system_locale())
+}
+
+pub fn system_code_pages() -> (u16, u16) {
+    windows_code_pages(crate::session::system_locale())
+}
+
+pub fn oem_code_page(locale: Option<&str>) -> u16 {
+    match windows_code_pages(locale) {
+        (_, 850) => 850,
+        _ => 437,
+    }
+}
+
+pub fn windows_code_pages(locale: Option<&str>) -> (u16, u16) {
+    let Some(tag) = locale else { return (1252, 437) };
+    let parts: Vec<&str> = tag.split(['-', '_', '.', '@']).collect();
+    let lang = parts.first().copied().unwrap_or_default().to_ascii_lowercase();
+    let rest = parts.get(1..).unwrap_or_default();
+    let region = rest.iter().find(|p| p.len() == 2 && p.chars().all(|c| c.is_ascii_alphabetic())).map(|r| r.to_ascii_uppercase());
+    let script = rest.iter().find(|p| p.len() == 4 && p.chars().all(|c| c.is_ascii_alphabetic())).map(|r| r.to_ascii_lowercase());
+    const WESTERN: [&str; 18] = ["ca", "da", "de", "es", "eu", "fi", "fo", "fr", "ga", "gl", "is", "it", "nb", "nl", "nn", "no", "pt", "sv"];
+    match lang.as_str() {
+        "en" => match region.as_deref() {
+            None | Some("US") => (1252, 437),
+            Some(_) => (1252, 850),
+        },
+        l if WESTERN.contains(&l) => (1252, 850),
+        "pl" | "cs" | "sk" | "hu" | "sl" | "hr" | "ro" | "sq" | "bs" => (1250, 852),
+        "sr" if script.as_deref() == Some("latn") => (1250, 852),
+        "ru" | "uk" | "be" | "bg" => (1251, 866),
+        "sr" | "mk" => (1251, 437),
+        "el" => (1253, 737),
+        "az" if script.as_deref() == Some("cyrl") => (1251, 866),
+        "tr" | "az" => (1254, 857),
+        "he" => (1255, 437),
+        "ar" | "fa" | "ur" => (1256, 437),
+        "et" | "lv" | "lt" => (1257, 437),
+        "vi" => (1258, 437),
+        "th" => (874, 437),
+        _ => (1252, 437),
+    }
 }
 
 /// The character a hex code (1–6 digits) names, if it is one Alt+X makes.

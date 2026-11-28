@@ -519,6 +519,11 @@ pub enum Dialog {
     WordPerfectHelp(Box<crate::dialogs_wphelp::WordPerfectHelpDialog>),
     /// Bounded custom XML schema, element-attribute and options editors.
     CustomXml(Box<crate::dialogs_custom_xml::CustomXmlDialog>),
+    /// Publisher links for fonts missing from the current document.
+    FontDownload {
+        fonts: Vec<crate::font_download::Row>,
+        dont_show: bool,
+    },
 }
 
 /// The Table Properties dialog's fields. Lengths are in the interface unit
@@ -931,6 +936,7 @@ impl Dialog {
             Dialog::Icons { .. } => "icons",
             Dialog::PasteSpecial { .. } => "pasteSpecial",
             Dialog::About { .. } => "about",
+            Dialog::FontDownload { .. } => "fontDownload",
             Dialog::SaveChanges { .. } => "saveChanges",
             Dialog::DiscardRecovery { .. } => "discardRecovery",
             Dialog::RecipientList { .. } => "recipientList",
@@ -985,6 +991,9 @@ impl Dialog {
     }
 
     pub fn open(name: &str, app: &mut WordApp) -> Option<Dialog> {
+        if name == "fontDownload" {
+            return Some(crate::font_download::open(app));
+        }
         if let Some(d) = crate::dialogs_insert::open(name, app) {
             return Some(Dialog::Insert(Box::new(d)));
         }
@@ -1461,6 +1470,7 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
         Dialog::Icons { .. } => "Icons",
         Dialog::PasteSpecial { .. } => "Paste Special",
         Dialog::About { .. } => "About Doc4Me",
+        Dialog::FontDownload { .. } => "Get the Missing Fonts",
         Dialog::SaveChanges { .. } => "Doc4Me",
         Dialog::DiscardRecovery { .. } => "Discard recovery copy",
         Dialog::RecipientList { .. } => "Recipient List",
@@ -1735,18 +1745,23 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 egui::Grid::new("fontdlg").num_columns(2).spacing(vec2(10.0, 6.0)).show(ui, |ui| {
                     // Word's two font boxes when East Asian text is in use: the Latin text font and
                     // the Asian text font, each with its own list (type to find a font).
+                    let latin_warning = app.font_dialog_warning(font);
+                    let asian_warning = if *asian { app.east_asian_font_box_warning(font_ea, font) } else { None };
                     let prev = app.previews.font_preview_fn();
                     if *asian {
                         ui.label(tl!("Asian text font:"));
                         let fams = app.previews.east_asian_families();
-                        if let Some(f) = crate::widgets::font_combo(ui, "fontdlg_asian", 220.0, font_ea, &fams, Some(&*prev)) {
+                        if let Some(f) =
+                            crate::widgets::font_combo_warned(ui, "fontdlg_asian", 220.0, font_ea, &fams, Some(&*prev), asian_warning.as_deref())
+                        {
                             *font_ea = f;
                         }
                         ui.end_row();
                     }
                     ui.label(if *asian { tl!("Latin text font:") } else { tl!("Font:") });
                     let fams = app.previews.families();
-                    if let Some(f) = crate::widgets::font_combo(ui, "fontdlg_font", 220.0, font, &fams, Some(&*prev)) {
+                    if let Some(f) = crate::widgets::font_combo_warned(ui, "fontdlg_font", 220.0, font, &fams, Some(&*prev), latin_warning.as_deref())
+                    {
                         *font = f;
                     }
                     ui.end_row();
@@ -2954,6 +2969,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             false
         }
+        Dialog::FontDownload { fonts, dont_show } => crate::font_download::body(app, ui, fonts, dont_show),
         Dialog::RecipientList { fields, rows, message } => recipient_list(app, ui, fields, rows, message),
         Dialog::InsertMergeField { fields, field } => {
             if fields.is_empty() {

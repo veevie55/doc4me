@@ -565,7 +565,7 @@ pub fn combo(
     items: &[String],
     preview: Option<&dyn Fn(&mut Ui, &str) -> Response>,
 ) -> Option<String> {
-    combo_impl(ui, id, width, current, items, preview, false)
+    combo_impl(ui, id, width, current, items, preview, false, None)
 }
 
 /// What [`font_combo`] returns when its list's last entry, Add Font…, is chosen (#582): the
@@ -585,7 +585,37 @@ pub fn font_combo(
     items: &[String],
     preview: Option<&dyn Fn(&mut Ui, &str) -> Response>,
 ) -> Option<String> {
-    combo_impl(ui, id, width, current, items, preview, true)
+    font_combo_warned(ui, id, width, current, items, preview, None)
+}
+
+/// A font combo with a warning mark when the requested family is being substituted.
+pub fn font_combo_warned(
+    ui: &mut Ui,
+    id: &str,
+    width: f32,
+    current: &str,
+    items: &[String],
+    preview: Option<&dyn Fn(&mut Ui, &str) -> Response>,
+    shown_as: Option<&str>,
+) -> Option<String> {
+    combo_impl(ui, id, width, current, items, preview, true, shown_as)
+}
+
+pub fn missing_font_tip(font: &str, shown_as: &str) -> String {
+    crate::i18n::fmt(
+        tl!(
+            "{font} isn't installed on this computer, so its text is shown in {shown}. Line breaks and page count can differ from where the document was made. If you have the font file, add it with Add Font… at the end of this list."
+        ),
+        &[("font", font), ("shown", shown_as)],
+    )
+}
+
+pub fn paint_font_warning(p: &egui::Painter, r: Rect) {
+    let s = r.width().min(r.height()) / 20.0;
+    let at = |x: f32, y: f32| pos2(r.center().x + (x - 10.0) * s, r.center().y + (y - 10.0) * s);
+    p.add(egui::Shape::convex_polygon(vec![at(10.0, 2.5), at(18.5, 17.5), at(1.5, 17.5)], Color32::from_rgb(0xE0, 0x7B, 0x1F), Stroke::NONE));
+    p.line_segment([at(10.0, 7.5), at(10.0, 12.5)], Stroke::new((1.6 * s).max(1.0), Color32::WHITE));
+    p.circle_filled(at(10.0, 15.0), (1.0 * s).max(0.8), Color32::WHITE);
 }
 
 /// Indices of the `items` matching `query`, ignoring case: exact matches, then the names starting
@@ -639,6 +669,7 @@ fn combo_impl(
     items: &[String],
     preview: Option<&dyn Fn(&mut Ui, &str) -> Response>,
     search: bool,
+    shown_as: Option<&str>,
 ) -> Option<String> {
     let mut out = None;
     let edit_id = ui.id().with(("combo_text", id));
@@ -670,10 +701,15 @@ fn combo_impl(
                 }
             });
         }
-        let te = egui::TextEdit::singleline(&mut text).id(te_id).desired_width(width - 16.0).font(regular(12.0)).margin(vec2(4.0, 3.0));
+        let left_margin = if shown_as.is_some() { 19.0 } else { 4.0 };
+        let te = egui::TextEdit::singleline(&mut text).id(te_id).desired_width(width - 16.0).font(regular(12.0)).margin(vec2(left_margin, 3.0));
         // The arrow's box is painted here, under the field, once its size is known.
         let arrow_bg = ui.painter().add(egui::Shape::Noop);
         let resp = ui.add(te);
+        if let Some(shown) = shown_as {
+            paint_font_warning(ui.painter(), Rect::from_min_size(pos2(resp.rect.min.x + 2.0, resp.rect.center().y - 6.5), vec2(13.0, 13.0)));
+            resp.clone().on_hover_text(missing_font_tip(current, shown));
+        }
         keytip_badge(ui, resp.rect, "combo", id);
         focused = resp.has_focus();
         let enter = resp.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));

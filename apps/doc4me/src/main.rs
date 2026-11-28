@@ -322,6 +322,7 @@ fn main() -> eframe::Result {
             let doc = if sample { doc4me_engine::sample::sample_document() } else { doc4me_doc::Document::new() };
             let (file_dialog, dialogs) = file_dialogs::hook(&cc.egui_ctx);
             let mut app = WordApp::new(Session::new(doc), services(file_dialog, &cc.egui_ctx));
+            app.tell_about_font_downloads();
             load_prefs(&mut app);
             if prefs_enabled()
                 && let Some(dir) = doc4me_control_key::settings_dir()

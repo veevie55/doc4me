@@ -18,6 +18,9 @@ pub fn specs() -> Vec<CommandSpec> {
             .pure(),
         CommandSpec::new("font.list", "Added Fonts", "Home › Font", list).params(r#"{"all"?: bool (also every available family)}"#).pure(),
         CommandSpec::new("font.remove", "Remove Added Font", "Home › Font", remove).params(r#"{"family": string}"#).pure(),
+        CommandSpec::new("font.missing", "Missing Fonts", "Status Bar", missing)
+            .params(r#"{} → {"missing": [{"font": string, "shownAs": [string], "metricCompatible": bool, "download"?: object}]} — fonts absent from the current layout"#)
+            .pure(),
     ]
 }
 
@@ -109,6 +112,84 @@ fn remove(s: &mut Session, v: &Value) -> CmdResult {
     s.relayout();
     s.status = format!("Removed {}", family.trim());
     Ok(json!({"removed": gone.iter().map(font_json).collect::<Vec<_>>()}))
+}
+
+/// A font the visible document layout asked for but could not find.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct MissingFont {
+    pub font: String,
+    pub shown_as: Vec<String>,
+    pub metric_compatible: bool,
+    pub download: Option<&'static doc4me_fonts::download::FontDownload>,
+}
+
+/// The family text in `font` resolves to when that family is unavailable.
+pub fn shown_as(font: &str) -> Option<String> {
+    let resolved = doc4me_fonts::word::resolve(font.trim(), false, false);
+    resolved.substituted.then(|| resolved.face.get().family.clone())
+}
+
+pub fn warns(font: &str, substitute: &str) -> bool {
+    let symbol = matches!(font.trim().to_ascii_lowercase().as_str(), "symbol" | "wingdings" | "wingdings 2" | "wingdings 3" | "webdings");
+    !symbol && !doc4me_fonts::word::metric_compatible(font, substitute)
+}
+
+pub fn font_key(font: &str) -> String {
+    reported_font_name(font).trim().to_lowercase()
+}
+
+fn reported_font_name(font: &str) -> &str {
+    font.char_indices().nth(256).and_then(|(i, _)| font.get(..i)).unwrap_or(font)
+}
+
+/// Missing families and the faces the current layout uses instead.
+pub fn missing_fonts(layout: &doc4me_layout::DocLayout) -> Vec<MissingFont> {
+    let mut out = std::collections::BTreeMap::<String, MissingFont>::new();
+    for (recorded, face) in layout.substituted_fonts() {
+        let font = reported_font_name(&recorded).trim();
+        if font.is_empty() {
+            continue;
+        }
+        let family = face.get().family.clone();
+        let entry = out.entry(font_key(font)).or_insert_with(|| MissingFont {
+            font: font.to_string(),
+            shown_as: Vec::new(),
+            metric_compatible: !warns(font, &family),
+            download: doc4me_fonts::download::download_for(font),
+        });
+        if !entry.shown_as.contains(&family) {
+            entry.shown_as.push(family);
+        }
+    }
+    out.into_values().collect()
+}
+
+fn missing(s: &mut Session, _: &Value) -> CmdResult {
+    let found = missing_fonts(&s.layout());
+    let changing: Vec<&str> = found.iter().filter(|f| !f.metric_compatible).map(|f| f.font.as_str()).collect();
+    let names = changing
+        .iter()
+        .take(5)
+        .map(|f| f.char_indices().nth(40).and_then(|(i, _)| f.get(..i)).map(|s| format!("{s}…")).unwrap_or_else(|| (*f).to_string()))
+        .collect::<Vec<_>>()
+        .join(", ");
+    s.status = match (found.is_empty(), changing.len()) {
+        (true, _) => "Every font the document shows is installed".into(),
+        (false, 0) => "Missing fonts are shown in fonts that measure the same; line breaks don't move".into(),
+        (_, n) if n > 5 => format!("Not installed: {names} and {} more", n - 5),
+        _ => format!("Not installed: {names}"),
+    };
+    let fonts = found
+        .into_iter()
+        .map(|f| {
+            let mut value = json!({"font": f.font, "shownAs": f.shown_as, "metricCompatible": f.metric_compatible});
+            if let Some(d) = f.download {
+                value["download"] = json!({"name": d.name, "publisher": d.publisher, "url": d.url, "windows": d.windows, "restricted": d.restricted});
+            }
+            value
+        })
+        .collect::<Vec<_>>();
+    Ok(json!({"missing": fonts}))
 }
 
 #[cfg(test)]

@@ -7,6 +7,10 @@ use serde_json::json;
 use crate::theme::{Tokens, TypeRung, paint_text, regular, semibold, text_width};
 use crate::{WordApp, icons};
 
+/// Missing fonts and the warning text used by font controls.
+pub type MissingFontsCache = (std::sync::Arc<Vec<doc4me_engine::cmd::font::MissingFont>>, std::sync::Arc<std::collections::HashMap<String, String>>);
+pub type MissingFontsMemo = (std::sync::Weak<doc4me_layout::DocLayout>, MissingFontsCache);
+
 fn qat_button(ui: &mut Ui, app: &mut WordApp, icon: &str, tip: &str, id: &str, enabled: bool) -> egui::Response {
     let t = Tokens::get(ui.ctx());
     let (r, resp) = ui.allocate_exact_size(vec2(26.0, 24.0), Sense::click());
@@ -337,6 +341,53 @@ pub fn status_bar(app: &mut WordApp, ui: &mut Ui) {
                 if app.session.doc.settings.track_changes {
                     st(ui, tl!("Track Changes: On"));
                 }
+                let missing = app.cached_missing_fonts(&l).0;
+                let count = missing.iter().filter(|f| !f.metric_compatible).count();
+                if count > 0 {
+                    let label = if count == 1 {
+                        tl!("1 font not installed").to_string()
+                    } else {
+                        crate::i18n::fmt(tl!("{n} fonts not installed"), &[("n", &count.to_string())])
+                    };
+                    let (r, resp) = ui.allocate_exact_size(
+                        vec2(
+                            17.0 + text_width(ui.painter(), &label, &TypeRung::Caption.regular(), TypeRung::Caption.tracking(), t.text_dim),
+                            TypeRung::Caption.line_height(),
+                        ),
+                        Sense::click(),
+                    );
+                    crate::widgets::paint_font_warning(ui.painter(), Rect::from_min_size(pos2(r.min.x, r.center().y - 6.5), vec2(13.0, 13.0)));
+                    paint_text(
+                        ui.painter(),
+                        pos2(r.min.x + 17.0, r.min.y),
+                        Align2::LEFT_TOP,
+                        &label,
+                        &TypeRung::Caption.regular(),
+                        TypeRung::Caption.tracking(),
+                        t.text_dim,
+                    );
+                    let resp = resp.on_hover_text(tl!("Shown in substitute fonts. Click for details."));
+                    egui::Popup::menu(&resp).show(|ui| {
+                        ui.set_min_width(260.0);
+                        ui.label(egui::RichText::new(tl!("Not installed — shown as")).strong());
+                        const SHOWN: usize = 20;
+                        for f in missing.iter().filter(|f| !f.metric_compatible).take(SHOWN) {
+                            ui.label(format!("{} → {}", f.font, f.shown_as.join(", ")));
+                        }
+                        if count > SHOWN {
+                            ui.label(crate::i18n::fmt(tl!("…and {n} more"), &[("n", &(count - SHOWN).to_string())]));
+                        }
+                        ui.separator();
+                        if missing.iter().any(|f| f.download.is_some()) && ui.button(tl!("Get the Missing Fonts…")).clicked() {
+                            let _ = app.run("ui.dialog", json!({"name": "fontDownload"}));
+                            ui.close();
+                        }
+                        if ui.button(tl!("Add Font…")).clicked() {
+                            let _ = app.run("font.add", json!({}));
+                            ui.close();
+                        }
+                    });
+                }
                 if app.session.prefs.overtype && st(ui, tl!("Overtype")).on_hover_text(tl!("Click to switch back to inserting")).clicked() {
                     let _ = app.run("text.overtype", json!({"value": false}));
                 }
@@ -462,6 +513,44 @@ fn small_icon(ui: &mut Ui, icon: &str, tip: &str) -> bool {
 }
 
 impl WordApp {
+    /// Missing fonts for a layout, recomputed only when the layout changes.
+    pub fn cached_missing_fonts(&mut self, layout: &std::sync::Arc<doc4me_layout::DocLayout>) -> MissingFontsCache {
+        if !self.missing_fonts.0.upgrade().is_some_and(|seen| std::sync::Arc::ptr_eq(&seen, layout)) {
+            let found = doc4me_engine::cmd::font::missing_fonts(layout);
+            let warnings =
+                found.iter().filter(|f| !f.metric_compatible).map(|f| (doc4me_engine::cmd::font::font_key(&f.font), f.shown_as.join(", "))).collect();
+            self.missing_fonts = (std::sync::Arc::downgrade(layout), (std::sync::Arc::new(found), std::sync::Arc::new(warnings)));
+        }
+        self.missing_fonts.1.clone()
+    }
+
+    pub fn font_box_warning(&mut self, font: &str) -> Option<String> {
+        let ahead = self.session.sel.is_collapsed();
+        self.font_box_warning_or(font, ahead)
+    }
+
+    pub fn font_dialog_warning(&mut self, font: &str) -> Option<String> {
+        self.font_box_warning_or(font, true)
+    }
+
+    pub fn east_asian_font_box_warning(&mut self, font_ea: &str, font: &str) -> Option<String> {
+        if font_ea.trim().is_empty() || font_ea.eq_ignore_ascii_case(font) {
+            return None;
+        }
+        let shown = doc4me_engine::cmd::font::shown_as(font_ea)?;
+        doc4me_engine::cmd::font::warns(font_ea, &shown).then_some(shown)
+    }
+
+    fn font_box_warning_or(&mut self, font: &str, ahead: bool) -> Option<String> {
+        let layout = self.session.layout();
+        let key = doc4me_engine::cmd::font::font_key(font);
+        if let Some(shown) = self.cached_missing_fonts(&layout).1.get(&key) {
+            return Some(shown.clone());
+        }
+        let shown = ahead.then(|| doc4me_engine::cmd::font::shown_as(font)).flatten()?;
+        doc4me_engine::cmd::font::warns(font, &shown).then_some(shown)
+    }
+
     /// Word count, recomputed only when the document changes.
     pub fn cached_word_count(&mut self) -> usize {
         // The count option changes the count without a document change.
