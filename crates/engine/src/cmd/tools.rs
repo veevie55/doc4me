@@ -598,9 +598,16 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"value": n}"#),
         CommandSpec::new("para.defineBullet", "Define New Bullet", "Home › Paragraph › Bullets", |s, v| {
-            s.run("para.bullets", &json!({"kind": p::str(v, "char").unwrap_or("★")}))
+            // Keep the original command's character-only toggle for existing callers. The
+            // extended parameters are used by Define New Bullet and create a private list
+            // definition with that character's formatting.
+            if ["font", "size", "bold", "italic", "color", "align"].iter().any(|k| v.get(k).is_some()) {
+                super::lists::define_bullet(s, v)
+            } else {
+                s.run("para.bullets", &json!({"kind": p::str(v, "char").unwrap_or("★")}))
+            }
         })
-        .params(r#"{"char": string}"#),
+        .params(r#"{"char"?: one character (default ★), "font"?: family (empty = paragraph font), "size"?: pt, "bold"?: bool, "italic"?: bool, "color"?: "RRGGBB" | "auto", "align"?: "left|center|right"} (extended settings create a private list; char-only calls keep their existing toggle behavior)"#),
         CommandSpec::new("para.defineNumber", "Define New Number Format", "Home › Paragraph › Numbering", |s, v| {
             // With AutoFormat on (`file.autoFormat`), decimal numbers are Thai digits.
             let fmt = super::format::auto_num_format(s, doc4me_doc::section::NumFormat::from_ooxml(p::str(v, "format").unwrap_or("decimal")));

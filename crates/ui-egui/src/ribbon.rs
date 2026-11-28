@@ -823,6 +823,11 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                         }
                     });
                     mi(ui, app, "None", "para.bullets", json!({"off": true}));
+                    ui.separator();
+                    if ui.button(tl!("Define New Bullet")).clicked() {
+                        app.dialog = crate::dialogs::Dialog::open("defineBullet", app);
+                        ui.close();
+                    }
                 });
                 split(ui, app, "numbering", "Numbering", "para.numbering", json!({}), lists.numbering, None, |ui, app| {
                     for (l, k) in [

@@ -170,6 +170,108 @@ fn default_level(i: usize) -> Level {
     levels_for(ListKind::Numbered).into_iter().nth(i).unwrap_or_default()
 }
 
+/// Define a new bullet list with its own character formatting. Only the levels used by the
+/// selected paragraphs get the chosen character, so multilevel bullets retain their indentation
+/// and list level. This command is called when `para.defineBullet` includes any extended setting;
+/// character-only callers retain the older toggle behavior in `cmd::tools`.
+pub fn define_bullet(s: &mut Session, v: &Value) -> CmdResult {
+    let ch = match v.get("char") {
+        None => '★',
+        Some(value) => {
+            let value = value.as_str().ok_or_else(|| CmdError::Params("char must be one character".into()))?;
+            let mut chars = value.chars();
+            match (chars.next(), chars.next()) {
+                (Some(ch), None) if !ch.is_control() => ch,
+                _ => return Err(CmdError::Params("char must be one character".into())),
+            }
+        }
+    };
+    let font = match v.get("font") {
+        None => None,
+        Some(value) => {
+            let name = value.as_str().map(str::trim).ok_or_else(|| CmdError::Params("font must be a family name".into()))?;
+            if name.len() > 128 {
+                return Err(CmdError::Params("font name too long".into()));
+            }
+            (!name.is_empty()).then(|| name.to_string())
+        }
+    };
+    let size = match v.get("size") {
+        None => None,
+        Some(value) => match value.as_f64() {
+            Some(pt) if (1.0..=1638.0).contains(&pt) => Some(pt as f32),
+            _ => return Err(CmdError::Params("size must be 1 to 1638 points".into())),
+        },
+    };
+    let flag = |key: &str| -> Result<Option<bool>, CmdError> {
+        match v.get(key) {
+            None => Ok(None),
+            Some(value) => value.as_bool().map(Some).ok_or_else(|| CmdError::Params(format!("{key} must be true or false"))),
+        }
+    };
+    let (bold, italic) = (flag("bold")?, flag("italic")?);
+    let color = match v.get("color") {
+        None => None,
+        Some(value) => {
+            let value = value.as_str().ok_or_else(|| CmdError::Params("color must be RRGGBB or auto".into()))?;
+            Some(TextColor::parse(value).ok_or_else(|| CmdError::Params("color must be RRGGBB or auto".into()))?)
+        }
+    };
+    let align = match p::str(v, "align") {
+        None if v.get("align").is_none() => None,
+        Some("left") => Some(Align::Left),
+        Some("center") => Some(Align::Center),
+        Some("right") => Some(Align::Right),
+        _ => return Err(CmdError::Params("align must be left, center or right".into())),
+    };
+
+    let styles = s.doc.styles.clone();
+    let level_of = |props: &doc4me_doc::props::ParaProps| styles.resolve_para(props).numbering.filter(|n| n.num != 0).map_or(0, |n| n.level);
+    let story = s.sel.focus.story;
+    let used: std::collections::BTreeSet<u8> =
+        s.selected_paragraph_paths().iter().filter_map(|path| s.doc.para(story, path)).map(|para| level_of(&para.props)).collect();
+    let mut levels = levels_for(ListKind::BulletChar(ch));
+    for level in used {
+        if let Some(level) = levels.get_mut(usize::from(level)) {
+            level.text = ch.to_string();
+            level.chr.font = font.clone();
+            if size.is_some() {
+                level.chr.size = size;
+            }
+            if bold.is_some() {
+                level.chr.bold = bold;
+            }
+            if italic.is_some() {
+                level.chr.italic = italic;
+            }
+            if color.is_some() {
+                level.chr.color = color;
+            }
+            if let Some(align) = align {
+                level.align = align;
+            }
+        }
+    }
+
+    let numbering = std::sync::Arc::make_mut(&mut s.doc.numbering);
+    let abstract_id = numbering.abstracts.iter().map(|a| a.id.saturating_add(1)).max().unwrap_or(0);
+    numbering.abstracts.push(AbstractNum { id: abstract_id, name: None, levels });
+    let num_id = numbering.nums.iter().map(|n| n.id.saturating_add(1)).max().unwrap_or(1).max(1);
+    numbering.nums.push(Num { id: num_id, abstract_id, ..Default::default() });
+
+    super::para::fmt(s, &|props| {
+        let level = level_of(props);
+        props.numbering = Some(NumRef { num: num_id, level });
+        props.indent_left = None;
+        props.indent_first = None;
+        props.indent_left_chars = None;
+        props.indent_first_chars = None;
+        if props.style.is_none() || props.style.as_deref() == Some("Normal") {
+            props.style = Some("ListParagraph".into());
+        }
+    })
+}
+
 fn get(s: &mut Session, v: &Value) -> CmdResult {
     let num =
         p::u64(v, "num").map(|n| n.min(u32::MAX as u64) as u32).or_else(|| caret_list(s)).ok_or_else(|| CmdError::Failed("not in a list".into()))?;
