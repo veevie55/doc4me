@@ -1,6 +1,6 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 20:26 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `bd5a2c7476d1aa29136baae2c01d50e4d26bed20` (`main`, 2026-11-28 20:26 ICT)
+อัปเดตเมื่อ **28 November 2026 20:31 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `5eaaeec921bf336cc07d6cde5dfb1583ea2a9861` (`main`, 2026-11-28 20:31 ICT)
 
 ## วิธีเปรียบเทียบ
 
@@ -42,7 +42,7 @@
 | ประเภท | ความสามารถใน Khiankrub | สถานะใน Doc4Me | สถานะงาน |
 |---|---|---|---|
 | Canvas และการเลือก | คลิกปุ่มกลางเพื่อเลื่อนเอกสารตามระยะ pointer, หยุดด้วย Escape/ปุ่มอื่น/ล้อเลื่อน (`ui-egui/autoscroll.rs`) | มี edge auto-scroll ระหว่างลากเลือกข้อความ และ middle-click scroll ที่เคารพการยกเลิก gesture | พอร์ตแล้ว; `bd5a2c7` · push 2026-11-28 20:26 ICT |
-| รูปภาพ | Crop mode บน canvas พร้อม handles, preview ส่วนที่ถูกตัด, ลากคืนพื้นที่ภาพ และจบเป็น undo step เดียว (`ui-egui/crop.rs`) | มีช่องตัวเลข `picture.crop` ใน Picture Format; ยังไม่มี crop overlay/drag mode | ค้าง |
+| รูปภาพ | Crop mode บน canvas พร้อม handles, preview ส่วนที่ถูกตัด, ลากคืนพื้นที่ภาพ และจบเป็น undo step เดียว (`ui-egui/crop.rs`) | Crop overlay/handles พร้อม preview; `picture.crop` รับ crop และขนาดใหม่ใน undo step เดียว | พอร์ตแล้ว; `5eaaeec` · push 2026-11-28 20:31 ICT |
 | จัดวางวัตถุ | Snap วัตถุไปยังขอบ/กึ่งกลางหน้า, margins และวัตถุอื่น พร้อมเส้น alignment guides (`ui-egui/guides.rs`) | ลากและปรับขนาดวัตถุได้ แต่ยังไม่พบ snapping guides | ค้าง |
 | บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | มี download callback และ dirty state; ยังไม่มี ticket/result flow สำหรับ save picker แบบ asynchronous | ค้าง |
 | อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | ยังไม่พบ update service, preference หรือ UI flow | ค้าง |
@@ -84,6 +84,7 @@
 | `fd75ccb` | 2026-11-28 16:20:21 ICT | พอร์ต 22 ช่องว่างและ UI ที่เกี่ยวข้อง | push 2026-11-28 16:20 ICT; `origin/main` ยืนยัน SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429` |
 | `6215d03` | 2026-11-28 20:19:45 ICT | พอร์ต region-aware units/number formatting, table ruler interactions และ tab-stop ruler; ปรับ DOCX/text import ให้รับ region | push 2026-11-28 20:19 ICT; `origin/main` ยืนยัน SHA `6215d03b08568a2042a5433ca60486b203e45511` |
 | `bd5a2c7` | 2026-11-28 20:26:18 ICT | เพิ่ม middle-click canvas auto-scroll สำหรับ platform ที่รองรับ | push 2026-11-28 20:26 ICT; `origin/main` ยืนยัน SHA `bd5a2c7476d1aa29136baae2c01d50e4d26bed20` |
+| `5eaaeec` | 2026-11-28 20:31:30 ICT | เพิ่ม Crop mode บน canvas และบันทึก crop/size พร้อมกัน | push 2026-11-28 20:31 ICT; `origin/main` ยืนยัน SHA `5eaaeec921bf336cc07d6cde5dfb1583ea2a9861` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -96,5 +97,5 @@
 ## การตรวจสอบ
 
 - Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
-- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; สำหรับ middle-click change `bd5a2c7` ผ่าน `cargo check --locked --offline -p doc4me-ui-egui -p doc4me -p doc4me-web`; ไม่ได้รันชุดทดสอบ.
+- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop mode `5eaaeec` ผ่าน engine/UI/desktop/web check. ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).
