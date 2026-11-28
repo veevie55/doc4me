@@ -547,6 +547,7 @@
 	Couldn't download {name}: {error}	ดาวน์โหลด {name} ไม่สำเร็จ: {error}
 	Couldn't make Doc4Me the default: {error}	ตั้ง Doc4Me เป็นค่าเริ่มต้นไม่สำเร็จ: {error}
 	Couldn't open {path}: {error}	เปิด {path} ไม่สำเร็จ: {error}
+	Couldn't save {name}, so it is still open and nothing was lost: {error}	บันทึก {name} ไม่สำเร็จ เอกสารยังเปิดอยู่และข้อมูลยังอยู่: {error}
 	Count by:	นับทีละ:
 	Count words in text boxes and notes	นับคำในกล่องข้อความและเชิงอรรถ
 	Country	ประเทศ
@@ -1883,6 +1884,7 @@
 	Save the document to turn on AutoSave (a file you have only opened isn't rewritten until you save it)	บันทึกเอกสารก่อนเพื่อเปิดใช้บันทึกอัตโนมัติ (ระบบจะไม่เขียนทับไฟล์ที่คุณเพียงเปิดไว้จนกว่าคุณจะบันทึก)
 	Save these pages as PDF…	บันทึกหน้าเหล่านี้เป็น PDF…
 	Saved	บันทึกแล้ว
+	Saving {name} was cancelled, so it is still open and nothing was lost.	ยกเลิกการบันทึก {name} แล้ว เอกสารยังเปิดอยู่และข้อมูลยังอยู่
 	Scale	มาตราส่วน
 	Scale Drawing	ปรับขนาดภาพวาด
 	Scatter	จุดกระจาย
@@ -2402,6 +2404,7 @@ preview	Title	ชื่อเรื่อง
 	Volume Integral with Limits	ปริพันธ์ตามปริมาตรแบบมีขอบเขต
 	Volume Integral with Stacked Limits	ปริพันธ์ตามปริมาตรแบบมีขอบเขตบนและล่าง
 	W:	กว้าง:
+	Waiting for the save to finish…	กำลังรอให้บันทึกเสร็จ…
 	Waiting for Zotero…	กำลังรอ Zotero…
 	Warm Gradient with Outline	ไล่ระดับสีโทนอุ่นพร้อมเส้นกรอบ
 	Warnings ({n})	คำเตือน ({n})

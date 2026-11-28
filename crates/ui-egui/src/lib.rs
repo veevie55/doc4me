@@ -22,6 +22,7 @@ macro_rules! tl {
 
 pub mod a11y;
 pub mod a11y_pane;
+pub mod async_saves;
 pub mod autoscroll;
 pub mod backstage;
 pub mod canvas;
@@ -138,6 +139,8 @@ pub struct Services {
     /// Web: hand bytes to the browser as a download. An error means no download started (the
     /// browser can't tell the page whether the user then kept the file).
     pub download: Option<Box<dyn Fn(&str, &[u8]) -> Result<(), String>>>,
+    /// Web: saves whose browser picker finishes after `download` returns.
+    pub async_saves: Option<async_saves::AsyncSaves>,
     /// Web: told whether the document has unsaved changes after each pass, for the browser's
     /// leave-page guard (`beforeunload` runs between frames and can't ask the app).
     pub on_dirty: Option<Box<dyn Fn(bool)>>,
@@ -530,6 +533,10 @@ pub struct WordApp {
     /// there. A file that was merely opened isn't rewritten until the user saves it: saving drops
     /// whatever Doc4Me can't represent (content controls, charts, macros…).
     autosave_path: Option<std::path::PathBuf>,
+    /// Web: saves whose browser picker hasn't finished yet.
+    saves_in_flight: Vec<SaveInFlight>,
+    /// Web: a command held by the Save Changes prompt until its save finishes.
+    awaiting_save: Option<AwaitingSave>,
     /// The file dialog the host is showing, and what its answer is for ([`file_dialogs`]).
     file_dialog: Option<file_dialogs::PendingDialog>,
     /// The built-in file browser, when it is open, and the folder it showed last (#576).
@@ -549,6 +556,33 @@ pub enum SaveChoice {
     Save,
     DontSave,
     Cancel,
+}
+
+/// How Save in the Save Changes prompt went.
+enum PromptSave {
+    /// Written, keeping everything: the held-back command may run.
+    Saved,
+    /// Not saved (a format that doesn't keep everything); the command is cancelled.
+    NotSaved,
+    /// Web: the browser's save picker finishes later.
+    Later(u64),
+}
+
+/// Web: a save the browser's picker hasn't finished.
+struct SaveInFlight {
+    ticket: u64,
+    name: String,
+    document: u64,
+    marked_saved: bool,
+}
+
+/// Web: the command a Save Changes prompt holds back until its picker save ends.
+struct AwaitingSave {
+    ticket: u64,
+    then: String,
+    params: Value,
+    document: u64,
+    rev: u64,
 }
 
 impl SaveChoice {
@@ -644,6 +678,8 @@ impl WordApp {
             read_aloud_at: None,
             read_aloud_error: None,
             autosave_path: None,
+            saves_in_flight: Vec::new(),
+            awaiting_save: None,
             change_picture_target: None,
             style_scratch: None,
             recipient_list_pending: false,
@@ -746,10 +782,20 @@ impl WordApp {
             self.dialog = dialogs::Dialog::open(name, self);
             return Ok(json!({"pending": name}));
         }
-        if self.session.dirty && discards_document(id, &params) {
+        if self.awaiting_save.is_some() && discards_document(id, &params) {
+            self.status(tl!("Waiting for the save to finish…"));
+            return Ok(json!({"pending": "save"}));
+        }
+        if (self.session.dirty || self.save_unconfirmed()) && discards_document(id, &params) {
             let name =
                 self.session.path.as_ref().and_then(|p| p.file_name()).map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| self.title_stem());
-            self.dialog = Some(dialogs::Dialog::SaveChanges { name, then: id.to_string(), params, document: self.session.document_id() });
+            self.dialog = Some(dialogs::Dialog::SaveChanges {
+                name,
+                then: id.to_string(),
+                params,
+                document: self.session.document_id(),
+                message: String::new(),
+            });
             return Ok(json!({"pending": "saveChanges"}));
         }
         // The ribbon and context-menu Paste commands send no text: read the system clipboard's, as
@@ -858,9 +904,18 @@ impl WordApp {
                 if matches!(id, "file.save" | "file.saveAs") { self.session.password.as_ref().map(doc4me_engine::Password::as_str) } else { None };
             let opts = doc4me_engine::cmd::file::export_options(&self.session, &params);
             let bytes = doc4me_engine::io::save_bytes_with(&name, &self.session.doc, password, &opts)?;
+            // A ticket left over from an unrelated download (for example Save Picture) isn't this
+            // document save.
+            let saves = self.services.async_saves.clone();
+            if let Some(saves) = &saves {
+                let _ = saves.take_started();
+            }
             if let Some(d) = &self.services.download
                 && let Err(e) = d(&name, &bytes)
             {
+                if let Some(saves) = &saves {
+                    let _ = saves.take_started();
+                }
                 let msg = i18n::fmt(tl!("Couldn't download {name}: {error}"), &[("name", &name), ("error", &e)]);
                 log::error!("download of {name} failed: {e}");
                 self.status(msg.clone());
@@ -868,8 +923,14 @@ impl WordApp {
             }
             // An export is a copy, and so is a save in a format that doesn't keep everything (a
             // page image, plain text): the document itself still has unsaved changes.
-            if matches!(id, "file.save" | "file.saveAs") && keeps_everything(&name) {
+            let marked_saved = matches!(id, "file.save" | "file.saveAs") && keeps_everything(&name);
+            if marked_saved {
                 self.session.dirty = false;
+            }
+            if let Some(ticket) = saves.as_ref().and_then(async_saves::AsyncSaves::take_started) {
+                let document = self.session.document_id();
+                self.saves_in_flight.push(SaveInFlight { ticket, name: name.clone(), document, marked_saved });
+                return Ok(json!({"downloaded": name, "bytes": bytes.len(), "pendingSave": ticket}));
             }
             return Ok(json!({"downloaded": name, "bytes": bytes.len()}));
         }
@@ -955,7 +1016,7 @@ impl WordApp {
     }
 
     /// Answer the Save Changes prompt: Save (through Save As for a new document) and carry on,
-    /// carry on without saving, or cancel. A failed or cancelled save cancels too.
+    /// carry on without saving, or cancel. A browser picker keeps the command pending until it ends.
     fn answer_save_changes(&mut self, choice: SaveChoice) -> Result<Value, String> {
         let Some(dialogs::Dialog::SaveChanges { then, params, document, .. }) = self.dialog.take() else {
             return Err("no Save Changes prompt is open".into());
@@ -980,7 +1041,17 @@ impl WordApp {
                     file_dialogs::Asked::Busy => Ok(json!({"done": false})),
                 };
             }
-            SaveChoice::Save => self.save_for_prompt(),
+            SaveChoice::Save => match self.save_for_prompt() {
+                Ok(PromptSave::Saved) => true,
+                Ok(PromptSave::NotSaved) => false,
+                Ok(PromptSave::Later(ticket)) => {
+                    let rev = self.session.rev();
+                    self.awaiting_save = Some(AwaitingSave { ticket, then, params, document, rev });
+                    self.status(tl!("Waiting for the save to finish…"));
+                    return Ok(json!({"pending": "save"}));
+                }
+                Err(error) => return Err(self.save_failed(&error, then, params, document)),
+            },
         };
         if !go {
             return Ok(json!({"done": false}));
@@ -1008,12 +1079,16 @@ impl WordApp {
     /// document is safely written. A save in a format that doesn't keep everything (a page
     /// image, plain text) writes a copy and leaves the document unsaved, so it doesn't count:
     /// the command is cancelled and the document stays.
-    fn save_for_prompt(&mut self) -> bool {
-        let saved = match self.execute("file.save", json!({})) {
-            Ok(v) => v.get("saved").and_then(Value::as_bool) == Some(true) || v.get("downloaded").is_some(),
-            Err(_) => false,
-        };
-        self.safely_saved(saved)
+    fn save_for_prompt(&mut self) -> Result<PromptSave, String> {
+        let v = self.execute("file.save", json!({}))?;
+        let saved = v.get("saved").and_then(Value::as_bool) == Some(true) || v.get("downloaded").is_some();
+        if !self.safely_saved(saved) {
+            return Ok(PromptSave::NotSaved);
+        }
+        Ok(match v.get("pendingSave").and_then(Value::as_u64) {
+            Some(ticket) => PromptSave::Later(ticket),
+            None => PromptSave::Saved,
+        })
     }
 
     /// Whether a save before New/Open/Close counts: it happened, and kept everything.
@@ -1023,6 +1098,86 @@ impl WordApp {
             return false;
         }
         saved
+    }
+
+    /// A browser picker save isn't confirmed until writing and closing has succeeded.
+    fn save_unconfirmed(&self) -> bool {
+        let document = self.session.document_id();
+        self.saves_in_flight.iter().any(|save| save.marked_saved && save.document == document)
+    }
+
+    fn prompt_name(&self) -> String {
+        self.session.path.as_ref().and_then(|p| p.file_name()).map(|n| n.to_string_lossy().to_string()).unwrap_or_else(|| self.title_stem())
+    }
+
+    fn save_failed(&mut self, error: &str, then: String, params: Value, document: u64) -> String {
+        let name = self.prompt_name();
+        let message = i18n::fmt(tl!("Couldn't save {name}, so it is still open and nothing was lost: {error}"), &[("name", &name), ("error", error)]);
+        log::error!("save from the Save Changes prompt failed: {error}");
+        self.prompt_again(message, then, params, document)
+    }
+
+    fn prompt_again(&mut self, message: String, then: String, params: Value, document: u64) -> String {
+        self.status(message.clone());
+        if document == self.session.document_id() {
+            let name = self.prompt_name();
+            self.dialog = Some(dialogs::Dialog::SaveChanges { name, then, params, document, message: message.clone() });
+        }
+        message
+    }
+
+    /// Read saves completed by the browser since the last frame.
+    fn settle_async_saves(&mut self) {
+        let Some(saves) = self.services.async_saves.clone() else { return };
+        for (ticket, outcome) in saves.take_finished() {
+            let current = self.session.document_id();
+            if let Some(i) = self.saves_in_flight.iter().position(|save| save.ticket == ticket) {
+                let save = self.saves_in_flight.swap_remove(i);
+                match &outcome {
+                    async_saves::SaveOutcome::Saved => log::info!("saved {} through the save picker", save.name),
+                    async_saves::SaveOutcome::Cancelled | async_saves::SaveOutcome::Failed(_) => {
+                        if save.marked_saved && save.document == current {
+                            self.session.dirty = true;
+                        }
+                    }
+                }
+                if let async_saves::SaveOutcome::Failed(error) = &outcome {
+                    let msg = i18n::fmt(tl!("Couldn't download {name}: {error}"), &[("name", &save.name), ("error", error)]);
+                    log::error!("the save picker couldn't save {}: {error}", save.name);
+                    self.status(msg);
+                }
+            }
+            let Some(wait) = self.awaiting_save.take_if(|pending| pending.ticket == ticket) else { continue };
+            if wait.document != current {
+                log::info!("the document a held-back {} was for has been replaced; dropped", wait.then);
+                continue;
+            }
+            match outcome {
+                async_saves::SaveOutcome::Saved if !self.session.dirty && self.session.rev() == wait.rev && !self.save_unconfirmed() => {
+                    if let Err(e) = self.execute_user(&wait.then, wait.params) {
+                        self.status(e);
+                    }
+                }
+                async_saves::SaveOutcome::Saved => {
+                    let name = self.prompt_name();
+                    self.dialog = Some(dialogs::Dialog::SaveChanges {
+                        name,
+                        then: wait.then,
+                        params: wait.params,
+                        document: wait.document,
+                        message: String::new(),
+                    });
+                }
+                async_saves::SaveOutcome::Cancelled => {
+                    let name = self.prompt_name();
+                    let message = i18n::fmt(tl!("Saving {name} was cancelled, so it is still open and nothing was lost."), &[("name", &name)]);
+                    self.prompt_again(message, wait.then, wait.params, wait.document);
+                }
+                async_saves::SaveOutcome::Failed(error) => {
+                    self.save_failed(&error, wait.then, wait.params, wait.document);
+                }
+            }
+        }
     }
 
     /// The window's close button (or the system) asked to quit. Returns true to let the window
@@ -1612,6 +1767,7 @@ impl WordApp {
             self.applied_editing = Some(lang);
         }
         options::sync(self);
+        self.settle_async_saves();
         // Chinese text wants the Chinese face before the Japanese one (one glyph style per line).
         // An installed CJK font is read only once CJK text is shown (#241): never for an English
         // interface that doesn't open the language list.

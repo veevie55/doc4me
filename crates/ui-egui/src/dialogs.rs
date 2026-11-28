@@ -382,6 +382,8 @@ pub enum Dialog {
         params: Value,
         #[serde(skip)]
         document: u64,
+        /// Why a cancelled or failed save left the document open.
+        message: String,
     },
     /// Confirm before permanently removing an unsaved recovery copy.
     DiscardRecovery {
@@ -2948,9 +2950,13 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let (ok, cancel) = buttons(ui, tl!("Close"));
             ok || cancel
         }
-        Dialog::SaveChanges { name, .. } => {
+        Dialog::SaveChanges { name, message, .. } => {
             ui.label(egui::RichText::new(crate::i18n::fmt(tl!("Do you want to save changes to {name}?"), &[("name", name)])).font(semibold(15.0)));
             ui.label(tl!("Your changes will be lost if you don't save them."));
+            if !message.is_empty() {
+                ui.add_space(4.0);
+                ui.label(egui::RichText::new(message.as_str()).color(ui.visuals().error_fg_color));
+            }
             ui.add_space(8.0);
             let buttons = ui.horizontal(|ui| {
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
