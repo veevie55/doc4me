@@ -649,6 +649,15 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 small(ui, app, "superscript", None, "Superscript", "format.superscript", json!({}), flag("superscript"));
                 small(ui, app, "charborder", None, "Character Border", "format.border", json!({}), flag("border"));
                 small(ui, app, "enclose", None, "Enclose Characters", "format.enclose", json!({}), false);
+                // Character-spacing presets expose the existing Font-dialog command directly
+                // on the Home ribbon, matching the document editor's common spacing actions.
+                menu_button(ui, app, "char-spacing", None, "Character Spacing", false, "", |ui, app| {
+                    for (label, points) in [("Very Tight", -1.5), ("Tight", -0.5), ("Normal", 0.0), ("Loose", 1.0), ("Very Loose", 3.0)] {
+                        mi(ui, app, label, "format.spacing", json!({"points": points}));
+                    }
+                    ui.separator();
+                    mi(ui, app, "More Spacing…", "format.fontDialog", json!({}));
+                });
                 ui.add_space(4.0);
                 menu_button(ui, app, "effects", None, "Text Effects and Typography", false, "", |ui, app| {
                     let theme = app.session.doc.settings.theme_colors.clone();

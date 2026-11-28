@@ -3044,3 +3044,13 @@
 	Web	Web
 	XML	XML
 	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?
+	Very Tight	Very tight
+	Tight	Tight
+	Normal	Normal
+	Loose	Loose
+	Very Loose	Very loose
+	More Spacing…	More spacing…
+	Bulgarian	Bulgarian
+	Croatian	Croatian
+	Open recovery copies…	Open recovery copies…
+	Restore an unsaved copy after Doc4Me closes unexpectedly.	Restore an unsaved copy after Doc4Me closes unexpectedly.

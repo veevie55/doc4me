@@ -3074,3 +3074,11 @@ spacing	Normal	ปกติ
 	Web	Web
 	XML	XML
 	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	อินเทอร์เฟซยังวาด {language} ได้ไม่ถูกต้อง ตัวอักษรที่เชื่อมกันหรือสลับลำดับ และข้อความจากขวาไปซ้ายอาจแสดงผิด ใช้ต่อหรือไม่
+	Very Tight	ชิดมาก
+	Tight	ชิด
+	Normal	ปกติ
+	Loose	ห่าง
+	Very Loose	ห่างมาก
+	More Spacing…	ระยะห่างเพิ่มเติม…
+	Bulgarian	บัลแกเรีย
+	Croatian	โครเอเชีย
