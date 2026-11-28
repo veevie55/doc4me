@@ -591,6 +591,17 @@ pub fn canvas_events(app: &mut WordApp, ctx: &egui::Context) {
                     let _ = app.run("insert.closeHeader", json!({}));
                     continue;
                 }
+                // Escape leaves OS full screen after the more specific canvas interactions above.
+                if key == Key::Escape
+                    && modifiers.is_none()
+                    && app.session.view.full_screen
+                    && app.session.sel.is_collapsed()
+                    && app.dialog.is_none()
+                    && !app.ui.backstage
+                {
+                    let _ = app.run("view.fullScreen", json!({"value": false}));
+                    continue;
+                }
                 app.canvas.swallow_text = dispatch(app, key, modifiers) && modifiers.alt;
             }
             _ => {}
@@ -813,9 +824,13 @@ pub fn global_shortcuts(app: &mut WordApp, ctx: &egui::Context) {
     let events = ctx.input(|i| i.events.clone());
     for e in events {
         if let egui::Event::Key { key, pressed: true, modifiers, .. } = e
-            && (modifiers.command || is_function_key(key))
+            && (modifiers.command || is_function_key(key) || (key == Key::Escape && app.session.view.full_screen))
         {
-            dispatch(app, key, modifiers);
+            if key == Key::Escape && app.session.view.full_screen && app.dialog.is_none() && !app.ui.backstage {
+                let _ = app.run("view.fullScreen", json!({"value": false}));
+            } else {
+                dispatch(app, key, modifiers);
+            }
         }
     }
 }

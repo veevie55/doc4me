@@ -485,6 +485,9 @@ pub struct WordApp {
     pub frame_cpu_ms: f64,
     /// The window title last sent; a viewport command schedules a repaint, so only send changes.
     sent_title: String,
+    /// The last full-screen state sent to or reported by the OS window.
+    sent_full_screen: bool,
+    seen_full_screen: Option<bool>,
     pub quit_requested: bool,
     pub autosave: bool,
     pub word_count: (u64, usize),
@@ -608,6 +611,8 @@ impl WordApp {
             key_frames: 0,
             frame_cpu_ms: 0.0,
             sent_title: String::new(),
+            sent_full_screen: false,
+            seen_full_screen: None,
             quit_requested: false,
             autosave: true,
             word_count: (0, 0),
@@ -1795,6 +1800,7 @@ impl WordApp {
             ctx.send_viewport_cmd(egui::ViewportCommand::Title(title.clone()));
             self.sent_title = title;
         }
+        self.sync_full_screen(&ctx);
         self.frame_ms = now_ms() - t0;
         self.frames += 1;
         // From `logic`'s start when it ran this frame (hosts that don't call it: from `ui`'s).
@@ -1812,6 +1818,25 @@ impl WordApp {
         crate::ribbon_keys::end_frame(&ctx);
         // Typing and formatting land here, after `logic` has reported.
         self.report_dirty();
+    }
+
+    /// Carry View › Full Screen (`view.fullScreen`, F11) to the window and follow the OS state.
+    fn sync_full_screen(&mut self, ctx: &egui::Context) {
+        let seen = ctx.input(|i| i.viewport().fullscreen);
+        if seen != self.seen_full_screen {
+            self.seen_full_screen = seen;
+            if let Some(on) = seen
+                && on != self.session.view.full_screen
+            {
+                self.session.view.full_screen = on;
+                self.sent_full_screen = on;
+            }
+        }
+        let want = self.session.view.full_screen;
+        if want != self.sent_full_screen {
+            ctx.send_viewport_cmd(egui::ViewportCommand::Fullscreen(want));
+            self.sent_full_screen = want;
+        }
     }
 
     /// Files that arrived asynchronously (web picker, drops): documents open, pictures insert,

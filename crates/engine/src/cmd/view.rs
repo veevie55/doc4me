@@ -107,6 +107,12 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("view.arrangeAll", "Arrange All", "View › Window", |s, _| window(s, json!({"window": "arrange"}))).pure(),
         // The app window: Ctrl+F10 maximizes it or puts it back, Alt+F5 puts it back (Word).
         CommandSpec::new("view.maximizeWindow", "Maximize", "View › Window", |s, _| window(s, json!({"window": "maximize"}))).key("Mod+F10").pure(),
+        // The window fills the screen, OS-level full screen. F11 as in browsers and most desktop apps.
+        CommandSpec::new("view.fullScreen", "Full Screen", "View › Window", |s, v| toggle(s, v, |x| &mut x.full_screen))
+            .params(r#"{"value"?: bool}"#)
+            .key("F11")
+            .when(full_screen_available)
+            .pure(),
         CommandSpec::new("view.restoreWindow", "Restore Down", "View › Window", |s, _| window(s, json!({"window": "restore"})))
             .key(super::non_mac("Alt+F5"))
             .pure(),
@@ -158,6 +164,11 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(r#"{"value"?: "arabic|hindi|context|system"}"#)
         .pure(),
     ]
+}
+
+/// Browsers reserve F11 for their own full screen; the web app cannot request it.
+fn full_screen_available(_: &Session) -> Option<&'static str> {
+    cfg!(target_arch = "wasm32").then_some("Use the browser's full screen (F11)")
 }
 
 fn mode(s: &mut Session, m: ViewMode, read: bool) -> CmdResult {
