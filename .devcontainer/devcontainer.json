@@ -1,0 +1,7 @@
+{
+  "name": "Doc4Me Linux development",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "remoteUser": "root"
+}
