@@ -236,9 +236,34 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
         touch_styles(s, &linked)?;
     }
     if p::bool(v, "apply").unwrap_or(true) {
+        // The style each level is linked to (its id), by level.
+        let level_style: Vec<Option<String>> = levels
+            .iter()
+            .map(|l| l.style.as_deref().map(|st| s.doc.styles.find(st).map(|x| x.id.clone()).unwrap_or_else(|| st.to_string())))
+            .collect();
+        // Applying a linked heading style also clears direct font, size, and colour overrides so
+        // the paragraph takes the style's look.
+        let story = s.sel.focus.story;
+        let paths = s.selected_paragraph_paths();
+        let before: Vec<Option<String>> = paths.iter().map(|path| s.doc.para(story, path).and_then(|para| para.props.style.clone())).collect();
         super::para::fmt(s, &|pp| {
+            // A paragraph in a style linked to one of these levels is numbered by that style.
+            if pp.style.as_ref().is_some_and(|style| level_style.iter().flatten().any(|linked| linked == style)) {
+                pp.numbering = None;
+                return;
+            }
             // Paragraphs already in a list keep their level.
             let level = pp.numbering.filter(|n| n.num != 0).map(|n| n.level).unwrap_or(0);
+            // A linked style supplies both the heading appearance and its numbering.
+            if let Some(style) = level_style.get(level as usize).cloned().flatten() {
+                pp.style = Some(style);
+                pp.numbering = None;
+                pp.indent_left = None;
+                pp.indent_first = None;
+                pp.indent_left_chars = None;
+                pp.indent_first_chars = None;
+                return;
+            }
             pp.numbering = Some(NumRef { num, level });
             pp.indent_left = None;
             pp.indent_first = None;
@@ -248,10 +273,38 @@ fn define(s: &mut Session, v: &Value) -> CmdResult {
                 pp.style = Some("ListParagraph".into());
             }
         })?;
+        for (path, was_style) in paths.iter().zip(before) {
+            let para = s.doc.para_mut(story, path)?;
+            if para.props.style != was_style
+                && para.props.style.as_ref().is_some_and(|style| level_style.iter().flatten().any(|linked| linked == style))
+            {
+                clear_direct_font(para)?;
+            }
+        }
     }
     let mut r = sel_result(s)?;
     r["num"] = json!(num);
     Ok(r)
+}
+
+/// Clear direct font, size, and colour overrides after applying a linked paragraph style.
+fn clear_direct_font(para: &mut doc4me_doc::Paragraph) -> Result<(), CmdError> {
+    let len = para.len();
+    para.format(0, len, &|c| {
+        c.font = None;
+        c.font_cs = None;
+        c.font_ea = None;
+        c.size = None;
+        c.size_cs = None;
+        c.color = None;
+    })?;
+    para.mark.font = None;
+    para.mark.font_cs = None;
+    para.mark.font_ea = None;
+    para.mark.size = None;
+    para.mark.size_cs = None;
+    para.mark.color = None;
+    Ok(())
 }
 
 /// Lay out again every paragraph in one of `nums`.

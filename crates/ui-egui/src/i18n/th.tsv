@@ -3111,3 +3111,24 @@ spacing	Normal	ปกติ
 	Or install it for every app: double-click each font file and choose Install in Font Book, then restart Doc4Me.	หรือติดตั้งให้ทุกแอป: ดับเบิลคลิกไฟล์ฟอนต์แต่ละไฟล์แล้วเลือก Install ใน Font Book จากนั้นเปิด Doc4Me ใหม่
 	Or install it for every app: copy the font files to the .local/share/fonts folder in your home folder, then restart Doc4Me.	หรือติดตั้งให้ทุกแอป: คัดลอกไฟล์ฟอนต์ไปไว้ในโฟลเดอร์ .local/share/fonts ในโฟลเดอร์บ้าน จากนั้นเปิด Doc4Me ใหม่
 	Tell me where to get a document's missing fonts	บอกแหล่งดาวน์โหลดเมื่อเอกสารขาดฟอนต์
+	Clear all	ล้างทั้งหมด
+	Doc4Me doesn't remember the documents you open. Turn it on in File › Options › Advanced.	Doc4Me ไม่จดจำเอกสารที่เปิด ใช้ตัวเลือกนี้ได้ที่ ไฟล์ › ตัวเลือก › ขั้นสูง
+	Grey boxes are level numbers; add one from Include level number from. Type anything around them, such as a dot or ข้อ.	กล่องสีเทาคือเลขระดับ เพิ่มจาก ใส่เลขระดับจาก ได้ และพิมพ์ข้อความรอบเลขได้ เช่น จุด หรือคำว่า ข้อ
+	List name:	ชื่อรายการ:
+	My Lists	รายการของฉัน
+	Remove from list	นำออกจากรายการ
+	Remove from My Lists	นำออกจากรายการของฉัน
+	Remember recently opened documents	จดจำเอกสารที่เปิดล่าสุด
+	Save in My Lists, for every document	บันทึกไว้ในรายการของฉัน ใช้ได้กับทุกเอกสาร
+	Take every document off this list. The files stay where they are.	นำเอกสารทั้งหมดออกจากรายการนี้ โดยไฟล์ยังอยู่ที่เดิม
+	Bottom edge	ขอบล่าง
+	Centred across the page.	จัดกึ่งกลางหน้ากระดาษ
+	Distance:	ระยะ:
+	Don't show on the first page of the section	ไม่แสดงในหน้าแรกของส่วน
+	Measured from the left edge to the start of the number.	วัดจากขอบซ้ายถึงต้นตัวเลข
+	Measured from the right edge to the end of the number.	วัดจากขอบขวาถึงท้ายตัวเลข
+	Measured to the baseline of the number.	วัดถึงเส้นฐานของตัวเลข
+	Page Number Position	ตำแหน่งหมายเลขหน้า
+	Page Number Position…	ตำแหน่งหมายเลขหน้า…
+	Place the page number at a set distance from the edges of the paper.	วางหมายเลขหน้าห่างจากขอบกระดาษตามระยะที่กำหนด
+	Top edge	ขอบบน

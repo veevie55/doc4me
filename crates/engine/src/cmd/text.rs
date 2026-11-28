@@ -690,9 +690,22 @@ fn backspace_inner(s: &mut Session, _: &Value) -> CmdResult {
         return sel_result(s);
     }
     // At the start of a paragraph.
+    if style_numbered(s, para) {
+        drop_style_list(s.doc.para_mut(f.story, &f.path)?);
+        return sel_result(s);
+    }
     if para.props.numbering.is_some_and(|n| n.num != 0) {
         // First Backspace removes the number but keeps the item's indent (Word).
+        let text_at = para.props.numbering.and_then(|n| s.doc.numbering.level(n.num, n.level)).map(|level| level.indent);
         let p = s.doc.para_mut(f.story, &f.path)?;
+        if p.props.style.as_deref() == Some("ListParagraph") {
+            if p.props.indent_left.is_none() && p.props.indent_left_chars.is_none_or(|chars| chars == 0.0) {
+                p.props.indent_left = text_at;
+            }
+            if p.props.indent_first.is_none() && p.props.indent_first_chars.is_none_or(|chars| chars == 0.0) {
+                p.props.indent_first = Some(0.0);
+            }
+        }
         p.props.numbering = Some(NumRef { num: 0, level: 0 });
         p.touch();
         return sel_result(s);
@@ -745,6 +758,22 @@ fn backspace_inner(s: &mut Session, _: &Value) -> CmdResult {
     sel_result(s)
 }
 
+/// A paragraph numbered by its style (a list level linked to it), not by its own numbering ref.
+fn style_numbered(s: &Session, para: &doc4me_doc::Paragraph) -> bool {
+    para.props.numbering.is_none() && s.doc.styles.resolve_para(&para.props).numbering.is_some_and(|n| n.num != 0)
+}
+
+/// Remove a style-linked list number and return the paragraph to Normal.
+fn drop_style_list(para: &mut doc4me_doc::Paragraph) {
+    para.props.style = None;
+    para.props.numbering = None;
+    para.props.indent_left = None;
+    para.props.indent_first = None;
+    para.props.indent_left_chars = None;
+    para.props.indent_first_chars = None;
+    para.touch();
+}
+
 fn delete(s: &mut Session, v: &Value) -> CmdResult {
     let r = delete_inner(s, v)?;
     super::controls::restore_placeholder(s)?;
@@ -760,6 +789,18 @@ fn delete_inner(s: &mut Session, _: &Value) -> CmdResult {
     }
     let f = s.sel.focus.clone();
     let Some(para) = s.doc.para_at(&f) else { return sel_result(s) };
+    // Delete in an empty numbered paragraph removes its number rather than joining the next
+    // paragraph into the list.
+    if para.is_empty() && !s.doc.settings.track_changes {
+        if style_numbered(s, para) {
+            drop_style_list(s.doc.para_mut(f.story, &f.path)?);
+            return sel_result(s);
+        }
+        if para.props.numbering.is_some_and(|n| n.num != 0) {
+            super::leave_list(s.doc.para_mut(f.story, &f.path)?);
+            return sel_result(s);
+        }
+    }
     if f.off < para.len() {
         let b = Pos { off: para.next_boundary(f.off), ..f.clone() };
         s.sel = Selection { anchor: f, focus: b };

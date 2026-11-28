@@ -1,7 +1,7 @@
 //! Insert tab: pages, tables, pictures, shapes, links, bookmarks, headers/footers, text, symbols.
 
-use doc4me_doc::para::{Float, InlineObject, ShapeKind, Wrap};
-use doc4me_doc::props::{Align, CharProps, Rgb, TabAlign, TabStop, TextColor};
+use doc4me_doc::para::{Anchor, Float, FloatAlign, InlineObject, ShapeKind, Wrap};
+use doc4me_doc::props::{Align, CharProps, FrameProps, FrameWrap, Rgb, TabAlign, TabStop, TextColor};
 use doc4me_doc::{Block, Paragraph, PartKind, Path, Pos, StoryRef, Table, para_block};
 use serde_json::{Value, json};
 
@@ -58,6 +58,8 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("insert.bookmark", "Bookmark", "Insert › Links", bookmark).params(r#"{"name": string}"#).key("Mod+Shift+F5"),
         CommandSpec::new("insert.header", "Header", "Insert › Header & Footer", |s, v| header_footer(s, v, true)).params(r#"{"text"?: string, "preset"?: "blank|blankThree|title"}"#),
         CommandSpec::new("insert.footer", "Footer", "Insert › Header & Footer", |s, v| header_footer(s, v, false)).params(r#"{"text"?: string, "preset"?: "blank|blankThree|pageNumber"}"#),
+        CommandSpec::new("layout.pageNumberPosition", "Page Number Position", "Insert › Header & Footer › Page Number", page_number_position)
+            .params(r#"{"vertical"?: "top|bottom", "fromEdge"?: pt (from that paper edge to the number's baseline; default 72), "horizontal"?: "left|center|right", "fromSide"?: pt (from that paper edge to the number's near edge; default 72; centred ignores it), "firstPage"?: bool (false: no number on each section's first page; default true)} — the page number in a frame placed from the paper's edges, in the caret's section; replaces one placed before"#),
         CommandSpec::new("insert.pageNumber", "Page Number", "Insert › Header & Footer", page_number).params(r#"{"position"?: "top|bottom|current", "align"?: "left|center|right", "format"?: "x of y"}"#),
         CommandSpec::new("insert.editHeader", "Edit Header", "Insert › Header & Footer › Header", |s, _| edit_hf(s, true)).pure(),
         CommandSpec::new("insert.editFooter", "Edit Footer", "Insert › Header & Footer › Footer", |s, _| edit_hf(s, false)).pure(),
@@ -658,6 +660,218 @@ fn page_number(s: &mut Session, v: &Value) -> CmdResult {
     }
     s.doc.set_story(StoryRef::Part(id), vec![para_block(para)])?;
     Ok(json!({"story": id}))
+}
+
+/// Width of a framed page number: enough for any ordinary page number.
+const PAGE_NUMBER_FRAME_W: f32 = 72.0;
+
+/// Whether `para` is the page-number frame placed by `layout.pageNumberPosition`.
+fn is_placed_page_number(para: &Paragraph) -> bool {
+    para.props.frame.is_some_and(|f| f.h_rel == Anchor::Page && f.v_rel == Anchor::Page)
+        && para.text.chars().all(|c| c == doc4me_doc::para::OBJ)
+        && para.objects.iter().any(|o| matches!(o, InlineObject::Field { instr, .. } if instr.trim().eq_ignore_ascii_case("PAGE")))
+}
+
+/// The selected section's last body block. In a header or footer, use the page being edited.
+fn current_section_block(s: &mut Session) -> usize {
+    let body_block = s.sel.focus.path.0.first().copied().unwrap_or(0) as usize;
+    if let StoryRef::Part(id) = s.sel.focus.story
+        && let Some(part) = s.doc.parts.get(&id)
+        && matches!(part.kind, PartKind::Header | PartKind::Footer)
+    {
+        let header = part.kind == PartKind::Header;
+        let hint = s.page_hint;
+        let section = {
+            let layout = s.layout();
+            let shows = |page: &doc4me_layout::Page| if header { page.header_story == Some(id) } else { page.footer_story == Some(id) };
+            layout.pages.get(hint).filter(|page| shows(page)).map(|page| page.section).or_else(|| layout.pages.iter().position(shows))
+        };
+        let sections = s.doc.sections();
+        if let Some((end, _)) = section.and_then(|i| sections.get(i)) {
+            return *end;
+        }
+    }
+    body_block
+}
+
+/// The current section, including the section whose header or footer is being edited.
+pub fn page_number_section(s: &mut Session) -> doc4me_doc::section::SectionProps {
+    let block = current_section_block(s);
+    s.doc.section_mut(block).clone()
+}
+
+/// Get or create the default header or footer of the specified section.
+fn hf_part_at(s: &mut Session, block: usize, header: bool) -> u32 {
+    let section = s.doc.section_mut(block).clone();
+    let existing = if header { section.headers.default } else { section.footers.default };
+    if let Some(id) = existing.filter(|id| s.doc.parts.contains_key(id)) {
+        return id;
+    }
+    let style = if header { "Header" } else { "Footer" };
+    let id = s.doc.add_part(if header { PartKind::Header } else { PartKind::Footer }, vec![para_block(Paragraph::new().styled(style))]);
+    let section = s.doc.section_mut(block);
+    if header {
+        section.headers.default = Some(id);
+    } else {
+        section.footers.default = Some(id);
+    }
+    id
+}
+
+/// Place the section's page number at distances from the paper edges, as a thesis may require.
+fn page_number_position(s: &mut Session, v: &Value) -> CmdResult {
+    let top = match p::str(v, "vertical").unwrap_or("top") {
+        "top" => true,
+        "bottom" => false,
+        other => return Err(CmdError::Params(format!("unknown vertical `{other}`: use top or bottom"))),
+    };
+    let horizontal = p::str(v, "horizontal").unwrap_or("right");
+    if !matches!(horizontal, "left" | "center" | "right") {
+        return Err(CmdError::Params(format!("unknown horizontal `{horizontal}`: use left, center or right")));
+    }
+    let block = current_section_block(s);
+    let section = s.doc.section_mut(block).clone();
+    let (page_w, page_h) = (section.page_w.max(1.0), section.page_h.max(1.0));
+    let from_edge = p::f32(v, "fromEdge").unwrap_or(72.0).clamp(0.0, page_h);
+    let from_side = p::f32(v, "fromSide").unwrap_or(72.0).clamp(0.0, page_w);
+    let first_page = p::bool(v, "firstPage").unwrap_or(true);
+
+    // Remove a page-number frame made by this command from either story; preserve other content.
+    for id in [section.headers.default, section.footers.default].into_iter().flatten() {
+        let Some(blocks) = s.doc.story(StoryRef::Part(id)) else { continue };
+        let kept: Vec<_> = blocks.iter().filter(|b| !b.as_para().is_some_and(is_placed_page_number)).cloned().collect();
+        if kept.len() != blocks.len() {
+            let kept = if kept.is_empty() { vec![para_block(Paragraph::new())] } else { kept };
+            s.doc.set_story(StoryRef::Part(id), kept)?;
+        }
+    }
+
+    let id = hf_part_at(s, block, top);
+    let (x, h_align, align) = match horizontal {
+        "left" => (from_side, None, Align::Left),
+        "center" => (0.0, Some(FloatAlign::Center), Align::Center),
+        _ => ((page_w - from_side - PAGE_NUMBER_FRAME_W).max(0.0), None, Align::Right),
+    };
+    let baseline = if top { from_edge } else { page_h - from_edge };
+    let style = if top { "Header" } else { "Footer" };
+    let numbered = |y: f32| -> Result<Paragraph, CmdError> {
+        let mut para = Paragraph::new().styled(style);
+        para.props.align = Some(align);
+        para.props.indent_left = Some(0.0);
+        para.props.indent_right = Some(0.0);
+        para.props.indent_first = Some(0.0);
+        para.props.space_before = Some(0.0);
+        para.props.space_after = Some(0.0);
+        para.props.frame = Some(FrameProps {
+            w: Some(PAGE_NUMBER_FRAME_W),
+            x,
+            y,
+            h_rel: Anchor::Page,
+            v_rel: Anchor::Page,
+            h_align,
+            wrap: FrameWrap::Around,
+            ..Default::default()
+        });
+        para.insert_object(
+            0,
+            InlineObject::Field { instr: "PAGE".into(), result: "1".into(), locked: false, code: false, form: None },
+            &CharProps::default(),
+        )?;
+        Ok(para)
+    };
+    let mut story = s.doc.story(StoryRef::Part(id)).cloned().unwrap_or_default();
+    // An empty header or footer is just the frame; a blank line beside it would push the text down.
+    story.retain(|b| !b.as_para().is_some_and(|para| para.text.is_empty() && para.props.frame.is_none()));
+    let at = story.len();
+    s.doc.section_mut(block).title_page = false;
+    let mut y = (baseline - 10.0).max(0.0);
+    story.push(para_block(numbered(y)?));
+    s.doc.set_story(StoryRef::Part(id), story.clone())?;
+    // A footer's position depends on its height; measure the laid out baseline and adjust it.
+    for _ in 0..4 {
+        let Some(found) = placed_baseline(s, id, at, true) else { break };
+        if (found - baseline).abs() < 0.05 {
+            break;
+        }
+        y = (y + baseline - found).max(0.0);
+        if let Some(slot) = story.get_mut(at) {
+            *slot = para_block(numbered(y)?);
+        }
+        s.doc.set_story(StoryRef::Part(id), story.clone())?;
+    }
+    s.doc.section_mut(block).title_page = !first_page || (section.title_page && section_first_has_own(&section, top));
+    Ok(json!({"story": id, "frameTop": y}))
+}
+
+/// The page number's baseline on the first page that shows its story.
+fn placed_baseline(s: &mut Session, id: u32, at: usize, changed: bool) -> Option<f32> {
+    if changed {
+        s.touch();
+    }
+    let layout = s.layout();
+    let path = Path::top(at);
+    for page in &layout.pages {
+        for placed in page.header.iter().chain(&page.footer) {
+            if let doc4me_layout::Placed::Lines { story: StoryRef::Part(part), path: placed_path, para, l0, y, .. } = placed
+                && *part == id
+                && *placed_path == path
+            {
+                let line = para.lines.get(*l0)?;
+                return Some(y + (line.baseline - line.top));
+            }
+        }
+    }
+    None
+}
+
+/// Parameters for the page number the current section already places, if any.
+pub fn page_number_placement(s: &mut Session) -> Option<Value> {
+    let block = current_section_block(s);
+    let section = s.doc.section_mut(block).clone();
+    for (top, id) in [(true, section.headers.default), (false, section.footers.default)] {
+        let Some(id) = id else { continue };
+        let Some(blocks) = s.doc.story(StoryRef::Part(id)) else { continue };
+        let Some((at, para)) =
+            blocks.iter().enumerate().find_map(|(i, b)| b.as_para().filter(|para| is_placed_page_number(para)).map(|para| (i, para.clone())))
+        else {
+            continue;
+        };
+        let frame = para.props.frame.unwrap_or_default();
+        let (horizontal, from_side) = if frame.h_align == Some(FloatAlign::Center) {
+            ("center", 72.0)
+        } else if para.props.align == Some(Align::Left) {
+            ("left", frame.x)
+        } else {
+            ("right", section.page_w - frame.x - frame.w.unwrap_or(PAGE_NUMBER_FRAME_W))
+        };
+        let baseline = match placed_baseline(s, id, at, false) {
+            Some(baseline) => baseline,
+            None => {
+                // If Different First Page hides the frame on a one-page section, measure it with
+                // that option temporarily off, then restore the document's state.
+                let dirty = s.dirty;
+                s.doc.section_mut(block).title_page = false;
+                let found = placed_baseline(s, id, at, true);
+                s.doc.section_mut(block).title_page = section.title_page;
+                s.touch();
+                s.dirty = dirty;
+                found?
+            }
+        };
+        let from_edge = if top { baseline } else { section.page_h - baseline };
+        return Some(json!({
+            "vertical": if top { "top" } else { "bottom" },
+            "fromEdge": from_edge,
+            "horizontal": horizontal,
+            "fromSide": from_side,
+            "firstPage": !section.title_page,
+        }));
+    }
+    None
+}
+
+fn section_first_has_own(section: &doc4me_doc::section::SectionProps, header: bool) -> bool {
+    if header { section.headers.first.is_some() } else { section.footers.first.is_some() }
 }
 
 fn date_time(s: &mut Session, v: &Value) -> CmdResult {

@@ -5,7 +5,8 @@
 use doc4me_doc::section::NumFormat;
 use doc4me_engine::cmd::lists::{LEVELS, caret_list, level_json, levels_of};
 use egui::{Sense, Ui, vec2};
-use serde::Serialize;
+use serde::de::Deserializer;
+use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
 use crate::WordApp;
@@ -51,6 +52,46 @@ pub struct LevelForm {
     pub bold: bool,
     pub italic: bool,
     pub legal: bool,
+}
+
+/// A multilevel list saved by name in My Lists: positions in `levels` remain points when the
+/// user's measurement unit changes.
+#[derive(Clone, Debug, PartialEq, Serialize, Deserialize)]
+pub struct SavedList {
+    pub name: String,
+    pub levels: Value,
+}
+
+/// At most this many saved lists; names are trimmed and cut to 64 characters.
+pub const MAX_SAVED_LISTS: usize = 50;
+const MAX_LIST_NAME: usize = 64;
+
+/// Settings may contain older or malformed entries: keep valid saved lists and drop the rest.
+pub fn lenient_saved_lists<'de, D: Deserializer<'de>>(d: D) -> Result<Vec<SavedList>, D::Error> {
+    let v = Value::deserialize(d)?;
+    Ok(v.as_array()
+        .map(|a| {
+            a.iter()
+                .filter_map(|x| serde_json::from_value::<SavedList>(x.clone()).ok())
+                .filter(|l| !l.name.trim().is_empty() && l.levels.is_array())
+                .take(MAX_SAVED_LISTS)
+                .collect()
+        })
+        .unwrap_or_default())
+}
+
+impl SavedList {
+    /// How the first three levels number, as shown in the ribbon menu.
+    pub fn sample(&self) -> String {
+        let levels = (0..LEVELS).map(|i| LevelForm::read(i, self.levels.get(i).unwrap_or(&Value::Null))).collect();
+        let f = ListForm { levels, level: 0, styles: Vec::new(), name: String::new(), save: false, target: None };
+        (0..3).map(|k| f.sample(k)).filter(|s| !s.is_empty()).collect::<Vec<_>>().join(" ")
+    }
+
+    /// `list.define` parameters to apply this list to the selected paragraphs.
+    pub fn params(&self) -> Value {
+        json!({"levels": self.levels, "name": self.name})
+    }
 }
 
 impl LevelForm {
@@ -110,6 +151,12 @@ pub struct ListForm {
     /// Paragraph styles a level can link to: (id, name).
     #[serde(skip)]
     pub styles: Vec<(String, String)>,
+    /// The list's name (kept with it in the document and shown in My Lists if saved).
+    pub name: String,
+    /// Save in My Lists, for every document.
+    pub save: bool,
+    #[serde(default)]
+    pub target: Option<u32>,
 }
 
 impl ListForm {
@@ -127,12 +174,32 @@ impl ListForm {
             .map(|st| (st.id.clone(), st.name.clone()))
             .collect();
         styles.sort_by(|a, b| a.1.cmp(&b.1));
-        ListForm { levels, level: 0, styles }
+        ListForm { levels, level: 0, styles, name: String::new(), save: false, target: None }
     }
 
     /// `list.define` parameters for the whole list.
     pub fn params(&self) -> Value {
-        json!({"levels": self.levels.iter().enumerate().map(|(i, l)| l.params(i)).collect::<Vec<_>>()})
+        let levels: Vec<Value> = self.levels.iter().enumerate().map(|(i, l)| l.params(i)).collect();
+        let name = self.name.trim();
+        let mut params = if name.is_empty() { json!({"levels": levels}) } else { json!({"levels": levels, "name": name}) };
+        if let Some(num) = self.target {
+            params["num"] = json!(num);
+        }
+        params
+    }
+
+    /// Save or replace a named list, if the user checked the option.
+    pub fn save_to(&self, saved: &mut Vec<SavedList>) {
+        let name: String = self.name.trim().chars().take(MAX_LIST_NAME).collect();
+        if !self.save || name.is_empty() {
+            return;
+        }
+        let levels = self.params().get("levels").cloned().unwrap_or(Value::Null);
+        saved.retain(|list| list.name != name);
+        saved.push(SavedList { name, levels });
+        if saved.len() > MAX_SAVED_LISTS {
+            saved.remove(0);
+        }
     }
 
     /// The number level `k` shows with every level at its start value, as in the preview.
@@ -144,21 +211,22 @@ impl ListForm {
             _ => {}
         }
         let mut out = String::new();
-        let mut chars = l.text.chars().peekable();
-        while let Some(c) = chars.next() {
-            if c == '%'
-                && let Some(d) = chars.peek().and_then(|d| d.to_digit(10))
-            {
-                chars.next();
-                let j = (d as usize).saturating_sub(1).min(LEVELS - 1);
-                let lv = self.levels.get(j);
-                let fmt = if l.legal && j != k { NumFormat::Decimal } else { lv.map(|x| NumFormat::from_ooxml(&x.format)).unwrap_or_default() };
-                out.push_str(&fmt.format(lv.map(|x| x.start).unwrap_or(1).max(1)));
-            } else {
-                out.push(c);
+        for piece in crate::number_text::parse(&l.text) {
+            match piece {
+                crate::number_text::Piece::Level(level) => out.push_str(&self.level_number(k, usize::from(level) - 1)),
+                crate::number_text::Piece::Text(c) => out.push(c),
             }
         }
         out
+    }
+
+    /// Level `j`'s sample number as level `k` displays it, including legal numbering.
+    pub fn level_number(&self, k: usize, j: usize) -> String {
+        let j = j.min(LEVELS - 1);
+        let legal = self.levels.get(k).is_some_and(|level| level.legal);
+        let level = self.levels.get(j);
+        let format = if legal && j != k { NumFormat::Decimal } else { level.map(|x| NumFormat::from_ooxml(&x.format)).unwrap_or_default() };
+        format.format(level.map(|x| x.start).unwrap_or(1).max(1))
     }
 }
 
@@ -188,11 +256,15 @@ pub fn define_list(app: &mut WordApp, ui: &mut Ui, f: &mut ListForm) -> bool {
     });
     let i = f.level.min(LEVELS - 1);
     let styles = f.styles.clone();
+    let chips: Vec<String> = (0..LEVELS).map(|level| f.level_number(i, level)).collect();
     let Some(l) = f.levels.get_mut(i) else { return true };
     heading(ui, "Number format");
     egui::Grid::new("mll_number").num_columns(2).spacing(vec2(10.0, 6.0)).show(ui, |ui| {
         ui.label(tl!("Enter formatting for number:"));
-        ui.add(crate::widgets::text_line(&mut l.text));
+        let text_id = egui::Id::new(("mll_number_text", i));
+        crate::number_text::show(ui, text_id, tl!("Number format"), &mut l.text, 260.0, |level| {
+            chips.get(usize::from(level).saturating_sub(1)).cloned().unwrap_or_default()
+        });
         ui.end_row();
         ui.label(tl!("Number style for this level:"));
         let current = STYLES.iter().find(|(k, _)| *k == l.format).map(|(_, s)| *s).unwrap_or("");
@@ -216,7 +288,7 @@ pub fn define_list(app: &mut WordApp, ui: &mut Ui, f: &mut ListForm) -> bool {
             egui::ComboBox::from_id_salt("mll_include").selected_text("").show_ui(ui, |ui| {
                 for k in 0..i {
                     if ui.selectable_label(false, crate::i18n::fmt(tl!("Level {n}"), &[("n", &(k + 1).to_string())])).clicked() {
-                        l.text.push_str(&format!("%{}", k + 1));
+                        crate::number_text::insert_level_at_cursor(ui, text_id, &mut l.text, (k + 1) as u8);
                     }
                 }
             });
@@ -288,9 +360,18 @@ pub fn define_list(app: &mut WordApp, ui: &mut Ui, f: &mut ListForm) -> bool {
         ui.add_enabled(l.follow == "tab" && l.tab_on, len(&mut l.tab_at, unit));
         ui.end_row();
     });
+    heading(ui, "Name");
+    ui.horizontal(|ui| {
+        ui.label(tl!("List name:"));
+        ui.add(egui::TextEdit::singleline(&mut f.name).desired_width(200.0).char_limit(MAX_LIST_NAME).hint_text(tl!("Optional")));
+    });
+    ui.add_enabled(!f.name.trim().is_empty(), egui::Checkbox::new(&mut f.save, tl!("Save in My Lists, for every document")));
     let (ok, cancel) = buttons(ui, tl!("OK"));
-    if ok && let Err(e) = app.run("list.define", f.params()) {
-        app.status(e);
+    if ok {
+        match app.run("list.define", f.params()) {
+            Ok(_) => f.save_to(&mut app.ui.saved_lists),
+            Err(e) => app.status(e),
+        }
     }
     ok || cancel
 }

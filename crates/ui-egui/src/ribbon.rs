@@ -451,6 +451,32 @@ fn mi_text(ui: &mut Ui, app: &mut WordApp, text: &str, id: &str, params: Value) 
     }
 }
 
+/// Home › Multilevel List › My Lists: apply a list saved in the user's UI settings or remove it
+/// from the gallery. Removing a saved entry does not change lists already in documents.
+fn saved_list_items(ui: &mut Ui, app: &mut WordApp) {
+    if app.ui.saved_lists.is_empty() {
+        return;
+    }
+    ui.separator();
+    ui.label(egui::RichText::new(tl!("My Lists")).small().weak());
+    let lists = app.ui.saved_lists.clone();
+    for list in &lists {
+        let label = format!("{}   {}", list.name, list.sample());
+        if ui.add_enabled(crate::widgets::enabled(app, "list.define"), egui::Button::new(label).min_size(vec2(200.0, 0.0))).clicked() {
+            crate::widgets::run_from_ribbon(app, "list.define", list.params());
+            ui.close();
+        }
+    }
+    ui.menu_button(tl!("Remove from My Lists"), |ui| {
+        for list in &lists {
+            if ui.button(&list.name).clicked() {
+                app.ui.saved_lists.retain(|saved| saved.name != list.name);
+                ui.close();
+            }
+        }
+    });
+}
+
 /// The proofing languages the Language menu offers: tag and English name (translated when drawn).
 pub(crate) const PROOFING_LANGUAGES: [(&str, &str); 11] = [
     ("en-US", "English (United States)"),
@@ -823,6 +849,7 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                     for lv in 0..5u64 {
                         mi(ui, app, &format!("Change to Level {}", lv + 1), "para.listLevel", json!({"level": lv}));
                     }
+                    saved_list_items(ui, app);
                 });
                 ui.add_space(4.0);
                 small(ui, app, "outdent", None, "Decrease Indent", "para.outdent", json!({}), false);
@@ -1023,6 +1050,8 @@ fn insert(app: &mut WordApp, ui: &mut Ui) {
             mi(ui, app, "Bottom of Page", "insert.pageNumber", json!({"position": "bottom", "align": "center"}));
             mi(ui, app, "Page X of Y", "insert.pageNumber", json!({"position": "bottom", "format": "x of y"}));
             mi(ui, app, "Current Position", "insert.pageNumber", json!({"position": "current"}));
+            ui.separator();
+            mi(ui, app, "Page Number Position…", "ui.dialog", json!({"name": "pageNumberPosition"}));
             mi(ui, app, "Format Page Numbers…", "layout.pageNumberFormat", json!({}));
         });
     });

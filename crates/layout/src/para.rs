@@ -3519,6 +3519,16 @@ fn resolve_tab(pl: &mut ParaLayout, pending: &mut Option<(usize, TabStop, f32)>,
 }
 
 impl ParaLayout {
+    /// Size of the paragraph mark (¶), points: its first run's size, as the mark is drawn.
+    pub fn mark_size(&self) -> f32 {
+        self.styles.first().map(|style| style.size).unwrap_or(11.0)
+    }
+
+    /// Width the drawn paragraph mark takes in a selection: its 1 pt gap and 0.6 × font size.
+    pub fn mark_width(&self) -> f32 {
+        (1.0 + self.mark_size() * 0.6).max(PARA_MARK_WIDTH)
+    }
+
     /// x of byte offset `off` within line `li` (clamped to the line).
     pub fn x_of(&self, li: usize, off: usize) -> Option<f32> {
         let l = self.lines.get(li)?;

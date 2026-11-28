@@ -73,6 +73,7 @@ pub mod keytips;
 pub mod mini_toolbar;
 pub mod net;
 pub mod number_select;
+mod number_text;
 pub mod numfield;
 pub mod objects;
 pub mod online_pictures;
@@ -197,6 +198,11 @@ pub struct UiState {
     pub print: print_page::PrintSettings,
     pub ribbon_collapsed: bool,
     pub recent: Vec<String>,
+    /// Whether to remember paths opened or saved for File › Home and Open.
+    pub remember_recent: bool,
+    /// Multilevel lists the user saved by name in Define New Multilevel List.
+    #[serde(deserialize_with = "crate::dialogs_lists::lenient_saved_lists")]
+    pub saved_lists: Vec<dialogs_lists::SavedList>,
     /// Symbols inserted from the Symbol dialog, most recent first (#321).
     pub recent_symbols: Vec<dialogs_insert::RecentSymbol>,
     /// Colours picked in the Colors dialog (More Colors…), most recent first (#606).
@@ -315,6 +321,8 @@ impl Default for UiState {
             print: print_page::PrintSettings::default(),
             ribbon_collapsed: false,
             recent: Vec::new(),
+            remember_recent: true,
+            saved_lists: Vec::new(),
             recent_symbols: Vec::new(),
             recent_colors: Vec::new(),
             theme: theme::Appearance::default(),
@@ -1012,7 +1020,8 @@ impl WordApp {
         for req in std::mem::take(&mut self.session.ui_requests) {
             self.handle_request(&req);
         }
-        if let Some(p) = self.session.path.as_ref().map(|p| p.to_string_lossy().to_string())
+        if self.ui.remember_recent
+            && let Some(p) = self.session.path.as_ref().map(|p| p.to_string_lossy().to_string())
             && self.ui.recent.first() != Some(&p)
         {
             self.ui.recent.retain(|r| *r != p);
@@ -1285,6 +1294,28 @@ impl WordApp {
                     }
                     _ => return Some(Err("`answer` must be discard or cancel".into())),
                 }
+            }
+            "ui.recentRemove" => {
+                let Some(path) = s("path") else { return Some(Err("`path` (string) is required".into())) };
+                self.ui.recent.retain(|recent| recent != path);
+                json!({"recent": self.ui.recent})
+            }
+            "ui.recentClear" => {
+                self.ui.recent.clear();
+                json!({"recent": self.ui.recent})
+            }
+            "ui.rememberRecent" => {
+                match p.get("value") {
+                    None => {}
+                    Some(Value::Bool(on)) => {
+                        self.ui.remember_recent = *on;
+                        if !on {
+                            self.ui.recent.clear();
+                        }
+                    }
+                    Some(_) => return Some(Err("`value` must be true or false".into())),
+                }
+                json!({"rememberRecent": self.ui.remember_recent})
             }
             "ui.openFileDialog" => {
                 self.open_dialog();

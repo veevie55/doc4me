@@ -3050,3 +3050,24 @@
 	Web	Web
 	XML	XML
 	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?
+	Clear all	Clear all
+	Doc4Me doesn't remember the documents you open. Turn it on in File › Options › Advanced.	Doc4Me doesn't remember the documents you open. Turn it on in File › Options › Advanced.
+	Grey boxes are level numbers; add one from Include level number from. Type anything around them, such as a dot or ข้อ.	Grey boxes are level numbers; add one from Include level number from. Type anything around them, such as a dot or ข้อ.
+	List name:	List name:
+	My Lists	My Lists
+	Remove from list	Remove from list
+	Remove from My Lists	Remove from My Lists
+	Remember recently opened documents	Remember recently opened documents
+	Save in My Lists, for every document	Save in My Lists, for every document
+	Take every document off this list. The files stay where they are.	Take every document off this list. The files stay where they are.
+	Bottom edge	Bottom edge
+	Centred across the page.	Centred across the page.
+	Distance:	Distance:
+	Don't show on the first page of the section	Don't show on the first page of the section
+	Measured from the left edge to the start of the number.	Measured from the left edge to the start of the number.
+	Measured from the right edge to the end of the number.	Measured from the right edge to the end of the number.
+	Measured to the baseline of the number.	Measured to the baseline of the number.
+	Page Number Position	Page Number Position
+	Page Number Position…	Page Number Position…
+	Place the page number at a set distance from the edges of the paper.	Place the page number at a set distance from the edges of the paper.
+	Top edge	Top edge

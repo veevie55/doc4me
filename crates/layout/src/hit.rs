@@ -7,7 +7,7 @@ use doc4me_doc::props::TextDirection;
 use doc4me_doc::{Document, Path, Pos, StoryRef};
 use doc4me_geom::{Point, Rect};
 
-use crate::para::{PARA_MARK_WIDTH, ParaLayout};
+use crate::para::ParaLayout;
 use crate::{DocLayout, Page, Placed};
 
 /// Caret geometry on a page: a bar from (`x`, `top`) to (`x + width`, `top + height`). It is
@@ -680,9 +680,12 @@ impl DocLayout {
                         }
                         // Selection continuing past the paragraph end shows the paragraph mark.
                         if li + 1 == para.lines.len() && path != b.path {
-                            let ex = l.end_x();
-                            let x0 = if l.rtl { ex - PARA_MARK_WIDTH } else { ex };
-                            put(Rect::new(x0, top, PARA_MARK_WIDTH, l.height));
+                            // Where the mark is drawn: the line's visual end, which differs from
+                            // its logical end when the last text runs the other way.
+                            let ex = l.visual_end_x();
+                            let w = para.mark_width();
+                            let x0 = if l.rtl { ex - w } else { ex };
+                            put(Rect::new(x0, top, w, l.height));
                         }
                         continue;
                     }
@@ -691,7 +694,7 @@ impl DocLayout {
                     // Selection continuing past the paragraph end shows the paragraph mark.
                     let last_line = li + 1 == para.lines.len();
                     if last_line && path != b.path {
-                        x1 += PARA_MARK_WIDTH;
+                        x1 += para.mark_width();
                     }
                     if path == b.path && to >= l.stop && li + 1 < para.lines.len() && b.off > l.stop {
                         x1 = para.x_of(li, l.stop).unwrap_or(x1);

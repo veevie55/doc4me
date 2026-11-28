@@ -25,6 +25,7 @@ pub enum LayoutDialog {
     ManualHyphenation(ManualForm),
     /// The break `layout.break` inserts (its `kind`).
     Break(String),
+    PageNumberPosition(PageNumberForm),
     Language(LanguageForm),
     Envelopes(EnvelopeForm),
     Labels(LabelsForm),
@@ -37,6 +38,7 @@ impl LayoutDialog {
             LayoutDialog::Hyphenation(_) => "hyphenation",
             LayoutDialog::ManualHyphenation(_) => "manualHyphenation",
             LayoutDialog::Break(_) => "insertBreak",
+            LayoutDialog::PageNumberPosition(_) => "pageNumberPosition",
             LayoutDialog::Language(_) => "language",
             LayoutDialog::Envelopes(_) => "envelopes",
             LayoutDialog::Labels(_) => "labels",
@@ -50,6 +52,7 @@ impl LayoutDialog {
             LayoutDialog::Hyphenation(_) => "Hyphenation",
             LayoutDialog::ManualHyphenation(_) => "Manual Hyphenation",
             LayoutDialog::Break(_) => "Breaks",
+            LayoutDialog::PageNumberPosition(_) => "Page Number Position",
             LayoutDialog::Language(_) => "Language",
             LayoutDialog::Envelopes(_) => "Envelopes",
             LayoutDialog::Labels(_) => "Labels",
@@ -64,6 +67,7 @@ pub fn open(name: &str, app: &mut WordApp) -> Option<LayoutDialog> {
         "hyphenation" => LayoutDialog::Hyphenation(HyphenationForm::read(app)),
         "manualHyphenation" => LayoutDialog::ManualHyphenation(ManualForm::start(app)),
         "insertBreak" => LayoutDialog::Break("page".into()),
+        "pageNumberPosition" => LayoutDialog::PageNumberPosition(PageNumberForm::read(app)),
         "language" => LayoutDialog::Language(LanguageForm::read(app)),
         "envelopes" => LayoutDialog::Envelopes(EnvelopeForm::read(app)),
         "labels" => LayoutDialog::Labels(LabelsForm::read(app)),
@@ -78,6 +82,7 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut LayoutDialog) -> bool {
         LayoutDialog::Hyphenation(f) => hyphenation_ui(app, ui, f),
         LayoutDialog::ManualHyphenation(f) => manual_ui(app, ui, f),
         LayoutDialog::Break(kind) => break_ui(app, ui, kind),
+        LayoutDialog::PageNumberPosition(f) => page_number_ui(app, ui, f),
         LayoutDialog::Language(f) => language_ui(app, ui, f),
         LayoutDialog::Envelopes(f) => envelopes_ui(app, ui, f),
         LayoutDialog::Labels(f) => labels_ui(app, ui, f),
@@ -120,6 +125,151 @@ fn run(app: &mut WordApp, id: &str, params: Value) -> bool {
 
 fn unit() -> doc4me_geom::Unit {
     crate::options::unit()
+}
+
+// ---------------------------------------------------------------------------------------------
+// Page Number Position
+
+/// The page number's placement in the selected section, with distances in the interface unit.
+#[derive(Clone, Debug, PartialEq, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct PageNumberForm {
+    pub top: bool,
+    pub from_edge: f32,
+    /// `left`, `center` or `right`.
+    pub horizontal: String,
+    pub from_side: f32,
+    /// No number on the section's first page (Different First Page).
+    pub hide_first: bool,
+}
+
+impl PageNumberForm {
+    /// The section's positioned number, or 1" from its top and right edges.
+    pub fn read(app: &mut WordApp) -> PageNumberForm {
+        let per_unit = unit().pt_per_unit();
+        let current = doc4me_engine::cmd::insert::page_number_placement(&mut app.session);
+        let get = |key: &str| current.as_ref().and_then(|v| v.get(key).cloned());
+        PageNumberForm {
+            top: get("vertical").and_then(|v| v.as_str().map(|v| v == "top")).unwrap_or(true),
+            from_edge: get("fromEdge").and_then(|v| v.as_f64()).unwrap_or(72.0) as f32 / per_unit,
+            horizontal: get("horizontal").and_then(|v| v.as_str().map(str::to_owned)).unwrap_or_else(|| "right".into()),
+            from_side: get("fromSide").and_then(|v| v.as_f64()).unwrap_or(72.0) as f32 / per_unit,
+            hide_first: get("firstPage").and_then(|v| v.as_bool()).is_some_and(|first| !first),
+        }
+    }
+
+    /// Parameters for `layout.pageNumberPosition`, always sent in points.
+    pub fn params(&self) -> Value {
+        let per_unit = unit().pt_per_unit();
+        json!({
+            "vertical": if self.top { "top" } else { "bottom" },
+            "fromEdge": (self.from_edge * per_unit).max(0.0),
+            "horizontal": self.horizontal,
+            "fromSide": (self.from_side * per_unit).max(0.0),
+            "firstPage": !self.hide_first,
+        })
+    }
+}
+
+fn page_number_ui(app: &mut WordApp, ui: &mut Ui, f: &mut PageNumberForm) -> bool {
+    ui.set_min_width(510.0);
+    let section = doc4me_engine::cmd::insert::page_number_section(&mut app.session);
+    let (page_w, page_h) = (section.page_w.max(1.0), section.page_h.max(1.0));
+    fn length(value: &mut f32, max_pt: f32) -> crate::numfield::NumField<'_> {
+        crate::numfield::NumField::new(value).speed(0.01).range(0.0..=max_pt / unit().pt_per_unit()).suffix(unit().suffix()).max_decimals(2)
+    }
+    ui.label(egui::RichText::new(tl!("Place the page number at a set distance from the edges of the paper.")).weak());
+    ui.horizontal_top(|ui| {
+        ui.vertical(|ui| {
+            heading(ui, "Vertical");
+            egui::Grid::new("page_number_position_vertical").num_columns(2).spacing(vec2(10.0, 6.0)).show(ui, |ui| {
+                ui.label(tl!("From:"));
+                ui.horizontal(|ui| {
+                    ui.radio_value(&mut f.top, true, tl!("Top edge"));
+                    ui.radio_value(&mut f.top, false, tl!("Bottom edge"));
+                });
+                ui.end_row();
+                ui.label(tl!("Distance:"));
+                ui.add(length(&mut f.from_edge, page_h));
+                ui.end_row();
+            });
+            ui.label(egui::RichText::new(tl!("Measured to the baseline of the number.")).small().weak());
+            heading(ui, "Horizontal");
+            egui::Grid::new("page_number_position_horizontal").num_columns(2).spacing(vec2(10.0, 6.0)).show(ui, |ui| {
+                ui.label(tl!("Position:"));
+                ui.horizontal(|ui| {
+                    for (value, label) in [("left", "Left"), ("center", "Center"), ("right", "Right")] {
+                        if ui.radio(f.horizontal == value, tl!(label)).clicked() {
+                            f.horizontal = value.into();
+                        }
+                    }
+                });
+                ui.end_row();
+                ui.label(tl!("Distance:"));
+                ui.add_enabled(f.horizontal != "center", length(&mut f.from_side, page_w));
+                ui.end_row();
+            });
+            let side = match f.horizontal.as_str() {
+                "left" => "Measured from the left edge to the start of the number.",
+                "center" => "Centred across the page.",
+                _ => "Measured from the right edge to the end of the number.",
+            };
+            ui.label(egui::RichText::new(tl!(side)).small().weak());
+            ui.add_space(6.0);
+            ui.checkbox(&mut f.hide_first, tl!("Don't show on the first page of the section"));
+        });
+        ui.add_space(12.0);
+        page_number_preview(ui, f, page_w, page_h);
+    });
+    let (ok, cancel) = buttons(ui, "OK", true);
+    if ok {
+        return run(app, "layout.pageNumberPosition", f.params());
+    }
+    cancel
+}
+
+/// A page preview with the number and its offsets from the paper edges.
+fn page_number_preview(ui: &mut Ui, f: &PageNumberForm, page_w: f32, page_h: f32) {
+    let tokens = crate::theme::Tokens::get(ui.ctx());
+    let h = 170.0;
+    let w = (h * page_w / page_h).clamp(60.0, 200.0);
+    let (r, _) = ui.allocate_exact_size(vec2(w, h), egui::Sense::hover());
+    let page = r.shrink(2.0);
+    ui.painter().rect(page, 2.0, egui::Color32::WHITE, egui::Stroke::new(1.0, tokens.border_strong), egui::StrokeKind::Middle);
+    let scale = page.width() / page_w;
+    let per_unit = unit().pt_per_unit();
+    let edge = (f.from_edge * per_unit * scale).clamp(0.0, page.height());
+    let side = (f.from_side * per_unit * scale).clamp(0.0, page.width());
+    let baseline = if f.top { page.top() + edge } else { page.bottom() - edge };
+    let galley = ui.painter().layout_no_wrap("12".into(), egui::FontId::proportional(8.5), egui::Color32::BLACK);
+    let text_width = galley.size().x;
+    let x = match f.horizontal.as_str() {
+        "left" => page.left() + side,
+        "center" => page.center().x - text_width / 2.0,
+        _ => page.right() - side - text_width,
+    };
+    for i in 0..9 {
+        let y = page.top() + page.height() * (0.3 + i as f32 * 0.055);
+        ui.painter().line_segment(
+            [egui::pos2(page.left() + page.width() * 0.18, y), egui::pos2(page.right() - page.width() * 0.18, y)],
+            egui::Stroke::new(1.0, egui::Color32::from_gray(205)),
+        );
+    }
+    let dim = egui::Stroke::new(1.0, tokens.accent.gamma_multiply(0.7));
+    let x_mid = x + text_width / 2.0;
+    let page_edge = if f.top { page.top() } else { page.bottom() };
+    ui.painter().line_segment([egui::pos2(x_mid, page_edge), egui::pos2(x_mid, baseline)], dim);
+    match f.horizontal.as_str() {
+        "left" => {
+            ui.painter().line_segment([egui::pos2(page.left(), baseline - 4.0), egui::pos2(x, baseline - 4.0)], dim);
+        }
+        "right" => {
+            ui.painter().line_segment([egui::pos2(x + text_width, baseline - 4.0), egui::pos2(page.right(), baseline - 4.0)], dim);
+        }
+        _ => {}
+    }
+    ui.painter().galley(egui::pos2(x, baseline - galley.size().y * 0.8), galley, egui::Color32::BLACK);
+    ui.painter().line_segment([egui::pos2(x - 2.0, baseline), egui::pos2(x + text_width + 2.0, baseline)], egui::Stroke::new(1.0, tokens.accent));
 }
 
 // ---------------------------------------------------------------------------------------------

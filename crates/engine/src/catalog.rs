@@ -169,6 +169,7 @@ Insert|Header & Footer|Edit Header|insert.editHeader
 Insert|Header & Footer|Edit Footer|insert.editFooter
 Insert|Header & Footer|Remove Header|insert.removeHeader
 Insert|Header & Footer|Remove Footer|insert.removeFooter
+Insert|Header & Footer|Page Number Position|layout.pageNumberPosition
 Insert|Header & Footer|Format Page Numbers|layout.pageNumberFormat
 Insert|Header & Footer|Close Header and Footer|insert.closeHeader
 Insert|Header & Footer|Different First Page|layout.differentFirstPage
