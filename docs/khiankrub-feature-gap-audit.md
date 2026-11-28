@@ -1,6 +1,6 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 20:36 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `e315da4d578d2abb2604f137e55bc5396404c680` (`main`, 2026-11-28 20:36 ICT)
+อัปเดตเมื่อ **28 November 2026 20:46 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `5570d26b981a3d01b8218a4f5802b66540ae261f` (`main`, 2026-11-28 20:46 ICT)
 
 ## วิธีเปรียบเทียบ
 
@@ -47,7 +47,7 @@
 | บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | มี download callback และ dirty state; ยังไม่มี ticket/result flow สำหรับ save picker แบบ asynchronous | ค้าง |
 | อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | ยังไม่พบ update service, preference หรือ UI flow | ค้าง |
 | แก้ไขตัวอักษร | Character dialog แยกหน้า Font, Effects, Position, Background และ Border (`ui-egui/dialogs_character.rs`) | มี Font dialog และคำสั่งจัดรูปแบบหลายรายการ แต่ยังไม่มี dialog แบบหลายหน้าที่เทียบเท่าทั้งชุด | ค้างบางส่วน; ต้องเทียบ fields ต่อ |
-| สัญลักษณ์หัวข้อ | Define New Bullet dialog เลือก character, font, alignment พร้อม preview (`ui-egui/dialogs_bullet.rs`) | มี command `para.defineBullet`; ยังไม่พบ dialog พร้อมตัวเลือก/preview | ค้าง |
+| สัญลักษณ์หัวข้อ | Define New Bullet dialog เลือก character, font, size, bold/italic, color และ alignment พร้อม preview (`ui-egui/dialogs_bullet.rs`) | เพิ่ม dialog ใน Home › Paragraph › Bullets; รูปแบบสร้าง private list definition และไม่กระทบรายการอื่น; การเรียก command เดิมที่ส่งแค่ `char` ยังคง toggle แบบเดิม | พอร์ตแล้ว; `5570d26` · push 2026-11-28 20:46 ICT |
 | แผงจัดรูปแบบ | แผงเต็มความสูงสำหรับข้อความ/ย่อหน้า/หน้า/ดีไซน์ (`ui-egui/format_panes.rs`) | มี Ribbon และ contextual panes บางชนิด; ยังไม่มีชุดแผงดังกล่าว | ค้างด้าน UI |
 | แผงตารางและวัตถุ | Table, Shape, Picture, Chart และ SmartArt panes รวมคำสั่งตามบริบท (`ui-egui/table_pane.rs`, `object_pane.rs`) | คำสั่งอยู่ใน Ribbon, dialog และ Chart Format pane; ยังไม่มีแผงตาราง/วัตถุครบชุด | ค้างด้าน UI |
 | ลำดับเรียงตามภาษา | Collation ตามภาษาสำหรับ accent และอักษรเฉพาะ (`doc/collate.rs`) | มี natural sort/case folding แต่ยังไม่พบ language-tailored collation | ค้าง |
@@ -86,6 +86,7 @@
 | `bd5a2c7` | 2026-11-28 20:26:18 ICT | เพิ่ม middle-click canvas auto-scroll สำหรับ platform ที่รองรับ | push 2026-11-28 20:26 ICT; `origin/main` ยืนยัน SHA `bd5a2c7476d1aa29136baae2c01d50e4d26bed20` |
 | `5eaaeec` | 2026-11-28 20:31:30 ICT | เพิ่ม Crop mode บน canvas และบันทึก crop/size พร้อมกัน | push 2026-11-28 20:31 ICT; `origin/main` ยืนยัน SHA `5eaaeec921bf336cc07d6cde5dfb1583ea2a9861` |
 | `e315da4` | 2026-11-28 20:36:27 ICT | เพิ่ม alignment snapping/guides สำหรับการย้ายและปรับขนาดวัตถุ | push 2026-11-28 20:36 ICT; `origin/main` ยืนยัน SHA `e315da4d578d2abb2604f137e55bc5396404c680` |
+| `5570d26` | 2026-11-28 20:46:10 ICT | เพิ่ม Define New Bullet dialog, preview และการจัดรูปแบบ bullet แบบส่วนตัว | push 2026-11-28 20:46 ICT; `origin/main` ยืนยัน SHA `5570d26b981a3d01b8218a4f5802b66540ae261f` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -98,5 +99,5 @@
 ## การตรวจสอบ
 
 - Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
-- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check. ไม่ได้รันชุดทดสอบ.
+- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check. ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).

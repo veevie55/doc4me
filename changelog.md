@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 20:36 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `e315da4d578d2abb2604f137e55bc5396404c680`
+อัปเดตเมื่อ **28 November 2026 20:46 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `5570d26b981a3d01b8218a4f5802b66540ae261f`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -52,6 +52,7 @@ flowchart LR
 | `bd5a2c7` | 2026-11-28 20:26:18 ICT | เพิ่ม middle-click auto-scroll บน canvas ใน Windows/Linux; กดล้อเริ่ม/หยุด, Escape และปุ่มอื่นยกเลิก, ระยะจากจุดยึดกำหนดความเร็ว | push 2026-11-28 20:26 ICT; `origin/main` ยืนยัน SHA `bd5a2c7476d1aa29136baae2c01d50e4d26bed20` |
 | `5eaaeec` | 2026-11-28 20:31:30 ICT | เพิ่ม Crop mode, crop handles/preview และขนาดใหม่ใน undo action เดียว | push 2026-11-28 20:31 ICT; `origin/main` ยืนยัน SHA `5eaaeec921bf336cc07d6cde5dfb1583ea2a9861` |
 | `e315da4` | 2026-11-28 20:36:27 ICT | เพิ่ม alignment guides/snapping ขณะย้ายหรือ resize วัตถุ; เพิ่มตัวเลือกปิดใน Advanced และ Alt สำหรับ free move | push 2026-11-28 20:36 ICT; `origin/main` ยืนยัน SHA `e315da4d578d2abb2604f137e55bc5396404c680` |
+| `5570d26` | 2026-11-28 20:46:10 ICT | เพิ่ม Define New Bullet dialog พร้อมตัวอักษร ฟอนต์ ขนาด น้ำหนัก สี แนวจัดวาง และ preview; คงพฤติกรรม command แบบ `char` อย่างเดียว | push 2026-11-28 20:46 ICT; `origin/main` ยืนยัน SHA `5570d26b981a3d01b8218a4f5802b66540ae261f` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
 
@@ -65,6 +66,7 @@ flowchart LR
 - **Canvas scrolling:** middle-click ที่ canvas แสดง marker; pointer ที่ห่างจาก anchor มากขึ้นจะ scroll เร็วขึ้น. คลิกกลางซ้ำ, Escape, ปุ่มอื่น, ล้อเลื่อน หรือออกจากหน้าต่างเพื่อหยุด; gesture ไม่ย้าย caret หรือเปิดเมนูของวัตถุ.
 - **Crop mode:** เลือกรูปแล้วคลิกขวา › Crop เพื่อแสดง handles; ลากขอบหรือมุมเพื่อตัด/คืนภาพ พร้อม preview บริเวณที่ถูกซ่อน. ปล่อยเมาส์บันทึก crop และขนาดครั้งเดียว; Escape/Enter ออกจากโหมดและเก็บ crop ปัจจุบัน.
 - **Alignment guides:** ลากหรือ resize รูป/shape ให้ snap กับขอบและกึ่งกลางหน้ากระดาษ, margins และวัตถุลอยอื่น; เส้นนำทางแสดงแนวที่ตรงกัน. Alt ปิด snap ชั่วคราว; View › Gridlines ใช้ drawing grid; File › Options › Advanced ปิด guides ได้.
+- **Define New Bullet:** Home › Paragraph › Bullets › Define New Bullet เลือกอักขระ, ฟอนต์, ขนาด, bold/italic, สี และแนวชิดซ้าย/กลาง/ขวา พร้อม preview. กด OK สร้าง list definition ของตัวเองให้ย่อหน้าที่เลือก จึงไม่เปลี่ยนรายการอื่นที่ใช้เครื่องหมายเดียวกัน; command `para.defineBullet` เมื่อส่งเพียง `char` ยังทำงาน toggle แบบเดิม.
 
 ```mermaid
 flowchart LR
@@ -98,6 +100,15 @@ flowchart LR
   G -->|ใช่| S[Snap กับ drawing grid]
   G -->|ไม่| H[Snap กับหน้า, margins และวัตถุ]
   H --> L[แสดง alignment guides]
+```
+
+```mermaid
+flowchart LR
+  S[เลือกย่อหน้า] --> D[Define New Bullet]
+  D --> C[ตั้งอักขระและรูปแบบ]
+  C --> P[ตรวจ preview]
+  P -->|OK| N[ใช้ private list definition]
+  P -->|Cancel| X[ปิดโดยไม่เปลี่ยนรายการ]
 ```
 
 รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 776 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
