@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 20:51 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `1eb5219c18d71a31e5284d8da17459b63477fe0f`
+อัปเดตเมื่อ **28 November 2026 20:55 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `598345932d6bc6d2cae23606eeca3d639620b383`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -54,6 +54,7 @@ flowchart LR
 | `e315da4` | 2026-11-28 20:36:27 ICT | เพิ่ม alignment guides/snapping ขณะย้ายหรือ resize วัตถุ; เพิ่มตัวเลือกปิดใน Advanced และ Alt สำหรับ free move | push 2026-11-28 20:36 ICT; `origin/main` ยืนยัน SHA `e315da4d578d2abb2604f137e55bc5396404c680` |
 | `5570d26` | 2026-11-28 20:46:10 ICT | เพิ่ม Define New Bullet dialog พร้อมตัวอักษร ฟอนต์ ขนาด น้ำหนัก สี แนวจัดวาง และ preview; คงพฤติกรรม command แบบ `char` อย่างเดียว | push 2026-11-28 20:46 ICT; `origin/main` ยืนยัน SHA `5570d26b981a3d01b8218a4f5802b66540ae261f` |
 | `1eb5219` | 2026-11-28 20:51:09 ICT | เรียงตัวเลขในตารางตามภาษาของ cell ด้วย parser ที่เข้าใจทศนิยม ตัวคั่นหลักพัน และสกุลเงิน | push 2026-11-28 20:51 ICT; `origin/main` ยืนยัน SHA `1eb5219c18d71a31e5284d8da17459b63477fe0f` |
+| `5983459` | 2026-11-28 20:55:54 ICT | เพิ่ม collation ตามภาษาให้ paragraph/table sort, ดัชนีและหัวอักษร รวมถึง bibliography | push 2026-11-28 20:55 ICT; `origin/main` ยืนยัน SHA `598345932d6bc6d2cae23606eeca3d639620b383` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
 
@@ -68,7 +69,7 @@ flowchart LR
 - **Crop mode:** เลือกรูปแล้วคลิกขวา › Crop เพื่อแสดง handles; ลากขอบหรือมุมเพื่อตัด/คืนภาพ พร้อม preview บริเวณที่ถูกซ่อน. ปล่อยเมาส์บันทึก crop และขนาดครั้งเดียว; Escape/Enter ออกจากโหมดและเก็บ crop ปัจจุบัน.
 - **Alignment guides:** ลากหรือ resize รูป/shape ให้ snap กับขอบและกึ่งกลางหน้ากระดาษ, margins และวัตถุลอยอื่น; เส้นนำทางแสดงแนวที่ตรงกัน. Alt ปิด snap ชั่วคราว; View › Gridlines ใช้ drawing grid; File › Options › Advanced ปิด guides ได้.
 - **Define New Bullet:** Home › Paragraph › Bullets › Define New Bullet เลือกอักขระ, ฟอนต์, ขนาด, bold/italic, สี และแนวชิดซ้าย/กลาง/ขวา พร้อม preview. กด OK สร้าง list definition ของตัวเองให้ย่อหน้าที่เลือก จึงไม่เปลี่ยนรายการอื่นที่ใช้เครื่องหมายเดียวกัน; command `para.defineBullet` เมื่อส่งเพียง `char` ยังทำงาน toggle แบบเดิม.
-- **Sort ตารางตาม locale:** ตัวเลขเรียงตามภาษาของ cell เช่น `1,5` ในภาษาโปแลนด์ หรือ `1,250.50` ในภาษาอังกฤษ; รองรับ space/จุด/จุลภาค/apostrophe คั่นหลักพัน, สัญลักษณ์สกุลเงิน, `%` และเครื่องหมายลบแบบ en dash.
+- **Sort ตาม locale:** ตัวเลขในตารางอ่านตามภาษาของ cell เช่น `1,5` ในภาษาโปแลนด์ หรือ `1,250.50` ในภาษาอังกฤษ; รองรับตัวคั่นหลักพัน, สกุลเงิน, `%` และเครื่องหมายลบแบบ en dash. ข้อความเรียงตาม alphabet ของภาษา รวม accents และอักษรเฉพาะ; ใช้กับ `para.sort`, `table.sort`, index entries/หัวอักษร และ bibliography.
 
 ```mermaid
 flowchart LR
@@ -118,6 +119,15 @@ flowchart LR
   C[อ่านข้อความและภาษาของ cell] --> N{parse เป็นตัวเลขตาม locale ได้?}
   N -->|ได้ทั้งสองค่า| V[เรียงตามค่าตัวเลข]
   N -->|มีข้อความที่ไม่ใช่ตัวเลข| T[ใช้การเรียงข้อความเดิม]
+```
+
+```mermaid
+flowchart LR
+  L[อ่านภาษาเอกสาร] --> A[ใช้อักษรและลำดับเฉพาะภาษา]
+  S[ข้อความที่เรียง] --> N[ปรับ case และ composed accents]
+  N --> P[เปรียบเทียบลำดับอักษร]
+  A --> P
+  P --> R[เรียง paragraph, table, index หรือ bibliography]
 ```
 
 รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 776 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
