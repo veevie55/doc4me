@@ -69,6 +69,7 @@ pub mod file_dialogs;
 pub mod font_download;
 mod font_notice;
 pub mod form_fields;
+pub mod format_panes;
 pub mod frame;
 pub mod get_addins;
 pub mod guides;

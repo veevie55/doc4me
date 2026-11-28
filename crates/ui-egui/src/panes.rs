@@ -11,6 +11,35 @@ use crate::theme::{Tokens, regular, semibold};
 
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
+    if app.session.view.format_pane {
+        egui::Panel::right("formatting_pane")
+            .default_size(300.0)
+            .resizable(true)
+            .frame(egui::Frame::NONE.fill(t.panel).inner_margin(10).stroke(Stroke::new(1.0, t.border)))
+            .show(ui, |ui| {
+                crate::ribbon_keys::stop(ui, crate::ribbon_keys::Region::Pane, ui.max_rect());
+                if header(ui, "Formatting") {
+                    let _ = app.run("view.formatPane", json!({"value": false}));
+                    return;
+                }
+                let id = egui::Id::new("formatting_pane_tab");
+                let mut tab = ui.ctx().data_mut(|d| d.get_persisted::<usize>(id)).unwrap_or(0).min(3);
+                ui.horizontal_wrapped(|ui| {
+                    for (i, title) in ["Text", "Paragraph", "Page", "Design"].into_iter().enumerate() {
+                        if ui.selectable_value(&mut tab, i, tl!(title)).changed() {
+                            ui.ctx().data_mut(|d| d.insert_persisted(id, tab));
+                        }
+                    }
+                });
+                ui.separator();
+                match tab {
+                    0 => crate::format_panes::text(app, ui),
+                    1 => crate::format_panes::paragraph(app, ui),
+                    2 => crate::format_panes::page(app, ui),
+                    _ => crate::format_panes::design(app, ui),
+                }
+            });
+    }
     if crate::hf_pane::wanted(app, ui.ctx()) {
         egui::Panel::right("hf_pane")
             .default_size(290.0)

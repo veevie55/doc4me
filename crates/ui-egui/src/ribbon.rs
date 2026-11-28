@@ -441,7 +441,7 @@ fn mi_icon(ui: &mut Ui, app: &mut WordApp, icon: &str, label: &str, id: &str, pa
 }
 
 /// A menu item whose text is already in the interface language.
-fn mi_text(ui: &mut Ui, app: &mut WordApp, text: &str, id: &str, params: Value) {
+pub(crate) fn mi_text(ui: &mut Ui, app: &mut WordApp, text: &str, id: &str, params: Value) {
     let sc = crate::widgets::shortcut_text(app, id);
     let enabled = crate::widgets::enabled(app, id);
     let resp = ui.add_enabled(enabled, egui::Button::new(text).shortcut_text(sc).min_size(vec2(200.0, 0.0)));
@@ -453,7 +453,7 @@ fn mi_text(ui: &mut Ui, app: &mut WordApp, text: &str, id: &str, params: Value) 
 
 /// Home › Multilevel List › My Lists: apply a list saved in the user's UI settings or remove it
 /// from the gallery. Removing a saved entry does not change lists already in documents.
-fn saved_list_items(ui: &mut Ui, app: &mut WordApp) {
+pub(crate) fn saved_list_items(ui: &mut Ui, app: &mut WordApp) {
     if app.ui.saved_lists.is_empty() {
         return;
     }
@@ -592,7 +592,7 @@ pub(crate) fn wrap_text_items(ui: &mut Ui, app: &mut WordApp) {
 }
 
 /// One row of the Underline menu: show the actual line style, with its name as the tooltip.
-fn underline_sample(ui: &mut Ui, app: &mut WordApp, label: &str, style: &str) -> egui::Response {
+pub(crate) fn underline_sample(ui: &mut Ui, app: &mut WordApp, label: &str, style: &str) -> egui::Response {
     let t = Tokens::get(ui.ctx());
     let (rect, response) = ui.allocate_exact_size(vec2(170.0, 24.0), Sense::click());
     if response.hovered() {
@@ -1920,6 +1920,10 @@ fn view(app: &mut WordApp, ui: &mut Ui) {
             let mut n = v.nav_pane;
             if ui.checkbox(&mut n, tl!("Navigation Pane")).changed() {
                 let _ = app.run("view.navigationPane", json!({"value": n}));
+            }
+            let mut f = v.format_pane;
+            if ui.checkbox(&mut f, tl!("Formatting Pane")).changed() {
+                let _ = app.run("view.formatPane", json!({"value": f}));
             }
             let mut w = v.hide_white_space;
             if ui.checkbox(&mut w, tl!("Hide White Space")).changed() {
