@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 16:21:35 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ**
+อัปเดตเมื่อ **28 November 2026 20:23 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `6215d03b08568a2042a5433ca60486b203e45511`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -48,8 +48,28 @@ flowchart LR
 | `0768b4a` | 2026-11-28 14:33:26 | Add save as picture | ยืนยันแล้วบน `origin/main` |
 | `b26606c` | 2026-11-28 14:56:25 | Port search, internal links, and line endpoint tools | ยืนยันแล้วบน `origin/main` ใน push 2026-11-28 16:20 ICT |
 | `fd75ccb` | 2026-11-28 16:20:21 ICT | พอร์ต 22 ช่องว่างที่เหลือและปรับ UI ให้เข้ากับ Doc4Me | push 2026-11-28 16:20 ICT; `origin/main` ยืนยัน SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429` |
+| `6215d03` | 2026-11-28 20:19:45 ICT | เพิ่มการตั้ง region/หน่วย/รูปแบบตัวเลขตาม locale, table ruler และ tab-stop ruler; ปรับการ import เอกสารให้รับ region | push 2026-11-28 20:19 ICT; `origin/main` ยืนยัน SHA `6215d03b08568a2042a5433ca60486b203e45511` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
+
+### รายการความสามารถที่เพิ่มใน `6215d03`
+
+- **Region และหน่วย:** เอกสารใหม่ใช้กระดาษตามภูมิภาคของระบบ; File › Options ตั้ง region ได้ และเลือกหน่วยอัตโนมัติตาม region หรือคงหน่วยที่เลือกเอง.
+- **ตัวเลขและระยะ:** ช่องระยะใน ribbon, dialogs, rulers และ readouts แสดงหน่วย/ทศนิยมตามภูมิภาค พร้อมอ่านค่าจากตัวคั่นทศนิยมของ locale.
+- **Table ruler:** ลากขอบตารางเพื่อปรับคอลัมน์/แถว มี preview; Ctrl ปรับตามสัดส่วน และปรับขอบซ้าย/indent/alignment ได้จาก ruler.
+- **Tab stops:** selector ที่มุม ruler วนชนิด tab; คลิกเพื่อวาง, ลากเพื่อย้าย, ลากออกเพื่อลบ, Alt ปิดการ snap, และ double-click เปิด Tabs dialog. การปล่อยหนึ่งครั้งสร้าง undo action เดียว.
+- **นำเข้าเอกสาร:** TXT, Markdown และ HTML ใช้ region/page defaults ของ session และมี region detection สำหรับ desktop/web/CLI.
+
+```mermaid
+flowchart LR
+  R[เลือกชนิด tab ที่มุม ruler] --> P[คลิกเพื่อวาง]
+  P --> D[ลากเพื่อย้าย]
+  D -->|ปล่อยใน ruler| S[บันทึก para.tabs หนึ่ง undo step]
+  D -->|ลากพ้น ruler| C[ลบ tab stop]
+  P -->|Alt| F[วางโดยไม่ snap]
+```
+
+รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 776 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
 
 ## รายการความสามารถทั้งหมด
 

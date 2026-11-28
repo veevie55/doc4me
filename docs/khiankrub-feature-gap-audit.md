@@ -1,12 +1,12 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 16:21:35 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` (feature commit `fd75ccb`; ก่อน push: `0768b4a`)
+อัปเดตเมื่อ **28 November 2026 20:23 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `6215d03b08568a2042a5433ca60486b203e45511` (`main`, 2026-11-28 20:19 ICT)
 
 ## วิธีเปรียบเทียบ
 
 รัน `wordcraft-cli commands --json` ใน source และ `doc4me-cli commands --json` ใน target แล้วเทียบ command ID แบบตรงตัว: source มี **655** IDs, target มี **776** IDs, source-only **0**, target-only **121**. นอกจากนี้ตรวจ UI และโครงสร้าง DOCX/layout สำหรับฟีเจอร์ที่พฤติกรรมไม่ได้อยู่ใน command ID เพียงอย่างเดียว.
 
-catalog ปัจจุบันไม่เหลือ command ID ของ Khiankrub ที่ขาดใน Doc4Me. ตารางต่อไปนี้เก็บรายการช่องว่าง 22 รายการจากการตรวจรอบก่อน พร้อมจุดที่ปรับให้ตรงกับสถาปัตยกรรม Doc4Me; ชุดโค้ดพอร์ตครบใน `fd75ccb` และ push ไป `main` เมื่อ 2026-11-28 16:20 ICT; ตรวจ SHA ปลายทางได้ `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
+การเทียบ command ID รอบก่อนพบ source-only **0 รายการ** แต่ command catalog ไม่ครอบคลุมพฤติกรรม UI และบริการของ host ทั้งหมด การตรวจไฟล์ระดับโมดูลรอบนี้พบช่องว่างเพิ่มเติมซึ่งยังต้องพอร์ตตามรายการสถานะด้านล่าง; จึงยังไม่นับว่าฟีเจอร์ทั้งหมดจาก source ครบแล้ว. รายการช่องว่าง command 22 รายการจากรอบก่อนพอร์ตใน `fd75ccb` และยืนยันบน `main` แล้ว.
 
 ## รายการช่องว่างที่พบและผลการพอร์ต
 
@@ -35,6 +35,36 @@ catalog ปัจจุบันไม่เหลือ command ID ของ Kh
 | รูปร่างและการจัดวางวัตถุ | <code>shape.lock</code> | ล็อกหรือปลดล็อกการย้าย/ปรับขนาดและแก้ไขรูปร่าง | เก็บ lock ใน DOCX, ปฏิเสธคำสั่งแก้ไข object และแสดง Lock/Unlock บน Shape Format | พอร์ตแล้ว; `fd75ccb` · push 2026-11-28 16:20 ICT |
 | ตาราง | <code>table.paintBorder</code> | วาดเส้นขอบตารางด้วย border painter | มีทั้ง compatibility command และ native `table.borderPainter`/`table.borders` | พอร์ตแล้ว; `fd75ccb` · push 2026-11-28 16:20 ICT |
 
+## ช่องว่างเพิ่มเติมจากการเทียบพฤติกรรมและโมดูล
+
+ตรวจ source `ab6d86a` เทียบ implementation จริงใน Doc4Me หลัง `fd75ccb`; สถานะ “ค้าง” หมายถึงยังไม่พบพฤติกรรมที่เทียบเท่าบน `main` ณ push `6215d03`.
+
+| ประเภท | ความสามารถใน Khiankrub | สถานะใน Doc4Me | สถานะงาน |
+|---|---|---|---|
+| Canvas และการเลือก | คลิกปุ่มกลางเพื่อเลื่อนเอกสารตามระยะ pointer, หยุดด้วย Escape/ปุ่มอื่น/ล้อเลื่อน (`ui-egui/autoscroll.rs`) | มี edge auto-scroll ระหว่างลากเลือกข้อความ แต่ไม่มี middle-click scroll | ค้าง |
+| รูปภาพ | Crop mode บน canvas พร้อม handles, preview ส่วนที่ถูกตัด, ลากคืนพื้นที่ภาพ และจบเป็น undo step เดียว (`ui-egui/crop.rs`) | มีช่องตัวเลข `picture.crop` ใน Picture Format; ยังไม่มี crop overlay/drag mode | ค้าง |
+| จัดวางวัตถุ | Snap วัตถุไปยังขอบ/กึ่งกลางหน้า, margins และวัตถุอื่น พร้อมเส้น alignment guides (`ui-egui/guides.rs`) | ลากและปรับขนาดวัตถุได้ แต่ยังไม่พบ snapping guides | ค้าง |
+| บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | มี download callback และ dirty state; ยังไม่มี ticket/result flow สำหรับ save picker แบบ asynchronous | ค้าง |
+| อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | ยังไม่พบ update service, preference หรือ UI flow | ค้าง |
+| แก้ไขตัวอักษร | Character dialog แยกหน้า Font, Effects, Position, Background และ Border (`ui-egui/dialogs_character.rs`) | มี Font dialog และคำสั่งจัดรูปแบบหลายรายการ แต่ยังไม่มี dialog แบบหลายหน้าที่เทียบเท่าทั้งชุด | ค้างบางส่วน; ต้องเทียบ fields ต่อ |
+| สัญลักษณ์หัวข้อ | Define New Bullet dialog เลือก character, font, alignment พร้อม preview (`ui-egui/dialogs_bullet.rs`) | มี command `para.defineBullet`; ยังไม่พบ dialog พร้อมตัวเลือก/preview | ค้าง |
+| แผงจัดรูปแบบ | แผงเต็มความสูงสำหรับข้อความ/ย่อหน้า/หน้า/ดีไซน์ (`ui-egui/format_panes.rs`) | มี Ribbon และ contextual panes บางชนิด; ยังไม่มีชุดแผงดังกล่าว | ค้างด้าน UI |
+| แผงตารางและวัตถุ | Table, Shape, Picture, Chart และ SmartArt panes รวมคำสั่งตามบริบท (`ui-egui/table_pane.rs`, `object_pane.rs`) | คำสั่งอยู่ใน Ribbon, dialog และ Chart Format pane; ยังไม่มีแผงตาราง/วัตถุครบชุด | ค้างด้าน UI |
+| ลำดับเรียงตามภาษา | Collation ตามภาษาสำหรับ accent และอักษรเฉพาะ (`doc/collate.rs`) | มี natural sort/case folding แต่ยังไม่พบ language-tailored collation | ค้าง |
+| ตัวเลขตาม locale | แยกเลขทศนิยม/ตัวคั่นหลักพันและสกุลเงินของภาษาขณะ sort ตาราง (`doc/locale_number.rs`) | sort ตัวเลขยังใช้ parsing แบบทั่วไป; ยังไม่ผูก locale ในการ sort | ค้าง |
+| ฟอนต์สัญลักษณ์ | แปลง Symbol/Wingdings/Webdings เป็น Unicode เมื่อไม่มีฟอนต์ต้นฉบับ (`doc/symbol_fonts.rs`) | มี symbol gallery และ fallback ฟอนต์ทั่วไป; ยังไม่พบ mapping ชุด proprietary fonts นี้ | ค้าง |
+| งานนำเสนอ/หน้าตา | ลายไทยบนแถบด้านบน, pointer แบบวาดเอง, ภาพตัวอย่าง line style และปุ่มรายงานปัญหา (`band_motifs.rs`, `pointer.rs`, `line_looks.rs`, `report.rs`) | มีแถบสี, system pointer, ตัวเลือกเส้น และไม่มี report-form integration; รายละเอียด/การตั้งค่าไม่เทียบเท่า source | ค้างหรือเทียบเท่าบางส่วน |
+| ตรวจทาน UI | Hover stability และ large-table performance checks (`hover_stability.rs`, `tests_perf.rs`) | เป็น test harness ของ source ไม่ใช่ฟีเจอร์ใช้งาน; ไม่รวมในรายการพอร์ต production | ไม่นับเป็นฟีเจอร์ผู้ใช้ |
+
+### ความสามารถที่มีตำแหน่งไฟล์ต่างกัน แต่พบ implementation เทียบเท่าแล้ว
+
+- `ui-egui/printing.rs` เทียบกับ `print_page.rs` และ `engine/print.rs`: ตั้งช่วงหน้า, odd/even, copies และ collate ได้.
+- `engine/cmd/table_formula.rs` เทียบกับ `engine/cmd/table.rs`: มี `table.formula` ใน Doc4Me.
+- `ui-egui/dialogs_table_style.rs` เทียบกับ `ui-egui/dialogs.rs`: มี New/Modify Table Style dialog.
+- การคัดลอก rich clipboard เทียบกับ `ui-egui/system_clipboard.rs` และ `apps/doc4me/src/clipboard.rs`.
+- การนับคำภาษาไทยใช้ dictionary segmentation ใน `doc::dictionary_words`; ไม่ต้องพอร์ตไฟล์แยก `thai_words.rs`.
+- ช่องว่างด้านภูมิภาค/หน่วย, resize ตาราง และการตั้ง/ย้าย/ลบ tab stop บน ruler รวมอยู่ใน code push `6215d03`.
+
 ## Commit และ push
 
 | Commit | วันและเวลา commit (ICT) | งาน | push ไป `main` |
@@ -52,6 +82,7 @@ catalog ปัจจุบันไม่เหลือ command ID ของ Kh
 | `0768b4a` | 2026-11-28 14:33:26 | Add save as picture | ยืนยันบน `origin/main` |
 | `b26606c` | 2026-11-28 14:56:25 | Port search, internal links, and line endpoint tools | ยืนยันบน `origin/main` |
 | `fd75ccb` | 2026-11-28 16:20:21 ICT | พอร์ต 22 ช่องว่างและ UI ที่เกี่ยวข้อง | push 2026-11-28 16:20 ICT; `origin/main` ยืนยัน SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429` |
+| `6215d03` | 2026-11-28 20:19:45 ICT | พอร์ต region-aware units/number formatting, table ruler interactions และ tab-stop ruler; ปรับ DOCX/text import ให้รับ region | push 2026-11-28 20:19 ICT; `origin/main` ยืนยัน SHA `6215d03b08568a2042a5433ca60486b203e45511` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -63,6 +94,6 @@ catalog ปัจจุบันไม่เหลือ command ID ของ Kh
 
 ## การตรวจสอบ
 
-- Catalog source/target เปรียบเทียบสำเร็จ; ไม่มี source-only command ID.
-- `cargo check --locked --offline -p doc4me-engine -p doc4me-ui-egui` ผ่าน; ไม่ได้รันชุดทดสอบ.
+- Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
+- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).
