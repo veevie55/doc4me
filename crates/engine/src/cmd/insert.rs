@@ -48,7 +48,10 @@ pub fn specs() -> Vec<CommandSpec> {
                 matches!(s.sel.focus.story, StoryRef::Part(id) if s.doc.parts.get(&id).is_some_and(|p| p.kind == PartKind::TextBox))
                     .then_some("text boxes can't go inside a text box")
             }),
-        CommandSpec::new("insert.link", "Link", "Insert › Links", link).key("Mod+K").params(r#"{"url": string, "text"?: string}"#),
+        CommandSpec::new("insert.link", "Link", "Insert › Links", link)
+            .key("Mod+K")
+            .params(r#"{"url"?: string} | {"bookmark": name} | {"heading": body block} | {"top": true}, "text"?: string (a web link or a place in this document)"#),
+        CommandSpec::new("link.targets", "Link", "Insert › Links", link_targets).pure(),
         CommandSpec::new("insert.removeLink", "Remove Hyperlink", "Insert › Links", |s, _| super::format::apply(s, &|c| {
             c.link = None;
             if c.style.as_deref() == Some("Hyperlink") {
@@ -56,6 +59,7 @@ pub fn specs() -> Vec<CommandSpec> {
             }
         })),
         CommandSpec::new("insert.bookmark", "Bookmark", "Insert › Links", bookmark).params(r#"{"name": string}"#).key("Mod+Shift+F5"),
+        CommandSpec::new("insert.deleteBookmark", "Delete Bookmark", "Insert › Links", delete_bookmark).params(r#"{"name": string}"#),
         CommandSpec::new("insert.header", "Header", "Insert › Header & Footer", |s, v| header_footer(s, v, true)).params(r#"{"text"?: string, "preset"?: "blank|blankThree|title"}"#),
         CommandSpec::new("insert.footer", "Footer", "Insert › Header & Footer", |s, v| header_footer(s, v, false)).params(r#"{"text"?: string, "preset"?: "blank|blankThree|pageNumber"}"#),
         CommandSpec::new("layout.pageNumberPosition", "Page Number Position", "Insert › Header & Footer › Page Number", page_number_position)
@@ -527,17 +531,58 @@ fn text_box(s: &mut Session, v: &Value) -> CmdResult {
     Ok(json!({"story": id}))
 }
 
+/// Places a link can point to inside the document, excluding hidden bookmarks.
+fn link_targets(s: &mut Session, _: &Value) -> CmdResult {
+    let headings: Vec<Value> =
+        super::references::headings(s).into_iter().map(|(block, level, text, _)| json!({"block": block, "level": level, "text": text})).collect();
+    let mut bookmarks = Vec::new();
+    for (name, _) in s.doc.bookmarks() {
+        if !name.starts_with('_') && !bookmarks.contains(&name) {
+            bookmarks.push(name);
+        }
+    }
+    Ok(json!({"top": true, "headings": headings, "bookmarks": bookmarks}))
+}
+
+/// Resolve an internal link destination. A heading gets a hidden `_Toc` bookmark so the
+/// destination survives saving and opening in other word processors.
+fn place_target(s: &mut Session, v: &Value) -> Result<Option<(String, String)>, CmdError> {
+    if p::bool(v, "top") == Some(true) {
+        return Ok(Some(("#_top".into(), "Top of the Document".into())));
+    }
+    if let Some(name) = p::str(v, "bookmark") {
+        if !s.doc.bookmarks().iter().any(|(n, _)| n == name) {
+            return Err(CmdError::Params(format!("no bookmark `{name}`")));
+        }
+        return Ok(Some((format!("#{name}"), name.to_string())));
+    }
+    if let Some(block) = p::u64(v, "heading") {
+        let Some((i, _, text, lead)) = super::references::headings(s).into_iter().find(|h| h.0 as u64 == block) else {
+            return Err(CmdError::Params(format!("block {block} is not a heading")));
+        };
+        let name = super::references::toc_bookmark(s, i, lead)?;
+        return Ok(Some((format!("#{name}"), text)));
+    }
+    Ok(None)
+}
+
 fn link(s: &mut Session, v: &Value) -> CmdResult {
-    let Some(url) = p::str(v, "url").map(str::to_string) else {
-        s.push_ui_request(json!({"open": "link"}));
-        return sel_result(s);
+    let (url, label) = match p::str(v, "url") {
+        Some(url) => (url.to_string(), url.to_string()),
+        None => match place_target(s, v)? {
+            Some(target) => target,
+            None => {
+                s.push_ui_request(json!({"open": "link"}));
+                return sel_result(s);
+            }
+        },
     };
     if url.is_empty() || url.len() > 4096 {
         return Err(CmdError::Params("bad url".into()));
     }
     let style = Some("Hyperlink".to_string());
     if s.sel.is_collapsed() {
-        let text = p::str(v, "text").unwrap_or(&url).to_string();
+        let text = p::str(v, "text").unwrap_or(&label).to_string();
         let mut props = s.typing_props();
         props.link = Some(url.clone());
         props.style = style;
@@ -575,6 +620,51 @@ fn bookmark(s: &mut Session, v: &Value) -> CmdResult {
     s.doc.insert_object(&a, InlineObject::BookmarkStart { name: name.clone() }, &props)?;
     let _ = end;
     sel_result(s)
+}
+
+fn delete_bookmark(s: &mut Session, v: &Value) -> CmdResult {
+    let name = p::req_str(v, "name")?.trim();
+    if !remove_bookmark(s, name)? {
+        return Err(CmdError::Params(format!("no bookmark `{name}`")));
+    }
+    sel_result(s)
+}
+
+/// Remove a bookmark's marks in any story while keeping the selection on the same text.
+fn remove_bookmark(s: &mut Session, name: &str) -> Result<bool, CmdError> {
+    let mark_len = doc4me_doc::para::OBJ.len_utf8();
+    let mut found = false;
+    let stories: Vec<StoryRef> = std::iter::once(StoryRef::Body).chain(s.doc.parts.keys().map(|k| StoryRef::Part(*k))).collect();
+    for story in stories {
+        for path in s.doc.para_paths(story) {
+            let Some(para) = s.doc.para(story, &path) else { continue };
+            let mut marks = Vec::new();
+            for off in para.object_offsets() {
+                match para.object_at(off) {
+                    Some(InlineObject::BookmarkStart { name: mark }) if mark == name => {
+                        found = true;
+                        marks.push(off);
+                    }
+                    Some(InlineObject::BookmarkEnd { name: mark }) if mark == name => marks.push(off),
+                    _ => {}
+                }
+            }
+            if marks.is_empty() {
+                continue;
+            }
+            let para = s.doc.para_mut(story, &path)?;
+            for off in marks.into_iter().rev() {
+                para.delete(off, off + mark_len)?;
+                for at in [&mut s.sel.anchor, &mut s.sel.focus] {
+                    if at.story == story && at.path == path && at.off > off {
+                        at.off = at.off.saturating_sub(mark_len);
+                    }
+                }
+            }
+        }
+    }
+    s.clamp_selection();
+    Ok(found)
 }
 
 fn hf_part(s: &mut Session, header: bool) -> u32 {

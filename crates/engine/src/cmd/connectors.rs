@@ -27,14 +27,57 @@ fn has_connector(s: &Session) -> Option<&'static str> {
     }
 }
 
+/// A floating line in the body whose endpoints can be adjusted independently.
+fn movable_line(s: &Session) -> bool {
+    matches!(
+        super::objects::selected(s),
+        Some((pos, InlineObject::Shape { kind: doc4me_doc::para::ShapeKind::Line, float, .. }))
+            if pos.story == StoryRef::Body && float.wrap != Wrap::Inline
+    )
+}
+
+fn has_line(s: &Session) -> Option<&'static str> {
+    (!movable_line(s)).then_some("select a floating line in the body text first")
+}
+
 pub fn specs() -> Vec<CommandSpec> {
     vec![
+        CommandSpec::new("shape.lineEnds", "Move Line Ends", "Shape Format › Size", line_ends)
+            .params(r#"{"start"?: {"x": pt, "y": pt}, "end"?: {"x": pt, "y": pt}} points on the line's page; the other end stays"#)
+            .when(has_line),
         CommandSpec::new("shape.connect", "Connect Shapes", "Shape Format › Insert Shapes", connect)
             .params(
                 r#"{"start"?: end, "end"?: end}  end: {"path": [..], "off": n, "site"?: n} (glue to that body shape's connection site; nearest one when omitted) | {"x": pt, "y": pt, "page"?: n} (drag the end there: it glues to a shape's site within 12 pt, else stays free there) | null (unglue)"#,
             )
             .when(has_connector),
     ]
+}
+
+/// Move one or both ends of a floating line to page points, keeping the untouched end in place.
+fn line_ends(s: &mut Session, v: &Value) -> CmdResult {
+    if let Some(reason) = has_line(s) {
+        return Err(CmdError::Disabled(reason.into()));
+    }
+    let (pos, object) = super::objects::selected(s).ok_or_else(|| CmdError::Disabled("select a line first".into()))?;
+    let InlineObject::Shape { float, w, h, .. } = &object else { return Err(CmdError::Disabled("select a line first".into())) };
+    let (flip_h, flip_v) = (float.flip_h, float.flip_v);
+    let layout = s.layout();
+    let hit = layout.object(&pos, s.page_hint).ok_or_else(|| CmdError::Failed("the line isn't laid out".into()))?;
+    let rect = hit.rect;
+    let (mut start, mut end) = ends(rect.x, rect.y, *w, *h, flip_h, flip_v);
+    let page = layout.pages.get(hit.page).ok_or_else(|| CmdError::Failed("the line isn't laid out".into()))?;
+    let (page_w, page_h) = (page.w.min(MAX_OFFSET), page.h.min(MAX_OFFSET));
+    for (key, endpoint) in [("start", &mut start), ("end", &mut end)] {
+        let Some(value) = v.get(key) else { continue };
+        let (Some(x), Some(y)) = (p::f32(value, "x"), p::f32(value, "y")) else {
+            return Err(CmdError::Params(format!("`{key}`: {{\"x\": pt, \"y\": pt}}")));
+        };
+        *endpoint = (doc4me_geom::finite(x).clamp(-page_w, 2.0 * page_w), doc4me_geom::finite(y).clamp(-page_h, 2.0 * page_h));
+    }
+    place(s, &pos, route(start, end), (rect.x, rect.y), (hit.origin.x, hit.origin.y));
+    s.touch();
+    let object = s.doc.para_at(&pos).and_then(|para| para.object_at(pos.off)).cloned();
+    Ok(json!({"object": serde_json::to_value(object).unwrap_or(Value::Null)}))
 }
 
 /// Commands after which glued connectors are re-routed: those that move, resize, turn, add or

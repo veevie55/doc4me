@@ -244,6 +244,12 @@ pub enum Dialog {
     Link {
         url: String,
         text: String,
+        /// Link to a place in the document instead of an external address.
+        place: bool,
+        /// The document's link targets, loaded when the internal tab is first shown.
+        targets: Option<Value>,
+        /// Selected internal destination and its displayed text.
+        pick: Option<(Value, String)>,
     },
     Bookmark {
         name: String,
@@ -1188,7 +1194,7 @@ impl Dialog {
                     rtl: sp.rtl,
                 }
             }
-            "link" => Dialog::Link { url: "https://".into(), text: app.session.selected_text() },
+            "link" => Dialog::Link { url: "https://".into(), text: app.session.selected_text(), place: false, targets: None, pick: None },
             "bookmark" => Dialog::Bookmark { name: String::new() },
             "wordCount" => Dialog::WordCount { stats: app.session.run("review.wordCount", &json!({})).unwrap_or_default() },
             "zoom" => Dialog::Zoom { percent: (app.session.view.zoom * 100.0).round() },
@@ -2426,18 +2432,83 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             ok || cancel
         }
-        Dialog::Link { url, text } => {
+        Dialog::Link { url, text, place, targets, pick } => {
+            ui.horizontal(|ui| {
+                ui.label(tl!("Link to:"));
+                ui.selectable_value(place, false, tl!("Existing File or Web Page"));
+                if ui.selectable_value(place, true, tl!("Place in This Document")).clicked() && targets.is_none() {
+                    *targets = app.run("link.targets", json!({})).ok();
+                }
+            });
+            ui.add_space(4.0);
             egui::Grid::new("lnk").num_columns(2).show(ui, |ui| {
                 ui.label(tl!("Text to display:"));
                 ui.add(crate::widgets::text_line(text));
                 ui.end_row();
-                ui.label(tl!("Address:"));
-                ui.add(crate::widgets::text_line(url));
-                ui.end_row();
+                if !*place {
+                    ui.label(tl!("Address:"));
+                    ui.add(crate::widgets::text_line(url));
+                    ui.end_row();
+                }
             });
+            if *place {
+                ui.add_space(4.0);
+                ui.label(tl!("Select a place in this document:"));
+                let mut chosen: Option<(Value, String)> = None;
+                egui::Frame::group(ui.style()).show(ui, |ui| {
+                    egui::ScrollArea::vertical().max_height(220.0).min_scrolled_height(160.0).auto_shrink([false, true]).show(ui, |ui| {
+                        let is = |key: &str, value: &Value| pick.as_ref().is_some_and(|(params, _)| params.get(key) == Some(value));
+                        let top = tl!("Top of the Document").to_string();
+                        if ui.selectable_label(is("top", &json!(true)), &top).clicked() {
+                            chosen = Some((json!({"top": true}), top));
+                        }
+                        let headings = targets.as_ref().and_then(|t| t.get("headings")).and_then(Value::as_array).cloned().unwrap_or_default();
+                        if !headings.is_empty() {
+                            ui.label(egui::RichText::new(tl!("Headings")).font(semibold(12.5)));
+                        }
+                        for heading in &headings {
+                            let (block, level) =
+                                (heading.get("block").cloned().unwrap_or_default(), heading.get("level").and_then(Value::as_u64).unwrap_or(1));
+                            let label = heading.get("text").and_then(Value::as_str).unwrap_or_default().to_string();
+                            ui.horizontal(|ui| {
+                                ui.add_space(14.0 * level.saturating_sub(1).min(8) as f32 + 8.0);
+                                if ui.selectable_label(is("heading", &block), &label).clicked() {
+                                    chosen = Some((json!({"heading": block}), label));
+                                }
+                            });
+                        }
+                        let bookmarks = targets.as_ref().and_then(|t| t.get("bookmarks")).and_then(Value::as_array).cloned().unwrap_or_default();
+                        if !bookmarks.is_empty() {
+                            ui.label(egui::RichText::new(tl!("Bookmarks")).font(semibold(12.5)));
+                        }
+                        for name in bookmarks.iter().filter_map(Value::as_str) {
+                            ui.horizontal(|ui| {
+                                ui.add_space(8.0);
+                                if ui.selectable_label(is("bookmark", &json!(name)), name).clicked() {
+                                    chosen = Some((json!({"bookmark": name}), name.to_string()));
+                                }
+                            });
+                        }
+                    });
+                });
+                if let Some(choice) = chosen {
+                    if text.is_empty() || pick.as_ref().is_some_and(|(_, previous)| previous == text) {
+                        *text = choice.1.clone();
+                    }
+                    *pick = Some(choice);
+                }
+            }
             let (ok, cancel) = buttons(ui, tl!("OK"));
             if ok {
-                let _ = app.run("insert.link", json!({"url": url, "text": text}));
+                if *place {
+                    let Some((mut params, _)) = pick.clone() else { return false };
+                    if !text.is_empty() {
+                        params["text"] = json!(text);
+                    }
+                    let _ = app.run("insert.link", params);
+                } else {
+                    let _ = app.run("insert.link", json!({"url": url, "text": text}));
+                }
             }
             ok || cancel
         }

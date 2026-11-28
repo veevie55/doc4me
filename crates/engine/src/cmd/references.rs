@@ -337,6 +337,12 @@ fn toc_entries(s: &Session, f: &FieldCode) -> Vec<TocEntry> {
     v
 }
 
+/// Body headings in document order for Insert › Link › Place in This Document.
+pub(crate) fn headings(s: &Session) -> Vec<(usize, u8, String, usize)> {
+    let field = FieldCode::parse(r#"TOC \o "1-9" \u"#);
+    toc_entries(s, &field).into_iter().map(|entry| (entry.path.last(), entry.level.saturating_add(1), entry.text, entry.lead)).collect()
+}
+
 /// The TOC block range in the body: the paragraph holding the TOC field and the TOC entries after
 /// it. A TOC with `\c` is a table of figures, kept by the generated lists.
 fn toc_range(s: &Session) -> Option<(usize, usize)> {
@@ -448,7 +454,7 @@ fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
 
 /// A hidden `_Toc` bookmark around the heading at body block `i` (after its leading page breaks),
 /// reusing one already there; its name.
-fn toc_bookmark(s: &mut Session, i: usize, lead: usize) -> Result<String, CmdError> {
+pub(crate) fn toc_bookmark(s: &mut Session, i: usize, lead: usize) -> Result<String, CmdError> {
     const MARK: usize = doc4me_doc::para::OBJ.len_utf8();
     let para = s.doc.para(StoryRef::Body, &Path::top(i)).ok_or_else(|| CmdError::Failed("heading is gone".into()))?;
     if let Some(InlineObject::BookmarkStart { name }) = para.object_at(lead)

@@ -362,6 +362,10 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("tools.listCommands", "List Commands", "View › Macros", list_commands)
             .params(r#"{"all"?: bool (every command; default: the commands that have a shortcut, as now assigned)}"#)
             .pure(),
+        CommandSpec::new("tools.search", "Search", "Title Bar", search_commands)
+            .key("Alt+Q")
+            .params(r#"{"query"?: string} → {matches: [{id, label, location, shortcut}]} (every word in label, location or id; at most 50); no query opens Search Commands"#)
+            .pure(),
         CommandSpec::new("tools.autocorrect", "AutoCorrect Options", "File › Options › Proofing", autocorrect_options)
             .params(
                 r#"{"enabled"?: bool (all of AutoCorrect), "replaceText"|"capSentences"|"capCells"|"capDays"|"smartQuotes"|"fractions"|"ordinals"|"dashes"|"links"|"bullets"|"numbering"|"borderLines"?: bool, "autoFormat"?: {"headings"|"lists"|"bullets"|"otherStyles"|"quotes"|"ordinals"|"fractions"|"dashes"|"emphasis"|"links"|"preserveStyles"?: bool} (the AutoFormat tab), "add"?: {"from": string, "to": string} (adds or replaces an entry), "delete"?: string (an entry's "from", built in or added), "addException"?: string, "deleteException"?: string} → options, entries and exceptions"#,
@@ -744,6 +748,30 @@ fn language(s: &mut Session, v: &Value) -> CmdResult {
             c.no_proof = Some(np);
         }
     })
+}
+
+/// `tools.search`: command discovery for the title-bar search box and automation clients.
+fn search_commands(s: &mut Session, v: &Value) -> CmdResult {
+    let Some(query) = p::str(v, "query") else {
+        s.push_ui_request(json!({"open": "commands"}));
+        return Ok(json!({"matches": []}));
+    };
+    let words: Vec<String> = query.split_whitespace().map(str::to_lowercase).collect();
+    let matches: Vec<Value> = if words.is_empty() {
+        Vec::new()
+    } else {
+        s.registry
+            .all()
+            .iter()
+            .filter(|command| {
+                let haystack = format!("{} {} {}", command.label, command.location, command.id).to_lowercase();
+                words.iter().all(|word| haystack.contains(word))
+            })
+            .take(50)
+            .map(|command| json!({"id": command.id, "label": command.label, "location": command.location, "shortcut": command.shortcut}))
+            .collect()
+    };
+    Ok(json!({"matches": matches}))
 }
 
 /// `tools.listCommands`: replaces the document (the window shows one) with a table of commands,

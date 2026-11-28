@@ -279,6 +279,7 @@
 	Book title	ชื่อหนังสือ
 	Book Title	ชื่อหนังสือ
 	Bookmark	ที่คั่นหน้า
+	Bookmarks	ที่คั่นหน้า
 	Bookmark name:	ชื่อที่คั่นหน้า:
 	Border lines	เส้นขอบ
 	Border Painter	แปรงเส้นขอบ
@@ -1260,6 +1261,7 @@
 	Lines only	เฉพาะบรรทัด
 	Lines per page:	บรรทัดต่อหน้า:
 	Link	ลิงก์
+	Link to:	ลิงก์ไปยัง:
 	Link entries to their headings	เชื่อมโยงแต่ละรายการไปยังหัวเรื่อง
 	Link level to style:	เชื่อมโยงระดับกับสไตล์:
 	Link to Previous	เชื่อมโยงกับส่วนก่อนหน้า
@@ -1904,6 +1906,7 @@
 	See	ดู
 	Select	เลือก
 	Select a picture, shape, chart or table to describe it.	เลือกรูปภาพ รูปร่าง แผนภูมิ หรือตารางที่ต้องการอธิบาย
+	Select a place in this document:	เลือกตำแหน่งในเอกสารนี้:
 	Select All	เลือกทั้งหมด
 	Select Cell	เลือกเซลล์
 	Select Heading and Content	เลือกหัวเรื่องและเนื้อหา
@@ -2282,6 +2285,7 @@ preview	Title	ชื่อเรื่อง
 	Top Border	เส้นขอบบน
 	Top Margin	ระยะขอบบน
 	Top of Page	ด้านบนของหน้า
+	Top of the Document	ต้นเอกสาร
 	Top:	บน:
 	Total	รวม
 	Total Row	แถวผลรวม
@@ -3132,4 +3136,5 @@ spacing	Normal	ปกติ
 	Page Number Position	ตำแหน่งหมายเลขหน้า
 	Page Number Position…	ตำแหน่งหมายเลขหน้า…
 	Place the page number at a set distance from the edges of the paper.	วางหมายเลขหน้าห่างจากขอบกระดาษตามระยะที่กำหนด
+	Place in This Document	ตำแหน่งในเอกสารนี้
 	Top edge	ขอบบน

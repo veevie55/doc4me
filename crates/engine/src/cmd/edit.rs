@@ -190,6 +190,16 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(r#"{"text"?: string, "matchCase"?: bool, "wholeWord"?: bool, "regex"?: bool}"#)
         .pure(),
         CommandSpec::new("edit.replace", "Replace", "Home › Editing", replace).key("Mod+H").params(r#"{"text": string, "with": string, …options of edit.replaceAll}"#),
+        CommandSpec::new("edit.findReplace", "Find and Replace", "Home › Editing", |s, v| {
+            let tab = match p::str(v, "tab").unwrap_or("replace") {
+                t @ ("find" | "replace" | "goto") => t,
+                other => return Err(CmdError::Params(format!("`tab` is find, replace or goto, not `{other}`"))),
+            };
+            s.push_ui_request(json!({"open": tab}));
+            Ok(json!({"open": tab}))
+        })
+        .params(r#"{"tab"?: "find|replace|goto" (default replace)}"#)
+        .pure(),
         CommandSpec::new("edit.replaceAll", "Replace All", "Home › Editing › Replace", replace_all)
             .params(r#"{"text": string, "with": string (^p ^t ^& ^c …; \\1 with wildcards), …options of edit.find}"#),
         CommandSpec::new("edit.goto", "Go To", "Home › Editing › Find", goto)
@@ -1151,6 +1161,11 @@ fn follow_link(s: &mut Session, v: &Value) -> CmdResult {
         s.push_ui_request(json!({"openUrl": link}));
         return Ok(json!({"url": link}));
     };
+    if name == "_top" {
+        s.sel = Selection::caret(s.doc.start_of(StoryRef::Body));
+        s.push_ui_request(json!({"scrollTo": "caret"}));
+        return sel_result(s);
+    }
     let at = s
         .doc
         .bookmarks()
