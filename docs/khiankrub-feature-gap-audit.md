@@ -1,6 +1,6 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 20:55 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `598345932d6bc6d2cae23606eeca3d639620b383` (`main`, 2026-11-28 20:55 ICT)
+อัปเดตเมื่อ **28 November 2026 21:02 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `2caed36b6820874d75db2374356e5b0a7ffbb5ca` (`main`, 2026-11-28 21:02 ICT)
 
 ## วิธีเปรียบเทียบ
 
@@ -52,7 +52,7 @@
 | แผงตารางและวัตถุ | Table, Shape, Picture, Chart และ SmartArt panes รวมคำสั่งตามบริบท (`ui-egui/table_pane.rs`, `object_pane.rs`) | คำสั่งอยู่ใน Ribbon, dialog และ Chart Format pane; ยังไม่มีแผงตาราง/วัตถุครบชุด | ค้างด้าน UI |
 | ลำดับเรียงตามภาษา | Collation ตามภาษาสำหรับ accent และอักษรเฉพาะ (`doc/collate.rs`) | เพิ่ม comparator ภาษา; ใช้กับ paragraph/table sort, index entries/letter headings และ bibliography; รองรับลำดับอักษรเฉพาะของภาษาและ decomposed accents | พอร์ตแล้ว; `5983459` · push 2026-11-28 20:55 ICT |
 | ตัวเลขตาม locale | แยกเลขทศนิยม/ตัวคั่นหลักพันและสกุลเงินของภาษาขณะ sort ตาราง (`doc/locale_number.rs`) | `table.sort` อ่านภาษาของ cell; รองรับจุด/จุลภาคทศนิยม, space/จุด/จุลภาค/apostrophe คั่นหลักพัน, สัญลักษณ์สกุลเงิน, เปอร์เซ็นต์ และเครื่องหมายลบหลายแบบ | พอร์ตแล้ว; `1eb5219` · push 2026-11-28 20:51 ICT |
-| ฟอนต์สัญลักษณ์ | แปลง Symbol/Wingdings/Webdings เป็น Unicode เมื่อไม่มีฟอนต์ต้นฉบับ (`doc/symbol_fonts.rs`) | มี symbol gallery และ fallback ฟอนต์ทั่วไป; ยังไม่พบ mapping ชุด proprietary fonts นี้ | ค้าง |
+| ฟอนต์สัญลักษณ์ | แปลง Symbol/Wingdings/Webdings เป็น Unicode เมื่อไม่มีฟอนต์ต้นฉบับ (`doc/symbol_fonts.rs`) | เพิ่ม mapping สำหรับ Symbol, Wingdings 1–3 และ Webdings; ใช้ใน layout/display, `Paragraph::shown_text`, story text และ export `.txt`; ไม่เปลี่ยนรหัสที่เก็บในเอกสาร | พอร์ตแล้ว; `2caed36` · push 2026-11-28 21:02 ICT |
 | งานนำเสนอ/หน้าตา | ลายไทยบนแถบด้านบน, pointer แบบวาดเอง, ภาพตัวอย่าง line style และปุ่มรายงานปัญหา (`band_motifs.rs`, `pointer.rs`, `line_looks.rs`, `report.rs`) | มีแถบสี, system pointer, ตัวเลือกเส้น และไม่มี report-form integration; รายละเอียด/การตั้งค่าไม่เทียบเท่า source | ค้างหรือเทียบเท่าบางส่วน |
 | ตรวจทาน UI | Hover stability และ large-table performance checks (`hover_stability.rs`, `tests_perf.rs`) | เป็น test harness ของ source ไม่ใช่ฟีเจอร์ใช้งาน; ไม่รวมในรายการพอร์ต production | ไม่นับเป็นฟีเจอร์ผู้ใช้ |
 
@@ -89,6 +89,7 @@
 | `5570d26` | 2026-11-28 20:46:10 ICT | เพิ่ม Define New Bullet dialog, preview และการจัดรูปแบบ bullet แบบส่วนตัว | push 2026-11-28 20:46 ICT; `origin/main` ยืนยัน SHA `5570d26b981a3d01b8218a4f5802b66540ae261f` |
 | `1eb5219` | 2026-11-28 20:51:09 ICT | เรียงค่าตัวเลขในตารางด้วย number parser ตามภาษาของ cell | push 2026-11-28 20:51 ICT; `origin/main` ยืนยัน SHA `1eb5219c18d71a31e5284d8da17459b63477fe0f` |
 | `5983459` | 2026-11-28 20:55:54 ICT | เพิ่ม language-aware collation ในการเรียงย่อหน้า ตาราง ดัชนี และ bibliography | push 2026-11-28 20:55 ICT; `origin/main` ยืนยัน SHA `598345932d6bc6d2cae23606eeca3d639620b383` |
+| `2caed36` | 2026-11-28 21:02:35 ICT | เพิ่ม Unicode mappings สำหรับ Symbol, Wingdings 1–3 และ Webdings ในการแสดงผล/ข้อความธรรมดา | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -101,5 +102,5 @@
 ## การตรวจสอบ
 
 - Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
-- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check; locale sort `1eb5219` และ collation `5983459` ผ่าน doc/engine/UI/desktop/CLI/web check. ไม่ได้รันชุดทดสอบ.
+- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check; locale sort `1eb5219` และ collation `5983459` ผ่าน doc/engine/UI/desktop/CLI/web check; symbol fonts `2caed36` ผ่าน doc/formats/layout/engine/UI/desktop/CLI/web check. ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).
