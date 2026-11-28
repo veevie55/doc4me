@@ -1,12 +1,12 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 22:25 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `b5818c296f4f2bba815dfac5fa277ed76ca5dffb` (`main`, commit 2026-11-28 22:25:47 ICT · push ยืนยัน 22:25:53 ICT)
+อัปเดตเมื่อ **28 November 2026 22:52 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a` (`main`, commit 2026-11-28 22:49:14 ICT · push ยืนยัน 22:49:26 ICT)
 
 ## วิธีเปรียบเทียบ
 
 รัน `wordcraft-cli commands --json` ใน source และ `doc4me-cli commands --json` ใน target แล้วเทียบ command ID แบบตรงตัว: source มี **655** IDs, target มี **779** IDs, source-only **0**, target-only **124**. นอกจากนี้ตรวจ UI และโครงสร้าง DOCX/layout สำหรับฟีเจอร์ที่พฤติกรรมไม่ได้อยู่ใน command ID เพียงอย่างเดียว.
 
-การเทียบ command ID รอบก่อนพบ source-only **0 รายการ** แต่ command catalog ไม่ครอบคลุมพฤติกรรม UI และบริการของ host ทั้งหมด การตรวจไฟล์ระดับโมดูลรอบนี้พบช่องว่างเพิ่มเติมซึ่งยังต้องพอร์ตตามรายการสถานะด้านล่าง; จึงยังไม่นับว่าฟีเจอร์ทั้งหมดจาก source ครบแล้ว. รายการช่องว่าง command 22 รายการจากรอบก่อนพอร์ตใน `fd75ccb` และยืนยันบน `main` แล้ว.
+การเทียบ command ID รอบก่อนพบ source-only **0 รายการ** แต่ command catalog ไม่ครอบคลุมพฤติกรรม UI และบริการของ host ทั้งหมด การตรวจไฟล์ระดับโมดูลจึงติดตามช่องว่างเพิ่มเติมในตารางด้านล่าง; ณ push ล่าสุด ช่องว่าง production ที่ระบุในรายงานพอร์ตครบแล้ว ส่วน hover/performance modules เป็น test harness ไม่ใช่ฟีเจอร์ผู้ใช้. รายการช่องว่าง command 22 รายการจากรอบก่อนพอร์ตใน `fd75ccb` และยืนยันบน `main` แล้ว.
 
 ## รายการช่องว่างที่พบและผลการพอร์ต
 
@@ -53,7 +53,7 @@
 | ลำดับเรียงตามภาษา | Collation ตามภาษาสำหรับ accent และอักษรเฉพาะ (`doc/collate.rs`) | เพิ่ม comparator ภาษา; ใช้กับ paragraph/table sort, index entries/letter headings และ bibliography; รองรับลำดับอักษรเฉพาะของภาษาและ decomposed accents | พอร์ตแล้ว; `5983459` · push 2026-11-28 20:55 ICT |
 | ตัวเลขตาม locale | แยกเลขทศนิยม/ตัวคั่นหลักพันและสกุลเงินของภาษาขณะ sort ตาราง (`doc/locale_number.rs`) | `table.sort` อ่านภาษาของ cell; รองรับจุด/จุลภาคทศนิยม, space/จุด/จุลภาค/apostrophe คั่นหลักพัน, สัญลักษณ์สกุลเงิน, เปอร์เซ็นต์ และเครื่องหมายลบหลายแบบ | พอร์ตแล้ว; `1eb5219` · push 2026-11-28 20:51 ICT |
 | ฟอนต์สัญลักษณ์ | แปลง Symbol/Wingdings/Webdings เป็น Unicode เมื่อไม่มีฟอนต์ต้นฉบับ (`doc/symbol_fonts.rs`) | เพิ่ม mapping สำหรับ Symbol, Wingdings 1–3 และ Webdings; ใช้ใน layout/display, `Paragraph::shown_text`, story text และ export `.txt`; ไม่เปลี่ยนรหัสที่เก็บในเอกสาร | พอร์ตแล้ว; `2caed36` · push 2026-11-28 21:02 ICT |
-| งานนำเสนอ/หน้าตา | ลายไทยบนแถบด้านบน, pointer แบบวาดเอง, ภาพตัวอย่าง line style และปุ่มรายงานปัญหา (`band_motifs.rs`, `pointer.rs`, `line_looks.rs`, `report.rs`) | มีแถบสี, system pointer, ตัวเลือกเส้น และไม่มี report-form integration; รายละเอียด/การตั้งค่าไม่เทียบเท่า source | ค้างหรือเทียบเท่าบางส่วน |
+| งานนำเสนอ/หน้าตา | ลายไทยบนแถบด้านบน, pointer แบบวาดเอง, ภาพตัวอย่าง line style และปุ่มรายงานปัญหา (`band_motifs.rs`, `pointer.rs`, `line_looks.rs`, `report.rs`) | File › Options › General เลือกลายไทยพร้อม preview (ค่าเริ่มต้น None) และ pointer 8 แบบ (ค่าเริ่มต้น System); line styles วาดตัวอย่างใน Character, Borders and Shading, Modify Style และ Table Pane; Report a problem เปิด Google Form พร้อมรุ่นแอปและ browser user-agent โดยไม่ส่งเอกสาร | พอร์ตแล้ว; `97f3a94` · commit 2026-11-28 22:49:14 ICT · push/ยืนยัน `origin/main` 2026-11-28 22:49:26 ICT (`97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a`) |
 | ตรวจทาน UI | Hover stability และ large-table performance checks (`hover_stability.rs`, `tests_perf.rs`) | เป็น test harness ของ source ไม่ใช่ฟีเจอร์ใช้งาน; ไม่รวมในรายการพอร์ต production | ไม่นับเป็นฟีเจอร์ผู้ใช้ |
 
 ### ความสามารถที่มีตำแหน่งไฟล์ต่างกัน แต่พบ implementation เทียบเท่าแล้ว
@@ -95,6 +95,7 @@
 | `3a88721` | 2026-11-28 21:58:00 ICT | ขยาย Character dialog และ `format.set` | push 2026-11-28 21:58:10 ICT; `origin/main` ยืนยัน SHA `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf` |
 | `d372c42` | 2026-11-28 22:07:04 ICT | เพิ่มแผง Formatting สำหรับ Text, Paragraph, Page และ Design | push 2026-11-28 22:07:23 ICT; `origin/main` ยืนยัน SHA `d372c4264aadda3126193210edbaabbfd033a553` |
 | `b5818c2` | 2026-11-28 22:25:47 ICT | เพิ่ม Table Pane และ Object Pane สำหรับการจัดรูปแบบตามบริบท | push 2026-11-28 22:25:53 ICT; `origin/main` ยืนยัน SHA `b5818c296f4f2bba815dfac5fa277ed76ca5dffb` |
+| `97f3a94` | 2026-11-28 22:49:14 ICT | พอร์ตลายไทยบนแถบ, custom pointer, line-style previews และ Report a problem | push 2026-11-28 22:49:26 ICT; `origin/main` ยืนยัน SHA `97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -108,4 +109,5 @@
 
 - Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
 - `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check; locale sort `1eb5219` และ collation `5983459` ผ่าน doc/engine/UI/desktop/CLI/web check; symbol fonts `2caed36` ผ่าน doc/formats/layout/engine/UI/desktop/CLI/web check; async save `d2943cf` ผ่าน `cargo fmt --all -- --check`, `cargo check --locked --offline -p doc4me-ui-egui` และ `cargo check --locked --offline -p doc4me-web --target wasm32-unknown-unknown`. ไม่ได้รันชุดทดสอบ.
+- `cargo fmt --all`, `git diff --check`, native `cargo check --locked --offline -p doc4me-ui-egui -p doc4me` และ web `cargo check --locked --offline -p doc4me-web --target wasm32-unknown-unknown` ผ่านที่ `97f3a94`; ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).

@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 22:25 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **779 รายการ** · latest verified code push `b5818c296f4f2bba815dfac5fa277ed76ca5dffb`
+อัปเดตเมื่อ **28 November 2026 22:52 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **779 รายการ** · latest verified code push `97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -61,6 +61,7 @@ flowchart LR
 | `3a88721` | 2026-11-28 21:58:00 ICT | ขยาย Character dialog ให้มี Effects, Position, Background และ Border; เพิ่ม complex-script font/language, preview และ reset/cancel workflow | push 2026-11-28 21:58:10 ICT; `origin/main` ยืนยัน SHA `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf` |
 | `d372c42` | 2026-11-28 22:07:04 ICT | เพิ่มแผง Formatting แบบปรับขนาดได้สำหรับ Text, Paragraph, Page และ Design; เปิด/ปิดจาก View และใช้ command เดิม | push 2026-11-28 22:07:23 ICT; `origin/main` ยืนยัน SHA `d372c4264aadda3126193210edbaabbfd033a553` |
 | `b5818c2` | 2026-11-28 22:25:47 ICT | เพิ่ม Table Pane และ Object Pane; แสดงคำสั่งตาม selection และใช้ command handlers เดิม | push 2026-11-28 22:25:53 ICT; `origin/main` ยืนยัน SHA `b5818c296f4f2bba815dfac5fa277ed76ca5dffb` |
+| `97f3a94` | 2026-11-28 22:49:14 ICT | เพิ่มลายไทยบนแถบ, custom pointer, ภาพตัวอย่าง line style และปุ่มรายงานปัญหา | push 2026-11-28 22:49:26 ICT; `origin/main` ยืนยัน SHA `97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); ทุก SHA ในรายการข้างต้นตรวจยืนยันกับ `origin/main` แล้วด้วย `git ls-remote origin refs/heads/main`.
 
@@ -149,6 +150,28 @@ flowchart LR
   PI --> C
   CH --> C
   SA --> C
+```
+
+### รายการความสามารถที่เพิ่มใน `97f3a94`
+
+- **ลายไทยบนแถบ:** File › Options › General เลือก ประจำยาม, กระจัง, ก้านขด, ดอกพิกุล หรือผ้าขาวม้า; รายการมีภาพตัวอย่างและวาดต่อเนื่องบน title bar กับแถบ tab. `None` เป็นค่าเริ่มต้นจึงคงหน้าตาเดิม.
+- **ตัวชี้เมาส์:** เลือก pointer ภาพ 8 แบบหรือ System pointer จาก File › Options › General; เปลี่ยนเฉพาะลูกศรปกติ ส่วน I-beam, hand และตัวชี้ปรับขนาดยังใช้ของระบบ. System เป็นค่าเริ่มต้น.
+- **ภาพตัวอย่าง line style:** เส้นตัวอย่างปรากฏทั้งในช่องเลือกและรายการของ Character dialog, Borders and Shading, Modify Style และ Table Pane; ชื่อยังคงอ่านได้ด้วย screen reader และเลือกค่า OOXML เดิม.
+- **รายงานปัญหา:** ปุ่ม Report a problem ข้าง Share เปิด Google Form เมื่อผู้ใช้กด โดยใส่รุ่นแอปและ user-agent ของเบราว์เซอร์ใน URL; ไม่แนบเนื้อหาเอกสาร.
+- **การตั้งค่าและขอบเขต:** เพิ่ม UI-local commands `ui.bandMotif`, `ui.pointer` และ `ui.reportProblem`; ค่า motif/pointer เก็บใน `ui.json`. Commands เหล่านี้ไม่เพิ่ม engine command catalog ซึ่งยังมี 779 รายการ.
+
+ตัวอย่างรูป pointer ที่เลือกได้:
+
+| ลูกศรสีขาว | แมว |
+|---|---|
+| ![ลูกศรสีขาว](assets/pointers/classic-white.png) | ![ตัวชี้รูปแมว](assets/pointers/animal-cat.png) |
+
+```mermaid
+flowchart LR
+  O[File › Options › General] --> M[ลายไทยบนแถบ]
+  O --> P[เลือกลูกศร]
+  D[Character / Borders / Table Pane] --> L[เลือกเส้นพร้อมภาพตัวอย่าง]
+  R[กด Report a problem] --> F[Google Form รุ่นแอป + browser]
 ```
 
 ### รายการความสามารถที่เพิ่มใน `6215d03`
@@ -254,7 +277,7 @@ flowchart LR
   S --> D[เก็บรหัสต้นฉบับไว้ในเอกสาร]
 ```
 
-รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 779 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
+ผลตรวจความสามารถที่พอร์ตแล้วและความสามารถที่ไม่ใช่ฟีเจอร์ผู้ใช้ อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 779 รายการยังคงเป็นรายการคำสั่ง ณ code push ล่าสุด.
 
 ## รายการความสามารถทั้งหมด
 
@@ -2288,6 +2311,6 @@ flowchart LR
 ## การตรวจสอบ
 
 - เปรียบเทียบ catalog: Khiankrub **655** IDs; Doc4Me **779** IDs; missing source IDs **0**.
-- รายการช่องว่างที่เคยระบุ 22 รายการและสถานะการพอร์ตแสดงในรายงานช่องว่างแยกต่างหาก.
+- รายการช่องว่างที่เคยระบุ 22 รายการและผลตรวจ UI เพิ่มเติมแสดงในรายงานช่องว่างแยกต่างหาก.
 - `cargo fmt --all -- --check`, `git diff --check`, native `cargo check --locked --offline -p doc4me-ui-egui -p doc4me`, และ web `cargo check --locked --offline -p doc4me-web --target wasm32-unknown-unknown` ผ่าน; ไม่ได้รันชุดทดสอบ.
-- commit `b5818c296f4f2bba815dfac5fa277ed76ca5dffb` commit เวลา 2026-11-28 22:25:47 ICT และ push/ยืนยันกับ `origin/main` เวลา 22:25:53 ICT.
+- commit `97f3a9473b7c2d22ab6aacacbe2f23ea8b0ec93a` commit เวลา 2026-11-28 22:49:14 ICT และ push/ยืนยันกับ `origin/main` เวลา 22:49:26 ICT.
