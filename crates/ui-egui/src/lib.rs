@@ -51,6 +51,7 @@ pub mod dialogs_refs;
 pub mod dialogs_review;
 pub mod dialogs_ribbon;
 pub mod dialogs_smart_art;
+pub mod dialogs_style;
 pub mod dialogs_templates;
 pub mod dialogs_wphelp;
 pub mod dictate;

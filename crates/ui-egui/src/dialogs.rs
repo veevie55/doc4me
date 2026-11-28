@@ -311,6 +311,7 @@ pub enum Dialog {
         extra_chr: serde_json::Map<String, Value>,
         #[serde(skip)]
         extra_para: serde_json::Map<String, Value>,
+        form: Box<crate::dialogs_style::StyleForm>,
     },
     /// Manage Styles: every style with its preview and description; modify, create, delete and
     /// show or hide them.
@@ -1327,6 +1328,7 @@ impl Dialog {
 
     pub fn modify_style(app: &WordApp, id: &str) -> Option<Dialog> {
         let st = app.session.doc.styles.get(id)?;
+        let form = crate::dialogs_style::StyleForm::read(app, id)?;
         let rc = app.session.doc.styles.resolve_char(
             if st.kind == doc4me_doc::StyleKind::Paragraph { Some(id) } else { None },
             &doc4me_doc::CharProps { style: if st.kind == doc4me_doc::StyleKind::Character { Some(id.into()) } else { None }, ..Default::default() },
@@ -1349,6 +1351,7 @@ impl Dialog {
             after: rp.space_after,
             extra_chr: serde_json::Map::new(),
             extra_para: serde_json::Map::new(),
+            form: Box::new(form),
         })
     }
 }
@@ -2617,90 +2620,18 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             ok || cancel
         }
-        Dialog::ModifyStyle { back, resume, id, name, font, size, bold, italic, color, before, after, extra_chr, extra_para } => {
-            egui::Grid::new("ms").num_columns(2).show(ui, |ui| {
-                ui.label(tl!("Name:"));
-                ui.add(crate::widgets::text_line(name));
-                ui.end_row();
-                ui.label(tl!("Font:"));
-                ui.add(crate::widgets::text_line(font));
-                ui.end_row();
-                ui.label(tl!("Size:"));
-                ui.add(egui::DragValue::new(size).range(1.0..=1638.0).clamp_existing_to_range(false).speed(0.5));
-                ui.end_row();
-                ui.label(tl!("Color:"));
-                ui.add(crate::widgets::text_line(color));
-                ui.end_row();
-                ui.label(tl!("Space before/after:"));
-                ui.horizontal(|ui| {
-                    ui.add(egui::DragValue::new(before).range(0.0..=1584.0).clamp_existing_to_range(false));
-                    ui.add(egui::DragValue::new(after).range(0.0..=1584.0).clamp_existing_to_range(false));
-                });
-                ui.end_row();
-            });
-            ui.horizontal(|ui| {
-                ui.checkbox(bold, tl!("Bold"));
-                ui.checkbox(italic, tl!("Italic"));
-            });
-            // Format ▾: the selection's dialogs, working on the style.
-            let para_style = app.session.doc.styles.get(id).is_some_and(|s| s.kind == doc4me_doc::StyleKind::Paragraph);
-            let mut pick = None;
-            ui.menu_button(tl!("Format"), |ui| {
-                for (label, which, para_only) in crate::style_format::ITEMS {
-                    if ui.add_enabled(para_style || !para_only, egui::Button::new(tl!(label))).clicked() {
-                        pick = Some(which);
-                        ui.close();
-                    }
-                }
-            });
-            if let Some(which) = pick {
-                let me = Dialog::ModifyStyle {
-                    back: *back,
-                    resume: resume.take(),
-                    id: id.clone(),
-                    name: name.clone(),
-                    font: font.clone(),
-                    size: *size,
-                    bold: *bold,
-                    italic: *italic,
-                    color: color.clone(),
-                    before: *before,
-                    after: *after,
-                    extra_chr: extra_chr.clone(),
-                    extra_para: extra_para.clone(),
-                };
-                crate::style_format::open(app, which, me);
-                return true;
+        Dialog::ModifyStyle { back, resume, form, .. } => {
+            let close = crate::dialogs_style::body(app, ui, form, back, resume);
+            if close && app.dialog.is_none() && *back {
+                app.dialog = Some(Dialog::ManageStyles { alphabetical: false, selected: form.id.clone() });
             }
-            let (ok, cancel) = buttons(ui, tl!("OK"));
-            if ok {
-                let d = Dialog::ModifyStyle {
-                    back: false,
-                    resume: None,
-                    id: id.clone(),
-                    name: name.clone(),
-                    font: font.clone(),
-                    size: *size,
-                    bold: *bold,
-                    italic: *italic,
-                    color: color.clone(),
-                    before: *before,
-                    after: *after,
-                    extra_chr: extra_chr.clone(),
-                    extra_para: extra_para.clone(),
-                };
-                let (chr, para) = crate::style_format::pending(&d);
-                let _ = app.run("styles.modify", json!({"style": id, "name": name, "chr": chr, "para": para}));
-            }
-            if (ok || cancel) && *back {
-                app.dialog = Some(Dialog::ManageStyles { alphabetical: false, selected: id.clone() });
-            }
-            if (ok || cancel)
+            if close
+                && app.dialog.is_none()
                 && let Some(r) = resume.take()
             {
                 app.dialog = Some(*r);
             }
-            ok || cancel
+            close
         }
         Dialog::ManageStyles { alphabetical, selected } => manage_styles(app, ui, alphabetical, selected),
         Dialog::TableStyle { id, name, based_on, region, regions, basis } => {

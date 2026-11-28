@@ -185,7 +185,9 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .pure(),
         CommandSpec::new("styles.create", "Create a Style", "Home › Styles", create_style).params(r#"{"name": string, "basedOn"?: string, "fromSelection"?: bool}"#),
-        CommandSpec::new("styles.modify", "Modify Style", "Home › Styles", modify_style).params(r#"{"style": string, "chr"?: CharProps, "para"?: ParaProps, "name"?: string, "next"?: string}"#),
+        CommandSpec::new("styles.modify", "Modify Style", "Home › Styles", modify_style).params(
+            r#"{"style": string, "chr"?: CharProps, "para"?: ParaProps, "name"?: string, "next"?: string, "basedOn"?: style | null, "list"?: {"num"?: id, "kind"?: kind} | null, "listLevel"?: 0..8, "clear"?: ["shading"|"borders"], "resetFormatting"?: bool}"#,
+        ),
         CommandSpec::new("styles.updateToMatch", "Update Style to Match Selection", "Home › Styles", update_to_match).params(r#"{"style"?: string}"#),
         CommandSpec::new("styles.delete", "Delete Style", "Home › Styles", delete_style).params(r#"{"style": string (name or id; custom styles only)}"#),
         CommandSpec::new("styles.manage", "Manage Styles", "Home › Styles", |s, v| {
@@ -960,15 +962,100 @@ fn modify_style(s: &mut Session, v: &Value) -> CmdResult {
         v.get("para").map(|c| serde_json::from_value(c.clone())).transpose().map_err(|e| CmdError::Params(e.to_string()))?;
     let next = p::str(v, "next").map(str::to_string);
     let name = p::str(v, "name").map(str::to_string);
+    // Based on another style (null: none). Never on itself, or on a style based on it.
+    let based_on = match v.get("basedOn") {
+        None => None,
+        Some(Value::Null) => Some(None),
+        Some(Value::String(n)) if n.trim().is_empty() => Some(None),
+        Some(Value::String(n)) => {
+            let b = style_id(s, n)?;
+            if b == id || s.doc.styles.chain(&b).iter().any(|x| x.id == id) {
+                return Err(CmdError::Params(format!("`{n}` is based on this style: it can't be its base too")));
+            }
+            Some(Some(b))
+        }
+        Some(_) => return Err(CmdError::Params("`basedOn` must be a style name or null".into())),
+    };
+    // A font or size set for Latin text carries to Thai unless the style already has an explicit
+    // complex-script setting. Preserve a separate Thai font when only the Latin font is changed.
+    let latin_font = s.doc.styles.resolve_char(Some(&id), &CharProps::default()).font;
+    let d = &s.doc.styles.default_chr;
+    let (eff_b, eff_b_cs, eff_i, eff_i_cs) =
+        s.doc.styles.chain(&id).into_iter().fold((d.bold, d.bold_cs, d.italic, d.italic_cs), |(b, b_cs, i, i_cs), st| {
+            (st.chr.bold.or(b), st.chr.bold_cs.or(b_cs), st.chr.italic.or(i), st.chr.italic_cs.or(i_cs))
+        });
+    let chr = chr.map(|mut c| {
+        if c.font_cs.is_none() && c.font.as_ref().is_some_and(|f| *f != latin_font) {
+            c.font_cs = c.font.clone();
+        }
+        c.size_cs = c.size_cs.or(c.size);
+        if eff_b_cs.filter(|&cs| Some(cs) != eff_b).is_none() {
+            c.bold_cs = c.bold_cs.or(c.bold);
+        }
+        if eff_i_cs.filter(|&cs| Some(cs) != eff_i).is_none() {
+            c.italic_cs = c.italic_cs.or(c.italic);
+        }
+        c
+    });
+    // Numbering for the style: an existing document list, a new multilevel list, or none.
+    let level = p::u64(v, "listLevel").unwrap_or(0).min(8) as u8;
+    let numbering = match v.get("list") {
+        None => None,
+        Some(Value::Null) => Some(None),
+        Some(l) => {
+            let num = if let Some(n) = l.get("num").and_then(Value::as_u64) {
+                let n = n.min(u32::MAX as u64) as u32;
+                s.doc.numbering.num(n).ok_or_else(|| CmdError::Params("no such list".into()))?;
+                n
+            } else {
+                let kind = l
+                    .get("kind")
+                    .and_then(Value::as_str)
+                    .and_then(ListKind::parse)
+                    .ok_or_else(|| CmdError::Params("`list` needs `num` or `kind`".into()))?;
+                std::sync::Arc::make_mut(&mut s.doc.numbering).add_list(kind)
+            };
+            let aid = s.doc.numbering.num(num).map(|n| n.abstract_id);
+            if let Some(aid) = aid
+                && let Some(lv) = std::sync::Arc::make_mut(&mut s.doc.numbering)
+                    .abstracts
+                    .iter_mut()
+                    .find(|a| a.id == aid)
+                    .and_then(|a| a.levels.get_mut(level as usize))
+            {
+                lv.style = Some(id.clone());
+            }
+            Some(Some(NumRef { num, level }))
+        }
+    };
+    let clear: Vec<String> =
+        v.get("clear").and_then(Value::as_array).map(|a| a.iter().filter_map(|x| x.as_str().map(str::to_string)).collect()).unwrap_or_default();
     let st = std::sync::Arc::make_mut(&mut s.doc.styles).get_mut(&id).ok_or_else(|| CmdError::Params("no such style".into()))?;
+    if p::bool(v, "resetFormatting").unwrap_or(false) {
+        st.chr = CharProps::default();
+        st.para = ParaProps::default();
+    }
     if let Some(c) = chr {
         st.chr.overlay(&c);
+    }
+    if let Some(n) = numbering {
+        st.para.numbering = n;
+    }
+    for c in &clear {
+        match c.as_str() {
+            "shading" => st.para.shading = None,
+            "borders" => st.para.borders = None,
+            _ => {}
+        }
     }
     if let Some(pp) = para {
         st.para.overlay(&pp);
     }
     if let Some(n) = next {
         st.next = Some(n);
+    }
+    if let Some(b) = based_on {
+        st.based_on = b;
     }
     if let Some(n) = name.filter(|n| !n.trim().is_empty()) {
         st.name = n;

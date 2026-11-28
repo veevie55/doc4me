@@ -118,10 +118,12 @@ pub fn finish(app: &mut WordApp, sc: StyleScratch) {
         return;
     }
     if after != before
-        && let Dialog::ModifyStyle { id, extra_chr, extra_para, font, size, bold, italic, color, before: sp_before, after: sp_after, .. } = &mut md
+        && let Dialog::ModifyStyle { id, extra_chr, extra_para, font, size, bold, italic, color, before: sp_before, after: sp_after, form, .. } =
+            &mut md
     {
         merge(extra_para, &after.0);
         merge(extra_chr, &after.1);
+        form.sync_format(extra_chr, extra_para);
         let styles = &session.doc.styles;
         let para = session.doc.para(StoryRef::Body, &Path::top(0));
         let props = para.map(|p| p.props.clone()).unwrap_or_default();
@@ -164,6 +166,10 @@ fn scratch_document(doc: &Document, id: &str, kind: StyleKind) -> Document {
 
 /// Modify Style's pending `chr` and `para`: what Format set, then its own fields.
 pub fn pending(md: &Dialog) -> (Value, Value) {
+    if let Dialog::ModifyStyle { form, .. } = md {
+        let params = form.params();
+        return (params.get("chr").cloned().unwrap_or_else(|| json!({})), params.get("para").cloned().unwrap_or_else(|| json!({})));
+    }
     let Dialog::ModifyStyle { font, size, bold, italic, color, before, after, extra_chr, extra_para, .. } = md else {
         return (json!({}), json!({}));
     };
