@@ -4,13 +4,17 @@
 //! `arrange.bounds` / `arrange.rotation` / `arrange.nudge`, so they're undoable and scriptable like
 //! everything else.
 //!
+//! While moving or resizing, pictures and shapes snap to the page, margins and other floating
+//! objects; alignment lines show where they landed. Alt moves freely, View › Gridlines snaps to
+//! the drawing grid, and File › Options › Advanced can turn alignment guides off.
+//!
 //! While dragging, nothing is laid out or rendered: the preview is the object's own pixels taken
 //! from its page's cached texture. The drop is one command, one relayout.
 //!
 //! A selected connector shows a handle at each end instead of a frame: dragging one onto a shape
 //! glues it to the nearest connection site there (`shape.connect`), elsewhere leaves it free.
 
-use doc4me_doc::para::{InlineObject, OBJ};
+use doc4me_doc::para::{InlineObject, OBJ, Wrap};
 use doc4me_doc::{PartKind, Pos, StoryRef};
 use doc4me_layout::DocLayout;
 use doc4me_layout::hit::ObjectHit;
@@ -19,6 +23,7 @@ use serde_json::json;
 
 use crate::WordApp;
 use crate::frame::{self, Drag, Grab};
+use crate::guides;
 use crate::theme::Tokens;
 
 /// The band along a text box's border that grabs the box rather than its text, screen points.
@@ -40,6 +45,8 @@ pub struct ObjectDrag {
     copy: bool,
     /// Dragging a connector's end (false: its start, true: its end) to this page point.
     end: Option<(bool, (f32, f32))>,
+    /// Alignment guides the drag snapped to, shown until release.
+    guides: Vec<guides::Guide>,
 }
 
 /// How near (screen points) a press must be to a connector's end to grab it.
@@ -199,6 +206,17 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
             } else {
                 // Pictures keep their proportions from a corner unless Shift; shapes only with Shift.
                 d.drag.update(at, pages, scale, d.min, d.picture != shift);
+                d.guides.clear();
+                let free = ui.input(|i| i.modifiers.alt);
+                let g = if free || !d.drag.moved { None } else { grid(app, layout, d.drag.to_page, scale) };
+                if let Some(g) = g {
+                    snap_to_grid(&mut d, &g);
+                } else if d.drag.grab == Grab::Move && d.drag.moved && app.ui.alignment_guides && !free {
+                    snap_move(layout, &mut d, scale);
+                } else if d.drag.moved && app.ui.alignment_guides && !free {
+                    let ratio = d.picture != shift;
+                    snap_resize(layout, &mut d, scale, ratio);
+                }
             }
             app.canvas.obj_drag = Some(d);
         } else {
@@ -218,7 +236,8 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
     // A selected connector's end: drag it to glue it.
     if pressed && let Some((object, which)) = connector_end_at(app, layout, pages, scale, at) {
         let drag = Drag::new(Grab::Move, object.page, object.rect, 0.0, at);
-        app.canvas.obj_drag = Some(ObjectDrag { drag, object, min: 0.0, picture: false, copy: false, end: Some((which, (0.0, 0.0))) });
+        app.canvas.obj_drag =
+            Some(ObjectDrag { drag, object, min: 0.0, picture: false, copy: false, end: Some((which, (0.0, 0.0))), guides: Vec::new() });
         return true;
     }
     let Some((object, grab)) = grab_at(app, layout, pages, scale, at) else { return false };
@@ -250,7 +269,7 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
         if !fixed(app, &object) && (grab != Grab::Move || movable(app, &object)) {
             let copy = grab == Grab::Move && ui.input(|i| i.modifiers.command);
             let drag = Drag::new(grab, object.page, object.rect, object.spin.deg, at).with_corner(corner_of(app, &object).unwrap_or(0.0));
-            app.canvas.obj_drag = Some(ObjectDrag { drag, object, min, picture, copy, end: None });
+            app.canvas.obj_drag = Some(ObjectDrag { drag, object, min, picture, copy, end: None, guides: Vec::new() });
         }
     }
     true
@@ -322,6 +341,128 @@ fn grab_at(app: &WordApp, layout: &DocLayout, pages: &[Rect], scale: f32, at: Po
 /// header/footer.
 fn movable(app: &WordApp, o: &ObjectHit) -> bool {
     o.path.depth() == 0 && selectable_story(app, o.story)
+}
+
+/// The drawing grid used while View › Gridlines is on.
+struct Grid {
+    origin: (f32, f32),
+    step: (f32, f32),
+}
+
+impl Grid {
+    fn snap(v: f32, origin: f32, step: f32) -> f32 {
+        if step.is_finite() && step > 0.0 && v.is_finite() { origin + ((v - origin) / step).round() * step } else { v }
+    }
+    fn x(&self, v: f32) -> f32 {
+        Self::snap(v, self.origin.0, self.step.0)
+    }
+    fn y(&self, v: f32) -> f32 {
+        Self::snap(v, self.origin.1, self.step.1)
+    }
+}
+
+fn grid(app: &WordApp, layout: &DocLayout, page: usize, scale: f32) -> Option<Grid> {
+    if !app.session.view.gridlines || app.session.view.mode != doc4me_layout::ViewMode::Print || app.session.view.read_mode {
+        return None;
+    }
+    let pg = layout.pages.get(page)?;
+    let sections = app.session.doc.sections();
+    let section = sections.get(pg.section).map(|(_, s)| *s);
+    let size = app.session.doc.styles.resolve_char(Some("Normal"), &Default::default()).size;
+    let steps = match section.and_then(|s| s.grid_line_pitch().map(|line| (s, line))) {
+        Some((s, line)) => (
+            s.grid_char_pitch(size).map_or(f32::INFINITY, |space| crate::canvas::drawing_grid_step(space, scale)),
+            crate::canvas::drawing_grid_step(line, scale),
+        ),
+        None => (
+            crate::canvas::drawing_grid_step(app.session.doc.settings.grid_h, scale),
+            crate::canvas::drawing_grid_step(app.session.doc.settings.grid_v, scale),
+        ),
+    };
+    Some(Grid { origin: (pg.body.x, pg.body.y), step: steps })
+}
+
+fn snap_to_grid(d: &mut ObjectDrag, g: &Grid) {
+    let r = &mut d.drag.rect;
+    match d.drag.grab {
+        Grab::Move => (r.x, r.y) = (g.x(r.x), g.y(r.y)),
+        Grab::Resize(h) if d.object.spin.is_identity() => {
+            let (mut x0, mut y0, mut x1, mut y1) = (r.x, r.y, r.right(), r.bottom());
+            let min = d.min.max(0.0);
+            match h.x {
+                -1 => x0 = g.x(x0).min(x1 - min),
+                1 => x1 = g.x(x1).max(x0 + min),
+                _ => {}
+            }
+            match h.y {
+                -1 => y0 = g.y(y0).min(y1 - min),
+                1 => y1 = g.y(y1).max(y0 + min),
+                _ => {}
+            }
+            *r = doc4me_geom::Rect::new(x0, y0, x1 - x0, y1 - y0);
+        }
+        _ => {}
+    }
+}
+
+fn snap_move(layout: &DocLayout, d: &mut ObjectDrag, scale: f32) {
+    let Some(pg) = layout.pages.get(d.drag.to_page) else { return };
+    let candidates = guides::candidates(paper_width(pg), pg.h, pg.body, snap_targets(pg, &d.object));
+    let s = guides::snap(d.object.spin.bounds(d.drag.rect), &candidates, guides::SNAP_SCREEN / scale.max(0.01));
+    d.drag.rect.x += s.dx;
+    d.drag.rect.y += s.dy;
+    d.guides = s.lines;
+}
+
+fn snap_resize(layout: &DocLayout, d: &mut ObjectDrag, scale: f32, ratio: bool) {
+    let Grab::Resize(h) = d.drag.grab else { return };
+    if !d.object.spin.is_identity() {
+        return;
+    }
+    let Some(pg) = layout.pages.get(d.drag.page) else { return };
+    let candidates = guides::candidates(paper_width(pg), pg.h, pg.body, snap_targets(pg, &d.object));
+    let (rect, lines) = guides::snap_resize(d.drag.rect, (h.x, h.y), &candidates, guides::SNAP_SCREEN / scale.max(0.01), ratio, d.min.max(1.0));
+    d.drag.rect = rect;
+    d.guides = lines;
+}
+
+fn paper_width(pg: &doc4me_layout::Page) -> f32 {
+    (pg.w - pg.markup).max(0.0)
+}
+
+fn snap_targets(pg: &doc4me_layout::Page, me: &ObjectHit) -> Vec<doc4me_geom::Rect> {
+    let pos = me.pos();
+    let own = me.text_box.map(StoryRef::Part);
+    pg.items
+        .iter()
+        .chain(&pg.header)
+        .chain(&pg.footer)
+        .filter_map(|it| match it {
+            doc4me_layout::Placed::Object { rect, spin, story, path, off, wrap, .. }
+                if *wrap != Wrap::Inline && !(*story == pos.story && *path == pos.path && *off == pos.off) && Some(*story) != own =>
+            {
+                Some(spin.bounds(*rect))
+            }
+            _ => None,
+        })
+        .collect()
+}
+
+fn paint_guide_lines(lines: &[guides::Guide], page: usize, painter: &Painter, t: &Tokens, layout: &DocLayout, pages: &[Rect], scale: f32) {
+    let Some(p) = pages.get(page) else { return };
+    let right = layout.pages.get(page).map_or(p.max.x, |pg| (p.min.x + paper_width(pg) * scale).min(p.max.x));
+    let stroke = egui::Stroke::new(1.0, t.guide);
+    for g in lines {
+        let ends = match g.axis {
+            guides::Axis::X => [egui::pos2(p.min.x + g.at * scale, p.min.y), egui::pos2(p.min.x + g.at * scale, p.max.y)],
+            guides::Axis::Y => [egui::pos2(p.min.x, p.min.y + g.at * scale), egui::pos2(right, p.min.y + g.at * scale)],
+        };
+        painter.line_segment(ends, stroke);
+    }
+}
+
+fn paint_guides(d: &ObjectDrag, painter: &Painter, t: &Tokens, layout: &DocLayout, pages: &[Rect], scale: f32) {
+    paint_guide_lines(&d.guides, d.drag.to_page, painter, t, layout, pages, scale);
 }
 
 /// Commit a finished drag as one command.
@@ -407,6 +548,7 @@ pub fn paint(app: &WordApp, painter: &Painter, t: &Tokens, layout: &DocLayout, p
             let text = crate::drag_readout::readout_text(crate::options::unit(), matches!(d.drag.grab, Grab::Resize(_)), d.drag.rect);
             crate::drag_readout::paint_readout(painter, text, to, *page);
         }
+        paint_guides(d, painter, t, layout, pages, scale);
         return;
     }
     // The others selected along with it (Shift+click): their outlines.

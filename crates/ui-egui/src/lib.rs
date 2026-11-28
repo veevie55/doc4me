@@ -69,6 +69,7 @@ mod font_notice;
 pub mod form_fields;
 pub mod frame;
 pub mod get_addins;
+pub mod guides;
 pub mod hf_pane;
 pub mod i18n;
 pub mod icons;
@@ -272,6 +273,8 @@ pub struct UiState {
     /// fades, as Word's does on Windows (on, the default), or it jumps and blinks on and off
     /// (off).
     pub caret_animation: bool,
+    /// Snap selected pictures and shapes to nearby page, margin and object edges.
+    pub alignment_guides: bool,
     /// Custom keyboard shortcuts (Customize Keyboard, #368); the session owns them while running.
     pub keyboard: doc4me_engine::KeyMap,
     /// WordPerfect-style offline command help display preferences.
@@ -356,6 +359,7 @@ impl Default for UiState {
             dark_page: false,
             text_boundaries: false,
             caret_animation: true,
+            alignment_guides: true,
             keyboard: doc4me_engine::KeyMap::default(),
             wp_help: dialogs_wphelp::HelpOptions::default(),
             ribbon: doc4me_engine::RibbonLayout::default(),
@@ -1399,6 +1403,14 @@ impl WordApp {
                     Some(_) => return Some(Err("`value` must be true or false".into())),
                 }
                 json!({"caretAnimation": self.ui.caret_animation})
+            }
+            "ui.alignmentGuides" => {
+                match p.get("value") {
+                    None => {}
+                    Some(Value::Bool(on)) => self.ui.alignment_guides = *on,
+                    Some(_) => return Some(Err("`value` must be true or false".into())),
+                }
+                json!({"alignmentGuides": self.ui.alignment_guides})
             }
             // Shape Format › Text › Create Link: the next click on an empty text box links the
             // selected box to it (`shape.link` with that box as the target); Esc cancels.

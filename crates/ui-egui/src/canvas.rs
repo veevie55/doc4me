@@ -767,7 +767,7 @@ fn gridline_cells(page: &Page) -> impl Iterator<Item = doc4me_geom::Rect> + '_ {
 /// The drawing grid's spacing in points at a screen scale: the document's spacing (`w:drawingGrid*Spacing`;
 /// ECMA-376's 1/8 inch when it doesn't say), doubled until the lines are at least
 /// [`DRAWING_GRID_MIN_PX`] apart on screen.
-fn drawing_grid_step(spacing: f32, scale: f32) -> f32 {
+pub(crate) fn drawing_grid_step(spacing: f32, scale: f32) -> f32 {
     let mut step = if spacing.is_finite() && spacing > 0.0 { spacing } else { doc4me_doc::DEFAULT_GRID };
     if !(scale.is_finite() && scale > 0.0) {
         return step;

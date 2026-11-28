@@ -234,6 +234,8 @@ pub struct Tokens {
     /// Crop mode: handles, and the dim over the part of a picture cropped away.
     pub crop_handle: Color32,
     pub crop_dim: Color32,
+    /// Alignment guides over the page while moving an object.
+    pub guide: Color32,
     pub menu: Color32,
     pub blue: Color32,
     pub red: Color32,
@@ -277,6 +279,7 @@ impl Tokens {
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x28),
             crop_handle: Color32::BLACK,
             crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
+            guide: Color32::from_rgb(0xC0, 0x28, 0x8C),
             menu: Color32::WHITE,
             blue: Color32::from_rgb(0x2F, 0x6F, 0xD0),
             red: Color32::from_rgb(0xD1, 0x3B, 0x3B),
@@ -321,6 +324,7 @@ impl Tokens {
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x5A),
             crop_handle: Color32::BLACK,
             crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
+            guide: Color32::from_rgb(0xE0, 0x4C, 0xB0),
             menu: Color32::from_rgb(0x2B, 0x2B, 0x2B),
             blue: Color32::from_rgb(0x6C, 0x9B, 0xEA),
             red: Color32::from_rgb(0xEE, 0x6A, 0x6A),

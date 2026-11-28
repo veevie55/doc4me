@@ -602,6 +602,16 @@ fn advanced(app: &mut WordApp, ui: &mut Ui) {
         ui.end_row();
     });
     note(ui, "Automatic follows the system region for new blank documents, default units, and decimal separators.");
+    let mut alignment_guides = app.ui.alignment_guides;
+    if ui
+        .checkbox(&mut alignment_guides, tl!("Snap objects to alignment guides"))
+        .on_hover_text(tl!(
+            "While moving or resizing a picture or shape, snap to page edges, margins, centres, and nearby objects. Hold Alt to move freely."
+        ))
+        .changed()
+    {
+        let _ = app.run("ui.alignmentGuides", json!({"value": alignment_guides}));
+    }
     let mut keytips = app.ui.keytips_enabled;
     if ui.checkbox(&mut keytips, tl!("Show KeyTips (Alt or F10)")).changed() {
         let _ = app.run("ui.keytips", json!({"value": keytips}));
