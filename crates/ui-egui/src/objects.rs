@@ -36,6 +36,8 @@ pub struct ObjectDrag {
     /// Smallest size it can be resized to, points.
     min: f32,
     picture: bool,
+    /// Ctrl/⌘ was held while moving, so release places a copy.
+    copy: bool,
     /// Dragging a connector's end (false: its start, true: its end) to this page point.
     end: Option<(bool, (f32, f32))>,
 }
@@ -154,6 +156,7 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
             return true;
         }
         if ui.input(|i| i.pointer.primary_down()) {
+            d.copy = ui.input(|i| i.modifiers.command) && d.drag.grab == Grab::Move;
             let shift = ui.input(|i| i.modifiers.shift);
             if d.drag.grab == Grab::Rotate {
                 d.drag.turn_to(at, pages, scale, shift);
@@ -179,7 +182,7 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
     // A selected connector's end: drag it to glue it.
     if pressed && let Some((object, which)) = connector_end_at(app, layout, pages, scale, at) {
         let drag = Drag::new(Grab::Move, object.page, object.rect, 0.0, at);
-        app.canvas.obj_drag = Some(ObjectDrag { drag, object, min: 0.0, picture: false, end: Some((which, (0.0, 0.0))) });
+        app.canvas.obj_drag = Some(ObjectDrag { drag, object, min: 0.0, picture: false, copy: false, end: Some((which, (0.0, 0.0))) });
         return true;
     }
     let Some((object, grab)) = grab_at(app, layout, pages, scale, at) else { return false };
@@ -190,7 +193,8 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
     }
     // Shift/Ctrl+click adds an object to the selected ones (or takes it out), for Group.
     let adding = ui.input(|i| i.modifiers.shift || i.modifiers.command);
-    if pressed && adding && grab == Grab::Move && selected(app).is_some() {
+    let already_selected = selected(app).is_some_and(|(pos, _)| pos == object.pos());
+    if pressed && adding && grab == Grab::Move && selected(app).is_some() && (!already_selected || ui.input(|i| i.modifiers.shift)) {
         let _ = app.run("select.addObject", json!({"pos": object.pos()}));
         return true;
     }
@@ -204,8 +208,9 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
         };
         // Objects in table cells can be selected and resized, not moved; charts neither.
         if !fixed(app, &object) && (grab != Grab::Move || movable(app, &object)) {
+            let copy = grab == Grab::Move && ui.input(|i| i.modifiers.command);
             app.canvas.obj_drag =
-                Some(ObjectDrag { drag: Drag::new(grab, object.page, object.rect, object.spin.deg, at), object, min, picture, end: None });
+                Some(ObjectDrag { drag: Drag::new(grab, object.page, object.rect, object.spin.deg, at), object, min, picture, copy, end: None });
         }
     }
     true
@@ -282,6 +287,10 @@ fn drop(app: &mut WordApp, d: &ObjectDrag) {
     let params = match d.drag.grab {
         Grab::Rotate => {
             let _ = app.run("arrange.rotation", json!({"degrees": d.drag.deg}));
+            return;
+        }
+        Grab::Move if d.copy => {
+            let _ = app.run("arrange.copyTo", json!({"page": d.drag.to_page, "x": r.x, "y": r.y}));
             return;
         }
         Grab::Move => json!({"page": d.drag.to_page, "x": r.x, "y": r.y}),

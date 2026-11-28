@@ -339,6 +339,9 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("arrange.bounds", "Move or Resize", "Layout › Arrange", bounds)
             .params(r#"{"width"?: pt, "height"?: pt, "x"?: pt, "y"?: pt, "page"?: n}  (x/y: the top-left on page `page` (0-based, default its page); moving an inline object floats it)"#)
             .when(has_movable),
+        CommandSpec::new("arrange.copyTo", "Copy to", "Layout › Arrange", copy_to)
+            .params(r#"{"x": pt, "y": pt, "page"?: n} (Ctrl+drag: copy the selected object to this page point; the original and clipboard stay unchanged)"#)
+            .when(has_movable),
         // Word's Layout dialog (Format Object): Position, Text Wrapping and Size together.
         CommandSpec::new("arrange.layout", "Layout", "Layout › Arrange › Position", layout_options)
             .params(
@@ -721,6 +724,22 @@ fn bounds(s: &mut Session, v: &Value) -> CmdResult {
     s.sel = Selection { anchor: pos.clone(), focus: Pos { off: pos.off + doc4me_doc::para::OBJ.len_utf8(), ..pos.clone() } };
     let o = s.doc.para_at(&pos).and_then(|p| p.object_at(pos.off)).cloned();
     Ok(json!({"object": serde_json::to_value(o).unwrap_or(Value::Null), "pos": super::pos_json(&pos)}))
+}
+
+/// Copy a selected object at (`x`, `y`), leaving the source in place and selecting the copy.
+fn copy_to(s: &mut Session, v: &Value) -> CmdResult {
+    let (pos, _) = selected(s).ok_or_else(|| CmdError::Disabled("no picture or shape selected".into()))?;
+    if p::f32(v, "x").is_none() || p::f32(v, "y").is_none() {
+        return Err(CmdError::Params("`x` and `y` are required".into()));
+    }
+    let len = doc4me_doc::para::OBJ.len_utf8();
+    let end = Pos { off: pos.off + len, ..pos.clone() };
+    let frag = s.doc.copy_range(&pos, &end);
+    s.sel = Selection::caret(end.clone());
+    super::paste::insert(s, frag)?;
+    s.touch(); // lay out the copy before moving it
+    s.sel = Selection { anchor: end.clone(), focus: Pos { off: end.off + len, ..end } };
+    bounds(s, v)
 }
 
 /// Put the object at `pos` with its top-left at (x, y) on `page` (default: where it is), as a
