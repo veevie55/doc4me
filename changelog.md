@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:02 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `2caed36b6820874d75db2374356e5b0a7ffbb5ca`
+อัปเดตเมื่อ **28 November 2026 21:18 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `d2943cf16f81785dda1fb8999bfe2707a35675ae`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -56,6 +56,7 @@ flowchart LR
 | `1eb5219` | 2026-11-28 20:51:09 ICT | เรียงตัวเลขในตารางตามภาษาของ cell ด้วย parser ที่เข้าใจทศนิยม ตัวคั่นหลักพัน และสกุลเงิน | push 2026-11-28 20:51 ICT; `origin/main` ยืนยัน SHA `1eb5219c18d71a31e5284d8da17459b63477fe0f` |
 | `5983459` | 2026-11-28 20:55:54 ICT | เพิ่ม collation ตามภาษาให้ paragraph/table sort, ดัชนีและหัวอักษร รวมถึง bibliography | push 2026-11-28 20:55 ICT; `origin/main` ยืนยัน SHA `598345932d6bc6d2cae23606eeca3d639620b383` |
 | `2caed36` | 2026-11-28 21:02:35 ICT | แปลง Symbol, Wingdings 1–3 และ Webdings เป็น Unicode เมื่อแสดงผลหรือ export ข้อความ | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
+| `d2943cf` | 2026-11-28 21:18:38 ICT | เพิ่มการติดตามผล save picker แบบ async; New/Open รอจนเขียนและปิดไฟล์สำเร็จ และแสดง prompt เมื่อผู้ใช้ยกเลิกหรือบันทึกผิดพลาด | push 2026-11-28 21:18:48 ICT; `origin/main` ยืนยัน SHA `d2943cf16f81785dda1fb8999bfe2707a35675ae` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
 
@@ -72,6 +73,29 @@ flowchart LR
 - **Define New Bullet:** Home › Paragraph › Bullets › Define New Bullet เลือกอักขระ, ฟอนต์, ขนาด, bold/italic, สี และแนวชิดซ้าย/กลาง/ขวา พร้อม preview. กด OK สร้าง list definition ของตัวเองให้ย่อหน้าที่เลือก จึงไม่เปลี่ยนรายการอื่นที่ใช้เครื่องหมายเดียวกัน; command `para.defineBullet` เมื่อส่งเพียง `char` ยังทำงาน toggle แบบเดิม.
 - **Sort ตาม locale:** ตัวเลขในตารางอ่านตามภาษาของ cell เช่น `1,5` ในภาษาโปแลนด์ หรือ `1,250.50` ในภาษาอังกฤษ; รองรับตัวคั่นหลักพัน, สกุลเงิน, `%` และเครื่องหมายลบแบบ en dash. ข้อความเรียงตาม alphabet ของภาษา รวม accents และอักษรเฉพาะ; ใช้กับ `para.sort`, `table.sort`, index entries/หัวอักษร และ bibliography.
 - **ฟอนต์สัญลักษณ์:** Unicode mappings ครอบคลุม Symbol, Wingdings, Wingdings 2, Wingdings 3 และ Webdings. เมื่อฟอนต์ต้นฉบับไม่มีหรือ glyph ไม่อยู่ใน fallback จะวาดและส่งออกเป็น Unicode; document ยังคงเก็บรหัสเดิมเพื่อรักษาความเข้ากันได้กับ Word.
+- **บันทึกบนเว็บ:** การบันทึกผ่าน File System Access API ใช้ ticket จน picker เขียนและปิดไฟล์เสร็จ. Save Changes จะพัก New/Open ไว้ระหว่างรอ; เมื่อบันทึกสำเร็จและเอกสารไม่มีการแก้ไขเพิ่ม จึงค่อยทำคำสั่งต่อ. การยกเลิกหรือเขียน/ปิดไม่สำเร็จจะคงเอกสารเดิมเป็น unsaved และนำ prompt กลับมาพร้อมเหตุผล; การดาวน์โหลดแบบ anchor ใน browser ที่ไม่มี picker ยังคงทำงานทันทีตามเดิม.
+
+```mermaid
+sequenceDiagram
+  actor User
+  participant App as Doc4Me
+  participant Picker as Browser save picker
+  User->>App: New/Open with unsaved changes
+  App->>User: Save Changes prompt
+  User->>App: Save
+  App->>Picker: Open picker and start save ticket
+  App-->>User: Wait while New/Open is held
+  Picker->>Picker: Write bytes and close file
+  alt Saved
+    Picker-->>App: Finish ticket: Saved
+    App->>App: Check document and revision
+    App->>User: Continue New/Open when unchanged
+  else Cancelled or failed
+    Picker-->>App: Finish ticket: Cancelled/Failed
+    App->>App: Keep old document unsaved
+    App->>User: Restore prompt with outcome
+  end
+```
 
 ```mermaid
 flowchart LR

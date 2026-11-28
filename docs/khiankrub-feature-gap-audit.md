@@ -1,6 +1,6 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:02 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `2caed36b6820874d75db2374356e5b0a7ffbb5ca` (`main`, 2026-11-28 21:02 ICT)
+อัปเดตเมื่อ **28 November 2026 21:18 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `d2943cf16f81785dda1fb8999bfe2707a35675ae` (`main`, 2026-11-28 21:18 ICT)
 
 ## วิธีเปรียบเทียบ
 
@@ -44,7 +44,7 @@
 | Canvas และการเลือก | คลิกปุ่มกลางเพื่อเลื่อนเอกสารตามระยะ pointer, หยุดด้วย Escape/ปุ่มอื่น/ล้อเลื่อน (`ui-egui/autoscroll.rs`) | มี edge auto-scroll ระหว่างลากเลือกข้อความ และ middle-click scroll ที่เคารพการยกเลิก gesture | พอร์ตแล้ว; `bd5a2c7` · push 2026-11-28 20:26 ICT |
 | รูปภาพ | Crop mode บน canvas พร้อม handles, preview ส่วนที่ถูกตัด, ลากคืนพื้นที่ภาพ และจบเป็น undo step เดียว (`ui-egui/crop.rs`) | Crop overlay/handles พร้อม preview; `picture.crop` รับ crop และขนาดใหม่ใน undo step เดียว | พอร์ตแล้ว; `5eaaeec` · push 2026-11-28 20:31 ICT |
 | จัดวางวัตถุ | Snap วัตถุไปยังขอบ/กึ่งกลางหน้า, margins และวัตถุอื่น พร้อมเส้น alignment guides (`ui-egui/guides.rs`) | ลาก/ปรับขนาดแล้ว snap พร้อมเส้นนำทาง; Alt ปิด snap, drawing grid มีลำดับความสำคัญ, ปิดได้ใน Options › Advanced | พอร์ตแล้ว; `e315da4` · push 2026-11-28 20:36 ICT |
-| บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | มี download callback และ dirty state; ยังไม่มี ticket/result flow สำหรับ save picker แบบ asynchronous | ค้าง |
+| บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | `AsyncSaves` รายงานผล Saved/Cancelled/Failed; คำสั่ง New/Open ที่ค้างจะทำต่อเมื่อเขียนไฟล์และปิดสำเร็จ โดยตรวจ document/revision; ถ้ายกเลิกหรือผิดพลาดจะคงเอกสารไว้เป็น unsaved และแสดงเหตุผล | พอร์ตแล้ว; `d2943cf` · push 2026-11-28 21:18 ICT |
 | อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | ยังไม่พบ update service, preference หรือ UI flow | ค้าง |
 | แก้ไขตัวอักษร | Character dialog แยกหน้า Font, Effects, Position, Background และ Border (`ui-egui/dialogs_character.rs`) | มี Font dialog และคำสั่งจัดรูปแบบหลายรายการ แต่ยังไม่มี dialog แบบหลายหน้าที่เทียบเท่าทั้งชุด | ค้างบางส่วน; ต้องเทียบ fields ต่อ |
 | สัญลักษณ์หัวข้อ | Define New Bullet dialog เลือก character, font, size, bold/italic, color และ alignment พร้อม preview (`ui-egui/dialogs_bullet.rs`) | เพิ่ม dialog ใน Home › Paragraph › Bullets; รูปแบบสร้าง private list definition และไม่กระทบรายการอื่น; การเรียก command เดิมที่ส่งแค่ `char` ยังคง toggle แบบเดิม | พอร์ตแล้ว; `5570d26` · push 2026-11-28 20:46 ICT |
@@ -90,6 +90,7 @@
 | `1eb5219` | 2026-11-28 20:51:09 ICT | เรียงค่าตัวเลขในตารางด้วย number parser ตามภาษาของ cell | push 2026-11-28 20:51 ICT; `origin/main` ยืนยัน SHA `1eb5219c18d71a31e5284d8da17459b63477fe0f` |
 | `5983459` | 2026-11-28 20:55:54 ICT | เพิ่ม language-aware collation ในการเรียงย่อหน้า ตาราง ดัชนี และ bibliography | push 2026-11-28 20:55 ICT; `origin/main` ยืนยัน SHA `598345932d6bc6d2cae23606eeca3d639620b383` |
 | `2caed36` | 2026-11-28 21:02:35 ICT | เพิ่ม Unicode mappings สำหรับ Symbol, Wingdings 1–3 และ Webdings ในการแสดงผล/ข้อความธรรมดา | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
+| `d2943cf` | 2026-11-28 21:18:38 ICT | เพิ่ม web async save tickets; Save Changes รอผล picker และคืน prompt พร้อมเหตุผลเมื่อบันทึกไม่สำเร็จ | push 2026-11-28 21:18:48 ICT; `origin/main` ยืนยัน SHA `d2943cf16f81785dda1fb8999bfe2707a35675ae` |
 
 `fd75ccb` commit เวลา 2026-11-28 16:20:21 ICT, push เวลา 2026-11-28 16:20 ICT; `git ls-remote origin refs/heads/main` คืน `fd75ccb4bee4622a59df53d736350d4fee9dc429`. เวลาทั้งหมดในรายงานใช้เขตเวลา Asia/Bangkok.
 
@@ -102,5 +103,5 @@
 ## การตรวจสอบ
 
 - Catalog source/target รอบก่อนเปรียบเทียบแล้ว: ไม่มี source-only command ID; behavioral gaps เพิ่มเติมอยู่ในตารางข้างต้น.
-- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check; locale sort `1eb5219` และ collation `5983459` ผ่าน doc/engine/UI/desktop/CLI/web check; symbol fonts `2caed36` ผ่าน doc/formats/layout/engine/UI/desktop/CLI/web check. ไม่ได้รันชุดทดสอบ.
+- `cargo check --locked --offline` ผ่านสำหรับ desktop, CLI, web, engine, UI, DOCX, render และ PDF ณ `6215d03`; middle-click `bd5a2c7` ผ่าน UI/desktop/web check; Crop `5eaaeec` ผ่าน engine/UI/desktop/web check; alignment guides `e315da4` ผ่าน UI/desktop/web check; Define New Bullet `5570d26` ผ่าน engine/UI/desktop/CLI/web check; locale sort `1eb5219` และ collation `5983459` ผ่าน doc/engine/UI/desktop/CLI/web check; symbol fonts `2caed36` ผ่าน doc/formats/layout/engine/UI/desktop/CLI/web check; async save `d2943cf` ผ่าน `cargo fmt --all -- --check`, `cargo check --locked --offline -p doc4me-ui-egui` และ `cargo check --locked --offline -p doc4me-web --target wasm32-unknown-unknown`. ไม่ได้รันชุดทดสอบ.
 - รายละเอียดความสามารถและภาพประกอบอยู่ใน [`changelog.md`](../changelog.md).
