@@ -1,10 +1,10 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:58 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf`
+อัปเดตเมื่อ **28 November 2026 22:07 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **777 รายการ** · latest verified code push `d372c4264aadda3126193210edbaabbfd033a553`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
-การเปรียบเทียบ catalog ณ รอบนี้อ่าน JSON จาก `doc4me-cli commands --json` และ `wordcraft-cli commands --json`: Khiankrub มี **655** IDs, Doc4Me มี **776** IDs, และไม่มี ID ของ Khiankrub ที่ขาดใน Doc4Me (Doc4Me มีคำสั่งเพิ่มอีก **121** IDs).
+การเปรียบเทียบ catalog ณ รอบนี้อ่าน JSON จาก `doc4me-cli commands --json` และ `wordcraft-cli commands --json`: Khiankrub มี **655** IDs, Doc4Me มี **777** IDs, และไม่มี ID ของ Khiankrub ที่ขาดใน Doc4Me (Doc4Me มีคำสั่งเพิ่มอีก **122** IDs).
 
 ## ภาพประกอบ
 
@@ -58,6 +58,7 @@ flowchart LR
 | `2caed36` | 2026-11-28 21:02:35 ICT | แปลง Symbol, Wingdings 1–3 และ Webdings เป็น Unicode เมื่อแสดงผลหรือ export ข้อความ | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
 | `d2943cf` | 2026-11-28 21:18:38 ICT | เพิ่มการติดตามผล save picker แบบ async; New/Open รอจนเขียนและปิดไฟล์สำเร็จ และแสดง prompt เมื่อผู้ใช้ยกเลิกหรือบันทึกผิดพลาด | push 2026-11-28 21:18:48 ICT; `origin/main` ยืนยัน SHA `d2943cf16f81785dda1fb8999bfe2707a35675ae` |
 | `f462f42` | 2026-11-28 21:35:45 ICT | เพิ่มการตรวจ GitHub release แบบขออนุญาตและรายวันบน desktop, คำสั่งตรวจเองจาก Help, แถบรุ่นใหม่และตัวเลือกข้ามรุ่น | push 2026-11-28 21:35:55 ICT; `origin/main` ยืนยัน SHA `f462f427708ab600cf782a30563960bfed956426` |
+| `d372c42` | 2026-11-28 22:07:04 ICT | เพิ่มแผง Formatting แบบปรับขนาดได้สำหรับ Text, Paragraph, Page และ Design; เปิด/ปิดจาก View และใช้ command เดิม | push 2026-11-28 22:07:23 ICT; `origin/main` ยืนยัน SHA `d372c4264aadda3126193210edbaabbfd033a553` |
 | `3a88721` | 2026-11-28 21:58:00 ICT | ขยาย Character dialog ให้มี Effects, Position, Background และ Border; เพิ่ม complex-script font/language, preview และ reset/cancel workflow | push 2026-11-28 21:58:10 ICT; `origin/main` ยืนยัน SHA `3a88721b43f7cd02cbceaf7ae984978f0f15e9cf` |
 
 เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); ทุก SHA ในรายการข้างต้นตรวจยืนยันกับ `origin/main` แล้วด้วย `git ls-remote origin refs/heads/main`.
@@ -100,6 +101,28 @@ flowchart LR
   D --> B
   C -->|Cancel| E[ปิดโดยไม่ใช้การแก้ไข]
   C -->|OK| F[ใช้ค่าที่เปลี่ยนเป็น action เดียว]
+```
+
+### รายการความสามารถที่เพิ่มใน `d372c42`
+
+- **Text:** เปลี่ยนฟอนต์/ขนาด/ตัวพิมพ์, รูปแบบตัวหนา/เอียง/ขีดเส้นใต้/ขีดฆ่า, สีตัวอักษรและ highlight, character border, Thai digits และ text effects; เปิด Character dialog ได้จาก pane.
+- **Paragraph:** ตั้ง alignment, bullets/numbering/multilevel list, ระยะบรรทัดและระยะก่อน/หลังย่อหน้า, indents, borders/shading และ text-flow flags เช่น widow/orphan, keep with next และ page break before.
+- **Page:** ปรับกระดาษ, แนวตั้ง/แนวนอน, margins, columns และ section/page breaks; ตั้ง different-first-page และเข้าสู่ header หรือ Page Setup.
+- **Design:** ใช้ theme/colors/fonts, style-set gallery, paragraph spacing, effects, default theme และ page background เช่น watermark, page color และ page borders.
+- **การเปิดแผง:** View › Show › Formatting Pane เปิดแผงขวาที่ปรับขนาดได้; แท็บ Text, Paragraph, Page และ Design คงแท็บล่าสุดไว้ใน UI state. แผงปิดอยู่โดยค่าเริ่มต้นและแต่ละ control ใช้ command เดิมของ ribbon จึงมีผลลัพธ์ร่วมกัน.
+- **Command:** เพิ่ม `view.formatPane` สำหรับแสดง/ซ่อนแผง.
+
+```mermaid
+flowchart LR
+  A[View › Formatting Pane] --> B[Text]
+  A --> C[Paragraph]
+  A --> D[Page]
+  A --> E[Design]
+  B --> F[คำสั่งจัดรูปแบบเดิม]
+  C --> F
+  D --> F
+  E --> F
+  F --> G[เอกสารและ ribbon แสดงค่าเดียวกัน]
 ```
 
 ### รายการความสามารถที่เพิ่มใน `6215d03`
@@ -205,7 +228,7 @@ flowchart LR
   S --> D[เก็บรหัสต้นฉบับไว้ในเอกสาร]
 ```
 
-รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 776 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
+รายละเอียดช่องว่างพฤติกรรมที่ยังต้องพอร์ตจาก Khiankrub อยู่ใน [รายงานตรวจสอบช่องว่าง](docs/khiankrub-feature-gap-audit.md); command catalog 777 รายการยังคงเป็นรายการคำสั่ง ณ push นี้.
 
 ## รายการความสามารถทั้งหมด
 
@@ -2228,7 +2251,7 @@ flowchart LR
 
 ## การตรวจสอบ
 
-- เปรียบเทียบ catalog: Khiankrub **655** IDs; Doc4Me **776** IDs; missing source IDs **0**.
+- เปรียบเทียบ catalog: Khiankrub **655** IDs; Doc4Me **777** IDs; missing source IDs **0**.
 - รายการช่องว่างที่เคยระบุ 22 รายการและสถานะการพอร์ตแสดงในรายงานช่องว่างแยกต่างหาก.
-- `cargo check --locked --offline -p doc4me-engine -p doc4me-ui-egui` ผ่านใน environment นี้; ไม่ได้รันชุดทดสอบ.
-- commit `fd75ccb` ของชุดปัจจุบัน push แล้วเวลา 2026-11-28 16:20 ICT; SHA บน `origin/main` ตรงกับ `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
+- `cargo fmt --all -- --check`, `git diff --check`, native `cargo check --locked --offline -p doc4me-ui-egui -p doc4me`, และ web `cargo check --locked --offline -p doc4me-web --target wasm32-unknown-unknown` ผ่าน; ไม่ได้รันชุดทดสอบ.
+- commit `d372c4264aadda3126193210edbaabbfd033a553` commit เวลา 2026-11-28 22:07:04 ICT และ push/ยืนยันกับ `origin/main` เวลา 22:07:23 ICT.
