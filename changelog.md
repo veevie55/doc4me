@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:18 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `d2943cf16f81785dda1fb8999bfe2707a35675ae`
+อัปเดตเมื่อ **28 November 2026 21:35 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ** · latest verified code push `f462f427708ab600cf782a30563960bfed956426`
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -57,8 +57,30 @@ flowchart LR
 | `5983459` | 2026-11-28 20:55:54 ICT | เพิ่ม collation ตามภาษาให้ paragraph/table sort, ดัชนีและหัวอักษร รวมถึง bibliography | push 2026-11-28 20:55 ICT; `origin/main` ยืนยัน SHA `598345932d6bc6d2cae23606eeca3d639620b383` |
 | `2caed36` | 2026-11-28 21:02:35 ICT | แปลง Symbol, Wingdings 1–3 และ Webdings เป็น Unicode เมื่อแสดงผลหรือ export ข้อความ | push 2026-11-28 21:02 ICT; `origin/main` ยืนยัน SHA `2caed36b6820874d75db2374356e5b0a7ffbb5ca` |
 | `d2943cf` | 2026-11-28 21:18:38 ICT | เพิ่มการติดตามผล save picker แบบ async; New/Open รอจนเขียนและปิดไฟล์สำเร็จ และแสดง prompt เมื่อผู้ใช้ยกเลิกหรือบันทึกผิดพลาด | push 2026-11-28 21:18:48 ICT; `origin/main` ยืนยัน SHA `d2943cf16f81785dda1fb8999bfe2707a35675ae` |
+| `f462f42` | 2026-11-28 21:35:45 ICT | เพิ่มการตรวจ GitHub release แบบขออนุญาตและรายวันบน desktop, คำสั่งตรวจเองจาก Help, แถบรุ่นใหม่และตัวเลือกข้ามรุ่น | push 2026-11-28 21:35:55 ICT; `origin/main` ยืนยัน SHA `f462f427708ab600cf782a30563960bfed956426` |
 
-เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
+เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); ทุก SHA ในรายการข้างต้นตรวจยืนยันกับ `origin/main` แล้วด้วย `git ls-remote origin refs/heads/main`.
+
+### รายการความสามารถที่เพิ่มใน `f462f42`
+
+- **ตรวจรุ่นใหม่:** Help › Check for Updates ขอข้อมูล latest release จาก GitHub และเทียบเลขรุ่นปัจจุบันกับ tag; แจ้งรุ่นล่าสุด, รุ่นใหม่ หรือสาเหตุที่ตรวจไม่ได้.
+- **ตรวจอัตโนมัติ:** เมื่อเปิดแอปครั้งแรกจะแสดงตัวเลือกให้อนุญาต; หากเลือกไว้จะตรวจไม่เกินวันละครั้งตอนเริ่มแอป และเปลี่ยนได้ที่ File › Options › General.
+- **แจ้งรุ่นใหม่:** แถบใต้ ribbon ให้เปิดหน้า release, ข้ามรุ่นนั้น หรือปิดแถบ; การดาวน์โหลดและติดตั้งยังอยู่ในการตัดสินใจของผู้ใช้.
+- **ขอบเขตการเชื่อมต่อ:** มี UI เฉพาะ desktop และทุก request ผ่าน online-services policy ของ Trust Center; ส่งเฉพาะคำขอ release โดยไม่แนบเอกสารหรือข้อมูลส่วนตัว.
+- **คำสั่ง UI:** `ui.checkForUpdates` เริ่มการตรวจจาก Help, `ui.checkUpdates` อ่าน/ตั้งค่าการตรวจรายวัน และ `ui.update` จัดการการเปิดหน้า release, ข้ามรุ่น หรือปิดแถบ.
+
+```mermaid
+flowchart LR
+  A[เปิด Doc4Me] --> B{อนุญาตตรวจรายวัน?}
+  B -->|ใช่| C[ถาม GitHub ไม่เกินวันละครั้ง]
+  B -->|ไม่| D[ตรวจเองได้จาก Help]
+  C --> E{พบรุ่นใหม่?}
+  D --> E
+  E -->|ใช่| F[แสดงแถบรุ่นใหม่]
+  F --> G[เปิดหน้า release]
+  F --> H[ข้ามรุ่น หรือปิดแถบ]
+  E -->|ไม่| I[แจ้งว่าเป็นรุ่นล่าสุด]
+```
 
 ### รายการความสามารถที่เพิ่มใน `6215d03`
 

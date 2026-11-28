@@ -1,6 +1,6 @@
 # รายงานตรวจสอบช่องว่างฟีเจอร์ Khiankrub → Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 21:18 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `d2943cf16f81785dda1fb8999bfe2707a35675ae` (`main`, 2026-11-28 21:18 ICT)
+อัปเดตเมื่อ **28 November 2026 21:35 น. (Asia/Bangkok)** · source `/workspace/kruboffice/sources/khiankrub` (`ab6d86a`) · target `veevie55/doc4me` · latest verified code push `f462f427708ab600cf782a30563960bfed956426` (`main`, 2026-11-28 21:35 ICT)
 
 ## วิธีเปรียบเทียบ
 
@@ -45,7 +45,7 @@
 | รูปภาพ | Crop mode บน canvas พร้อม handles, preview ส่วนที่ถูกตัด, ลากคืนพื้นที่ภาพ และจบเป็น undo step เดียว (`ui-egui/crop.rs`) | Crop overlay/handles พร้อม preview; `picture.crop` รับ crop และขนาดใหม่ใน undo step เดียว | พอร์ตแล้ว; `5eaaeec` · push 2026-11-28 20:31 ICT |
 | จัดวางวัตถุ | Snap วัตถุไปยังขอบ/กึ่งกลางหน้า, margins และวัตถุอื่น พร้อมเส้น alignment guides (`ui-egui/guides.rs`) | ลาก/ปรับขนาดแล้ว snap พร้อมเส้นนำทาง; Alt ปิด snap, drawing grid มีลำดับความสำคัญ, ปิดได้ใน Options › Advanced | พอร์ตแล้ว; `e315da4` · push 2026-11-28 20:36 ICT |
 | บันทึกบนเว็บ | ติดตาม save ticket ที่เสร็จภายหลัง; Save Changes รอผล picker และคงเอกสารไว้เมื่อยกเลิก/ผิดพลาด (`ui-egui/async_saves.rs`) | `AsyncSaves` รายงานผล Saved/Cancelled/Failed; คำสั่ง New/Open ที่ค้างจะทำต่อเมื่อเขียนไฟล์และปิดสำเร็จ โดยตรวจ document/revision; ถ้ายกเลิกหรือผิดพลาดจะคงเอกสารไว้เป็น unsaved และแสดงเหตุผล | พอร์ตแล้ว; `d2943cf` · push 2026-11-28 21:18 ICT |
-| อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | ยังไม่พบ update service, preference หรือ UI flow | ค้าง |
+| อัปเดตแอป | ตรวจ GitHub release อัตโนมัติรายวัน/จาก Help และแสดงรุ่นใหม่ให้เปิดหน้าดาวน์โหลด (`ui-egui/updates.rs`) | desktop มี dialog ขออนุญาตครั้งแรก, ตรวจรายวันเมื่อเปิดใช้, Help ตรวจเอง, แถบรุ่นใหม่พร้อม Download/Skip/Close; ตรวจผ่าน Trust Center และเปิดหน้า release โดยไม่ดาวน์โหลดหรือติดตั้งเอง | พอร์ตแล้ว; `f462f42` · commit 2026-11-28 21:35:45 ICT · push/ยืนยัน `origin/main` 2026-11-28 21:35:55 ICT (`f462f427708ab600cf782a30563960bfed956426`) |
 | แก้ไขตัวอักษร | Character dialog แยกหน้า Font, Effects, Position, Background และ Border (`ui-egui/dialogs_character.rs`) | มี Font dialog และคำสั่งจัดรูปแบบหลายรายการ แต่ยังไม่มี dialog แบบหลายหน้าที่เทียบเท่าทั้งชุด | ค้างบางส่วน; ต้องเทียบ fields ต่อ |
 | สัญลักษณ์หัวข้อ | Define New Bullet dialog เลือก character, font, size, bold/italic, color และ alignment พร้อม preview (`ui-egui/dialogs_bullet.rs`) | เพิ่ม dialog ใน Home › Paragraph › Bullets; รูปแบบสร้าง private list definition และไม่กระทบรายการอื่น; การเรียก command เดิมที่ส่งแค่ `char` ยังคง toggle แบบเดิม | พอร์ตแล้ว; `5570d26` · push 2026-11-28 20:46 ICT |
 | แผงจัดรูปแบบ | แผงเต็มความสูงสำหรับข้อความ/ย่อหน้า/หน้า/ดีไซน์ (`ui-egui/format_panes.rs`) | มี Ribbon และ contextual panes บางชนิด; ยังไม่มีชุดแผงดังกล่าว | ค้างด้าน UI |
