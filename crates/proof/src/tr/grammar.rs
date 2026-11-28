@@ -298,4 +298,3 @@ pub fn turkish_capitalize(s: &str) -> String {
     out.push_str(chars.as_str());
     out
 }
-

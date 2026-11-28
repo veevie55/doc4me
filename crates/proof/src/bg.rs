@@ -61,4 +61,3 @@ pub fn points(word: &[char]) -> Vec<usize> {
     }
     out
 }
-

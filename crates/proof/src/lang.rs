@@ -40,10 +40,8 @@ pub enum ProofLang {
 
 impl ProofLang {
     /// Languages with spelling support, in display order (Hunspell dictionaries may need to be installed).
-    pub const PROOFED: [ProofLang; 9] = [
-        ProofLang::En, ProofLang::Pl, ProofLang::Th, ProofLang::Pt, ProofLang::It,
-        ProofLang::Hr, ProofLang::Tr, ProofLang::Ru, ProofLang::Cs,
-    ];
+    pub const PROOFED: [ProofLang; 9] =
+        [ProofLang::En, ProofLang::Pl, ProofLang::Th, ProofLang::Pt, ProofLang::It, ProofLang::Hr, ProofLang::Tr, ProofLang::Ru, ProofLang::Cs];
 
     /// The proofing language of a BCP 47 tag (`pl-PL`, `en_GB`, `PL`…). Only the primary subtag
     /// counts. No tag (or an empty one) is English, Doc4Me's default editing language.

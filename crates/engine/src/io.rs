@@ -105,7 +105,19 @@ pub fn open_bytes(name: &str, bytes: &[u8]) -> Result<Document, String> {
 /// whether the file was encrypted. Without the password needed the error satisfies
 /// [`needs_password`]; with a wrong one, [`wrong_password`].
 pub fn open_bytes_with(name: &str, bytes: &[u8], password: Option<&str>) -> Result<(Document, bool), String> {
-    let (doc, encrypted) = open_bytes_read(name, bytes, password)?;
+    open_bytes_in(name, bytes, password, &doc4me_geom::Region::default())
+}
+
+/// The page used when opening a format without page-size metadata (plain text, Markdown, HTML).
+pub fn region_page(region: &doc4me_geom::Region) -> doc4me_doc::section::SectionProps {
+    let (_, page_w, page_h) = region.paper();
+    doc4me_doc::section::SectionProps { page_w, page_h, ..Default::default() }
+}
+
+/// [`open_bytes_with`] using the region's paper for formats without page-size metadata.
+pub fn open_bytes_in(name: &str, bytes: &[u8], password: Option<&str>, region: &doc4me_geom::Region) -> Result<(Document, bool), String> {
+    let page = region_page(region);
+    let (doc, encrypted) = open_bytes_read(name, bytes, password, &page)?;
     register_embedded_fonts(&doc);
     Ok((doc, encrypted))
 }
@@ -125,7 +137,7 @@ pub fn register_embedded_fonts(doc: &Document) {
     log::info!("{added} embedded font faces added");
 }
 
-fn open_bytes_read(name: &str, bytes: &[u8], password: Option<&str>) -> Result<(Document, bool), String> {
+fn open_bytes_read(name: &str, bytes: &[u8], password: Option<&str>, page: &doc4me_doc::section::SectionProps) -> Result<(Document, bool), String> {
     let ext = ext_of(name);
     if matches!(ext.as_str(), "docx" | "docm" | "dotx" | "dotm" | "doc" | "dot") && doc4me_docx::is_encrypted(bytes) {
         let mut doc = doc4me_docx::read_with_password(bytes, password).map_err(|e| e.to_string())?;
@@ -133,20 +145,20 @@ fn open_bytes_read(name: &str, bytes: &[u8], password: Option<&str>) -> Result<(
         return Ok((doc, true));
     }
     if ext.is_empty() {
-        return open_by_content(name, &ext, bytes, password);
+        return open_by_content(name, &ext, bytes, password, page);
     }
     let mut doc = match ext.as_str() {
         // Plain text goes through the formats importer: BOMs, unmarked UTF-16, Windows-1252.
-        "txt" | "text" | "" => doc4me_formats::txt::import(bytes),
+        "txt" | "text" | "" => doc4me_formats::txt::import_on(bytes, page),
         "json" => {
             // Run lengths from a file may overflow, fall short or split a character (WordCraft #1337).
             let mut d = serde_json::from_slice::<Document>(bytes).map_err(|e| format!("{name}: {e}"))?;
             d.normalize_runs();
             d
         }
-        other => match crate::io_ext::open(other, bytes) {
+        other => match crate::io_ext::open(other, bytes, page) {
             Some(r) => r?,
-            None => return open_by_content(name, other, bytes, password),
+            None => return open_by_content(name, other, bytes, password, page),
         },
     };
     doc.ensure_nonempty();
@@ -194,7 +206,13 @@ pub(crate) fn fit_pictures(doc: &mut Document) {
 /// opened by what it holds, as Word does: a Word document or RTF file by its signature, any
 /// other text through the plain-text import with encoding detection (#569). Anything else is
 /// refused with a clear error rather than shown as garbage.
-fn open_by_content(name: &str, ext: &str, bytes: &[u8], password: Option<&str>) -> Result<(Document, bool), String> {
+fn open_by_content(
+    name: &str,
+    ext: &str,
+    bytes: &[u8],
+    password: Option<&str>,
+    page: &doc4me_doc::section::SectionProps,
+) -> Result<(Document, bool), String> {
     const ZIP: &[u8] = b"PK\x03\x04";
     const OLE: &[u8] = &[0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1];
     let (mut doc, encrypted) = if bytes.starts_with(OLE) && doc4me_docx::is_encrypted(bytes) {
@@ -206,7 +224,7 @@ fn open_by_content(name: &str, ext: &str, bytes: &[u8], password: Option<&str>) 
     } else if bytes.starts_with(b"{\\rtf") {
         (doc4me_formats::rtf::import(bytes)?, false)
     } else if doc4me_formats::txt::is_text(bytes) {
-        (doc4me_formats::txt::import(bytes), false)
+        (doc4me_formats::txt::import_on(bytes, page), false)
     } else if ext.is_empty() {
         return Err(format!("{name}: not a document or text file Doc4Me can open"));
     } else {
@@ -255,6 +273,12 @@ pub fn open_path(path: &std::path::Path) -> Result<Document, String> {
 /// [`open_path`] for a file that may be password-protected (see [`open_bytes_with`]).
 #[cfg(not(target_arch = "wasm32"))]
 pub fn open_path_with(path: &std::path::Path, password: Option<&str>) -> Result<(Document, bool), String> {
+    open_path_in(path, password, &doc4me_geom::Region::default())
+}
+
+/// [`open_path_with`] using the region's paper for formats without page-size metadata.
+#[cfg(not(target_arch = "wasm32"))]
+pub fn open_path_in(path: &std::path::Path, password: Option<&str>, region: &doc4me_geom::Region) -> Result<(Document, bool), String> {
     crate::file_access::check_read(&path.to_string_lossy())?;
     // Only a regular file, read at most 2 GB + 1 byte: a named pipe would block and a device such
     // as `/dev/zero` never ends (WordCraft #3666).
@@ -270,12 +294,12 @@ pub fn open_path_with(path: &std::path::Path, password: Option<&str>) -> Result<
     if matches!(ext_of(&name).as_str(), "html" | "htm" | "xhtml") {
         // Pictures referenced by a relative path load from beside the HTML file.
         let images = LocalImages::new(path.parent().unwrap_or(std::path::Path::new("")));
-        let mut doc = doc4me_formats::html::import_with(&doc4me_formats::html::decode(&bytes), &|src| images.load(src));
+        let mut doc = doc4me_formats::html::import_on(&doc4me_formats::html::decode(&bytes), &|src| images.load(src), &region_page(region));
         fit_pictures(&mut doc);
         doc.ensure_nonempty();
         return Ok((doc, false));
     }
-    open_bytes_with(&name, &bytes, password)
+    open_bytes_in(&name, &bytes, password, region)
 }
 
 /// The pictures an HTML file names by a path relative to its folder.
@@ -550,6 +574,11 @@ pub fn list_dir(path: &str) -> Result<Vec<DirEntry>, String> {
 
 #[cfg(target_arch = "wasm32")]
 pub fn open_path_with(path: &std::path::Path, _password: Option<&str>) -> Result<(Document, bool), String> {
+    Err(format!("{}: files are opened through the browser on the web", path.display()))
+}
+
+#[cfg(target_arch = "wasm32")]
+pub fn open_path_in(path: &std::path::Path, _password: Option<&str>, _region: &doc4me_geom::Region) -> Result<(Document, bool), String> {
     Err(format!("{}: files are opened through the browser on the web", path.display()))
 }
 

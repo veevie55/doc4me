@@ -44,10 +44,16 @@ USAGE:
 ";
 
 fn open(path: &str) -> Result<Session, String> {
-    let doc = doc4me_engine::io::open_path(std::path::Path::new(path))?;
+    let region = system_region();
+    let (doc, _) = doc4me_engine::io::open_path_in(std::path::Path::new(path), None, &region)?;
     let mut s = Session::new(doc);
+    s.system_region = region;
     s.path = Some(path.into());
     Ok(s)
+}
+
+fn system_region() -> doc4me_engine::Region {
+    doc4me_engine::Region::from_locale_vars(|name| std::env::var(name).ok(), sys_locale::get_locale)
 }
 
 /// The body text for `text`: the plain-text export, so list items keep their bullet or number label.
@@ -243,11 +249,11 @@ fn run(args: &[String]) -> Result<(), Failure> {
             let mut s = match (arg_value(&rest, "--file"), arg_value(&rest, "--template")) {
                 (Some(f), _) => open(&f)?,
                 (None, Some(t)) => {
-                    let mut s = Session::new(doc4me_doc::Document::new());
+                    let mut s = Session::new_blank_in(system_region());
                     s.run("file.new", &json!({"template": t})).map_err(|e| e.to_string())?;
                     s
                 }
-                _ => Session::new(doc4me_doc::Document::new()),
+                _ => Session::new_blank_in(system_region()),
             };
             if let Some(name) = arg_value(&rest, "--author") {
                 set_author(&mut s, &name)?;

@@ -77,6 +77,86 @@ pub fn rotate_handle_at(f: egui::Rect, deg: f32, p: Pos2) -> bool {
     rotate_handle(f, deg).distance(p) <= GRAB_R
 }
 
+/// Where a rounded rectangle's corner handle sits: the end of the top-left curve.
+pub fn corner_handle(f: egui::Rect, deg: f32, radius: f32) -> Pos2 {
+    let radius = radius.clamp(0.0, (f.width().min(f.height()) / 2.0).max(0.0));
+    turn(pos2(f.min.x + radius, f.min.y), f.center(), deg)
+}
+
+/// Whether the corner handle is closer to `p` than any resize handle.
+pub fn corner_handle_wins(f: egui::Rect, deg: f32, at: Pos2, p: Pos2) -> bool {
+    let d = at.distance(p);
+    d <= GRAB_R && handles(f).all(|h| h.at_turned(f, deg).distance(p) > d)
+}
+
+/// Draw the rounded rectangle's gold corner-adjustment handle.
+pub fn paint_corner_handle(painter: &Painter, t: &Tokens, at: Pos2) {
+    const GOLD: egui::Color32 = egui::Color32::from_rgb(0xF2, 0xB7, 0x05);
+    const EDGE: egui::Color32 = egui::Color32::from_rgb(0x7A, 0x5B, 0x00);
+    let points = |center: Pos2, radius: f32| {
+        vec![center + vec2(0.0, -radius), center + vec2(radius, 0.0), center + vec2(0.0, radius), center + vec2(-radius, 0.0)]
+    };
+    let radius = HANDLE_R + 0.5;
+    painter.add(egui::Shape::convex_polygon(points(at + vec2(0.0, 0.75), radius + 1.0), t.handle_shadow, Stroke::NONE));
+    painter.add(egui::Shape::convex_polygon(points(at, radius), GOLD, Stroke::new(1.0, EDGE)));
+}
+
+/// Draw the rounded outline and handle preview during a corner-radius drag.
+pub fn paint_cornering(painter: &Painter, t: &Tokens, f: egui::Rect, deg: f32, radius: f32) {
+    let radius = radius.clamp(0.0, (f.width().min(f.height()) / 2.0).max(0.0));
+    let center = f.center();
+    let mut points = Vec::with_capacity(37);
+    let arcs = [
+        (pos2(f.max.x - radius, f.min.y + radius), -90.0f32),
+        (pos2(f.max.x - radius, f.max.y - radius), 0.0),
+        (pos2(f.min.x + radius, f.max.y - radius), 90.0),
+        (pos2(f.min.x + radius, f.min.y + radius), 180.0),
+    ];
+    for (origin, start) in arcs {
+        for i in 0..=8 {
+            let angle = (start + 90.0 * i as f32 / 8.0).to_radians();
+            points.push(turn(origin + vec2(angle.cos(), angle.sin()) * radius, center, deg));
+        }
+    }
+    if let Some(first) = points.first().copied() {
+        points.push(first);
+        painter.add(egui::Shape::line(points, Stroke::new(1.25, t.accent)));
+    }
+    paint_corner_handle(painter, t, corner_handle(f, deg, radius));
+}
+
+/// Screen-space corners of a frame, clockwise from the top-left.
+pub fn corners(f: egui::Rect, deg: f32) -> [Pos2; 4] {
+    let c = outline(f, deg);
+    [c[0], c[1], c[2], c[3]]
+}
+
+/// A locked frame with a small padlock marker and no editable handles.
+pub fn paint_locked(painter: &Painter, t: &Tokens, f: egui::Rect, deg: f32) {
+    let corners = corners(f, deg);
+    let stroke = Stroke::new(1.25, egui::Color32::from_gray(135));
+    painter.add(egui::Shape::line(vec![corners[0], corners[1], corners[2], corners[3], corners[0]], stroke));
+    paint_lock_badge(painter, t, corners[1] + vec2(1.0, -1.0));
+}
+
+/// Draw the small padlock badge used for a locked object.
+pub fn paint_lock_badge(painter: &Painter, t: &Tokens, center: Pos2) {
+    let badge = egui::Rect::from_center_size(center, vec2(17.0, 17.0));
+    painter.rect_filled(badge, 3.0, t.panel);
+    painter.rect_stroke(badge, 3.0, Stroke::new(1.0, egui::Color32::from_gray(125)), egui::StrokeKind::Outside);
+    let body = egui::Rect::from_min_size(center + vec2(-4.0, 0.0), vec2(8.0, 6.0));
+    painter.rect_filled(body, 1.0, egui::Color32::from_gray(95));
+    let shackle = [
+        center + vec2(-2.5, 0.5),
+        center + vec2(-2.5, -2.0),
+        center + vec2(-1.5, -3.5),
+        center + vec2(1.5, -3.5),
+        center + vec2(2.5, -2.0),
+        center + vec2(2.5, 0.5),
+    ];
+    painter.add(egui::Shape::line(shackle.to_vec(), Stroke::new(1.5, egui::Color32::from_gray(80))));
+}
+
 /// What a press grabbed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Grab {
@@ -84,6 +164,8 @@ pub enum Grab {
     Resize(Handle),
     /// The rotation handle.
     Rotate,
+    /// A rounded rectangle's corner handle.
+    Corner,
 }
 
 impl Grab {
@@ -92,6 +174,7 @@ impl Grab {
             Grab::Move => CursorIcon::Move,
             Grab::Resize(h) => h.cursor(),
             Grab::Rotate => CursorIcon::Crosshair,
+            Grab::Corner => CursorIcon::PointingHand,
         }
     }
 }
@@ -182,12 +265,32 @@ pub struct Drag {
     pub moved: bool,
     /// The frame's angle (degrees clockwise): as it started, or where turning puts it.
     pub deg: f32,
+    /// The rounded rectangle's current corner radius, in points.
+    pub corner: f32,
 }
 
 impl Drag {
     /// A drag of the frame at `start` on `page`, turned `deg`, grabbed at screen point `press`.
     pub fn new(grab: Grab, page: usize, start: Rect, deg: f32, press: Pos2) -> Drag {
-        Drag { grab, page, start, press, to_page: page, rect: start, moved: false, deg: doc4me_geom::normalize_degrees(deg) }
+        Drag { grab, page, start, press, to_page: page, rect: start, moved: false, deg: doc4me_geom::normalize_degrees(deg), corner: 0.0 }
+    }
+
+    /// Seed a corner-radius drag with the shape's current radius.
+    pub fn with_corner(self, corner: f32) -> Drag {
+        Drag { corner, ..self }
+    }
+
+    /// Follow the pointer along the frame's own top edge to change its corner radius.
+    pub fn corner_to(&mut self, pointer: Pos2, pages: &[egui::Rect], scale: f32) {
+        if !self.moved && pointer.distance(self.press) < DRAG_START {
+            return;
+        }
+        let Some(page) = pages.get(self.page) else { return };
+        self.moved = true;
+        let f = to_screen(*page, scale, self.start);
+        let p = turn(pointer, f.center(), -self.deg);
+        let max = (self.start.w.min(self.start.h) / 2.0).max(0.0);
+        self.corner = ((p.x - f.min.x) / scale.max(0.01)).clamp(0.0, max);
     }
 
     /// Follow the pointer with the rotation handle: the frame turns to face it, by whole degrees
@@ -233,7 +336,7 @@ impl Drag {
                 self.to_page = self.page;
                 self.rect = resized_turned(self.start, self.deg, h, d.x, d.y, min, keep_aspect);
             }
-            Grab::Rotate => {}
+            Grab::Rotate | Grab::Corner => {}
         }
     }
 }

@@ -65,4 +65,3 @@ pub fn points(c: &[char]) -> Vec<usize> {
     }
     out
 }
-

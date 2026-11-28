@@ -120,4 +120,3 @@ pub fn is_correct_with(d: &TrDict, word: &str) -> bool {
     // Compound words separated by hyphens (e.g., `afyon-karahisar`)
     w.contains('-') && w.split('-').all(|part| part.is_empty() || is_correct_with(d, part))
 }
-

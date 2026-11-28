@@ -117,14 +117,18 @@ fn bounded(spec: &ChartSpec) -> ChartSpec {
     ChartSpec {
         kind: spec.kind,
         categories: spec.categories.iter().take(MAX_POINTS).cloned().collect(),
-        series: spec.series.iter().take(MAX_SERIES)
+        series: spec
+            .series
+            .iter()
+            .take(MAX_SERIES)
             .map(|s| ChartSeries { name: s.name.clone(), values: s.values.iter().take(MAX_POINTS).copied().collect() })
             .collect(),
         title: spec.title.clone(),
         legend: spec.legend,
         data_labels: spec.data_labels,
         format: spec.format.clone(),
-    }.sanitized()
+    }
+    .sanitized()
 }
 
 /// The chart type element and the series in it, then the axes.
@@ -497,12 +501,8 @@ pub(crate) fn formats_of(space: &El, chart: &El, plot: &El, ty: &El) -> kf::Form
 /// The points of a `c:strLit` / `c:numLit` (or a cache) as texts by index, `ptCount` long.
 fn literal(e: &El) -> Vec<String> {
     let Some(lit) = e.els().find(|c| matches!(c.name.as_str(), "c:strLit" | "c:numLit")) else { return Vec::new() };
-    let n = lit
-        .child("c:ptCount")
-        .and_then(|c| c.attr("val"))
-        .and_then(|v| v.parse::<usize>().ok())
-        .unwrap_or(0)
-        .min(doc4me_doc::chart::MAX_POINTS + 1);
+    let n =
+        lit.child("c:ptCount").and_then(|c| c.attr("val")).and_then(|v| v.parse::<usize>().ok()).unwrap_or(0).min(doc4me_doc::chart::MAX_POINTS + 1);
     let mut out = vec![String::new(); n];
     for p in lit.children("c:pt") {
         if let Some(slot) = p.attr("idx").and_then(|i| i.parse::<usize>().ok()).and_then(|i| out.get_mut(i)) {

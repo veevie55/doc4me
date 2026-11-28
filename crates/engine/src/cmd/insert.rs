@@ -65,8 +65,10 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("layout.pageNumberPosition", "Page Number Position", "Insert › Header & Footer › Page Number", page_number_position)
             .params(r#"{"vertical"?: "top|bottom", "fromEdge"?: pt (from that paper edge to the number's baseline; default 72), "horizontal"?: "left|center|right", "fromSide"?: pt (from that paper edge to the number's near edge; default 72; centred ignores it), "firstPage"?: bool (false: no number on each section's first page; default true)} — the page number in a frame placed from the paper's edges, in the caret's section; replaces one placed before"#),
         CommandSpec::new("insert.pageNumber", "Page Number", "Insert › Header & Footer", page_number).params(r#"{"position"?: "top|bottom|current", "align"?: "left|center|right", "format"?: "x of y"}"#),
-        CommandSpec::new("insert.editHeader", "Edit Header", "Insert › Header & Footer › Header", |s, _| edit_hf(s, true)).pure(),
-        CommandSpec::new("insert.editFooter", "Edit Footer", "Insert › Header & Footer › Footer", |s, _| edit_hf(s, false)).pure(),
+        CommandSpec::new("insert.editHeader", "Edit Header", "Insert › Header & Footer › Header", |s, v| edit_hf(s, v, true))
+            .params(r#"{"page"?: number (0-based; default: the caret's section)} → {story}; enters the header shown on that page, creating it if missing"#),
+        CommandSpec::new("insert.editFooter", "Edit Footer", "Insert › Header & Footer › Footer", |s, v| edit_hf(s, v, false))
+            .params(r#"{"page"?: number (0-based; default: the caret's section)} → {story}; enters the footer shown on that page, creating it if missing"#),
         CommandSpec::new("insert.createHeader", "Header", "Insert › Header & Footer", |s, v| create_hf(s, v, true))
             .params(r#"{"page"?: number (0-based; default: the caret's section)} → {story}; creates the page's header if missing and enters it"#),
         CommandSpec::new("insert.createFooter", "Footer", "Insert › Header & Footer", |s, v| create_hf(s, v, false))
@@ -711,6 +713,14 @@ fn create_hf(s: &mut Session, v: &Value, header: bool) -> CmdResult {
     Ok(json!({"story": id}))
 }
 
+/// The story displayed by the page for its selected header/footer slot, if one exists.
+fn shown_hf(s: &mut Session, page: usize, header: bool) -> Result<Option<u32>, CmdError> {
+    let layout = s.layout();
+    let page = layout.pages.get(page).ok_or_else(|| CmdError::Params(format!("no page {page}")))?;
+    let id = if header { page.header_story } else { page.footer_story };
+    Ok(id.filter(|id| s.doc.parts.contains_key(id)))
+}
+
 fn page_hf_part(s: &mut Session, page: usize, header: bool) -> Result<u32, CmdError> {
     let layout = s.layout();
     let pg = layout.pages.get(page).ok_or_else(|| CmdError::Params(format!("no page {page}")))?;
@@ -811,8 +821,30 @@ fn header_footer(s: &mut Session, v: &Value, header: bool) -> CmdResult {
     Ok(json!({"story": id}))
 }
 
-fn edit_hf(s: &mut Session, header: bool) -> CmdResult {
-    let id = hf_part(s, header);
+fn edit_hf(s: &mut Session, v: &Value, header: bool) -> CmdResult {
+    let page = p::u64(v, "page").map(|page| usize::try_from(page).unwrap_or(usize::MAX));
+    let shown = match page {
+        Some(page) => shown_hf(s, page, header)?,
+        None => {
+            let block = s.sel.focus.path.0.first().copied().unwrap_or(0) as usize;
+            s.doc
+                .sections()
+                .into_iter()
+                .find(|(end, _)| block <= *end)
+                .or_else(|| s.doc.sections().pop())
+                .map(|(_, section)| if header { section.headers.default } else { section.footers.default })
+                .flatten()
+                .filter(|id| s.doc.parts.contains_key(id))
+        }
+    };
+    let Some(id) = shown else {
+        let cmd = if header { "insert.createHeader" } else { "insert.createFooter" };
+        let params = page.map_or_else(|| json!({}), |page| json!({ "page": page }));
+        return s.run(cmd, &params);
+    };
+    if let Some(page) = page {
+        s.page_hint = page;
+    }
     s.touch();
     s.sel = Selection::caret(s.doc.end_of(StoryRef::Part(id)));
     Ok(json!({"story": id}))

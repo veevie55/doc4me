@@ -21,5 +21,3 @@ pub fn is_vietnamese_word(word: &str) -> bool {
     // Two marks stacked on one letter (decomposed `ế` = e + circumflex + acute) are Vietnamese too.
     word.chars().any(vietnamese_letter) || word.chars().zip(word.chars().skip(1)).any(|(a, b)| combining(a) && combining(b))
 }
-
-

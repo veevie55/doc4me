@@ -9,9 +9,9 @@ use serde::de::Deserializer;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
-use crate::WordApp;
 use crate::dialogs::buttons;
 use crate::theme::{Tokens, semibold};
+use crate::{WordApp, options::MeasureExt as _};
 
 /// Number styles a level can have: OOXML name and a sample.
 const STYLES: [(&str, &str); 13] = [
@@ -234,7 +234,7 @@ impl ListForm {
 pub fn define_list(app: &mut WordApp, ui: &mut Ui, f: &mut ListForm) -> bool {
     let unit = crate::options::unit();
     fn len(v: &mut f32, unit: doc4me_geom::Unit) -> egui::DragValue<'_> {
-        egui::DragValue::new(v).speed(0.01).range(-10.0..=22.0).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2)
+        egui::DragValue::new(v).speed(0.01).range(-10.0..=22.0).clamp_existing_to_range(false).measure(unit).max_decimals(2)
     }
     let heading = |ui: &mut Ui, s: &str| {
         ui.add_space(4.0);

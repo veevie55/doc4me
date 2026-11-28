@@ -8,8 +8,8 @@ use egui::{Ui, vec2};
 use serde::Serialize;
 use serde_json::{Map, Value, json};
 
-use crate::WordApp;
 use crate::theme::semibold;
+use crate::{WordApp, options::MeasureExt as _};
 
 /// Horizontal and vertical alignments, and what positions are measured from, with their labels.
 const H_ALIGN: [(&str, &str); 5] = [("left", "Left"), ("center", "Centered"), ("right", "Right"), ("inside", "Inside"), ("outside", "Outside")];
@@ -392,7 +392,7 @@ fn heading(ui: &mut Ui, s: &str) {
 fn length(v: &mut f32, lo: f32, hi: f32) -> egui::DragValue<'_> {
     let unit = crate::options::unit();
     let k = unit.pt_per_unit();
-    egui::DragValue::new(v).speed(0.01).range(lo / k..=hi / k).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2)
+    egui::DragValue::new(v).speed(0.01).range(lo / k..=hi / k).clamp_existing_to_range(false).measure(unit).max_decimals(2)
 }
 
 fn choice(ui: &mut Ui, id: &str, value: &mut String, options: &[(&str, &str)]) {

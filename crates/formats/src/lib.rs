@@ -46,6 +46,22 @@ pub fn import(ext: &str, bytes: &[u8]) -> Option<Result<Document, String>> {
     }))
 }
 
+/// Import page-less formats using the caller's default page. Formats with their own page
+/// settings keep those settings.
+pub fn import_on(ext: &str, bytes: &[u8], page: &doc4me_doc::section::SectionProps) -> Option<Result<Document, String>> {
+    let ext = ext.trim_start_matches('.').to_ascii_lowercase();
+    let r = match ext.as_str() {
+        "txt" | "text" => Ok(txt::import_on(bytes, page)),
+        "md" | "markdown" => Ok(markdown::import_on(&txt::decode(bytes), page)),
+        "html" | "htm" | "xhtml" => Ok(html::import_on(&html::decode(bytes), &|_| None, page)),
+        _ => return import(&ext, bytes),
+    };
+    Some(r.map(|mut d| {
+        d.ensure_nonempty();
+        d
+    }))
+}
+
 /// Export `doc` in the format named by `ext`. `None` = not our format.
 pub fn export(ext: &str, doc: &Document) -> Option<Result<Vec<u8>, String>> {
     let ext = ext.trim_start_matches('.').to_ascii_lowercase();

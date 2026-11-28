@@ -75,6 +75,11 @@ pub fn reload_dictionary() {
     *DICT.write().unwrap_or_else(|e| e.into_inner()) = None;
 }
 
+/// The `.dic` file of the Hunspell dictionary found now, if installed.
+pub fn installed_path() -> Option<std::path::PathBuf> {
+    crate::hunspell::find(NAMES).map(|(_, dic)| dic)
+}
+
 /// Is a Russian dictionary available (spelling is checked)?
 pub fn has_dictionary() -> bool {
     !dictionary().is_empty()
@@ -350,4 +355,3 @@ fn hyphenated(d: &AffixDict, w: &str) -> bool {
         i != last && linking_stem(d, p)
     })
 }
-

@@ -68,13 +68,7 @@ pub fn search_dirs() -> Vec<PathBuf> {
         if let Some(h) = &home {
             dirs.push(h.join(".local/share/hunspell"));
         }
-        for d in [
-            "/usr/share/hunspell",
-            "/usr/share/myspell",
-            "/usr/share/myspell/dicts",
-            "/usr/local/share/hunspell",
-            "/usr/local/share/myspell",
-        ] {
+        for d in ["/usr/share/hunspell", "/usr/share/myspell", "/usr/share/myspell/dicts", "/usr/local/share/hunspell", "/usr/local/share/myspell"] {
             dirs.push(PathBuf::from(d));
         }
         for base in ["/usr/lib/libreoffice/share/extensions", "/opt/libreoffice/share/extensions"] {

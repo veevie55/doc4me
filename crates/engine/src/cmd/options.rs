@@ -21,7 +21,7 @@ pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("file.options", "Options", "File", options)
             .params(
-                r#"{"pane"?: "general|display|proofing|save|typography|language|accessibility|advanced|trustCenter|agents", "author"?: string, "initials"?: string, "units"?: "inches|centimeters|millimeters|points|picas", "typingReplacesSelection"?: bool, "insertKeyOvertype"?: bool, "overtype"?: bool, "marks"?: {"tabs"?: bool, "spaces"?: bool, "paragraphs"?: bool, "hidden"?: bool}, "checkSpelling"?: bool, "markGrammar"?: bool, "ignoreUppercase"?: bool, "ignoreNumbers"?: bool, "ignoreInternet"?: bool, "addWords"?: [string], "removeWords"?: [string], "pasteSame"|"pasteBetween"|"pasteOther"?: "keep|merge|text" (Paste within this document, between documents, from other programs), "logicalCursor"?: bool, "rtlDefault"?: bool (Bidirectional text), "grammarRules"?: {"capitalization"|"repeated"|"wordForms"|"punctuation"|"spacing"?: bool} (Writing Style › Settings)} — with any setting it changes them and opens nothing; without, it opens File › Options (at `pane`). Returns the settings."#,
+                r#"{"pane"?: "general|display|proofing|save|typography|language|accessibility|advanced|trustCenter|agents", "author"?: string, "initials"?: string, "units"?: "inches|centimeters|millimeters|points|picas|auto" (auto: follows the region), "region"?: string (locale tag such as pl-PL; auto follows the system), "dictionariesFolder"?: string (folder of Hunspell .aff/.dic files searched first; auto searches the system locations), "typingReplacesSelection"?: bool, "insertKeyOvertype"?: bool, "overtype"?: bool, "marks"?: {"tabs"?: bool, "spaces"?: bool, "paragraphs"?: bool, "hidden"?: bool}, "checkSpelling"?: bool, "markGrammar"?: bool, "ignoreUppercase"?: bool, "ignoreNumbers"?: bool, "ignoreInternet"?: bool, "addWords"?: [string], "removeWords"?: [string], "pasteSame"|"pasteBetween"|"pasteOther"?: "keep|merge|text" (Paste within this document, between documents, from other programs), "logicalCursor"?: bool, "rtlDefault"?: bool (Bidirectional text), "grammarRules"?: {"capitalization"|"repeated"|"wordForms"|"punctuation"|"spacing"?: bool} (Writing Style › Settings)} — with any setting it changes them and opens nothing; without, it opens File › Options (at `pane`). Returns the settings."#,
             )
             .pure(),
         CommandSpec::new("text.overtype", "Overtype", "File › Options › Advanced", |s, v| {
@@ -41,6 +41,7 @@ pub fn specs() -> Vec<CommandSpec> {
 
 /// Longest folder path File Locations keeps, in bytes.
 const MAX_FOLDER_PATH: usize = 4096;
+const MAX_DICTIONARY_FOLDER_CHARS: usize = 4096;
 
 /// A File Locations folder: `Some(None)` clears it, `Some(Some(path))` sets it to an existing
 /// folder (absolute), `None` leaves it.
@@ -61,6 +62,36 @@ fn folder_param(v: &Value, k: &str) -> Result<Option<Option<String>>, CmdError> 
         }
         Some(_) => Err(CmdError::Params(format!("`{k}` must be a folder path or null"))),
     }
+}
+
+fn dictionaries_folder(v: &Value) -> Result<Option<Option<String>>, CmdError> {
+    let Some(value) = v.get("dictionariesFolder") else { return Ok(None) };
+    let Some(folder) = value.as_str() else {
+        if value.is_null() {
+            return Ok(Some(None));
+        }
+        return Err(CmdError::Params("`dictionariesFolder` must be a folder path or `auto`".into()));
+    };
+    let folder = folder.trim();
+    if folder.is_empty() || folder.eq_ignore_ascii_case("auto") {
+        return Ok(Some(None));
+    }
+    if folder.chars().count() > MAX_DICTIONARY_FOLDER_CHARS || folder.chars().any(char::is_control) {
+        return Err(CmdError::Params("`dictionariesFolder` isn't a folder path".into()));
+    }
+    let home = std::env::var_os("HOME").filter(|h| !h.is_empty()).map(std::path::PathBuf::from);
+    let path = match (folder.strip_prefix("~/"), home) {
+        (Some(rest), Some(home)) => home.join(rest),
+        _ => std::path::PathBuf::from(folder),
+    };
+    if !path.is_absolute() {
+        return Err(CmdError::Params(format!("`dictionariesFolder`: {folder:?} isn't a full path")));
+    }
+    crate::file_access::check_read(&path.to_string_lossy()).map_err(CmdError::Failed)?;
+    if !path.is_dir() {
+        return Err(CmdError::Failed(format!("no folder at {}", path.display())));
+    }
+    Ok(Some(Some(path.to_string_lossy().into_owned())))
 }
 
 /// Word's File Locations: where Open and Save As (Documents) and Insert Picture (Pictures) start.
@@ -173,11 +204,23 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
     };
     let units = match v.get("units") {
         None | Some(Value::Null) => None,
-        Some(u) => Some(
+        Some(Value::String(u)) if u.eq_ignore_ascii_case("auto") => Some(None),
+        Some(u) => Some(Some(
             serde_json::from_value::<doc4me_geom::Unit>(u.clone())
-                .map_err(|_| CmdError::Params("`units` is one of inches, centimeters, millimeters, points, picas".into()))?,
-        ),
+                .map_err(|_| CmdError::Params("`units` is one of inches, centimeters, millimeters, points, picas, auto".into()))?,
+        )),
     };
+    let region = match v.get("region") {
+        None => None,
+        Some(Value::Null) => Some(None),
+        Some(Value::String(tag)) if tag.trim().is_empty() || tag.trim().eq_ignore_ascii_case("auto") => Some(None),
+        Some(Value::String(tag)) => {
+            let parsed = doc4me_geom::Region::from_tag(tag);
+            Some(Some(if parsed.territory.is_empty() { parsed.language } else { format!("{}-{}", parsed.language, parsed.territory) }))
+        }
+        Some(_) => return Err(CmdError::Params("`region` must be a locale tag or `auto`".into())),
+    };
+    let dictionaries_folder = dictionaries_folder(v)?;
     let mut flag_values = Vec::new();
     for (k, f) in flags() {
         if let Some(b) = bool_param(v, k)? {
@@ -230,6 +273,8 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
     let setting = author.is_some()
         || initials.is_some()
         || units.is_some()
+        || region.is_some()
+        || dictionaries_folder.is_some()
         || !flag_values.is_empty()
         || !mark_values.is_empty()
         || check_spelling.is_some()
@@ -244,7 +289,20 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
         s.initials = i;
     }
     if let Some(u) = units {
-        s.prefs.units = u;
+        match u {
+            Some(unit) => {
+                s.prefs.units = unit;
+                s.prefs.units_auto = false;
+            }
+            None => s.prefs.units_auto = true,
+        }
+    }
+    if let Some(region) = region {
+        s.prefs.region = region;
+    }
+    if let Some(folder) = dictionaries_folder {
+        s.prefs.dictionaries_folder = folder;
+        doc4me_proof::set_dictionaries_folder(s.prefs.dictionaries_folder.as_deref().map(std::path::PathBuf::from));
     }
     for (f, b) in flag_values {
         *f(&mut s.prefs) = b;
@@ -286,10 +344,15 @@ fn options(s: &mut Session, v: &Value) -> CmdResult {
 /// The settings `file.options` reads and sets.
 pub fn current(s: &Session) -> Value {
     let pr = &s.prefs;
+    let region = s.region();
+    let effective_region = if region.territory.is_empty() { region.language } else { format!("{}-{}", region.language, region.territory) };
     json!({
         "author": s.author,
         "initials": s.user_initials(),
-        "units": pr.units,
+        "units": if pr.units_auto { json!("auto") } else { json!(pr.units) },
+        "region": pr.region,
+        "effectiveRegion": effective_region,
+        "dictionariesFolder": pr.dictionaries_folder,
         "typingReplacesSelection": pr.typing_replaces_selection,
         "insertKeyOvertype": pr.insert_key_overtype,
         "overtype": pr.overtype,
@@ -306,6 +369,9 @@ pub fn current(s: &Session) -> Value {
         "rtlDefault": pr.rtl_default,
         "grammarRules": GRAMMAR_RULES.iter().map(|k| (k.to_string(), json!(!pr.grammar_off.iter().any(|x| x == k)))).collect::<serde_json::Map<_, _>>(),
         "dictionary": doc4me_proof::user_dictionary(),
+        "dictionaries": doc4me_proof::installed_dictionaries().into_iter().map(|(lang, file)| {
+            json!({"language": lang.code(), "file": file.map(|p| p.to_string_lossy().into_owned())})
+        }).collect::<Vec<_>>(),
     })
 }
 

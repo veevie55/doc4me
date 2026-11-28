@@ -4,7 +4,7 @@ use doc4me_geom::Unit;
 use egui::{Color32, Painter, Pos2, Rect, vec2};
 
 pub fn readout_text(unit: Unit, resizing: bool, r: doc4me_geom::Rect) -> String {
-    let n = |pt: f32| unit.format(pt);
+    let n = |pt: f32| unit.format_with(pt, crate::options::decimal());
     if resizing {
         format!("{} {}   {} {}", tl!("W:"), n(r.w), tl!("H:"), n(r.h))
     } else {
@@ -38,9 +38,9 @@ pub fn menu_lines(app: &mut crate::WordApp) -> Option<[String; 2]> {
         format!(
             "{} {}   {} {}",
             tl!("Right:"),
-            unit.format(page_width - object.rect.x - object.rect.w),
+            unit.format_with(page_width - object.rect.x - object.rect.w, crate::options::decimal()),
             tl!("Bottom:"),
-            unit.format(page.h - object.rect.y - object.rect.h)
+            unit.format_with(page.h - object.rect.y - object.rect.h, crate::options::decimal())
         ),
     ])
 }

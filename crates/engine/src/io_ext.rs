@@ -3,14 +3,14 @@
 use doc4me_doc::Document;
 
 /// Open a format other than plain text / JSON.
-pub fn open(ext: &str, bytes: &[u8]) -> Option<Result<Document, String>> {
+pub fn open(ext: &str, bytes: &[u8], page: &doc4me_doc::section::SectionProps) -> Option<Result<Document, String>> {
     match ext {
         "docx" | "docm" | "dotx" | "dotm" => Some(doc4me_docx::read(bytes).map_err(|e| e.to_string())),
         "doc" | "dot" => Some(doc4me_docbin::read(bytes).map_err(|e| e.to_string())),
         // Word XML Document (Flat OPC) or Word 2003 XML, told apart by the root element.
         "xml" => Some(doc4me_docx::read_xml(bytes).map_err(|e| e.to_string())),
         // HTML, Markdown, ODT, RTF…: pictures fit the text width (see `io::fit_pictures`).
-        other => doc4me_formats::import(other, bytes).map(|r| {
+        other => doc4me_formats::import_on(other, bytes, page).map(|r| {
             r.map(|mut doc| {
                 crate::io::fit_pictures(&mut doc);
                 doc

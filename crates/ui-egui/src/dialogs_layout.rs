@@ -14,8 +14,8 @@ use serde_json::{Value, json};
 use doc4me_doc::section::LineNumberRestart;
 use doc4me_engine::cmd::mailings::{ENVELOPE_SIZES, LABEL_PRODUCTS};
 
-use crate::WordApp;
 use crate::theme::semibold;
+use crate::{WordApp, options::MeasureExt as _};
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "form", rename_all = "camelCase")]
@@ -176,7 +176,7 @@ fn page_number_ui(app: &mut WordApp, ui: &mut Ui, f: &mut PageNumberForm) -> boo
     let section = doc4me_engine::cmd::insert::page_number_section(&mut app.session);
     let (page_w, page_h) = (section.page_w.max(1.0), section.page_h.max(1.0));
     fn length(value: &mut f32, max_pt: f32) -> crate::numfield::NumField<'_> {
-        crate::numfield::NumField::new(value).speed(0.01).range(0.0..=max_pt / unit().pt_per_unit()).suffix(unit().suffix()).max_decimals(2)
+        crate::numfield::NumField::new(value).speed(0.01).range(0.0..=max_pt / unit().pt_per_unit()).measure(unit()).max_decimals(2)
     }
     ui.label(egui::RichText::new(tl!("Place the page number at a set distance from the edges of the paper.")).weak());
     ui.horizontal_top(|ui| {
@@ -360,7 +360,7 @@ fn line_numbers_ui(app: &mut WordApp, ui: &mut Ui, f: &mut LineNumbersForm) -> b
                         .speed(0.01)
                         .range(0.0..=22.0 * 72.0 / unit().pt_per_unit())
                         .clamp_existing_to_range(false)
-                        .suffix(unit().suffix())
+                        .measure(unit())
                         .max_decimals(2),
                 );
             });
@@ -421,7 +421,7 @@ fn hyphenation_ui(app: &mut WordApp, ui: &mut Ui, f: &mut HyphenationForm) -> bo
                 .speed(0.01)
                 .range(0.0..=22.0 * 72.0 / unit().pt_per_unit())
                 .clamp_existing_to_range(false)
-                .suffix(unit().suffix())
+                .measure(unit())
                 .max_decimals(2),
         );
         ui.end_row();

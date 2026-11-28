@@ -11,6 +11,16 @@ use crate::theme::{Tokens, regular, semibold};
 
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
+    if crate::hf_pane::wanted(app, ui.ctx()) {
+        egui::Panel::right("hf_pane")
+            .default_size(290.0)
+            .resizable(true)
+            .frame(egui::Frame::NONE.fill(t.panel).inner_margin(10).stroke(Stroke::new(1.0, t.border)))
+            .show(ui, |ui| {
+                crate::ribbon_keys::stop(ui, crate::ribbon_keys::Region::Pane, ui.max_rect());
+                crate::hf_pane::show(app, ui);
+            });
+    }
     crate::lists_pane::show(app, ui);
     crate::chart_format_pane::show(app, ui);
     // SmartArt Design › Text Pane, while a SmartArt graphic Doc4Me can edit is selected.

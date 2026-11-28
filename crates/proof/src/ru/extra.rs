@@ -151,4 +151,3 @@ fn forms(base: &str, class: &str) -> Vec<String> {
         _ => vec![base.to_string()],
     }
 }
-

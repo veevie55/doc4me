@@ -7,8 +7,8 @@ use egui::{Color32, Rect, Sense, Stroke, Ui, pos2, vec2};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
-use crate::WordApp;
 use crate::theme::{Tokens, regular, semibold};
+use crate::{WordApp, options::MeasureExt as _};
 
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "form", rename_all = "camelCase")]
@@ -539,7 +539,7 @@ fn columns_ui(app: &mut WordApp, ui: &mut Ui, f: &mut ColumnsForm) -> bool {
                                 .speed(0.01)
                                 .range(ColumnsForm::min_w()..=max)
                                 .clamp_existing_to_range(false)
-                                .suffix(unit.suffix())
+                                .measure(unit)
                                 .max_decimals(2);
                             if ui.add_enabled(editable, w).changed() {
                                 changed = Some(i);
@@ -549,7 +549,7 @@ fn columns_ui(app: &mut WordApp, ui: &mut Ui, f: &mut ColumnsForm) -> bool {
                                     .speed(0.01)
                                     .range(0.0..=max)
                                     .clamp_existing_to_range(false)
-                                    .suffix(unit.suffix())
+                                    .measure(unit)
                                     .max_decimals(2);
                                 if ui.add_enabled(editable, s).changed() {
                                     changed = Some(i);

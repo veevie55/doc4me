@@ -12,8 +12,8 @@ use serde_json::{Value, json};
 
 use doc4me_engine::Password;
 
-use crate::WordApp;
 use crate::theme::{Tokens, semibold};
+use crate::{WordApp, options::MeasureExt as _};
 
 /// The Find and Replace dialog's search options beyond the first row (#543).
 #[derive(Clone, Debug, Default, Serialize)]
@@ -1996,14 +1996,14 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         ui.add(
                             egui::DragValue::new(left)
                                 .speed(3.6 / crate::options::unit().pt_per_unit())
-                                .suffix(crate::options::unit().suffix())
+                                .measure(crate::options::unit())
                                 .max_decimals(2),
                         );
                         ui.label(tl!(r_label));
                         ui.add(
                             egui::DragValue::new(right)
                                 .speed(3.6 / crate::options::unit().pt_per_unit())
-                                .suffix(crate::options::unit().suffix())
+                                .measure(crate::options::unit())
                                 .max_decimals(2),
                         );
                         ui.end_row();
@@ -2011,7 +2011,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         ui.add(
                             egui::DragValue::new(first)
                                 .speed(3.6 / crate::options::unit().pt_per_unit())
-                                .suffix(crate::options::unit().suffix())
+                                .measure(crate::options::unit())
                                 .max_decimals(2),
                         );
                         ui.end_row();
@@ -2306,35 +2306,23 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                 ui.label(tl!("Top:"));
                 ui.add(bounded_field(
                     80.0,
-                    egui::DragValue::new(top)
-                        .speed(3.6 / crate::options::unit().pt_per_unit())
-                        .suffix(crate::options::unit().suffix())
-                        .max_decimals(2),
+                    egui::DragValue::new(top).speed(3.6 / crate::options::unit().pt_per_unit()).measure(crate::options::unit()).max_decimals(2),
                 ));
                 ui.label(tl!("Bottom:"));
                 ui.add(bounded_field(
                     80.0,
-                    egui::DragValue::new(bottom)
-                        .speed(3.6 / crate::options::unit().pt_per_unit())
-                        .suffix(crate::options::unit().suffix())
-                        .max_decimals(2),
+                    egui::DragValue::new(bottom).speed(3.6 / crate::options::unit().pt_per_unit()).measure(crate::options::unit()).max_decimals(2),
                 ));
                 ui.end_row();
                 ui.label(if *mirror { tl!("Inside:") } else { tl!("Left:") });
                 ui.add(bounded_field(
                     80.0,
-                    egui::DragValue::new(left)
-                        .speed(3.6 / crate::options::unit().pt_per_unit())
-                        .suffix(crate::options::unit().suffix())
-                        .max_decimals(2),
+                    egui::DragValue::new(left).speed(3.6 / crate::options::unit().pt_per_unit()).measure(crate::options::unit()).max_decimals(2),
                 ));
                 ui.label(if *mirror { tl!("Outside:") } else { tl!("Right:") });
                 ui.add(bounded_field(
                     80.0,
-                    egui::DragValue::new(right)
-                        .speed(3.6 / crate::options::unit().pt_per_unit())
-                        .suffix(crate::options::unit().suffix())
-                        .max_decimals(2),
+                    egui::DragValue::new(right).speed(3.6 / crate::options::unit().pt_per_unit()).measure(crate::options::unit()).max_decimals(2),
                 ));
                 ui.end_row();
                 ui.label(tl!("Gutter:"));
@@ -2343,7 +2331,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     egui::DragValue::new(gutter)
                         .range(0.0..=1000.0)
                         .speed(3.6 / crate::options::unit().pt_per_unit())
-                        .suffix(crate::options::unit().suffix())
+                        .measure(crate::options::unit())
                         .max_decimals(2),
                 ));
                 ui.end_row();
@@ -3415,7 +3403,7 @@ fn table_properties(ui: &mut Ui, f: &mut TableForm) -> Option<&'static str> {
     let mut sub = None;
     let unit = crate::options::unit();
     fn len(v: &mut f32, lo: f32, unit: doc4me_geom::Unit) -> egui::DragValue<'_> {
-        egui::DragValue::new(v).speed(0.01).range(lo..=22.0).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2)
+        egui::DragValue::new(v).speed(0.01).range(lo..=22.0).clamp_existing_to_range(false).measure(unit).max_decimals(2)
     }
     let heading = |ui: &mut Ui, s: &str| {
         ui.add_space(4.0);
@@ -3436,7 +3424,7 @@ fn table_properties(ui: &mut Ui, f: &mut TableForm) -> Option<&'static str> {
         ui.label(tl!("Indent from left:"));
         ui.add_enabled(
             f.align == "left",
-            egui::DragValue::new(&mut f.indent).speed(0.01).range(-11.0..=22.0).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2),
+            egui::DragValue::new(&mut f.indent).speed(0.01).range(-11.0..=22.0).clamp_existing_to_range(false).measure(unit).max_decimals(2),
         );
         ui.end_row();
         ui.label(tl!("Table direction:"));

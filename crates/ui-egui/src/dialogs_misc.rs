@@ -11,8 +11,8 @@ use egui::{Ui, vec2};
 use serde::Serialize;
 use serde_json::{Value, json};
 
-use crate::WordApp;
 use crate::theme::semibold;
+use crate::{WordApp, options::MeasureExt as _};
 
 #[derive(Clone, Debug, PartialEq, Serialize)]
 #[serde(tag = "form", rename_all = "camelCase")]
@@ -179,7 +179,7 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut MiscDialog) -> bool {
                             .speed(0.01)
                             .range(0.5 / unit.pt_per_unit()..=100.0 / unit.pt_per_unit())
                             .clamp_existing_to_range(false)
-                            .suffix(unit.suffix())
+                            .measure(unit)
                             .max_decimals(2),
                     );
                     ui.end_row();
@@ -395,7 +395,7 @@ pub fn body(app: &mut WordApp, ui: &mut Ui, d: &mut MiscDialog) -> bool {
 fn length(v: &mut f32, lo: f32, hi: f32) -> egui::DragValue<'_> {
     let unit = crate::options::unit();
     let k = unit.pt_per_unit();
-    egui::DragValue::new(v).speed(0.01).range(lo / k..=hi / k).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2)
+    egui::DragValue::new(v).speed(0.01).range(lo / k..=hi / k).clamp_existing_to_range(false).measure(unit).max_decimals(2)
 }
 
 /// One axis of Table Positioning: the position (an alignment or an offset) and what it's

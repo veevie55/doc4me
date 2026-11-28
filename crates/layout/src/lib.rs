@@ -472,8 +472,16 @@ pub fn turned_sheet<'a>(doc: &Document, sections: &[(usize, &'a SectionProps)], 
     let (_, sect) = sections.get(i)?;
     let landscape = |s: &SectionProps| s.page_w > s.page_h + 1.0;
     let portrait = |s: &SectionProps| s.page_h > s.page_w + 1.0;
-    if !landscape(sect) || !turns_landscape_headers(doc) { return None; }
-    sections.get(..i).unwrap_or(&[]).iter().rev().map(|(_, s)| *s).find(|s| portrait(s))
+    if !landscape(sect) || !turns_landscape_headers(doc) {
+        return None;
+    }
+    sections
+        .get(..i)
+        .unwrap_or(&[])
+        .iter()
+        .rev()
+        .map(|(_, s)| *s)
+        .find(|s| portrait(s))
         .or_else(|| sections.get(i + 1..).unwrap_or(&[]).iter().map(|(_, s)| *s).find(|s| portrait(s)))
 }
 
@@ -5174,7 +5182,9 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
         let w = gs.text_width();
         let turn = |items: &mut Vec<Placed>| {
             if sheet.is_some() {
-                for it in items.iter_mut() { it.turn(TextDirection::Down, sect.page_w, 0.0); }
+                for it in items.iter_mut() {
+                    it.turn(TextDirection::Down, sect.page_w, 0.0);
+                }
             }
         };
         if let Some(id) = hid

@@ -89,6 +89,13 @@ pub fn import(bytes: &[u8]) -> Document {
     Document::from_text(&clean)
 }
 
+/// Import plain text on the supplied page; text files contain no page-size information.
+pub fn import_on(bytes: &[u8], page: &doc4me_doc::section::SectionProps) -> Document {
+    let mut doc = import(bytes);
+    doc.last_section = page.clone();
+    doc
+}
+
 fn blocks_text(blocks: &[FBlock], out: &mut Vec<String>, lists: &mut ListCounter, depth: usize) {
     for b in blocks {
         match b {

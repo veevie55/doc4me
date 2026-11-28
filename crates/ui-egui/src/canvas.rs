@@ -135,6 +135,10 @@ pub struct CanvasState {
     pub(crate) table_resize: Option<crate::table_resize::ResizeDrag>,
     /// A table selection area or move handle being dragged (`table_mouse`).
     pub(crate) table_drag: Option<crate::table_mouse::TableDrag>,
+    /// The kind of tab stop a click on the ruler places (the selector in the rulers' corner).
+    pub tab_kind: doc4me_doc::props::TabAlign,
+    /// A tab stop being placed or dragged on the ruler.
+    pub(crate) tab_drag: Option<crate::ruler_tabs::TabDrag>,
     /// The last key ran an Alt shortcut: the text its key sends (it may arrive a frame later)
     /// isn't typed. The next key press clears it.
     pub(crate) swallow_text: bool,
@@ -240,6 +244,8 @@ impl Default for CanvasState {
             table_stroke: None,
             table_resize: None,
             table_drag: None,
+            tab_kind: Default::default(),
+            tab_drag: None,
             link_from: None,
             a11y: Default::default(),
         }
@@ -1135,17 +1141,46 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 painter.image(tex.id(), visual_sr, Rect::from_min_max(pos2(0.0, 0.0), pos2(1.0, 1.0)), Color32::WHITE);
             }
             let page_scale = page_screen_scale(visual_sr, page, geo.scale);
-            // Header/footer editing chrome.
-            if let StoryRef::Part(id) = app.session.sel.focus.story {
+            // Header/footer editing chrome, including section labels and Same as Previous state.
+            if editing_header_footer(app, &layout)
+                && let Some(labels) = doc4me_engine::cmd::hf::page_labels(&app.session, &layout, i)
+            {
                 let sect_body = page.body;
-                if page.header_story == Some(id) || page.footer_story == Some(id) {
-                    let hy = visual_sr.min.y + sect_body.y * page_scale - 4.0;
-                    let fy = visual_sr.min.y + sect_body.bottom() * page_scale + 4.0;
-                    for (y, label) in [(hy, "Header"), (fy, "Footer")] {
-                        dashed(&painter, pos2(visual_sr.min.x, y), pos2(visual_sr.max.x, y), Stroke::new(1.0, t.accent));
-                        let tr = Rect::from_min_size(pos2(visual_sr.min.x + 2.0, if label == "Header" { y } else { y - 18.0 }), vec2(52.0, 18.0));
-                        painter.rect_filled(tr, 2.0, t.checked);
-                        painter.text(tr.center(), egui::Align2::CENTER_CENTER, tl!(label), regular(11.0), t.accent_text);
+                let hy = visual_sr.min.y + sect_body.y * page_scale - 4.0;
+                let fy = visual_sr.min.y + sect_body.bottom() * page_scale + 4.0;
+                let k = page_scale.clamp(0.55, 1.0);
+                let (tag_h, font) = (18.0 * k, regular(11.0 * k));
+                if page.hf_turned {
+                    let hx = visual_sr.min.x + sect_body.right() * page_scale + 4.0;
+                    let fx = visual_sr.min.x + sect_body.x * page_scale - 4.0;
+                    for ((x, header), (label, linked)) in [(hx, true), (fx, false)].into_iter().zip(labels.clone()) {
+                        dashed(&painter, pos2(x, visual_sr.min.y), pos2(x, visual_sr.max.y), Stroke::new(1.0, t.accent));
+                        let mut top = visual_sr.min.y + 2.0;
+                        for text in std::iter::once(hf_label(&label)).chain(linked.then(|| tl!("Same as Previous").to_string())) {
+                            let galley = painter.layout_no_wrap(text, font.clone(), t.accent_text);
+                            let w = galley.size().x + 12.0 * k;
+                            let tx = if header { visual_sr.max.x - 2.0 - w } else { visual_sr.min.x + 2.0 };
+                            let tr = Rect::from_min_size(pos2(tx, top), vec2(w, tag_h));
+                            painter.rect_filled(tr, 2.0, t.checked);
+                            painter.galley(pos2(tr.min.x + 6.0 * k, tr.center().y - galley.size().y / 2.0), galley, t.accent_text);
+                            top += tag_h + 2.0;
+                        }
+                    }
+                }
+                for ((y, header), (label, linked)) in [(hy, true), (fy, false)].into_iter().zip(labels).filter(|_| !page.hf_turned) {
+                    dashed(&painter, pos2(visual_sr.min.x, y), pos2(visual_sr.max.x, y), Stroke::new(1.0, t.accent));
+                    let top = if header { y - tag_h } else { y };
+                    let tag = |painter: &egui::Painter, text: &str, left: bool| {
+                        let galley = painter.layout_no_wrap(text.to_string(), font.clone(), t.accent_text);
+                        let w = galley.size().x + 12.0 * k;
+                        let x = if left { visual_sr.min.x + 2.0 } else { visual_sr.max.x - 2.0 - w };
+                        let rect = Rect::from_min_size(pos2(x, top), vec2(w, tag_h));
+                        painter.rect_filled(rect, 2.0, t.checked);
+                        painter.galley(pos2(rect.min.x + 6.0 * k, rect.center().y - galley.size().y / 2.0), galley, t.accent_text);
+                    };
+                    tag(&painter, &hf_label(&label), true);
+                    if linked {
+                        tag(&painter, &tl!("Same as Previous"), false);
                     }
                 }
             }
@@ -2384,9 +2419,11 @@ fn paint_text_drop(app: &WordApp, painter: &egui::Painter, t: &Tokens, layout: &
 fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layout: &DocLayout, scale: f32) {
     let t = Tokens::get(ui.ctx());
     let p = ui.painter();
-    p.rect_filled(Rect::from_min_max(pos2(v.min.x, h.min.y), pos2(v.max.x, h.max.y)), 0.0, t.canvas);
+    let corner = Rect::from_min_max(pos2(v.min.x, h.min.y), pos2(v.max.x, h.max.y));
+    p.rect_filled(corner, 0.0, t.canvas);
     p.rect_filled(h, 0.0, t.canvas);
     p.rect_filled(v, 0.0, t.canvas);
+    crate::ruler_tabs::selector(app, ui, corner);
     let pi = app.session.page_hint.min(layout.pages.len().saturating_sub(1));
     let (Some(page), Some(pr)) = (layout.pages.get(pi), rects.get(pi)) else { return };
     let scale = page_screen_scale(*pr, page, scale);
@@ -2400,7 +2437,7 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
     hp.rect_filled(text, 0.0, t.ruler);
     let rp = app.session.doc.para_at(&app.session.sel.focus).map(|para| app.session.doc.styles.resolve_para(&para.props));
     // Graduations in the File › Options unit.
-    let (unit, div, step) = ruler_scale(app.session.prefs.units);
+    let (unit, div, step) = ruler_scale(app.session.units());
     // The caret paragraph's reading direction anchors the whole scale (#692): for a right-to-left
     // paragraph it runs from the page's right edge and the numbers increase right-to-left, so the
     // ruler matches the indent and tab markers, which sit at the paragraph's start edge.
@@ -2429,14 +2466,14 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
     ] {
         margin_handle(app, ui, edge, zone, |p| (p.x - x0) / scale, &sect);
     }
-    // Indent markers for the caret's paragraph (relative to its column).
-    let col_x = page.body.x;
+    // Indent markers for the caret's paragraph (relative to its column, or cell text in a table).
+    let (col_x, w) = crate::table_ruler::text_area(app, layout, pi).unwrap_or((page.body.x, page.body.w));
+    let start = if rtl { page.w - (col_x + w) } else { col_x };
     if let Some(rp) = rp {
         // Indents and tabs are measured from the paragraph's start edge: the right margin of a
         // right-to-left paragraph, where the start-indent markers sit.
-        let w = page.body.w;
-        let px = |s: f32| sx(origin + s);
-        let dist_at = |x: f32| s_at(x) - origin;
+        let px = |s: f32| sx(start + s);
+        let dist_at = |x: f32| s_at(x) - start;
         let first = px(rp.indent_left + rp.indent_first);
         let left = px(rp.indent_left);
         let right = px(w - rp.indent_right);
@@ -2463,19 +2500,10 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
             t.ruler,
             Stroke::new(1.0, c),
         ));
-        let mut open_tabs = false;
-        for (i, tab) in rp.tabs.iter().enumerate() {
-            let tx = px(tab.pos);
-            let foot = if rtl { -4.0 } else { 4.0 };
-            hp.line_segment([pos2(tx, bar.max.y - 6.0), pos2(tx, bar.max.y - 1.0)], Stroke::new(1.5, t.text));
-            hp.line_segment([pos2(tx, bar.max.y - 1.0), pos2(tx + foot, bar.max.y - 1.0)], Stroke::new(1.5, t.text));
-            // Double-clicking a tab marker opens the Tabs dialog (#320).
-            let zone = Rect::from_center_size(pos2(tx, bar.max.y - 4.0), vec2(8.0, 9.0));
-            open_tabs |= ui.interact(zone, ui.id().with(("ruler_tab", i)), Sense::click()).double_clicked();
-        }
-        if open_tabs {
-            let _ = app.run("para.tabs", json!({}));
-        }
+        let tab_ruler = crate::ruler_tabs::Ruler { bar, text, width: w, step: unit / div as f32 / 2.0, rtl, x_of: &px, dist_at: &dist_at };
+        crate::ruler_tabs::stops(app, ui, &hp, &tab_ruler, &rp.tabs);
+        // Table column borders, registered before the paragraph indent grips.
+        crate::table_ruler::columns(app, ui, layout, pi, bar, x0, scale);
         // Dragging the left-indent marker.
         let id = ui.id().with("ruler_left");
         let mr = Rect::from_center_size(pos2(left, bar.max.y - 3.0), vec2(12.0, 12.0));
@@ -2483,7 +2511,7 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
         if r.dragged()
             && let Some(pp) = r.interact_pointer_pos()
         {
-            let pt = dist_at(pp.x).clamp(-col_x, page.body.w - 18.0);
+            let pt = dist_at(pp.x).clamp(-col_x, (w - 18.0).max(-col_x));
             let snapped = (pt / 4.5).round() * 4.5;
             if !r.drag_started() {
                 app.session.join_next_undo();
@@ -2506,7 +2534,7 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
         if r.dragged()
             && let Some(pp) = r.interact_pointer_pos()
         {
-            let pt = page.body.w - dist_at(pp.x);
+            let pt = w - dist_at(pp.x);
             if !r.drag_started() {
                 app.session.join_next_undo();
             }
@@ -2548,6 +2576,7 @@ fn rulers(app: &mut WordApp, ui: &mut Ui, h: Rect, v: Rect, rects: &[Rect], layo
             break;
         }
     }
+    crate::table_ruler::rows(app, ui, layout, pi, vbar, y0, scale);
 }
 
 /// One mark drawn along a horizontal ruler.
@@ -2727,6 +2756,17 @@ pub(crate) fn text_box_host(app: &WordApp, layout: &DocLayout) -> Option<StoryRe
 pub fn editing_header_footer(app: &WordApp, layout: &DocLayout) -> bool {
     let story = text_box_host(app, layout).unwrap_or(app.session.sel.focus.story);
     matches!(part_kind(app, story), Some(PartKind::Header | PartKind::Footer))
+}
+
+/// Translate the header/footer kind and section number independently for the page label.
+fn hf_label(label: &str) -> String {
+    match label.split_once(" -Section ") {
+        Some((kind, rest)) => {
+            let number = rest.trim_end_matches('-');
+            crate::i18n::fmt(tl!("{kind} -Section {n}-"), &[("kind", tl!(kind)), ("n", number)])
+        }
+        None => tl!(label).to_string(),
+    }
 }
 
 /// The body is dimmed while editing anything but the body (or a text box in it).

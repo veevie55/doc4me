@@ -7,9 +7,9 @@ use egui::{Rect, Sense, Stroke, Ui, pos2, vec2};
 use serde::Serialize;
 use serde_json::{Value, json};
 
-use crate::WordApp;
 use crate::dialogs::{buttons, color_menu};
 use crate::theme::{Tokens, semibold};
+use crate::{WordApp, options::MeasureExt as _};
 
 /// Stops closer than this (points) are the same stop.
 const SAME_POS: f32 = 0.5;
@@ -128,7 +128,7 @@ pub fn tabs(app: &mut WordApp, ui: &mut Ui, f: &mut TabsForm) -> bool {
                     .speed(0.05)
                     .range(-22.0 * 72.0 / k..=22.0 * 72.0 / k)
                     .clamp_existing_to_range(false)
-                    .suffix(u.suffix())
+                    .measure(u)
                     .max_decimals(2),
             );
             let mut pick = None;
@@ -136,7 +136,7 @@ pub fn tabs(app: &mut WordApp, ui: &mut Ui, f: &mut TabsForm) -> bool {
                 ui.set_min_size(vec2(150.0, 96.0));
                 egui::ScrollArea::vertical().max_height(96.0).show(ui, |ui| {
                     for (i, t) in f.stops.iter().enumerate() {
-                        if ui.selectable_label(f.selected == Some(i), u.format(t.pos)).clicked() {
+                        if ui.selectable_label(f.selected == Some(i), u.format_with(t.pos, crate::options::decimal())).clicked() {
                             pick = Some(i);
                         }
                     }
@@ -159,12 +159,16 @@ pub fn tabs(app: &mut WordApp, ui: &mut Ui, f: &mut TabsForm) -> bool {
                     .speed(0.05)
                     .range(1.0 / k..=1584.0 / k)
                     .clamp_existing_to_range(false)
-                    .suffix(u.suffix())
+                    .measure(u)
                     .max_decimals(2),
             );
             ui.add_space(8.0);
             ui.label(tl!("Tab stops to be cleared:"));
-            let list = if f.clear_all { tl!("All").to_string() } else { f.cleared.iter().map(|p| u.format(*p)).collect::<Vec<_>>().join(", ") };
+            let list = if f.clear_all {
+                tl!("All").to_string()
+            } else {
+                f.cleared.iter().map(|p| u.format_with(*p, crate::options::decimal())).collect::<Vec<_>>().join(", ")
+            };
             ui.label(egui::RichText::new(list).weak());
         });
     });

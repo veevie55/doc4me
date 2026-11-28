@@ -504,7 +504,8 @@ fn labels(el: Option<&El>, cap: usize, date1904: bool) -> Vec<String> {
     let Some(cache) = el.find("c:strCache").or_else(|| el.find("c:numCache")).or_else(|| el.find("c:strLit")).or_else(|| el.find("c:numLit")) else {
         return Vec::new();
     };
-    let code = cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE && !f.eq_ignore_ascii_case("General"));
+    let code =
+        cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE && !f.eq_ignore_ascii_case("General"));
     pts(cache, cap)
         .into_iter()
         .map(|p| {
@@ -567,7 +568,12 @@ fn axis(a: Option<&El>) -> Axis {
         mid: a.child("c:crossBetween").and_then(|c| c.attr("val")) == Some("midCat"),
         min: num("c:min"),
         max: num("c:max"),
-        fmt: a.child("c:numFmt").filter(|f| f.attr("sourceLinked") != Some("1")).and_then(|f| f.attr("formatCode")).filter(|f| f.len() <= MAX_FORMAT_CODE).map(str::to_string),
+        fmt: a
+            .child("c:numFmt")
+            .filter(|f| f.attr("sourceLinked") != Some("1"))
+            .and_then(|f| f.attr("formatCode"))
+            .filter(|f| f.len() <= MAX_FORMAT_CODE)
+            .map(str::to_string),
     }
 }
 

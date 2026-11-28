@@ -5,7 +5,8 @@
 //! made the drawn columns differ from the stored grid. The app sends each finished drag here,
 //! so every drag is one undo step.
 
-use doc4me_doc::props::HeightRule;
+use doc4me_doc::props::{Align, HeightRule, VMerge};
+use doc4me_doc::table::MAX_COLS;
 use doc4me_doc::{Document, Path, StoryRef, Table};
 use doc4me_geom::Rect;
 use doc4me_layout::{DocLayout, Placed};
@@ -27,20 +28,38 @@ const MAX_LEN: f32 = 1584.0;
 
 pub fn specs() -> Vec<CommandSpec> {
     vec![CommandSpec::new("table.resizeDrag", "Resize Table by Dragging", "Table Layout › Cell Size", resize_drag).params(
-        r#"{"page": n, "x": pt, "y": pt, "toX": pt, "toY": pt, "shift"?: bool, "reach"?: pt} (a mouse drag in page points, 0-based page, starting on a table border or the resize handle: a column border moves (the column to its right gives or takes the difference, so the table keeps its width; with shift, or on the table's right edge, only the column left of it changes); a row's bottom border sets that row's height; the handle just outside the bottom-right corner scales every column and the rows on that page. `reach` (default 3) is how near the start has to be.)"#,
+        r#"{"page": n, "x": pt, "y": pt, "toX": pt, "toY": pt, "shift"?: bool, "ctrl"?: bool, "reach"?: pt} (a mouse drag in page points, 0-based page, starting on a table border or the resize handle: a column border moves (the column to its right gives or takes the difference, so the table keeps its width; with ctrl the columns right of it share it in proportion; with shift, or on the table's right edge, only the column left of it changes); the table's left edge moves a left-aligned table's indent, the first column making up the difference (a centred or right-aligned table keeps its alignment: only the first column changes); with cells of the table selected, a border of theirs moves only in their rows; a row's bottom border sets that row's height; the handle just outside the bottom-right corner scales every column and the rows on that page. `reach` (default 3) is how near the start has to be.)"#,
     )]
 }
 
 /// What a press on the page would grab.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Edge {
-    /// The vertical border at grid line `line` (1 = between the first two columns; the last is
-    /// the table's right edge).
+    /// The vertical border at grid line `line` (0 = the table's left edge, 1 = between the first
+    /// two columns; the last is the table's right edge).
     Column(usize),
     /// The bottom border of row `row`.
     Row(usize),
     /// The resize handle at the bottom-right corner.
     Corner,
+}
+
+/// Who makes up the difference when a column border moves.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum Share {
+    /// The column on the right, so the table keeps its width.
+    #[default]
+    Neighbour,
+    /// Nobody; only the column on the left changes and the ones right of it move along.
+    LeftOnly,
+    /// The columns on the right, in proportion to their widths, so the table keeps its width.
+    Proportional,
+}
+
+impl From<bool> for Share {
+    fn from(shift: bool) -> Share {
+        if shift { Share::LeftOnly } else { Share::Neighbour }
+    }
 }
 
 /// A row of the table as drawn on one page.
@@ -65,6 +84,8 @@ pub struct ResizeTarget {
     pub rows: Vec<DrawnRow>,
     /// Whether the table's last row is on this page (the handle is shown only then).
     pub ends_here: bool,
+    /// For a border of selected cells, their rows and the grid lines at their cell borders.
+    pub only: Vec<(usize, Vec<usize>)>,
 }
 
 /// What a drag to a point would make of the table.
@@ -74,6 +95,10 @@ pub struct Plan {
     pub widths: Option<Vec<f32>>,
     /// New heights (points) of these rows.
     pub heights: Vec<(usize, f32)>,
+    /// How far the table's left edge moves.
+    pub indent_by: Option<f32>,
+    /// New cell widths for rows whose selected border moves on its own.
+    pub cells: Vec<(usize, Vec<f32>)>,
 }
 
 impl ResizeTarget {
@@ -99,34 +124,46 @@ impl ResizeTarget {
     }
 
     /// The new widths and heights a drag that moved the pointer by (`dx`, `dy`) points gives.
-    pub fn plan(&self, dx: f32, dy: f32, shift: bool) -> Plan {
+    pub fn plan(&self, dx: f32, dy: f32, share: impl Into<Share>) -> Plan {
+        let share = share.into();
         let (dx, dy) =
             (if dx.is_finite() { dx.clamp(-MAX_LEN, MAX_LEN) } else { 0.0 }, if dy.is_finite() { dy.clamp(-MAX_LEN, MAX_LEN) } else { 0.0 });
         let mut w = self.widths();
         match self.edge {
-            Edge::Column(line) => {
-                let Some(left) = line.checked_sub(1).and_then(|i| w.get(i).copied()) else { return Plan::default() };
-                let right = w.get(line).copied();
-                let (new_left, new_right) = match right {
-                    // An inner border: the neighbour on the right makes up the difference.
-                    Some(right) if !shift => {
-                        let d = dx.clamp(MIN_COL - left, (right - MIN_COL).max(MIN_COL - left));
-                        (left + d, Some(right - d))
-                    }
-                    // The right edge (or Shift): only the column on the left changes.
-                    _ => ((left + dx).clamp(MIN_COL, MAX_LEN), None),
-                };
-                if let Some(x) = w.get_mut(line - 1) {
-                    *x = new_left;
-                }
-                if let (Some(r), Some(x)) = (new_right, w.get_mut(line)) {
-                    *x = r;
-                }
-                Plan { widths: Some(w), heights: Vec::new() }
+            Edge::Column(0) => {
+                let Some(first) = w.first_mut() else { return Plan::default() };
+                let d = dx.clamp(*first - MAX_LEN, (*first - MIN_COL).max(*first - MAX_LEN));
+                *first -= d;
+                Plan { widths: Some(w), indent_by: Some(d), ..Plan::default() }
             }
+            Edge::Column(line) if !self.only.is_empty() => {
+                let rows: Vec<(usize, Vec<f32>, usize)> = self
+                    .only
+                    .iter()
+                    .filter_map(|(r, lines)| {
+                        let i = lines.iter().position(|g| *g == line)?.checked_sub(1)?;
+                        let xs: Vec<f32> = lines.iter().map(|g| self.cols.get(*g).copied()).collect::<Option<_>>()?;
+                        Some((*r, xs.windows(2).map(|x| (x[1] - x[0]).max(0.0)).collect(), i))
+                    })
+                    .collect();
+                let d = rows.iter().filter_map(|(_, w, i)| share_out(&mut w.clone(), *i, dx, share)).min_by(|a, b| a.abs().total_cmp(&b.abs()));
+                let Some(d) = d else { return Plan::default() };
+                let cells = rows
+                    .into_iter()
+                    .map(|(r, mut w, i)| {
+                        share_out(&mut w, i, d, share);
+                        (r, w)
+                    })
+                    .collect();
+                Plan { cells, ..Plan::default() }
+            }
+            Edge::Column(line) => match line.checked_sub(1).and_then(|i| share_out(&mut w, i, dx, share)) {
+                Some(_) => Plan { widths: Some(w), ..Plan::default() },
+                None => Plan::default(),
+            },
             Edge::Row(row) => {
                 let Some(r) = self.rows.iter().find(|r| r.row == row) else { return Plan::default() };
-                Plan { widths: None, heights: vec![(row, (r.bottom - r.top + dy).clamp(MIN_ROW, MAX_LEN))] }
+                Plan { heights: vec![(row, (r.bottom - r.top + dy).clamp(MIN_ROW, MAX_LEN))], ..Plan::default() }
             }
             Edge::Corner => {
                 let (width, height) = (self.right() - self.left(), self.bottom() - self.top());
@@ -138,10 +175,122 @@ impl ResizeTarget {
                 } else {
                     Vec::new()
                 };
-                Plan { widths, heights }
+                Plan { widths, heights, ..Plan::default() }
             }
         }
     }
+
+    /// Page x of grid line `line` once `plan` is applied.
+    pub fn planned_x(&self, plan: &Plan, row: Option<usize>, line: usize) -> f32 {
+        let left = self.left() + plan.indent_by.unwrap_or(0.0);
+        if let Some(r) = row
+            && let Some((_, w)) = plan.cells.iter().find(|(c, _)| *c == r)
+            && let Some(k) = self.only.iter().find(|(o, _)| *o == r).and_then(|(_, lines)| lines.iter().position(|g| *g == line))
+        {
+            return left + w.iter().take(k).sum::<f32>();
+        }
+        match &plan.widths {
+            Some(w) => left + w.iter().take(line).sum::<f32>(),
+            None => self.cols.get(line).copied().unwrap_or(left),
+        }
+    }
+
+    /// Limit a selected-cell border drag to rows covered by the selected cells.
+    pub fn limit_to_selection(&mut self, s: &Session, y: f32) {
+        self.only.clear();
+        let Edge::Column(line) = self.edge else { return };
+        if line == 0 {
+            return;
+        }
+        let Some(t) = s.doc.table(self.story, &self.table) else { return };
+        let Some(((r0, r1), (lo, hi))) = self.selected_block(s, t) else { return };
+        let here = self.rows.iter().find(|r| y >= r.top && y <= r.bottom).map(|r| r.row);
+        if line < lo || line > hi || !here.is_some_and(|r| (r0..=r1).contains(&r)) {
+            return;
+        }
+        let mut only = Vec::new();
+        for r in r0..=r1 {
+            let Some(row) = t.rows.get(r) else { break };
+            let mut lines = vec![row.props.grid_before.min(MAX_COLS as u32) as usize];
+            for cell in &row.cells {
+                let g = lines.last().copied().unwrap_or(0);
+                let end = g.saturating_add(cell.span());
+                let below =
+                    || t.cell_at_grid(r + 1, g).and_then(|c| t.rows.get(r + 1)?.cells.get(c)).is_some_and(|c| c.props.vmerge == VMerge::Continue);
+                let past = (r == r0 && cell.props.vmerge == VMerge::Continue) || (r == r1 && cell.props.vmerge != VMerge::None && below());
+                if past && (g == line || end == line) {
+                    return;
+                }
+                lines.push(end);
+            }
+            only.push((r, lines));
+        }
+        self.only = only;
+    }
+
+    fn selected_block(&self, s: &Session, t: &Table) -> Option<((usize, usize), (usize, usize))> {
+        let grid_bounds = |cells: &[(usize, usize)]| -> Option<(usize, usize)> {
+            let lo = cells.iter().map(|&(r, c)| t.grid_col(r, c)).min()?;
+            let hi = cells
+                .iter()
+                .map(|&(r, c)| Some(t.grid_col(r, c).saturating_add(t.rows.get(r)?.cells.get(c)?.span())))
+                .collect::<Option<Vec<_>>>()?
+                .into_iter()
+                .max()?;
+            Some((lo, hi))
+        };
+        if let Some(sel) = s.selected_table_cells().filter(|sel| sel.story == self.story && sel.table == self.table) {
+            let cells: Vec<_> = sel.cells.iter().copied().collect();
+            let rows = (cells.iter().map(|(r, _)| *r).min()?, cells.iter().map(|(r, _)| *r).max()?);
+            return Some((rows, grid_bounds(&cells)?));
+        }
+        let (a, b) = s.sel.ordered();
+        if s.sel.is_collapsed() || a.story != self.story || b.story != self.story {
+            return None;
+        }
+        let ((ra, ca), (rb, cb)) = (cell_in(&self.table, &a.path)?, cell_in(&self.table, &b.path)?);
+        if (ra, ca) == (rb, cb) {
+            return None;
+        }
+        Some(((ra.min(rb), ra.max(rb)), grid_bounds(&[(ra, ca), (rb, cb)])?))
+    }
+}
+
+/// Move the border right of column `i` by `dx`, with no column narrower than `MIN_COL`.
+fn share_out(w: &mut [f32], i: usize, dx: f32, share: Share) -> Option<f32> {
+    let left = *w.get(i)?;
+    let rest: f32 = w.iter().skip(i + 1).sum();
+    let narrowest = w.iter().skip(i + 1).copied().fold(f32::INFINITY, f32::min);
+    let share = match share {
+        Share::Neighbour if i + 1 < w.len() => Share::Neighbour,
+        Share::Proportional if rest > 0.0 && narrowest > 0.0 => Share::Proportional,
+        _ => Share::LeftOnly,
+    };
+    let least = MIN_COL - left;
+    let d = match share {
+        Share::Neighbour => dx.clamp(least, (w.get(i + 1).copied().unwrap_or(0.0) - MIN_COL).max(least)),
+        Share::Proportional => dx.clamp(least, (rest * (1.0 - (MIN_COL / narrowest).min(1.0))).max(least)),
+        Share::LeftOnly => (left + dx).clamp(MIN_COL, MAX_LEN) - left,
+    };
+    *w.get_mut(i)? = left + d;
+    match share {
+        Share::Neighbour => {
+            if let Some(x) = w.get_mut(i + 1) {
+                *x -= d;
+            }
+        }
+        Share::Proportional => w.iter_mut().skip(i + 1).for_each(|x| *x *= (rest - d) / rest),
+        Share::LeftOnly => {}
+    }
+    Some(d)
+}
+
+fn cell_in(tp: &Path, p: &Path) -> Option<(usize, usize)> {
+    let n = tp.0.len();
+    if p.0.len() < n + 3 || !p.0.starts_with(&tp.0) {
+        return None;
+    }
+    Some((*p.0.get(n)? as usize, *p.0.get(n + 1)? as usize))
 }
 
 /// A table cell's area on a page.
@@ -244,7 +393,7 @@ pub(crate) fn tables_on(l: &DocLayout, doc: &Document, page: usize) -> Vec<Resiz
             let mine: Vec<&CellBox> = boxes.iter().filter(|b| b.story == story && b.table == *path).collect();
             let (cols, rows) = geometry(t, &mine)?;
             let ends_here = rows.last().is_some_and(|r| r.row + 1 == t.rows.len());
-            Some(ResizeTarget { edge: Edge::Corner, story, table: path.clone(), cols, rows, ends_here })
+            Some(ResizeTarget { edge: Edge::Corner, story, table: path.clone(), cols, rows, ends_here, only: Vec::new() })
         })
         .collect()
 }
@@ -293,7 +442,7 @@ pub fn resize_target(l: &DocLayout, doc: &Document, page: usize, x: f32, y: f32,
         // Column borders: in the row under the pointer, only lines that are cell borders there.
         let row_here = target.rows.iter().find(|r| y >= r.top && y <= r.bottom).cloned();
         if let Some(r) = &row_here {
-            for line in 1..target.cols.len() {
+            for line in 0..target.cols.len() {
                 if r.edges.contains(&line)
                     && let Some(cx) = target.cols.get(line).copied()
                 {
@@ -316,27 +465,23 @@ fn resize_drag(s: &mut Session, v: &Value) -> CmdResult {
         p::u64(v, "page").map(|n| usize::try_from(n).unwrap_or(usize::MAX)).ok_or_else(|| CmdError::Params("`page` (number) is required".into()))?;
     let (x, y) = (p::req_f32(v, "x")?, p::req_f32(v, "y")?);
     let (to_x, to_y) = (p::req_f32(v, "toX")?, p::req_f32(v, "toY")?);
-    let shift = p::bool(v, "shift").unwrap_or(false);
+    // Ctrl wins over Shift, as in Word.
+    let share = if p::bool(v, "ctrl").unwrap_or(false) { Share::Proportional } else { Share::from(p::bool(v, "shift").unwrap_or(false)) };
     let reach = p::f32(v, "reach").unwrap_or(REACH);
     let l = s.layout();
     if l.pages.get(page).is_none() {
         return Err(CmdError::Params(format!("no page {page}")));
     }
-    let target =
+    let mut target =
         resize_target(&l, &s.doc, page, x, y, reach).ok_or_else(|| CmdError::Failed("there's no table border or resize handle there".into()))?;
-    let plan = target.plan(to_x - x, to_y - y, shift);
-    if plan.widths.is_none() && plan.heights.is_empty() {
+    target.limit_to_selection(s, y);
+    let plan = target.plan(to_x - x, to_y - y, share);
+    if plan.widths.is_none() && plan.heights.is_empty() && plan.cells.is_empty() && plan.indent_by.is_none() {
         return sel_result(s);
     }
     let t = s.doc.table_mut(target.story, &target.table)?;
-    if let Some(widths) = plan.widths
-        && widths.len() == t.cols()
-    {
-        t.grid = widths;
-        // The drag's widths are the table's now: no preferred table width scales them again.
-        t.props.width = None;
-        t.props.width_pct = None;
-        super::table::sync_cell_widths(t);
+    if let Some(widths) = plan.widths {
+        set_widths(t, widths);
     }
     for (r, h) in &plan.heights {
         if let Some(row) = t.rows.get_mut(*r) {
@@ -346,7 +491,19 @@ fn resize_drag(s: &mut Session, v: &Value) -> CmdResult {
             }
         }
     }
+    let moved = plan.indent_by.is_some_and(|d| move_left_edge(t, d));
+    if !plan.cells.is_empty() {
+        regrid(t, &target.cols, &plan.cells)?;
+    }
     touch(s, &target)?;
+    if moved
+        && let Some(d) = plan.indent_by
+        && let Some(got) = drawn_left(&s.layout(), page, &target)
+        && (got - (target.left() + d)).abs() > 0.05
+    {
+        move_left_edge(s.doc.table_mut(target.story, &target.table)?, target.left() + d - got);
+        touch(s, &target)?;
+    }
     if plan.heights.is_empty() {
         return sel_result(s);
     }
@@ -359,7 +516,7 @@ fn resize_drag(s: &mut Session, v: &Value) -> CmdResult {
     for (r, want) in &plan.heights {
         let Some(got) = drawn.iter().find(|(i, _)| i == r).map(|(_, h)| *h) else { continue };
         if let Some(row) = t.rows.get_mut(*r)
-            && row.props.height_rule == HeightRule::AtLeast
+            && matches!(row.props.height_rule, HeightRule::AtLeast | HeightRule::Exact)
             && got > want + 0.05
         {
             row.props.height = Some((want - (got - want)).max(1.0));
@@ -384,6 +541,99 @@ fn resize_drag(s: &mut Session, v: &Value) -> CmdResult {
     sel_result(s)
 }
 
+/// Move `t`'s left edge by `by` points: its indent, or a floating table's offset. Centred and
+/// right-aligned tables keep their alignment by changing the first column alone.
+fn move_left_edge(t: &mut Table, by: f32) -> bool {
+    match t.props.float.as_mut() {
+        Some(f) => {
+            f.h_align = None;
+            f.x = (f.x + by).clamp(-MAX_LEN, MAX_LEN);
+            true
+        }
+        None if matches!(t.props.align, Some(Align::Center | Align::Right)) => false,
+        None => {
+            t.props.indent = Some((t.props.indent.unwrap_or(0.0) + by).clamp(-MAX_LEN, MAX_LEN));
+            true
+        }
+    }
+}
+
+/// Rebuild the shared grid when selected rows' cell borders move on their own.
+fn regrid(t: &mut Table, cols: &[f32], rows: &[(usize, Vec<f32>)]) -> Result<(), CmdError> {
+    let left = cols.first().copied().unwrap_or(0.0);
+    let total = cols.last().copied().unwrap_or(left) - left;
+    let borders: Vec<Vec<f32>> = t
+        .rows
+        .iter()
+        .enumerate()
+        .map(|(r, row)| {
+            let start = row.props.grid_before.min(MAX_COLS as u32) as usize;
+            match rows.iter().find(|(i, w)| *i == r && w.len() == row.cells.len()) {
+                Some((_, widths)) => {
+                    let x0 = cols.get(start).copied().unwrap_or(left) - left;
+                    std::iter::once(x0)
+                        .chain(widths.iter().scan(x0, |x, width| {
+                            *x += width;
+                            Some(*x)
+                        }))
+                        .collect()
+                }
+                None => std::iter::once(cols.get(start).copied().unwrap_or(left) - left)
+                    .chain(row.cells.iter().scan(start, |g, cell| {
+                        *g = g.saturating_add(cell.span());
+                        Some(cols.get((*g).min(cols.len().saturating_sub(1))).copied().unwrap_or_else(|| cols.last().copied().unwrap_or(left)) - left)
+                    }))
+                    .collect(),
+            }
+        })
+        .collect();
+    let mut lines: Vec<f32> = std::iter::once(0.0).chain(std::iter::once(total)).chain(borders.iter().flatten().copied()).collect();
+    lines.sort_by(f32::total_cmp);
+    lines.dedup_by(|a, b| (*a - *b).abs() < 0.01);
+    if lines.len() > MAX_COLS + 1 {
+        return Err(CmdError::Failed(format!("a table can't have more than {MAX_COLS} columns")));
+    }
+    let line_at = |x: f32| lines.iter().enumerate().min_by(|(_, a), (_, b)| (*a - x).abs().total_cmp(&(*b - x).abs())).map_or(0, |(i, _)| i);
+    let mut spans: Vec<Vec<u32>> = Vec::with_capacity(borders.len());
+    let mut before_after = Vec::with_capacity(borders.len());
+    for (row, b) in t.rows.iter().zip(&borders) {
+        let at: Vec<usize> = b.iter().map(|x| line_at(*x)).collect();
+        let row_spans: Vec<u32> = at.windows(2).map(|g| g[1].saturating_sub(g[0]) as u32).collect();
+        if row_spans.len() != row.cells.len() || row_spans.contains(&0) {
+            return Err(CmdError::Failed("the cells there are too narrow to move that border".into()));
+        }
+        before_after.push((at.first().copied().unwrap_or(0), lines.len().saturating_sub(1).saturating_sub(at.last().copied().unwrap_or(0))));
+        spans.push(row_spans);
+    }
+    t.grid = lines.windows(2).map(|x| x[1] - x[0]).collect();
+    for ((row, row_spans), (before, after)) in t.rows.iter_mut().zip(spans).zip(before_after) {
+        row.props.grid_before = before.min(MAX_COLS) as u32;
+        row.props.grid_after = after.min(MAX_COLS) as u32;
+        for (cell, span) in row.cells.iter_mut().zip(row_spans) {
+            cell.props.span = span;
+        }
+    }
+    t.props.width = None;
+    t.props.width_pct = None;
+    super::table::sync_cell_widths(t);
+    Ok(())
+}
+
+/// The page x of the target table's left edge as drawn.
+fn drawn_left(l: &DocLayout, page: usize, target: &ResizeTarget) -> Option<f32> {
+    cell_boxes(l, page).iter().filter(|b| b.story == target.story && b.table == target.table).map(|b| b.rect.x).min_by(f32::total_cmp)
+}
+
+/// Make `widths` the table's column widths; no preferred table width scales them again.
+pub(crate) fn set_widths(t: &mut Table, widths: Vec<f32>) {
+    if widths.len() == t.cols() {
+        t.grid = widths;
+        t.props.width = None;
+        t.props.width_pct = None;
+        super::table::sync_cell_widths(t);
+    }
+}
+
 /// The drawn height of each of the target table's rows on `page`.
 fn drawn_heights(l: &DocLayout, doc: &Document, page: usize, target: &ResizeTarget) -> Vec<(usize, f32)> {
     tables_on(l, doc, page)
@@ -394,7 +644,7 @@ fn drawn_heights(l: &DocLayout, doc: &Document, page: usize, target: &ResizeTarg
 }
 
 /// Mark the table's paragraphs changed, so the layout redoes them.
-pub(super) fn touch(s: &mut Session, target: &ResizeTarget) -> Result<(), CmdError> {
+pub(crate) fn touch(s: &mut Session, target: &ResizeTarget) -> Result<(), CmdError> {
     let story = target.story;
     let paths: Vec<Path> =
         s.doc.para_paths(story).into_iter().filter(|q| q.0.len() > target.table.0.len() && q.0.starts_with(&target.table.0)).collect();

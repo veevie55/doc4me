@@ -54,6 +54,11 @@ pub fn reload_dictionary() {
     *DICT.write().unwrap_or_else(|e| e.into_inner()) = None;
 }
 
+/// The `.dic` file of the Hunspell dictionary found now, if installed.
+pub fn installed_path() -> Option<std::path::PathBuf> {
+    crate::hunspell::find(NAMES).map(|(_, dic)| dic)
+}
+
 /// Is a Czech dictionary available (spelling is checked)?
 pub fn has_dictionary() -> bool {
     !dictionary().is_empty()
@@ -98,4 +103,3 @@ pub fn is_correct_with(d: &AffixDict, word: &str) -> bool {
 fn known(d: &AffixDict, w: &str) -> bool {
     d.check(w) || crate::in_user_dictionary(&w.to_lowercase())
 }
-

@@ -143,6 +143,33 @@ pub fn dictionary_generation() -> u64 {
     DICTIONARY_GENERATION.load(Ordering::Relaxed)
 }
 
+/// Search `dir` for Hunspell dictionaries before the system locations and reload their language
+/// caches. The generation change invalidates proofing results that used the old folder.
+pub fn set_dictionaries_folder(dir: Option<std::path::PathBuf>) {
+    hunspell::set_dictionary_dir(dir);
+    pl::reload_dictionary();
+    pt::reload_dictionary();
+    it::reload_dictionary();
+    hr::reload_dictionary();
+    tr::reload_dictionary();
+    ru::reload_dictionary();
+    cs::reload_dictionary();
+    DICTIONARY_GENERATION.fetch_add(1, Ordering::Relaxed);
+}
+
+/// Each language that uses an installed Hunspell dictionary, with the `.dic` file found now.
+pub fn installed_dictionaries() -> Vec<(ProofLang, Option<std::path::PathBuf>)> {
+    vec![
+        (ProofLang::Pl, pl::installed_path()),
+        (ProofLang::Pt, pt::installed_path()),
+        (ProofLang::It, it::installed_path()),
+        (ProofLang::Hr, hr::installed_path()),
+        (ProofLang::Tr, tr::installed_path()),
+        (ProofLang::Ru, ru::installed_path()),
+        (ProofLang::Cs, cs::installed_path()),
+    ]
+}
+
 /// Is `lower` (a lower-case word) in the user dictionary?
 pub(crate) fn in_user_dictionary(lower: &str) -> bool {
     user_words().read().unwrap_or_else(|e| e.into_inner()).contains(lower)

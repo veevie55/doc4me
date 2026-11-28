@@ -120,9 +120,8 @@ pub fn selection_locked(s: &Session) -> bool {
 /// Refuse a command that would change a locked selected drawing.
 pub fn object_lock_refuses(s: &Session, id: &str) -> bool {
     const FREE: [&str; 6] = ["shape.lock", "object.altText", "picture.altText", "picture.save", "edit.undo", "edit.redo"];
-    let object_cmd = ["picture.", "shape.", "arrange.", "canvas.", "wordArt.", "chart.", "smartArt.", "object."]
-        .iter()
-        .any(|prefix| id.starts_with(prefix));
+    let object_cmd =
+        ["picture.", "shape.", "arrange.", "canvas.", "wordArt.", "chart.", "smartArt.", "object."].iter().any(|prefix| id.starts_with(prefix));
     if !object_cmd || FREE.contains(&id) {
         return false;
     }
@@ -439,35 +438,72 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(r#"{"index"?: n}"#)
         .pure(),
         CommandSpec::new("shape.fill", "Shape Fill", "Shape Format › Shape Styles", |s, v| {
+            let set_color = v.get("color").is_some();
             let c = p::str(v, "color").and_then(Rgb::parse);
+            let transparency = p::f32(v, "transparency").map(|t| t.clamp(0.0, 100.0));
             with_obj(s, |o| {
-                if let InlineObject::Shape { fill, .. } = o {
-                    *fill = c;
+                if let InlineObject::Shape { fill, extra, .. } = o {
+                    if set_color {
+                        *fill = c;
+                    }
+                    if let Some(t) = transparency {
+                        extra.fill_transparency = t;
+                    }
                 } else if let Some(style) = super::canvas::style_mut(o) {
-                    style.fill = c;
+                    if set_color {
+                        style.fill = c;
+                    }
                 }
             })
         })
-        .params(r#"{"color": "RRGGBB" | null}  (a selected drawing canvas: its background)"#)
+        .params(r#"{"color"?: "RRGGBB" | null, "transparency"?: %}  (a selected drawing canvas: its background color)"#)
         .when(has_shape_or_canvas),
         CommandSpec::new("shape.outline", "Shape Outline", "Shape Format › Shape Styles", |s, v| {
+            let set_color = v.get("color").is_some();
             let c = p::str(v, "color").and_then(Rgb::parse);
             let w = p::f32(v, "width").map(|w| w.clamp(0.0, 72.0));
+            let transparency = p::f32(v, "transparency").map(|t| t.clamp(0.0, 100.0));
+            let dash = match p::str(v, "dash") {
+                Some(d) => Some(
+                    doc4me_doc::connector::LineDash::ALL
+                        .into_iter()
+                        .find(|x| serde_json::to_value(x).ok().and_then(|j| j.as_str().map(|value| value == d)).unwrap_or(false))
+                        .ok_or_else(|| CmdError::Params(format!("`dash`: solid, dot, dash, longDash or dashDot, not `{d}`")))?,
+                ),
+                None => None,
+            };
+            let (arrow_start, arrow_end) = (p::bool(v, "arrowStart"), p::bool(v, "arrowEnd"));
             with_obj(s, |o| {
-                if let InlineObject::Shape { stroke, stroke_width, .. } = o {
-                    *stroke = c;
+                if let InlineObject::Shape { stroke, stroke_width, extra, .. } = o {
+                    if set_color {
+                        *stroke = c;
+                    }
                     if let Some(w) = w {
                         *stroke_width = w;
                     }
+                    if let Some(t) = transparency {
+                        extra.line_transparency = t;
+                    }
+                    if let Some(d) = dash {
+                        extra.dash = d;
+                    }
+                    if let Some(value) = arrow_start {
+                        extra.arrow_start = value;
+                    }
+                    if let Some(value) = arrow_end {
+                        extra.arrow_end = value;
+                    }
                 } else if let Some(style) = super::canvas::style_mut(o) {
-                    style.stroke = c;
+                    if set_color {
+                        style.stroke = c;
+                    }
                     if let Some(w) = w {
                         style.stroke_width = w;
                     }
                 }
             })
         })
-        .params(r#"{"color": "RRGGBB" | null, "width"?: pt}  (a selected drawing canvas: its border)"#)
+        .params(r#"{"color"?: "RRGGBB" | null, "width"?: pt, "transparency"?: %, "dash"?: "solid|dot|dash|longDash|dashDot", "arrowStart"?: bool, "arrowEnd"?: bool}  (a selected drawing canvas: its border color and width)"#)
         .when(has_shape_or_canvas),
         CommandSpec::new("shape.effects", "Shape Effects", "Shape Format › Shape Styles", shape_effects)
             .params(

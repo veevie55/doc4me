@@ -61,4 +61,3 @@ fn spaces(text: &str, v: &mut Vec<Issue>) {
         v.push(issue(i, i + 2, "Dvojitá mezera".into(), vec![" ".into()]));
     }
 }
-

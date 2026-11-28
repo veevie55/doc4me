@@ -1236,6 +1236,11 @@ pub fn import_with(s: &str, images: ImageLoader) -> Document {
     model::to_doc(&parse_with(s, images))
 }
 
+/// Import HTML on the supplied page; HTML contains no page-size information.
+pub fn import_on(s: &str, images: ImageLoader, page: &doc4me_doc::section::SectionProps) -> Document {
+    model::to_doc_in(&parse_with(s, images), page.clone())
+}
+
 // ---------------------------------------------------------------------------------------------
 // Export
 

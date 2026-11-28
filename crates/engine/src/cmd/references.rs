@@ -3,7 +3,7 @@
 use doc4me_doc::para::{InlineObject, NoteKind, OBJ};
 use doc4me_doc::props::{CharProps, TabAlign, TabLeader, TabStop};
 use doc4me_doc::section::NumFormat;
-use doc4me_doc::{Block, Paragraph, ParaProps, PartKind, Path, Pos, StoryRef, para_block};
+use doc4me_doc::{Block, ParaProps, Paragraph, PartKind, Path, Pos, StoryRef, para_block};
 use serde_json::{Value, json};
 
 use super::{delete_selection, sel_result};
@@ -224,11 +224,13 @@ pub(crate) fn page_formats(s: &Session) -> Vec<NumFormat> {
 }
 
 pub(crate) fn page_label_or_first(l: &doc4me_layout::DocLayout, formats: &[NumFormat], pos: &Pos) -> (usize, String) {
-    l.caret(pos).and_then(|c| {
-        let page = l.pages.get(c.page)?;
-        let label = formats.get(page.section).copied().unwrap_or_default().format(page.number);
-        Some((c.page, if label.is_empty() { page.number.to_string() } else { label }))
-    }).unwrap_or_else(|| (0, "1".into()))
+    l.caret(pos)
+        .and_then(|c| {
+            let page = l.pages.get(c.page)?;
+            let label = formats.get(page.section).copied().unwrap_or_default().format(page.number);
+            Some((c.page, if label.is_empty() { page.number.to_string() } else { label }))
+        })
+        .unwrap_or_else(|| (0, "1".into()))
 }
 
 /// The TOC field instruction for `references.toc`'s parameters (ECMA-376 §17.16.5.68): `\o`
@@ -468,7 +470,9 @@ pub(crate) fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
     };
     s.doc.insert_block(StoryRef::Body, &Path::top(i), Block::Para(head))?;
     let leader = leader(p::str(v, "tabLeader").unwrap_or(if report.is_some() { "none" } else { "dot" }));
-    if report.is_some() { report_toc_styles(s); }
+    if report.is_some() {
+        report_toc_styles(s);
+    }
     regenerate_toc(s, Some(leader), Some(report))?;
     s.clamp_selection();
     sel_result(s)
@@ -543,7 +547,9 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Opt
         for o in &mut p.objects {
             if let InlineObject::Field { instr, result, .. } = o {
                 let f = FieldCode::parse(instr);
-                if f.name == "TOC" && !f.has('c') { result.clear(); }
+                if f.name == "TOC" && !f.has('c') {
+                    result.clear();
+                }
             }
         }
         p.touch();
@@ -551,7 +557,11 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Opt
     let f = FieldCode::parse(&instr);
     let leader = leader.unwrap_or_else(|| {
         s.doc
-            .body.iter().take(end + 1).skip(start + 1).filter_map(|b| b.as_para())
+            .body
+            .iter()
+            .take(end + 1)
+            .skip(start + 1)
+            .filter_map(|b| b.as_para())
             .find(|p| !continued::is_part(p, continued::TOC))
             .and_then(|p| p.props.tabs.as_ref()?.last().map(|t| t.leader))
             .unwrap_or(TabLeader::Dot)
@@ -563,7 +573,9 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Opt
     let width = s.doc.sections().get(section).map_or_else(|| super::page::sect(s).text_width(), |(_, x)| x.text_width());
     let mut entries = toc_entries(s, &f);
     if report.is_some() {
-        for e in &mut entries { e.text = e.text.replacen('\t', " ", 1); }
+        for e in &mut entries {
+            e.text = e.text.replacen('\t', " ", 1);
+        }
     }
     let links: Vec<Option<String>> = if f.has('h') {
         let mut v = Vec::new();
@@ -588,15 +600,24 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Opt
     for pass in 0..2 {
         s.touch();
         let l = s.layout();
-        let slots: Vec<usize> = if pass == 0 { (0..entries.len()).map(|k| first_entry + k).collect() }
-        else { (start + 1..=start + added).filter(|i| s.doc.body.get(*i).and_then(|b| b.as_para()).is_some_and(|p| !continued::is_part(p, continued::TOC))).collect() };
+        let slots: Vec<usize> = if pass == 0 {
+            (0..entries.len()).map(|k| first_entry + k).collect()
+        } else {
+            (start + 1..=start + added)
+                .filter(|i| s.doc.body.get(*i).and_then(|b| b.as_para()).is_some_and(|p| !continued::is_part(p, continued::TOC)))
+                .collect()
+        };
         for (k, e) in entries.iter().enumerate() {
             let target = Path::top(e.path.last() + if e.path.last() > start { added } else { 0 });
             let page = page_label_or_first(&l, &formats, &Pos { story: StoryRef::Body, path: target, off: e.lead }).1;
             let show_page = no_pages.is_none_or(|(a, b)| !(a..=b).contains(&(e.level + 1)));
             let link = links.get(k).cloned().flatten();
             let pageref = link.as_deref().and_then(|l| l.strip_prefix('#')).filter(|_| show_page).map(|b| format!("PAGEREF {b} \\h"));
-            let text = match (show_page, &pageref) { (true, None) => format!("{}{sep}{page}", e.text), (true, Some(_)) => format!("{}{sep}", e.text), (false, _) => e.text.clone() };
+            let text = match (show_page, &pageref) {
+                (true, None) => format!("{}{sep}{page}", e.text),
+                (true, Some(_)) => format!("{}{sep}", e.text),
+                (false, _) => e.text.clone(),
+            };
             let props = CharProps { link, ..Default::default() };
             let mut para = Paragraph::with_text(&text, props.clone()).styled(&format!("TOC{}", e.level + 1));
             if let Some(instr) = pageref {
@@ -607,14 +628,19 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Opt
                 para.props.tabs = Some(entry_tabs(s, &para.props, &e.text, TabStop { pos: width - 0.5, align: TabAlign::Right, leader }));
             }
             match slots.get(k) {
-                Some(i) if pass == 1 => { s.doc.remove_block(StoryRef::Body, &Path::top(*i))?; s.doc.insert_block(StoryRef::Body, &Path::top(*i), Block::Para(para))?; }
+                Some(i) if pass == 1 => {
+                    s.doc.remove_block(StoryRef::Body, &Path::top(*i))?;
+                    s.doc.insert_block(StoryRef::Body, &Path::top(*i), Block::Para(para))?;
+                }
                 Some(i) => s.doc.insert_block(StoryRef::Body, &Path::top(*i), Block::Para(para))?,
                 None => {}
             }
         }
         if pass == 0 {
             added += entries.len();
-            if let Some(label) = &report { added = continued::paginate(s, start, start + added, label, continued::TOC)? - start; }
+            if let Some(label) = &report {
+                added = continued::paginate(s, start, start + added, label, continued::TOC)? - start;
+            }
         }
     }
     s.touch();

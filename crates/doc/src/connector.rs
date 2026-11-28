@@ -37,6 +37,65 @@ pub struct ShapeExtra {
     /// A rounded rectangle's corner as a proportion of its shorter side, in 100000ths.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub corner: Option<u32>,
+    /// Fill and outline transparency, percent from 0 (opaque) to 100 (clear).
+    #[serde(skip_serializing_if = "is_zero_f32")]
+    pub fill_transparency: f32,
+    #[serde(skip_serializing_if = "is_zero_f32")]
+    pub line_transparency: f32,
+    /// Outline dash; solid when absent.
+    #[serde(skip_serializing_if = "LineDash::is_solid")]
+    pub dash: LineDash,
+}
+
+/// An outline's dash pattern, matching the presets offered by Word.
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum LineDash {
+    #[default]
+    Solid,
+    Dot,
+    Dash,
+    LongDash,
+    DashDot,
+}
+
+impl LineDash {
+    pub const ALL: [LineDash; 5] = [LineDash::Solid, LineDash::Dot, LineDash::Dash, LineDash::LongDash, LineDash::DashDot];
+
+    pub fn is_solid(&self) -> bool {
+        *self == LineDash::Solid
+    }
+
+    pub fn ooxml(self) -> &'static str {
+        match self {
+            LineDash::Solid => "solid",
+            LineDash::Dot => "sysDot",
+            LineDash::Dash => "sysDash",
+            LineDash::LongDash => "lgDash",
+            LineDash::DashDot => "dashDot",
+        }
+    }
+
+    pub fn from_ooxml(value: &str) -> LineDash {
+        match value {
+            "sysDot" | "dot" => LineDash::Dot,
+            "sysDash" | "dash" => LineDash::Dash,
+            "lgDash" | "lgDashDot" | "lgDashDotDot" => LineDash::LongDash,
+            "dashDot" | "sysDashDot" | "sysDashDotDot" => LineDash::DashDot,
+            _ => LineDash::Solid,
+        }
+    }
+
+    /// The on/off lengths in multiples of the outline width; empty for a solid line.
+    pub fn pattern(self) -> &'static [f32] {
+        match self {
+            LineDash::Solid => &[],
+            LineDash::Dot => &[1.0, 1.0],
+            LineDash::Dash => &[3.0, 1.0],
+            LineDash::LongDash => &[8.0, 3.0],
+            LineDash::DashDot => &[4.0, 3.0, 1.0, 3.0],
+        }
+    }
 }
 
 /// Maximum radius: half the shorter side, producing round ends.
@@ -60,6 +119,9 @@ pub fn corner_from_radius(radius: f32, w: f32, h: f32) -> u32 {
 
 fn is_zero(v: &u32) -> bool {
     *v == 0
+}
+fn is_zero_f32(v: &f32) -> bool {
+    *v == 0.0
 }
 fn is_false(v: &bool) -> bool {
     !*v

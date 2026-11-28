@@ -397,14 +397,26 @@ impl DocLayout {
     pub fn header_footer_zone(&self, page: usize, x: f32, y: f32) -> Option<(Option<StoryRef>, bool)> {
         let p = self.pages.get(page)?;
         if p.hf_turned {
-            if !x.is_finite() { return None; }
-            if x > p.body.right() { return Some((p.header_story.map(StoryRef::Part), true)); }
-            if x < p.body.x { return Some((p.footer_story.map(StoryRef::Part), false)); }
+            if !x.is_finite() {
+                return None;
+            }
+            if x > p.body.right() {
+                return Some((p.header_story.map(StoryRef::Part), true));
+            }
+            if x < p.body.x {
+                return Some((p.footer_story.map(StoryRef::Part), false));
+            }
             return None;
         }
-        if !y.is_finite() { return None; }
-        if y < p.body.y { return Some((p.header_story.map(StoryRef::Part), true)); }
-        if y > p.body.bottom() { return Some((p.footer_story.map(StoryRef::Part), false)); }
+        if !y.is_finite() {
+            return None;
+        }
+        if y < p.body.y {
+            return Some((p.header_story.map(StoryRef::Part), true));
+        }
+        if y > p.body.bottom() {
+            return Some((p.footer_story.map(StoryRef::Part), false));
+        }
         None
     }
 

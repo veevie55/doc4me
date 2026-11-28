@@ -22,6 +22,7 @@ mod file_dialogs;
 mod graphics;
 mod logging;
 mod print;
+mod region;
 mod screen_clip;
 mod system_clipboard;
 
@@ -319,11 +320,15 @@ fn main() -> eframe::Result {
         "Doc4Me",
         options,
         Box::new(move |cc| {
-            let doc = if sample { doc4me_engine::sample::sample_document() } else { doc4me_doc::Document::new() };
+            let session = if sample { Session::new(doc4me_engine::sample::sample_document()) } else { Session::new_blank_in(region::system()) };
             let (file_dialog, dialogs) = file_dialogs::hook(&cc.egui_ctx);
-            let mut app = WordApp::new(Session::new(doc), services(file_dialog, &cc.egui_ctx));
+            let mut app = WordApp::new(session, services(file_dialog, &cc.egui_ctx));
             app.tell_about_font_downloads();
             load_prefs(&mut app);
+            if !sample && app.session.prefs.region.is_some() {
+                let doc = app.session.blank_document();
+                app.session.set_document(doc);
+            }
             if prefs_enabled()
                 && let Some(dir) = doc4me_control_key::settings_dir()
             {

@@ -361,4 +361,3 @@ fn scan(col: &mut Collector, chars: &[char]) {
         }
     }
 }
-

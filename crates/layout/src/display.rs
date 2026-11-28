@@ -23,6 +23,27 @@ pub enum Stroke {
     Wave,
 }
 
+/// Opacity and dash applied to a drawing's fill and outline.
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ShapeLook {
+    pub fill_alpha: f32,
+    pub stroke_alpha: f32,
+    pub dash: doc4me_doc::connector::LineDash,
+}
+
+impl Default for ShapeLook {
+    fn default() -> Self {
+        ShapeLook { fill_alpha: 1.0, stroke_alpha: 1.0, dash: doc4me_doc::connector::LineDash::Solid }
+    }
+}
+
+impl ShapeLook {
+    pub fn of(extra: &doc4me_doc::connector::ShapeExtra) -> ShapeLook {
+        let alpha = |transparency: f32| if transparency.is_finite() { 1.0 - transparency.clamp(0.0, 100.0) / 100.0 } else { 1.0 };
+        ShapeLook { fill_alpha: alpha(extra.fill_transparency), stroke_alpha: alpha(extra.line_transparency), dash: extra.dash }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub enum Draw {
     Glyphs {
@@ -74,6 +95,7 @@ pub enum Draw {
         corner: Option<u32>,
         /// Shadow, glow and soft edges (drawn with [`doc4me_doc::effects::bands`]).
         effects: doc4me_doc::effects::ShapeEffects,
+        look: ShapeLook,
     },
     /// An ink stroke: a line through `pts` (page points) with round ends and joins, `width`
     /// wide, in `color` at opacity `alpha`.
@@ -89,6 +111,7 @@ pub enum Draw {
         fill: Option<Rgb>,
         stroke: Option<Rgb>,
         stroke_width: f32,
+        look: ShapeLook,
     },
     /// An inline chart or diagram's draws, as one figure with its alt text (for tagged PDF).
     Figure {
@@ -1021,6 +1044,7 @@ fn lines(
                 stroke_width: e.stroke,
                 corner: None,
                 effects: Default::default(),
+                look: ShapeLook::default(),
             });
             if e.cross {
                 for (y0, y1) in [(rect.y, rect.bottom()), (rect.bottom(), rect.y)] {
@@ -1242,10 +1266,11 @@ fn graphic_draws(doc: &Document, g: &Graphic, rect: Rect, alpha: f32) -> Vec<Dra
                 stroke_width: stroke_width * k,
                 corner: None,
                 effects: Default::default(),
+                look: ShapeLook::default(),
             }),
             GraphicItem::Path { segs, fill, stroke, stroke_width } => {
                 let segs = page_segs(segs, |x, y| (rect.x + x * sx, rect.y + y * sy));
-                out.push(Draw::Path { segs, fill: *fill, stroke: *stroke, stroke_width: stroke_width * k })
+                out.push(Draw::Path { segs, fill: *fill, stroke: *stroke, stroke_width: stroke_width * k, look: ShapeLook::default() })
             }
             GraphicItem::Text { rect: r, .. } => out.extend(text_glyphs(doc, inside(r), it, alpha, k)),
             GraphicItem::Image { rect: r, media } => out.push(Draw::Image { rect: inside(r), media: media.clone(), crop: [0.0; 4], alpha }),
@@ -1319,7 +1344,7 @@ fn shape_draws(
         return;
     }
     let Some(f) = freeform.filter(|_| kind == ShapeKind::Freeform) else {
-        out.push(Draw::Shape { rect, kind, fill, stroke, stroke_width, corner: extra.corner, effects });
+        out.push(Draw::Shape { rect, kind, fill, stroke, stroke_width, corner: extra.corner, effects, look: ShapeLook::of(extra) });
         return;
     };
     if f.is_ink() && opts.hide_ink {
@@ -1333,7 +1358,13 @@ fn shape_draws(
                 if closed && let Some(first) = pts.first().copied() {
                     pts.push(first);
                 }
-                out.push(Draw::Ink { pts, color, width: width.max(0.25), alpha: f.alpha });
+                if !closed
+                    && extra.arrow_end
+                    && let Some(arrow) = path_arrowhead(&pts, color, width, ShapeLook::of(extra).stroke_alpha)
+                {
+                    out.push(arrow);
+                }
+                out.push(Draw::Ink { pts, color, width: width.max(0.25), alpha: f.alpha * ShapeLook::of(extra).stroke_alpha });
             }
             continue;
         }
@@ -1344,8 +1375,39 @@ fn shape_draws(
         if closed {
             segs.push(PathSeg::Close);
         }
-        out.push(Draw::Path { segs, fill: if closed { fill } else { None }, stroke, stroke_width: width });
+        out.push(Draw::Path { segs, fill: if closed { fill } else { None }, stroke, stroke_width: width, look: ShapeLook::of(extra) });
+        if !closed
+            && extra.arrow_end
+            && let Some(color) = stroke
+        {
+            let points: Vec<(f32, f32)> = pts.iter().map(|[x, y]| (*x, *y)).collect();
+            if let Some(arrow) = path_arrowhead(&points, color, width, ShapeLook::of(extra).stroke_alpha) {
+                out.push(arrow);
+            }
+        }
     }
+}
+
+fn path_arrowhead(points: &[(f32, f32)], color: Rgb, stroke_width: f32, alpha: f32) -> Option<Draw> {
+    let tip = *points.last()?;
+    let (previous_x, previous_y) = points.iter().rev().skip(1).copied().find(|point| *point != tip)?;
+    let (dx, dy) = (tip.0 - previous_x, tip.1 - previous_y);
+    let length = dx.hypot(dy);
+    if !length.is_finite() || length <= f32::EPSILON {
+        return None;
+    }
+    let (dx, dy) = (dx / length, dy / length);
+    let width = if stroke_width.is_finite() { stroke_width.clamp(0.25, 200.0) } else { 0.75 };
+    let len = (width * 3.5).max(7.0);
+    let (base_x, base_y) = (tip.0 - dx * len, tip.1 - dy * len);
+    let (normal_x, normal_y) = (-dy * len * 0.45, dx * len * 0.45);
+    let segs = vec![
+        PathSeg::Move(tip.0, tip.1),
+        PathSeg::Line(base_x + normal_x, base_y + normal_y),
+        PathSeg::Line(base_x - normal_x, base_y - normal_y),
+        PathSeg::Close,
+    ];
+    Some(Draw::Path { segs, fill: Some(color), stroke: None, stroke_width: 0.0, look: ShapeLook { fill_alpha: alpha, ..ShapeLook::default() } })
 }
 
 /// A line or connector at `rect` (its unflipped frame: flips are the frame's turn), with its
@@ -1371,9 +1433,9 @@ fn line_draws(
                     PathSeg::Close => PathSeg::Close,
                 })
                 .collect();
-            out.push(Draw::Path { segs, fill: None, stroke, stroke_width });
+            out.push(Draw::Path { segs, fill: None, stroke, stroke_width, look: ShapeLook::of(extra) });
         }
-        None => out.push(Draw::Shape { rect, kind, fill: None, stroke, stroke_width, corner: None, effects }),
+        None => out.push(Draw::Shape { rect, kind, fill: None, stroke, stroke_width, corner: None, effects, look: ShapeLook::of(extra) }),
     }
     let Some(color) = stroke else { return };
     // Our line runs from the bottom-left corner to the top-right; connectors from the top-left
@@ -1390,7 +1452,13 @@ fn line_draws(
         let (bx, by) = (tip.0 - dx * len, tip.1 - dy * len);
         let (nx, ny) = (-dy * len * 0.45, dx * len * 0.45);
         let segs = vec![PathSeg::Move(tip.0, tip.1), PathSeg::Line(bx + nx, by + ny), PathSeg::Line(bx - nx, by - ny), PathSeg::Close];
-        out.push(Draw::Path { segs, fill: Some(color), stroke: None, stroke_width: 0.0 });
+        out.push(Draw::Path {
+            segs,
+            fill: Some(color),
+            stroke: None,
+            stroke_width: 0.0,
+            look: ShapeLook { fill_alpha: ShapeLook::of(extra).stroke_alpha, ..ShapeLook::default() },
+        });
     }
 }
 
@@ -1638,6 +1706,7 @@ fn canvas_background(rect: Rect, c: &doc4me_doc::para::CanvasStyle) -> Draw {
         stroke_width: c.stroke_width,
         corner: None,
         effects: Default::default(),
+        look: ShapeLook::default(),
     }
 }
 

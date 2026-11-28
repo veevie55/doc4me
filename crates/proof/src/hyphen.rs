@@ -161,7 +161,9 @@ fn core_breaks_patterns(core: &[char], pats: &Patterns) -> (Vec<usize>, Source) 
     if let Some(p) = pats.exception(&s) {
         return (p.to_vec(), Source::Dictionary);
     }
-    if !pats.is_empty() && let Some(p) = pats.points(core) {
+    if !pats.is_empty()
+        && let Some(p) = pats.points(core)
+    {
         return (p, Source::Patterns);
     }
     (heuristic_points(core), Source::Heuristic)

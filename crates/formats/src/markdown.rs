@@ -28,6 +28,11 @@ pub fn import(text: &str) -> Document {
     model::to_doc(&parse(text))
 }
 
+/// Import Markdown on the supplied page; Markdown contains no page-size information.
+pub fn import_on(text: &str, page: &doc4me_doc::section::SectionProps) -> Document {
+    model::to_doc_in(&parse(text), page.clone())
+}
+
 /// Parse Markdown text into the flow model.
 pub fn parse(text: &str) -> model::Flow {
     let text = text.strip_prefix('\u{FEFF}').unwrap_or(text);

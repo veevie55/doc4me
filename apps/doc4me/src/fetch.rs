@@ -6,12 +6,12 @@
 
 use std::fs::OpenOptions;
 use std::io::{Read, Write};
+#[cfg(unix)]
+use std::os::unix::fs::OpenOptionsExt;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 use std::sync::atomic::Ordering;
 use std::sync::mpsc;
-#[cfg(unix)]
-use std::os::unix::fs::OpenOptionsExt;
 
 use doc4me_ui_egui::net::{FetchAnswer, FetchRequest};
 

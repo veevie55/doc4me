@@ -340,4 +340,3 @@ pub fn check(text: &str) -> Vec<Issue> {
     v.sort_by_key(|i| (i.start, i.end));
     v
 }
-

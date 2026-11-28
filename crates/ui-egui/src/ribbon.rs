@@ -6,7 +6,7 @@ use serde_json::{Value, json};
 use crate::colors::{Remember, Target};
 use crate::theme::{Tokens, medium, regular, semibold};
 use crate::widgets::{CONTENT_H, LABEL_H, big, big_toggle, combo, group, menu_button, small, split};
-use crate::{WordApp, icons};
+use crate::{WordApp, icons, options::MeasureExt as _};
 
 pub const TABS: [&str; 13] = doc4me_engine::ribbon::TABS;
 
@@ -1338,15 +1338,20 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
             }
         });
         menu_button(ui, app, "margins", Some("Margins"), "Margins", true, "layout.margins", |ui, app| {
-            for (l, k) in [
-                ("Normal  1\" all", "normal"),
-                ("Narrow  0.5\" all", "narrow"),
-                ("Moderate", "moderate"),
-                ("Wide", "wide"),
-                ("Mirrored", "mirrored"),
-                ("Office 2003 Default", "office2003"),
+            for (template, k, pt) in [
+                ("Normal  {size} all", "normal", Some(72.0)),
+                ("Narrow  {size} all", "narrow", Some(36.0)),
+                ("Moderate", "moderate", None),
+                ("Wide", "wide", None),
+                ("Mirrored", "mirrored", None),
+                ("Office 2003 Default", "office2003", None),
             ] {
-                mi(ui, app, l, "layout.margins", json!({"preset": k}));
+                let label = if let Some(pt) = pt {
+                    crate::i18n::fmt(tl!(template), &[("size", &crate::options::length(pt))])
+                } else {
+                    tl!(template).to_string()
+                };
+                mi(ui, app, &label, "layout.margins", json!({"preset": k}));
             }
             mi(ui, app, "Custom Margins…", "ui.dialog", json!({"name": "pageSetup"}));
         });
@@ -1356,7 +1361,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
         });
         menu_button(ui, app, "size", Some("Size"), "Size", true, "layout.size", |ui, app| {
             for (n, w, h) in doc4me_geom::PAPER_SIZES {
-                mi(ui, app, &format!("{n}   {:.2}\" × {:.2}\"", w / 72.0, h / 72.0), "layout.size", json!({"name": n}));
+                mi(ui, app, &format!("{n}   {} × {}", crate::options::length(*w), crate::options::length(*h)), "layout.size", json!({"name": n}));
             }
         });
         menu_button(ui, app, "columns", Some("Columns"), "Columns", true, "layout.columns", |ui, app| {
@@ -1424,7 +1429,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
                         .speed(3.6 / k)
                         .range(-792.0 / k..=1584.0 / k)
                         .clamp_existing_to_range(false)
-                        .suffix(u.suffix())
+                        .measure(u)
                         .max_decimals(2),
                 )
                 .changed()
@@ -1452,7 +1457,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
                         .speed(3.6 / k)
                         .range(-792.0 / k..=1584.0 / k)
                         .clamp_existing_to_range(false)
-                        .suffix(u.suffix())
+                        .measure(u)
                         .max_decimals(2),
                 )
                 .changed()
@@ -2155,9 +2160,11 @@ fn chart_design(app: &mut WordApp, ui: &mut Ui) {
 
 /// Shape Format: fill, outline and effects of the selected shape, and its arrangement.
 fn shape_format(app: &mut WordApp, ui: &mut Ui) {
-    let (stroke, glow_size) = match doc4me_engine::cmd::objects::selected(&app.session) {
-        Some((_, doc4me_doc::para::InlineObject::Shape { stroke, effects, .. })) => (stroke, effects.glow.map(|g| g.size)),
-        _ => (None, None),
+    let (stroke, glow_size, extra, is_shape) = match doc4me_engine::cmd::objects::selected(&app.session) {
+        Some((_, doc4me_doc::para::InlineObject::Shape { stroke, effects, extra, .. })) => {
+            (stroke, effects.glow.map(|g| g.size), extra.clone(), true)
+        }
+        _ => (None, None, doc4me_doc::connector::ShapeExtra::default(), false),
     };
     let locked = doc4me_engine::cmd::objects::selection_locked(&app.session);
     let theme = app.session.doc.settings.theme_colors.clone();
@@ -2174,6 +2181,14 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
             menu_button(ui, app, "shading", Some("Shape Fill"), "Shape Fill", false, "shape.fill", |ui, app| {
                 mi(ui, app, "No Color", "shape.fill", json!({"color": null}));
                 crate::colors::menu(ui, app, &theme, Target::cmd("shape.fill"));
+                ui.separator();
+                if is_shape {
+                    crate::ribbon_keys::sub_menu(ui, tl!("Transparency"), |ui| {
+                        for percent in [0, 25, 50, 75, 100] {
+                            mi(ui, app, &format!("{percent}%"), "shape.fill", json!({"transparency": percent}));
+                        }
+                    });
+                }
             });
             menu_button(ui, app, "pen", Some("Shape Outline"), "Shape Outline", false, "shape.outline", |ui, app| {
                 mi(ui, app, "No Color", "shape.outline", json!({"color": null}));
@@ -2185,6 +2200,34 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
                         mi(ui, app, &format!("{w} pt"), "shape.outline", json!({"color": color, "width": w}));
                     }
                 });
+                if is_shape {
+                    crate::ribbon_keys::sub_menu(ui, tl!("Dash"), |ui| {
+                        for (label, dash) in
+                            [("Solid", "solid"), ("Dot", "dot"), ("Dash", "dash"), ("Long Dash", "longDash"), ("Dash Dot", "dashDot")]
+                        {
+                            mi(ui, app, label, "shape.outline", json!({"dash": dash}));
+                        }
+                    });
+                    crate::ribbon_keys::sub_menu(ui, tl!("Transparency"), |ui| {
+                        for percent in [0, 25, 50, 75, 100] {
+                            mi(ui, app, &format!("{percent}%"), "shape.outline", json!({"transparency": percent}));
+                        }
+                    });
+                    mi(
+                        ui,
+                        app,
+                        if extra.arrow_start { "Remove Start Arrowhead" } else { "Add Start Arrowhead" },
+                        "shape.outline",
+                        json!({"arrowStart": !extra.arrow_start}),
+                    );
+                    mi(
+                        ui,
+                        app,
+                        if extra.arrow_end { "Remove End Arrowhead" } else { "Add End Arrowhead" },
+                        "shape.outline",
+                        json!({"arrowEnd": !extra.arrow_end}),
+                    );
+                }
             });
             menu_button(ui, app, "shapeEffects", Some("Shape Effects"), "Shadow, glow and soft edges", false, "shape.effects", |ui, app| {
                 shape_effects_menu(ui, app, &theme, glow_size)
@@ -2227,7 +2270,16 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
         stack(ui, |ui| {
             rotate_menu(ui, app, Some("Rotate"));
             small(ui, app, "align", Some("Align"), "Align", "arrange.align", json!({}), false);
-            small(ui, app, if locked { "lock" } else { "unlock" }, Some(if locked { "Unlock" } else { "Lock" }), "Lock selected object", "shape.lock", json!({"locked": !locked}), false);
+            small(
+                ui,
+                app,
+                if locked { "lock" } else { "unlock" },
+                Some(if locked { "Unlock" } else { "Lock" }),
+                "Lock selected object",
+                "shape.lock",
+                json!({"locked": !locked}),
+                false,
+            );
         });
     });
     group(ui, "Size", None, app, |ui, app| {
@@ -2406,30 +2458,42 @@ fn picture_format(app: &mut WordApp, ui: &mut Ui) {
             Some((pos, doc4me_doc::para::InlineObject::Image { media, w, h, alt, crop, .. })) => (media, pos.off, w, h, crop, alt),
             _ => (String::new(), 0, 0.0, 0.0, [0.0; 4], String::new()),
         };
+        let unit = crate::options::unit();
+        let per_unit = unit.pt_per_unit();
         // `picture.size` locks the aspect ratio unless told otherwise, so one dimension suffices.
         stack(ui, |ui| {
             crate::widgets::row(ui, |ui| {
                 ui.label(egui::RichText::new(tl!("W:")).small());
-                let mut w = w0;
+                let mut w = w0 / per_unit;
                 let r = ui.add(
-                    egui::DragValue::new(&mut w).speed(1.0).range(4.0..=2000.0).clamp_existing_to_range(false).suffix(format!(" {}", tl!("pt"))),
+                    egui::DragValue::new(&mut w)
+                        .speed(1.0 / per_unit)
+                        .range(4.0 / per_unit..=2000.0 / per_unit)
+                        .clamp_existing_to_range(false)
+                        .measure(unit)
+                        .max_decimals(2),
                 );
                 if r.changed() {
                     if r.dragged() && !r.drag_started() {
                         app.session.join_next_undo();
                     }
-                    let _ = app.run("picture.size", json!({"width": w}));
+                    let _ = app.run("picture.size", json!({"width": w * per_unit}));
                 }
                 ui.label(egui::RichText::new(tl!("H:")).small());
-                let mut h = h0;
+                let mut h = h0 / per_unit;
                 let r = ui.add(
-                    egui::DragValue::new(&mut h).speed(1.0).range(4.0..=2000.0).clamp_existing_to_range(false).suffix(format!(" {}", tl!("pt"))),
+                    egui::DragValue::new(&mut h)
+                        .speed(1.0 / per_unit)
+                        .range(4.0 / per_unit..=2000.0 / per_unit)
+                        .clamp_existing_to_range(false)
+                        .measure(unit)
+                        .max_decimals(2),
                 );
                 if r.changed() {
                     if r.dragged() && !r.drag_started() {
                         app.session.join_next_undo();
                     }
-                    let _ = app.run("picture.size", json!({"height": h}));
+                    let _ = app.run("picture.size", json!({"height": h * per_unit}));
                 }
                 rotation_field(ui, app);
             });
@@ -2657,7 +2721,7 @@ fn cell_size_boxes(ui: &mut Ui, app: &mut WordApp) {
             let mut v = pt / k;
             let r = ui.add_sized(
                 vec2(72.0, 18.0),
-                egui::DragValue::new(&mut v).speed(0.01).range(0.02..=22.0).clamp_existing_to_range(false).suffix(unit.suffix()).max_decimals(2),
+                egui::DragValue::new(&mut v).speed(0.01).range(0.02..=22.0).clamp_existing_to_range(false).measure(unit).max_decimals(2),
             );
             if r.changed() {
                 out = Some((v * k, r.dragged() && !r.drag_started()));

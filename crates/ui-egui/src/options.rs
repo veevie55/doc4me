@@ -20,6 +20,7 @@ thread_local! {
     // The unit dialogs and the ribbon show lengths in: File › Options › Advanced, copied from the
     // session each frame so dialog code without the app can read it.
     static UNIT: Cell<Unit> = const { Cell::new(Unit::Inches) };
+    static DECIMAL: Cell<char> = const { Cell::new('.') };
 }
 
 /// The unit lengths are shown in (File › Options › Advanced › Measurement units).
@@ -27,10 +28,67 @@ pub fn unit() -> Unit {
     UNIT.get()
 }
 
+/// The decimal separator measurement fields use for display.
+pub fn decimal() -> char {
+    DECIMAL.get()
+}
+
+/// A length in the selected unit and region's decimal format.
+pub fn length(pt: f32) -> String {
+    unit().format_with(pt, decimal())
+}
+
+/// Add the selected measurement unit and regional decimal separator to a length field.
+pub trait MeasureExt: Sized {
+    fn measure(self, unit: Unit) -> Self;
+    fn measure_blank(self, unit: Unit) -> Self;
+}
+
+impl MeasureExt for crate::numfield::NumField<'_> {
+    fn measure(self, unit: Unit) -> Self {
+        let sep = decimal();
+        self.suffix(unit.suffix())
+            .custom_formatter(move |n, decimals| {
+                let s = egui::emath::format_with_decimals_in_range(n, decimals);
+                if sep == '.' { s } else { s.replace('.', &sep.to_string()) }
+            })
+            .custom_parser(move |text| parse_length(text, unit))
+    }
+
+    fn measure_blank(self, unit: Unit) -> Self {
+        self.custom_formatter(|_, _| String::new()).custom_parser(move |text| parse_length(text, unit))
+    }
+}
+
+impl MeasureExt for egui::DragValue<'_> {
+    fn measure(self, unit: Unit) -> Self {
+        let sep = decimal();
+        self.suffix(unit.suffix())
+            .custom_formatter(move |n, decimals| {
+                let s = egui::emath::format_with_decimals_in_range(n, decimals);
+                if sep == '.' { s } else { s.replace('.', &sep.to_string()) }
+            })
+            .custom_parser(move |text| parse_length(text, unit))
+    }
+
+    fn measure_blank(self, unit: Unit) -> Self {
+        self.custom_formatter(|_, _| String::new()).custom_parser(move |text| parse_length(text, unit))
+    }
+}
+
+fn parse_length(text: &str, unit: Unit) -> Option<f64> {
+    let text: String = text.chars().filter(|c| !c.is_whitespace()).collect();
+    doc4me_geom::parse_measure(&text, unit).map(|pt| f64::from(pt / unit.pt_per_unit()))
+}
+
 /// Copy the session's settings the UI reads without the app.
 pub(crate) fn sync(app: &WordApp) {
-    UNIT.set(app.session.prefs.units);
+    UNIT.set(app.session.units());
+    DECIMAL.set(app.session.region().decimal());
 }
+
+const REGIONS: [&str; 16] =
+    ["en-US", "en-CA", "en-GB", "en-AU", "en-IN", "es-MX", "es-ES", "pt-BR", "fr-FR", "de-DE", "it-IT", "pl-PL", "ru-RU", "ja-JP", "zh-CN", "ko-KR"];
 
 /// The units offered, with their names.
 pub const UNITS: [(Unit, &str); 5] = [
@@ -279,6 +337,9 @@ fn proofing(app: &mut WordApp, ui: &mut Ui) {
     ui.add_space(8.0);
     section(ui, "Custom dictionary");
     custom_dictionary(app, ui);
+    ui.add_space(8.0);
+    section(ui, "Dictionaries");
+    dictionaries(app, ui);
 }
 
 /// The custom dictionary: the words Add to Dictionary kept, each with a Remove button, and a
@@ -314,6 +375,39 @@ fn custom_dictionary(app: &mut WordApp, ui: &mut Ui) {
         }
     });
     ui.data_mut(|d| d.insert_temp(id, word));
+}
+
+/// Search a user-selected folder for Hunspell dictionaries before the system locations.
+fn dictionaries(app: &mut WordApp, ui: &mut Ui) {
+    let saved = app.session.prefs.dictionaries_folder.clone().unwrap_or_default();
+    let id = egui::Id::new("options_dictionaries_folder");
+    let mut folder = ui.data(|d| d.get_temp::<String>(id)).unwrap_or_else(|| saved.clone());
+    ui.label(tl!("Dictionaries folder:"));
+    ui.horizontal(|ui| {
+        let r = ui.add(egui::TextEdit::singleline(&mut folder).desired_width(320.0).hint_text(tl!("Not set: the system's usual places")));
+        let enter = r.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter));
+        let changed = folder.trim() != saved;
+        if ui.add_enabled(changed, egui::Button::new(tl!("Apply"))).clicked() || (enter && changed) {
+            if let Err(e) = app.run("file.options", json!({"dictionariesFolder": folder.trim()})) {
+                app.status(e);
+            } else {
+                folder = app.session.prefs.dictionaries_folder.clone().unwrap_or_default();
+            }
+        }
+        if ui.add_enabled(!saved.is_empty(), egui::Button::new(tl!("Clear"))).clicked() {
+            if let Err(e) = app.run("file.options", json!({"dictionariesFolder": "auto"})) {
+                app.status(e);
+            } else {
+                folder.clear();
+            }
+        }
+    });
+    ui.data_mut(|d| d.insert_temp(id, folder));
+    note(ui, "Hunspell .aff and .dic files here are searched before the system's usual places.");
+    for (lang, path) in doc4me_engine::proof::installed_dictionaries() {
+        let source = path.map(|p| p.to_string_lossy().into_owned()).unwrap_or_else(|| tl!("Not installed").to_string());
+        ui.label(format!("{}: {source}", lang.code()));
+    }
 }
 
 fn save(app: &mut WordApp, ui: &mut Ui) {
@@ -356,7 +450,9 @@ fn save(app: &mut WordApp, ui: &mut Ui) {
     }
     ui.indent("embed_fonts_options", |ui| {
         let mut value = subset;
-        if ui.add_enabled(embed, egui::Checkbox::new(&mut value, tl!("Embed only the characters used in the document (best for reducing file size)"))).changed()
+        if ui
+            .add_enabled(embed, egui::Checkbox::new(&mut value, tl!("Embed only the characters used in the document (best for reducing file size)")))
+            .changed()
             && let Err(e) = app.run("file.embedFonts", json!({"subset": value}))
         {
             app.status(e);
@@ -368,7 +464,10 @@ fn save(app: &mut WordApp, ui: &mut Ui) {
             app.status(e);
         }
     });
-    note(ui, "People who open the document see its text in the fonts you used, even without them installed. A font whose licence doesn't allow embedding is left out.");
+    note(
+        ui,
+        "People who open the document see its text in the fonts you used, even without them installed. A font whose licence doesn't allow embedding is left out.",
+    );
     if cfg!(target_arch = "wasm32") {
         note(ui, "In the browser, only the fonts that come with Doc4Me and fonts embedded in documents you opened can be embedded.");
     }
@@ -471,16 +570,38 @@ fn advanced(app: &mut WordApp, ui: &mut Ui) {
         }
         ui.end_row();
         ui.label(tl!("Measurement units:"));
-        let name = UNITS.iter().find(|(u, _)| *u == pr.units).map_or("Inches", |(_, n)| n);
-        egui::ComboBox::from_id_salt("options_units").selected_text(tl!(name)).width(160.0).show_ui(ui, |ui| {
+        let current_unit = app.session.units();
+        let label = UNITS.iter().find(|(u, _)| *u == current_unit).map_or("Inches", |(_, n)| n);
+        let shown = if pr.units_auto { format!("{} ({})", tl!("Automatic"), tl!(label)) } else { tl!(label).to_string() };
+        egui::ComboBox::from_id_salt("options_units").selected_text(shown).width(180.0).show_ui(ui, |ui| {
+            if ui.selectable_label(pr.units_auto, tl!("Automatic")).clicked() {
+                set(app, json!({"units": "auto"}));
+            }
             for (u, label) in UNITS {
-                if ui.selectable_label(pr.units == u, tl!(label)).clicked() {
+                if ui.selectable_label(!pr.units_auto && pr.units == u, tl!(label)).clicked() {
                     set(app, json!({"units": u}));
                 }
             }
         });
         ui.end_row();
+        ui.label(tl!("Region:"));
+        let system = &app.session.system_region;
+        let system_tag = if system.territory.is_empty() { system.language.clone() } else { format!("{}-{}", system.language, system.territory) };
+        let automatic = format!("{} ({system_tag})", tl!("Automatic"));
+        let selected_region = pr.region.clone().unwrap_or_else(|| automatic.clone());
+        egui::ComboBox::from_id_salt("options_region").selected_text(selected_region).width(200.0).show_ui(ui, |ui| {
+            if ui.selectable_label(pr.region.is_none(), automatic).clicked() {
+                set(app, json!({"region": "auto"}));
+            }
+            for region in REGIONS {
+                if ui.selectable_label(pr.region.as_deref() == Some(region), region).clicked() {
+                    set(app, json!({"region": region}));
+                }
+            }
+        });
+        ui.end_row();
     });
+    note(ui, "Automatic follows the system region for new blank documents, default units, and decimal separators.");
     let mut keytips = app.ui.keytips_enabled;
     if ui.checkbox(&mut keytips, tl!("Show KeyTips (Alt or F10)")).changed() {
         let _ = app.run("ui.keytips", json!({"value": keytips}));

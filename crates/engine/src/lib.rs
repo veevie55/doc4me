@@ -30,6 +30,7 @@ use std::collections::HashMap;
 use serde_json::Value;
 
 pub use doc4me_doc as doc;
+pub use doc4me_geom::Region;
 pub use doc4me_layout as layout;
 pub use doc4me_proof as proof;
 pub use doc4me_render as render;

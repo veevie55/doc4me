@@ -14,8 +14,8 @@ use egui::{Ui, vec2};
 use serde::Serialize;
 use serde_json::{Value, json};
 
-use crate::WordApp;
 use crate::theme::semibold;
+use crate::{WordApp, options::MeasureExt as _};
 
 trait SteadyUi {
     fn steady_label(&mut self, selected: bool, text: impl Into<egui::WidgetText>) -> egui::Response;
@@ -1119,7 +1119,7 @@ fn tabs_page(ui: &mut Ui, f: &mut StyleForm) {
                     ui.label(egui::RichText::new(tl!("(no tab stops)")).weak());
                 }
                 for (i, (pos, _, _)) in f.tabs.iter().enumerate() {
-                    if ui.steady_label(f.tab == i, format!("{pos:.2}{}", unit.suffix())).clicked() {
+                    if ui.steady_label(f.tab == i, crate::options::length(pos * unit.pt_per_unit())).clicked() {
                         f.tab = i;
                     }
                 }
@@ -1146,7 +1146,7 @@ fn tabs_page(ui: &mut Ui, f: &mut StyleForm) {
         ui.vertical(|ui| {
             ui.horizontal(|ui| {
                 ui.label(tl!("Position:"));
-                ui.add(crate::numfield::NumField::new(pos).speed(0.01).range(0.0..=22.0).suffix(unit.suffix()).max_decimals(2));
+                ui.add(crate::numfield::NumField::new(pos).speed(0.01).range(0.0..=22.0).measure(unit).max_decimals(2));
             });
             heading(ui, "Alignment");
             ui.horizontal_wrapped(|ui| {
@@ -1173,7 +1173,7 @@ fn tabs_page(ui: &mut Ui, f: &mut StyleForm) {
 fn indents_page(ui: &mut Ui, f: &mut StyleForm) {
     let unit = crate::options::unit();
     fn len(v: &mut f32, unit: doc4me_geom::Unit) -> crate::numfield::NumField<'_> {
-        crate::numfield::NumField::new(v).speed(0.01).range(-22.0..=22.0).suffix(unit.suffix()).max_decimals(2)
+        crate::numfield::NumField::new(v).speed(0.01).range(-22.0..=22.0).measure(unit).max_decimals(2)
     }
     heading(ui, "Indentation");
     egui::Grid::new("ms_indent").num_columns(4).spacing(vec2(10.0, 8.0)).show(ui, |ui| {

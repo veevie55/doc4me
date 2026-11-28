@@ -8,6 +8,9 @@
 
 use serde::{Deserialize, Serialize};
 
+mod region;
+pub use region::Region;
+
 #[cfg(feature = "image")]
 pub mod picture;
 mod pixels;
@@ -85,18 +88,22 @@ impl Unit {
     }
     /// Format `pt` in this unit the way Word's fields show it (`1"`, `2.54 cm`, `12 pt`).
     pub fn format(self, pt: f32) -> String {
+        self.format_with(pt, '.')
+    }
+    /// Format `pt` with a region's decimal separator.
+    pub fn format_with(self, pt: f32, decimal: char) -> String {
         let v = finite(pt) / self.pt_per_unit();
         let s = format!("{v:.2}");
         let s = s.trim_end_matches('0').trim_end_matches('.');
         let s = if s == "-0" { "0" } else { s };
-        format!("{s}{}", self.suffix())
+        format!("{}{}", s.replace('.', &decimal.to_string()), self.suffix())
     }
 }
 
 /// Parse a measurement typed by a user: `1"`, `1 in`, `2.5cm`, `12pt`, `3 pi`, `10 mm`, `1.5 li`
 /// (lines are 12 pt). A bare number is in `default`. Returns points.
 pub fn parse_measure(s: &str, default: Unit) -> Option<f32> {
-    let t = s.trim().to_ascii_lowercase();
+    let t = s.trim().to_ascii_lowercase().replace('\u{2212}', "-");
     if t.is_empty() {
         return None;
     }

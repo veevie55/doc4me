@@ -52,8 +52,12 @@ pub fn start() {
                     if let Err(e) = listen_for_pasted_pictures(inbox.clone(), cc.egui_ctx.clone()) {
                         log::error!("pasting pictures is unavailable: {e}");
                     }
-                    let doc = if query().contains("sample") { doc4me_engine::sample::sample_document() } else { doc4me_doc::Document::new() };
-                    let mut app = WordApp::new(Session::new(doc), services(inbox.clone(), cc.egui_ctx.clone(), dirty, saves.clone()));
+                    let session = if query().contains("sample") {
+                        Session::new(doc4me_engine::sample::sample_document())
+                    } else {
+                        Session::new_blank_in(doc4me_ui_egui::i18n::system_region())
+                    };
+                    let mut app = WordApp::new(session, services(inbox.clone(), cc.egui_ctx.clone(), dirty, saves.clone()));
                     app.autosave = false;
                     Ok(Box::new(WebShell { app, inbox, saves }))
                 }),

@@ -668,6 +668,9 @@ impl Default for LineSpacing {
     }
 }
 
+/// Positions within this many points refer to the same tab stop.
+pub const TAB_POS_EPS: f32 = 0.5;
+
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub enum TabAlign {

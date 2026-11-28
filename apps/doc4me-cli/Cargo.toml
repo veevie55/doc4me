@@ -20,3 +20,4 @@ doc4me-render = { workspace = true }
 doc4me-mcp = { workspace = true }
 doc4me-zotero = { workspace = true }
 serde_json = { workspace = true }
+sys-locale = { version = "0.3", features = ["js"] }

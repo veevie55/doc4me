@@ -106,7 +106,27 @@ fn active_story(app: &WordApp, layout: &DocLayout) -> StoryRef {
 /// handles, no move cursor and no drag.
 fn fixed(app: &WordApp, hit: &ObjectHit) -> bool {
     let pos = hit.pos();
-    matches!(app.session.doc.para_at(&pos).and_then(|p| p.object_at(pos.off)), Some(InlineObject::Graphic { .. }))
+    matches!(app.session.doc.para_at(&pos).and_then(|p| p.object_at(pos.off)), Some(InlineObject::Graphic { .. })) || locked(app, hit)
+}
+
+/// Whether the drawing under `hit` is locked against changes.
+fn locked(app: &WordApp, hit: &ObjectHit) -> bool {
+    let pos = hit.pos();
+    app.session.doc.para_at(&pos).and_then(|p| p.object_at(pos.off)).and_then(InlineObject::frame).is_some_and(|(_, _, f)| f.locked)
+}
+
+fn locked_press_id() -> egui::Id {
+    egui::Id::new("doc4me_locked_object_press")
+}
+
+/// The rounded rectangle's corner radius, for its canvas adjustment handle.
+fn corner_of(app: &WordApp, hit: &ObjectHit) -> Option<f32> {
+    match app.session.doc.para_at(&hit.pos()).and_then(|p| p.object_at(hit.off))? {
+        InlineObject::Shape { kind: doc4me_doc::para::ShapeKind::RoundedRectangle, extra, .. } => {
+            Some(doc4me_doc::connector::corner_radius(extra.corner, hit.rect.w, hit.rect.h))
+        }
+        _ => None,
+    }
 }
 
 /// The story of the selected text box.
@@ -136,6 +156,17 @@ fn screen(pages: &[Rect], scale: f32, page: usize, r: doc4me_geom::Rect) -> Opti
 /// Pressing, dragging, releasing or double-clicking on an object (or a frame handle). Returns
 /// true when it was about an object, so the text doesn't also get it.
 pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect], layout: &DocLayout, scale: f32, at: Pos2) -> bool {
+    if let Some((press, reported)) = ui.ctx().data(|d| d.get_temp::<(Pos2, bool)>(locked_press_id())) {
+        if !ui.input(|i| i.pointer.primary_down()) {
+            ui.ctx().data_mut(|d| d.remove::<(Pos2, bool)>(locked_press_id()));
+        } else {
+            if !reported && at.distance(press) > 4.0 {
+                app.status(format!("{}: {}", tl!("Locked"), tl!("Unlock")));
+                ui.ctx().data_mut(|d| d.insert_temp(locked_press_id(), (press, true)));
+            }
+            return true;
+        }
+    }
     if let Some(mut d) = app.canvas.obj_drag.take() {
         if ui.input(|i| i.key_pressed(egui::Key::Escape)) {
             return true; // cancelled: dropped without a change
@@ -160,6 +191,8 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
             let shift = ui.input(|i| i.modifiers.shift);
             if d.drag.grab == Grab::Rotate {
                 d.drag.turn_to(at, pages, scale, shift);
+            } else if d.drag.grab == Grab::Corner {
+                d.drag.corner_to(at, pages, scale);
             } else {
                 // Pictures keep their proportions from a corner unless Shift; shapes only with Shift.
                 d.drag.update(at, pages, scale, d.min, d.picture != shift);
@@ -206,11 +239,15 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, pages: &[Rect]
             Some((_, o)) => (doc4me_engine::cmd::objects::min_size(o), matches!(o, InlineObject::Image { .. })),
             None => return true,
         };
+        if locked(app, &object) {
+            ui.ctx().data_mut(|d| d.insert_temp(locked_press_id(), (at, false)));
+            return true;
+        }
         // Objects in table cells can be selected and resized, not moved; charts neither.
         if !fixed(app, &object) && (grab != Grab::Move || movable(app, &object)) {
             let copy = grab == Grab::Move && ui.input(|i| i.modifiers.command);
-            app.canvas.obj_drag =
-                Some(ObjectDrag { drag: Drag::new(grab, object.page, object.rect, object.spin.deg, at), object, min, picture, copy, end: None });
+            let drag = Drag::new(grab, object.page, object.rect, object.spin.deg, at).with_corner(corner_of(app, &object).unwrap_or(0.0));
+            app.canvas.obj_drag = Some(ObjectDrag { drag, object, min, picture, copy, end: None });
         }
     }
     true
@@ -262,6 +299,12 @@ fn grab_at(app: &WordApp, layout: &DocLayout, pages: &[Rect], scale: f32, at: Po
         if frame::rotate_handle_at(f, o.spin.deg, at) {
             return Some((o, Grab::Rotate));
         }
+        if let Some(radius) = corner_of(app, &o) {
+            let corner = frame::corner_handle(f, o.spin.deg, radius * scale);
+            if frame::corner_handle_wins(f, o.spin.deg, corner, at) {
+                return Some((o, Grab::Corner));
+            }
+        }
         frame::handle_at(f, o.spin.deg, at).map(|h| (o, Grab::Resize(h)))
     });
     handle.or_else(|| {
@@ -287,6 +330,10 @@ fn drop(app: &mut WordApp, d: &ObjectDrag) {
     let params = match d.drag.grab {
         Grab::Rotate => {
             let _ = app.run("arrange.rotation", json!({"degrees": d.drag.deg}));
+            return;
+        }
+        Grab::Corner => {
+            let _ = app.run("shape.cornerRadius", json!({"radius": d.drag.corner}));
             return;
         }
         Grab::Move if d.copy => {
@@ -328,6 +375,10 @@ pub fn paint(app: &WordApp, painter: &Painter, t: &Tokens, layout: &DocLayout, p
             frame::paint_turning(painter, t, to, d.drag.deg);
             return;
         }
+        if d.drag.grab == Grab::Corner {
+            frame::paint_cornering(painter, t, to, d.drag.deg, d.drag.corner * scale);
+            return;
+        }
         // The object's own pixels, from its page's cached texture: moved, or scaled for an
         // unturned picture. Resizing reflows a text box (and redraws a shape), so that's just the
         // new outline.
@@ -366,7 +417,29 @@ pub fn paint(app: &WordApp, painter: &Painter, t: &Tokens, layout: &DocLayout, p
         // Handles where it can be resized and turned (body and header/footer objects,
         // not charts): else a plain frame.
         let handles = selectable_story(app, o.story) && !fixed(app, &o);
-        frame::paint(painter, t, f, o.spin.deg, editing, handles, handles);
+        if locked(app, &o) && !editing {
+            frame::paint_locked(painter, t, f, o.spin.deg);
+        } else {
+            frame::paint(painter, t, f, o.spin.deg, editing, handles, handles);
+            if handles && let Some(radius) = corner_of(app, &o) {
+                frame::paint_corner_handle(painter, t, frame::corner_handle(f, o.spin.deg, radius * scale));
+            }
+        }
+    }
+    if let Some(at) = painter.ctx().input(|i| i.pointer.latest_pos()) {
+        paint_locked_hover(app, painter, t, layout, pages, scale, at);
+    }
+}
+
+/// Show the padlock on a locked object the pointer is resting over.
+fn paint_locked_hover(app: &WordApp, painter: &Painter, t: &Tokens, layout: &DocLayout, pages: &[Rect], scale: f32, at: Pos2) {
+    let Some((object, _)) = grab_at(app, layout, pages, scale, at) else { return };
+    if !locked(app, &object) || selected(app).is_some_and(|(pos, _)| pos == object.pos()) {
+        return;
+    }
+    if let Some(f) = screen(pages, scale, object.page, object.rect) {
+        let corners = frame::corners(f, object.spin.deg);
+        frame::paint_lock_badge(painter, t, corners[1] + egui::vec2(1.0, -1.0));
     }
 }
 

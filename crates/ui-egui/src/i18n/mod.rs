@@ -503,6 +503,14 @@ fn detect_system_lang() -> Lang {
     first_supported(tags.iter().map(String::as_str)).unwrap_or(Lang::EN)
 }
 
+/// The system region for blank documents and measurements, independent of the interface language.
+pub fn system_region() -> doc4me_geom::Region {
+    if cfg!(test) {
+        return doc4me_geom::Region::default();
+    }
+    doc4me_geom::Region::from_locale_vars(|name| std::env::var(name).ok(), sys_locale::get_locale)
+}
+
 thread_local! {
     // Per thread: parallel test harnesses must not change each other's language.
     static CURRENT: Cell<Lang> = const { Cell::new(Lang::EN) };

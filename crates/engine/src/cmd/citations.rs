@@ -741,12 +741,18 @@ pub(crate) fn generated_list(s: &mut Session, instr: &str, title: &str) -> Resul
 
 pub(crate) fn report_list(s: &mut Session, instr: &str, title: &str, label: &str) -> Result<(), CmdError> {
     let at = delete_selection(s)?;
-    if at.story != StoryRef::Body || at.path.depth() > 0 { return Err(CmdError::Failed("lists go in the main text".into())); }
+    if at.story != StoryRef::Body || at.path.depth() > 0 {
+        return Err(CmdError::Failed("lists go in the main text".into()));
+    }
     let (para, chr) = super::continued::heading_look(s);
     let mut head = Paragraph::with_text(title, chr.clone());
     head.mark = chr.clone();
     head.props = doc4me_doc::ParaProps { style: Some("TOCHeading".into()), ..para };
-    head.insert_object(head.len(), InlineObject::Field { instr: instr.to_string(), result: String::new(), locked: false, code: false, form: None }, &chr)?;
+    head.insert_object(
+        head.len(),
+        InlineObject::Field { instr: instr.to_string(), result: String::new(), locked: false, code: false, form: None },
+        &chr,
+    )?;
     let i = if s.doc.para_at(&at).is_some_and(|p| p.is_empty()) { at.path.last() } else { s.doc.split_paragraph(&at)?.path.last() };
     s.doc.insert_block(StoryRef::Body, &Path::top(i), Block::Para(head))?;
     super::continued::add_styles(s, super::continued::LIST);
@@ -793,33 +799,60 @@ pub(crate) const THAI_FIGURE: &str = "ภาพที่";
 pub(crate) const THAI_TABLE: &str = "ตารางที่";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum LabelMode { Full, Number, None }
+pub enum LabelMode {
+    Full,
+    Number,
+    None,
+}
 
 impl LabelMode {
-    pub fn name(self) -> &'static str { match self { Self::Full => "full", Self::Number => "number", Self::None => "none" } }
-    pub fn from_name(n: &str) -> Option<Self> { match n { "full" => Some(Self::Full), "number" => Some(Self::Number), "none" => Some(Self::None), _ => None } }
+    pub fn name(self) -> &'static str {
+        match self {
+            Self::Full => "full",
+            Self::Number => "number",
+            Self::None => "none",
+        }
+    }
+    pub fn from_name(n: &str) -> Option<Self> {
+        match n {
+            "full" => Some(Self::Full),
+            "number" => Some(Self::Number),
+            "none" => Some(Self::None),
+            _ => None,
+        }
+    }
 }
 
 const LABEL_MODE_PROP: &str = "KrubOffice.CaptionListLabels";
 
 pub fn label_mode(doc: &Document, label: &str) -> LabelMode {
     doc.custom_prop(LABEL_MODE_PROP)
-        .and_then(|v| v.split(';').find_map(|pair| pair.split_once('=').filter(|(l, _)| l.trim() == label).and_then(|(_, m)| LabelMode::from_name(m.trim()))))
+        .and_then(|v| {
+            v.split(';').find_map(|pair| pair.split_once('=').filter(|(l, _)| l.trim() == label).and_then(|(_, m)| LabelMode::from_name(m.trim())))
+        })
         .unwrap_or(LabelMode::Full)
 }
 
 pub(crate) fn set_label_mode(doc: &mut Document, label: &str, mode: LabelMode) {
     let label: String = label.chars().filter(|c| !matches!(c, ';' | '=') && !c.is_control()).take(64).collect();
     let label = label.trim();
-    if label.is_empty() { return; }
-    let mut pairs: Vec<(String, String)> = doc.custom_prop(LABEL_MODE_PROP)
+    if label.is_empty() {
+        return;
+    }
+    let mut pairs: Vec<(String, String)> = doc
+        .custom_prop(LABEL_MODE_PROP)
         .map(|v| v.split(';').filter_map(|p| p.split_once('=')).map(|(l, m)| (l.trim().to_string(), m.trim().to_string())).collect())
         .unwrap_or_default();
     pairs.retain(|(l, _)| l != label && !l.is_empty());
-    if mode != LabelMode::Full { pairs.push((label.to_string(), mode.name().to_string())); }
+    if mode != LabelMode::Full {
+        pairs.push((label.to_string(), mode.name().to_string()));
+    }
     pairs.truncate(64);
-    if pairs.is_empty() { doc.remove_custom_prop(LABEL_MODE_PROP); }
-    else { doc.set_custom_prop(LABEL_MODE_PROP, &pairs.iter().map(|(l, m)| format!("{l}={m}")).collect::<Vec<_>>().join(";")); }
+    if pairs.is_empty() {
+        doc.remove_custom_prop(LABEL_MODE_PROP);
+    } else {
+        doc.set_custom_prop(LABEL_MODE_PROP, &pairs.iter().map(|(l, m)| format!("{l}={m}")).collect::<Vec<_>>().join(";"));
+    }
 }
 
 pub(crate) fn caption_entry(text: &str, label: &str, mode: LabelMode) -> String {
@@ -827,13 +860,18 @@ pub(crate) fn caption_entry(text: &str, label: &str, mode: LabelMode) -> String 
     let rest = rest.trim_start();
     match mode {
         LabelMode::Number => rest.to_string(),
-        LabelMode::None => rest.find(char::is_whitespace).map(|k| rest[k..].trim_start_matches(|c: char| c.is_whitespace() || matches!(c, ':' | '.' | '-' | '–' | '—')).to_string()).unwrap_or_default(),
+        LabelMode::None => rest
+            .find(char::is_whitespace)
+            .map(|k| rest[k..].trim_start_matches(|c: char| c.is_whitespace() || matches!(c, ':' | '.' | '-' | '–' | '—')).to_string())
+            .unwrap_or_default(),
         LabelMode::Full => text.to_string(),
     }
 }
 
 pub(crate) fn entry_leader(p: &Paragraph) -> Option<TabLeader> {
-    if p.props.style.as_deref() != Some(ENTRY_STYLE) { return None; }
+    if p.props.style.as_deref() != Some(ENTRY_STYLE) {
+        return None;
+    }
     p.props.tabs.as_ref()?.iter().find(|t| t.align == TabAlign::Right).map(|t| t.leader)
 }
 
@@ -878,10 +916,14 @@ fn rebuild_generated_where(s: &mut Session, leader: Option<TabLeader>, wanted: i
         }
         let in_list = |p: &Paragraph| p.props.style.as_deref() == Some(ENTRY_STYLE) || super::continued::is_part(p, super::continued::LIST);
         let mut last = i;
-        while s.doc.body.get(last + 1).and_then(|b| b.as_para()).is_some_and(in_list) { last += 1; }
+        while s.doc.body.get(last + 1).and_then(|b| b.as_para()).is_some_and(in_list) {
+            last += 1;
+        }
         let report = if kind.starts_with(r"TOC \c") { super::continued::label_in(s, i + 1, last, super::continued::LIST) } else { None };
         let kept = (i + 1..=last).filter_map(|k| s.doc.body.get(k)?.as_para()).find_map(entry_leader);
-        for k in (i + 1..=last).rev() { s.doc.remove_block(StoryRef::Body, &Path::top(k))?; }
+        for k in (i + 1..=last).rev() {
+            s.doc.remove_block(StoryRef::Body, &Path::top(k))?;
+        }
         let mut added = 0;
         if let Some(label) = &report {
             super::continued::add_styles(s, super::continued::LIST);
@@ -899,7 +941,9 @@ fn rebuild_generated_where(s: &mut Session, leader: Option<TabLeader>, wanted: i
             if text.contains('\t') {
                 para.props.tabs = Some(vec![TabStop { pos: width - 0.5, align: TabAlign::Right, leader }]);
             }
-            if report.is_some() { para.props.space_after = Some(0.0); }
+            if report.is_some() {
+                para.props.space_after = Some(0.0);
+            }
             para
         };
         let count = lines.len();
@@ -908,7 +952,9 @@ fn rebuild_generated_where(s: &mut Session, leader: Option<TabLeader>, wanted: i
         }
         if let Some(label) = &report {
             let end = super::continued::paginate(s, i, i + added + count, label, super::continued::LIST)?;
-            let slots: Vec<usize> = (i + 1..=end).filter(|k| s.doc.body.get(*k).and_then(|b| b.as_para()).is_some_and(|p| p.props.style.as_deref() == Some(ENTRY_STYLE))).collect();
+            let slots: Vec<usize> = (i + 1..=end)
+                .filter(|k| s.doc.body.get(*k).and_then(|b| b.as_para()).is_some_and(|p| p.props.style.as_deref() == Some(ENTRY_STYLE)))
+                .collect();
             for ((text, hanging), k) in entries_for(s, &kind).into_iter().zip(slots) {
                 s.doc.remove_block(StoryRef::Body, &Path::top(k))?;
                 s.doc.insert_block(StoryRef::Body, &Path::top(k), Block::Para(make_entry(&text, hanging)))?;

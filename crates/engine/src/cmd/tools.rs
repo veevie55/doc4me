@@ -531,23 +531,13 @@ pub fn specs() -> Vec<CommandSpec> {
             sel_result(s)
         })
         .params(r#"{"csv"?: string}"#),
-        CommandSpec::new("layout.linkToPrevious", "Link to Previous", "Header & Footer › Navigation", |s, v| {
-            // Alt+Shift+R in a footer links the footer.
-            let in_footer = matches!(s.sel.focus.story, StoryRef::Part(id) if s.doc.parts.get(&id).is_some_and(|p| p.kind == doc4me_doc::PartKind::Footer));
-            let header = p::bool(v, "footer").map(|f| !f).unwrap_or(!in_footer);
-            let block = s.sel.focus.path.0.first().copied().unwrap_or(0) as usize;
-            let sect = s.doc.section_mut(block);
-            if header {
-                sect.headers = Default::default();
-            } else {
-                sect.footers = Default::default();
-            }
-            Ok(json!({"linked": true}))
-        })
-        .key("Alt+Shift+R")
-        .params(r#"{"footer"?: bool}"#),
-        CommandSpec::new("hf.next", "Next Section", "Header & Footer › Navigation", |s, _| hf_nav(s, 1)).pure(),
-        CommandSpec::new("hf.previous", "Previous Section", "Header & Footer › Navigation", |s, _| hf_nav(s, -1)).pure(),
+        CommandSpec::new("layout.linkToPrevious", "Link to Previous", "Header & Footer › Navigation", super::hf::link_to_previous)
+            .key("Alt+Shift+R")
+            .params(
+                r#"{"value"?: bool (true: use the previous section's; false: give this section its own copy; default: toggle), "footer"?: bool (default: what the caret is in, else the header), "section"?: n (0-based; default: the section being edited, else the caret's)} → {linked, section, story}"#,
+            ),
+        CommandSpec::new("hf.next", "Next Section", "Header & Footer › Navigation", |s, _| super::hf::nav(s, 1)),
+        CommandSpec::new("hf.previous", "Previous Section", "Header & Footer › Navigation", |s, _| super::hf::nav(s, -1)),
         CommandSpec::new("hf.position", "Header/Footer Position", "Header & Footer › Position", |s, v| {
             let (h, f) = (p::f32(v, "header"), p::f32(v, "footer"));
             let block = s.sel.focus.path.0.first().copied().unwrap_or(0) as usize;
@@ -1479,26 +1469,6 @@ fn autotext_complete(s: &mut Session, v: &Value) -> CmdResult {
     s.sel = Selection { anchor: start, focus: s.sel.focus.clone() };
     quick_parts(s, &json!({"insert": name}))?;
     Ok(json!({"name": name}))
-}
-
-fn hf_nav(s: &mut Session, dir: i32) -> CmdResult {
-    let StoryRef::Part(cur) = s.sel.focus.story else { return Err(CmdError::Disabled("edit a header or footer first".into())) };
-    let mut ids: Vec<u32> = Vec::new();
-    for (_, sect) in s.doc.sections() {
-        for id in [sect.headers.default, sect.headers.first, sect.headers.even, sect.footers.default, sect.footers.first, sect.footers.even]
-            .into_iter()
-            .flatten()
-        {
-            if !ids.contains(&id) {
-                ids.push(id);
-            }
-        }
-    }
-    let i = ids.iter().position(|x| *x == cur).unwrap_or(0) as i32;
-    let n = ids.len().max(1) as i32;
-    let next = ids.get(((i + dir).rem_euclid(n)) as usize).copied().unwrap_or(cur);
-    s.sel = Selection::caret(s.doc.start_of(StoryRef::Part(next)));
-    sel_result(s)
 }
 
 fn select_similar(s: &mut Session, _: &Value) -> CmdResult {

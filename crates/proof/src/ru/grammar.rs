@@ -601,4 +601,3 @@ fn doubled_punctuation(text: &str, v: &mut Vec<Issue>) {
         i += run.max(1);
     }
 }
-

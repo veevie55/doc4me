@@ -8,10 +8,10 @@
 //! (`continued`, with `ตารางที่\tหน้า` for the column heading), and how each line shows the
 //! caption's label in a custom document property ([`citations::LABEL_MODE_PROP`]).
 
-use serde_json::{Value, json};
 use doc4me_doc::para::OBJ;
 use doc4me_doc::props::{TabAlign, TabLeader};
 use doc4me_doc::{Block, Paragraph, Path, Pos, StoryRef};
+use serde_json::{Value, json};
 
 use super::citations::{self, LabelMode};
 use super::continued;

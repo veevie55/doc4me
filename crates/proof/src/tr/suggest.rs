@@ -268,4 +268,3 @@ fn match_casing(orig: &str, cand: &str) -> String {
         cand.to_string()
     }
 }
-

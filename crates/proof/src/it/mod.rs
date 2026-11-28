@@ -144,4 +144,3 @@ pub fn is_correct_with(d: &AffixDict, word: &str) -> bool {
 fn known(d: &AffixDict, w: &str) -> bool {
     d.check(w) || crate::in_user_dictionary(&w.to_lowercase())
 }
-

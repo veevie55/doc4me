@@ -425,6 +425,8 @@ pub struct Session {
     pub read_aloud: crate::speech::ReadAloud,
     /// Preferences the front end saves between runs.
     pub prefs: Prefs,
+    /// The platform's region. `Prefs::region` overrides this.
+    pub system_region: doc4me_geom::Region,
     /// Custom keyboard shortcuts (`tools.customizeKeyboard`); the front end saves them too.
     pub keymap: crate::KeyMap,
     /// Custom ribbon and Quick Access Toolbar (`tools.customizeRibbon`); the front end saves it too.
@@ -511,6 +513,13 @@ pub struct Prefs {
     pub overtype: bool,
     /// The unit rulers and dialogs show lengths in.
     pub units: doc4me_geom::Unit,
+    /// Follow the region for measurement units instead of the explicit `units` value.
+    pub units_auto: bool,
+    /// A user-selected region; `None` follows the system region.
+    pub region: Option<String>,
+    /// A folder searched for Hunspell dictionaries before the system locations; `None` searches
+    /// only the system locations.
+    pub dictionaries_folder: Option<String>,
     /// Formatting marks shown even while Show/Hide ¶ is off.
     pub marks: doc4me_layout::display::FormattingMarks,
     /// Mark grammar errors as you type (with Check spelling as you type on).
@@ -584,6 +593,9 @@ impl Default for Prefs {
             insert_key_overtype: false,
             overtype: false,
             units: Default::default(),
+            units_auto: false,
+            region: None,
+            dictionaries_folder: None,
             marks: Default::default(),
             mark_grammar: true,
             ignore_uppercase: true,
@@ -628,6 +640,15 @@ impl Prefs {
     }
 }
 
+/// A blank document on `region`'s default paper.
+pub fn blank_document(region: &doc4me_geom::Region) -> Document {
+    let mut doc = Document::new();
+    let (_, width, height) = region.paper();
+    doc.last_section.page_w = width;
+    doc.last_section.page_h = height;
+    doc
+}
+
 /// The citation style a document records (References › Style), APA when it records none or
 /// one we don't know.
 fn doc_bib_style(doc: &Document) -> String {
@@ -640,6 +661,19 @@ const MAX_UNDO: usize = 500;
 pub const UNDO_LIST_MAX: usize = 100;
 
 impl Session {
+    /// A new session with a blank document on the current system region's paper.
+    pub fn new_blank() -> Self {
+        let region = doc4me_geom::Region::from_locale_vars(|k| std::env::var(k).ok(), || None);
+        Self::new_blank_in(region)
+    }
+
+    /// A new session with a blank document on the supplied region's paper.
+    pub fn new_blank_in(region: doc4me_geom::Region) -> Self {
+        let mut session = Session::new(blank_document(&region));
+        session.system_region = region;
+        session
+    }
+
     pub fn new(doc: Document) -> Self {
         let start = doc.start_of(StoryRef::Body);
         let bib_style = doc_bib_style(&doc);
@@ -696,6 +730,7 @@ impl Session {
             also_selected: Vec::new(),
             table_selection: None,
             prefs: Prefs::default(),
+            system_region: doc4me_geom::Region::from_locale_vars(|k| std::env::var(k).ok(), || None),
             keymap: crate::KeyMap::default(),
             ribbon: crate::RibbonLayout::default(),
             editing_lang: None,
@@ -711,6 +746,26 @@ impl Session {
             edit_marks: Vec::new(),
             go_back_step: 0,
         }
+    }
+
+    /// The region in effect: the user's choice, else the system's.
+    pub fn region(&self) -> doc4me_geom::Region {
+        self.prefs.region.as_deref().map(doc4me_geom::Region::from_tag).unwrap_or_else(|| self.system_region.clone())
+    }
+
+    /// The unit lengths are shown in: an explicit choice, or the region's default.
+    pub fn units(&self) -> doc4me_geom::Unit {
+        if self.prefs.units_auto { self.region().units() } else { self.prefs.units }
+    }
+
+    /// Format a length in the user's unit and decimal separator.
+    pub fn format_length(&self, pt: f32) -> String {
+        self.region().format(self.units(), pt)
+    }
+
+    /// A blank document on the current region's paper.
+    pub fn blank_document(&self) -> Document {
+        blank_document(&self.region())
     }
 
     /// Remember the caret as the place of an edit, for Go Back. Edits in the same paragraph as
@@ -1227,6 +1282,8 @@ impl Session {
             // Go Back's places, like the caret history: not part of the document.
             edit_marks: _,
             go_back_step: _,
+            // Host locale used for new documents and automatic region preferences.
+            system_region: _,
         } = self;
         let head = if history.len() + SNAPSHOT_HEAD > MAX_UNDO { history.iter().take(SNAPSHOT_HEAD).cloned().collect() } else { Vec::new() };
         EditSnapshot {

@@ -1350,6 +1350,13 @@ impl Reader<'_> {
         let arrow = |tag: &str| ln.and_then(|l| l.child(tag)).and_then(|e| e.attr("type")).is_some_and(|t| t != "none");
         extra.arrow_start = arrow("a:headEnd");
         extra.arrow_end = arrow("a:tailEnd");
+        let solid_alpha = |e: Option<&El>| e.and_then(|e| e.child("a:solidFill")).map_or(0.0, |fill| effect_color(fill).1);
+        extra.fill_transparency = solid_alpha(sppr);
+        extra.line_transparency = solid_alpha(ln);
+        extra.dash = ln
+            .and_then(|line| line.child("a:prstDash"))
+            .and_then(|dash| dash.attr("val"))
+            .map_or(doc4me_doc::connector::LineDash::Solid, doc4me_doc::connector::LineDash::from_ooxml);
         // A connector's glued ends (ECMA-376 §20.1.2.2.36, §20.1.2.2.13).
         if let Some(cn) = wsp.child("wps:cNvCnPr") {
             let end = |tag: &str| {
