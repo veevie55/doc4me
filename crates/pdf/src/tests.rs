@@ -170,6 +170,48 @@ fn page_selection_and_errors() {
 }
 
 #[test]
+fn booklet_sheets_follow_fold_order_and_split_at_the_requested_sheet_count() {
+    assert_eq!(booklet_sheets(&[0, 1, 2, 3], 0), vec![[Some(3), Some(0)], [Some(1), Some(2)]]);
+    assert_eq!(booklet_sheets(&[0, 1], 0), vec![[None, Some(0)], [Some(1), None]]);
+    assert_eq!(booklet_sheets(&[0, 1, 2, 3, 4], 1), vec![[Some(3), Some(0)], [Some(1), Some(2)], [None, Some(4)], [None, None]]);
+}
+
+#[test]
+fn book_fold_exports_two_pages_per_landscape_sheet_and_can_be_disabled() {
+    let mut d = sample();
+    d.set_book_fold(true, 0);
+    let lay = layout(&d, &mut LayoutCache::new(), &LayoutOptions::default());
+    assert!(lay.pages.len() >= 2);
+
+    let options = PdfOptions { pages: Some(vec![0, 1]), compress: false, ..Default::default() };
+    let bytes = export_layout(&d, &lay, &options).unwrap();
+    let pdf = hayro_syntax::Pdf::new(bytes.clone()).expect("parse booklet");
+    assert_eq!(pdf.pages().len(), 2, "two selected pages make one double-sided sheet");
+    assert!(pdf.pages().iter().all(|p| {
+        let r = p.media_box();
+        (r.width().round(), r.height().round()) == (792.0, 612.0)
+    }));
+    let raw = String::from_utf8_lossy(&bytes);
+    assert!(!raw.contains("/Outlines") && !raw.contains("/StructTreeRoot") && !raw.contains("/Subtype /Link"));
+    let text = extract_text(&bytes);
+    assert!(squash(&text.concat()).contains("Introduction"));
+
+    let separate = export_layout(&d, &lay, &PdfOptions { pages: Some(vec![0, 1]), booklet: false, ..Default::default() }).unwrap();
+    let pdf = hayro_syntax::Pdf::new(separate).expect("parse separate pages");
+    assert_eq!(pdf.pages().len(), 2);
+    let r = pdf.pages()[0].media_box();
+    assert_eq!((r.width().round(), r.height().round()), (396.0, 612.0));
+
+    let part = d.add_part(doc4me_doc::PartKind::Comment, vec![para_block(Paragraph::with_text("Booklet markup note", CharProps::default()))]);
+    d.comments.insert(0, doc4me_doc::Comment { author: "Ada Reviewer".into(), part, ..Default::default() });
+    d.insert_object(&doc4me_doc::Pos::body(1, 3), InlineObject::CommentStart { id: 0 }, &CharProps::default()).unwrap();
+    let marked_layout = layout(&d, &mut LayoutCache::new(), &LayoutOptions { comment_balloons: true, ..Default::default() });
+    let marked = export_layout(&d, &marked_layout, &PdfOptions { pages: Some(vec![0, 1]), comments: true, ..Default::default() }).unwrap();
+    let text = squash(&extract_text(&marked).concat());
+    assert!(!text.contains("Booklet markup note") && !text.contains("Ada Reviewer"), "booklet print leaves comment balloons off: {text}");
+}
+
+#[test]
 fn hostile_documents_export() {
     let mut d = Document::from_text("x");
     d.last_section.page_w = f32::NAN;

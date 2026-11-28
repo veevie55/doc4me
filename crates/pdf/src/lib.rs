@@ -91,11 +91,13 @@ pub struct PdfOptions {
     pub comments: bool,
     /// Compress content streams.
     pub compress: bool,
+    /// Impose Book fold documents as landscape sheets when enabled.
+    pub booklet: bool,
 }
 
 impl Default for PdfOptions {
     fn default() -> Self {
-        PdfOptions { pages: None, title: None, author: None, tagged: true, include_markup: false, comments: false, compress: true }
+        PdfOptions { pages: None, title: None, author: None, tagged: true, include_markup: false, comments: false, compress: true, booklet: true }
     }
 }
 
@@ -169,6 +171,16 @@ fn refresh_page_refs(doc: &mut Document, lay: &DocLayout) -> bool {
 
 /// Write an existing layout of `doc` as PDF.
 pub fn export_layout(doc: &Document, lay: &DocLayout, opts: &PdfOptions) -> Result<Vec<u8>, PdfError> {
+    // Comment balloons live in a side area outside the page. Booklet sheets print the document
+    // pages themselves, so rebuild only this layout without that area when given a marked layout.
+    let imposed_layout;
+    let lay = if doc.settings.book_fold && opts.booklet && lay.pages.iter().any(|page| page.markup > 0.0) {
+        let mut cache = LayoutCache::new();
+        imposed_layout = layout(doc, &mut cache, &LayoutOptions { hide_deleted: !opts.include_markup, ..Default::default() });
+        &imposed_layout
+    } else {
+        lay
+    };
     let pages: Vec<usize> = match &opts.pages {
         Some(v) => {
             if let Some(bad) = v.iter().find(|p| **p >= lay.pages.len()) {
@@ -205,7 +217,31 @@ enum Attempt {
     BadFont(u32, String),
 }
 
+/// The landscape sheets of a booklet in print order. A booklet is padded with blank pages to a
+/// multiple of four; a positive `sheets` count splits the selected pages into smaller booklets.
+pub fn booklet_sheets(pages: &[usize], sheets: u32) -> Vec<[Option<usize>; 2]> {
+    let per = if sheets == 0 { pages.len().div_ceil(4).max(1) * 4 } else { (sheets as usize).saturating_mul(4) };
+    let mut out = Vec::new();
+    for chunk in pages.chunks(per.max(4)) {
+        let n = chunk.len().div_ceil(4) * 4;
+        let at = |k: usize| chunk.get(k).copied();
+        for i in 0..n / 4 {
+            out.push([at(n - 1 - 2 * i), at(2 * i)]);
+            out.push([at(2 * i + 1), at(n - 2 - 2 * i)]);
+        }
+    }
+    out
+}
+
 fn write(doc: &Document, lay: &DocLayout, opts: &PdfOptions, pages: &[usize], outlined: &HashSet<u32>) -> Result<Attempt, PdfError> {
+    let impose = doc.settings.book_fold && opts.booklet;
+    let imposed_opts;
+    let opts = if impose {
+        imposed_opts = PdfOptions { tagged: false, comments: false, booklet: false, ..opts.clone() };
+        &imposed_opts
+    } else {
+        opts
+    };
     let settings = krilla::SerializeSettings { compress_content_streams: opts.compress, enable_tagging: opts.tagged, ..Default::default() };
     let mut pdf = krilla::Document::new_with(settings);
     pdf.set_metadata(metadata(doc, opts));
@@ -225,32 +261,63 @@ fn write(doc: &Document, lay: &DocLayout, opts: &PdfOptions, pages: &[usize], ou
         links: Vec::new(),
         bookmarks: std::cell::OnceCell::new(),
     };
-    if let Some(o) = ex.outline(pages) {
-        pdf.set_outline(o);
+    if !impose {
+        if let Some(o) = ex.outline(pages) {
+            pdf.set_outline(o);
+        }
     }
-    for &pi in pages {
-        let Some(page) = lay.pages.get(pi) else { return Err(PdfError::BadPage(pi + 1)) };
-        let fit = Fit::of(page);
-        let (w, h) = (clamp_side(fit.paper_w), clamp_side(page.h));
-        let size = Size::from_wh(w, h).ok_or(PdfError::NoPages)?;
-        let mut kp = pdf.start_page_with(PageSettings::new(size));
-        let mut s = kp.surface();
-        ex.links.clear();
-        // A page with a markup area is scaled down to fit its paper with the area beside it.
-        let scaled = fit.k < 1.0;
-        if scaled {
-            s.push_transform(&Transform::from_row(fit.k, 0.0, 0.0, fit.k, 0.0, fit.dy));
+    if impose {
+        let sheets = booklet_sheets(pages, doc.settings.book_fold_sheets);
+        let first = pages.first().and_then(|p| lay.pages.get(*p)).ok_or(PdfError::NoPages)?;
+        let first_fit = Fit::of(first);
+        let (w, h) = (clamp_side(first_fit.paper_w), clamp_side(first.h));
+        let size = Size::from_wh(clamp_side(w * 2.0), h).ok_or(PdfError::NoPages)?;
+        for sheet in sheets {
+            let mut kp = pdf.start_page_with(PageSettings::new(size));
+            let mut s = kp.surface();
+            for (side, index) in sheet.iter().enumerate() {
+                let Some(page) = index.and_then(|i| lay.pages.get(i)) else { continue };
+                let fit = Fit::of(page);
+                ex.links.clear();
+                s.push_transform(&Transform::from_translate(side as f32 * w, 0.0));
+                let scaled = fit.k < 1.0;
+                if scaled {
+                    s.push_transform(&Transform::from_row(fit.k, 0.0, 0.0, fit.k, 0.0, fit.dy));
+                }
+                ex.page(&mut s, page, w, h);
+                if scaled {
+                    s.pop();
+                }
+                s.pop();
+            }
+            s.finish();
+            kp.finish();
         }
-        // `w` is the document page's width: the page colour and watermark stay off the markup area.
-        ex.page(&mut s, page, w, h);
-        if scaled {
-            s.pop();
+    } else {
+        for &pi in pages {
+            let Some(page) = lay.pages.get(pi) else { return Err(PdfError::BadPage(pi + 1)) };
+            let fit = Fit::of(page);
+            let (w, h) = (clamp_side(fit.paper_w), clamp_side(page.h));
+            let size = Size::from_wh(w, h).ok_or(PdfError::NoPages)?;
+            let mut kp = pdf.start_page_with(PageSettings::new(size));
+            let mut s = kp.surface();
+            ex.links.clear();
+            // A page with a markup area is scaled down to fit its paper with the area beside it.
+            let scaled = fit.k < 1.0;
+            if scaled {
+                s.push_transform(&Transform::from_row(fit.k, 0.0, 0.0, fit.k, 0.0, fit.dy));
+            }
+            // `w` is the document page's width: the page colour and watermark stay off the markup area.
+            ex.page(&mut s, page, w, h);
+            if scaled {
+                s.pop();
+            }
+            s.finish();
+            for a in ex.annotations(fit) {
+                kp.add_annotation(a);
+            }
+            kp.finish();
         }
-        s.finish();
-        for a in ex.annotations(fit) {
-            kp.add_annotation(a);
-        }
-        kp.finish();
     }
     if opts.tagged {
         pdf.set_tag_tree(ex.tag_tree());

@@ -10,7 +10,7 @@ use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("layout.margins", "Margins", "Layout › Page Setup", margins).params(
-            r#"{"preset"?: "normal|narrow|moderate|wide|mirrored|office2003", "top"?: pt, "bottom"?: pt, "left"?: pt, "right"?: pt, "gutter"?: pt}"#,
+            r#"{"preset"?: "normal|narrow|moderate|wide|mirrored|office2003", "top"?: pt, "bottom"?: pt, "left"?: pt, "right"?: pt, "gutter"?: pt, "mirror"?: bool}"#,
         ),
         CommandSpec::new("layout.orientation", "Orientation", "Layout › Page Setup", |s, v| {
             let land = match p::str(v, "value") {
@@ -21,6 +21,15 @@ pub fn specs() -> Vec<CommandSpec> {
             with_sect(s, |x| x.set_landscape(land))
         })
         .params(r#"{"value": "portrait|landscape"}"#),
+        CommandSpec::new("layout.bookFold", "Book Fold", "Layout › Page Setup", |s, v| {
+            let on = p::bool(v, "on").unwrap_or(!s.doc.settings.book_fold);
+            let sheets = p::u64(v, "sheets")
+                .map(|n| n.min(u64::from(doc4me_doc::MAX_BOOK_FOLD_SHEETS)) as u32)
+                .unwrap_or(s.doc.settings.book_fold_sheets);
+            s.doc.set_book_fold(on, sheets);
+            Ok(json!({"on": s.doc.settings.book_fold, "sheets": s.doc.settings.book_fold_sheets}))
+        })
+        .params(r#"{"on"?: bool, "sheets"?: 0-15 (0 = all sheets)}"#),
         CommandSpec::new("layout.size", "Size", "Layout › Page Setup", size).params(r#"{"name"?: "Letter|Legal|A4|…", "width"?: pt, "height"?: pt}"#),
         CommandSpec::new("layout.columns", "Columns", "Layout › Page Setup", columns)
             .params(
@@ -382,6 +391,9 @@ fn margins(s: &mut Session, v: &Value) -> CmdResult {
     // A preset picks mirrored or not; plain numbers (a ruler drag, an agent) keep the setting.
     if preset.is_some() {
         s.doc.settings.mirror_margins = preset == Some("mirrored");
+    }
+    if let Some(mirror) = p::bool(v, "mirror") {
+        s.doc.settings.mirror_margins = mirror;
     }
     with_sect(s, |x| {
         x.margin_top = t.max(0.0);

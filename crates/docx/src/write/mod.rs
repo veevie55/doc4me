@@ -1023,6 +1023,12 @@ fn settings_xml(doc: &Document, footnotes: bool, endnotes: bool, template_rel: O
     if s.mirror_margins {
         w.empty("w:mirrorMargins", &[]);
     }
+    if s.book_fold {
+        w.empty("w:bookFoldPrinting", &[]);
+        if s.book_fold_sheets > 0 {
+            w.val("w:bookFoldPrintingSheets", &s.book_fold_sheets.to_string());
+        }
+    }
     if let Some(id) = template_rel {
         w.empty("w:attachedTemplate", &[("r:id", id)]);
     }

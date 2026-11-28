@@ -12,6 +12,25 @@ fn new_document_is_valid() {
 }
 
 #[test]
+fn booklet_pages_switch_between_page_and_half_sheet_dimensions() {
+    let mut document = Document::new();
+    let (original_w, original_h) = {
+        let section = document.sections()[0].1;
+        (section.page_w, section.page_h)
+    };
+    document.set_book_fold(true, 99);
+    let section = document.sections()[0].1;
+    assert_eq!((section.page_w, section.page_h), (original_w.max(original_h) / 2.0, original_w.min(original_h)));
+    assert!(!section.landscape);
+    assert!(document.settings.mirror_margins);
+    assert_eq!(document.settings.book_fold_sheets, MAX_BOOK_FOLD_SHEETS);
+    document.set_book_fold(false, 3);
+    let section = document.sections()[0].1;
+    assert_eq!((section.page_w, section.page_h), (original_w, original_h));
+    assert_eq!(document.settings.book_fold_sheets, 0);
+}
+
+#[test]
 fn word_count() {
     let d = Document::from_text("Hello, world!\nThis is — a test 42.\n\n");
     assert_eq!(d.word_count(), 7);

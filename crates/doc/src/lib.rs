@@ -440,6 +440,10 @@ pub struct Settings {
     pub default_tab: f32,
     pub even_odd_headers: bool,
     pub mirror_margins: bool,
+    /// Page Setup › Multiple pages › Book fold; document pages are half of each landscape sheet.
+    pub book_fold: bool,
+    /// Sheets per booklet, with zero meaning all sheets in one booklet.
+    pub book_fold_sheets: u32,
     pub auto_hyphenation: bool,
     /// Hyphenation zone (`w:hyphenationZone`), points: a line is hyphenated only when breaking
     /// it at a word boundary would leave more than this empty at its end.
@@ -838,6 +842,9 @@ pub const THEME_COLORS: [Rgb; 12] = [
     Rgb(0x96, 0x60, 0x7D),
 ];
 
+/// The most sheets Word allows in one booklet.
+pub const MAX_BOOK_FOLD_SHEETS: u32 = 15;
+
 impl Default for Settings {
     fn default() -> Self {
         Settings {
@@ -845,6 +852,8 @@ impl Default for Settings {
             default_tab: 36.0,
             even_odd_headers: false,
             mirror_margins: false,
+            book_fold: false,
+            book_fold_sheets: 0,
             auto_hyphenation: false,
             hyphenation_zone: DEFAULT_HYPHENATION_ZONE,
             hyphenate_caps: true,
@@ -1251,6 +1260,45 @@ impl Document {
             out.pop();
         }
         out
+    }
+
+    /// Enable booklet imposition by storing each half-sheet as the document page. Layout remains
+    /// ordinary portrait page layout. PDF export combines pairs of these pages onto landscape sheets.
+    pub fn set_book_fold(&mut self, on: bool, sheets: u32) {
+        if on != self.settings.book_fold {
+            let ends: Vec<usize> = self.sections().iter().map(|(end, _)| *end).collect();
+            for end in ends {
+                let section = self.section_mut(end);
+                let (width, height) = (section.page_w, section.page_h);
+                if on {
+                    (section.page_w, section.page_h) = (width.max(height) / 2.0, width.min(height));
+                } else {
+                    let sheet_width = width * 2.0;
+                    (section.page_w, section.page_h) = (sheet_width.min(height), sheet_width.max(height));
+                }
+                section.landscape = false;
+            }
+        }
+        self.settings.book_fold = on;
+        self.settings.book_fold_sheets = if on { sheets.min(MAX_BOOK_FOLD_SHEETS) } else { 0 };
+        if on {
+            self.settings.mirror_margins = true;
+        }
+    }
+
+    /// Convert section dimensions read from a DOCX booklet sheet into the half-sheet page model.
+    pub fn halve_book_fold_sheets(&mut self) {
+        if !self.settings.book_fold {
+            return;
+        }
+        let ends: Vec<usize> = self.sections().iter().map(|(end, _)| *end).collect();
+        for end in ends {
+            let section = self.section_mut(end);
+            if section.page_w >= section.page_h {
+                section.page_w /= 2.0;
+            }
+            section.landscape = false;
+        }
     }
 
     /// Section properties in effect for each top-level body block (index → section number), and

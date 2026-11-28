@@ -215,6 +215,7 @@ Design|Page Background|Page Color|design.pageColor
 Design|Page Background|Page Borders|design.pageBorders
 Layout|Page Setup|Margins|layout.margins
 Layout|Page Setup|Orientation|layout.orientation
+Layout|Page Setup|Book Fold|layout.bookFold
 Layout|Page Setup|Size|layout.size
 Layout|Page Setup|Columns|layout.columns
 Layout|Page Setup|Breaks|layout.break

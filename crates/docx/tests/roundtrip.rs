@@ -40,6 +40,29 @@ fn doc_with(blocks: Vec<Paragraph>) -> Document {
 }
 
 #[test]
+fn book_fold_settings_and_sheet_dimensions_round_trip() {
+    let mut document = doc_with(vec![Paragraph::with_text("Booklet", Default::default())]);
+    document.last_section.page_w = 612.0;
+    document.last_section.page_h = 792.0;
+    document.last_section.gutter = 18.0;
+    document.set_book_fold(true, 2);
+    assert_eq!((document.last_section.page_w, document.last_section.page_h), (396.0, 612.0));
+    let bytes = doc4me_docx::write(&document).expect("write");
+    let mut archive = zip::ZipArchive::new(std::io::Cursor::new(&bytes)).expect("zip");
+    let mut settings = String::new();
+    std::io::Read::read_to_string(&mut archive.by_name("word/settings.xml").expect("settings"), &mut settings).expect("read settings");
+    assert!(settings.contains("w:bookFoldPrinting"));
+    assert!(settings.contains(r#"w:bookFoldPrintingSheets w:val="2""#));
+    let back = rt(&document);
+    assert!(back.settings.book_fold);
+    assert_eq!(back.settings.book_fold_sheets, 2);
+    assert_eq!((back.last_section.page_w, back.last_section.page_h), (396.0, 612.0));
+    let mut plain = back;
+    plain.set_book_fold(false, 0);
+    assert_eq!((plain.last_section.page_w, plain.last_section.page_h), (612.0, 792.0));
+}
+
+#[test]
 fn horizontal_in_vertical_character_properties_round_trip() {
     let layout = EastAsianLayout { vert: true, combine: true, brackets: CombineBrackets::Square, ..Default::default() };
     let d = doc_with(vec![para_runs(&[("vertical", CharProps { east_asian: Some(layout), ..Default::default() })])]);

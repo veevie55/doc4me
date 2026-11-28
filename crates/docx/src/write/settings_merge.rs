@@ -18,6 +18,8 @@
 const OWNED: &[&str] = &[
     "w:displayBackgroundShape",
     "w:mirrorMargins",
+    "w:bookFoldPrinting",
+    "w:bookFoldPrintingSheets",
     "w:attachedTemplate",
     "w:linkStyles",
     "w:trackRevisions",

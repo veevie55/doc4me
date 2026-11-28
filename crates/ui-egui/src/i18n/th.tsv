@@ -3074,3 +3074,9 @@ spacing	Normal	ปกติ
 	Web	Web
 	XML	XML
 	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	อินเทอร์เฟซยังวาด {language} ได้ไม่ถูกต้อง ตัวอักษรที่เชื่อมกันหรือสลับลำดับ และข้อความจากขวาไปซ้ายอาจแสดงผิด ใช้ต่อหรือไม่
+	Mirror margins	ระยะขอบแบบสะท้อน
+	Gutter:	ที่เผื่อเข้าเล่ม:
+	Multiple pages:	หลายหน้า:
+	Book fold	พับเป็นเล่ม
+	Sheets in booklet:	จำนวนแผ่นต่อเล่ม:
+	A booklet is printed on landscape sheets with two pages side by side, then folded.	พิมพ์เป็นแผ่นแนวนอนที่มีสองหน้าอยู่ข้างกัน แล้วพับครึ่งเป็นเล่ม

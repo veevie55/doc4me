@@ -224,6 +224,11 @@ pub enum Dialog {
         left: f32,
         right: f32,
         landscape: bool,
+        mirror: bool,
+        gutter: f32,
+        book_fold: bool,
+        sheets: u32,
+        book_was: (bool, u32),
         /// Document grid: kind (0 none, 1 lines, 2 lines and characters, 3 snap to characters),
         /// lines per page and characters per line; `grid_was` as opened (applied only if changed).
         grid: (u8, u32, u32),
@@ -1154,6 +1159,11 @@ impl Dialog {
                     left: sp.margin_left / crate::options::unit().pt_per_unit(),
                     right: sp.margin_right / crate::options::unit().pt_per_unit(),
                     landscape: sp.landscape,
+                    mirror: app.session.doc.settings.mirror_margins,
+                    gutter: sp.gutter / crate::options::unit().pt_per_unit(),
+                    book_fold: app.session.doc.settings.book_fold,
+                    sheets: app.session.doc.settings.book_fold_sheets,
+                    book_was: (app.session.doc.settings.book_fold, app.session.doc.settings.book_fold_sheets),
                     grid,
                     grid_was: grid,
                     rtl: sp.rtl,
@@ -2219,7 +2229,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             }
             ok || cancel
         }
-        Dialog::PageSetup { top, bottom, left, right, landscape, rtl, grid, grid_was } => {
+        Dialog::PageSetup { top, bottom, left, right, landscape, mirror, gutter, book_fold, sheets, book_was, rtl, grid, grid_was } => {
             ui.label(egui::RichText::new(tl!("Margins")).font(semibold(12.5)));
             egui::Grid::new("ps").num_columns(4).show(ui, |ui| {
                 ui.label(tl!("Top:"));
@@ -2239,7 +2249,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         .max_decimals(2),
                 ));
                 ui.end_row();
-                ui.label(tl!("Left:"));
+                ui.label(if *mirror { tl!("Inside:") } else { tl!("Left:") });
                 ui.add(bounded_field(
                     80.0,
                     egui::DragValue::new(left)
@@ -2247,7 +2257,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         .suffix(crate::options::unit().suffix())
                         .max_decimals(2),
                 ));
-                ui.label(tl!("Right:"));
+                ui.label(if *mirror { tl!("Outside:") } else { tl!("Right:") });
                 ui.add(bounded_field(
                     80.0,
                     egui::DragValue::new(right)
@@ -2256,11 +2266,64 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         .max_decimals(2),
                 ));
                 ui.end_row();
+                ui.label(tl!("Gutter:"));
+                ui.add(bounded_field(
+                    80.0,
+                    egui::DragValue::new(gutter)
+                        .range(0.0..=1000.0)
+                        .speed(3.6 / crate::options::unit().pt_per_unit())
+                        .suffix(crate::options::unit().suffix())
+                        .max_decimals(2),
+                ));
+                ui.end_row();
             });
+            ui.horizontal(|ui| {
+                ui.label(tl!("Multiple pages:"));
+                let selected = if *book_fold {
+                    tl!("Book fold")
+                } else if *mirror {
+                    tl!("Mirror margins")
+                } else {
+                    tl!("Normal")
+                };
+                egui::ComboBox::from_id_salt("ps_multiple").selected_text(selected).show_ui(ui, |ui| {
+                    if ui.selectable_label(!*mirror && !*book_fold, tl!("Normal")).clicked() {
+                        (*mirror, *book_fold) = (false, false);
+                    }
+                    if ui.selectable_label(*mirror && !*book_fold, tl!("Mirror margins")).clicked() {
+                        (*mirror, *book_fold) = (true, false);
+                    }
+                    if ui.selectable_label(*book_fold, tl!("Book fold")).clicked() {
+                        (*mirror, *book_fold) = (true, true);
+                    }
+                });
+            });
+            if *book_fold {
+                ui.horizontal(|ui| {
+                    ui.label(tl!("Sheets in booklet:"));
+                    let shown = if *sheets == 0 { tl!("All").to_string() } else { sheets.to_string() };
+                    egui::ComboBox::from_id_salt("ps_sheets").selected_text(shown).show_ui(ui, |ui| {
+                        if ui.selectable_label(*sheets == 0, tl!("All")).clicked() {
+                            *sheets = 0;
+                        }
+                        for n in 1..=doc4me_doc::MAX_BOOK_FOLD_SHEETS {
+                            if ui.selectable_label(*sheets == n, n.to_string()).clicked() {
+                                *sheets = n;
+                            }
+                        }
+                    });
+                });
+                book_fold_preview(ui);
+                ui.label(
+                    egui::RichText::new(tl!("A booklet is printed on landscape sheets with two pages side by side, then folded.")).small().weak(),
+                );
+            }
             ui.label(egui::RichText::new(tl!("Orientation")).font(semibold(12.5)));
             ui.horizontal(|ui| {
-                ui.radio_value(landscape, false, tl!("Portrait"));
-                ui.radio_value(landscape, true, tl!("Landscape"));
+                ui.add_enabled_ui(!*book_fold, |ui| {
+                    ui.radio_value(landscape, false, tl!("Portrait"));
+                    ui.radio_value(landscape, true, tl!("Landscape"));
+                });
             });
             ui.label(egui::RichText::new(tl!("Document Grid")).font(semibold(12.5)));
             ui.horizontal_wrapped(|ui| {
@@ -2283,9 +2346,16 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             });
             let (ok, cancel) = buttons(ui, tl!("OK"));
             if ok {
+                let book_changed = (*book_fold, if *book_fold { *sheets } else { 0 }) != *book_was;
+                let leaving_book_fold = book_was.0 && !*book_fold;
+                if leaving_book_fold {
+                    let _ = app.run("layout.bookFold", json!({"on": false, "sheets": 0}));
+                }
                 let _ = app.run("layout.orientation", json!({"value": if *landscape { "landscape" } else { "portrait" }}));
-                let _ =
-                    app.run("layout.margins", json!({"top": *top * crate::options::unit().pt_per_unit(), "bottom": *bottom * crate::options::unit().pt_per_unit(), "left": *left * crate::options::unit().pt_per_unit(), "right": *right * crate::options::unit().pt_per_unit()}));
+                let _ = app.run("layout.margins", json!({"top": *top * crate::options::unit().pt_per_unit(), "bottom": *bottom * crate::options::unit().pt_per_unit(), "left": *left * crate::options::unit().pt_per_unit(), "right": *right * crate::options::unit().pt_per_unit(), "gutter": *gutter * crate::options::unit().pt_per_unit(), "mirror": *mirror}));
+                if book_changed && !leaving_book_fold {
+                    let _ = app.run("layout.bookFold", json!({"on": *book_fold, "sheets": *sheets}));
+                }
                 if grid != grid_was {
                     let kind = ["none", "lines", "linesAndChars", "snapToChars"].get(grid.0 as usize).copied().unwrap_or("none");
                     let mut v = json!({"type": kind});
@@ -3687,6 +3757,25 @@ fn enclose_preview(ui: &mut Ui, style: &str, text: &str, shape: &str) {
     p.text(c + vec2(0.0, dy), egui::Align2::CENTER_CENTER, text, egui::FontId::proportional(px), ink);
 }
 
+/// Page Setup preview: two portrait pages on one landscape booklet sheet.
+fn book_fold_preview(ui: &mut egui::Ui) {
+    let (rect, _) = ui.allocate_exact_size(vec2(150.0, 84.0), egui::Sense::hover());
+    let t = crate::theme::Tokens::get(ui.ctx());
+    let p = ui.painter();
+    p.rect_filled(rect, 2.0, t.input);
+    p.rect_stroke(rect, 2.0, egui::Stroke::new(1.0, t.border), egui::StrokeKind::Inside);
+    let mid = rect.center().x;
+    p.line_segment([egui::pos2(mid, rect.top()), egui::pos2(mid, rect.bottom())], egui::Stroke::new(1.0, t.border));
+    for side in [-1.0_f32, 1.0] {
+        let (x0, x1) = if side < 0.0 { (rect.left() + 10.0, mid - 14.0) } else { (mid + 14.0, rect.right() - 10.0) };
+        let mut y = rect.top() + 10.0;
+        while y < rect.bottom() - 10.0 {
+            p.line_segment([egui::pos2(x0, y), egui::pos2(x1, y)], egui::Stroke::new(1.0, t.text.gamma_multiply(0.35)));
+            y += 6.0;
+        }
+    }
+}
+
 /// `widget` in a field `width` points wide that it can't grow past: a DragValue's button widens
 /// to fit its value, so a long paste would push the dialog's other fields aside.
 fn bounded_field<'a>(width: f32, widget: impl egui::Widget + 'a) -> impl egui::Widget + 'a {
@@ -3709,6 +3798,36 @@ mod tests {
         let mut app = WordApp::new(Session::new(doc4me_doc::Document::new()), crate::Services::default());
         let _ = app.run("document.setText", json!({"text": text}));
         app
+    }
+
+    #[test]
+    fn page_setup_applies_book_fold_and_gutter() {
+        use egui_kittest::kittest::Queryable;
+        let ppu = crate::options::unit().pt_per_unit();
+        let mut app = app_with("Booklet text");
+        app.run("ui.dialog", json!({"name": "pageSetup"})).unwrap();
+        let Some(Dialog::PageSetup { mirror, gutter, book_fold, sheets, .. }) = app.dialog.as_mut() else { panic!("Page Setup did not open") };
+        (*mirror, *book_fold, *sheets, *gutter) = (true, true, 2, 18.0 / ppu);
+        let mut h = egui_kittest::Harness::builder().with_size(vec2(1440.0, 900.0)).build_ui_state(
+            |ui, app: &mut WordApp| {
+                let ctx = ui.ctx().clone();
+                app.logic(&ctx);
+                app.ui(ui);
+            },
+            app,
+        );
+        for _ in 0..4 {
+            h.step();
+        }
+        h.get_by_label(tl!("OK")).click();
+        for _ in 0..4 {
+            h.step();
+        }
+        assert!(h.state().dialog.is_none());
+        assert!(h.state().session.doc.settings.book_fold && h.state().session.doc.settings.mirror_margins);
+        assert_eq!(h.state().session.doc.settings.book_fold_sheets, 2);
+        let section = doc4me_engine::cmd::page::sect(&h.state().session);
+        assert_eq!((section.page_w.round(), section.page_h.round(), section.gutter.round()), (396.0, 612.0, 18.0));
     }
 
     fn props(app: &WordApp) -> doc4me_doc::props::ParaProps {
