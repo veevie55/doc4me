@@ -565,6 +565,65 @@ pub(crate) fn wrap_text_items(ui: &mut Ui, app: &mut WordApp) {
     mi_check(ui, app, "Fix Position on Page", with_text == Some(false), "arrange.moveWithText", json!({"value": false}));
 }
 
+/// One row of the Underline menu: show the actual line style, with its name as the tooltip.
+fn underline_sample(ui: &mut Ui, app: &mut WordApp, label: &str, style: &str) -> egui::Response {
+    let t = Tokens::get(ui.ctx());
+    let (rect, response) = ui.allocate_exact_size(vec2(170.0, 24.0), Sense::click());
+    if response.hovered() {
+        ui.painter().rect_filled(rect, 3.0, t.hover);
+    }
+    let (x0, x1, y) = (rect.left() + 12.0, rect.right() - 12.0, rect.center().y);
+    let painter = ui.painter();
+    match style {
+        "double" => {
+            for dy in [-1.2, 1.2] {
+                painter.line_segment([pos2(x0, y + dy), pos2(x1, y + dy)], Stroke::new(1.0, t.text));
+            }
+        }
+        "thick" => {
+            painter.line_segment([pos2(x0, y), pos2(x1, y)], Stroke::new(2.0, t.text));
+        }
+        "wave" => {
+            let points = (0..=80)
+                .map(|i| {
+                    let x = x0 + (x1 - x0) * i as f32 / 80.0;
+                    pos2(x, y + ((x - x0) * std::f32::consts::TAU / 8.0).sin() * 1.5)
+                })
+                .collect();
+            painter.add(egui::Shape::line(points, Stroke::new(1.0, t.text)));
+        }
+        "dotted" | "dash" | "dotDash" | "dotDotDash" => {
+            let pattern: &[(bool, f32, f32)] = match style {
+                "dotted" => &[(true, 1.0, 2.0)],
+                "dash" => &[(false, 7.0, 3.0)],
+                "dotDash" => &[(true, 1.0, 2.0), (false, 7.0, 3.0)],
+                _ => &[(true, 1.0, 1.5), (true, 1.0, 2.0), (false, 7.0, 3.0)],
+            };
+            let mut x = x0;
+            let mut i = 0;
+            while x < x1 {
+                let (dot, length, gap) = pattern[i % pattern.len()];
+                if dot {
+                    painter.circle_filled(pos2(x, y), 0.9, t.text);
+                } else {
+                    painter.line_segment([pos2(x, y), pos2((x + length).min(x1), y)], Stroke::new(1.0, t.text));
+                }
+                x += length + gap;
+                i += 1;
+            }
+        }
+        _ => {
+            painter.line_segment([pos2(x0, y), pos2(x1, y)], Stroke::new(1.0, t.text));
+        }
+    }
+    let response = response.on_hover_text(tl!(label));
+    if response.clicked() {
+        crate::widgets::run_from_ribbon(app, "format.underline", json!({"style": style}));
+        ui.close();
+    }
+    response
+}
+
 fn home(app: &mut WordApp, ui: &mut Ui) {
     let st = app.session.run("format.state", &json!({})).unwrap_or_default();
     let flag = |k: &str| st.get(k).and_then(Value::as_bool).unwrap_or(false);
@@ -638,13 +697,14 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                         ("Dotted", "dotted"),
                         ("Dashed", "dash"),
                         ("Dot-dash", "dotDash"),
+                        ("Dot-dot-dash", "dotDotDash"),
                         ("Wave", "wave"),
-                        ("Words only", "words"),
                     ] {
-                        mi(ui, app, l, "format.underline", json!({"style": s}));
+                        let _ = underline_sample(ui, app, l, s);
                     }
+                    mi(ui, app, "Words only", "format.underline", json!({"style": "words"}));
                     ui.separator();
-                    mi(ui, app, "Font…", "format.fontDialog", json!({}));
+                    mi(ui, app, "More Underlines…", "format.fontDialog", json!({}));
                 });
                 small(ui, app, "strike", None, "Strikethrough", "format.strikethrough", json!({}), flag("strike"));
                 small(ui, app, "subscript", None, "Subscript", "format.subscript", json!({}), flag("subscript"));
@@ -2645,6 +2705,28 @@ mod tests {
         let mut b = Vec::new();
         image::DynamicImage::ImageRgba8(img).write_to(&mut std::io::Cursor::new(&mut b), image::ImageFormat::Png).unwrap();
         doc4me_engine::cmd::insert::base64_encode(&b)
+    }
+
+    #[test]
+    fn underline_sample_applies_its_style_when_clicked() {
+        let app = WordApp::new(Session::new(doc4me_doc::Document::from_text("Text")), crate::Services::default());
+        let row = std::cell::Cell::new(egui::Rect::NOTHING);
+        let sample_rect = row.clone();
+        let mut h = egui_kittest::Harness::builder().with_size(vec2(320.0, 100.0)).build_ui_state(
+            move |ui, app: &mut WordApp| {
+                sample_rect.set(underline_sample(ui, app, "Dot-dot-dash", "dotDotDash").rect);
+            },
+            app,
+        );
+        h.run_steps(2);
+        let at = row.get().center();
+        h.event(egui::Event::PointerMoved(at));
+        h.step();
+        h.event(egui::Event::PointerButton { pos: at, button: egui::PointerButton::Primary, pressed: true, modifiers: Default::default() });
+        h.step();
+        h.event(egui::Event::PointerButton { pos: at, button: egui::PointerButton::Primary, pressed: false, modifiers: Default::default() });
+        h.step();
+        assert_eq!(h.state().session.pending.as_ref().and_then(|props| props.underline), Some(doc4me_doc::props::Underline::DotDotDash));
     }
 
     /// The style set gallery fills exactly its own box and the next control starts after a gap,
