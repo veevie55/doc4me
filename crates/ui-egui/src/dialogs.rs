@@ -140,25 +140,54 @@ pub enum Dialog {
         size: String,
         bold: bool,
         italic: bool,
+        /// OOXML underline style (`none`, `single`, `double`…). The checkbox is retained for
+        /// the original Font page; this value lets Font Effects edit the full style.
+        underline_style: String,
+        underline_color: String,
         underline: bool,
         strike: bool,
+        double_strike: bool,
         sup: bool,
         sub: bool,
         small_caps: bool,
         caps: bool,
         hidden: bool,
+        outline: bool,
+        shadow: bool,
+        emboss: bool,
+        engrave: bool,
         color: String,
+        /// Raised/lowered position and horizontal scale, points and percent.
+        position: f32,
+        scale: f32,
         spacing: f32,
+        /// Shading behind the characters, separate from highlight.
+        shading: String,
+        /// One border around the run of characters.
+        border_enabled: bool,
+        border_style: String,
+        border_width: f32,
+        border_color: String,
+        /// The language and complex-script font properties.
+        lang: String,
+        lang_bidi: String,
+        font_cs: String,
+        size_cs: String,
+        bold_cs: bool,
+        italic_cs: bool,
         /// Kerning for fonts: the size in points and above (0 = off), and the `w14:ligatures` value.
         kern: f32,
         ligatures: String,
-        /// Page: 0 Font, 1 Advanced (spacing, kerning, ligatures).
+        /// Page: 0 Font, 1 Advanced, 2 Font Effects, 3 Position, 4 Background, 5 Border.
         tab: u8,
         /// The properties the fields stood for when the dialog opened: OK sends only what the
         /// user changed, so formatting the dialog can't show (a double underline) or left
         /// alone stays as it is.
         #[serde(skip)]
         start: serde_json::Map<String, Value>,
+        /// The original form fields for Reset. The copy does not recursively keep another copy.
+        #[serde(skip)]
+        start_form: Option<Box<Dialog>>,
     },
     Paragraph {
         /// Right-to-left reading order (Direction in Word's Paragraph dialog).
@@ -1075,10 +1104,22 @@ impl Dialog {
         let st = app.session.run("format.state", &json!({})).unwrap_or_default();
         let s = |k: &str| st.get(k).and_then(Value::as_str).unwrap_or("").to_string();
         let b = |k: &str| st.get(k).and_then(Value::as_bool).unwrap_or(false);
+        let n = |k: &str| st.get(k).and_then(Value::as_f64).map(|v| v as f32).unwrap_or(0.0);
         Some(match name {
             "font" => {
                 let font = app.previews.font_shown(&s("font"));
                 let font_ea = app.previews.font_shown(&s("fontEastAsia"));
+                let font_cs = app.previews.font_shown(&s("fontCs"));
+                let underline_style = s("underlineStyle");
+                let underline_style = if underline_style.is_empty() && b("underline") { "single".to_string() } else { underline_style };
+                let border_line = st.get("borderLine").filter(|v| !v.is_null());
+                let border_style = border_line.and_then(|v| v.get("style")).and_then(Value::as_str).unwrap_or("single").to_string();
+                let border_color = border_line
+                    .and_then(|v| v.get("color"))
+                    .and_then(|v| serde_json::from_value::<doc4me_doc::Rgb>(v.clone()).ok())
+                    .map_or_else(|| "auto".to_string(), |c| c.hex());
+                let shading =
+                    st.get("shading").and_then(|v| serde_json::from_value::<doc4me_doc::Rgb>(v.clone()).ok()).map_or_else(String::new, |c| c.hex());
                 let lang = crate::i18n::current().code();
                 let text = app.session.selected_text();
                 let text = if text.is_empty() {
@@ -1094,25 +1135,56 @@ impl Dialog {
                     font_ea,
                     asian,
                     size: st.get("size").and_then(Value::as_f64).map(|v| v.to_string()).unwrap_or_default(),
+                    size_cs: st.get("sizeCs").and_then(Value::as_f64).map(|v| v.to_string()).unwrap_or_default(),
                     bold: b("bold"),
                     italic: b("italic"),
+                    underline_style,
+                    underline_color: s("underlineColor"),
                     underline: b("underline"),
                     strike: b("strike"),
+                    double_strike: b("doubleStrike"),
                     sup: b("superscript"),
                     sub: b("subscript"),
                     small_caps: b("smallCaps"),
                     caps: b("caps"),
                     hidden: b("hidden"),
+                    outline: b("outline"),
+                    shadow: b("shadow"),
+                    emboss: b("emboss"),
+                    engrave: b("engrave"),
                     color: s("color"),
+                    position: n("position"),
+                    scale: if st.get("scale").and_then(Value::as_f64).is_some() { n("scale") } else { 100.0 },
                     spacing: st.get("spacing").and_then(Value::as_f64).unwrap_or(0.0) as f32,
+                    shading,
+                    border_enabled: b("border"),
+                    border_style,
+                    border_width: border_line.and_then(|v| v.get("width")).and_then(Value::as_f64).map_or(0.5, |v| v as f32),
+                    border_color,
+                    lang: s("lang"),
+                    lang_bidi: {
+                        let lang = s("langBidi");
+                        if lang.is_empty() { "th-TH".into() } else { lang }
+                    },
+                    font_cs,
+                    bold_cs: b("boldCs"),
+                    italic_cs: b("italicCs"),
                     kern: st.get("kern").and_then(Value::as_f64).unwrap_or(0.0) as f32,
                     ligatures: st.get("ligatures").and_then(Value::as_str).unwrap_or("none").to_string(),
                     tab: 0,
                     start: serde_json::Map::new(),
+                    start_form: None,
                 };
                 let props = font_props(&d);
                 if let Dialog::Font { start, .. } = &mut d {
                     *start = props;
+                }
+                let mut snapshot = d.clone();
+                if let Dialog::Font { start_form, .. } = &mut snapshot {
+                    *start_form = None;
+                }
+                if let Dialog::Font { start_form, .. } = &mut d {
+                    *start_form = Some(Box::new(snapshot));
                 }
                 d
             }
@@ -1605,18 +1677,37 @@ fn font_props(d: &Dialog) -> serde_json::Map<String, Value> {
     let Dialog::Font {
         font,
         font_ea,
+        font_cs,
+        size_cs,
         size,
         bold,
         italic,
-        underline,
+        bold_cs,
+        italic_cs,
+        underline_style,
+        underline_color,
         strike,
+        double_strike,
         sup,
         sub,
         small_caps,
         caps,
         hidden,
+        outline,
+        shadow,
+        emboss,
+        engrave,
         color,
+        position,
+        scale,
         spacing,
+        shading,
+        border_enabled,
+        border_style,
+        border_width,
+        border_color,
+        lang,
+        lang_bidi,
         kern,
         ligatures,
         ..
@@ -1627,8 +1718,16 @@ fn font_props(d: &Dialog) -> serde_json::Map<String, Value> {
     let mut props = serde_json::Map::new();
     props.insert("bold".into(), json!(*bold));
     props.insert("italic".into(), json!(*italic));
+    props.insert("boldCs".into(), json!(*bold_cs));
+    props.insert("italicCs".into(), json!(*italic_cs));
     props.insert("strike".into(), json!(*strike));
-    props.insert("underline".into(), json!(if *underline { "single" } else { "none" }));
+    props.insert("doubleStrike".into(), json!(*double_strike));
+    if !underline_style.is_empty() {
+        props.insert("underline".into(), json!(underline_style));
+    }
+    if let Some(c) = doc4me_doc::Rgb::parse(underline_color) {
+        props.insert("underlineColor".into(), json!(c));
+    }
     let vert = if *sup {
         "superscript"
     } else if *sub {
@@ -1640,6 +1739,12 @@ fn font_props(d: &Dialog) -> serde_json::Map<String, Value> {
     props.insert("smallCaps".into(), json!(*small_caps));
     props.insert("caps".into(), json!(*caps));
     props.insert("hidden".into(), json!(*hidden));
+    props.insert("outline".into(), json!(*outline));
+    props.insert("shadow".into(), json!(*shadow));
+    props.insert("emboss".into(), json!(*emboss));
+    props.insert("engrave".into(), json!(*engrave));
+    props.insert("position".into(), json!(*position));
+    props.insert("scale".into(), json!(*scale));
     props.insert("spacing".into(), json!(*spacing));
     props.insert("kern".into(), json!(*kern));
     props.insert("ligatures".into(), json!(ligatures));
@@ -1649,14 +1754,33 @@ fn font_props(d: &Dialog) -> serde_json::Map<String, Value> {
     if !font_ea.trim().is_empty() {
         props.insert("fontEa".into(), json!(font_ea.trim()));
     }
+    if !font_cs.trim().is_empty() {
+        props.insert("fontCs".into(), json!(font_cs.trim()));
+    }
     if let Ok(s) = size.trim().parse::<f64>() {
         props.insert("size".into(), json!(s));
+    }
+    if let Ok(s) = size_cs.trim().parse::<f64>() {
+        props.insert("sizeCs".into(), json!(s));
+    }
+    if !lang.trim().is_empty() {
+        props.insert("lang".into(), json!(lang.trim()));
+    }
+    if !lang_bidi.trim().is_empty() {
+        props.insert("langBidi".into(), json!(lang_bidi.trim()));
     }
     if let Some(c) = doc4me_doc::Rgb::parse(color) {
         props.insert("color".into(), json!({"Rgb": [c.0, c.1, c.2]}));
     } else if color.eq_ignore_ascii_case("auto") {
         // Automatic, from the colour field's drop-down (#606).
         props.insert("color".into(), json!("Auto"));
+    }
+    if let Some(c) = doc4me_doc::Rgb::parse(shading) {
+        props.insert("shading".into(), json!(c));
+    }
+    if *border_enabled {
+        let color = doc4me_doc::Rgb::parse(border_color).map_or(Value::Null, |c| json!(c));
+        props.insert("border".into(), json!({"style": border_style, "width": border_width, "color": color, "space": 0.0}));
     }
     props
 }
@@ -1712,18 +1836,33 @@ fn spacing_value(kind: usize, by: f32) -> f32 {
 /// formatting the dialog can't show or left alone stays as it is. Fonts are set by their stored
 /// (English) names, the Latin font for Persian/Arabic text too (as `format.font`).
 fn apply_font(app: &mut WordApp, d: &Dialog) {
-    let Dialog::Font { start, .. } = d else { return };
+    let Dialog::Font { start, shading, border_enabled, underline_color, .. } = d else { return };
     let mut changed: serde_json::Map<String, Value> = font_props(d).into_iter().filter(|(k, v)| start.get(k) != Some(v)).collect();
     if let Some(f) = changed.get("font").and_then(Value::as_str).map(str::to_string) {
         let f = app.previews.font_stored(&f);
         changed.insert("font".into(), json!(f));
-        changed.insert("fontCs".into(), json!(f));
+        if !changed.contains_key("fontCs") {
+            changed.insert("fontCs".into(), json!(f));
+        }
     }
     if let Some(f) = changed.get("fontEa").and_then(Value::as_str).map(str::to_string) {
         changed.insert("fontEa".into(), json!(app.previews.font_stored(&f)));
     }
-    if !changed.is_empty() {
-        let _ = app.run("format.set", json!({"props": changed}));
+    if let Some(f) = changed.get("fontCs").and_then(Value::as_str).map(str::to_string) {
+        changed.insert("fontCs".into(), json!(app.previews.font_stored(&f)));
+    }
+    let mut clear = Vec::new();
+    if shading.is_empty() && start.contains_key("shading") {
+        clear.push("shading");
+    }
+    if !border_enabled && start.contains_key("border") {
+        clear.push("border");
+    }
+    if underline_color.eq_ignore_ascii_case("auto") && start.contains_key("underlineColor") {
+        clear.push("underlineColor");
+    }
+    if !changed.is_empty() || !clear.is_empty() {
+        let _ = app.run("format.set", json!({"props": changed, "clear": clear}));
     }
 }
 
@@ -1757,23 +1896,47 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
         }
         Dialog::Font {
             font,
+            font_was,
             font_ea,
+            font_ea_was,
+            font_cs,
             asian,
             size,
+            size_cs,
             bold,
             italic,
+            bold_cs,
+            italic_cs,
+            lang,
+            underline_style,
+            underline_color,
             underline,
             strike,
+            double_strike,
             sup,
             sub,
             small_caps,
             caps,
             hidden,
+            outline,
+            shadow,
+            emboss,
+            engrave,
             color,
+            position,
+            scale,
             spacing,
+            shading,
+            border_enabled,
+            border_style,
+            border_width,
+            border_color,
             kern,
             ligatures,
+            lang_bidi,
             tab,
+            start,
+            start_form,
             ..
         } => {
             // Build the sample text format for the preview pane below.
@@ -1790,16 +1953,28 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             if *italic {
                 fmt.italics = true;
             }
-            if *underline {
-                fmt.underline = egui::Stroke::new(1.0, preview_color);
+            if !matches!(underline_style.as_str(), "" | "none") {
+                let ink = doc4me_doc::Rgb::parse(underline_color).map(crate::theme::c32).unwrap_or(preview_color);
+                let width = if underline_style == "thick" { 2.0 } else { 1.0 };
+                fmt.underline = egui::Stroke::new(width, ink);
             }
-            if *strike {
-                fmt.strikethrough = egui::Stroke::new(1.0, preview_color);
+            if *strike || *double_strike {
+                fmt.strikethrough = egui::Stroke::new(if *double_strike { 2.0 } else { 1.0 }, preview_color);
             }
-            ui.horizontal(|ui| {
-                for (k, name) in ["Font", "Advanced"].into_iter().enumerate() {
-                    if ui.selectable_label(*tab as usize == k, tl!(name)).clicked() {
-                        *tab = k as u8;
+            if let Some(c) = doc4me_doc::Rgb::parse(shading) {
+                fmt.background = crate::theme::c32(c);
+            }
+            fmt.valign = if *sup {
+                egui::Align::TOP
+            } else if *sub {
+                egui::Align::BOTTOM
+            } else {
+                egui::Align::Center
+            };
+            ui.horizontal_wrapped(|ui| {
+                for (name, k) in [("Font", 0_u8), ("Advanced", 1), ("Font Effects", 2), ("Position", 3), ("Background", 4), ("Border", 5)] {
+                    if ui.selectable_label(*tab == k, tl!(name)).clicked() {
+                        *tab = k;
                     }
                 }
             });
@@ -1843,6 +2018,55 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     ui.label(tl!("Size:"));
                     ui.add(crate::widgets::text_line(size));
                     ui.end_row();
+                    ui.label(tl!("Complex-script font:"));
+                    let cs_warning = app.font_dialog_warning(font_cs);
+                    if let Some(f) =
+                        crate::widgets::font_combo_warned(ui, "fontdlg_complex", 220.0, font_cs, &fams, Some(&*prev), cs_warning.as_deref())
+                    {
+                        if f == crate::widgets::ADD_FONT {
+                            let _ = app.run("font.add", json!({}));
+                        } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
+                            let _ = app.run("font.loadSystem", json!({}));
+                        } else {
+                            *font_cs = f;
+                        }
+                    }
+                    ui.end_row();
+                    ui.label(tl!("Complex-script size:"));
+                    ui.add(crate::widgets::text_line(size_cs));
+                    ui.end_row();
+                    ui.label(tl!("Complex-script style:"));
+                    ui.horizontal(|ui| {
+                        ui.checkbox(bold_cs, tl!("Bold"));
+                        ui.checkbox(italic_cs, tl!("Italic"));
+                    });
+                    ui.end_row();
+                    ui.label(tl!("Language:"));
+                    let lang_name = crate::dialogs_layout::LANGUAGES
+                        .iter()
+                        .find(|(tag, _)| tag.eq_ignore_ascii_case(lang))
+                        .map_or_else(|| if lang.is_empty() { tl!("Automatic").to_string() } else { lang.clone() }, |(_, name)| tl!(name).to_string());
+                    egui::ComboBox::from_id_salt("fontdlg_language").selected_text(lang_name).show_ui(ui, |ui| {
+                        if ui.selectable_label(lang.is_empty(), tl!("Automatic")).clicked() {
+                            lang.clear();
+                        }
+                        for (tag, name) in crate::dialogs_layout::LANGUAGES {
+                            ui.selectable_value(lang, tag.to_string(), tl!(name));
+                        }
+                    });
+                    ui.end_row();
+                    ui.label(tl!("Complex-script language:"));
+                    let complex_languages = [("th-TH", "Thai"), ("ar-SA", "Arabic"), ("he-IL", "Hebrew")];
+                    let complex_name = complex_languages.iter().find(|(tag, _)| tag.eq_ignore_ascii_case(lang_bidi)).map_or_else(
+                        || if lang_bidi.is_empty() { tl!("Thai").to_string() } else { lang_bidi.clone() },
+                        |(_, name)| tl!(name).to_string(),
+                    );
+                    egui::ComboBox::from_id_salt("fontdlg_complex_language").selected_text(complex_name).show_ui(ui, |ui| {
+                        for (tag, name) in complex_languages {
+                            ui.selectable_value(lang_bidi, tag.to_string(), tl!(name));
+                        }
+                    });
+                    ui.end_row();
                     ui.label(tl!("Font color:"));
                     let theme = app.session.doc.settings.theme_colors.clone();
                     color_field(ui, &theme, color, "Automatic", "auto");
@@ -1854,8 +2078,12 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     ui.checkbox(bold, tl!("Bold"));
                     ui.checkbox(italic, tl!("Italic"));
                     ui.end_row();
-                    ui.checkbox(underline, tl!("Underline"));
-                    ui.checkbox(strike, tl!("Strikethrough"));
+                    if ui.checkbox(underline, tl!("Underline")).changed() {
+                        *underline_style = if *underline { "single" } else { "none" }.into();
+                    }
+                    if ui.checkbox(strike, tl!("Strikethrough")).changed() && *strike {
+                        *double_strike = false;
+                    }
                     ui.end_row();
                     ui.checkbox(sup, tl!("Superscript"));
                     ui.checkbox(sub, tl!("Subscript"));
@@ -1866,7 +2094,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     ui.checkbox(hidden, tl!("Hidden"));
                     ui.end_row();
                 });
-            } else {
+            } else if *tab == 1 {
                 egui::Grid::new("fontdlg_adv").num_columns(2).spacing(vec2(10.0, 6.0)).show(ui, |ui| {
                     // Only what the user enters is held to a box's range: egui clamps the value
                     // already there by default, which would change the text just by showing the page.
@@ -1940,6 +2168,186 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     });
                     ui.end_row();
                 });
+            } else if *tab == 2 {
+                ui.label(egui::RichText::new(tl!("Text Decoration")).font(semibold(12.5)));
+                egui::Grid::new("fontdlg_effects_decoration").num_columns(2).spacing(vec2(10.0, 8.0)).show(ui, |ui| {
+                    ui.label(tl!("Underlining:"));
+                    let styles = [
+                        ("none", "(none)"),
+                        ("single", "Single"),
+                        ("words", "Words only"),
+                        ("double", "Double"),
+                        ("thick", "Thick"),
+                        ("dotted", "Dotted"),
+                        ("dash", "Dashed"),
+                        ("dotDash", "Dot dash"),
+                        ("dotDotDash", "Dot dot dash"),
+                        ("wave", "Wave"),
+                        ("doubleWave", "Double wave"),
+                    ];
+                    let shown = styles
+                        .iter()
+                        .find(|(value, _)| *value == underline_style)
+                        .map_or_else(|| underline_style.clone(), |(_, name)| tl!(name).to_string());
+                    ui.horizontal(|ui| {
+                        egui::ComboBox::from_id_salt("fontdlg_underline_style").selected_text(shown).show_ui(ui, |ui| {
+                            for (value, name) in styles {
+                                ui.selectable_value(underline_style, value.to_string(), tl!(name));
+                            }
+                        });
+                        let theme = app.session.doc.settings.theme_colors.clone();
+                        color_field(ui, &theme, underline_color, "Automatic", "auto");
+                    });
+                    *underline = !matches!(underline_style.as_str(), "" | "none");
+                    ui.end_row();
+                    ui.label(tl!("Strikethrough:"));
+                    let mut kind = if *double_strike {
+                        2
+                    } else if *strike {
+                        1
+                    } else {
+                        0
+                    };
+                    egui::ComboBox::from_id_salt("fontdlg_strike").selected_text(tl!(["(none)", "Single", "Double"][kind])).show_ui(ui, |ui| {
+                        for (value, label) in ["(none)", "Single", "Double"].into_iter().enumerate() {
+                            ui.selectable_value(&mut kind, value, tl!(label));
+                        }
+                    });
+                    *strike = kind == 1;
+                    *double_strike = kind == 2;
+                    ui.end_row();
+                });
+                ui.add_space(6.0);
+                ui.label(egui::RichText::new(tl!("Effects")).font(semibold(12.5)));
+                egui::Grid::new("fontdlg_effects_flags").num_columns(3).spacing(vec2(14.0, 6.0)).show(ui, |ui| {
+                    if ui.checkbox(caps, tl!("All caps")).changed() && *caps {
+                        *small_caps = false;
+                    }
+                    if ui.checkbox(small_caps, tl!("Small caps")).changed() && *small_caps {
+                        *caps = false;
+                    }
+                    ui.checkbox(hidden, tl!("Hidden"));
+                    ui.end_row();
+                    ui.checkbox(outline, tl!("Outline"));
+                    ui.checkbox(shadow, tl!("Shadow"));
+                    if ui.checkbox(emboss, tl!("Emboss")).changed() && *emboss {
+                        *engrave = false;
+                    }
+                    ui.end_row();
+                    if ui.checkbox(engrave, tl!("Engrave")).changed() && *engrave {
+                        *emboss = false;
+                    }
+                    ui.end_row();
+                });
+            } else if *tab == 3 {
+                ui.label(egui::RichText::new(tl!("Position")).font(semibold(12.5)));
+                let mut vertical = if *sup {
+                    1
+                } else if *sub {
+                    2
+                } else {
+                    0
+                };
+                egui::Grid::new("fontdlg_position_vertical").num_columns(2).spacing(vec2(10.0, 7.0)).show(ui, |ui| {
+                    for (value, label) in [(0, "Normal"), (1, "Superscript"), (2, "Subscript")] {
+                        if ui.radio_value(&mut vertical, value, tl!(label)).changed() {
+                            *sup = vertical == 1;
+                            *sub = vertical == 2;
+                        }
+                        if value == 0 {
+                            ui.label(tl!("Raise (+) or lower (−) by (pt):"));
+                            ui.add(crate::numfield::NumField::new(position).range(-1584.0..=1584.0).speed(0.5).max_decimals(1));
+                            ui.end_row();
+                        } else {
+                            ui.end_row();
+                        }
+                    }
+                });
+                ui.add_space(6.0);
+                ui.label(egui::RichText::new(tl!("Scale and Spacing")).font(semibold(12.5)));
+                egui::Grid::new("fontdlg_position_scale").num_columns(2).spacing(vec2(10.0, 7.0)).show(ui, |ui| {
+                    ui.label(tl!("Scale width (%):"));
+                    ui.add(crate::numfield::NumField::new(scale).range(1.0..=600.0).speed(1.0).max_decimals(0));
+                    ui.end_row();
+                    ui.label(tl!("Character spacing (pt):"));
+                    ui.add(crate::numfield::NumField::new(spacing).range(-20.0..=20.0).speed(0.1).spinner());
+                    ui.end_row();
+                });
+            } else if *tab == 4 {
+                ui.label(egui::RichText::new(tl!("Background")).font(semibold(12.5)));
+                ui.horizontal(|ui| {
+                    if ui.selectable_label(shading.is_empty(), tl!("None")).clicked() {
+                        shading.clear();
+                    }
+                    if ui.selectable_label(!shading.is_empty(), tl!("Color")).clicked() && shading.is_empty() {
+                        *shading = "D9D9D9".into();
+                    }
+                });
+                if !shading.is_empty() {
+                    ui.add_space(6.0);
+                    ui.horizontal(|ui| {
+                        ui.label(tl!("Color:"));
+                        let theme = app.session.doc.settings.theme_colors.clone();
+                        color_field(ui, &theme, shading, "No Color", "");
+                    });
+                }
+                ui.add_space(6.0);
+                ui.label(egui::RichText::new(tl!("Shading behind the selected characters (not the highlight color).")).small().weak());
+            } else {
+                ui.label(egui::RichText::new(tl!("Line Arrangement")).font(semibold(12.5)));
+                ui.horizontal(|ui| {
+                    if ui.selectable_label(!*border_enabled, tl!("None")).clicked() {
+                        *border_enabled = false;
+                    }
+                    if ui.selectable_label(*border_enabled, tl!("Box")).clicked() {
+                        *border_enabled = true;
+                    }
+                });
+                ui.add_space(6.0);
+                ui.add_enabled_ui(*border_enabled, |ui| {
+                    ui.label(egui::RichText::new(tl!("Line")).font(semibold(12.5)));
+                    egui::Grid::new("fontdlg_character_border").num_columns(2).spacing(vec2(10.0, 8.0)).show(ui, |ui| {
+                        ui.label(tl!("Style:"));
+                        let styles = [
+                            ("single", "Single"),
+                            ("double", "Double"),
+                            ("dotted", "Dotted"),
+                            ("dashed", "Dashed"),
+                            ("dotDash", "Dot dash"),
+                            ("thick", "Thick"),
+                            ("triple", "Triple"),
+                            ("wave", "Wave"),
+                        ];
+                        let shown = styles
+                            .iter()
+                            .find(|(value, _)| *value == border_style)
+                            .map_or_else(|| border_style.clone(), |(_, name)| tl!(name).to_string());
+                        egui::ComboBox::from_id_salt("fontdlg_character_border_style").selected_text(shown).show_ui(ui, |ui| {
+                            for (value, label) in styles {
+                                ui.selectable_value(border_style, value.to_string(), tl!(label));
+                            }
+                        });
+                        ui.end_row();
+                        ui.label(tl!("Color:"));
+                        let theme = app.session.doc.settings.theme_colors.clone();
+                        color_field(ui, &theme, border_color, "Automatic", "auto");
+                        ui.end_row();
+                        ui.label(tl!("Width:"));
+                        let widths = [0.25_f32, 0.5, 0.75, 1.0, 1.5, 2.25];
+                        egui::ComboBox::from_id_salt("fontdlg_character_border_width")
+                            .selected_text(format!("{} {}", border_width, tl!("pt")))
+                            .show_ui(ui, |ui| {
+                                for width in widths {
+                                    ui.selectable_value(border_width, width, format!("{width} {}", tl!("pt")));
+                                }
+                            });
+                        ui.end_row();
+                    });
+                });
+                ui.add_space(6.0);
+                ui.label(
+                    egui::RichText::new(tl!("Word files keep one border all round the characters, so there are no separate sides.")).small().weak(),
+                );
             }
             // Live preview of the chosen font/size/colour/effects.
             ui.separator();
@@ -1947,8 +2355,113 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let sample = if *caps { tl!("AaBbYyZz").to_uppercase() } else { tl!("AaBbYyZz").to_string() };
             let mut job = egui::text::LayoutJob::single_section(sample, fmt);
             job.wrap.max_width = ui.available_width().min(400.0);
-            ui.label(job);
-            let (ok, cancel) = buttons(ui, tl!("OK"));
+            let preview = ui.label(job);
+            if *border_enabled {
+                let ink = doc4me_doc::Rgb::parse(border_color).map(crate::theme::c32).unwrap_or(preview_color);
+                ui.painter().rect_stroke(
+                    preview.rect.expand(2.0),
+                    0.0,
+                    egui::Stroke::new(border_width.clamp(0.5, 3.0), ink),
+                    egui::StrokeKind::Outside,
+                );
+            }
+            let mut reset = false;
+            let mut result = (false, false);
+            ui.horizontal(|ui| {
+                reset = ui.button(tl!("Reset")).on_hover_text(tl!("Back to the formatting the text had when this opened")).clicked();
+                ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                    let ok = ui.add(crate::widgets::primary_button(ui, tl!("OK"))).clicked();
+                    let cancel = ui.button(tl!("Cancel")).clicked();
+                    result = (ok, cancel);
+                });
+            });
+            if reset
+                && let Some(Dialog::Font {
+                    font: old_font,
+                    font_was: old_font_was,
+                    font_ea: old_font_ea,
+                    font_ea_was: old_font_ea_was,
+                    asian: old_asian,
+                    size: old_size,
+                    size_cs: old_size_cs,
+                    bold: old_bold,
+                    italic: old_italic,
+                    bold_cs: old_bold_cs,
+                    italic_cs: old_italic_cs,
+                    underline_style: old_underline_style,
+                    underline_color: old_underline_color,
+                    underline: old_underline,
+                    strike: old_strike,
+                    double_strike: old_double_strike,
+                    sup: old_sup,
+                    sub: old_sub,
+                    small_caps: old_small_caps,
+                    caps: old_caps,
+                    hidden: old_hidden,
+                    outline: old_outline,
+                    shadow: old_shadow,
+                    emboss: old_emboss,
+                    engrave: old_engrave,
+                    color: old_color,
+                    position: old_position,
+                    scale: old_scale,
+                    spacing: old_spacing,
+                    shading: old_shading,
+                    border_enabled: old_border_enabled,
+                    border_style: old_border_style,
+                    border_width: old_border_width,
+                    border_color: old_border_color,
+                    lang: old_lang,
+                    lang_bidi: old_lang_bidi,
+                    font_cs: old_font_cs,
+                    kern: old_kern,
+                    ligatures: old_ligatures,
+                    start: old_start,
+                    ..
+                }) = start_form.as_deref()
+            {
+                *font = old_font.clone();
+                *font_was = old_font_was.clone();
+                *font_ea = old_font_ea.clone();
+                *font_ea_was = old_font_ea_was.clone();
+                *asian = *old_asian;
+                *size = old_size.clone();
+                *size_cs = old_size_cs.clone();
+                *bold = *old_bold;
+                *italic = *old_italic;
+                *bold_cs = *old_bold_cs;
+                *italic_cs = *old_italic_cs;
+                *underline_style = old_underline_style.clone();
+                *underline_color = old_underline_color.clone();
+                *underline = *old_underline;
+                *strike = *old_strike;
+                *double_strike = *old_double_strike;
+                *sup = *old_sup;
+                *sub = *old_sub;
+                *small_caps = *old_small_caps;
+                *caps = *old_caps;
+                *hidden = *old_hidden;
+                *outline = *old_outline;
+                *shadow = *old_shadow;
+                *emboss = *old_emboss;
+                *engrave = *old_engrave;
+                *color = old_color.clone();
+                *position = *old_position;
+                *scale = *old_scale;
+                *spacing = *old_spacing;
+                *shading = old_shading.clone();
+                *border_enabled = *old_border_enabled;
+                *border_style = old_border_style.clone();
+                *border_width = *old_border_width;
+                *border_color = old_border_color.clone();
+                *lang = old_lang.clone();
+                *lang_bidi = old_lang_bidi.clone();
+                *font_cs = old_font_cs.clone();
+                *kern = *old_kern;
+                *ligatures = old_ligatures.clone();
+                *start = old_start.clone();
+            }
+            let (ok, cancel) = result;
             if ok {
                 apply_font(app, d);
             }

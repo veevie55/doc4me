@@ -140,7 +140,8 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"points": number}"#),
         CommandSpec::new("format.charStyle", "Apply Character Style", "Home › Styles", char_style).params(r#"{"style": string}"#),
-        CommandSpec::new("format.set", "Set Character Formatting", "Home › Font › Font", set).params(r#"{"props": CharProps}"#),
+        CommandSpec::new("format.set", "Set Character Formatting", "Home › Font › Font", set)
+            .params(r#"{"props": CharProps, "clear"?: ["shading"|"border"|"underlineColor"]}"#),
         CommandSpec::new("format.fontDialog", "Font Dialog", "Home › Font", |s, _| {
             s.push_ui_request(json!({"open": "font"}));
             sel_result(s)
@@ -953,12 +954,33 @@ fn char_style(s: &mut Session, v: &Value) -> CmdResult {
 
 fn set(s: &mut Session, v: &Value) -> CmdResult {
     let mut props: CharProps = serde_json::from_value(v.get("props").cloned().unwrap_or(Value::Null)).map_err(|e| CmdError::Params(e.to_string()))?;
+    let clear: Vec<String> = match v.get("clear") {
+        None => Vec::new(),
+        Some(Value::Array(fields)) => fields
+            .iter()
+            .map(|field| field.as_str().map(str::to_string).ok_or_else(|| CmdError::Params("clear entries must be strings".into())))
+            .collect::<Result<_, _>>()?,
+        Some(_) => return Err(CmdError::Params("clear must be an array of property names".into())),
+    };
+    if let Some(field) = clear.iter().find(|field| !matches!(field.as_str(), "shading" | "border" | "underlineColor")) {
+        return Err(CmdError::Params(format!("can't clear character property `{field}`")));
+    }
     // The font dialog and callers supplying one value format both scripts. Explicit
     // complex-script values still take precedence; importing a DOCX never uses this command.
     props.size_cs = props.size_cs.or(props.size);
     props.bold_cs = props.bold_cs.or(props.bold);
     props.italic_cs = props.italic_cs.or(props.italic);
-    apply(s, &|c| c.overlay(&props))
+    apply(s, &|c| {
+        c.overlay(&props);
+        for field in &clear {
+            match field.as_str() {
+                "shading" => c.shading = None,
+                "border" => c.border = None,
+                "underlineColor" => c.underline_color = None,
+                _ => unreachable!("validated above"),
+            }
+        }
+    })
 }
 
 /// What the ribbon shows: the formatting at the selection (mixed values are null).
@@ -974,19 +996,34 @@ pub fn state(s: &Session) -> Value {
     let style_name = s.doc.styles.get(&style).map(|st| st.name.clone()).unwrap_or(style.clone());
     json!({
         "font": same(&|r| json!(r.font)),
+        "fontCs": same(&|r| json!(r.font_cs)),
         "fontEastAsia": same(&|r| json!(r.font_ea)),
         "size": same(&|r| json!(r.size)),
+        "sizeCs": same(&|r| json!(r.size_cs)),
         "bold": all.iter().all(|r| r.bold),
+        "boldCs": all.iter().all(|r| r.bold_cs),
         "italic": all.iter().all(|r| r.italic),
+        "italicCs": all.iter().all(|r| r.italic_cs),
         "underline": all.iter().all(|r| r.underline != Underline::None),
+        "underlineStyle": same(&|r| json!(r.underline)),
+        "underlineColor": same(&|r| json!(r.underline_color.map_or_else(|| "auto".to_string(), |c| c.hex()))),
         "strike": all.iter().all(|r| r.strike),
+        "doubleStrike": all.iter().all(|r| r.double_strike),
         "border": all.iter().all(|r| r.border.is_some()),
+        "borderLine": same(&|r| json!(r.border)),
         "subscript": all.iter().all(|r| r.vert_align == VertAlign::Subscript),
         "superscript": all.iter().all(|r| r.vert_align == VertAlign::Superscript),
         "smallCaps": all.iter().all(|r| r.small_caps),
         "caps": all.iter().all(|r| r.caps),
         "hidden": all.iter().all(|r| r.hidden),
         "spacing": same(&|r| json!(r.spacing)),
+        "scale": same(&|r| json!(r.scale)),
+        "position": same(&|r| json!(r.position)),
+        "outline": all.iter().all(|r| r.outline),
+        "shadow": all.iter().all(|r| r.shadow),
+        "emboss": all.iter().all(|r| r.emboss),
+        "engrave": all.iter().all(|r| r.engrave),
+        "shading": same(&|r| json!(r.shading)),
         // Kerning for fonts (points and above; 0 = off) and OpenType ligatures (`none` unless set).
         "kern": same(&|r| json!(r.kern)),
         "ligatures": same(&|r| json!(r.ligatures.as_deref().unwrap_or("none"))),
@@ -996,6 +1033,7 @@ pub fn state(s: &Session) -> Value {
         "styleName": style_name,
         // The proofing language (a BCP 47 tag; null when mixed or unset) and "Do not check".
         "lang": same(&|r| json!(r.lang)),
+        "langBidi": same(&|r| json!(r.lang_bidi)),
         "noProof": all.iter().all(|r| r.no_proof),
     })
 }

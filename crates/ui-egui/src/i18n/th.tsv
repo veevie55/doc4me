@@ -3163,3 +3163,18 @@ spacing	Normal	ปกติ
 	You're up to date	ใช้รุ่นล่าสุดแล้ว
 	You have {version}. The download page has what's new and how to install it.	คุณใช้รุ่น {version} ดูรายการที่เปลี่ยนแปลงและวิธีติดตั้งได้ที่หน้าดาวน์โหลด
 	Check the internet connection, then try again from Help › Check for Updates.	ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองอีกครั้งที่ วิธีใช้ › ตรวจหาอัปเดต
+	Complex-script font:	ฟอนต์สำหรับอักษรไทย/อาหรับ:
+	Complex-script language:	ภาษาของอักษรไทย/อาหรับ:
+	Complex-script size:	ขนาดอักษรไทย/อาหรับ:
+	Complex-script style:	รูปแบบอักษรไทย/อาหรับ:
+	Dot dot dash	จุดสองจุดสลับขีด
+	Double wave	เส้นหยักคู่
+	Font Effects	เอฟเฟ็กต์ตัวอักษร
+	Language:	ภาษา:
+	Line Arrangement	การจัดวางเส้น
+	Raise (+) or lower (−) by (pt):	ยกขึ้น (+) หรือลง (−) กี่ pt:
+	Scale and Spacing	การย่อขยายและระยะห่าง
+	Scale width (%):	ปรับความกว้าง (%):
+	Shading behind the selected characters (not the highlight color).	ลงสีพื้นหลังอักขระที่เลือก ไม่ใช่สีเน้นข้อความ
+	Text Decoration	การตกแต่งข้อความ
+	Underlining:	รูปแบบเส้นใต้:
