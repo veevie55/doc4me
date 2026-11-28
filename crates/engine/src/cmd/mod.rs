@@ -78,6 +78,12 @@ pub fn default_lang(s: &Session) -> Option<String> {
     s.doc.styles.resolve_char(None, &doc4me_doc::props::CharProps::default()).lang.or_else(|| s.editing_lang.clone())
 }
 
+/// The effective language of a paragraph's first run with text, or its paragraph mark.
+pub fn para_lang(doc: &doc4me_doc::Document, para: &doc4me_doc::Paragraph) -> Option<String> {
+    let run = para.runs.iter().find(|run| run.len > 0).map(|run| &run.props).unwrap_or(&para.mark);
+    doc.styles.resolve_char(para.props.style.as_deref(), run).lang
+}
+
 /// The full registry.
 pub fn registry() -> Registry {
     let mut v = Vec::new();

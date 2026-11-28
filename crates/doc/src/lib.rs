@@ -16,6 +16,7 @@ pub mod chart;
 mod cjk_numbers;
 mod clipboard;
 pub mod cluster;
+pub mod collate;
 pub mod connector;
 pub mod control;
 pub mod edit;

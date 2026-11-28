@@ -1172,10 +1172,11 @@ fn cell_text(c: &doc4me_doc::Cell) -> String {
 
 /// The language of the first non-empty paragraph in a cell, including its run and style.
 fn cell_lang(doc: &doc4me_doc::Document, cell: &doc4me_doc::Cell) -> Option<String> {
-    cell.blocks.iter().filter_map(|block| block.as_para()).find(|para| !para.plain_text().trim().is_empty()).and_then(|para| {
-        let run = para.runs.iter().find(|run| run.len > 0).map(|run| &run.props).unwrap_or(&para.mark);
-        doc.styles.resolve_char(para.props.style.as_deref(), run).lang
-    })
+    cell.blocks
+        .iter()
+        .filter_map(|block| block.as_para())
+        .find(|para| !para.plain_text().trim().is_empty())
+        .and_then(|para| super::para_lang(doc, para))
 }
 
 fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
@@ -1207,6 +1208,7 @@ fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
         }
         row_keys.push(key);
     }
+    let sort_lang = row_keys.iter().find(|(text, _)| !text.trim().is_empty()).and_then(|(_, lang)| lang.clone()).or(default_lang);
     if t.rows.iter().take(range.1).skip(range.0).flat_map(|r| &r.cells).any(|c| c.props.vmerge != doc4me_doc::props::VMerge::None) {
         return Err(CmdError::Disabled("split vertically merged cells before sorting their rows".into()));
     }
@@ -1227,7 +1229,9 @@ fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
             let b = doc4me_doc::locale_number::parse_number(kb.trim(), lang_b.as_deref()).filter(|n| n.is_finite());
             let order = match (a, b) {
                 (Some(a), Some(b)) => a.total_cmp(&b),
-                _ => ka.to_lowercase().cmp(&kb.to_lowercase()),
+                (Some(_), None) => std::cmp::Ordering::Less,
+                (None, Some(_)) => std::cmp::Ordering::Greater,
+                (None, None) => doc4me_doc::collate::collate(ka.trim(), kb.trim(), sort_lang.as_deref()),
             };
             if desc { order.reverse() } else { order }
         });

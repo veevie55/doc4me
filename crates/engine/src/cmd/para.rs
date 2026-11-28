@@ -1,5 +1,6 @@
 //! Paragraph formatting, lists and styles (Home › Paragraph, Home › Styles).
 
+use doc4me_doc::collate::{SortKey, sort_key};
 use doc4me_doc::numbering::ListKind;
 use doc4me_doc::props::{Align, Border, BorderStyle, Borders, LineSpacing, NumRef, ParaProps, Rgb, TabAlign, TabLeader, TabStop};
 use doc4me_doc::styles::{Style, StyleKind};
@@ -892,28 +893,43 @@ fn sort(s: &mut Session, v: &Value) -> CmdResult {
         return Err(CmdError::Failed("select paragraphs in one place to sort".into()));
     }
     let (i0, i1) = (a.path.last(), b.path.last());
+    let lang = s.doc.para(a.story, &a.path).and_then(|para| super::para_lang(&s.doc, para)).or_else(|| super::default_lang(s));
     let bl = s.doc.container_mut(a.story, &a.path)?;
     let Some(slice) = bl.get_mut(i0..=i1) else { return Err(CmdError::Failed("bad range".into())) };
     if slice.iter().any(|b| !matches!(**b, Block::Para(_))) {
         return Err(CmdError::Failed("sorting tables isn't supported here; use Table › Sort".into()));
     }
-    let key = |b: &std::sync::Arc<Block>| b.as_para().map(|p| p.plain_text().to_lowercase()).unwrap_or_default();
-    slice.sort_by(|x, y| {
-        let o = natural_cmp(&key(x), &key(y));
+    let mut keyed: Vec<_> = slice
+        .iter()
+        .map(|block| (natural_key(&block.as_para().map(|para| para.plain_text()).unwrap_or_default(), lang.as_deref()), block.clone()))
+        .collect();
+    keyed.sort_by(|(a, _), (b, _)| {
+        let o = natural_cmp(a, b);
         if desc { o.reverse() } else { o }
     });
+    for (dst, (_, block)) in slice.iter_mut().zip(keyed) {
+        *dst = block;
+    }
     // Keep a section break on the last paragraph of the range where it was.
     s.sel = crate::Selection { anchor: Pos { off: 0, ..a }, focus: b };
     sel_result(s)
 }
 
 /// Compare strings with embedded numbers numerically ("item 2" < "item 10").
-fn natural_cmp(a: &str, b: &str) -> std::cmp::Ordering {
-    let num = |s: &str| s.trim().split(|c: char| !c.is_ascii_digit()).next().and_then(|n| n.parse::<f64>().ok());
-    match (num(a), num(b)) {
-        (Some(x), Some(y)) if x != y => x.total_cmp(&y),
-        _ => a.cmp(b),
-    }
+fn natural_key(text: &str, lang: Option<&str>) -> (Option<f64>, SortKey) {
+    let number = text.trim().split(|c: char| !c.is_ascii_digit()).next().and_then(|n| n.parse::<f64>().ok());
+    (number, sort_key(text, lang))
+}
+
+/// Numbered paragraphs come first in numeric order; the rest compare by their language's alphabet.
+fn natural_cmp(a: &(Option<f64>, SortKey), b: &(Option<f64>, SortKey)) -> std::cmp::Ordering {
+    let number = match (a.0, b.0) {
+        (Some(a), Some(b)) => a.total_cmp(&b),
+        (Some(_), None) => std::cmp::Ordering::Less,
+        (None, Some(_)) => std::cmp::Ordering::Greater,
+        (None, None) => std::cmp::Ordering::Equal,
+    };
+    number.then_with(|| a.1.cmp(&b.1))
 }
 
 fn create_style(s: &mut Session, v: &Value) -> CmdResult {

@@ -1,9 +1,7 @@
 //! Numbers written the way a language writes them: `1 250,50` in Polish, `1.250,50` in German,
 //! `1,250.50` in English. Used by table sort and table formulas.
 
-fn language(lang: Option<&str>) -> String {
-    lang.unwrap_or("").trim().to_ascii_lowercase().replace('_', "-").split(['-', '.', '@']).next().unwrap_or_default().to_string()
-}
+use crate::collate::language;
 
 /// The decimal separator of language `lang` (a BCP 47 tag; `None` means English).
 pub fn decimal_separator(lang: Option<&str>) -> char {

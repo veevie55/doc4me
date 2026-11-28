@@ -3,6 +3,7 @@
 
 use std::collections::BTreeMap;
 
+use doc4me_doc::collate::{SortKey, heading_letter, sort_key};
 use doc4me_doc::para::InlineObject;
 use doc4me_doc::props::{CharProps, TabAlign, TabLeader, TabStop};
 use doc4me_doc::section::SectionStart;
@@ -176,7 +177,7 @@ struct Node {
 }
 
 /// Every XE entry in the body with its page (or page range), grouped by entry.
-fn collect(s: &mut Session) -> BTreeMap<Vec<String>, Node> {
+fn collect(s: &mut Session, lang: Option<&str>) -> BTreeMap<Vec<SortKey>, Node> {
     let mut marks: Vec<(FieldCode, Pos)> = Vec::new();
     for path in s.doc.para_paths(StoryRef::Body) {
         let Some(p) = s.doc.para(StoryRef::Body, &path) else { continue };
@@ -199,7 +200,7 @@ fn collect(s: &mut Session) -> BTreeMap<Vec<String>, Node> {
         })
     };
     let starts = s.doc.bookmarks();
-    let mut tree: BTreeMap<Vec<String>, Node> = BTreeMap::new();
+    let mut tree: BTreeMap<Vec<SortKey>, Node> = BTreeMap::new();
     for (f, pos) in marks {
         let text = f.args.first().cloned().unwrap_or_default();
         let levels: Vec<String> = text.split(':').map(|x| x.trim().to_string()).filter(|x| !x.is_empty()).take(9).collect();
@@ -209,10 +210,10 @@ fn collect(s: &mut Session) -> BTreeMap<Vec<String>, Node> {
         // Every level above gets a line of its own, even without pages.
         for k in 1..levels.len() {
             let head: Vec<String> = levels.iter().take(k).cloned().collect();
-            tree.entry(head.iter().map(|x| x.to_lowercase()).collect()).or_insert_with(|| Node { levels: head, ..Default::default() });
+            tree.entry(head.iter().map(|x| sort_key(x, lang)).collect()).or_insert_with(|| Node { levels: head, ..Default::default() });
         }
         let node =
-            tree.entry(levels.iter().map(|x| x.to_lowercase()).collect()).or_insert_with(|| Node { levels: levels.clone(), ..Default::default() });
+            tree.entry(levels.iter().map(|x| sort_key(x, lang)).collect()).or_insert_with(|| Node { levels: levels.clone(), ..Default::default() });
         if let Some(see) = f.arg('t') {
             if !node.see.iter().any(|x| x == see) {
                 node.see.push(see.to_string());
@@ -265,6 +266,7 @@ pub fn rebuild(s: &mut Session, i: usize, leader: Option<TabLeader>) -> Result<(
         return Ok(());
     };
     let f = FieldCode::parse(&instr);
+    let lang = super::default_lang(s);
     // Old entries go; keep their leader and the section their columns had.
     let mut old_leader = None;
     let mut old_sect = None;
@@ -280,7 +282,7 @@ pub fn rebuild(s: &mut Session, i: usize, leader: Option<TabLeader>) -> Result<(
     let sep = f.arg('e').map(str::to_string).unwrap_or_else(|| ", ".into());
     let run_in = f.has('r');
     let headings = f.switches.iter().find(|(c, _)| *c == 'h').map(|(_, a)| a.clone().unwrap_or_default());
-    let tree = collect(s);
+    let tree = collect(s, lang.as_deref());
     let mut lines: Vec<(usize, Line)> = Vec::new();
     let mut letter: Option<String> = None;
     let mut keys = tree.keys().peekable();
@@ -288,7 +290,7 @@ pub fn rebuild(s: &mut Session, i: usize, leader: Option<TabLeader>) -> Result<(
         let Some(node) = tree.get(key) else { continue };
         let Some(main) = node.levels.first() else { continue };
         if let Some(h) = &headings {
-            let first = main.chars().next().map(|c| c.to_uppercase().to_string());
+            let first = heading_letter(main, lang.as_deref());
             if first != letter {
                 if letter.is_some() || !h.is_empty() {
                     lines.push((0, vec![(if h.is_empty() { String::new() } else { first.clone().unwrap_or_default() }, CharProps::default())]));
