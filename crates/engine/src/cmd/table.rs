@@ -684,7 +684,7 @@ fn fix_caret(s: &mut Session, tp: &Path, r: usize, c: usize) -> CmdResult {
     sel_result(s)
 }
 
-fn row(s: &mut Session, below: bool) -> CmdResult {
+pub(super) fn row(s: &mut Session, below: bool) -> CmdResult {
     let (tp, r, c) = cell(s)?;
     let cells = selected_cells(s);
     let rows: std::collections::BTreeSet<_> = cells.iter().map(|x| x.0).collect();
@@ -751,7 +751,7 @@ fn insert_cells(s: &mut Session, v: &Value) -> CmdResult {
     }
 }
 
-fn col(s: &mut Session, right: bool) -> CmdResult {
+pub(super) fn col(s: &mut Session, right: bool) -> CmdResult {
     let (tp, r, c) = cell(s)?;
     let cells = selected_cells(s);
     let explicit = s.selected_table_cells().is_some() || !s.sel.is_collapsed();

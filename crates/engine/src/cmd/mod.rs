@@ -51,6 +51,7 @@ pub mod speech;
 pub mod summarize;
 pub mod table;
 pub mod table_draw;
+pub mod table_mouse;
 pub mod table_resize;
 pub mod table_style;
 pub mod templates;
@@ -95,6 +96,7 @@ pub fn registry() -> Registry {
     v.extend(table::specs());
     v.extend(table_style::specs());
     v.extend(table_draw::specs());
+    v.extend(table_mouse::specs());
     v.extend(table_resize::specs());
     v.extend(review::specs());
     v.extend(file::specs());

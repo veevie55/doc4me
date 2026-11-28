@@ -14,7 +14,7 @@ use crate::WordApp;
 use crate::theme::Tokens;
 
 /// How near (screen pixels) the pointer has to be to a border to grab it.
-const REACH_PX: f32 = 4.0;
+pub(crate) const REACH_PX: f32 = 4.0;
 
 /// A table border (or the handle) being dragged.
 #[derive(Clone, Debug)]
@@ -26,13 +26,13 @@ pub(crate) struct ResizeDrag {
 }
 
 /// Screen pixels per page point on `page`.
-fn page_scale(rects: &[Rect], layout: &DocLayout, scale: f32, page: usize) -> Option<f32> {
+pub(crate) fn page_scale(rects: &[Rect], layout: &DocLayout, scale: f32, page: usize) -> Option<f32> {
     let r = rects.get(page)?;
     let sc = layout.pages.get(page).filter(|pg| pg.w > 0.0).map_or(scale, |pg| r.width() / pg.w);
     (sc > 0.0 && sc.is_finite()).then_some(sc)
 }
 
-fn to_screen(rects: &[Rect], layout: &DocLayout, scale: f32, page: usize, x: f32, y: f32) -> Option<Pos2> {
+pub(crate) fn to_screen(rects: &[Rect], layout: &DocLayout, scale: f32, page: usize, x: f32, y: f32) -> Option<Pos2> {
     let r = rects.get(page)?;
     let sc = page_scale(rects, layout, scale, page)?;
     Some(pos2(r.min.x + x * sc, r.min.y + y * sc))
@@ -40,7 +40,7 @@ fn to_screen(rects: &[Rect], layout: &DocLayout, scale: f32, page: usize, x: f32
 
 /// Whether table resizing is in reach: not while a pen, the eraser, an object drag or a text
 /// drag owns the pointer, nor while editing a header or footer from the body (or back).
-fn available(app: &WordApp) -> bool {
+pub(crate) fn available(app: &WordApp) -> bool {
     app.canvas.table_tool.is_none()
         && app.canvas.ink.is_none()
         && app.canvas.obj_drag.is_none()
@@ -74,8 +74,16 @@ pub fn pointer(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect]
             app.canvas.table_resize = Some(d);
             return true;
         }
-        // A click without a move changes nothing.
+        // A click without a move changes nothing; double-clicking a column border fits that
+        // column to its contents, as in Word.
         if (d.to.0 - d.from.0).abs() < 0.5 && (d.to.1 - d.from.1).abs() < 0.5 {
+            if resp.double_clicked() && matches!(d.target.edge, Edge::Column(_)) {
+                let sc = page_scale(rects, layout, scale, d.page).unwrap_or(1.0);
+                let params = json!({"page": d.page, "x": d.from.0, "y": d.from.1, "reach": REACH_PX / sc});
+                if let Err(e) = app.run("table.fitColumn", params) {
+                    app.status(e);
+                }
+            }
             return true;
         }
         let shift = ui.input(|i| i.modifiers.shift);

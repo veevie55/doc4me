@@ -90,6 +90,7 @@ pub mod screen_clip;
 pub mod scroll;
 pub mod style_format;
 pub mod system_clipboard;
+pub mod table_mouse;
 pub mod table_pen;
 pub mod table_resize;
 pub mod theme;

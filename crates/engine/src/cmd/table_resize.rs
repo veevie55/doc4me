@@ -50,7 +50,7 @@ pub struct DrawnRow {
     pub top: f32,
     pub bottom: f32,
     /// Grid lines that are cell borders in this row (a merged cell hides the ones it covers).
-    edges: Vec<usize>,
+    pub(crate) edges: Vec<usize>,
 }
 
 /// A table border (or the handle) under the pointer, with the table's drawn geometry.
@@ -145,15 +145,15 @@ impl ResizeTarget {
 }
 
 /// A table cell's area on a page.
-struct CellBox {
-    rect: Rect,
-    table: Path,
-    story: StoryRef,
-    row: usize,
-    cell: usize,
+pub(crate) struct CellBox {
+    pub(crate) rect: Rect,
+    pub(crate) table: Path,
+    pub(crate) story: StoryRef,
+    pub(crate) row: usize,
+    pub(crate) cell: usize,
 }
 
-fn cell_boxes(l: &DocLayout, page: usize) -> Vec<CellBox> {
+pub(crate) fn cell_boxes(l: &DocLayout, page: usize) -> Vec<CellBox> {
     let Some(pg) = l.pages.get(page) else { return Vec::new() };
     pg.items
         .iter()
@@ -229,7 +229,7 @@ fn geometry(t: &Table, boxes: &[&CellBox]) -> Option<(Vec<f32>, Vec<DrawnRow>)> 
 }
 
 /// Every table drawn on a page, with its geometry there (`edge` is a placeholder).
-fn tables_on(l: &DocLayout, doc: &Document, page: usize) -> Vec<ResizeTarget> {
+pub(crate) fn tables_on(l: &DocLayout, doc: &Document, page: usize) -> Vec<ResizeTarget> {
     let boxes = cell_boxes(l, page);
     let mut tables: Vec<(StoryRef, &Path)> = Vec::new();
     for b in &boxes {
@@ -394,7 +394,7 @@ fn drawn_heights(l: &DocLayout, doc: &Document, page: usize, target: &ResizeTarg
 }
 
 /// Mark the table's paragraphs changed, so the layout redoes them.
-fn touch(s: &mut Session, target: &ResizeTarget) -> Result<(), CmdError> {
+pub(super) fn touch(s: &mut Session, target: &ResizeTarget) -> Result<(), CmdError> {
     let story = target.story;
     let paths: Vec<Path> =
         s.doc.para_paths(story).into_iter().filter(|q| q.0.len() > target.table.0.len() && q.0.starts_with(&target.table.0)).collect();

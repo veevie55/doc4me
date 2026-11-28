@@ -131,6 +131,8 @@ pub struct CanvasState {
     pub(crate) table_stroke: Option<crate::table_pen::PenStroke>,
     /// A table border or the table's resize handle being dragged (`table_resize`).
     pub(crate) table_resize: Option<crate::table_resize::ResizeDrag>,
+    /// A table selection area or move handle being dragged (`table_mouse`).
+    pub(crate) table_drag: Option<crate::table_mouse::TableDrag>,
     /// The last key ran an Alt shortcut: the text its key sends (it may arrive a frame later)
     /// isn't typed. The next key press clears it.
     pub(crate) swallow_text: bool,
@@ -234,6 +236,7 @@ impl Default for CanvasState {
             table_border: doc4me_doc::props::Border { style: doc4me_doc::props::BorderStyle::Single, width: 0.5, color: None, space: 0.0 },
             table_stroke: None,
             table_resize: None,
+            table_drag: None,
             link_from: None,
             a11y: Default::default(),
         }
@@ -1361,6 +1364,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         crate::ink::paint(app, &painter, &rects, &layout, geo.scale);
         crate::table_pen::paint(app, &painter, &t, &layout, &rects, geo.scale);
         crate::table_resize::paint(app, &painter, &t, &layout, &rects, geo.scale);
+        crate::table_mouse::paint(app, &painter, &t, &layout, &rects, geo.scale);
         paint_text_drop(app, &painter, &t, &layout, &rects, geo.scale);
         (resp, rects)
     });
@@ -1503,6 +1507,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         ui.ctx().set_cursor_icon(over_object.unwrap_or(egui::CursorIcon::Text));
     }
     crate::table_resize::cursor(app, ui, &resp, &layout, &rects, geo.scale);
+    crate::table_mouse::cursor(app, ui, &resp, &layout, &rects, geo.scale);
     crate::table_pen::cursor(app, ui, &resp);
     if !keys_first && app.canvas.focused && !matches!(app.dialog, Some(crate::dialogs::Dialog::SaveChanges { .. })) {
         crate::keys::canvas_events(app, ui.ctx());
@@ -2017,6 +2022,9 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
     }
     // A press on a table border (or the table's resize handle) drags it instead of the caret.
     if crate::table_resize::pointer(app, ui, resp, rects, layout, scale) {
+        return;
+    }
+    if crate::table_mouse::pointer(app, ui, resp, rects, layout, scale) {
         return;
     }
     let Some(p) = pointer else { return };
@@ -2662,6 +2670,14 @@ fn margin_handle(app: &mut WordApp, ui: &Ui, edge: MarginEdge, zone: Rect, to_pt
             app.session.join_next_undo();
         }
         let _ = app.run("layout.margins", json!({ edge.param(): v }));
+    }
+}
+
+/// Paint the selection with the Format Painter's formatting, when it is armed and something
+/// selected (including an explicitly selected empty cell).
+pub(crate) fn apply_format_painter(app: &mut WordApp) {
+    if app.session.painter.is_some() && (!app.session.sel.is_collapsed() || app.session.selected_table_cells().is_some()) {
+        let _ = app.run("edit.pasteFormat", json!({}));
     }
 }
 
