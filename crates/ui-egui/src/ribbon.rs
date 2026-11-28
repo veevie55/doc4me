@@ -643,6 +643,8 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                     ] {
                         mi(ui, app, l, "format.underline", json!({"style": s}));
                     }
+                    ui.separator();
+                    mi(ui, app, "Font…", "format.fontDialog", json!({}));
                 });
                 small(ui, app, "strike", None, "Strikethrough", "format.strikethrough", json!({}), flag("strike"));
                 small(ui, app, "subscript", None, "Subscript", "format.subscript", json!({}), flag("subscript"));
@@ -652,11 +654,11 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 // Character-spacing presets expose the existing Font-dialog command directly
                 // on the Home ribbon, matching the document editor's common spacing actions.
                 menu_button(ui, app, "char-spacing", None, "Character Spacing", false, "", |ui, app| {
-                    for (label, points) in [("Very Tight", -1.5), ("Tight", -0.5), ("Normal", 0.0), ("Loose", 1.0), ("Very Loose", 3.0)] {
+                    for (label, points) in [("Tight", -1.5), ("Normal", 0.0), ("Loose", 3.0)] {
                         mi(ui, app, label, "format.spacing", json!({"points": points}));
                     }
                     ui.separator();
-                    mi(ui, app, "More Spacing…", "format.fontDialog", json!({}));
+                    mi(ui, app, "Font…", "format.fontDialog", json!({}));
                 });
                 ui.add_space(4.0);
                 menu_button(ui, app, "effects", None, "Text Effects and Typography", false, "", |ui, app| {

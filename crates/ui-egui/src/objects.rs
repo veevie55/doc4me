@@ -337,6 +337,10 @@ pub fn paint(app: &WordApp, painter: &Painter, t: &Tokens, layout: &DocLayout, p
             painter.image(tex.id(), to, uv, Color32::from_white_alpha(PREVIEW_OPACITY));
         }
         frame::paint(painter, t, to, d.drag.deg, false, false, false);
+        if let Some(page) = pages.get(d.drag.to_page) {
+            let text = crate::drag_readout::readout_text(crate::options::unit(), matches!(d.drag.grab, Grab::Resize(_)), d.drag.rect);
+            crate::drag_readout::paint_readout(painter, text, to, *page);
+        }
         return;
     }
     // The others selected along with it (Shift+click): their outlines.

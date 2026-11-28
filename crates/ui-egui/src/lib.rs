@@ -54,6 +54,7 @@ pub mod dialogs_smart_art;
 pub mod dialogs_templates;
 pub mod dialogs_wphelp;
 pub mod dictate;
+pub mod drag_readout;
 pub mod equation_tab;
 /// The built-in file browser, for desktops without a system file dialog (#576).
 #[cfg(not(target_arch = "wasm32"))]

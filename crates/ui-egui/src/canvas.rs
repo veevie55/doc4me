@@ -2707,6 +2707,11 @@ fn context_menu(app: &mut WordApp, ui: &mut Ui) {
     }
     if object {
         crate::ribbon_keys::sub_menu(ui, tl!("Wrap Text"), |ui| crate::ribbon::wrap_text_items(ui, app));
+        if let Some(lines) = crate::drag_readout::menu_lines(app) {
+            ui.separator();
+            ui.label(egui::RichText::new(&lines[0]).small().weak());
+            ui.label(egui::RichText::new(&lines[1]).small().weak());
+        }
     }
     if app.session.sel.focus.path.cell().is_some() {
         ui.separator();

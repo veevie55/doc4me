@@ -3078,13 +3078,3 @@ spacing	Normal	Normal
 	Web	Web
 	XML	XML
 	The interface can't draw {language} correctly yet: letters that join or change order, and right-to-left text, may look wrong. Use it anyway?	Arayüz {language} dilini henüz doğru çizemiyor: birleşen veya sırası değişen harfler ve sağdan sola metin yanlış görünebilir. Yine de kullanılsın mı?
-	Very Tight	Çok sıkı
-	Tight	Sıkı
-	Normal	Normal
-	Loose	Geniş
-	Very Loose	Çok geniş
-	More Spacing…	Daha fazla aralık…
-	Bulgarian	Bulgarca
-	Croatian	Hırvatça
-	Open recovery copies…	Kurtarma kopyalarını aç…
-	Restore an unsaved copy after Doc4Me closes unexpectedly.	Doc4Me beklenmedik şekilde kapandıktan sonra kaydedilmemiş bir kopyayı geri yükle.
