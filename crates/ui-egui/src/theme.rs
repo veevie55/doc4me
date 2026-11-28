@@ -231,6 +231,9 @@ pub struct Tokens {
     /// Selection-frame handles (pictures, shapes, text boxes) and their shadow.
     pub handle: Color32,
     pub handle_shadow: Color32,
+    /// Crop mode: handles, and the dim over the part of a picture cropped away.
+    pub crop_handle: Color32,
+    pub crop_dim: Color32,
     pub menu: Color32,
     pub blue: Color32,
     pub red: Color32,
@@ -272,6 +275,8 @@ impl Tokens {
             page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x22),
             handle: Color32::WHITE,
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x28),
+            crop_handle: Color32::BLACK,
+            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
             menu: Color32::WHITE,
             blue: Color32::from_rgb(0x2F, 0x6F, 0xD0),
             red: Color32::from_rgb(0xD1, 0x3B, 0x3B),
@@ -314,6 +319,8 @@ impl Tokens {
             page_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x60),
             handle: Color32::from_rgb(0xF2, 0xF2, 0xF2),
             handle_shadow: Color32::from_rgba_unmultiplied(0, 0, 0, 0x5A),
+            crop_handle: Color32::BLACK,
+            crop_dim: Color32::from_rgba_unmultiplied(0x30, 0x30, 0x30, 0xE0),
             menu: Color32::from_rgb(0x2B, 0x2B, 0x2B),
             blue: Color32::from_rgb(0x6C, 0x9B, 0xEA),
             red: Color32::from_rgb(0xEE, 0x6A, 0x6A),

@@ -95,6 +95,9 @@ pub struct CanvasState {
     pub mini_anchor: Option<Rect>,
     /// A picture, shape or text box being dragged by its frame.
     pub(crate) obj_drag: Option<crate::objects::ObjectDrag>,
+    /// The selected picture in interactive crop mode, and an active crop-handle drag.
+    pub(crate) crop: Option<Pos>,
+    pub(crate) crop_drag: Option<crate::crop::CropDrag>,
     /// An ink stroke being drawn with a pen (Draw tab).
     pub(crate) ink: Option<crate::ink::InkDrag>,
     /// The eraser is down: whether it has erased anything in this drag yet.
@@ -215,6 +218,8 @@ impl Default for CanvasState {
             context_synonyms: None,
             context_page_number: None,
             obj_drag: None,
+            crop: None,
+            crop_drag: None,
             ink: None,
             erasing: None,
             ink_ui: Default::default(),
@@ -2996,6 +3001,7 @@ fn context_menu(app: &mut WordApp, ui: &mut Ui) {
         item(ui, app, "Save as Picture…", "ui.savePicture", json!({}));
         item(ui, app, "Reset Picture", "picture.reset", json!({}));
         item(ui, app, "Size and Crop…", "ui.tab", json!({"tab": "Picture Format"}));
+        item(ui, app, if crate::crop::active(app).is_some() { "Leave Crop" } else { "Crop" }, "ui.crop", json!({}));
     }
     if object {
         crate::ribbon_keys::sub_menu(ui, tl!("Wrap Text"), |ui| crate::ribbon::wrap_text_items(ui, app));

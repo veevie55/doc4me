@@ -33,6 +33,7 @@ pub mod colors;
 pub mod content_controls;
 pub mod control;
 pub mod credits;
+pub mod crop;
 pub mod desktop_theme;
 pub mod dialogs;
 pub mod dialogs_chart;
@@ -1208,6 +1209,11 @@ impl WordApp {
                 json!({"pending": self.change_picture_target.is_some()})
             }
             "ui.savePicture" => return Some(self.save_picture()),
+            // Picture Format › Size and Crop: toggle interactive crop handles for this picture.
+            "ui.crop" => match crop::toggle(self) {
+                Ok(v) => v,
+                Err(e) => return Some(Err(e)),
+            },
             "ui.collapseRibbon" => {
                 self.ui.ribbon_collapsed = !self.ui.ribbon_collapsed;
                 json!({"collapsed": self.ui.ribbon_collapsed})

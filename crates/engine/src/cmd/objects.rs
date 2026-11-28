@@ -145,13 +145,31 @@ pub fn specs() -> Vec<CommandSpec> {
             .when(has_shape_or_canvas),
         CommandSpec::new("picture.crop", "Crop", "Picture Format › Size", |s, v| {
             let c = [p::f32(v, "left"), p::f32(v, "top"), p::f32(v, "right"), p::f32(v, "bottom")].map(|x| x.unwrap_or(0.0).clamp(0.0, 0.45));
+            let size = |k: &str| p::f32(v, k).map(|x| x.clamp(1.0, 4000.0));
+            let (nw, nh) = (size("width"), size("height"));
             with_obj(s, |o| {
-                if let InlineObject::Image { crop, .. } = o {
+                if let InlineObject::Image { crop, w, h, float, .. } = o {
+                    // When resizing along with a crop, move a floating picture by the amount
+                    // trimmed from its left/top edge so the visible part stays in place.
+                    let full = |len: f32, lo: f32, hi: f32| len / (1.0 - lo - hi).max(0.1);
+                    let (left, top) = (if float.flip_h { 2 } else { 0 }, if float.flip_v { 3 } else { 1 });
+                    if let Some(nw) = nw {
+                        if float.wrap != Wrap::Inline && float.h_align.is_none() {
+                            float.x += (c[left] - crop[left]) * full(nw, c[0], c[2]);
+                        }
+                        *w = nw;
+                    }
+                    if let Some(nh) = nh {
+                        if float.wrap != Wrap::Inline && float.v_align.is_none() {
+                            float.y += (c[top] - crop[top]) * full(nh, c[1], c[3]);
+                        }
+                        *h = nh;
+                    }
                     *crop = c;
                 }
             })
         })
-        .params(r#"{"left"?, "top"?, "right"?, "bottom"? (fractions 0–0.45)}"#)
+        .params(r#"{"left"?, "top"?, "right"?, "bottom"? (fractions 0–0.45), "width"?: pt, "height"?: pt (new display size in the same undo step)}"#)
         .when(has_picture),
         // Kept for scripts written before every object had alt text: `object.altText` on a picture.
         CommandSpec::new("picture.altText", "Alt Text", "Picture Format › Accessibility", |s, v| {
