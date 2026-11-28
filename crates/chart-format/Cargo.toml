@@ -1,0 +1,12 @@
+[package]
+name = "doc4me-chart-format"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Doc4Me chart appearance model and DrawingML formatting"
+
+[lints]
+workspace = true
+
+[dependencies]
+serde = { workspace = true }

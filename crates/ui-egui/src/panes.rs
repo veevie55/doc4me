@@ -11,6 +11,8 @@ use crate::theme::{Tokens, regular, semibold};
 
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
+    crate::lists_pane::show(app, ui);
+    crate::chart_format_pane::show(app, ui);
     // SmartArt Design › Text Pane, while a SmartArt graphic Doc4Me can edit is selected.
     if app.session.view.smart_art_pane && doc4me_engine::cmd::smart_art::selected_smart_art(&app.session).is_some() {
         egui::Panel::left("smart_art_pane")

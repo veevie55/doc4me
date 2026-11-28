@@ -84,6 +84,55 @@ fn has_shape(s: &Session) -> Option<&'static str> {
         _ => Some("select a shape first"),
     }
 }
+fn has_rounded_rectangle(s: &Session) -> Option<&'static str> {
+    match selected(s) {
+        Some((_, InlineObject::Shape { kind: doc4me_doc::para::ShapeKind::RoundedRectangle, .. })) => None,
+        _ => Some("select a rounded rectangle first"),
+    }
+}
+
+/// Lock or unlock the selected drawing(s); the default toggles their state.
+fn lock_object(s: &mut Session, v: &Value) -> CmdResult {
+    let mut positions = picked_objects(s);
+    if positions.is_empty() {
+        positions = selected(s).map(|(p, _)| vec![p]).unwrap_or_default();
+    }
+    let locked = positions.first().and_then(|p| s.doc.para_at(p)?.object_at(p.off)).and_then(|o| o.frame()).is_some_and(|(_, _, f)| f.locked);
+    let to = p::bool(v, "locked").unwrap_or(!locked);
+    for pos in &positions {
+        edit_float(s, pos, |f| f.locked = to)?;
+    }
+    Ok(json!({"locked": to, "objects": positions.len()}))
+}
+
+/// Whether any selected or picked drawing is locked (commands refuse mixed selections too).
+pub fn selection_locked(s: &Session) -> bool {
+    let mut positions = picked_objects(s);
+    if positions.is_empty() {
+        positions = selected(s).map(|(p, _)| vec![p]).unwrap_or_default();
+    }
+    !positions.is_empty()
+        && positions.iter().any(|p| {
+            s.doc.para_at(p).and_then(|para| para.object_at(p.off)).and_then(|object| object.frame()).is_some_and(|(_, _, frame)| frame.locked)
+        })
+}
+
+/// Refuse a command that would change a locked selected drawing.
+pub fn object_lock_refuses(s: &Session, id: &str) -> bool {
+    const FREE: [&str; 6] = ["shape.lock", "object.altText", "picture.altText", "picture.save", "edit.undo", "edit.redo"];
+    let object_cmd = ["picture.", "shape.", "arrange.", "canvas.", "wordArt.", "chart.", "smartArt.", "object."]
+        .iter()
+        .any(|prefix| id.starts_with(prefix));
+    if !object_cmd || FREE.contains(&id) {
+        return false;
+    }
+    let positions = picked_objects(s);
+    if positions.is_empty() {
+        selected(s).is_some_and(|(_, o)| o.frame().is_some_and(|(_, _, f)| f.locked))
+    } else {
+        positions.iter().any(|p| s.doc.para_at(p).and_then(|q| q.object_at(p.off)).and_then(|o| o.frame()).is_some_and(|(_, _, f)| f.locked))
+    }
+}
 
 pub fn specs() -> Vec<CommandSpec> {
     vec![
@@ -114,6 +163,9 @@ pub fn specs() -> Vec<CommandSpec> {
         .when(has_picture),
         CommandSpec::new("object.altText", "Alt Text", "Shape Format › Accessibility", alt_text)
             .params(r#"{"text"?: string, "title"?: string, "decorative"?: bool} (the selected picture, shape, text box, group or chart)"#)
+            .when(has_object),
+        CommandSpec::new("shape.lock", "Lock", "Shape Format › Arrange", lock_object)
+            .params(r#"{"locked"?: bool} (default: toggle the selected object or picked objects)"#)
             .when(has_object),
         CommandSpec::new("picture.corrections", "Corrections", "Picture Format › Adjust", |s, v| {
             let b = p::f32(v, "brightness").unwrap_or(0.0).clamp(-100.0, 100.0);
@@ -432,6 +484,17 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"kind": string}"#)
         .when(has_shape),
+        CommandSpec::new("shape.cornerRadius", "Corner Radius", "Shape Format › Size", |s, v| {
+            let radius = p::f32(v, "radius").filter(|r| r.is_finite()).ok_or_else(|| CmdError::Params("`radius` must be a number of points".into()))?;
+            with_obj(s, |o| {
+                let (w, h) = o.frame().map_or((0.0, 0.0), |(w, h, _)| (w, h));
+                if let InlineObject::Shape { extra, .. } = o {
+                    extra.corner = Some(doc4me_doc::connector::corner_from_radius(radius, w, h));
+                }
+            })
+        })
+        .params(r#"{"radius": pt} (0 gives square corners; half the shorter side gives round ends)"#)
+        .when(has_rounded_rectangle),
         CommandSpec::new("shape.textDirection", "Text Direction", "Shape Format › Text", |s, v| {
             let dir = p::str(v, "dir").unwrap_or("horz");
             let vert = match dir {

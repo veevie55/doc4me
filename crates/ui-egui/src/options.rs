@@ -329,6 +329,49 @@ fn save(app: &mut WordApp, ui: &mut Ui) {
         app.session.autosave = autosave;
     }
     note(ui, "AutoSave writes your changes to the file a moment after you stop typing.");
+    ui.add_space(8.0);
+    section(ui, "Privacy for this document");
+    let settings = &app.session.doc.settings;
+    for (label, key, current) in [
+        ("Remove my name from comments, changes and file properties when saving", "removePersonalInfo", settings.remove_personal_info),
+        ("Leave out the date and time of comments and tracked changes when saving", "removeDateTime", settings.remove_date_time),
+    ] {
+        let mut value = current;
+        if ui.checkbox(&mut value, tl!(label)).changed()
+            && let Err(e) = app.run("file.privacyOptions", json!({ key: value }))
+        {
+            app.status(e);
+        }
+    }
+    note(ui, "The document you are editing keeps the names and dates; only the saved file leaves them out.");
+    ui.add_space(8.0);
+    section(ui, "Preserve fidelity when sharing this document");
+    let settings = &app.session.doc.settings;
+    let (embed, subset, system_fonts) = (settings.embed_fonts, settings.embed_subset, settings.embed_system_fonts);
+    let mut value = embed;
+    if ui.checkbox(&mut value, tl!("Embed fonts in the file")).changed()
+        && let Err(e) = app.run("file.embedFonts", json!({"embed": value}))
+    {
+        app.status(e);
+    }
+    ui.indent("embed_fonts_options", |ui| {
+        let mut value = subset;
+        if ui.add_enabled(embed, egui::Checkbox::new(&mut value, tl!("Embed only the characters used in the document (best for reducing file size)"))).changed()
+            && let Err(e) = app.run("file.embedFonts", json!({"subset": value}))
+        {
+            app.status(e);
+        }
+        let mut leave_out = !system_fonts;
+        if ui.add_enabled(embed, egui::Checkbox::new(&mut leave_out, tl!("Do not embed common system fonts"))).changed()
+            && let Err(e) = app.run("file.embedFonts", json!({"systemFonts": !leave_out}))
+        {
+            app.status(e);
+        }
+    });
+    note(ui, "People who open the document see its text in the fonts you used, even without them installed. A font whose licence doesn't allow embedding is left out.");
+    if cfg!(target_arch = "wasm32") {
+        note(ui, "In the browser, only the fonts that come with Doc4Me and fonts embedded in documents you opened can be embedded.");
+    }
 }
 
 fn language(app: &mut WordApp, ui: &mut Ui) {

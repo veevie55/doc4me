@@ -580,6 +580,8 @@ pub fn specs() -> Vec<CommandSpec> {
         .params(r#"{"top"?, "left"?, "bottom"?, "right"? (pt)}"#),
         CommandSpec::new("table.borderPainter", "Border Painter", "Table Design › Borders", super::table::paint_border)
             .params(r#"{"page"?: n, "x0"?, "y0"?, "x1"?, "y1"?: pt, "style"?, "width"?, "color"?, "kind"?, "scope"?} (coordinates paint a nearby edge or straight stroke; without coordinates applies table.borders)"#),
+        CommandSpec::new("table.paintBorder", "Border Painter", "Table Design › Borders", super::table::paint_border)
+            .params(r#"Khiankrub-compatible ID for table.borderPainter"#),
         CommandSpec::new("para.setNumberingValue", "Set Numbering Value", "Home › Paragraph › Numbering", |s, v| {
             let value = p::u64(v, "value").unwrap_or(1).clamp(0, 100_000) as u32;
             let f = s.sel.focus.clone();

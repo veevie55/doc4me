@@ -139,6 +139,8 @@ fn content(app: &mut WordApp, ui: &mut egui::Ui, t: &Tokens) {
         if let Some(f) = widgets::font_combo_warned(ui, "mini_font", COMBO_FONT_W, &font, &fams, Some(&*prev), warning.as_deref()) {
             let _ = if f == crate::widgets::ADD_FONT {
                 app.run("font.add", json!({}))
+            } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
+                app.run("font.loadSystem", json!({}))
             } else {
                 let f = app.previews.font_stored(&f);
                 app.run("format.font", json!({"name": f}))

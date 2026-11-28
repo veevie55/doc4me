@@ -108,6 +108,41 @@ pub fn specs() -> Vec<CommandSpec> {
             }))
         })
         .params(r#"{"doNotUseHtmlParagraphAutoSpacing"?: bool (space after and before add up instead of the larger winning), "splitPageBreakAndParagraphMark"?: bool (a page break ending a paragraph takes its mark to the next page)} → the options and the compatibility mode (15: Word 2013 and later)"#),
+        CommandSpec::new("file.privacyOptions", "Privacy Options", "File › Options › Save", |s, v| {
+            let personal = p::bool(v, "removePersonalInfo");
+            let date_time = p::bool(v, "removeDateTime");
+            if personal.is_none() && date_time.is_none() {
+                return Err(CmdError::Params("give removePersonalInfo or removeDateTime (file.privacy reads them)".into()));
+            }
+            if let Some(on) = personal {
+                s.doc.settings.remove_personal_info = on;
+            }
+            if let Some(on) = date_time {
+                s.doc.settings.remove_date_time = on;
+            }
+            Ok(privacy(s))
+        })
+        .params(r#"{"removePersonalInfo"?: bool (save comment and revision authors as "Author", no creator or last-modified-by), "removeDateTime"?: bool (save comments and tracked changes without dates)} — at least one; the open document keeps its real names and dates"#),
+        CommandSpec::new("file.privacy", "Privacy Settings", "File › Options › Save", |s, _| Ok(privacy(s)))
+            .params(r#"{} → {"removePersonalInfo": bool, "removeDateTime": bool} (file.privacyOptions changes them)"#)
+            .pure(),
+        CommandSpec::new("file.embedFonts", "Embed Fonts in the File", "File › Options › Save", |s, v| {
+            let embed = p::bool(v, "embed");
+            let subset = p::bool(v, "subset");
+            let system = p::bool(v, "systemFonts");
+            if embed.is_none() && subset.is_none() && system.is_none() {
+                return Err(CmdError::Params("give embed, subset or systemFonts (file.fontEmbedding reads them)".into()));
+            }
+            let st = &mut s.doc.settings;
+            if let Some(on) = embed { st.embed_fonts = on; }
+            if let Some(on) = subset { st.embed_subset = on; }
+            if let Some(on) = system { st.embed_system_fonts = on; }
+            Ok(font_embedding(s))
+        })
+        .params(r#"{"embed"?: bool, "subset"?: bool, "systemFonts"?: bool} — embeds used fonts in Word files and respects each font's embedding licence"#),
+        CommandSpec::new("file.fontEmbedding", "Font Embedding Settings", "File › Options › Save", |s, _| Ok(font_embedding(s)))
+            .params(r#"{} → {"embed": bool, "subset": bool, "systemFonts": bool} (file.embedFonts changes these options)"#)
+            .pure(),
         // Options › Advanced › Font Substitution: the fonts the document names that aren't
         // installed, each with the font shown instead; `convert` puts that font in their place.
         CommandSpec::new("file.fontSubstitution", "Font Substitution", "File › Options › Advanced", font_substitution)
@@ -165,6 +200,19 @@ pub fn specs() -> Vec<CommandSpec> {
         })
         .params(r#"{"text": string}"#),
     ]
+}
+
+/// The document's privacy settings, as `file.privacy` and `file.privacyOptions` return them.
+fn privacy(s: &Session) -> Value {
+    json!({
+        "removePersonalInfo": s.doc.settings.remove_personal_info,
+        "removeDateTime": s.doc.settings.remove_date_time,
+    })
+}
+
+fn font_embedding(s: &Session) -> Value {
+    let st = &s.doc.settings;
+    json!({"embed": st.embed_fonts, "subset": st.embed_subset, "systemFonts": st.embed_system_fonts})
 }
 
 /// Rename the current file in its directory, or name a document before its first save.
@@ -703,6 +751,9 @@ fn save(s: &mut Session, v: &Value) -> CmdResult {
     s.stamp_save();
     let password = s.password.as_ref().map(crate::io::Password::as_str);
     crate::io::save_path_with(&path, &s.doc_to_save(), password, &export_options(s, v)).map_err(CmdError::Failed)?;
+    if let Some(report) = crate::embed_fonts::take_report() {
+        s.status = report;
+    }
     let encrypted = password.is_some() && crate::io::can_encrypt(&path.to_string_lossy());
     let ext = path.extension().and_then(|e| e.to_str()).unwrap_or("").to_ascii_lowercase();
     if ["docx", "docm", "dotx", "dotm", "odt", "rtf", "json", "xml"].contains(&ext.as_str()) {

@@ -182,6 +182,9 @@ pub struct ViewState {
     /// View › Window › Full Screen (F11): the front end carries this to the window.
     #[serde(default)]
     pub full_screen: bool,
+    /// Header & Footer › Show Document Text. Session-only display preference.
+    #[serde(default = "on")]
+    pub hf_document_text: bool,
 }
 
 fn on() -> bool {
@@ -244,6 +247,7 @@ impl Default for ViewState {
             outline: Default::default(),
             design_mode: false,
             full_screen: false,
+            hf_document_text: true,
         }
     }
 }
@@ -366,6 +370,8 @@ pub struct Session {
     pub goal_x: Option<f32>,
     /// Page the caret was last on (headers/footers repeat on many pages).
     pub page_hint: usize,
+    /// Header/footer stories created during this session; empty ones can be discarded on close.
+    pub(crate) new_header_parts: Vec<u32>,
     pub registry: Arc<Registry>,
     /// Author name for comments and tracked changes.
     pub author: String,
@@ -658,6 +664,7 @@ impl Session {
             find: FindState::default(),
             goal_x: None,
             page_hint: 0,
+            new_header_parts: Vec::new(),
             registry: Arc::new(crate::cmd::registry()),
             author: "Doc4Me User".into(),
             initials: String::new(),
@@ -1106,6 +1113,7 @@ impl Session {
         self.document_id = self.document_id.wrapping_add(1);
         self.bib_style = doc_bib_style(&doc);
         self.doc = doc;
+        self.new_header_parts.clear();
         self.doc.ensure_nonempty();
         self.password = None;
         self.file_name = None;
@@ -1167,6 +1175,7 @@ impl Session {
             find: _,
             goal_x: _,
             page_hint: _,
+            new_header_parts: _,
             registry: _,
             author: _,
             initials: _,
@@ -1306,6 +1315,9 @@ impl Session {
         }
         if self.view_blocks(id, spec.mutates) {
             return Err(CmdError::Disabled(format!("{id}: the document is view only")));
+        }
+        if spec.mutates && crate::cmd::objects::object_lock_refuses(self, id) {
+            return Err(CmdError::Disabled(format!("{id}: the object is locked")));
         }
         // Restrict Editing: refused outright, or allowed as long as it only edits the exceptions.
         let guard = if spec.mutates { crate::cmd::protect::check_before(self, id, params)? } else { false };

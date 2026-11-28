@@ -70,6 +70,8 @@ pub enum Draw {
         fill: Option<Rgb>,
         stroke: Option<Rgb>,
         stroke_width: f32,
+        /// Rounded rectangle adjustment, in 100000ths of the shorter side.
+        corner: Option<u32>,
         /// Shadow, glow and soft edges (drawn with [`doc4me_doc::effects::bands`]).
         effects: doc4me_doc::effects::ShapeEffects,
     },
@@ -193,6 +195,8 @@ pub struct DisplayOptions {
     /// Dim headers/footers (editing the body) or the body (editing a header/footer).
     pub dim_header: bool,
     pub dim_body: bool,
+    /// Hide the body text while editing a header or footer.
+    pub hide_body: bool,
     /// Show tracked changes as markup (coloured, underlined/struck).
     pub markup: bool,
     /// Show on-screen-only marks: equation placeholders and prompts (never in print or PDF).
@@ -210,6 +214,7 @@ impl Default for DisplayOptions {
             always: FormattingMarks::default(),
             dim_header: true,
             dim_body: false,
+            hide_body: false,
             markup: true,
             placeholders: false,
             hide_ink: false,
@@ -367,7 +372,8 @@ pub fn page_display(doc: &Document, page: &Page, opts: &DisplayOptions) -> Vec<D
     let mut out = Vec::new();
     let ha = if opts.dim_header { 0.45 } else { 1.0 };
     let ba = if opts.dim_body { 0.45 } else { 1.0 };
-    for (items, a) in [(&page.header, ha), (&page.footer, ha), (&page.items, ba)] {
+    let body: &[Placed] = if opts.hide_body { &[] } else { &page.items };
+    for (items, a) in [(&page.header[..], ha), (&page.footer[..], ha), (body, ba)] {
         let warps = warped_boxes(doc, items);
         let mut done: Vec<u32> = Vec::new();
         for it in items.iter() {
@@ -1007,7 +1013,15 @@ fn lines(
             let Some(st) = pl.styles.get(c.style as usize) else { continue };
             let rect = Rect::new(x + left + e.x, base - st.shift - e.top, e.w, e.h);
             let color = text_color(&st.rc.color, None);
-            out.push(Draw::Shape { rect, kind: e.kind, fill: None, stroke: Some(color), stroke_width: e.stroke, effects: Default::default() });
+            out.push(Draw::Shape {
+                rect,
+                kind: e.kind,
+                fill: None,
+                stroke: Some(color),
+                stroke_width: e.stroke,
+                corner: None,
+                effects: Default::default(),
+            });
             if e.cross {
                 for (y0, y1) in [(rect.y, rect.bottom()), (rect.bottom(), rect.y)] {
                     out.push(Draw::Line { x0: rect.x, y0, x1: rect.right(), y1, width: e.stroke, color, stroke: Stroke::Solid, alpha });
@@ -1226,6 +1240,7 @@ fn graphic_draws(doc: &Document, g: &Graphic, rect: Rect, alpha: f32) -> Vec<Dra
                 fill: *fill,
                 stroke: *stroke,
                 stroke_width: stroke_width * k,
+                corner: None,
                 effects: Default::default(),
             }),
             GraphicItem::Path { segs, fill, stroke, stroke_width } => {
@@ -1304,7 +1319,7 @@ fn shape_draws(
         return;
     }
     let Some(f) = freeform.filter(|_| kind == ShapeKind::Freeform) else {
-        out.push(Draw::Shape { rect, kind, fill, stroke, stroke_width, effects });
+        out.push(Draw::Shape { rect, kind, fill, stroke, stroke_width, corner: extra.corner, effects });
         return;
     };
     if f.is_ink() && opts.hide_ink {
@@ -1358,7 +1373,7 @@ fn line_draws(
                 .collect();
             out.push(Draw::Path { segs, fill: None, stroke, stroke_width });
         }
-        None => out.push(Draw::Shape { rect, kind, fill: None, stroke, stroke_width, effects }),
+        None => out.push(Draw::Shape { rect, kind, fill: None, stroke, stroke_width, corner: None, effects }),
     }
     let Some(color) = stroke else { return };
     // Our line runs from the bottom-left corner to the top-right; connectors from the top-left
@@ -1615,7 +1630,15 @@ pub(crate) fn inline_rect(obj: Option<&InlineObject>, cx: f32, base: f32, adv: f
 
 /// A Drawing Canvas's background and outline over its frame `rect`.
 fn canvas_background(rect: Rect, c: &doc4me_doc::para::CanvasStyle) -> Draw {
-    Draw::Shape { rect, kind: ShapeKind::Rectangle, fill: c.fill, stroke: c.stroke, stroke_width: c.stroke_width, effects: Default::default() }
+    Draw::Shape {
+        rect,
+        kind: ShapeKind::Rectangle,
+        fill: c.fill,
+        stroke: c.stroke,
+        stroke_width: c.stroke_width,
+        corner: None,
+        effects: Default::default(),
+    }
 }
 
 /// Whether `c` stands upright in top-to-bottom East Asian text (`tbRl`) rather than turning with

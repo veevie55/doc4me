@@ -67,6 +67,18 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("insert.pageNumber", "Page Number", "Insert › Header & Footer", page_number).params(r#"{"position"?: "top|bottom|current", "align"?: "left|center|right", "format"?: "x of y"}"#),
         CommandSpec::new("insert.editHeader", "Edit Header", "Insert › Header & Footer › Header", |s, _| edit_hf(s, true)).pure(),
         CommandSpec::new("insert.editFooter", "Edit Footer", "Insert › Header & Footer › Footer", |s, _| edit_hf(s, false)).pure(),
+        CommandSpec::new("insert.createHeader", "Header", "Insert › Header & Footer", |s, v| create_hf(s, v, true))
+            .params(r#"{"page"?: number (0-based; default: the caret's section)} → {story}; creates the page's header if missing and enters it"#),
+        CommandSpec::new("insert.createFooter", "Footer", "Insert › Header & Footer", |s, v| create_hf(s, v, false))
+            .params(r#"{"page"?: number (0-based; default: the caret's section)} → {story}; creates the page's footer if missing and enters it"#),
+        CommandSpec::new("insert.removeEmptyHeaders", "Remove Empty New Headers and Footers", "Header & Footer", |s, _| {
+            let ids = new_empty_headers(s);
+            let removed = strip_headers(&mut s.doc, &ids);
+            if removed {
+                s.touch();
+            }
+            Ok(json!({"removed": ids.len()}))
+        }),
         CommandSpec::new("insert.closeHeader", "Close Header and Footer", "Header & Footer", |s, _| {
             s.sel = Selection::caret(s.doc.start_of(StoryRef::Body));
             sel_result(s)
@@ -682,7 +694,87 @@ fn hf_part(s: &mut Session, header: bool) -> u32 {
     } else {
         sect.footers.default = Some(id);
     }
+    s.new_header_parts.push(id);
     id
+}
+
+fn create_hf(s: &mut Session, v: &Value, header: bool) -> CmdResult {
+    let id = match p::u64(v, "page") {
+        Some(page) => {
+            let page = usize::try_from(page).unwrap_or(usize::MAX);
+            s.page_hint = page;
+            page_hf_part(s, page, header)?
+        }
+        None => hf_part(s, header),
+    };
+    s.sel = Selection::caret(s.doc.end_of(StoryRef::Part(id)));
+    Ok(json!({"story": id}))
+}
+
+fn page_hf_part(s: &mut Session, page: usize, header: bool) -> Result<u32, CmdError> {
+    let layout = s.layout();
+    let pg = layout.pages.get(page).ok_or_else(|| CmdError::Params(format!("no page {page}")))?;
+    let shown = if header { pg.header_story } else { pg.footer_story };
+    if let Some(id) = shown.filter(|id| s.doc.parts.contains_key(id)) {
+        return Ok(id);
+    }
+    let slot = pg.hf_slot;
+    let block = s.doc.sections().first().map(|(end, _)| *end).unwrap_or(0);
+    let style = if header { "Header" } else { "Footer" };
+    let kind = if header { PartKind::Header } else { PartKind::Footer };
+    let id = s.doc.add_part(kind, vec![para_block(Paragraph::new().styled(style))]);
+    let section = s.doc.section_mut(block);
+    let set = if header { &mut section.headers } else { &mut section.footers };
+    match slot {
+        doc4me_layout::HfSlot::First => set.first = Some(id),
+        doc4me_layout::HfSlot::Even => set.even = Some(id),
+        doc4me_layout::HfSlot::Default => set.default = Some(id),
+    }
+    s.new_header_parts.push(id);
+    Ok(id)
+}
+
+fn new_empty_headers(s: &Session) -> Vec<u32> {
+    s.new_header_parts
+        .iter()
+        .copied()
+        .filter(|id| {
+            s.doc.parts.get(id).is_some_and(|part| {
+                matches!(part.kind, PartKind::Header | PartKind::Footer)
+                    && part.blocks.len() == 1
+                    && part.blocks.first().is_some_and(|b| matches!(&**b, Block::Para(p) if p.text.is_empty() && p.objects.is_empty()))
+            })
+        })
+        .collect()
+}
+
+fn strip_headers(doc: &mut doc4me_doc::Document, ids: &[u32]) -> bool {
+    if ids.is_empty() {
+        return false;
+    }
+    let clear = |set: &mut doc4me_doc::section::HeaderSet| {
+        for slot in [&mut set.default, &mut set.first, &mut set.even] {
+            if slot.is_some_and(|id| ids.contains(&id)) {
+                *slot = None;
+            }
+        }
+    };
+    clear(&mut doc.last_section.headers);
+    clear(&mut doc.last_section.footers);
+    for path in doc.para_paths(StoryRef::Body) {
+        if doc.para(StoryRef::Body, &path).is_some_and(|p| p.section.is_some())
+            && let Ok(p) = doc.para_mut(StoryRef::Body, &path)
+            && let Some(section) = p.section.as_mut()
+        {
+            clear(&mut section.headers);
+            clear(&mut section.footers);
+        }
+    }
+    let mut any = false;
+    for id in ids {
+        any |= doc.parts.remove(id).is_some();
+    }
+    any
 }
 
 fn header_footer(s: &mut Session, v: &Value, header: bool) -> CmdResult {

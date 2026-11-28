@@ -23,7 +23,7 @@ pub fn open(ext: &str, bytes: &[u8]) -> Option<Result<Document, String>> {
 pub fn save(ext: &str, doc: &Document, opts: &crate::io::ExportOptions) -> Option<Result<Vec<u8>, String>> {
     // .docx/.docm/.dotx/.dotm: the extension picks the package flavour Word expects.
     if let Some(flavor) = doc4me_docx::Flavor::from_ext(ext) {
-        return Some(doc4me_docx::write_as(doc, flavor).map_err(|e| e.to_string()));
+        return Some(crate::embed_fonts::write(doc, flavor));
     }
     match ext {
         "xml" => Some(doc4me_docx::write_flat(doc).map_err(|e| e.to_string())),

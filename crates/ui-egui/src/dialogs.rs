@@ -1798,7 +1798,13 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         if let Some(f) =
                             crate::widgets::font_combo_warned(ui, "fontdlg_asian", 220.0, font_ea, &fams, Some(&*prev), asian_warning.as_deref())
                         {
-                            *font_ea = f;
+                            if f == crate::widgets::ADD_FONT {
+                                let _ = app.run("font.add", json!({}));
+                            } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
+                                let _ = app.run("font.loadSystem", json!({}));
+                            } else {
+                                *font_ea = f;
+                            }
                         }
                         ui.end_row();
                     }
@@ -1806,7 +1812,13 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                     let fams = app.previews.families();
                     if let Some(f) = crate::widgets::font_combo_warned(ui, "fontdlg_font", 220.0, font, &fams, Some(&*prev), latin_warning.as_deref())
                     {
-                        *font = f;
+                        if f == crate::widgets::ADD_FONT {
+                            let _ = app.run("font.add", json!({}));
+                        } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
+                            let _ = app.run("font.loadSystem", json!({}));
+                        } else {
+                            *font = f;
+                        }
                     }
                     ui.end_row();
                     ui.label(tl!("Size:"));

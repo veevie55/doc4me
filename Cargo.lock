@@ -1135,6 +1135,13 @@ dependencies = [
 ]
 
 [[package]]
+name = "doc4me-chart-format"
+version = "1.1.4"
+dependencies = [
+ "serde",
+]
+
+[[package]]
 name = "doc4me-cli"
 version = "1.1.4"
 dependencies = [
@@ -1154,6 +1161,7 @@ version = "1.1.4"
 name = "doc4me-doc"
 version = "1.1.4"
 dependencies = [
+ "doc4me-chart-format",
  "doc4me-geom",
  "icu_segmenter",
  "log",
@@ -1186,6 +1194,7 @@ dependencies = [
  "aes",
  "base64",
  "cfb",
+ "doc4me-chart-format",
  "doc4me-doc",
  "doc4me-geom",
  "getrandom 0.3.4",
@@ -1206,6 +1215,7 @@ name = "doc4me-engine"
 version = "1.1.4"
 dependencies = [
  "chrono",
+ "doc4me-chart-format",
  "doc4me-doc",
  "doc4me-docbin",
  "doc4me-docx",
@@ -1360,6 +1370,7 @@ name = "doc4me-ui-egui"
 version = "1.1.4"
 dependencies = [
  "accesskit_consumer 0.35.0",
+ "doc4me-chart-format",
  "doc4me-doc",
  "doc4me-engine",
  "doc4me-fonts",

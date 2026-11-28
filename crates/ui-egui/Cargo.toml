@@ -15,6 +15,7 @@ doc4me-fonts = { workspace = true }
 doc4me-layout = { workspace = true }
 doc4me-render = { workspace = true }
 doc4me-engine = { workspace = true }
+doc4me-chart-format = { workspace = true }
 doc4me-zotero = { workspace = true }
 egui = { workspace = true }
 serde = { workspace = true }

@@ -388,13 +388,23 @@ impl DocLayout {
 
     /// Which header/footer (if any) is at (x, y) on a page — for double-click editing.
     pub fn header_footer_at(&self, page: usize, y: f32) -> Option<(StoryRef, bool)> {
+        let (story, header) = self.header_footer_zone(page, f32::NAN, y)?;
+        story.map(|s| (s, header))
+    }
+
+    /// Which header or footer zone contains a point on the page. Turned landscape headers run
+    /// down the right edge and footers down the left edge, so x decides there.
+    pub fn header_footer_zone(&self, page: usize, x: f32, y: f32) -> Option<(Option<StoryRef>, bool)> {
         let p = self.pages.get(page)?;
-        if y < p.body.y {
-            return p.header_story.map(|id| (StoryRef::Part(id), true));
+        if p.hf_turned {
+            if !x.is_finite() { return None; }
+            if x > p.body.right() { return Some((p.header_story.map(StoryRef::Part), true)); }
+            if x < p.body.x { return Some((p.footer_story.map(StoryRef::Part), false)); }
+            return None;
         }
-        if y > p.body.bottom() {
-            return p.footer_story.map(|id| (StoryRef::Part(id), false));
-        }
+        if !y.is_finite() { return None; }
+        if y < p.body.y { return Some((p.header_story.map(StoryRef::Part), true)); }
+        if y > p.body.bottom() { return Some((p.footer_story.map(StoryRef::Part), false)); }
         None
     }
 

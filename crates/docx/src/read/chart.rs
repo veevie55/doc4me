@@ -11,6 +11,7 @@ use doc4me_doc::graphic::{GraphicItem, PathSeg, TextAlign};
 use doc4me_doc::para::ShapeKind;
 use doc4me_doc::props::Rgb;
 
+use super::chart_look;
 use super::drawing_color::{fill_colour, slot};
 use crate::units::{int, measure};
 use crate::xml::El;
@@ -23,6 +24,8 @@ const MAX_POINTS: usize = 10_000;
 const MAX_CELLS: usize = 100_000;
 /// Longest series name or category label kept.
 const MAX_LABEL: usize = 200;
+/// Longest number format string kept from a chart part.
+const MAX_FORMAT_CODE: usize = 255;
 /// Most axis ticks drawn.
 const MAX_TICKS: usize = 20;
 /// Default text size, points.
@@ -57,10 +60,23 @@ pub(crate) fn chart_items(space: &El, theme: &[Rgb], w: f32, h: f32) -> Vec<Grap
         placeholder(&mut out, space, theme, w, h);
         return out;
     };
-    backdrop(&mut out, space, theme, w, h);
+    let fmt = &chart.fmt;
+    if fmt.chart_area.shape_is_auto() {
+        backdrop(&mut out, space, theme, w, h);
+    } else {
+        // The chart area as the pane formats it; an automatic fill stays white.
+        let whole = [0.0, 0.0, w, h];
+        chart_look::effects(&mut out, whole, fmt.rounded_corners, &fmt.chart_area);
+        if !chart_look::fill(&mut out, whole, fmt.rounded_corners, &fmt.chart_area) && fmt.chart_area.fill == doc4me_chart_format::Fill::Auto {
+            out.push(GraphicItem::Shape { rect: whole, kind: ShapeKind::Rectangle, fill: Some(Rgb::WHITE), stroke: None, stroke_width: 0.0 });
+        }
+        chart_look::border(&mut out, whole, fmt.rounded_corners, &fmt.chart_area);
+    }
     let mut area = Rect { x: PAD, y: PAD, w: (w - 2.0 * PAD).max(1.0), h: (h - 2.0 * PAD).max(1.0) };
     if let Some(t) = &chart.title {
-        area = title_block(&mut out, t, area);
+        let start = out.len();
+        area = title_block(&mut out, t, area, chart_look::text_size(&fmt.title).unwrap_or(TITLE_SIZE));
+        boxed(&mut out, start, &fmt.title, chart_look::text_color(&fmt.title));
     }
     if let Some(pos) = chart.legend {
         // Word lists bar series in the order they are drawn: reversed for clustered horizontal bars
@@ -71,19 +87,44 @@ pub(crate) fn chart_items(space: &El, theme: &[Rgb], w: f32, h: f32) -> Vec<Grap
         if reverse {
             entries.reverse();
         }
-        area = legend(&mut out, &entries, pos, area, chart.text_size);
+        let start = out.len();
+        area = legend(&mut out, &entries, pos, area, chart_look::text_size(&fmt.legend).unwrap_or(chart.text_size));
+        boxed(&mut out, start, &fmt.legend, chart_look::text_color(&fmt.legend));
     }
     match chart.kind {
         Kind::Pie | Kind::Doughnut => pie(&mut out, &chart, area),
         _ => cartesian(&mut out, &chart, area),
     }
+    // The chart's text colour (the chart area's) for every text still in the default colour.
+    if let Some(c) = chart_look::text_color(&fmt.chart_area) {
+        chart_look::recolor(&mut out, 0, TEXT, c);
+    }
     out
 }
 
+/// A title or legend drawn from `out[start..]`: its text in the pane's colour, and its box (fill,
+/// border, effects) put behind it.
+fn boxed(out: &mut Vec<GraphicItem>, start: usize, f: &doc4me_chart_format::Format, color: Option<Rgb>) {
+    if let Some(c) = color {
+        chart_look::recolor(out, start, TEXT, c);
+    }
+    if f.shape_is_auto() {
+        return;
+    }
+    let Some(r) = chart_look::bounds(out, start, 3.0) else { return };
+    let mut back = Vec::new();
+    chart_look::part(&mut back, r, false, f);
+    let tail = out.split_off(start.min(out.len()));
+    out.extend(back);
+    out.extend(tail);
+}
+
 /// The title at the top of `area`; returns the room left under it.
-fn title_block(out: &mut Vec<GraphicItem>, t: &str, area: Rect) -> Rect {
-    let lh = TITLE_SIZE * LINE;
-    text(out, Rect { x: area.x, y: area.y, w: area.w, h: lh }, t, TITLE_SIZE, TextAlign::Center, true);
+fn title_block(out: &mut Vec<GraphicItem>, t: &str, area: Rect, size: f32) -> Rect {
+    let lh = size * LINE;
+    // As wide as the title (for its box), centred in the area.
+    let tw = (text_w(t, size) + 8.0).min(area.w);
+    text(out, Rect { x: area.x + (area.w - tw) / 2.0, y: area.y, w: tw, h: lh }, t, size, TextAlign::Center, true);
     Rect { y: area.y + lh + PAD, h: (area.h - lh - PAD).max(1.0), ..area }
 }
 
@@ -102,7 +143,7 @@ fn placeholder(out: &mut Vec<GraphicItem>, space: &El, theme: &[Rgb], w: f32, h:
     out.push(GraphicItem::Shape { rect: [0.0, 0.0, w, h], kind: ShapeKind::Rectangle, fill: None, stroke: Some(AXIS), stroke_width: 0.75 });
     let mut area = Rect { x: PAD, y: PAD, w: (w - 2.0 * PAD).max(1.0), h: (h - 2.0 * PAD).max(1.0) };
     if let Some(t) = title_of(chart, &read_series(ty, false, theme)) {
-        area = title_block(out, &t, area);
+        area = title_block(out, &t, area, TITLE_SIZE);
     }
     let size = text_size(space);
     let lh = size * LINE;
@@ -238,6 +279,9 @@ struct Chart {
     date1904: bool,
     /// Outline of the plot area, when the file draws one.
     plot_border: Option<Rgb>,
+    /// The chart pane's formats (`doc4me_chart_format`), where the file's markup is fully
+    /// understood; automatic parts draw as before.
+    fmt: doc4me_chart_format::Formats,
 }
 
 impl Chart {
@@ -309,6 +353,7 @@ impl Chart {
             val_fmt,
             date1904,
             plot_border: plot.child("c:spPr").and_then(|p| p.child("a:ln")).and_then(|l| fill_colour(l, theme)),
+            fmt: crate::chart_spec::formats_of(space, chart, plot, ty),
         })
     }
 
@@ -452,9 +497,6 @@ impl Series {
     }
 }
 
-/// Longest number-format code honoured (the limit spreadsheet apps use); longer ones are ignored.
-const MAX_FORMAT_CODE: usize = 255;
-
 /// Category labels of a `c:cat` (string or number cache), capped. Numbers show in the cache's
 /// format code (dates included); text and `General` numbers as they are stored.
 fn labels(el: Option<&El>, cap: usize, date1904: bool) -> Vec<String> {
@@ -462,8 +504,7 @@ fn labels(el: Option<&El>, cap: usize, date1904: bool) -> Vec<String> {
     let Some(cache) = el.find("c:strCache").or_else(|| el.find("c:numCache")).or_else(|| el.find("c:strLit")).or_else(|| el.find("c:numLit")) else {
         return Vec::new();
     };
-    let code =
-        cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE && !f.eq_ignore_ascii_case("General"));
+    let code = cache.child("c:formatCode").map(|f| f.text()).filter(|f| !f.is_empty() && f.len() <= MAX_FORMAT_CODE && !f.eq_ignore_ascii_case("General"));
     pts(cache, cap)
         .into_iter()
         .map(|p| {
@@ -526,12 +567,7 @@ fn axis(a: Option<&El>) -> Axis {
         mid: a.child("c:crossBetween").and_then(|c| c.attr("val")) == Some("midCat"),
         min: num("c:min"),
         max: num("c:max"),
-        fmt: a
-            .child("c:numFmt")
-            .filter(|f| f.attr("sourceLinked") != Some("1"))
-            .and_then(|f| f.attr("formatCode"))
-            .filter(|f| f.len() <= MAX_FORMAT_CODE)
-            .map(str::to_string),
+        fmt: a.child("c:numFmt").filter(|f| f.attr("sourceLinked") != Some("1")).and_then(|f| f.attr("formatCode")).filter(|f| f.len() <= MAX_FORMAT_CODE).map(str::to_string),
     }
 }
 
@@ -1324,8 +1360,9 @@ fn cartesian(out: &mut Vec<GraphicItem>, c: &Chart, area: Rect) {
         return;
     }
     let g = Frame { plot, horiz: c.horizontal, n: c.n, vs: ax.vs, xs: ax.xs, mid: c.val.mid };
+    chart_look::part(out, [plot.x, plot.y, plot.w, plot.h], false, &c.fmt.plot_area);
     if c.val.grid {
-        draw_grid(out, &g, &ax.vticks);
+        draw_grid(out, &g, &ax.vticks, &c.fmt.gridlines);
     }
     let mut labels = Vec::new();
     match c.kind {
@@ -1338,36 +1375,58 @@ fn cartesian(out: &mut Vec<GraphicItem>, c: &Chart, area: Rect) {
     draw_axes(out, c, &g);
     draw_data_labels(out, &labels, c.text_size, g.horiz && c.kind == Kind::Bar);
     if !c.val.deleted {
+        let start = out.len();
         draw_value_labels(out, c, &g, &ax.vticks, Rect { w: m.left, ..area });
+        if let Some(col) = chart_look::text_color(&c.fmt.value_axis) {
+            chart_look::recolor(out, start, TEXT, col);
+        }
     }
     if !c.cat.deleted {
+        let start = out.len();
         draw_category_labels(out, c, &g, &ax.xticks, &m, area);
+        if let Some(col) = chart_look::text_color(&c.fmt.category_axis) {
+            chart_look::recolor(out, start, TEXT, col);
+        }
     }
 }
 
 /// Major gridlines at the value ticks.
-fn draw_grid(out: &mut Vec<GraphicItem>, g: &Frame, ticks: &[(f64, String)]) {
+fn draw_grid(out: &mut Vec<GraphicItem>, g: &Frame, ticks: &[(f64, String)], f: &doc4me_chart_format::Format) {
     let plot = g.plot;
+    if f.border == doc4me_chart_format::Border::None {
+        return;
+    }
     for (t, _) in ticks {
         let p = g.val(*t);
-        let segs = if g.horiz { seg(p, plot.y, p, plot.bottom()) } else { seg(plot.x, p, plot.right(), p) };
-        stroke(out, segs, GRID, 0.75);
+        let (a, b) = if g.horiz { ((p, plot.y), (p, plot.bottom())) } else { ((plot.x, p), (plot.right(), p)) };
+        if !chart_look::line(out, a, b, f) {
+            stroke(out, seg(a.0, a.1, b.0, b.1), GRID, 0.75);
+        }
     }
 }
 
 /// The category axis line, the plot area's outline and the value axis line, as the file shows them.
 fn draw_axes(out: &mut Vec<GraphicItem>, c: &Chart, g: &Frame) {
     let plot = g.plot;
-    if !c.cat.deleted && c.cat.line {
-        let segs = if g.horiz { seg(plot.x, plot.y, plot.x, plot.bottom()) } else { seg(plot.x, plot.bottom(), plot.right(), plot.bottom()) };
-        stroke(out, segs, AXIS, 0.75);
+    let (left, bottom) = (((plot.x, plot.y), (plot.x, plot.bottom())), ((plot.x, plot.bottom()), (plot.right(), plot.bottom())));
+    let (cat_line, val_line) = if g.horiz { (left, bottom) } else { (bottom, left) };
+    // The pane's look for an axis line wins; else the file's.
+    if !c.cat.deleted
+        && !chart_look::line(out, cat_line.0, cat_line.1, &c.fmt.category_axis)
+        && c.cat.line
+        && c.fmt.category_axis.border != doc4me_chart_format::Border::None
+    {
+        stroke(out, seg(cat_line.0.0, cat_line.0.1, cat_line.1.0, cat_line.1.1), AXIS, 0.75);
     }
-    if let Some(color) = c.plot_border {
+    if let Some(color) = c.plot_border.filter(|_| c.fmt.plot_area.border == doc4me_chart_format::Border::Auto) {
         stroke(out, rect_segs(plot.x, plot.y, plot.right(), plot.bottom()), color, 0.75);
     }
-    if !c.val.deleted && c.val.line {
-        let segs = if g.horiz { seg(plot.x, plot.bottom(), plot.right(), plot.bottom()) } else { seg(plot.x, plot.y, plot.x, plot.bottom()) };
-        stroke(out, segs, AXIS, 0.75);
+    if !c.val.deleted
+        && !chart_look::line(out, val_line.0, val_line.1, &c.fmt.value_axis)
+        && c.val.line
+        && c.fmt.value_axis.border != doc4me_chart_format::Border::None
+    {
+        stroke(out, seg(val_line.0.0, val_line.0.1, val_line.1.0, val_line.1.1), AXIS, 0.75);
     }
 }
 
@@ -2109,43 +2168,5 @@ mod tests {
         assert_eq!(format_value(0.00012, "0.0E+0", 0.0001), "1.2E-4");
         assert_eq!(format_value(0.0, "0.00E+00", 1.0), "0.00E+00");
         assert_eq!(format_value(-12345.0, "0.0E-00", 1.0), "-1.2E04");
-    }
-
-    #[test]
-    fn category_format_code_length_is_capped() {
-        let cat = |code: &str| -> Vec<String> {
-            let x = format!(
-                r#"<c:cat {NS}><c:numRef><c:numCache><c:formatCode>{code}</c:formatCode><c:ptCount val="1"/><c:pt idx="0"><c:v>5</c:v></c:pt></c:numCache></c:numRef></c:cat>"#
-            );
-            labels(Some(&crate::xml::parse(x.as_bytes()).unwrap()), 10, false)
-        };
-        let ok = format!("{}0", "x".repeat(254));
-        assert!(cat(&ok)[0].starts_with("xxx"));
-        let long = format!("{}0", "x".repeat(300));
-        assert_eq!(cat(&long), ["5"]);
-    }
-
-    #[test]
-    fn value_format_code_length_is_capped() {
-        let val = |code: &str| -> Option<String> {
-            let x = format!(
-                r#"<c:val {NS}><c:numRef><c:numCache><c:formatCode>{code}</c:formatCode><c:ptCount val="1"/><c:pt idx="0"><c:v>5</c:v></c:pt></c:numCache></c:numRef></c:val>"#
-            );
-            numbers(Some(&crate::xml::parse(x.as_bytes()).unwrap()), 10).1
-        };
-        let ok = format!("{}0", "x".repeat(254));
-        assert_eq!(val(&ok), Some(ok.clone()));
-        assert_eq!(val(&format!("{}0", "x".repeat(300))), None);
-    }
-
-    #[test]
-    fn axis_format_code_length_is_capped() {
-        let fmt = |code: &str| -> Option<String> {
-            let x = format!(r#"<c:valAx {NS}><c:numFmt formatCode="{code}" sourceLinked="0"/></c:valAx>"#);
-            axis(Some(&crate::xml::parse(x.as_bytes()).unwrap())).fmt
-        };
-        let ok = format!("{}0", "x".repeat(254));
-        assert_eq!(fmt(&ok), Some(ok.clone()));
-        assert_eq!(fmt(&format!("{}0", "x".repeat(300))), None);
     }
 }

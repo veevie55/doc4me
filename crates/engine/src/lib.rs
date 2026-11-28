@@ -10,6 +10,7 @@ pub mod build_info;
 pub mod catalog;
 pub mod clip_transfer;
 pub mod cmd;
+mod embed_fonts;
 pub mod file_access;
 pub mod ink_math;
 pub mod io;

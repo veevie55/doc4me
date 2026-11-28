@@ -9,6 +9,8 @@ use crate::xml::{self, El};
 
 /// Largest single part we decompress.
 pub const MAX_PART: u64 = 256 * 1024 * 1024;
+/// Word's optional embedded-font table.
+pub const FONT_TABLE_PART: &str = "word/fontTable.xml";
 /// Largest total of all decompressed parts.
 pub const MAX_TOTAL: u64 = 512 * 1024 * 1024;
 /// Most zip entries we look at.

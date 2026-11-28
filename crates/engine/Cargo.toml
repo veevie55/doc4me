@@ -11,6 +11,7 @@ workspace = true
 [dependencies]
 doc4me-geom = { workspace = true, features = ["image"] }
 doc4me-doc = { workspace = true }
+doc4me-chart-format = { workspace = true }
 doc4me-fonts = { workspace = true }
 doc4me-layout = { workspace = true }
 doc4me-render = { workspace = true }

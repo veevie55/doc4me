@@ -367,8 +367,8 @@ impl Writer<'_> {
     fn rev_attrs(&mut self, idx: u32) -> (String, String, String) {
         self.next_rev_id += 1;
         let r = self.doc.revisions.get(idx as usize);
-        let author = r.map(|r| r.author.clone()).filter(|a| !a.is_empty()).unwrap_or_else(|| "Unknown".into());
-        let date = r.map(|r| r.date.clone()).unwrap_or_default();
+        let author = super::annotation_author(self.doc, r.map_or("", |r| r.author.as_str())).to_string();
+        let date = if self.doc.settings.remove_date_time { String::new() } else { r.map(|r| r.date.clone()).unwrap_or_default() };
         (self.next_rev_id.to_string(), author, date)
     }
 
@@ -380,7 +380,9 @@ impl Writer<'_> {
             a.push(("w:date", date));
         }
         // The UTC time, which Word 365 keeps beside `w:date` (the author's local time).
-        if let Some(utc) = self.doc.revisions.get(idx as usize).map(|r| r.date_utc.clone()).filter(|u| !u.is_empty()) {
+        if !self.doc.settings.remove_date_time
+            && let Some(utc) = self.doc.revisions.get(idx as usize).map(|r| r.date_utc.clone()).filter(|u| !u.is_empty())
+        {
             a.push(("w16du:dateUtc", utc));
         }
         a
@@ -556,7 +558,7 @@ impl Writer<'_> {
                     doc4me_doc::graphic::GraphicKind::Diagram => format!("Diagram {docpr}"),
                 };
                 self.drawing_open(w, float, *gw, *gh, &docpr, &name, alt);
-                w.empty("wp:cNvGraphicFramePr", &[]);
+                frame_locks(w, float.locked);
                 w.raw(&inner);
                 w.close(if float.wrap == Wrap::Inline { "wp:inline" } else { "wp:anchor" });
                 w.close("w:drawing");
@@ -584,7 +586,7 @@ impl Writer<'_> {
                 let docpr = self.next_docpr();
                 let name = format!("Picture {docpr}");
                 self.drawing_open(w, float, *iw, *ih, &docpr, &name, alt);
-                w.empty("wp:cNvGraphicFramePr", &[]);
+                frame_locks(w, float.locked);
                 w.open("a:graphic", &[]);
                 w.open("a:graphicData", &[("uri", "http://schemas.openxmlformats.org/drawingml/2006/picture")]);
                 self.pic(w, o, &file, (0.0, 0.0), rels);
@@ -616,7 +618,7 @@ impl Writer<'_> {
                 }
                 let float = &float;
                 self.drawing_open(w, float, *sw, *sh, &docpr, &name, o.alt_text());
-                w.empty("wp:cNvGraphicFramePr", &[]);
+                frame_locks(w, float.locked);
                 w.open("a:graphic", &[]);
                 w.open("a:graphicData", &[("uri", "http://schemas.microsoft.com/office/word/2010/wordprocessingShape")]);
                 self.wsp(w, o, None, (0.0, 0.0), rels, depth);
@@ -635,7 +637,7 @@ impl Writer<'_> {
                 let docpr = self.next_docpr();
                 let name = format!("{} {docpr}", if canvas.is_some() { "Canvas" } else { "Group" });
                 self.drawing_open(w, float, *gw, *gh, &docpr, &name, o.alt_text());
-                w.empty("wp:cNvGraphicFramePr", &[]);
+                frame_locks(w, float.locked);
                 w.open("a:graphic", &[]);
                 let outer = match canvas {
                     Some(c) => {
@@ -886,7 +888,11 @@ impl Writer<'_> {
         w.open("pic:nvPicPr", &[]);
         nv_props(w, "pic:cNvPr", "0", file, alt, &float.alt);
         w.open("pic:cNvPicPr", &[]);
-        w.empty("a:picLocks", &[("noChangeAspect", "1"), ("noChangeArrowheads", "1")]);
+        if float.locked {
+            w.empty("a:picLocks", &[("noChangeAspect", "1"), ("noChangeArrowheads", "1"), ("noMove", "1"), ("noResize", "1"), ("noCrop", "1")]);
+        } else {
+            w.empty("a:picLocks", &[("noChangeAspect", "1"), ("noChangeArrowheads", "1")]);
+        }
         w.close("pic:cNvPicPr");
         w.close("pic:nvPicPr");
         w.open("pic:blipFill", &[]);
@@ -945,9 +951,21 @@ impl Writer<'_> {
                 w.empty("wps:cNvCnPr", &[]);
             }
         } else if *kind == ShapeKind::TextBox {
-            w.empty("wps:cNvSpPr", &[("txBox", "1")]);
+            if float.locked {
+                w.open("wps:cNvSpPr", &[("txBox", "1")]);
+                w.empty("a:spLocks", SHAPE_LOCKS);
+                w.close("wps:cNvSpPr");
+            } else {
+                w.empty("wps:cNvSpPr", &[("txBox", "1")]);
+            }
         } else {
-            w.empty("wps:cNvSpPr", &[]);
+            if float.locked {
+                w.open("wps:cNvSpPr", &[]);
+                w.empty("a:spLocks", SHAPE_LOCKS);
+                w.close("wps:cNvSpPr");
+            } else {
+                w.empty("wps:cNvSpPr", &[]);
+            }
         }
         w.open("wps:spPr", &[]);
         xfrm(w, off, *sw, *sh, float.spin());
@@ -969,7 +987,14 @@ impl Writer<'_> {
             Some(f) => cust_geom(w, f, *sw, *sh),
             None => {
                 w.open("a:prstGeom", &[("prst", prst)]);
-                w.empty("a:avLst", &[]);
+                if let Some(corner) = extra.corner.filter(|_| *kind == ShapeKind::RoundedRectangle) {
+                    let formula = format!("val {}", corner.min(doc4me_doc::connector::MAX_CORNER));
+                    w.open("a:avLst", &[]);
+                    w.empty("a:gd", &[("name", "adj"), ("fmla", &formula)]);
+                    w.close("a:avLst");
+                } else {
+                    w.empty("a:avLst", &[]);
+                }
                 w.close("a:prstGeom");
             }
         }
@@ -1580,6 +1605,27 @@ fn toc_span(bl: &Blocks) -> Option<(usize, usize)> {
 /// `CT_NonVisualDrawingProps`) with its alt text `descr`, its title, and the decorative mark as
 /// the `adec:decorative` extension ([MS-ODRAWXML]). A description that is only the title (read
 /// from a file with no description) is not written twice.
+const SHAPE_LOCKS: &[(&str, &str)] = &[
+    ("noRot", "1"),
+    ("noMove", "1"),
+    ("noResize", "1"),
+    ("noEditPoints", "1"),
+    ("noAdjustHandles", "1"),
+    ("noChangeArrowheads", "1"),
+    ("noChangeShapeType", "1"),
+    ("noTextEdit", "1"),
+];
+
+fn frame_locks(w: &mut W, locked: bool) {
+    if locked {
+        w.open("wp:cNvGraphicFramePr", &[]);
+        w.empty("a:graphicFrameLocks", &[("noMove", "1"), ("noResize", "1"), ("noDrilldown", "1")]);
+        w.close("wp:cNvGraphicFramePr");
+    } else {
+        w.empty("wp:cNvGraphicFramePr", &[]);
+    }
+}
+
 pub(super) fn nv_props(w: &mut W, tag: &str, id: &str, name: &str, descr: &str, alt: &AltText) {
     let mut attrs = vec![("id", id), ("name", name)];
     if descr != alt.title || descr.is_empty() {

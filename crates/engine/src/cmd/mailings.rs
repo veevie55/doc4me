@@ -167,6 +167,12 @@ pub fn specs() -> Vec<CommandSpec> {
         CommandSpec::new("mailings.query", "Filter and Sort", "Mailings › Edit Recipient List", query)
             .params(r#"{"filter"?: [{"field": name, "op": "eq|ne|lt|gt|le|ge|blank|notBlank|contains|notContains", "value"?: string, "or"?: bool (joined to the rule before by Or; And binds first)}], "sort"?: [{"field": name, "descending"?: bool}], "clear"?: true} → {"records", "of", "query"}: the records the merge uses and their order (numbers compare as numbers, text without regard to case); no parameters returns the query in effect"#)
             .when(has_list),
+        CommandSpec::new("mailings.filterRecipients", "Filter Recipients", "Mailings › Edit Recipient List", filter_recipients_compat)
+            .params(r#"{"rules"?: [{"field": string, "op": "equal|notEqual|less|greater|lessOrEqual|greaterOrEqual|blank|notBlank|contains|notContains", "value"?: string, "join"?: "and|or"}], "sort"?: [{"field": string, "descending"?: bool}]} (Khiankrub-compatible Filter and Sort command)"#)
+            .when(has_list),
+        CommandSpec::new("mailings.sortRecipients", "Sort Recipients", "Mailings › Edit Recipient List", sort_recipients_compat)
+            .params(r#"{"sort"?: [{"field": string, "descending"?: bool}]} | {"field": string, "descending"?: bool} (keeps the current filter)"#)
+            .when(has_list),
         CommandSpec::new("mailings.manageFields", "Manage Fields", "Mailings › Edit Recipient List", manage_fields)
             .params(r#"{"add"?: name, "remove"?: name, "rename"?: {"from": name, "to": name}} → {"fields"}: the recipient list's fields changed (a new field is blank in every record; a change ends Filter and Sort); none of them opens Edit Recipient List"#)
             .when(has_list)
@@ -632,6 +638,59 @@ fn query(s: &mut Session, v: &Value) -> CmdResult {
     refresh(s);
     let of = s.merge.all_rows.as_ref().map_or(s.merge.rows.len(), Vec::len);
     Ok(json!({"records": s.merge.rows.len(), "of": of, "query": s.merge.query}))
+}
+
+/// Accept Khiankrub's split filter API while sharing Doc4Me's combined query implementation.
+fn filter_recipients_compat(s: &mut Session, v: &Value) -> CmdResult {
+    let mut filters = Vec::new();
+    if let Some(rules) = v.get("rules") {
+        let rules = rules.as_array().ok_or_else(|| CmdError::Params("`rules` must be an array".into()))?;
+        for (i, rule) in rules.iter().take(MAX_RULES + 1).enumerate() {
+            let op = p::str(rule, "op").unwrap_or("equal");
+            let op = match op {
+                "equal" => "eq",
+                "notEqual" => "ne",
+                "less" => "lt",
+                "greater" => "gt",
+                "lessOrEqual" => "le",
+                "greaterOrEqual" => "ge",
+                "blank" | "notBlank" | "contains" | "notContains" => op,
+                other => other,
+            };
+            let or = match p::str(rule, "join") {
+                None | Some("and") => false,
+                Some("or") if i > 0 => true,
+                Some("or") => false,
+                Some(other) => return Err(CmdError::Params(format!("unknown rule join `{other}`; use and or or"))),
+            };
+            filters.push(json!({
+                "field": p::str(rule, "field").unwrap_or(""),
+                "op": op,
+                "value": p::str(rule, "value").unwrap_or(""),
+                "or": or,
+            }));
+        }
+    }
+    let params = if v.get("rules").is_none() && v.get("sort").is_none() {
+        json!({"clear": true})
+    } else {
+        json!({"filter": filters, "sort": v.get("sort").cloned().unwrap_or(Value::Null)})
+    };
+    query(s, &params)
+}
+
+/// Accept the split sort command and preserve the query's current filter.
+fn sort_recipients_compat(s: &mut Session, v: &Value) -> CmdResult {
+    let sort = match v.get("sort") {
+        Some(Value::Array(a)) => Value::Array(a.clone()),
+        Some(_) => return Err(CmdError::Params("`sort` must be an array of {field, descending?}".into())),
+        None if v.get("field").is_some() => json!([{
+            "field": p::str(v, "field").unwrap_or(""),
+            "descending": p::bool(v, "descending").unwrap_or(false),
+        }]),
+        None => json!([]),
+    };
+    query(s, &json!({"filter": s.merge.query.get("filter").cloned().unwrap_or(Value::Null), "sort": sort}))
 }
 
 /// Most rows Insert Database puts in a table (the header row included).

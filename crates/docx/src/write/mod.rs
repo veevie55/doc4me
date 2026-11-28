@@ -1,6 +1,7 @@
 //! [`Document`] → DOCX.
 
 mod embed;
+mod font_embed;
 mod settings_merge;
 pub(crate) use settings_merge::has_unowned as settings_has_unowned;
 mod math;
@@ -15,7 +16,7 @@ use doc4me_doc::numbering::{Level, LevelSuffix};
 use doc4me_doc::styles::{Style, StyleKind};
 use doc4me_doc::{Blocks, Document, PartKind};
 
-use crate::package::{MAX_VBA_RELATED, VBA_PROJECT_PART, VBA_RELATED, rt, zip_entries};
+use crate::package::{FONT_TABLE_PART, MAX_VBA_RELATED, VBA_PROJECT_PART, VBA_RELATED, rt, zip_entries};
 use crate::xml::{self, W};
 use crate::{DocxError, Flavor};
 
@@ -124,12 +125,24 @@ pub fn write(doc: &Document) -> Result<Vec<u8>, DocxError> {
 
 /// Write a package of the given flavour (`.docx`, `.docm`, `.dotx`, `.dotm`).
 pub fn write_as(doc: &Document, flavor: Flavor) -> Result<Vec<u8>, DocxError> {
-    zip_entries(&write_parts(doc, flavor)?)
+    zip_entries(&write_parts_with(doc, flavor, None)?)
+}
+
+/// A font file to include in the Word package.
+pub use font_embed::EmbedFont;
+
+/// Write a Word package with these font files embedded, replacing any previous embedded fonts.
+pub fn write_as_embedding(doc: &Document, flavor: Flavor, fonts: &[EmbedFont]) -> Result<Vec<u8>, DocxError> {
+    zip_entries(&write_parts_with(doc, flavor, Some(fonts))?)
 }
 
 /// The parts of the package [`write_as`] zips, in order, `[Content_Types].xml` first: (part name
 /// without the leading `/`, bytes).
 pub(crate) fn write_parts(doc: &Document, flavor: Flavor) -> Result<Vec<(String, Vec<u8>)>, DocxError> {
+    write_parts_with(doc, flavor, None)
+}
+
+fn write_parts_with(doc: &Document, flavor: Flavor, fonts: Option<&[EmbedFont]>) -> Result<Vec<(String, Vec<u8>)>, DocxError> {
     // A range field must be whole in the file: drop markers that lost their partner in editing.
     let balanced;
     let doc = if doc.has_unbalanced_field_ranges() {
@@ -311,12 +324,14 @@ pub(crate) fn write_parts(doc: &Document, flavor: Flavor) -> Result<Vec<(String,
         w.open("w:comments", &ns_refs);
         for (cid, c) in &doc.comments {
             let id = cid.to_string();
-            let author = if c.author.is_empty() { "Unknown" } else { c.author.as_str() };
+            let author = annotation_author(doc, &c.author);
             let mut a = vec![("w:id", id.as_str()), ("w:author", author)];
-            if !c.date.is_empty() {
+            if !c.date.is_empty() && !doc.settings.remove_date_time {
                 a.push(("w:date", c.date.as_str()));
             }
-            if !c.initials.is_empty() {
+            if doc.settings.remove_personal_info {
+                a.push(("w:initials", "A"));
+            } else if !c.initials.is_empty() {
                 a.push(("w:initials", c.initials.as_str()));
             }
             w.open("w:comment", &a);
@@ -359,7 +374,7 @@ pub(crate) fn write_parts(doc: &Document, flavor: Flavor) -> Result<Vec<(String,
         // Word 2019 and later: each comment's durable id (commentsIds, by the paragraph id of its
         // last paragraph) and its UTC time (commentsExtensible, by durable id), so Word shows the
         // time in the reader's time zone; `w:date` is the author's local time.
-        if doc.comments.values().any(|c| !c.date_utc.is_empty()) {
+        if !doc.settings.remove_date_time && doc.comments.values().any(|c| !c.date_utc.is_empty()) {
             let ids: Vec<(u32, String, String)> = doc
                 .comments
                 .keys()
@@ -396,9 +411,35 @@ pub(crate) fn write_parts(doc: &Document, flavor: Flavor) -> Result<Vec<(String,
 
     rels.add(rt::STYLES, "styles.xml", false);
     push_part(&mut entries, &mut overrides, "word/styles.xml", styles_xml(doc), &format!("{CT_WML}styles+xml"), PartRels::default());
-    if !doc.font_aliases.is_empty() {
-        rels.add(rt::FONT_TABLE, "fontTable.xml", false);
-        push_part(&mut entries, &mut overrides, "word/fontTable.xml", font_table_xml(doc), &format!("{CT_WML}fontTable+xml"), PartRels::default());
+    match fonts {
+        None if !doc.font_aliases.is_empty() => {
+            rels.add(rt::FONT_TABLE, "fontTable.xml", false);
+            push_part(
+                &mut entries,
+                &mut overrides,
+                "word/fontTable.xml",
+                font_table_xml(doc),
+                &format!("{CT_WML}fontTable+xml"),
+                PartRels::default(),
+            );
+        }
+        Some(fonts) => {
+            let used = |name: &str| {
+                entries.iter().any(|(n, _)| n.eq_ignore_ascii_case(name))
+                    || wr.embeds.parts.iter().any(|(n, ..)| n.eq_ignore_ascii_case(name))
+                    || doc.passthrough.keys().any(|k| k.eq_ignore_ascii_case(name) && !k.eq_ignore_ascii_case(FONT_TABLE_PART))
+            };
+            if used(FONT_TABLE_PART) {
+                log::warn!("docx: {FONT_TABLE_PART} is taken by another part; fonts are not embedded");
+            } else if let Some(table) = font_embed::font_table(doc, fonts, |n| used(n)) {
+                for (name, bytes) in table.fonts {
+                    push_part(&mut entries, &mut overrides, &name, bytes, font_embed::OBFUSCATED_FONT, PartRels::default());
+                }
+                push_part(&mut entries, &mut overrides, FONT_TABLE_PART, table.xml, &format!("{CT_WML}fontTable+xml"), table.rels);
+                rels.add(rt::FONT_TABLE, "fontTable.xml", false);
+            }
+        }
+        None => {}
     }
     if !doc.numbering.nums.is_empty() || !doc.numbering.abstracts.is_empty() {
         rels.add(rt::NUMBERING, "numbering.xml", false);
@@ -1017,6 +1058,21 @@ fn settings_xml(doc: &Document, footnotes: bool, endnotes: bool, template_rel: O
     let ns_refs: Vec<(&str, &str)> = ns.iter().map(|(k, v)| (k.as_str(), v.as_str())).collect();
     w.open("w:settings", &ns_refs);
     w.empty("w:zoom", &[("w:percent", "100")]);
+    if s.remove_personal_info {
+        w.empty("w:removePersonalInformation", &[]);
+    }
+    if s.remove_date_time {
+        w.empty("w:removeDateAndTime", &[]);
+    }
+    if s.embed_fonts {
+        w.empty("w:embedTrueTypeFonts", &[]);
+        if s.embed_system_fonts {
+            w.empty("w:embedSystemFonts", &[]);
+        }
+        if s.embed_subset {
+            w.empty("w:saveSubsetFonts", &[]);
+        }
+    }
     if s.page_color.is_some() {
         w.empty("w:displayBackgroundShape", &[]);
     }
@@ -1199,6 +1255,9 @@ fn core_xml(doc: &Document) -> Vec<u8> {
         ("cp:lastModifiedBy", &c.last_modified_by),
         ("cp:category", &c.category),
     ] {
+        if doc.settings.remove_personal_info && matches!(tag, "dc:creator" | "cp:lastModifiedBy") {
+            continue;
+        }
         if !v.is_empty() {
             w.leaf(tag, &[], v);
         }
@@ -1213,6 +1272,17 @@ fn core_xml(doc: &Document) -> Vec<u8> {
     }
     w.close("cp:coreProperties");
     w.into_bytes()
+}
+
+/// The author saved for comments and tracked changes when privacy options request anonymisation.
+pub(crate) fn annotation_author<'a>(doc: &Document, author: &'a str) -> &'a str {
+    if doc.settings.remove_personal_info {
+        "Author"
+    } else if author.is_empty() {
+        "Unknown"
+    } else {
+        author
+    }
 }
 
 fn app_xml(doc: &Document) -> Vec<u8> {

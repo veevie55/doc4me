@@ -79,6 +79,8 @@ pub struct CanvasState {
     pub want_focus: bool,
     pub context_issue: Option<serde_json::Value>,
     pub context_synonyms: Option<serde_json::Value>,
+    /// Page number state under a right-click in the header or footer area.
+    pub context_page_number: Option<(usize, doc4me_engine::cmd::page_number::PageNumber)>,
     /// The right-click context menu is open (the mini toolbar stands down while it is).
     pub context_menu_open: bool,
     /// Shift+F10 asked for the context menu at the caret (`ribbon_keys`).
@@ -205,6 +207,7 @@ impl Default for CanvasState {
             want_focus: true,
             context_issue: None,
             context_synonyms: None,
+            context_page_number: None,
             obj_drag: None,
             ink: None,
             erasing: None,
@@ -654,7 +657,8 @@ fn page_sig(app: &WordApp, page: &Page, scale_px: f32, dim_body: bool) -> PageSi
     let mut h = std::collections::hash_map::DefaultHasher::new();
     scale_px.to_bits().hash(&mut h);
     let v = &app.session.view;
-    (v.marks, app.session.prefs.marks, v.show_markup, v.dark_mode, doc4me_render::DARK_PAPER, v.hide_ink, v.draw.replay).hash(&mut h);
+    (v.marks, app.session.prefs.marks, v.show_markup, v.dark_mode, doc4me_render::DARK_PAPER, v.hide_ink, v.draw.replay, v.hf_document_text)
+        .hash(&mut h);
     app.session.prefs.markup.hash(&mut h);
     dim_body.hash(&mut h);
     format!("{:?}{:?}", app.session.doc.settings.page_color, app.session.doc.settings.watermark).hash(&mut h);
@@ -1064,6 +1068,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                 opts.dark_paper = dark_paper;
                 opts.display.dim_header = !dim_body;
                 opts.display.dim_body = dim_body;
+                opts.display.hide_body = dim_body && !app.session.view.hf_document_text && editing_header_footer(app, &layout);
                 // An edit to a few lines redraws just them, into the page's texture as it is.
                 let (pw, ph) = doc4me_render::page_size_px(page, scale_px);
                 let same_size = app.canvas.textures.get(&i).is_some_and(|(_, tex)| tex.size() == [pw as usize, ph as usize]);
@@ -1455,6 +1460,14 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             app.canvas.context_synonyms = app.session.run("review.thesaurus", &json!({})).ok().and_then(|v| v.get("synonyms").cloned());
         }
     }
+    if resp.secondary_clicked() {
+        app.canvas.context_page_number = resp
+            .interact_pointer_pos()
+            .and_then(|p| page_at(&rects, &layout, geo.scale, p))
+            .filter(|(page, x, y)| layout.header_footer_zone(*page, *x, *y).is_some())
+            .map(|(page, _, _)| (page, doc4me_engine::cmd::page_number::state(&mut app.session, page)))
+            .filter(|(_, state)| *state != doc4me_engine::cmd::page_number::PageNumber::None);
+    }
     // AutoComplete's tip just above the caret, as Word shows it.
     if let Some(name) = app.canvas.autotext_tip.clone()
         && app.canvas.focused
@@ -1474,6 +1487,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     if std::mem::take(&mut app.canvas.context_from_keys)
         && let Some(at) = ui.ctx().output(|o| o.ime.map(|i| i.cursor_rect.left_bottom())).or(app.canvas.viewport.map(|v| v.center()))
     {
+        app.canvas.context_page_number = None;
         if crate::objects::selected(app).is_some() {
             app.canvas.context_issue = None;
             app.canvas.context_synonyms = None;
@@ -2074,7 +2088,7 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
     }
     // Double-click in the header/footer area edits it; double-click in the body leaves it.
     if resp.double_clicked() {
-        if let Some((s, header)) = layout.header_footer_at(page, y)
+        if let Some((s, header)) = layout.header_footer_zone(page, x, y)
             && story == StoryRef::Body
         {
             let id = if header { "insert.editHeader" } else { "insert.editFooter" };
@@ -2085,7 +2099,7 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
             }
             return;
         }
-        if matches!(story, StoryRef::Part(_)) && !in_text_box(app) && layout.header_footer_at(page, y).is_none() {
+        if matches!(story, StoryRef::Part(_)) && !in_text_box(app) && layout.header_footer_zone(page, x, y).is_none() {
             let _ = app.run("insert.closeHeader", json!({}));
             if let Some(pos) = layout.hit(page, x, y, StoryRef::Body) {
                 app.session.sel = doc4me_engine::Selection::caret(pos);
@@ -2116,8 +2130,8 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
         app.canvas.unit_drag = None;
         app.canvas.number_sel = None;
         // A double-click that enters or leaves a header/footer is handled on release.
-        let hf_switch = (layout.header_footer_at(page, y).is_some() && story == StoryRef::Body)
-            || (matches!(story, StoryRef::Part(_)) && !in_text_box(app) && layout.header_footer_at(page, y).is_none());
+        let hf_switch = (layout.header_footer_zone(page, x, y).is_some() && story == StoryRef::Body)
+            || (matches!(story, StoryRef::Part(_)) && !in_text_box(app) && layout.header_footer_zone(page, x, y).is_none());
         // Clicking into a footnote/endnote or a text box edits it; clicking outside a text box goes
         // back to where it is. While editing a header/footer, only its own text boxes are in reach.
         let story = {
@@ -2819,6 +2833,24 @@ fn context_menu(app: &mut WordApp, ui: &mut Ui) {
             ui.close();
         }
     };
+    if let Some((page, state)) = app.canvas.context_page_number {
+        use doc4me_engine::cmd::page_number::PageNumber;
+        let label = if state == PageNumber::Hidden { "Show Page Number on This Page" } else { "Hide Page Number on This Page" };
+        if ui.button(tl!(label)).clicked() {
+            if let Err(error) = app.run("hf.hidePageNumber", json!({"page": page, "hide": state != PageNumber::Hidden})) {
+                let message = if error.contains("table") {
+                    tl!("The page starts right after a table, so its page number can't be hidden on its own.").to_string()
+                } else if error.contains("paragraph") {
+                    tl!("The page starts in the middle of a paragraph, so its page number can't be hidden on its own.").to_string()
+                } else {
+                    error
+                };
+                app.status(message);
+            }
+            ui.close();
+        }
+        ui.separator();
+    }
     if let Some(issue) = app.canvas.context_issue.clone() {
         let sugg: Vec<String> = issue
             .get("suggestions")

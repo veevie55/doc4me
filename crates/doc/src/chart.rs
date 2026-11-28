@@ -151,6 +151,9 @@ pub struct ChartSpec {
     /// Show each point's value next to it.
     #[serde(default)]
     pub data_labels: bool,
+    /// Formatting of chart areas, text, axes, gridlines and series.
+    #[serde(default, skip_serializing_if = "doc4me_chart_format::Formats::is_auto")]
+    pub format: doc4me_chart_format::Formats,
 }
 
 impl ChartSpec {
@@ -172,6 +175,7 @@ impl ChartSpec {
             title: None,
             legend: Some(LegendPos::Bottom),
             data_labels: false,
+            format: Default::default(),
         }
     }
 

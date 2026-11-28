@@ -22,6 +22,7 @@ repository = "https://github.com/chatraweechai/doc4me"
 # internal
 doc4me-geom = { path = "crates/geom" }
 doc4me-doc = { path = "crates/doc" }
+doc4me-chart-format = { path = "crates/chart-format" }
 doc4me-fonts = { path = "crates/fonts" }
 doc4me-layout = { path = "crates/layout" }
 doc4me-docx = { path = "crates/docx" }

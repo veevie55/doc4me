@@ -997,6 +997,8 @@ fn font_page(app: &mut WordApp, ui: &mut Ui, f: &mut StyleForm) {
                 if let Some(pick) = crate::widgets::font_combo(ui, &format!("{salt}_font"), 190.0, &shown, &fams, Some(&*prev)) {
                     if pick == crate::widgets::ADD_FONT {
                         let _ = app.run("font.add", json!({}));
+                    } else if pick == crate::widgets::LOAD_SYSTEM_FONTS {
+                        let _ = app.run("font.loadSystem", json!({}));
                     } else {
                         *font = app.previews.font_stored(&pick);
                     }

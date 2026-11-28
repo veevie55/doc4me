@@ -1,6 +1,7 @@
 //! DOCX → [`Document`].
 
 pub(crate) mod chart;
+mod chart_look;
 pub(crate) mod diagram;
 mod drawing_color;
 mod embed;
@@ -1149,9 +1150,14 @@ impl Reader<'_> {
                 }
                 "m:mathPr" => s.math = Some(math::read_math_pr(k)),
                 "w:mirrorMargins" => s.mirror_margins = on_off(k),
-                // Embedded fonts hold only the characters used (§17.15.1.81): they may not stand
-                // in for a whole installed font.
-                "w:saveSubsetFonts" => self.doc.embedded_fonts_subset = on_off(k),
+                "w:removePersonalInformation" => s.remove_personal_info = on_off(k),
+                "w:removeDateAndTime" => s.remove_date_time = on_off(k),
+                "w:embedTrueTypeFonts" => s.embed_fonts = on_off(k),
+                "w:saveSubsetFonts" => {
+                    s.embed_subset = on_off(k);
+                    self.doc.embedded_fonts_subset = s.embed_subset;
+                }
+                "w:embedSystemFonts" => s.embed_system_fonts = on_off(k),
                 "w:autoHyphenation" => s.auto_hyphenation = on_off(k),
                 "w:characterSpacingControl" => {
                     if let Some(v) = k.attr("w:val").and_then(doc4me_doc::CharSpacing::from_ooxml) {
@@ -1578,7 +1584,7 @@ const MAX_EMBEDDED_FONTS_BYTES: usize = 128 << 20;
 
 /// A `w:fontKey` GUID (`{8F3E…}`) as the 16 key bytes, in the order ECMA-376 §17.8.1 applies
 /// them: the GUID's hex digits read from the end, two at a time.
-fn font_key(guid: &str) -> Option<[u8; 16]> {
+pub(crate) fn font_key(guid: &str) -> Option<[u8; 16]> {
     let hex: Vec<u8> = guid.bytes().filter(|b| b.is_ascii_hexdigit()).collect();
     if hex.len() != 32 {
         return None;

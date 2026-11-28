@@ -29,6 +29,7 @@ pub mod frames;
 pub mod frameset;
 pub mod hanja;
 pub mod help;
+pub mod hf;
 pub mod index;
 pub mod ink_shape;
 pub mod insert;
@@ -40,12 +41,15 @@ pub mod objects;
 pub mod options;
 pub mod outline;
 pub mod page;
+pub mod page_number;
 pub mod para;
 pub mod paste;
 pub mod phonetic;
 pub mod protect;
 pub mod references;
 pub mod review;
+pub mod ref_lists;
+mod continued;
 pub mod smart_art;
 pub mod speech;
 pub mod summarize;
@@ -68,6 +72,11 @@ use doc4me_doc::{Pos, Revision, RevisionKind, StoryRef};
 use serde_json::{Value, json};
 
 use crate::{CmdError, CmdResult, Registry, Session};
+
+/// The language used for text with no explicit run language.
+pub fn default_lang(s: &Session) -> Option<String> {
+    s.doc.styles.resolve_char(None, &doc4me_doc::props::CharProps::default()).lang.or_else(|| s.editing_lang.clone())
+}
 
 /// The full registry.
 pub fn registry() -> Registry {
@@ -93,6 +102,8 @@ pub fn registry() -> Registry {
     v.extend(insert::specs());
     v.extend(equation::specs());
     v.extend(page::specs());
+    v.extend(page_number::specs());
+    v.extend(hf::specs());
     v.extend(table::specs());
     v.extend(table_style::specs());
     v.extend(table_draw::specs());
@@ -103,6 +114,7 @@ pub fn registry() -> Registry {
     v.extend(options::specs());
     v.extend(design::specs());
     v.extend(references::specs());
+    v.extend(ref_lists::specs());
     v.extend(fields::specs());
     v.extend(mailings::specs());
     v.extend(citations::specs());

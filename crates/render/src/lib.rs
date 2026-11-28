@@ -854,9 +854,9 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
             ctx.set_stroke(kurbo::Stroke::new(w as f64).with_caps(kurbo::Cap::Round).with_join(kurbo::Join::Round));
             ctx.stroke_path(&path);
         }
-        Draw::Shape { rect, kind, fill, stroke, stroke_width, effects } => {
+        Draw::Shape { rect, kind, fill, stroke, stroke_width, effects, corner } => {
             let r = kurbo::Rect::new(rect.x as f64, rect.y as f64, rect.right() as f64, rect.bottom() as f64);
-            let path = shape_path(*kind, r);
+            let path = shape_path_with_corner(*kind, r, *corner);
             ctx.set_transform(view);
             let fx = effects.sanitized();
             let can_fill = *kind != ShapeKind::Line && fill.is_some();
@@ -869,11 +869,11 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                         let grow = g + if stroke.is_some() { sw / 2.0 } else { 0.0 };
                         let rr = r.inflate(grow, grow) + d;
                         if rr.width() > 0.0 && rr.height() > 0.0 {
-                            ctx.fill_path(&shape_path(*kind, rr));
+                            ctx.fill_path(&shape_path_with_corner(*kind, rr, *corner));
                         }
                     } else if sw + 2.0 * g > 0.05 {
                         ctx.set_stroke(kurbo::Stroke::new(sw + 2.0 * g));
-                        ctx.stroke_path(&shape_path(*kind, r + d));
+                        ctx.stroke_path(&shape_path_with_corner(*kind, r + d, *corner));
                     }
                 };
                 if let Some(sh) = fx.shadow {
@@ -897,7 +897,7 @@ fn draw(ctx: &mut RenderContext, doc: &Document, it: &Draw, view: Affine, visibl
                     let rr = r.inflate(g as f64, g as f64);
                     if rr.width() > 0.0 && rr.height() > 0.0 {
                         ctx.set_paint(color(opts.ink(*f), a));
-                        ctx.fill_path(&shape_path(*kind, rr));
+                        ctx.fill_path(&shape_path_with_corner(*kind, rr, *corner));
                     }
                 }
                 return;
@@ -966,6 +966,10 @@ fn ink_path(pts: &[(f32, f32)]) -> Option<BezPath> {
 
 /// Outline of a basic shape in a rectangle.
 pub fn shape_path(kind: ShapeKind, r: kurbo::Rect) -> BezPath {
+    shape_path_with_corner(kind, r, None)
+}
+
+fn shape_path_with_corner(kind: ShapeKind, r: kurbo::Rect, corner: Option<u32>) -> BezPath {
     let (cx, cy) = (r.center().x, r.center().y);
     let poly = |pts: &[(f64, f64)]| {
         let mut p = BezPath::new();
@@ -982,7 +986,10 @@ pub fn shape_path(kind: ShapeKind, r: kurbo::Rect) -> BezPath {
     match kind {
         // A freeform is drawn from its own paths; without them, its frame.
         ShapeKind::Rectangle | ShapeKind::TextBox | ShapeKind::Freeform => r.to_path(0.1),
-        ShapeKind::RoundedRectangle => kurbo::RoundedRect::from_rect(r, r.width().min(r.height()) * 0.16).to_path(0.1),
+        ShapeKind::RoundedRectangle => {
+            let radius = doc4me_doc::connector::corner_radius(corner, r.width() as f32, r.height() as f32);
+            kurbo::RoundedRect::from_rect(r, radius as f64).to_path(0.1)
+        }
         ShapeKind::Ellipse => kurbo::Ellipse::from_rect(r).to_path(0.1),
         ShapeKind::Triangle => poly(&[(cx, r.y0), (r.x1, r.y1), (r.x0, r.y1)]),
         ShapeKind::Diamond => poly(&[(cx, r.y0), (r.x1, cy), (cx, r.y1), (r.x0, cy)]),

@@ -1027,6 +1027,7 @@ impl Reader<'_> {
             }
         }
         let gd = c.child("a:graphic").and_then(|g| g.child("a:graphicData"))?;
+        float.locked = drawing_locked(c, gd);
         // Checked by URI before the blip search: a diagram's data can hold a blip further down.
         let uri = gd.attr("uri").unwrap_or("");
         let graphic_kind = if uri.ends_with("/chart") {
@@ -1334,6 +1335,17 @@ impl Reader<'_> {
             }
         }
         let mut extra = ShapeExtra::default();
+        if prst == "roundRect" {
+            extra.corner = sppr
+                .and_then(|s| s.child("a:prstGeom"))
+                .and_then(|g| g.child("a:avLst"))
+                .and_then(|a| a.child("a:gd"))
+                .filter(|gd| gd.attr("name") == Some("adj"))
+                .and_then(|gd| gd.attr("fmla"))
+                .and_then(|f| f.strip_prefix("val "))
+                .and_then(|v| v.trim().parse::<i64>().ok())
+                .map(|v| v.clamp(0, i64::from(doc4me_doc::connector::MAX_CORNER)) as u32);
+        }
         // Arrowheads: any end type but `none` (ECMA-376 §20.1.10.33) is drawn as a triangle.
         let arrow = |tag: &str| ln.and_then(|l| l.child(tag)).and_then(|e| e.attr("type")).is_some_and(|t| t != "none");
         extra.arrow_start = arrow("a:headEnd");
@@ -1689,6 +1701,15 @@ fn web_video(blip: &El) -> Option<std::sync::Arc<doc4me_doc::video::WebVideo>> {
     }
     let px = |n: &str| pr.attr(n).and_then(|v| v.trim().parse::<u32>().ok()).unwrap_or(0).min(100_000);
     Some(std::sync::Arc::new(doc4me_doc::video::WebVideo { html: html.to_string(), w: px("w"), h: px("h") }))
+}
+
+/// DrawingML's full Lock marks both moving and resizing as unavailable.
+fn drawing_locked(c: &El, gd: &El) -> bool {
+    let both = |e: Option<&El>| e.is_some_and(|l| on_off_attr(l, "noMove") && on_off_attr(l, "noResize"));
+    let frame = c.child("wp:cNvGraphicFramePr").and_then(|n| n.child("a:graphicFrameLocks"));
+    let pic = gd.child("pic:pic").and_then(|p| p.child("pic:nvPicPr")).and_then(|n| n.child("pic:cNvPicPr")).and_then(|n| n.child("a:picLocks"));
+    let sp = gd.child("wps:wsp").and_then(|p| p.child("wps:cNvSpPr")).and_then(|n| n.child("a:spLocks"));
+    both(frame) || both(pic) || both(sp)
 }
 
 fn anchor_float(c: &El) -> Float {

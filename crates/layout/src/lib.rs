@@ -21,6 +21,7 @@ pub mod para;
 mod substituted;
 mod table;
 mod textbox;
+mod used;
 mod vertical;
 pub mod wordart;
 
@@ -39,6 +40,7 @@ pub use fields::FieldCtx;
 pub use hit::VisualStep;
 pub use para::{LineEnd, ParaLayout};
 pub use table::{autofit_widths, measure_table_columns};
+pub use used::{MAX_USED_FACES, UsedFace};
 
 /// How the document is viewed.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Default, serde::Serialize, serde::Deserialize)]
@@ -422,6 +424,15 @@ pub fn turn_rect(turn: TextDirection, x: f32, y: f32, r: Rect) -> Rect {
     }
 }
 
+/// Which header/footer slot a page uses, including when that slot is empty.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum HfSlot {
+    #[default]
+    Default,
+    First,
+    Even,
+}
+
 /// One laid-out page.
 #[derive(Clone, Debug, Default)]
 pub struct Page {
@@ -441,11 +452,29 @@ pub struct Page {
     pub body: Rect,
     pub header_story: Option<u32>,
     pub footer_story: Option<u32>,
+    pub hf_slot: HfSlot,
     /// Top-level body block index at the start of the page.
     pub first_block: usize,
     /// Width of the markup area on the right of `w` that holds comment balloons (Print Markup,
     /// [`LayoutOptions::comment_balloons`]); 0 without one. The document page is `w - markup` wide.
     pub markup: f32,
+    /// Header and footer are laid out on the portrait sheet and turned onto this landscape page.
+    pub hf_turned: bool,
+}
+
+pub const TURN_HF_PROP: &str = "KrubOffice.TurnHeadersOnLandscapePages";
+
+pub fn turns_landscape_headers(doc: &Document) -> bool {
+    doc.custom_prop(TURN_HF_PROP).is_none_or(|v| !v.trim().eq_ignore_ascii_case("off"))
+}
+
+pub fn turned_sheet<'a>(doc: &Document, sections: &[(usize, &'a SectionProps)], i: usize) -> Option<&'a SectionProps> {
+    let (_, sect) = sections.get(i)?;
+    let landscape = |s: &SectionProps| s.page_w > s.page_h + 1.0;
+    let portrait = |s: &SectionProps| s.page_h > s.page_w + 1.0;
+    if !landscape(sect) || !turns_landscape_headers(doc) { return None; }
+    sections.get(..i).unwrap_or(&[]).iter().rev().map(|(_, s)| *s).find(|s| portrait(s))
+        .or_else(|| sections.get(i + 1..).unwrap_or(&[]).iter().map(|(_, s)| *s).find(|s| portrait(s)))
 }
 
 /// The whole layout.
@@ -5122,22 +5151,42 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
         };
         let hid = pick(&all_heads);
         let fid = pick(&all_feet);
+        page.hf_slot = if sect.title_page && first_of_section.contains(&i) {
+            HfSlot::First
+        } else if even_odd && page.number % 2 == 0 {
+            HfSlot::Even
+        } else {
+            HfSlot::Default
+        };
         ctx.fields.page = page.number;
         ctx.fields.page_format = sect.page_num_format;
         ctx.fields.pages = total;
         ctx.fields.section_pages = per_section.get(&page.section).copied().unwrap_or(1);
         ctx.fields.section = page.section as u32 + 1;
-        let w = sect.text_width();
-        let x = sect.margin_left + sect.gutter;
+        let sheet = turned_sheet(ctx.doc, sections, page.section);
+        page.hf_turned = sheet.is_some();
+        let gs = sheet.unwrap_or(sect);
+        let sheet_h = if sheet.is_some() { sect.page_w } else { sect.page_h };
+        let mut x = gs.margin_left + gs.gutter;
+        if sheet.is_some() && ctx.doc.settings.mirror_margins && page.number % 2 == 0 {
+            x += gs.margin_right - gs.margin_left - gs.gutter;
+        }
+        let w = gs.text_width();
+        let turn = |items: &mut Vec<Placed>| {
+            if sheet.is_some() {
+                for it in items.iter_mut() { it.turn(TextDirection::Down, sect.page_w, 0.0); }
+            }
+        };
         if let Some(id) = hid
             && let Some(part) = ctx.doc.parts.get(&id)
         {
             let blocks = part.blocks.clone();
-            let frame = PageFrame { sect, origin: (x, sect.header) };
+            let frame = PageFrame { sect: gs, origin: (x, gs.header) };
             let mut items = layout_box(ctx, StoryRef::Part(id), &blocks, &[], w, None, 0, Some(frame)).items;
             for it in &mut items {
-                it.translate(x, sect.header);
+                it.translate(x, gs.header);
             }
+            turn(&mut items);
             page.header = items;
             page.header_story = Some(id);
         }
@@ -5147,11 +5196,13 @@ fn headers_footers(ctx: &mut Ctx, pages: &mut [Page], sections: &[(usize, &Secti
             let blocks = part.blocks.clone();
             // The footer's height fixes where it sits, which page-relative floats need.
             let h = layout_box(ctx, StoryRef::Part(id), &blocks, &[], w, None, 0, None).height;
-            let frame = PageFrame { sect, origin: (x, sect.page_h - sect.footer - h) };
+            let top = sheet_h - gs.footer - h;
+            let frame = PageFrame { sect: gs, origin: (x, top) };
             let mut items = layout_box(ctx, StoryRef::Part(id), &blocks, &[], w, None, 0, Some(frame)).items;
             for it in &mut items {
-                it.translate(x, sect.page_h - sect.footer - h);
+                it.translate(x, top);
             }
+            turn(&mut items);
             page.footer = items;
             page.footer_story = Some(id);
         }
@@ -5169,7 +5220,8 @@ fn mirror_even_pages(pages: &mut [Page], sections: &[(usize, &SectionProps)]) {
             continue;
         }
         let borders = page_border_rules(s).len();
-        for it in page.items.iter_mut().skip(borders).chain(page.header.iter_mut()).chain(page.footer.iter_mut()) {
+        let (header, footer) = if page.hf_turned { (&mut [][..], &mut [][..]) } else { (&mut page.header[..], &mut page.footer[..]) };
+        for it in page.items.iter_mut().skip(borders).chain(header.iter_mut()).chain(footer.iter_mut()) {
             it.translate(dx, 0.0);
         }
         page.body.x += dx;

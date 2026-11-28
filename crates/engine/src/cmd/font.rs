@@ -18,10 +18,28 @@ pub fn specs() -> Vec<CommandSpec> {
             .pure(),
         CommandSpec::new("font.list", "Added Fonts", "Home › Font", list).params(r#"{"all"?: bool (also every available family)}"#).pure(),
         CommandSpec::new("font.remove", "Remove Added Font", "Home › Font", remove).params(r#"{"family": string}"#).pure(),
+        CommandSpec::new("font.loadSystem", "Load System Installed Fonts…", "Home › Font", load_system).pure(),
         CommandSpec::new("font.missing", "Missing Fonts", "Status Bar", missing)
             .params(r#"{} → {"missing": [{"font": string, "shownAs": [string], "metricCompatible": bool, "download"?: object}]} — fonts absent from the current layout"#)
             .pure(),
     ]
+}
+
+/// Rescan installed fonts when the user requests it. Native builds can scan directly; the web
+/// shell asks its host to query local fonts because browsers gate that API behind user consent.
+fn load_system(s: &mut Session, _v: &Value) -> CmdResult {
+    #[cfg(not(target_arch = "wasm32"))]
+    {
+        let faces = FontDb::global().load_system_fonts();
+        s.relayout();
+        s.status = format!("Loaded {faces} installed font faces");
+        Ok(json!({"loaded": faces, "families": FontDb::global().families().len()}))
+    }
+    #[cfg(target_arch = "wasm32")]
+    {
+        s.push_ui_request(json!({"open": "loadSystemFonts"}));
+        Ok(json!({"pending": true}))
+    }
 }
 
 fn font_json(f: &UserFont) -> Value {

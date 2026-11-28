@@ -34,6 +34,28 @@ pub struct ShapeExtra {
     pub arrow_start: bool,
     #[serde(skip_serializing_if = "is_false")]
     pub arrow_end: bool,
+    /// A rounded rectangle's corner as a proportion of its shorter side, in 100000ths.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub corner: Option<u32>,
+}
+
+/// Maximum radius: half the shorter side, producing round ends.
+pub const MAX_CORNER: u32 = 50_000;
+
+/// Default rounded-rectangle radius (16% of the shorter side).
+pub const DEFAULT_CORNER: f32 = 0.16;
+
+pub fn corner_radius(corner: Option<u32>, w: f32, h: f32) -> f32 {
+    let side = doc4me_geom::finite(w).min(doc4me_geom::finite(h)).max(0.0);
+    side * corner.map_or(DEFAULT_CORNER, |c| c.min(MAX_CORNER) as f32 / 100_000.0)
+}
+
+pub fn corner_from_radius(radius: f32, w: f32, h: f32) -> u32 {
+    let side = doc4me_geom::finite(w).min(doc4me_geom::finite(h)).max(0.0);
+    if side <= 0.0 {
+        return 0;
+    }
+    ((doc4me_geom::finite(radius).max(0.0) / side) * 100_000.0).round().clamp(0.0, MAX_CORNER as f32) as u32
 }
 
 fn is_zero(v: &u32) -> bool {

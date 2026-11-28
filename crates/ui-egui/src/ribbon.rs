@@ -680,6 +680,8 @@ fn home(app: &mut WordApp, ui: &mut Ui) {
                 if let Some(f) = crate::widgets::font_combo_warned(ui, "font", 150.0, &font, &fams, Some(&*prev), warning.as_deref()) {
                     let _ = if f == crate::widgets::ADD_FONT {
                         app.run("font.add", json!({}))
+                    } else if f == crate::widgets::LOAD_SYSTEM_FONTS {
+                        app.run("font.loadSystem", json!({}))
                     } else {
                         let f = app.previews.font_stored(&f);
                         app.run("format.font", json!({"name": f}))
@@ -1054,6 +1056,9 @@ fn insert(app: &mut WordApp, ui: &mut Ui) {
             mi(ui, app, "Page Number Position…", "ui.dialog", json!({"name": "pageNumberPosition"}));
             mi(ui, app, "Format Page Numbers…", "layout.pageNumberFormat", json!({}));
         });
+        ui.separator();
+        mi(ui, app, "Show Document Text", "hf.showDocumentText", json!({}));
+        mi(ui, app, "Turn on Landscape Pages", "hf.turnOnLandscape", json!({}));
     });
     group(ui, "Text", None, app, |ui, app| {
         big(ui, app, "textBox", "Text\nBox", "insert.textBox", json!({}), false);
@@ -1554,6 +1559,7 @@ fn references(app: &mut WordApp, ui: &mut Ui) {
             mi(ui, app, "Automatic Table 2 (2 levels)", "references.toc", json!({"levels": 2, "title": "Table of Contents"}));
             ui.separator();
             mi(ui, app, "Custom Table of Contents…", "references.customToc", json!({}));
+            mi(ui, app, "Manage Tables of Contents…", "ui.listsPane", json!({"value": true, "kind": "contents"}));
             mi(ui, app, "Remove Table of Contents", "references.removeToc", json!({}));
         });
         stack(ui, |ui| {
@@ -1616,6 +1622,7 @@ fn references(app: &mut WordApp, ui: &mut Ui) {
                 json!({}),
                 false,
             );
+            small(ui, app, "manageLists", Some("Manage Lists"), "Manage Lists", "ui.listsPane", json!({"value": true, "kind": "figures"}), false);
             small(ui, app, "update", Some("Update Table"), "Update Table of Figures", "references.updateFigures", json!({}), false);
             small(ui, app, "crossRef", Some("Cross-reference"), "Cross-reference", "insert.crossReference", json!({}), false);
         });
@@ -2152,7 +2159,16 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
         Some((_, doc4me_doc::para::InlineObject::Shape { stroke, effects, .. })) => (stroke, effects.glow.map(|g| g.size)),
         _ => (None, None),
     };
+    let locked = doc4me_engine::cmd::objects::selection_locked(&app.session);
     let theme = app.session.doc.settings.theme_colors.clone();
+    if locked {
+        ui.horizontal(|ui| {
+            ui.label(tl!("Locked: it can't be moved, resized or edited."));
+            if ui.button(tl!("Unlock")).clicked() {
+                let _ = app.run("shape.lock", json!({"locked": false}));
+            }
+        });
+    }
     group(ui, "Shape Styles", None, app, |ui, app| {
         stack(ui, |ui| {
             menu_button(ui, app, "shading", Some("Shape Fill"), "Shape Fill", false, "shape.fill", |ui, app| {
@@ -2211,6 +2227,7 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
         stack(ui, |ui| {
             rotate_menu(ui, app, Some("Rotate"));
             small(ui, app, "align", Some("Align"), "Align", "arrange.align", json!({}), false);
+            small(ui, app, if locked { "lock" } else { "unlock" }, Some(if locked { "Unlock" } else { "Lock" }), "Lock selected object", "shape.lock", json!({"locked": !locked}), false);
         });
     });
     group(ui, "Size", None, app, |ui, app| {
@@ -2233,6 +2250,22 @@ fn shape_format(app: &mut WordApp, ui: &mut Ui) {
             crate::widgets::row(ui, |ui| rotation_field(ui, app));
         });
     });
+    if let Some(radius) = doc4me_engine::cmd::objects::selected(&app.session).and_then(|(_, o)| match o {
+        doc4me_doc::para::InlineObject::Shape { kind: doc4me_doc::para::ShapeKind::RoundedRectangle, extra, w, h, .. } => {
+            Some((doc4me_doc::connector::corner_radius(extra.corner, w, h), (w.min(h) / 2.0).max(0.0)))
+        }
+        _ => None,
+    }) {
+        group(ui, "Shape Corners", None, app, |ui, app| {
+            let (mut value, max) = radius;
+            ui.horizontal(|ui| {
+                ui.label(tl!("Corner Radius:"));
+                if ui.add(egui::DragValue::new(&mut value).speed(0.5).range(0.0..=max).suffix(" pt")).changed() {
+                    let _ = app.run("shape.cornerRadius", json!({"radius": value}));
+                }
+            });
+        });
+    }
 }
 
 /// Shape Format › Text: the text box's Text Direction and Align Text, and Create Link (Break Link

@@ -217,6 +217,9 @@ pub struct Float {
     /// decorative mark). See [`InlineObject::alt_text`].
     #[serde(skip_serializing_if = "AltText::is_empty")]
     pub alt: AltText,
+    /// Whether Word should lock the drawing against moving and resizing.
+    #[serde(skip_serializing_if = "is_false")]
+    pub locked: bool,
 }
 
 /// Longest alternative text kept (characters): hostile files and commands are capped.

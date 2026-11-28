@@ -23,6 +23,7 @@ macro_rules! tl {
 pub mod a11y;
 pub mod a11y_pane;
 pub mod backstage;
+pub mod chart_format_pane;
 pub mod canvas;
 pub mod caret_glide;
 pub mod chrome;
@@ -33,6 +34,7 @@ pub mod control;
 pub mod credits;
 pub mod desktop_theme;
 pub mod dialogs;
+pub mod lists_pane;
 pub mod dialogs_chart;
 pub mod dialogs_controls;
 pub mod dialogs_custom_xml;
@@ -417,6 +419,8 @@ pub struct WordApp {
     pub colors: Option<colors::ColorsDialog>,
     /// The Restrict Editing pane (#412).
     pub restrict: dialogs_review::RestrictPane,
+    /// References › Manage Table of Contents.
+    pub lists_pane: lists_pane::ListsPane,
     pub status_msg: Option<(String, f64)>,
     pub previews: previews::Previews,
     /// Media key of the picture a pending Change Picture replaces (#147).
@@ -581,6 +585,7 @@ impl WordApp {
             dialog: None,
             colors: None,
             restrict: Default::default(),
+            lists_pane: Default::default(),
             status_msg: None,
             previews: previews::Previews::default(),
             integrated_titlebar: false,
@@ -1209,6 +1214,13 @@ impl WordApp {
                 }
                 self.ui.toc_options_open = !self.ui.toc_options_open;
                 json!({"open": self.ui.toc_options_open})
+            }
+            "ui.listsPane" => {
+                self.lists_pane.open = p.get("value").and_then(Value::as_bool).unwrap_or(!self.lists_pane.open);
+                if let Some(kind) = p.get("kind").and_then(Value::as_str) {
+                    self.lists_pane.kind = ["contents", "figures", "tables"].iter().position(|k| *k == kind).unwrap_or(self.lists_pane.kind);
+                }
+                json!({"open": self.lists_pane.open})
             }
             "ui.citationOptions" => {
                 if !crate::citation_options::caret_in_citation_content(self) {

@@ -3,7 +3,7 @@
 use doc4me_doc::para::{InlineObject, NoteKind, OBJ};
 use doc4me_doc::props::{CharProps, TabAlign, TabLeader, TabStop};
 use doc4me_doc::section::NumFormat;
-use doc4me_doc::{Block, Paragraph, PartKind, Path, Pos, StoryRef, para_block};
+use doc4me_doc::{Block, Paragraph, ParaProps, PartKind, Path, Pos, StoryRef, para_block};
 use serde_json::{Value, json};
 
 use super::{delete_selection, sel_result};
@@ -219,6 +219,18 @@ pub fn leader(name: &str) -> TabLeader {
     }
 }
 
+pub(crate) fn page_formats(s: &Session) -> Vec<NumFormat> {
+    s.doc.sections().into_iter().map(|(_, sec)| sec.page_num_format).collect()
+}
+
+pub(crate) fn page_label_or_first(l: &doc4me_layout::DocLayout, formats: &[NumFormat], pos: &Pos) -> (usize, String) {
+    l.caret(pos).and_then(|c| {
+        let page = l.pages.get(c.page)?;
+        let label = formats.get(page.section).copied().unwrap_or_default().format(page.number);
+        Some((c.page, if label.is_empty() { page.number.to_string() } else { label }))
+    }).unwrap_or_else(|| (0, "1".into()))
+}
+
 /// The TOC field instruction for `references.toc`'s parameters (ECMA-376 §17.16.5.68): `\o`
 /// heading styles, `\h` hyperlinks, `\z` hide tab and page numbers in Web view, `\u` outline
 /// levels, `\f`/`\l` TC fields, `\n` without page numbers, `\p` separator, `\t` styles with levels.
@@ -345,7 +357,7 @@ pub(crate) fn headings(s: &Session) -> Vec<(usize, u8, String, usize)> {
 
 /// The TOC block range in the body: the paragraph holding the TOC field and the TOC entries after
 /// it. A TOC with `\c` is a table of figures, kept by the generated lists.
-fn toc_range(s: &Session) -> Option<(usize, usize)> {
+pub(crate) fn toc_range(s: &Session) -> Option<(usize, usize)> {
     let start = s.doc.body.iter().position(|b| b.as_para().is_some_and(|p| toc_field(p).is_some()))?;
     let mut end = start;
     while let Some(Block::Para(p)) = s.doc.body.get(end + 1).map(|b| &**b) {
@@ -364,7 +376,7 @@ fn toc_range(s: &Session) -> Option<(usize, usize)> {
 /// range started, its old result gone, and the regenerated entries after that paragraph (text
 /// that followed the range moves below them). Only an unlocked, top-level TOC that isn't inside
 /// another range field, and only when the body has no engine TOC already.
-fn range_toc_to_field(s: &mut Session) -> Result<(), CmdError> {
+pub(crate) fn range_toc_to_field(s: &mut Session) -> Result<(), CmdError> {
     if toc_range(s).is_some() {
         return Ok(());
     }
@@ -394,7 +406,7 @@ fn range_toc_to_field(s: &mut Session) -> Result<(), CmdError> {
 }
 
 /// The TOC field instruction in `p` (not a table of figures).
-fn toc_field(p: &Paragraph) -> Option<String> {
+pub(crate) fn toc_field(p: &Paragraph) -> Option<String> {
     p.objects.iter().find_map(|o| match o {
         InlineObject::Field { instr, .. } => {
             let f = FieldCode::parse(instr);
@@ -404,7 +416,7 @@ fn toc_field(p: &Paragraph) -> Option<String> {
     })
 }
 
-fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
+pub(crate) fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
     range_toc_to_field(s)?;
     let replace = v.as_object().is_some_and(|m| !m.is_empty());
     // Replacing a table puts the new one where the old one was, in place of an empty paragraph.
@@ -426,12 +438,21 @@ fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
         }
         None => delete_selection(s)?,
     };
-    let title = p::str(v, "title").unwrap_or("Contents").to_string();
+    let report = report_label(v);
+    let title = p::str(v, "title").unwrap_or(if report.is_some() { "สารบัญ" } else { "Contents" }).to_string();
     if at.story != StoryRef::Body || at.path.depth() > 0 {
         return Err(CmdError::Failed("a table of contents goes in the main text".into()));
     }
     // Title paragraph carrying the TOC field marker.
-    let mut head = Paragraph::with_text(&title, CharProps::default()).styled("TOCHeading");
+    let mut head = if report.is_some() {
+        let (para, chr) = super::continued::heading_look(s);
+        let mut h = Paragraph::with_text(&title, chr.clone());
+        h.mark = chr;
+        h.props = ParaProps { style: Some("TOCHeading".into()), ..para };
+        h
+    } else {
+        Paragraph::with_text(&title, CharProps::default()).styled("TOCHeading")
+    };
     head.insert_object(
         head.len(),
         InlineObject::Field { instr: toc_instr(v), result: String::new(), locked: false, code: false, form: None },
@@ -446,10 +467,30 @@ fn insert_toc(s: &mut Session, v: &Value) -> CmdResult {
         s.doc.split_paragraph(&at)?.path.last()
     };
     s.doc.insert_block(StoryRef::Body, &Path::top(i), Block::Para(head))?;
-    let leader = leader(p::str(v, "tabLeader").unwrap_or("dot"));
-    regenerate_toc(s, Some(leader))?;
+    let leader = leader(p::str(v, "tabLeader").unwrap_or(if report.is_some() { "none" } else { "dot" }));
+    if report.is_some() { report_toc_styles(s); }
+    regenerate_toc(s, Some(leader), Some(report))?;
     s.clamp_selection();
     sel_result(s)
+}
+
+pub(crate) fn report_label(v: &Value) -> Option<String> {
+    p::bool(v, "continued").unwrap_or(false).then(|| {
+        let label = super::continued::clean_label(p::str(v, "pageLabel").unwrap_or(""));
+        if label.is_empty() { super::continued::PAGE_LABEL.to_string() } else { label }
+    })
+}
+
+fn report_toc_styles(s: &mut Session) {
+    for n in 1..=9u32 {
+        if let Some(st) = std::sync::Arc::make_mut(&mut s.doc.styles).get_mut(&format!("TOC{n}")) {
+            st.para.indent_left = Some(36.0 * (n - 1) as f32);
+            st.para.indent_first = Some(0.0);
+            st.para.space_before = Some(0.0);
+            st.para.space_after = Some(0.0);
+        }
+    }
+    s.touch();
 }
 
 /// A hidden `_Toc` bookmark around the heading at body block `i` (after its leading page breaks),
@@ -487,30 +528,43 @@ pub(crate) fn toc_bookmark(s: &mut Session, i: usize, lead: usize) -> Result<Str
 
 /// Regenerate the TOC entries with page numbers (two layout passes: entries change pagination).
 pub fn update_toc(s: &mut Session) -> Result<(), CmdError> {
-    regenerate_toc(s, None)
+    regenerate_toc(s, None, None)
 }
 
 /// Rebuild the entries the TOC field's switches ask for. The tab leader is `leader`, or the one
 /// the entries had (Word keeps it in the entries' tab stops, not in the field).
-fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>) -> Result<(), CmdError> {
+fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>, report: Option<Option<String>>) -> Result<(), CmdError> {
+    use super::continued;
     range_toc_to_field(s)?;
     let Some((start, end)) = toc_range(s) else { return Ok(()) };
     let Some(instr) = s.doc.body.get(start).and_then(|b| b.as_para()).and_then(toc_field) else { return Ok(()) };
+    let report = report.unwrap_or_else(|| continued::label_in(s, start + 1, end, continued::TOC));
+    if let Ok(p) = s.doc.para_mut(StoryRef::Body, &Path::top(start)) {
+        for o in &mut p.objects {
+            if let InlineObject::Field { instr, result, .. } = o {
+                let f = FieldCode::parse(instr);
+                if f.name == "TOC" && !f.has('c') { result.clear(); }
+            }
+        }
+        p.touch();
+    }
     let f = FieldCode::parse(&instr);
     let leader = leader.unwrap_or_else(|| {
         s.doc
-            .body
-            .get(start + 1)
-            .filter(|_| end > start)
-            .and_then(|b| b.as_para())
+            .body.iter().take(end + 1).skip(start + 1).filter_map(|b| b.as_para())
+            .find(|p| !continued::is_part(p, continued::TOC))
             .and_then(|p| p.props.tabs.as_ref()?.last().map(|t| t.leader))
             .unwrap_or(TabLeader::Dot)
     });
     for i in (start + 1..=end).rev() {
         s.doc.remove_block(StoryRef::Body, &Path::top(i))?;
     }
-    let width = super::page::sect(s).text_width();
-    let entries = toc_entries(s, &f);
+    let section = s.doc.section_index_of(start);
+    let width = s.doc.sections().get(section).map_or_else(|| super::page::sect(s).text_width(), |(_, x)| x.text_width());
+    let mut entries = toc_entries(s, &f);
+    if report.is_some() {
+        for e in &mut entries { e.text = e.text.replacen('\t', " ", 1); }
+    }
     let links: Vec<Option<String>> = if f.has('h') {
         let mut v = Vec::new();
         for e in &entries {
@@ -524,35 +578,61 @@ fn regenerate_toc(s: &mut Session, leader: Option<TabLeader>) -> Result<(), CmdE
     };
     let no_pages = f.has('n').then(|| f.arg('n').and_then(level_range).unwrap_or((1, 9)));
     let sep = f.arg('p').map(str::to_string).unwrap_or_else(|| "\t".into());
+    let formats = page_formats(s);
+    let mut added = 0;
+    if let Some(label) = &report {
+        continued::add_styles(s, continued::TOC);
+        added = continued::insert_label(s, start, label, continued::TOC)?;
+    }
+    let first_entry = start + 1 + added;
     for pass in 0..2 {
-        // Pass 1 lays out with the entries in place, so headings below the TOC sit `entries.len()`
-        // blocks further down and their pages account for the TOC's own length.
         s.touch();
         let l = s.layout();
-        if pass == 1 {
-            // Replace the page numbers now that the entries exist.
-            for _ in 0..entries.len() {
-                s.doc.remove_block(StoryRef::Body, &Path::top(start + 1))?;
-            }
-        }
-        let shift = if pass == 0 { 0 } else { entries.len() };
+        let slots: Vec<usize> = if pass == 0 { (0..entries.len()).map(|k| first_entry + k).collect() }
+        else { (start + 1..=start + added).filter(|i| s.doc.body.get(*i).and_then(|b| b.as_para()).is_some_and(|p| !continued::is_part(p, continued::TOC))).collect() };
         for (k, e) in entries.iter().enumerate() {
-            let target = Path::top(e.path.last() + if e.path.last() > start { shift } else { 0 });
-            let page =
-                l.caret(&Pos { story: StoryRef::Body, path: target, off: e.lead }).and_then(|c| l.pages.get(c.page)).map(|pg| pg.number).unwrap_or(1);
+            let target = Path::top(e.path.last() + if e.path.last() > start { added } else { 0 });
+            let page = page_label_or_first(&l, &formats, &Pos { story: StoryRef::Body, path: target, off: e.lead }).1;
             let show_page = no_pages.is_none_or(|(a, b)| !(a..=b).contains(&(e.level + 1)));
-            let text = if show_page { format!("{}{sep}{page}", e.text) } else { e.text.clone() };
-            let props = CharProps { link: links.get(k).cloned().flatten(), ..Default::default() };
-            let mut para = Paragraph::with_text(&text, props).styled(&format!("TOC{}", e.level + 1));
+            let link = links.get(k).cloned().flatten();
+            let pageref = link.as_deref().and_then(|l| l.strip_prefix('#')).filter(|_| show_page).map(|b| format!("PAGEREF {b} \\h"));
+            let text = match (show_page, &pageref) { (true, None) => format!("{}{sep}{page}", e.text), (true, Some(_)) => format!("{}{sep}", e.text), (false, _) => e.text.clone() };
+            let props = CharProps { link, ..Default::default() };
+            let mut para = Paragraph::with_text(&text, props.clone()).styled(&format!("TOC{}", e.level + 1));
+            if let Some(instr) = pageref {
+                para.insert_object(para.len(), InlineObject::Field { instr, result: page.clone(), locked: false, code: false, form: None }, &props)?;
+            }
             para.mark = CharProps::default();
             if show_page && sep.contains('\t') {
-                para.props.tabs = Some(vec![TabStop { pos: width - 0.5, align: TabAlign::Right, leader }]);
+                para.props.tabs = Some(entry_tabs(s, &para.props, &e.text, TabStop { pos: width - 0.5, align: TabAlign::Right, leader }));
             }
-            s.doc.insert_block(StoryRef::Body, &Path::top(start + 1 + k), Block::Para(para))?;
+            match slots.get(k) {
+                Some(i) if pass == 1 => { s.doc.remove_block(StoryRef::Body, &Path::top(*i))?; s.doc.insert_block(StoryRef::Body, &Path::top(*i), Block::Para(para))?; }
+                Some(i) => s.doc.insert_block(StoryRef::Body, &Path::top(*i), Block::Para(para))?,
+                None => {}
+            }
+        }
+        if pass == 0 {
+            added += entries.len();
+            if let Some(label) = &report { added = continued::paginate(s, start, start + added, label, continued::TOC)? - start; }
         }
     }
     s.touch();
     Ok(())
+}
+
+fn entry_tabs(s: &Session, props: &ParaProps, text: &str, right: TabStop) -> Vec<TabStop> {
+    let mut tabs = Vec::new();
+    if !text.contains('\t') {
+        let style = s.doc.styles.resolve_para(&ParaProps { style: props.style.clone(), ..Default::default() });
+        for t in style.tabs {
+            if t.pos < right.pos - 0.5 && !matches!(t.align, TabAlign::Right | TabAlign::Bar) {
+                tabs.push(TabStop { pos: t.pos, align: TabAlign::Clear, leader: TabLeader::None });
+            }
+        }
+    }
+    tabs.push(right);
+    tabs
 }
 
 fn note(s: &mut Session, v: &Value, kind: NoteKind) -> CmdResult {

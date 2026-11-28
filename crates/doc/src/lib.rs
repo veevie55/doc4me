@@ -436,6 +436,19 @@ pub struct CoreProps {
 #[serde(default, rename_all = "camelCase")]
 pub struct Settings {
     pub track_changes: bool,
+    /// Remove personal names from annotations and document properties when saving (`w:removePersonalInformation`).
+    pub remove_personal_info: bool,
+    /// Remove dates and times from annotations when saving (`w:removeDateAndTime`).
+    pub remove_date_time: bool,
+    /// Embed fonts used by the document when writing a Word file.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub embed_fonts: bool,
+    /// Embed only used glyphs where the font licence permits subsetting.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub embed_subset: bool,
+    /// Include common installed system fonts as well.
+    #[serde(skip_serializing_if = "std::ops::Not::not")]
+    pub embed_system_fonts: bool,
     /// Default tab stop interval, points.
     pub default_tab: f32,
     pub even_odd_headers: bool,
@@ -849,6 +862,11 @@ impl Default for Settings {
     fn default() -> Self {
         Settings {
             track_changes: false,
+            remove_personal_info: false,
+            remove_date_time: false,
+            embed_fonts: false,
+            embed_subset: false,
+            embed_system_fonts: false,
             default_tab: 36.0,
             even_odd_headers: false,
             mirror_margins: false,

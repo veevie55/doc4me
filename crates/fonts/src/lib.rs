@@ -7,9 +7,10 @@
 #![deny(clippy::unwrap_used, clippy::expect_used, clippy::panic, clippy::unimplemented, clippy::todo, clippy::unreachable)]
 #![forbid(unsafe_code)]
 
+pub mod download;
+pub mod embed;
 mod fontdb;
 mod latin_metrics;
-pub mod download;
 pub mod math;
 mod script;
 // Generated tables: one entry per line would be thousands of lines.

@@ -13,8 +13,8 @@
 //! carried. Anything unexpected returns `None`, and the generated part is written as before.
 
 /// Children of `w:settings` the model writes (`super::settings_xml`).
-/// Doc4Me's model holds no "remove personal information / date and time" options, so those stay
-/// the file's own (kept byte for byte); its East Asian line-breaking settings are the model's.
+/// Settings held by the document model are rewritten from it; the East Asian line-breaking
+/// settings are also model-owned.
 const OWNED: &[&str] = &[
     "w:displayBackgroundShape",
     "w:mirrorMargins",
@@ -23,6 +23,8 @@ const OWNED: &[&str] = &[
     "w:attachedTemplate",
     "w:linkStyles",
     "w:trackRevisions",
+    "w:removePersonalInformation",
+    "w:removeDateAndTime",
     "w:documentProtection",
     "w:defaultTabStop",
     "w:autoHyphenation",
