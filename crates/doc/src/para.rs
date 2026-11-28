@@ -847,6 +847,28 @@ impl Paragraph {
         }
         out
     }
+    /// The text as shown on screen: symbol-font codes (Symbol, Wingdings…) become Unicode.
+    /// The stored text and its formatting remain unchanged.
+    pub fn shown_text(&self) -> String {
+        let mut out = String::with_capacity(self.text.len());
+        let mut objects = 0;
+        let mut runs = self.run_ranges().peekable();
+        for (offset, ch) in self.text.char_indices() {
+            while runs.peek().is_some_and(|(range, _)| range.end <= offset) {
+                runs.next();
+            }
+            if ch == OBJ {
+                if let Some(object) = self.objects.get(objects) {
+                    out.push_str(object.plain_text());
+                }
+                objects += 1;
+                continue;
+            }
+            let font = runs.peek().filter(|(range, _)| range.contains(&offset)).and_then(|(_, props)| props.font.as_deref());
+            out.push(font.and_then(|font| crate::symbol_fonts::symbol_char(font, ch)).unwrap_or(ch));
+        }
+        out
+    }
     /// [`Self::plain_text`] without tracked deletions: the text as it reads with every change accepted.
     pub fn final_text(&self) -> String {
         self.text_without(&self.deleted_ranges())

@@ -41,6 +41,7 @@ pub mod resolve;
 pub mod section;
 pub mod smart_art;
 pub mod styles;
+pub mod symbol_fonts;
 pub mod table;
 pub mod video;
 pub mod wordart;
@@ -1282,6 +1283,19 @@ impl Document {
         out
     }
 
+    /// The story's text as shown on screen, mapping proprietary symbol-font codes to Unicode
+    /// for plain-text output while leaving the document's stored text unchanged.
+    pub fn shown_text(&self, s: StoryRef) -> String {
+        let mut out = String::new();
+        if let Some(bl) = self.story(s) {
+            shown_text_of(bl, &mut out, 0);
+        }
+        if out.ends_with('\n') {
+            out.pop();
+        }
+        out
+    }
+
     /// Enable booklet imposition by storing each half-sheet as the document page. Layout remains
     /// ordinary portrait page layout. PDF export combines pairs of these pages onto landscape sheets.
     pub fn set_book_fold(&mut self, on: bool, sheets: u32) {
@@ -1959,6 +1973,35 @@ fn text_of(bl: &Blocks, out: &mut String, depth: usize) {
                         text_of(&c.blocks, &mut s, depth + 1);
                         cells.push(s.trim_end_matches('\n').replace('\n', " "));
                     }
+                    out.push_str(&cells.join("\t"));
+                    out.push('\n');
+                }
+            }
+        }
+    }
+}
+
+fn shown_text_of(bl: &Blocks, out: &mut String, depth: usize) {
+    if depth > 16 {
+        return;
+    }
+    for block in bl {
+        match &**block {
+            Block::Para(para) => {
+                out.push_str(&para.shown_text());
+                out.push('\n');
+            }
+            Block::Table(table) => {
+                for row in &table.rows {
+                    let cells: Vec<_> = row
+                        .cells
+                        .iter()
+                        .map(|cell| {
+                            let mut text = String::new();
+                            shown_text_of(&cell.blocks, &mut text, depth + 1);
+                            text.trim_end_matches('\n').replace('\n', " ")
+                        })
+                        .collect();
                     out.push_str(&cells.join("\t"));
                     out.push('\n');
                 }

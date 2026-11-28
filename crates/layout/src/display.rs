@@ -777,7 +777,12 @@ fn lines(
                         text.push_str(s);
                         shown = Some(r);
                     } else if let Some(p) = para {
-                        text.push_str(p.text.get(c.start..c.end).unwrap_or(""));
+                        let value = p.text.get(c.start..c.end).unwrap_or("");
+                        if doc4me_doc::symbol_fonts::is_symbol_font(&st.rc.font) {
+                            text.push_str(&doc4me_doc::symbol_fonts::map_text(&st.rc.font, value));
+                        } else {
+                            text.push_str(value);
+                        }
                     }
                     let b = text.len();
                     let cg = pl.glyphs.get(c.g0 as usize..c.g1 as usize).unwrap_or(&[]);

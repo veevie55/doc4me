@@ -149,6 +149,23 @@ impl Para {
         }
         s
     }
+    /// The text as shown on screen, mapping Symbol/Wingdings/Webdings runs to Unicode.
+    pub fn shown_text(&self) -> String {
+        let mut text = String::new();
+        for inline in &self.inlines {
+            match inline {
+                Inline::Text(value, format) => match format.font.as_deref() {
+                    Some(font) if doc4me_doc::symbol_fonts::is_symbol_font(font) => {
+                        text.push_str(&doc4me_doc::symbol_fonts::map_text(font, value));
+                    }
+                    _ => text.push_str(value),
+                },
+                Inline::Equation { linear, .. } => text.push_str(linear),
+                Inline::Image(_) | Inline::Anchor(_) | Inline::Figure(_) => {}
+            }
+        }
+        text
+    }
     pub fn is_empty(&self) -> bool {
         self.inlines.iter().all(|i| matches!(i, Inline::Text(t, _) if t.is_empty()))
     }

@@ -520,7 +520,37 @@ fn reported_font_name(font: &str) -> &str {
 }
 
 fn is_symbol_font(font: &str) -> bool {
-    matches!(font.trim().to_ascii_lowercase().as_str(), "symbol" | "wingdings" | "wingdings 2" | "wingdings 3" | "webdings")
+    doc4me_doc::symbol_fonts::is_symbol_font(font)
+}
+
+/// The character a proprietary symbol font displays, using its face when installed and a
+/// Unicode mapping when the font or a code point is unavailable.
+fn symbol_char_for_draw(family: &str, ch: char, resolved: &doc4me_fonts::word::Resolved) -> char {
+    if !is_symbol_font(family) {
+        return ch;
+    }
+    if !resolved.substituted {
+        if resolved.face.covers(ch) {
+            return ch;
+        }
+        if let Some(pua) = (0x20..=0xFF).contains(&u32::from(ch)).then(|| char::from_u32(0xF000 + u32::from(ch))).flatten()
+            && resolved.face.covers(pua)
+        {
+            return pua;
+        }
+    }
+    let Some(unicode) = doc4me_doc::symbol_fonts::symbol_char(family, ch) else { return ch };
+    let alternate = match unicode {
+        '\u{26AB}' => Some('\u{25CF}'),
+        '\u{25FC}' => Some('\u{25A0}'),
+        '\u{2B9A}' => Some('\u{27A2}'),
+        _ => None,
+    };
+    let has = |c| resolved.face.covers(c) || doc4me_fonts::FontDb::global().fallback_for(c, resolved.face.id()).is_some();
+    match alternate {
+        Some(c) if !has(unicode) && has(c) => c,
+        _ => unicode,
+    }
 }
 
 /// Whether this character produces visible glyphs in the current layout.
@@ -908,11 +938,7 @@ impl<'a> Builder<'a> {
         // with no glyph at the private-use code, shows as its standard character, as list
         // labels do: zenodo-048's footer brackets (Symbol F05B/F05D) are 2.3 pt wide in Word's
         // PDF, where a fallback face's 7 pt private-use boxes pushed a word onto another line.
-        let symbol_sub = primary_r.substituted;
-        let sym = |c: char| match doc4me_fonts::word::symbol_font_char(&rc.font, c) {
-            Some(u) if symbol_sub || !primary.covers(c) => u,
-            _ => c,
-        };
+        let sym = |c: char| symbol_char_for_draw(&rc.font, c, &primary_r);
         let resolved_cs: Option<(FaceRef, bool)> = rc_cs.as_ref().map(|r| {
             let family = font_for_document(self.env.doc, &r.font);
             let resolved = doc4me_fonts::word::resolve(&family, r.bold, r.italic);
@@ -2088,13 +2114,7 @@ pub fn layout_para(p: &Paragraph, env: &ParaEnv) -> ParaLayout {
         // substitute has another glyph, or none, there.
         let family = font_for_document(env.doc, &rc.font);
         let r = doc4me_fonts::word::resolve(&family, rc.bold, rc.italic);
-        let text: String = text
-            .chars()
-            .map(|c| match doc4me_fonts::word::symbol_font_char(&rc.font, c) {
-                Some(u) if r.substituted || !r.face.covers(c) => u,
-                _ => c,
-            })
-            .collect();
+        let text: String = text.chars().map(|c| symbol_char_for_draw(&rc.font, c, &r)).collect();
         let before_c = b.clusters.len();
         let before_g = b.glyphs.len();
         b.shape_with(&text, 0, &rc, None, false);
