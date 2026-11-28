@@ -71,6 +71,7 @@ pub mod keys;
 pub mod keytips;
 pub mod mini_toolbar;
 pub mod net;
+pub mod numfield;
 pub mod objects;
 pub mod online_pictures;
 pub mod options;

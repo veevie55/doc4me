@@ -1790,17 +1790,13 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         ui.label(tl!("By:"));
                         ui.add_enabled(
                             kind != 0,
-                            egui::DragValue::new(&mut by).speed(0.1).range(0.0..=1584.0).clamp_existing_to_range(false).suffix(" pt"),
+                            crate::numfield::NumField::new(&mut by)
+                                .speed(0.1)
+                                .range(0.0..=1584.0)
+                                .clamp_existing_to_range(false)
+                                .suffix(" pt")
+                                .spinner(),
                         );
-                        // Spin arrows: each click steps the amount by a tenth of a point.
-                        ui.add_enabled_ui(kind != 0, |ui| {
-                            if ui.add(egui::Button::new("▲").small()).clicked() {
-                                by = step_spacing_by(by, true);
-                            }
-                            if ui.add(egui::Button::new("▼").small()).clicked() {
-                                by = step_spacing_by(by, false);
-                            }
-                        });
                         if kind != was || (kind != 0 && by != spacing.abs()) {
                             *spacing = spacing_value(kind, by);
                         }
