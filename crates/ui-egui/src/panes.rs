@@ -11,6 +11,8 @@ use crate::theme::{Tokens, regular, semibold};
 
 pub fn show(app: &mut WordApp, ui: &mut Ui) {
     let t = Tokens::get(ui.ctx());
+    crate::table_pane::show(app, ui);
+    crate::object_pane::show(app, ui);
     if app.session.view.format_pane {
         egui::Panel::right("formatting_pane")
             .default_size(300.0)

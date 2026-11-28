@@ -1501,7 +1501,7 @@ fn layout(app: &mut WordApp, ui: &mut Ui) {
 /// Arrange › Rotate: turn 90° either way or flip (the angle and mirroring, not the pixels).
 /// Arrange › Wrap Text: how the selected object sits in the text, and (Square, Tight, Through)
 /// which of its sides text flows on.
-fn wrap_menu(ui: &mut Ui, app: &mut WordApp) {
+pub(crate) fn wrap_menu(ui: &mut Ui, app: &mut WordApp) {
     let (wrap, side) =
         doc4me_engine::cmd::objects::selected(&app.session).and_then(|(_, o)| o.frame().map(|(_, _, f)| (f.wrap, f.wrap_text))).unwrap_or_default();
     menu_button(ui, app, "wrapText", Some("Wrap\nText"), "Wrap Text", true, "arrange.wrapText", |ui, app| {
@@ -1531,7 +1531,7 @@ fn wrap_menu(ui: &mut Ui, app: &mut WordApp) {
     });
 }
 
-fn rotate_menu(ui: &mut Ui, app: &mut WordApp, label: Option<&str>) {
+pub(crate) fn rotate_menu(ui: &mut Ui, app: &mut WordApp, label: Option<&str>) {
     menu_button(ui, app, "rotate", label, "Rotate", false, "arrange.rotate", |ui, app| {
         mi(ui, app, "Rotate Right 90°", "arrange.rotate", json!({"direction": "right"}));
         mi(ui, app, "Rotate Left 90°", "arrange.rotate", json!({"direction": "left"}));
@@ -1541,7 +1541,7 @@ fn rotate_menu(ui: &mut Ui, app: &mut WordApp, label: Option<&str>) {
 }
 
 /// Size › Rotation: the selected object's exact angle (a drag of the field is one undo step).
-fn rotation_field(ui: &mut Ui, app: &mut WordApp) {
+pub(crate) fn rotation_field(ui: &mut Ui, app: &mut WordApp) {
     let deg0 = doc4me_engine::cmd::objects::selected(&app.session).and_then(|(_, o)| o.frame().map(|(_, _, f)| f.spin().deg)).unwrap_or(0.0);
     ui.label(egui::RichText::new(tl!("Rotation:")).small());
     let mut deg = deg0;
@@ -1921,13 +1921,25 @@ fn view(app: &mut WordApp, ui: &mut Ui) {
             if ui.checkbox(&mut n, tl!("Navigation Pane")).changed() {
                 let _ = app.run("view.navigationPane", json!({"value": n}));
             }
-            let mut f = v.format_pane;
-            if ui.checkbox(&mut f, tl!("Formatting Pane")).changed() {
-                let _ = app.run("view.formatPane", json!({"value": f}));
-            }
             let mut w = v.hide_white_space;
             if ui.checkbox(&mut w, tl!("Hide White Space")).changed() {
                 let _ = app.run("view.hideWhiteSpace", json!({"value": w}));
+            }
+        });
+    });
+    group(ui, "Panes", None, app, |ui, app| {
+        stack(ui, |ui| {
+            let mut format = v.format_pane;
+            if ui.checkbox(&mut format, tl!("Formatting Pane")).changed() {
+                let _ = app.run("view.formatPane", json!({"value": format}));
+            }
+            let mut table = v.table_pane;
+            if ui.checkbox(&mut table, tl!("Table Pane")).changed() {
+                let _ = app.run("view.tablePane", json!({"value": table}));
+            }
+            let mut object = v.object_pane;
+            if ui.checkbox(&mut object, tl!("Object Pane")).changed() {
+                let _ = app.run("view.objectPane", json!({"value": object}));
             }
         });
     });
@@ -2695,7 +2707,7 @@ fn table_design(app: &mut WordApp, ui: &mut Ui) {
 /// Table Layout › Cell Size: the caret cell's row height and column width, in inches. They show
 /// the size on the page (a row without a set height shows the height its text gives it) and
 /// editing runs `table.rowHeight` / `table.columnWidth`; dragging one is a single Undo.
-fn cell_size_boxes(ui: &mut Ui, app: &mut WordApp) {
+pub(crate) fn cell_size_boxes(ui: &mut Ui, app: &mut WordApp) {
     let story = app.session.sel.focus.story;
     let Some((tp, r, c)) = app.session.sel.focus.path.cell() else { return };
     let Some(t) = app.session.doc.table(story, &tp) else { return };

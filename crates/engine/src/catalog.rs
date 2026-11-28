@@ -322,7 +322,9 @@ View|Show|Ruler|view.ruler
 View|Show|Gridlines|view.gridlines
 View|Show|Text Boundaries|view.textBoundaries
 View|Show|Navigation Pane|view.navigationPane
-View|Show|Formatting Pane|view.formatPane
+View|Panes|Formatting Pane|view.formatPane
+View|Panes|Table Pane|view.tablePane
+View|Panes|Object Pane|view.objectPane
 View|Zoom|Zoom|view.zoom
 View|Zoom|100%|view.zoom100
 View|Zoom|One Page|view.onePage

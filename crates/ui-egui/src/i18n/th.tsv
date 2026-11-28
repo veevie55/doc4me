@@ -917,6 +917,8 @@
 	Formatted Text	ข้อความที่จัดรูปแบบ
 	Formatting	การจัดรูปแบบ
 	Formatting Pane	แผงจัดรูปแบบ
+	Table Pane	แผงตาราง
+	Object Pane	แผงวัตถุ
 	Formatting at Selection	การจัดรูปแบบที่ส่วนที่เลือก
 	Formatting exceptions	ข้อยกเว้นการจัดรูปแบบ
 	Formatting marks	เครื่องหมายการจัดรูปแบบ
@@ -3179,3 +3181,9 @@ spacing	Normal	ปกติ
 	Shading behind the selected characters (not the highlight color).	ลงสีพื้นหลังอักขระที่เลือก ไม่ใช่สีเน้นข้อความ
 	Text Decoration	การตกแต่งข้อความ
 	Underlining:	รูปแบบเส้นใต้:
+	Corner Radius	รัศมีมุม
+	Different first page	หน้าแรกแยกต่างหาก
+	Page Setup…	ตั้งค่าหน้ากระดาษ…
+	Place the cursor in a table to apply a table style.	วางเคอร์เซอร์ในตารางเพื่อใช้สไตล์ตาราง
+	Place the cursor in a table to edit table style options.	วางเคอร์เซอร์ในตารางเพื่อแก้ตัวเลือกสไตล์ตาราง
+	Select a picture, shape, chart or SmartArt graphic to edit its formatting.	เลือกรูปภาพ รูปร่าง แผนภูมิ หรือกราฟิก SmartArt เพื่อปรับรูปแบบ

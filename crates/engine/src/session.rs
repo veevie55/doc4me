@@ -110,6 +110,12 @@ pub struct ViewState {
     /// View › Show › Formatting Pane (session UI preference).
     #[serde(default)]
     pub format_pane: bool,
+    /// View › Show › Table Pane (session UI preference).
+    #[serde(default)]
+    pub table_pane: bool,
+    /// View › Show › Object Pane (session UI preference).
+    #[serde(default)]
+    pub object_pane: bool,
     /// Style Inspector pane (Home › Styles).
     #[serde(default)]
     pub style_inspector: bool,
@@ -221,6 +227,8 @@ impl Default for ViewState {
             nav_pane: false,
             styles_pane: false,
             format_pane: false,
+            table_pane: false,
+            object_pane: false,
             style_inspector: false,
             comments_pane: false,
             clipboard_pane: false,

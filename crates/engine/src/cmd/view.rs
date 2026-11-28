@@ -59,7 +59,13 @@ pub fn specs() -> Vec<CommandSpec> {
             .params(r#"{"value"?: bool}"#)
             .pure(),
         CommandSpec::new("view.navigationPane", "Navigation Pane", "View › Show", |s, v| toggle(s, v, |x| &mut x.nav_pane)).pure(),
-        CommandSpec::new("view.formatPane", "Formatting Pane", "View › Show", |s, v| toggle(s, v, |x| &mut x.format_pane))
+        CommandSpec::new("view.formatPane", "Formatting Pane", "View › Panes", |s, v| toggle(s, v, |x| &mut x.format_pane))
+            .params(r#"{"value"?: bool}"#)
+            .pure(),
+        CommandSpec::new("view.tablePane", "Table Pane", "View › Panes", |s, v| toggle(s, v, |x| &mut x.table_pane))
+            .params(r#"{"value"?: bool}"#)
+            .pure(),
+        CommandSpec::new("view.objectPane", "Object Pane", "View › Panes", |s, v| toggle(s, v, |x| &mut x.object_pane))
             .params(r#"{"value"?: bool}"#)
             .pure(),
         CommandSpec::new("view.zoom", "Zoom", "View › Zoom", zoom)
