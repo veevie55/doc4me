@@ -5,11 +5,11 @@ use std::collections::HashMap;
 use doc4me_doc::para::cap_alt;
 use doc4me_doc::props::{
     Align, Border, BorderStyle, Borders, CellProps, CharProps, HeightRule, Highlight, LineSpacing, NumRef, ParaProps, Rgb, RowProps, TabAlign,
-    TabLeader, TabStop, TableFloat, TableLook, TableProps, TextColor, TextDirection, Underline, VAlign, VMerge, VertAlign,
+    TabLeader, TabStop, TableFloat, TableLook, TableProps, TextAlignment, TextColor, TextDirection, Underline, VAlign, VMerge, VertAlign,
 };
 use doc4me_doc::section::{
-    Columns, DocGrid, DocGridType, LineNumberRestart, LineNumbering, MAX_CHAR_SPACE, MAX_GRID_PITCH, NotePos, NoteProps, NoteRestart, NumFormat,
-    SectionProps, SectionStart,
+    ChapterSep, Columns, DocGrid, DocGridType, LineNumberRestart, LineNumbering, MAX_CHAR_SPACE, MAX_GRID_PITCH, NotePos, NoteProps, NoteRestart,
+    NumFormat, SectionProps, SectionStart,
 };
 
 use super::drawing_color::adjust_lum;
@@ -307,6 +307,7 @@ impl PropCtx {
                 "w:widowControl" => p.widow_control = Some(on_off(k)),
                 "w:contextualSpacing" => p.contextual_spacing = Some(on_off(k)),
                 "w:mirrorIndents" => p.mirror_indents = Some(on_off(k)),
+                "w:adjustRightInd" => p.adjust_right_indent = Some(on_off(k)),
                 "w:suppressAutoHyphens" => p.suppress_hyphens = Some(on_off(k)),
                 "w:suppressLineNumbers" => p.suppress_line_numbers = Some(on_off(k)),
                 "w:bidi" => p.bidi = Some(on_off(k)),
@@ -396,6 +397,7 @@ impl PropCtx {
                     }
                 }
                 "w:jc" => p.align = k.attr("w:val").map(align),
+                "w:textAlignment" => p.text_alignment = k.attr("w:val").and_then(TextAlignment::from_ooxml),
                 "w:outlineLvl" => p.outline_level = k.attr("w:val").and_then(u32_of).map(|v| v.min(9) as u8),
                 "w:rPr" => mark = self.rpr(k),
                 _ => {}
@@ -702,6 +704,18 @@ pub fn sectpr(e: &El) -> (SectionProps, Vec<HfRef>) {
                 s.footer = m("w:footer", s.footer);
                 s.gutter = m("w:gutter", s.gutter);
             }
+            "w:paperSrc" => {
+                let tray = |name| {
+                    let value = k.attr(name)?.trim();
+                    let digits = value.strip_prefix('+').unwrap_or(value);
+                    if digits.is_empty() || !digits.bytes().all(|b| b.is_ascii_digit()) {
+                        return None;
+                    }
+                    u32_of(digits).filter(|v| *v <= u16::MAX as u32).map(|v| v as u16)
+                };
+                s.paper_src_first = tray("w:first");
+                s.paper_src_other = tray("w:other");
+            }
             "w:cols" => {
                 let mut c = Columns { count: k.attr("w:num").and_then(u32_of).unwrap_or(1).clamp(1, 45), ..Columns::default() };
                 if let Some(sp) = tw(k, "w:space") {
@@ -732,6 +746,8 @@ pub fn sectpr(e: &El) -> (SectionProps, Vec<HfRef>) {
                 if let Some(f) = k.attr("w:fmt") {
                     s.page_num_format = NumFormat::from_ooxml(f);
                 }
+                s.chapter_style = k.attr("w:chapStyle").and_then(u32_of).filter(|v| *v <= u8::MAX as u32).map(|v| v as u8);
+                s.chapter_sep = k.attr("w:chapSep").and_then(ChapterSep::from_ooxml);
             }
             "w:lnNumType" => {
                 let mut l = LineNumbering::default();
@@ -756,6 +772,8 @@ pub fn sectpr(e: &El) -> (SectionProps, Vec<HfRef>) {
                     _ => VAlign::Top,
                 }
             }
+            "w:noEndnote" => s.no_endnote = Some(on_off(k)),
+            "w15:footnoteColumns" => s.footnote_columns = k.attr("w:val").and_then(u32_of).filter(|v| (1..=45).contains(v)),
             "w:pgBorders" => s.page_borders = Some(borders(k)),
             "w:docGrid" => {
                 let mut g = DocGrid::default();

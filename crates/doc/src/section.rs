@@ -15,6 +15,40 @@ pub enum SectionStart {
     NextColumn,
 }
 
+/// Chapter number separator used by page-number fields (`w:chapSep`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ChapterSep {
+    Hyphen,
+    Period,
+    Colon,
+    EmDash,
+    EnDash,
+}
+
+impl ChapterSep {
+    pub fn from_ooxml(value: &str) -> Option<Self> {
+        Some(match value {
+            "hyphen" => Self::Hyphen,
+            "period" => Self::Period,
+            "colon" => Self::Colon,
+            "emDash" => Self::EmDash,
+            "enDash" => Self::EnDash,
+            _ => return None,
+        })
+    }
+
+    pub const fn ooxml(self) -> &'static str {
+        match self {
+            Self::Hyphen => "hyphen",
+            Self::Period => "period",
+            Self::Colon => "colon",
+            Self::EmDash => "emDash",
+            Self::EnDash => "enDash",
+        }
+    }
+}
+
 /// A number format (ECMA-376 §17.18.59 ST_NumberFormat). Every value the format defines is
 /// kept, so a document saves back the format it was opened with even where Doc4Me draws it as
 /// plain decimal (see [`NumFormat::format`]).
@@ -741,6 +775,9 @@ pub struct SectionProps {
     /// Different first page header/footer.
     pub title_page: bool,
     pub page_num_start: Option<u32>,
+    /// Heading style level and separator for chapter-numbered page numbers.
+    pub chapter_style: Option<u8>,
+    pub chapter_sep: Option<ChapterSep>,
     pub page_num_format: NumFormat,
     pub line_numbers: Option<LineNumbering>,
     pub valign: VAlign,
@@ -761,6 +798,13 @@ pub struct SectionProps {
     pub footnote_pr: NoteProps,
     #[serde(skip_serializing_if = "NoteProps::is_empty")]
     pub endnote_pr: NoteProps,
+    /// First-page and other-page printer trays (`w:paperSrc`).
+    pub paper_src_first: Option<u16>,
+    pub paper_src_other: Option<u16>,
+    /// Section-specific suppression of endnotes (`w:noEndnote`).
+    pub no_endnote: Option<bool>,
+    /// Independent footnote column count (`w15:footnoteColumns`).
+    pub footnote_columns: Option<u32>,
     /// Left editable when the document is protected for filling in forms (`w:formProt
     /// w:val="0"`, Restrict Editing › Select sections…); sections are protected by default.
     #[serde(skip_serializing_if = "std::ops::Not::not")]
@@ -787,6 +831,8 @@ impl Default for SectionProps {
             footers: HeaderSet::default(),
             title_page: false,
             page_num_start: None,
+            chapter_style: None,
+            chapter_sep: None,
             page_num_format: NumFormat::Decimal,
             line_numbers: None,
             valign: VAlign::Top,
@@ -797,6 +843,10 @@ impl Default for SectionProps {
             doc_grid: None,
             footnote_pr: NoteProps::default(),
             endnote_pr: NoteProps::default(),
+            paper_src_first: None,
+            paper_src_other: None,
+            no_endnote: None,
+            footnote_columns: None,
             form_unprotected: false,
         }
     }

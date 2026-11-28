@@ -1269,6 +1269,17 @@ fn sectpr_body(w: &mut W, s: &SectionProps, fold: bool) {
                 ("w:gutter", &twips(s.gutter.max(0.0))),
             ],
         );
+        let mut paper_source = Vec::new();
+        if let Some(first) = s.paper_src_first {
+            paper_source.push(("w:first", first.to_string()));
+        }
+        if let Some(other) = s.paper_src_other {
+            paper_source.push(("w:other", other.to_string()));
+        }
+        if !paper_source.is_empty() {
+            let refs: Vec<(&str, &str)> = paper_source.iter().map(|(k, v)| (*k, v.as_str())).collect();
+            w.empty("w:paperSrc", &refs);
+        }
         if let Some(b) = &s.page_borders {
             borders(w, "w:pgBorders", b, None, &[("w:offsetFrom", "text")]);
         }
@@ -1289,10 +1300,20 @@ fn sectpr_body(w: &mut W, s: &SectionProps, fold: bool) {
             let refs: Vec<(&str, &str)> = a.iter().map(|(k, v)| (*k, v.as_str())).collect();
             w.empty("w:lnNumType", &refs);
         }
-        if s.page_num_start.is_some() || s.page_num_format != doc4me_doc::section::NumFormat::Decimal {
+        if s.page_num_start.is_some()
+            || s.page_num_format != doc4me_doc::section::NumFormat::Decimal
+            || s.chapter_style.is_some()
+            || s.chapter_sep.is_some()
+        {
             let mut a = vec![("w:fmt", s.page_num_format.ooxml().to_string())];
             if let Some(st) = s.page_num_start {
                 a.push(("w:start", st.to_string()));
+            }
+            if let Some(style) = s.chapter_style {
+                a.push(("w:chapStyle", style.to_string()));
+            }
+            if let Some(separator) = s.chapter_sep {
+                a.push(("w:chapSep", separator.ooxml().to_string()));
             }
             let refs: Vec<(&str, &str)> = a.iter().map(|(k, v)| (*k, v.as_str())).collect();
             w.empty("w:pgNumType", &refs);
@@ -1316,6 +1337,9 @@ fn sectpr_body(w: &mut W, s: &SectionProps, fold: bool) {
             let refs: Vec<(&str, &str)> = ca.iter().map(|(k, v)| (*k, v.as_str())).collect();
             w.empty("w:cols", &refs);
         }
+        if let Some(count) = s.footnote_columns.filter(|count| *count > 0) {
+            w.empty("w15:footnoteColumns", &[("w:val", &count.clamp(1, 45).to_string())]);
+        }
         // After w:cols, before w:vAlign (CT_SectPr's order).
         if s.form_unprotected {
             w.val("w:formProt", "0");
@@ -1324,6 +1348,9 @@ fn sectpr_body(w: &mut W, s: &SectionProps, fold: bool) {
             doc4me_doc::props::VAlign::Top => {}
             doc4me_doc::props::VAlign::Center => w.val("w:vAlign", "center"),
             doc4me_doc::props::VAlign::Bottom => w.val("w:vAlign", "bottom"),
+        }
+        if let Some(on) = s.no_endnote {
+            w.empty("w:noEndnote", if on { &[] } else { &[("w:val", "0")] });
         }
         if s.title_page {
             w.empty("w:titlePg", &[]);

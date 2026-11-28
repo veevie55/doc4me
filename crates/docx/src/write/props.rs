@@ -369,8 +369,12 @@ pub fn ppr_inner(w: &mut W, p: &ParaProps, framed: bool, num_change: Option<&Cha
     }
     toggle(w, "w:contextualSpacing", p.contextual_spacing);
     toggle(w, "w:mirrorIndents", p.mirror_indents);
+    toggle(w, "w:adjustRightInd", p.adjust_right_indent);
     if let Some(a) = p.align {
         w.val("w:jc", align_val(a));
+    }
+    if let Some(a) = p.text_alignment {
+        w.val("w:textAlignment", a.ooxml());
     }
     if let Some(l) = p.outline_level {
         w.val("w:outlineLvl", &n(l.min(9) as i64));

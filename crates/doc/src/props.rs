@@ -608,6 +608,48 @@ impl Align {
     }
 }
 
+/// Vertical alignment of text within a paragraph line (`w:textAlignment`).
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, Serialize, Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub enum TextAlignment {
+    /// Use the default alignment for the line.
+    #[default]
+    Auto,
+    /// Align to the top of the line box.
+    Top,
+    /// Center within the line box.
+    Center,
+    /// Align to the baseline.
+    Baseline,
+    /// Align to the bottom of the line box.
+    Bottom,
+}
+
+impl TextAlignment {
+    /// The OOXML `w:textAlignment/@w:val` name.
+    pub fn ooxml(self) -> &'static str {
+        match self {
+            TextAlignment::Auto => "auto",
+            TextAlignment::Top => "top",
+            TextAlignment::Center => "center",
+            TextAlignment::Baseline => "baseline",
+            TextAlignment::Bottom => "bottom",
+        }
+    }
+
+    /// Parse an OOXML `w:textAlignment/@w:val` name.
+    pub fn from_ooxml(value: &str) -> Option<TextAlignment> {
+        Some(match value {
+            "auto" => TextAlignment::Auto,
+            "top" => TextAlignment::Top,
+            "center" => TextAlignment::Center,
+            "baseline" => TextAlignment::Baseline,
+            "bottom" => TextAlignment::Bottom,
+            _ => return None,
+        })
+    }
+}
+
 /// Line spacing rule.
 #[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", tag = "rule", content = "value")]
@@ -685,6 +727,16 @@ pub enum BorderStyle {
     Triple,
     DotDash,
     Wave,
+    /// Compound strokes are retained on save and drawn as a single border line.
+    ThinThickSmallGap,
+    ThickThinSmallGap,
+    ThinThickThinSmallGap,
+    ThinThickMediumGap,
+    ThickThinMediumGap,
+    ThinThickThinMediumGap,
+    ThinThickLargeGap,
+    ThickThinLargeGap,
+    ThinThickThinLargeGap,
 }
 
 impl BorderStyle {
@@ -699,6 +751,15 @@ impl BorderStyle {
             BorderStyle::Triple => "triple",
             BorderStyle::DotDash => "dotDash",
             BorderStyle::Wave => "wave",
+            BorderStyle::ThinThickSmallGap => "thinThickSmallGap",
+            BorderStyle::ThickThinSmallGap => "thickThinSmallGap",
+            BorderStyle::ThinThickThinSmallGap => "thinThickThinSmallGap",
+            BorderStyle::ThinThickMediumGap => "thinThickMediumGap",
+            BorderStyle::ThickThinMediumGap => "thickThinMediumGap",
+            BorderStyle::ThinThickThinMediumGap => "thinThickThinMediumGap",
+            BorderStyle::ThinThickLargeGap => "thinThickLargeGap",
+            BorderStyle::ThickThinLargeGap => "thickThinLargeGap",
+            BorderStyle::ThinThickThinLargeGap => "thinThickThinLargeGap",
         }
     }
     pub fn from_ooxml(s: &str) -> BorderStyle {
@@ -711,6 +772,15 @@ impl BorderStyle {
             "triple" => BorderStyle::Triple,
             "dotDash" | "dotDotDash" => BorderStyle::DotDash,
             "wave" | "doubleWave" => BorderStyle::Wave,
+            "thinThickSmallGap" => BorderStyle::ThinThickSmallGap,
+            "thickThinSmallGap" => BorderStyle::ThickThinSmallGap,
+            "thinThickThinSmallGap" => BorderStyle::ThinThickThinSmallGap,
+            "thinThickMediumGap" => BorderStyle::ThinThickMediumGap,
+            "thickThinMediumGap" => BorderStyle::ThickThinMediumGap,
+            "thinThickThinMediumGap" => BorderStyle::ThinThickThinMediumGap,
+            "thinThickLargeGap" => BorderStyle::ThinThickLargeGap,
+            "thickThinLargeGap" => BorderStyle::ThickThinLargeGap,
+            "thinThickThinLargeGap" => BorderStyle::ThinThickThinLargeGap,
             _ => BorderStyle::Single,
         }
     }
@@ -801,6 +871,9 @@ pub struct ParaProps {
     pub style: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub align: Option<Align>,
+    /// `w:textAlignment`: vertical alignment within the paragraph's line box.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub text_alignment: Option<TextAlignment>,
     /// Left indent, points.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub indent_left: Option<f32>,
@@ -841,6 +914,9 @@ pub struct ParaProps {
     /// outside ones, so they swap sides on even (left-hand) pages.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mirror_indents: Option<bool>,
+    /// `w:adjustRightInd`: whether the right indent adjusts to the document grid.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub adjust_right_indent: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub keep_next: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -1032,8 +1108,8 @@ impl FrameWrap {
 
 impl ParaProps {
     pub fn overlay(&mut self, patch: &ParaProps) {
-        overlay_fields!(self, patch; style, align, indent_left, indent_right, indent_first, indent_left_chars, indent_right_chars, indent_first_chars, space_before, space_after, space_before_auto, space_after_auto, line_spacing,
-            contextual_spacing, mirror_indents, keep_next, keep_lines, page_break_before, widow_control, outline_level, numbering, tabs, shading, borders,
+        overlay_fields!(self, patch; style, align, text_alignment, indent_left, indent_right, indent_first, indent_left_chars, indent_right_chars, indent_first_chars, space_before, space_after, space_before_auto, space_after_auto, line_spacing,
+            contextual_spacing, mirror_indents, adjust_right_indent, keep_next, keep_lines, page_break_before, widow_control, outline_level, numbering, tabs, shading, borders,
             suppress_hyphens, suppress_line_numbers, bidi, drop_cap, kinsoku, word_wrap, overflow_punct, top_line_punct, auto_space_de, auto_space_dn,
             snap_to_grid, frame);
     }
