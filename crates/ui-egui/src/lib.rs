@@ -25,6 +25,7 @@ pub mod a11y_pane;
 pub mod async_saves;
 pub mod autoscroll;
 pub mod backstage;
+pub mod band_motifs;
 pub mod canvas;
 pub mod caret_glide;
 pub mod chart_format_pane;
@@ -79,6 +80,7 @@ pub mod icons;
 pub mod ink;
 pub mod keys;
 pub mod keytips;
+mod line_looks;
 pub mod lists_pane;
 pub mod mini_toolbar;
 pub mod net;
@@ -91,9 +93,11 @@ pub mod online_pictures;
 pub mod options;
 pub mod panes;
 pub mod paste_picture;
+pub mod pointer;
 pub mod previews;
 pub mod print_page;
 pub mod read_aloud;
+pub mod report;
 pub mod ribbon;
 pub mod ribbon_keys;
 pub mod ruler_tabs;
@@ -184,6 +188,8 @@ pub struct Services {
     pub store_font: Option<Box<dyn Fn(&str, &[u8])>>,
     /// Web: forget a stored font (its stored file name) once the user removes it.
     pub forget_font: Option<Box<dyn Fn(&str)>>,
+    /// Browser and system user agent, included only when the user opens the problem-report form.
+    pub browser_info: Option<String>,
     /// Desktop: File › Options › General › Make Doc4Me the default for Word documents (#295),
     /// only from that button (never a programmatic command). Windows opens the Settings app's
     /// Default apps page (apps can't set defaults themselves); Linux and BSD set it with
@@ -227,6 +233,10 @@ pub struct UiState {
     pub recent_colors: Vec<String>,
     /// Interface theme: light, dark, or follow the OS appearance (#115).
     pub theme: theme::Appearance,
+    /// A faint Thai motif on the title bar and ribbon strip; none preserves the default appearance.
+    pub band_motif: theme::BandMotif,
+    /// The mouse pointer's arrow; other pointer shapes remain system-controlled.
+    pub pointer: pointer::Pointer,
     /// Interface size in percent (#475): scales the whole interface on top of the system's
     /// display scale. Junk or out-of-range saved values read as 100 % or are clamped to 80–200 %.
     pub interface_size: theme::InterfaceSize,
@@ -355,6 +365,8 @@ impl Default for UiState {
             recent_symbols: Vec::new(),
             recent_colors: Vec::new(),
             theme: theme::Appearance::default(),
+            band_motif: theme::BandMotif::default(),
+            pointer: pointer::Pointer::default(),
             interface_size: theme::InterfaceSize::default(),
             animations: theme::Animations::default(),
             legacy_dark: None,
@@ -1451,6 +1463,36 @@ impl WordApp {
                 }
                 json!({"theme": self.ui.theme.code(), "dark": self.ui_is_dark()})
             }
+            "ui.bandMotif" => {
+                if let Some(value) = s("value") {
+                    let Some(motif) = theme::BandMotif::from_code(value) else {
+                        return Some(Err(format!("unknown motif {value:?}; use none, prajamYam, krajang, kanKhod, pikul or phaKhaoMa")));
+                    };
+                    self.ui.band_motif = motif;
+                }
+                json!({"motif": self.ui.band_motif.code()})
+            }
+            "ui.pointer" => {
+                if let Some(value) = s("value") {
+                    let Some(pointer) = pointer::Pointer::from_code(value) else {
+                        return Some(Err(format!(
+                            "unknown pointer {value:?}; use system, white, black, gold, large, cat, rabbit, chick or elephant"
+                        )));
+                    };
+                    self.ui.pointer = pointer;
+                }
+                json!({"pointer": self.ui.pointer.code()})
+            }
+            "ui.reportProblem" => {
+                let browser = self.services.browser_info.as_deref().unwrap_or("");
+                match report::report_url(env!("CARGO_PKG_VERSION"), browser) {
+                    Some(url) => {
+                        self.canvas.open_url = Some(url.clone());
+                        json!({"url": url})
+                    }
+                    None => return Some(Err("no problem-report form is configured".into())),
+                }
+            }
             "ui.checkUpdates" => {
                 if let Some(v) = p.get("value") {
                     let Some(enabled) = v.as_bool() else { return Some(Err("`value` must be a boolean".into())) };
@@ -2087,6 +2129,8 @@ impl WordApp {
         crate::ribbon_keys::end_frame(&ctx);
         // Typing and formatting land here, after `logic` has reported.
         self.report_dirty();
+        // Paint a selected arrow only after every widget has had a chance to request a cursor.
+        pointer::paint(&ctx, self.ui.pointer);
     }
 
     /// Carry View › Full Screen (`view.fullScreen`, F11) to the window and follow the OS state.

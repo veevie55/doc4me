@@ -171,9 +171,15 @@ fn borders(app: &mut WordApp, ui: &mut Ui) {
                         ("Dash Dot", "dotDash"),
                         ("Wave", "wave"),
                     ] {
-                        let mut params = crate::table_pen::border_params(app);
-                        params["style"] = json!(style);
-                        mi(ui, app, label, "table.borders", params);
+                        let current = app.canvas.table_border.style.ooxml();
+                        let look = crate::line_looks::word_look(style);
+                        let response = crate::line_looks::swatch(ui, vec2(150.0, 22.0), look, tl!(label), current == style);
+                        if response.clicked() {
+                            let mut params = crate::table_pen::border_params(app);
+                            params["style"] = json!(style);
+                            let _ = app.run("table.borders", params);
+                            ui.close();
+                        }
                     }
                 });
                 ui.menu_button(tl!("Width:"), |ui| {

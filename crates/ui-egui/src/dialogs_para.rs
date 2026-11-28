@@ -509,12 +509,7 @@ fn lines(ui: &mut Ui, id: &str, l: &mut LineForm, theme: &[Rgb], fill: Option<Rg
         ui.add_space(8.0);
         ui.vertical(|ui| {
             ui.label(tl!("Style:"));
-            let current = STYLES.iter().find(|(s, _)| *s == l.style).map(|(_, n)| *n).unwrap_or("Single");
-            egui::ComboBox::from_id_salt((id, "style")).selected_text(tl!(current)).width(120.0).show_ui(ui, |ui| {
-                for (s, n) in STYLES {
-                    ui.selectable_value(&mut l.style, s, tl!(n));
-                }
-            });
+            crate::line_looks::borders(ui, egui::Id::new((id, "style")), 120.0, &mut l.style, &STYLES);
             ui.label(tl!("Color:"));
             color_menu(ui, theme, &mut l.color);
             ui.label(tl!("Width:"));

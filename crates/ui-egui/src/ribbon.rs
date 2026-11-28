@@ -219,6 +219,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         .exact_size(30.0)
         .frame(egui::Frame::NONE.fill(t.tab_strip).inner_margin(egui::Margin { left: 8, right: 10, top: 0, bottom: 0 }))
         .show(ui, |ui| {
+            crate::band_motifs::paint(ui.painter(), ui.clip_rect(), app.ui.band_motif, t.dark);
             ui.horizontal_centered(|ui| {
                 ui.spacing_mut().item_spacing = vec2(2.0, 0.0);
                 for (tab, custom) in &tabs {
@@ -268,6 +269,13 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
                     ui.painter().text(pos2(r.min.x + 26.0, r.center().y), Align2::LEFT_CENTER, share, medium(12.0), t.on_accent);
                     if resp.on_hover_text(tl!("Export a copy to share (PDF, Word document)")).clicked() {
                         let _ = app.run("ui.backstage", json!({"value": true, "page": "export"}));
+                    }
+                    ui.add_space(6.0);
+                    let report = ui.button(tl!("Report a problem")).on_hover_text(tl!("Open the problem-report form with app and browser details."));
+                    if report.clicked()
+                        && let Err(error) = app.run("ui.reportProblem", json!({}))
+                    {
+                        app.status(error);
                     }
                     ui.add_space(6.0);
                     let track = app.session.doc.settings.track_changes;

@@ -2185,16 +2185,8 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                         ("wave", "Wave"),
                         ("doubleWave", "Double wave"),
                     ];
-                    let shown = styles
-                        .iter()
-                        .find(|(value, _)| *value == underline_style)
-                        .map_or_else(|| underline_style.clone(), |(_, name)| tl!(name).to_string());
                     ui.horizontal(|ui| {
-                        egui::ComboBox::from_id_salt("fontdlg_underline_style").selected_text(shown).show_ui(ui, |ui| {
-                            for (value, name) in styles {
-                                ui.selectable_value(underline_style, value.to_string(), tl!(name));
-                            }
-                        });
+                        crate::line_looks::names(ui, egui::Id::new("fontdlg_underline_style"), 140.0, underline_style, &styles);
                         let theme = app.session.doc.settings.theme_colors.clone();
                         color_field(ui, &theme, underline_color, "Automatic", "auto");
                     });
@@ -2318,15 +2310,7 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
                             ("triple", "Triple"),
                             ("wave", "Wave"),
                         ];
-                        let shown = styles
-                            .iter()
-                            .find(|(value, _)| *value == border_style)
-                            .map_or_else(|| border_style.clone(), |(_, name)| tl!(name).to_string());
-                        egui::ComboBox::from_id_salt("fontdlg_character_border_style").selected_text(shown).show_ui(ui, |ui| {
-                            for (value, label) in styles {
-                                ui.selectable_value(border_style, value.to_string(), tl!(label));
-                            }
-                        });
+                        crate::line_looks::names(ui, egui::Id::new("fontdlg_character_border_style"), 140.0, border_style, &styles);
                         ui.end_row();
                         ui.label(tl!("Color:"));
                         let theme = app.session.doc.settings.theme_colors.clone();

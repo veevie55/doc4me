@@ -235,15 +235,6 @@ fn align_of(s: &str) -> Align {
     }
 }
 
-fn choice_names(ui: &mut Ui, id: &str, width: f32, value: &mut String, choices: &[(&str, &str)]) {
-    let shown = choices.iter().find(|(v, _)| *v == value).map(|(_, label)| tl!(label).to_string()).unwrap_or_else(|| value.clone());
-    egui::ComboBox::from_id_salt(id).width(width).selected_text(shown).show_ui(ui, |ui| {
-        for (v, label) in choices {
-            ui.selectable_value(value, (*v).to_string(), tl!(label));
-        }
-    });
-}
-
 impl StyleForm {
     /// The form for style `id` as it resolves now; `None` for no such style or a table style
     /// (edited from Table Design).
@@ -1041,7 +1032,7 @@ fn effects_page(app: &mut WordApp, ui: &mut Ui, f: &mut StyleForm) {
     heading(ui, "Underline");
     egui::Grid::new("ms_underline").num_columns(2).spacing(vec2(10.0, 8.0)).show(ui, |ui| {
         ui.label(tl!("Style:"));
-        choice_names(ui, "ms_ul", 140.0, &mut f.underline, &UNDERLINES);
+        crate::line_looks::names(ui, egui::Id::new("ms_ul"), 140.0, &mut f.underline, &UNDERLINES);
         ui.end_row();
         ui.label(tl!("Underline color:"));
         let theme = app.session.doc.settings.theme_colors.clone();
@@ -1277,7 +1268,7 @@ fn borders_page(app: &mut WordApp, ui: &mut Ui, f: &mut StyleForm) {
     });
     egui::Grid::new("ms_line").num_columns(2).spacing(vec2(10.0, 8.0)).show(ui, |ui| {
         ui.label(tl!("Style:"));
-        choice_names(ui, "ms_line_style", 140.0, &mut f.border_style, &LINES);
+        crate::line_looks::names(ui, egui::Id::new("ms_line_style"), 140.0, &mut f.border_style, &LINES);
         ui.end_row();
         ui.label(tl!("Width (pt):"));
         ui.add(crate::numfield::NumField::new(&mut f.border_width).range(0.25..=6.0).speed(0.25).max_decimals(2));

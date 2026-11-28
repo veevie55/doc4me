@@ -249,6 +249,7 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
         .exact_size(if mac { MAC_TITLE_BAR } else { 38.0 })
         .frame(egui::Frame::NONE.fill(t.title_bar).inner_margin(egui::Margin { left, right: 10, top: 0, bottom: 0 }))
         .show(ui, |ui| {
+            crate::band_motifs::paint(ui.painter(), ui.clip_rect(), app.ui.band_motif, t.dark);
             let full = ui.max_rect();
             // Drag the window by the title bar (integrated title bar on macOS).
             let drag = ui.interact(full, ui.id().with("title_drag"), Sense::click_and_drag());

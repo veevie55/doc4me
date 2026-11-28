@@ -79,6 +79,61 @@ impl From<Appearance> for String {
     }
 }
 
+/// A faint Thai motif painted on the title bar and ribbon strip (`ui.bandMotif`).
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[serde(from = "String", into = "String")]
+pub enum BandMotif {
+    #[default]
+    None,
+    PrajamYam,
+    Krajang,
+    KanKhod,
+    Pikul,
+    PhaKhaoMa,
+}
+
+impl BandMotif {
+    pub const ALL: [BandMotif; 6] = [Self::None, Self::PrajamYam, Self::Krajang, Self::KanKhod, Self::Pikul, Self::PhaKhaoMa];
+
+    pub fn code(self) -> &'static str {
+        match self {
+            Self::None => "none",
+            Self::PrajamYam => "prajamYam",
+            Self::Krajang => "krajang",
+            Self::KanKhod => "kanKhod",
+            Self::Pikul => "pikul",
+            Self::PhaKhaoMa => "phaKhaoMa",
+        }
+    }
+
+    pub fn from_code(code: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|motif| motif.code().eq_ignore_ascii_case(code.trim()))
+    }
+
+    pub fn label(self) -> &'static str {
+        match self {
+            Self::None => "None",
+            Self::PrajamYam => "Prajam Yam",
+            Self::Krajang => "Krajang",
+            Self::KanKhod => "Kan Khod",
+            Self::Pikul => "Pikul flowers",
+            Self::PhaKhaoMa => "Pha khao ma",
+        }
+    }
+}
+
+impl From<String> for BandMotif {
+    fn from(value: String) -> Self {
+        Self::from_code(&value).unwrap_or_default()
+    }
+}
+
+impl From<BandMotif> for String {
+    fn from(value: BandMotif) -> Self {
+        value.code().to_string()
+    }
+}
+
 /// Interface size (File › Options › General, `ui.interfaceSize`), in percent (#475): scales the
 /// ribbon, menus, panes and dialogs on top of the display scale the system reports, through
 /// egui's zoom factor. Document zoom (View › Zoom) is a separate setting and never changes with it.

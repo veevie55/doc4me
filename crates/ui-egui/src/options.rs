@@ -191,6 +191,8 @@ fn flag(app: &mut WordApp, ui: &mut Ui, label: &str, key: &str, value: bool) {
 fn general(app: &mut WordApp, ui: &mut Ui) {
     section(ui, "Interface");
     theme_picker(app, ui);
+    band_motif_picker(app, ui);
+    pointer_picker(app, ui);
     interface_size_picker(app, ui);
     ui.checkbox(&mut app.ui.mini_toolbar, tl!("Show the mini toolbar when text is selected"));
     ui.checkbox(&mut app.ui.font_download_notice, tl!("Tell me where to get a document's missing fonts"));
@@ -750,6 +752,51 @@ fn trust_center(app: &mut WordApp, ui: &mut Ui) {
 fn agents(ui: &mut Ui) {
     section(ui, "Agents");
     ui.label(tl!("Every command is available to scripts and AI agents: run `doc4me-cli mcp` for an MCP server, or start the app with `--control <port>` for the JSON control channel."));
+}
+
+/// Optional Thai pattern on the title bar and ribbon strip; None keeps today's default appearance.
+fn band_motif_picker(app: &mut WordApp, ui: &mut Ui) {
+    use crate::theme::BandMotif;
+    let current = app.ui.band_motif;
+    ui.horizontal(|ui| {
+        ui.label(tl!("Top bar motif:"));
+        egui::ComboBox::from_id_salt("band_motif").selected_text(tl!(current.label())).width(220.0).show_ui(ui, |ui| {
+            for motif in BandMotif::ALL {
+                let row = ui.horizontal(|ui| {
+                    let (rect, _) = ui.allocate_exact_size(vec2(44.0, 18.0), egui::Sense::hover());
+                    let tokens = crate::theme::Tokens::get(ui.ctx());
+                    ui.painter().rect_filled(rect, 3.0, tokens.title_bar);
+                    crate::band_motifs::paint_sample(&ui.painter().with_clip_rect(rect), rect, motif);
+                    ui.selectable_label(current == motif, tl!(motif.label()))
+                });
+                if row.inner.clicked() {
+                    let _ = app.run("ui.bandMotif", json!({"value": motif.code()}));
+                }
+            }
+        });
+    });
+}
+
+/// The system pointer remains the default; the optional pictures change only the plain arrow.
+fn pointer_picker(app: &mut WordApp, ui: &mut Ui) {
+    use crate::pointer::Pointer;
+    let current = app.ui.pointer;
+    ui.horizontal(|ui| {
+        ui.label(tl!("Mouse pointer:"));
+        current.preview(ui, 20.0);
+        egui::ComboBox::from_id_salt("mouse_pointer").selected_text(tl!(current.label())).width(220.0).show_ui(ui, |ui| {
+            for pointer in Pointer::ALL {
+                let row = ui.horizontal(|ui| {
+                    pointer.preview(ui, 20.0);
+                    ui.selectable_label(current == pointer, tl!(pointer.label()))
+                });
+                if row.inner.clicked() {
+                    let _ = app.run("ui.pointer", json!({"value": pointer.code()}));
+                }
+            }
+        });
+    });
+    note(ui, "Changes only the arrow. The pointers for typing text, links and resizing stay the system's.");
 }
 
 /// Interface theme: Light, Dark, or follow the system's appearance (#115).

@@ -199,6 +199,7 @@ fn services(inbox: Inbox, ctx: egui::Context, dirty: Rc<Cell<bool>>, saves: Asyn
         inbox: Some(inbox),
         on_dirty: Some(Box::new(move |d| dirty.set(d))),
         animations_enabled: Some(animations_enabled()),
+        browser_info: web_sys::window().and_then(|window| window.navigator().user_agent().ok()),
         fetch: Some(fetch::hook(fetch_ctx)),
         store_font: Some(Box::new(font_store::store)),
         forget_font: Some(Box::new(font_store::forget)),
