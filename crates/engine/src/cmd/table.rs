@@ -1170,6 +1170,14 @@ fn cell_text(c: &doc4me_doc::Cell) -> String {
     c.blocks.iter().filter_map(|b| b.as_para().map(|p| p.plain_text())).collect::<Vec<_>>().join("\n")
 }
 
+/// The language of the first non-empty paragraph in a cell, including its run and style.
+fn cell_lang(doc: &doc4me_doc::Document, cell: &doc4me_doc::Cell) -> Option<String> {
+    cell.blocks.iter().filter_map(|block| block.as_para()).find(|para| !para.plain_text().trim().is_empty()).and_then(|para| {
+        let run = para.runs.iter().find(|run| run.len > 0).map(|run| &run.props).unwrap_or(&para.mark);
+        doc.styles.resolve_char(para.props.style.as_deref(), run).lang
+    })
+}
+
 fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
     let col = usize::try_from(p::u64(v, "column").unwrap_or(0)).map_err(|_| CmdError::Params("column is outside the table".into()))?;
     let desc = p::bool(v, "descending").unwrap_or(false);
@@ -1185,10 +1193,24 @@ fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
     } else {
         (0, t.rows.len())
     };
+    let default_lang = super::default_lang(s);
+    let mut row_keys = Vec::with_capacity(t.rows.len());
+    for row in &t.rows {
+        let mut grid_col = row.props.grid_before as usize;
+        let mut key = (String::new(), default_lang.clone());
+        for cell in &row.cells {
+            if col >= grid_col && col < grid_col.saturating_add(cell.span()) {
+                key = (cell_text(cell), cell_lang(&s.doc, cell).or_else(|| default_lang.clone()));
+                break;
+            }
+            grid_col = grid_col.saturating_add(cell.span());
+        }
+        row_keys.push(key);
+    }
     if t.rows.iter().take(range.1).skip(range.0).flat_map(|r| &r.cells).any(|c| c.props.vmerge != doc4me_doc::props::VMerge::None) {
         return Err(CmdError::Disabled("split vertically merged cells before sorting their rows".into()));
     }
-    with_table(s, |t| {
+    with_table(s, move |t| {
         let prefix = t.rows.iter().take_while(|r| r.props.header).count();
         let skip = match header {
             Some(false) => 0,
@@ -1198,25 +1220,20 @@ fn sort_table(s: &mut Session, v: &Value) -> CmdResult {
         let start = range.0.max(skip).min(range.1);
         let Some(body) = t.rows.get_mut(start..range.1) else { return };
         let header_flags: Vec<_> = body.iter().map(|r| r.props.header).collect();
-        let key = |row: &doc4me_doc::Row| {
-            let mut g = row.props.grid_before as usize;
-            for cell in &row.cells {
-                if col >= g && col < g.saturating_add(cell.span()) {
-                    return cell_text(cell);
-                }
-                g = g.saturating_add(cell.span());
-            }
-            String::new()
-        };
-        body.sort_by(|a, b| {
-            let ka = key(a);
-            let kb = key(b);
-            let o = match (ka.trim().replace(',', "").parse::<f64>(), kb.trim().replace(',', "").parse::<f64>()) {
-                (Ok(x), Ok(y)) => x.total_cmp(&y),
+        let mut keyed: Vec<_> =
+            body.iter().cloned().enumerate().map(|(offset, row)| (row_keys.get(start + offset).cloned().unwrap_or_default(), row)).collect();
+        keyed.sort_by(|((ka, lang_a), _), ((kb, lang_b), _)| {
+            let a = doc4me_doc::locale_number::parse_number(ka.trim(), lang_a.as_deref()).filter(|n| n.is_finite());
+            let b = doc4me_doc::locale_number::parse_number(kb.trim(), lang_b.as_deref()).filter(|n| n.is_finite());
+            let order = match (a, b) {
+                (Some(a), Some(b)) => a.total_cmp(&b),
                 _ => ka.to_lowercase().cmp(&kb.to_lowercase()),
             };
-            if desc { o.reverse() } else { o }
+            if desc { order.reverse() } else { order }
         });
+        for (slot, (_, row)) in body.iter_mut().zip(keyed) {
+            *slot = row;
+        }
         for (row, header) in body.iter_mut().zip(header_flags) {
             row.props.header = header;
         }
