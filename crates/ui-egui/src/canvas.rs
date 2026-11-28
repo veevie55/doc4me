@@ -52,6 +52,8 @@ pub struct CanvasState {
     dragging: bool,
     /// Alt+drag: where the column (block) selection started (page, x, y) and its last end.
     column_drag: Option<((usize, f32, f32), (usize, f32, f32))>,
+    /// Selected text being dragged; Option/Alt or Ctrl copies instead of moving it.
+    pub(crate) text_drag: Option<TextDrag>,
     /// The last primary press on the page (time, screen point, clicks in a row), to count
     /// double- and triple-presses as they go down (egui reports them on release).
     last_press: Option<(f64, Pos2, u8)>,
@@ -183,6 +185,7 @@ impl Default for CanvasState {
             caret_visible_since: 0.0,
             dragging: false,
             column_drag: None,
+            text_drag: None,
             last_press: None,
             unit_drag: None,
             last_highlight: "yellow".into(),
@@ -245,6 +248,19 @@ struct UnitDrag {
     start: Pos,
     end: Pos,
     last: Pos,
+}
+
+/// A press on selected text: where it was, and once the pointer has moved, where it would drop.
+#[derive(Clone, Debug)]
+pub(crate) struct TextDrag {
+    /// The press in screen coordinates.
+    from: Pos2,
+    /// Initial hit point (page, x, y), used when a press ends as a click.
+    at: (usize, f32, f32),
+    /// Drop point (page, x, y), set after moving past the click threshold.
+    drop: Option<(usize, f32, f32)>,
+    /// A short preview shown next to the pointer while dragging.
+    ghost: String,
 }
 
 /// Clicks in a row for a press at `at` (time `now`) after `last`: within the double-click
@@ -1345,6 +1361,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         crate::ink::paint(app, &painter, &rects, &layout, geo.scale);
         crate::table_pen::paint(app, &painter, &t, &layout, &rects, geo.scale);
         crate::table_resize::paint(app, &painter, &t, &layout, &rects, geo.scale);
+        paint_text_drop(app, &painter, &t, &layout, &rects, geo.scale);
         (resp, rects)
     });
     app.canvas.scroll_offset = out.state.offset;
@@ -2145,6 +2162,28 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
             }
             return;
         }
+        // A press inside selected text starts a move; the platform's copy modifier keeps the
+        // selection in place. A press that never crosses the drag threshold is an ordinary click.
+        let copy_key = drop_copies(ui);
+        if clicks == 1
+            && !mods.shift
+            && (!mods.alt || copy_key)
+            && (!mods.command || copy_key)
+            && !app.session.sel.is_collapsed()
+            && app.session.selected_table_cells().is_none()
+            && app.session.column_segments().is_none()
+            && pos.story == app.session.sel.focus.story
+            && {
+                let (a, b) = app.session.sel.ordered();
+                a <= pos && pos <= b
+            }
+        {
+            let ghost = drag_ghost(&app.session.selected_text());
+            app.canvas.text_drag = Some(TextDrag { from: p, at: (page, x, y), drop: None, ghost });
+            app.canvas.dragging = true;
+            app.session.page_hint = page;
+            return;
+        }
         let pj = serde_json::to_value(&pos).unwrap_or_default();
         // Alt+drag selects a column (block) of text.
         if mods.alt && !mods.shift && !mods.command {
@@ -2173,6 +2212,42 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
         app.session.page_hint = page;
         app.canvas.dragging = true;
         // Format painter applies on mouse up.
+    } else if app.canvas.dragging
+        && ui.input(|i| i.pointer.primary_down())
+        && let Some(d) = app.canvas.text_drag.as_mut()
+    {
+        let reach = ui.ctx().options(|o| o.input_options.max_click_dist);
+        if d.drop.is_some() || (p - d.from).length() > reach {
+            d.drop = Some((page, x, y));
+        }
+        let moving = d.drop.is_some();
+        let copy = drop_copies(ui);
+        ui.ctx().set_cursor_icon(if !moving {
+            egui::CursorIcon::Default
+        } else if copy {
+            egui::CursorIcon::Copy
+        } else {
+            egui::CursorIcon::Grabbing
+        });
+    } else if app.canvas.dragging
+        && ui.input(|i| i.pointer.primary_released())
+        && let Some(d) = app.canvas.text_drag.take()
+    {
+        app.canvas.dragging = false;
+        match d.drop {
+            Some((page, x, y)) => {
+                let params = json!({"page": page, "x": x, "y": y, "copy": drop_copies(ui)});
+                if app.run("edit.dropText", params).is_ok() {
+                    app.session.page_hint = page;
+                }
+            }
+            None => {
+                let (page, x, y) = d.at;
+                if let Some(pos) = layout.hit(page, x, y, story) {
+                    let _ = app.run("caret.set", json!({"pos": pos}));
+                }
+            }
+        }
     } else if app.canvas.dragging
         && ui.input(|i| i.pointer.primary_down())
         && let Some((from, last)) = app.canvas.column_drag
@@ -2228,6 +2303,59 @@ fn mouse(app: &mut WordApp, ui: &Ui, resp: &egui::Response, rects: &[Rect], layo
             ui.label(tip);
         });
     }
+}
+
+/// Whether a text drag copies instead of moving: Option on macOS, Ctrl elsewhere.
+fn drop_copies(ui: &Ui) -> bool {
+    let m = ui.input(|i| i.modifiers);
+    if ui.ctx().os() == egui::os::OperatingSystem::Mac { m.alt } else { m.ctrl }
+}
+
+/// Keep the dragged-text preview small enough to follow the pointer without covering the page.
+fn drag_ghost(text: &str) -> String {
+    const LINES: usize = 3;
+    const CHARS: usize = 40;
+    let mut lines = text.lines().map(str::trim).filter(|l| !l.is_empty());
+    let mut out: Vec<String> = Vec::new();
+    for l in lines.by_ref().take(LINES) {
+        let mut line: String = l.chars().take(CHARS).collect();
+        if l.chars().nth(CHARS).is_some() {
+            line.push('…');
+        }
+        out.push(line);
+    }
+    if lines.next().is_some()
+        && let Some(last) = out.last_mut()
+        && !last.ends_with('…')
+    {
+        last.push('…');
+    }
+    out.join("\n")
+}
+
+/// While selected text is dragged, show its prospective caret and a faint preview by the pointer.
+fn paint_text_drop(app: &WordApp, painter: &egui::Painter, t: &Tokens, layout: &DocLayout, rects: &[Rect], scale: f32) {
+    let Some(d) = app.canvas.text_drag.as_ref() else { return };
+    let Some((page, x, y)) = d.drop else { return };
+    if !d.ghost.is_empty()
+        && let Some(at) = painter.ctx().pointer_latest_pos()
+    {
+        let ink = Color32::from_gray(30).gamma_multiply(0.5);
+        let g = painter.layout_no_wrap(d.ghost.clone(), egui::FontId::proportional(13.0), ink);
+        let at = at + vec2(14.0, 18.0);
+        let back = Rect::from_min_size(at, g.size()).expand(3.0);
+        painter.rect_filled(back, 2.0, Color32::WHITE.gamma_multiply(0.45));
+        painter.rect_stroke(back, 2.0, Stroke::new(1.0, t.accent.gamma_multiply(0.35)), egui::StrokeKind::Inside);
+        painter.galley(at, g, ink);
+    }
+    let story = app.session.sel.focus.story;
+    let Some(pos) = layout.hit(page, x, y, story) else { return };
+    let Some(c) = layout.caret_on(&pos, page) else { return };
+    let (Some(page_rect), Some(page_data)) = (rects.get(c.page), layout.pages.get(c.page)) else { return };
+    let page_scale = page_screen_scale(*page_rect, page_data, scale);
+    let top = to_screen(pos2(0.0, 0.0), *page_rect, page_scale, c.x, c.top);
+    let bottom = to_screen(pos2(0.0, 0.0), *page_rect, page_scale, c.x, c.top + c.height);
+    painter.line_segment([top, bottom], Stroke::new(2.0, t.accent));
 }
 
 /// Horizontal and vertical rulers for the caret's page and paragraph.

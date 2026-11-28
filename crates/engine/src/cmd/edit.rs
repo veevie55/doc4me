@@ -30,6 +30,64 @@ fn has_sel(s: &Session) -> Option<&'static str> {
     if s.sel.is_collapsed() && s.selected_table_cells().is_none() { Some("nothing is selected") } else { None }
 }
 
+/// Text after `pos` in its story, measured from the end so the place remains findable after a move.
+fn distance_to_end(s: &Session, pos: &Pos) -> Option<usize> {
+    let paths = s.doc.para_paths(pos.story);
+    let i = paths.iter().position(|p| *p == pos.path)?;
+    let len = |p: &doc4me_doc::Path| s.doc.para(pos.story, p).map_or(0, Paragraph::len);
+    let after: usize = paths.iter().skip(i + 1).map(|p| len(p) + 1).sum();
+    Some(after + len(&pos.path).saturating_sub(pos.off))
+}
+
+/// The place `distance` characters from the end of `story`.
+fn at_distance_to_end(s: &Session, story: StoryRef, mut distance: usize) -> Option<Pos> {
+    for path in s.doc.para_paths(story).into_iter().rev() {
+        let len = s.doc.para(story, &path).map_or(0, Paragraph::len);
+        if distance <= len {
+            return Some(Pos { story, path, off: len - distance });
+        }
+        distance -= len + 1;
+    }
+    None
+}
+
+/// Drag and drop selected text in the document without going through the system clipboard.
+fn drop_text(s: &mut Session, v: &Value) -> CmdResult {
+    let page =
+        p::u64(v, "page").map(|n| usize::try_from(n).unwrap_or(usize::MAX)).ok_or_else(|| CmdError::Params("`page` (number) is required".into()))?;
+    let (x, y) = (p::req_f32(v, "x")?, p::req_f32(v, "y")?);
+    let copy = p::bool(v, "copy").unwrap_or(false);
+    if s.selected_table_cells().is_some() || s.column_segments().is_some() {
+        return Err(CmdError::Disabled("whole cells or a column of text can't be dragged".into()));
+    }
+    let (start, end) = s.sel.ordered();
+    if start == end {
+        return Err(CmdError::Disabled("select the text to drag first".into()));
+    }
+    let story = start.story;
+    let layout = s.layout();
+    let to = layout.hit(page, x, y, story).ok_or_else(|| CmdError::Failed("there's no text there to drop into".into()))?;
+    let inside = to > start && to < end;
+    if inside || (!copy && (to == start || to == end)) {
+        return Err(CmdError::Disabled("dropped onto the selection itself: nothing moves".into()));
+    }
+    let fragment = s.doc.copy_range(&start, &end);
+    let after = to >= end;
+    let keep = if after { distance_to_end(s, &to) } else { None };
+    if !copy {
+        delete_selection(s)?;
+    }
+    let to = match keep {
+        Some(distance) => at_distance_to_end(s, story, distance).ok_or_else(|| CmdError::Failed("the drop point moved".into()))?,
+        None => to,
+    };
+    s.sel = Selection::caret(to.clone());
+    super::paste::insert(s, fragment)?;
+    let end = s.sel.focus.clone();
+    s.sel = Selection { anchor: to, focus: end };
+    sel_result(s)
+}
+
 pub fn specs() -> Vec<CommandSpec> {
     vec![
         CommandSpec::new("edit.undo", "Undo", "Quick Access Toolbar", |s, _| {
@@ -59,6 +117,9 @@ pub fn specs() -> Vec<CommandSpec> {
         .key("Mod+Y / Mod+Shift+Z")
         .pure(),
         CommandSpec::new("edit.cut", "Cut", "Home › Clipboard", cut).key("Mod+X").when(has_sel),
+        CommandSpec::new("edit.dropText", "Drag Selected Text", "Home › Clipboard", drop_text)
+            .params(r#"{"page": n, "x": pt, "y": pt, "copy"?: bool} (move or copy the selection to a page point; the clipboard is untouched; the dropped text stays selected)"#)
+            .when(has_sel),
         // F2 / Shift+F2: the selection waits while the caret goes where it should go; Enter
         // moves (or copies) it there, Esc or any edit forgets it.
         CommandSpec::new("edit.moveText", "Move Text", "Editing", |s, _| move_text(s, false)).key("F2").when(has_sel).pure(),
