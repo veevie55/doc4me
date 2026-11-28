@@ -738,6 +738,9 @@ pub fn math_gap(size: f64) -> (f64, f64) {
 fn requested_line(family: &str) -> Option<(f64, f64)> {
     match family.trim().to_ascii_lowercase().as_str() {
         "cambria" | "cambria math" => Some((1946.0 / 2048.0, 455.0 / 2048.0)),
+        // The classic Mac PostScript faces use their Windows Word counterparts' line pitch:
+        // Times New Roman for Times, and Courier New for Courier (#3241).
+        "times" => Some((1912.0 / 2048.0, 443.0 / 2048.0)),
         "courier new" | "courier" => Some((1705.0 / 2048.0, 615.0 / 2048.0)),
         // OS/2 Win metrics observed in the original fonts embedded by Word in govuk-068
         // (Nyala) and zenodo-095 (Gotham Book/Medium); no outlines or font programs copied.
@@ -843,9 +846,13 @@ fn is_aptos(family: &str) -> bool {
 pub fn single_line(family: &str, face: &crate::FontFace, substituted: bool, size: f64) -> (f64, f64) {
     // "Arial Bold" spaces lines as Arial does.
     let family = face_name(family).map_or(family, |(base, ..)| base);
+    let classic_postscript = matches!(family.trim().to_ascii_lowercase().as_str(), "times" | "courier");
     // Aptos's, Cambria Math's and the open variable Overpass's own win metrics aren't what Word
-    // spaces them by, so their lines hold when they are installed.
-    if let Some((a, d)) = requested_line(family).filter(|_| substituted || is_aptos(family) || is_cambria_math(family) || is_overpass(family)) {
+    // spaces them by, so their lines hold when they are installed. Times and Courier take the
+    // same line pitch as their Windows counterparts on macOS too.
+    if let Some((a, d)) =
+        requested_line(family).filter(|_| substituted || is_aptos(family) || is_cambria_math(family) || is_overpass(family) || classic_postscript)
+    {
         return (a * size, d * size);
     }
     if !substituted {

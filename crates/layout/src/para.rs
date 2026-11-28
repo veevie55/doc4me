@@ -2526,6 +2526,9 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         let mut pending_tab: Option<(usize, TabStop, f32)> = None; // tab cluster, stop, x where tab started
         let mut space_w = 0.0f32; // width of the spaces so far on this line
         let mut space_n = 0usize; // and how many there are
+        // Leading spaces keep their width in justified lines; they cannot make more room for a
+        // later word by shrinking (WordCraft #4307).
+        let mut text_seen = false;
         let mut has_tab = false;
         while j < n {
             let Some(c) = pl.clusters.get(j).cloned() else { break };
@@ -2663,9 +2666,12 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             }
             xs.push(x);
             x += c.adv;
-            if c.kind == ClKind::Space {
+            if c.kind == ClKind::Space && text_seen {
                 space_w += c.adv;
                 space_n += 1;
+            }
+            if !blank_cluster(&c) {
+                text_seen = true;
             }
             // Decimal/center/right tab: shift pending text as it grows.
             if let Some((tj, stop, tx)) = pending_tab {
@@ -2983,8 +2989,18 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
             _ => 0.0,
         };
         if shift > 0.0 && slack > 0.0 {
-            for v in xs.iter_mut().skip(align_from - c0) {
+            // With ordinary tabs, paragraph alignment moves the line as a whole. List labels,
+            // displayed equations and RTL lines keep their own anchoring rules.
+            let whole_line = display.is_none() && pl.label.is_none() && !rtl_para;
+            let shift_from = if whole_line { c0 } else { align_from };
+            for v in xs.iter_mut().skip(shift_from - c0) {
                 *v += shift;
+            }
+            if first
+                && last_tab.is_none()
+                && let Some(label) = pl.label.as_mut()
+            {
+                label.x += shift;
             }
         }
         // Thai Distributed justifies like Justify (not the last line) and spreads the room between
@@ -2997,8 +3013,10 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
         if shrink {
             shrink_line_spaces(pl, &mut xs, c0, c1, content_end, slack);
         } else if justify && slack > 0.0 {
-            // Spaces inside the content (after the last tab).
-            let spaces: Vec<usize> = (align_from..c1)
+            // Leading spaces keep their width so text indented with spaces stays where they put
+            // it. Markers and floating-object anchors are blank, not the first character.
+            let text_from = (align_from..c1).find(|k| pl.clusters.get(*k).is_some_and(|c| !blank_cluster(c))).unwrap_or(c1);
+            let spaces: Vec<usize> = (text_from..c1)
                 .filter(|k| {
                     pl.clusters.get(*k).is_some_and(|c| c.kind == ClKind::Space) && xs.get(k - c0).copied().unwrap_or(f32::MAX) < content_end - 0.01
                 })
@@ -3007,19 +3025,11 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 if rp.align == Align::Distribute || thai {
                     // Spread the room up to the last character shown: trailing spaces and marks
                     // hang past the margin, so the text itself ends at it.
-                    let last = (align_from..c1)
-                        .rev()
-                        .find(|k| {
-                            !matches!(
-                                pl.clusters.get(*k).map(|c| c.kind),
-                                Some(ClKind::Space | ClKind::Marker | ClKind::LineBreak | ClKind::PageBreak | ClKind::ColumnBreak)
-                            )
-                        })
-                        .unwrap_or(align_from);
-                    let cnt = (last - align_from).max(1) as f32;
+                    let last = (text_from..c1).rev().find(|k| pl.clusters.get(*k).is_some_and(|c| !blank_cluster(c))).unwrap_or(text_from);
+                    let cnt = (last - text_from).max(1) as f32;
                     let per = slack / cnt;
-                    for (q, v) in xs.iter_mut().enumerate().skip(align_from - c0) {
-                        let k = (q + c0 - align_from) as f32;
+                    for (q, v) in xs.iter_mut().enumerate().skip(text_from - c0) {
+                        let k = (q + c0 - text_from) as f32;
                         *v += per * k.min(cnt);
                     }
                 }
@@ -3027,7 +3037,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                 let per = slack / spaces.len() as f32;
                 let mut add = 0.0;
                 let mut si = 0;
-                for k in align_from..c1 {
+                for k in text_from..c1 {
                     if let Some(v) = xs.get_mut(k - c0) {
                         *v += add;
                     }
@@ -3091,6 +3101,14 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     (LineSpacing::AtLeast(v), None) => natural.max(v),
                     (LineSpacing::Exactly(v), _) => v,
                 };
+                // The empty line after a trailing break follows paragraph alignment just like
+                // an otherwise empty paragraph (WordCraft #4293).
+                let empty_slack = (base_right - rp.indent_left).max(0.0);
+                let empty_shift = match rp.align {
+                    Align::Center => empty_slack / 2.0,
+                    Align::Right => empty_slack,
+                    _ => 0.0,
+                };
                 let x0 = rp.indent_left;
                 let (x0, left, right) = if rtl_para { (width - x0, width - base_right, width - x0) } else { (x0, x0, base_right) };
                 lines.push(Line {
@@ -3100,7 +3118,7 @@ fn break_lines(pl: &mut ParaLayout, env: &ParaEnv, mark_style: u16, level: Optio
                     text_desc: desc,
                     c0: n,
                     c1: n,
-                    xs: vec![x0],
+                    xs: vec![if rtl_para { x0 - empty_shift } else { x0 + empty_shift }],
                     leaders: Vec::new(),
                     end: LineEnd::Para,
                     start: pl.text_len,
@@ -3359,7 +3377,10 @@ fn word_overhang_fits(overhang: f32, word: f32, space_before: f32) -> bool {
 /// Take `-slack` (an overflow) out of the line's inner spaces, in proportion to their widths and
 /// never more than [`space_shrink_room`] allows. Trailing spaces hang and are left alone.
 fn shrink_line_spaces(pl: &ParaLayout, xs: &mut [f32], c0: usize, c1: usize, content_end: f32, slack: f32) {
-    let spaces: Vec<(usize, f32)> = (c0..c1)
+    // Leading spaces stay at their original width, so only spaces after the first character may
+    // shrink to bring another word onto the line.
+    let text_from = (c0..c1).find(|k| pl.clusters.get(*k).is_some_and(|c| !blank_cluster(c))).unwrap_or(c1);
+    let spaces: Vec<(usize, f32)> = (text_from..c1)
         .filter_map(|k| {
             let c = pl.clusters.get(k).filter(|c| c.kind == ClKind::Space)?;
             (xs.get(k - c0).copied().unwrap_or(f32::MAX) < content_end - 0.01).then_some((k, c.adv))
@@ -3383,6 +3404,13 @@ fn shrink_line_spaces(pl: &ParaLayout, xs: &mut [f32], c0: usize, c1: usize, con
     if let Some(v) = xs.last_mut() {
         *v -= take;
     }
+}
+
+/// A cluster that draws no character: whitespace, a marker, a break, or the anchor of a
+/// zero-sized floating object (WordCraft #4307).
+fn blank_cluster(c: &Cluster) -> bool {
+    matches!(c.kind, ClKind::Space | ClKind::Marker | ClKind::LineBreak | ClKind::PageBreak | ClKind::ColumnBreak)
+        || (matches!(c.kind, ClKind::Object(_)) && c.adv == 0.0 && c.obj_h == 0.0)
 }
 
 /// The hyphen glyph and advance in a style (cached per paragraph).
