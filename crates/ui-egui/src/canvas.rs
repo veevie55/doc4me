@@ -103,6 +103,8 @@ pub struct CanvasState {
     pub(crate) ink_ui: crate::ink::InkUi,
     /// Wheel/touchpad scrolling (smooth notches, touchpad momentum).
     pub(crate) wheel: crate::scroll::CanvasScroll,
+    /// Middle-click scrolling, where the platform supports it.
+    pub(crate) auto_scroll: crate::autoscroll::AutoScroll,
     /// The scroll offset and its maximum at the end of last frame.
     pub(crate) scroll_offset: egui::Vec2,
     pub(crate) scroll_max: egui::Vec2,
@@ -229,6 +231,7 @@ impl Default for CanvasState {
             field_alt_code: Default::default(),
             dead_accent: None,
             wheel: Default::default(),
+            auto_scroll: Default::default(),
             scroll_offset: egui::Vec2::ZERO,
             scroll_max: egui::Vec2::ZERO,
             scroll_request: None,
@@ -846,7 +849,10 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     // While "Save changes?" is up, keys answer it rather than edit the document behind it.
     let keys_first = app.canvas.focused && !matches!(app.dialog, Some(crate::dialogs::Dialog::SaveChanges { .. }));
     if keys_first {
-        crate::keys::canvas_events(app, ui.ctx());
+        let escape_ends_scroll = app.canvas.auto_scroll.active() && ui.input(|i| i.key_pressed(egui::Key::Escape));
+        if !escape_ends_scroll {
+            crate::keys::canvas_events(app, ui.ctx());
+        }
     }
     let layout = app.session.layout();
     if let Some(anchor) = reflow_anchor
@@ -994,7 +1000,13 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     } else {
         egui::Vec2::ZERO
     };
-    let delta = wheel_delta + auto_delta + touch_pan;
+    let middle_delta = if app.session.view.read_mode || app.dialog.is_some() {
+        app.canvas.auto_scroll.cancel();
+        egui::Vec2::ZERO
+    } else {
+        app.canvas.auto_scroll.update(ui, area)
+    };
+    let delta = wheel_delta + auto_delta + middle_delta + touch_pan;
     let mut scroll_area = egui::ScrollArea::both()
         .id_salt("canvas_scroll")
         .auto_shrink([false, false])
@@ -1422,8 +1434,9 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     // the scroll area is built, so it reads last frame's viewport.
     app.canvas.viewport = Some(out.inner_rect);
     let (resp, rects) = out.inner;
+    let middle_gesture = app.canvas.auto_scroll.blocks_input();
     // A click on the page leaves the selected comment balloon.
-    if app.canvas.balloon.is_some() && ui.input(|i| i.pointer.any_pressed()) && resp.contains_pointer() {
+    if !middle_gesture && app.canvas.balloon.is_some() && ui.input(|i| i.pointer.any_pressed()) && resp.contains_pointer() {
         deselect_balloon(app, ui.ctx());
     }
     // Focus: the canvas takes keyboard focus on click and keeps Tab/arrows.
@@ -1440,7 +1453,8 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     // Screen readers: the document under the canvas, with the caret (#488).
     crate::a11y::expose(app, ui.ctx(), resp.id, &layout, &rects, area);
     // Double-click the space between two pages (or the line between them) to hide or show it.
-    if resp.double_clicked()
+    if !middle_gesture
+        && resp.double_clicked()
         && app.session.view.mode == doc4me_layout::ViewMode::Print
         && !app.session.view.read_mode
         && let Some(p) = resp.interact_pointer_pos()
@@ -1449,16 +1463,21 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         let _ = app.run("view.hideWhiteSpace", json!({"value": !app.session.view.hide_white_space}));
     } else
     // Draw Table / Eraser own the mouse while on (no caret moves); else the usual editing.
-    if !crate::table_pen::pointer(app, ui, &resp, &rects, &layout, geo.scale) {
+    if !middle_gesture && !crate::table_pen::pointer(app, ui, &resp, &rects, &layout, geo.scale) {
         mouse(app, ui, &resp, &rects, &layout, geo.scale);
     }
     // A click on a check box ticks it; on a list's button opens the list.
-    crate::content_controls::clicks(app, &resp);
+    if !middle_gesture {
+        crate::content_controls::clicks(app, &resp);
+    }
     // In a protected form a click fills a form field in; otherwise a double-click opens its Options.
-    crate::form_fields::clicks(app, &resp);
+    if !middle_gesture {
+        crate::form_fields::clicks(app, &resp);
+    }
     // Right-click: move the caret there (unless inside the selection), then the context menu.
     // Right-click in an equation puts the caret there and opens the equation menu.
-    if resp.secondary_clicked()
+    if !middle_gesture
+        && resp.secondary_clicked()
         && let Some(p) = resp.interact_pointer_pos()
         && let Some((page, x, y)) = page_at(&rects, &layout, geo.scale, p)
     {
@@ -1474,7 +1493,8 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         }
     }
     // Right-click on a picture, shape or text box selects it (its menu offers Wrap Text).
-    if resp.secondary_clicked()
+    if !middle_gesture
+        && resp.secondary_clicked()
         && app.session.math.is_none()
         && let Some(p) = resp.interact_pointer_pos()
         && let Some((page, x, y)) = page_at(&rects, &layout, geo.scale, p)
@@ -1495,7 +1515,7 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
             app.canvas.context_synonyms = app.session.run("review.thesaurus", &json!({})).ok().and_then(|v| v.get("synonyms").cloned());
         }
     }
-    if resp.secondary_clicked() {
+    if !middle_gesture && resp.secondary_clicked() {
         app.canvas.context_page_number = resp
             .interact_pointer_pos()
             .and_then(|p| page_at(&rects, &layout, geo.scale, p))
@@ -1535,19 +1555,21 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
         egui::Popup::open_id(ui.ctx(), menu);
         crate::ribbon_keys::opened_from_keys(ui.ctx(), menu);
     }
-    if resp.secondary_clicked() {
+    if !middle_gesture && resp.secondary_clicked() {
         app.canvas.context_at = None;
     }
-    let mut menu = egui::Popup::context_menu(&resp);
-    if let Some(at) = app.canvas.context_at {
-        menu = menu.anchor(egui::PopupAnchor::Position(at));
-    }
-    menu.show(|ui| context_menu(app, ui));
-    // Stand down while the context menu owns the pointer so the two never double up;
-    // `context_menu_opened` also covers the click that dismisses the menu.
-    app.canvas.context_menu_open = resp.context_menu_opened();
-    if !app.canvas.context_menu_open {
-        app.canvas.context_at = None;
+    if !middle_gesture {
+        let mut menu = egui::Popup::context_menu(&resp);
+        if let Some(at) = app.canvas.context_at {
+            menu = menu.anchor(egui::PopupAnchor::Position(at));
+        }
+        menu.show(|ui| context_menu(app, ui));
+        // Stand down while the context menu owns the pointer so the two never double up;
+        // `context_menu_opened` also covers the click that dismisses the menu.
+        app.canvas.context_menu_open = resp.context_menu_opened();
+        if !app.canvas.context_menu_open {
+            app.canvas.context_at = None;
+        }
     }
     if let Some(c) = crate::ink::cursor(app).filter(|_| resp.hovered() || app.canvas.ink.is_some()) {
         ui.ctx().set_cursor_icon(c);
@@ -1558,8 +1580,12 @@ pub fn show(app: &mut WordApp, ui: &mut Ui) {
     crate::table_resize::cursor(app, ui, &resp, &layout, &rects, geo.scale);
     crate::table_mouse::cursor(app, ui, &resp, &layout, &rects, geo.scale);
     crate::table_pen::cursor(app, ui, &resp);
+    app.canvas.auto_scroll.paint(ui, area);
     if !keys_first && app.canvas.focused && !matches!(app.dialog, Some(crate::dialogs::Dialog::SaveChanges { .. })) {
-        crate::keys::canvas_events(app, ui.ctx());
+        let escape_ends_scroll = app.canvas.auto_scroll.active() && ui.input(|i| i.key_pressed(egui::Key::Escape));
+        if !escape_ends_scroll {
+            crate::keys::canvas_events(app, ui.ctx());
+        }
     }
     let _ = origin;
     if let (Some(h), Some(v)) = (hruler, vruler) {
