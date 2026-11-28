@@ -227,6 +227,19 @@ fn picture(s: &mut Session, v: &Value) -> CmdResult {
     Ok(r)
 }
 
+/// The media extension of encoded image bytes accepted by `image_size` (TIFF included).
+pub(crate) fn image_ext(bytes: &[u8]) -> &'static str {
+    match bytes.get(..4) {
+        Some([0x89, b'P', b'N', b'G']) => "png",
+        Some([0xFF, 0xD8, ..]) => "jpeg",
+        Some([b'G', b'I', b'F', _]) => "gif",
+        Some([b'R', b'I', b'F', b'F']) => "webp",
+        Some([b'B', b'M', ..]) => "bmp",
+        Some([b'I', b'I', 0x2A, 0x00]) | Some([b'M', b'M', 0x00, 0x2A]) => "tiff",
+        _ => "png",
+    }
+}
+
 /// Insert › Online Pictures: a Creative Commons picture the front end found (Openverse) and
 /// downloaded, with a credit line under it ("“Title” by Creator is licensed under CC BY 2.0",
 /// the title linked to the picture's page and the licence to its deed), as the licences ask.

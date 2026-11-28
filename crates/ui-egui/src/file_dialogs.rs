@@ -62,6 +62,8 @@ pub(crate) enum AfterPick {
     SaveAs(AfterSave),
     /// Save a copy there in this format (`pdf`, `docx`, `png`, `jpg`…).
     Export { ext: String },
+    /// Save the selected picture there in its original image format.
+    SavePicture,
     /// Write the PDF of these print settings there (File › Print › Save these pages as PDF).
     PrintPdf { settings: Value },
     /// Load the picked CSV/TSV/text file or spreadsheet as the mail-merge recipients (#240, #334).
@@ -223,6 +225,10 @@ impl WordApp {
                     return Ok(json!({"cancelled": true}));
                 };
                 self.insert_or_change_picture(json!({"path": path}))
+            }
+            AfterPick::SavePicture => {
+                let Some(path) = picked else { return Ok(json!({"cancelled": true})) };
+                self.run("picture.save", json!({"path": path}))
             }
             AfterPick::Model3d => {
                 let Some(path) = picked else { return Ok(json!({"cancelled": true})) };

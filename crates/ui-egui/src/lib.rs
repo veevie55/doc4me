@@ -1197,6 +1197,7 @@ impl WordApp {
                 self.pick_picture();
                 json!({"pending": self.change_picture_target.is_some()})
             }
+            "ui.savePicture" => return Some(self.save_picture()),
             "ui.collapseRibbon" => {
                 self.ui.ribbon_collapsed = !self.ui.ribbon_collapsed;
                 json!({"collapsed": self.ui.ribbon_collapsed})
@@ -1458,6 +1459,30 @@ impl WordApp {
         match doc4me_engine::cmd::objects::selected(&self.session) {
             Some((_, doc4me_doc::para::InlineObject::Image { media, .. })) => Some(media),
             _ => None,
+        }
+    }
+
+    /// Save the selected picture's original bytes as a browser download or to a picked file.
+    fn save_picture(&mut self) -> Result<Value, String> {
+        let Some((_, bytes)) = doc4me_engine::cmd::objects::selected_picture_file(&self.session) else {
+            return Err(tl!("Select a picture first.").to_string());
+        };
+        let ext = doc4me_engine::cmd::objects::picture_format(&bytes);
+        let name = format!("{}.{ext}", tl!("Picture"));
+        if let Some(download) = &self.services.download {
+            return match download(&name, &bytes) {
+                Ok(()) => Ok(json!({"downloaded": name, "bytes": bytes.len()})),
+                Err(error) => {
+                    let message = i18n::fmt(tl!("Couldn't download {name}: {error}"), &[("name", &name), ("error", &error)]);
+                    self.status(message.clone());
+                    Err(message)
+                }
+            };
+        }
+        match self.ask_file(file_dialogs::FileDialogRequest::Save { name, dir: None }, file_dialogs::AfterPick::SavePicture) {
+            file_dialogs::Asked::Done(result) => result,
+            file_dialogs::Asked::Pending => Ok(json!({"pending": "savePicture"})),
+            file_dialogs::Asked::Busy => Ok(json!({"done": false})),
         }
     }
 

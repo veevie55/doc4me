@@ -2895,6 +2895,7 @@ fn context_menu(app: &mut WordApp, ui: &mut Ui) {
     }
     if picture {
         item(ui, app, "Change Picture…", "ui.changePicture", json!({}));
+        item(ui, app, "Save as Picture…", "ui.savePicture", json!({}));
         item(ui, app, "Reset Picture", "picture.reset", json!({}));
         item(ui, app, "Size and Crop…", "ui.tab", json!({"tab": "Picture Format"}));
     }
