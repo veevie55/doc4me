@@ -1,6 +1,6 @@
 # Changelog และรายการความสามารถของ Doc4Me
 
-อัปเดตเมื่อ **28 November 2026 16:18:24 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ**
+อัปเดตเมื่อ **28 November 2026 16:21:35 น. (Asia/Bangkok)** · ปลายทาง `main` · command catalog ของ Doc4Me **776 รายการ**
 
 เอกสารนี้รวมบันทึกการเปลี่ยนแปลง รายการความสามารถที่เปิดผ่าน command catalog และภาพประกอบของ Doc4Me รายการคำสั่งจัดตามตำแหน่งใน UI โดยระบุ command ID, คีย์ลัด, พารามิเตอร์ และชนิดการทำงาน
 
@@ -46,10 +46,10 @@ flowchart LR
 | `2f95c82` | 2026-11-28 14:25:12 | Add table selection and mouse operations | ยืนยันแล้วบน `origin/main` |
 | `a3e7f4b` | 2026-11-28 14:27:56 | Add copy by dragging selected objects | ยืนยันแล้วบน `origin/main` |
 | `0768b4a` | 2026-11-28 14:33:26 | Add save as picture | ยืนยันแล้วบน `origin/main` |
-| `b26606c` | 2026-11-28 14:56:25 | Port search, internal links, and line endpoint tools | จะรวมใน push ชุดปัจจุบัน |
-| `pending` | pending | พอร์ตฟีเจอร์ส่วนที่เหลือและปรับ UI ให้เข้ากับ Doc4Me | รอ commit และ push |
+| `b26606c` | 2026-11-28 14:56:25 | Port search, internal links, and line endpoint tools | ยืนยันแล้วบน `origin/main` ใน push 2026-11-28 16:20 ICT |
+| `fd75ccb` | 2026-11-28 16:20:21 ICT | พอร์ต 22 ช่องว่างที่เหลือและปรับ UI ให้เข้ากับ Doc4Me | push 2026-11-28 16:20 ICT; `origin/main` ยืนยัน SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429` |
 
-เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); เวลา commit มาจากประวัติ Git และสถานะปลายทางตรวจด้วย `git ls-remote origin refs/heads/main` หลัง push
+เวลาที่แสดงเป็นเขตเวลาไทย (Asia/Bangkok); commit `fd75ccb` ส่งขึ้น `main` เวลา 2026-11-28 16:20 ICT และตรวจยืนยันด้วย `git ls-remote origin refs/heads/main` ได้ SHA `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
 
 ## รายการความสามารถทั้งหมด
 
@@ -2075,4 +2075,4 @@ flowchart LR
 - เปรียบเทียบ catalog: Khiankrub **655** IDs; Doc4Me **776** IDs; missing source IDs **0**.
 - รายการช่องว่างที่เคยระบุ 22 รายการและสถานะการพอร์ตแสดงในรายงานช่องว่างแยกต่างหาก.
 - `cargo check --locked --offline -p doc4me-engine -p doc4me-ui-egui` ผ่านใน environment นี้; ไม่ได้รันชุดทดสอบ.
-- รายการ commit/push ของชุดปัจจุบันจะถูกแทนที่ด้วย hash และเวลา ICT ที่ตรวจยืนยันแล้วหลัง push.
+- commit `fd75ccb` ของชุดปัจจุบัน push แล้วเวลา 2026-11-28 16:20 ICT; SHA บน `origin/main` ตรงกับ `fd75ccb4bee4622a59df53d736350d4fee9dc429`.
