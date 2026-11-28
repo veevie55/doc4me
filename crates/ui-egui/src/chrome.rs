@@ -62,6 +62,9 @@ fn quick_access(ui: &mut Ui, app: &mut WordApp) {
             }
         }
         crate::widgets::command_menu(&resp, app, id);
+        if id == "edit.undo" {
+            undo_list_button(ui, app, enabled);
+        }
     }
     let t = Tokens::get(ui.ctx());
     let (r, _) = ui.allocate_exact_size(vec2(26.0, 24.0), Sense::hover());
@@ -75,6 +78,85 @@ fn quick_access(ui: &mut Ui, app: &mut WordApp) {
         ui.set_min_width(220.0);
         qat_menu(ui, app);
     });
+}
+
+/// Row `i` in the Undo list (zero is the newest action).
+fn undo_list_row_id(i: usize) -> egui::Id {
+    undo_list_button_id().with(("row", i))
+}
+
+fn undo_list_button_id() -> egui::Id {
+    egui::Id::new("qat_undo_list")
+}
+
+fn undo_list_rows(app: &WordApp) -> Vec<String> {
+    app.session.undo_history().into_iter().map(|label| tl!(label).to_string()).collect()
+}
+
+fn undo_list_footer(count: usize) -> String {
+    match count {
+        0 => tl!("Cancel").to_string(),
+        1 => tl!("Undo 1 Action").to_string(),
+        n => crate::i18n::fmt(tl!("Undo {n} Actions"), &[("n", &n.to_string())]),
+    }
+}
+
+/// The drop-down arrow beside Undo opens the recent undo steps.
+fn undo_list_button(ui: &mut Ui, app: &mut WordApp, enabled: bool) {
+    let t = Tokens::get(ui.ctx());
+    let (r, resp) = ui.allocate_exact_size(vec2(12.0, 24.0), Sense::click());
+    if resp.hovered() && enabled {
+        ui.painter().rect_filled(r, 3.0, t.hover);
+    }
+    let color = if enabled { t.icon } else { t.text_disabled };
+    let c = r.center();
+    let a = pos2(c.x - 2.5, c.y - 1.0);
+    let b = pos2(c.x, c.y + 1.5);
+    let d = pos2(c.x + 2.5, c.y - 1.0);
+    ui.painter().line_segment([a, b], Stroke::new(1.2, color));
+    ui.painter().line_segment([b, d], Stroke::new(1.2, color));
+    let resp = resp.on_hover_text(tl!("Undo History"));
+    egui::Popup::menu(&resp).show(|ui| undo_list(ui, app));
+}
+
+/// Hover highlights the chosen action and every newer one; clicking undoes them together.
+fn undo_list(ui: &mut Ui, app: &mut WordApp) {
+    const WIDTH: f32 = 210.0;
+    const ROW: f32 = 20.0;
+    let t = Tokens::get(ui.ctx());
+    let rows = undo_list_rows(app);
+    ui.set_width(WIDTH);
+    let (mut hovered, mut clicked) = (None, None);
+    egui::ScrollArea::vertical().max_height(ROW * 18.0).auto_shrink([false, true]).show(ui, |ui| {
+        ui.spacing_mut().item_spacing.y = 0.0;
+        let rects: Vec<Rect> = (0..rows.len())
+            .map(|i| {
+                let (r, _) = ui.allocate_exact_size(vec2(ui.available_width(), ROW), Sense::hover());
+                let resp = ui.interact(r, undo_list_row_id(i), Sense::click());
+                if resp.hovered() {
+                    hovered = Some(i);
+                }
+                if resp.clicked() {
+                    clicked = Some(i);
+                }
+                r
+            })
+            .collect();
+        for (i, (r, label)) in rects.iter().zip(&rows).enumerate() {
+            if hovered.is_some_and(|h| i <= h) {
+                ui.painter().rect_filled(*r, 0.0, t.selection);
+            }
+            ui.painter_at(r.shrink2(vec2(6.0, 0.0))).text(pos2(r.min.x + 6.0, r.center().y), Align2::LEFT_CENTER, label, regular(12.0), t.text);
+        }
+    });
+    ui.separator();
+    ui.vertical_centered(|ui| {
+        ui.label(egui::RichText::new(undo_list_footer(hovered.map_or(0, |i| i + 1))).font(regular(12.0)).color(t.text));
+    });
+    if let Some(i) = clicked {
+        let _ = app.run("edit.undoTo", json!({"count": i + 1}));
+        ui.close();
+    }
 }
 
 /// The Quick Access Toolbar's menu button (…), which opens [`qat_menu`].

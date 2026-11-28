@@ -624,6 +624,8 @@ fn doc_bib_style(doc: &Document) -> String {
 
 /// Maximum undo depth.
 const MAX_UNDO: usize = 500;
+/// How many recent labels the Undo list shows.
+pub const UNDO_LIST_MAX: usize = 100;
 
 impl Session {
     pub fn new(doc: Document) -> Self {
@@ -1039,6 +1041,18 @@ impl Session {
     }
     pub fn undo_labels(&self) -> Vec<String> {
         self.history.iter().rev().map(|u| u.label.clone()).collect()
+    }
+    /// Recent undo labels in the order shown by the Quick Access Toolbar.
+    pub fn undo_history(&self) -> Vec<&str> {
+        self.history.iter().rev().take(UNDO_LIST_MAX).map(|u| u.label.as_str()).collect()
+    }
+    /// Undo the newest `count` steps. A step that would lift protection is never applied.
+    pub fn undo_steps(&mut self, count: usize) -> usize {
+        let mut done = 0;
+        while done < count && !self.step_lifts_protection(false) && self.undo() {
+            done += 1;
+        }
+        done
     }
     pub fn undo(&mut self) -> bool {
         self.typing_open = false;

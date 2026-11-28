@@ -7,6 +7,25 @@ use serde_json::{Value, json};
 use super::{delete_selection, find_pattern, pos_json, sel_result};
 use crate::{CmdError, CmdResult, CommandSpec, Selection, Session, p};
 
+/// Undo several steps at once: the Undo button's list.
+fn undo_to(s: &mut Session, v: &Value) -> CmdResult {
+    let n = p::u64(v, "count").ok_or_else(|| CmdError::Params("`count` (whole number, 1 or more) is required".into()))?;
+    if n == 0 {
+        return Err(CmdError::Params("`count` must be 1 or more".into()));
+    }
+    let n = usize::try_from(n).unwrap_or(usize::MAX).min(s.undo_depth());
+    if s.step_lifts_protection(false) {
+        return Err(CmdError::Disabled("edit.undoTo: use Stop Protection to lift the document's protection".into()));
+    }
+    let undone = s.undo_steps(n);
+    let mut result = sel_result(s)?;
+    if let Some(result) = result.as_object_mut() {
+        result.insert("undone".into(), json!(undone));
+        result.insert("depth".into(), json!(s.undo_depth()));
+    }
+    Ok(result)
+}
+
 fn has_sel(s: &Session) -> Option<&'static str> {
     if s.sel.is_collapsed() && s.selected_table_cells().is_none() { Some("nothing is selected") } else { None }
 }
@@ -21,6 +40,14 @@ pub fn specs() -> Vec<CommandSpec> {
             sel_result(s)
         })
         .key("Mod+Z")
+        .pure(),
+        CommandSpec::new("edit.undoTo", "Undo Actions", "Quick Access Toolbar", undo_to)
+            .params(r#"{"count": n (1 = newest step; n undoes the newest n steps, at most the undo depth)}"#)
+            .when(|s| if s.can_undo() { None } else { Some("there is nothing to undo") })
+            .pure(),
+        CommandSpec::new("edit.undoHistory", "Undo History", "Quick Access Toolbar", |s, _| {
+            Ok(json!({"undo": s.undo_history(), "depth": s.undo_depth(), "redo": s.redo_label()}))
+        })
         .pure(),
         CommandSpec::new("edit.redo", "Redo", "Quick Access Toolbar", |s, _| {
             if s.step_lifts_protection(true) {
