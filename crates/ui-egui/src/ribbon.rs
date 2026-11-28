@@ -2042,6 +2042,9 @@ fn outlining(app: &mut WordApp, ui: &mut Ui) {
 fn help(app: &mut WordApp, ui: &mut Ui) {
     group(ui, "Help", None, app, |ui, app| {
         big(ui, app, "help", "Help", "help.show", json!({}), false);
+        if crate::updates::available(app) {
+            big(ui, app, "update", "Check for\nUpdates", "ui.checkForUpdates", json!({}), false);
+        }
     });
     group(ui, "About Doc4Me", None, app, |ui, app| {
         big(ui, app, "info", "About", "help.about", json!({}), false);

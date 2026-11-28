@@ -106,6 +106,7 @@ pub mod table_ruler;
 pub mod theme;
 pub mod toc_options;
 pub mod translator;
+pub mod updates;
 pub mod widgets;
 pub mod window_geometry;
 pub mod windows;
@@ -313,8 +314,17 @@ pub struct UiState {
     /// The add-ins installed from Get Add-ins: each pack's text, installed again at start-up.
     pub addins: Vec<String>,
     /// File › Options › Trust Center: Doc4Me may connect to online services (Online Pictures,
-    /// Translate, Get Add-ins, Dictate's speech model). Off, it makes no connection of its own.
+    /// Translate, Get Add-ins, Dictate's speech model and release checks. When off, every request
+    /// through these services is blocked.
     pub online_services: bool,
+    /// File › Options › General: ask once a day at start-up for newer Doc4Me releases.
+    pub check_updates: bool,
+    /// Whether the user has answered the one-time update-check permission prompt.
+    pub update_asked: bool,
+    /// The local date of the last release check (`YYYY-MM-DD`).
+    pub update_checked_on: String,
+    /// A release version the user chose to skip.
+    pub update_skipped: String,
     /// Tell the user where to get fonts that a document needs but this computer lacks.
     pub font_download_notice: bool,
 }
@@ -379,6 +389,10 @@ impl Default for UiState {
             translator: translator::Settings::default(),
             addins: Vec::new(),
             online_services: true,
+            check_updates: false,
+            update_asked: false,
+            update_checked_on: String::new(),
+            update_skipped: String::new(),
             font_download_notice: true,
         }
     }
@@ -446,6 +460,10 @@ pub struct WordApp {
     /// Mail Merge Helper › Header Options: the header source whose field names the next data
     /// source opened there takes (`mailings.recipients` `headerSource`).
     pub(crate) header_source: Option<String>,
+    /// The release check and banner, available in native desktop builds.
+    pub(crate) updates: updates::UpdateState,
+    /// Whether this process has run first-start update checks.
+    update_started: bool,
     /// The font database's [`generation`](doc4me_fonts::FontDb::generation) last seen: when
     /// fonts are added or removed (by any route) the font lists and the layout are refreshed.
     font_generation: u64,
@@ -684,6 +702,8 @@ impl WordApp {
             style_scratch: None,
             recipient_list_pending: false,
             header_source: None,
+            updates: updates::UpdateState::default(),
+            update_started: false,
             font_generation: doc4me_fonts::FontDb::global().generation(),
             dialog_pick: None,
             file_dialog: None,
@@ -1428,6 +1448,16 @@ impl WordApp {
                 }
                 json!({"theme": self.ui.theme.code(), "dark": self.ui_is_dark()})
             }
+            "ui.checkUpdates" => {
+                if let Some(v) = p.get("value") {
+                    let Some(enabled) = v.as_bool() else { return Some(Err("`value` must be a boolean".into())) };
+                    self.ui.check_updates = enabled;
+                    self.ui.update_asked = true;
+                }
+                json!({"checkUpdates": self.ui.check_updates})
+            }
+            "ui.checkForUpdates" => return Some(updates::command(self, &json!({"action": "check"}))),
+            "ui.update" => return Some(updates::command(self, p)),
             "ui.interfaceSize" => {
                 // Interface size in percent, 80–200 (clamped); no value reads it. Document zoom is
                 // `view.zoom` and stays as it is.
@@ -1850,6 +1880,10 @@ impl WordApp {
                 }
             }
         }
+        updates::tick(self);
+        if self.updates.pending.is_some() {
+            ctx.request_repaint_after(std::time::Duration::from_millis(250));
+        }
         if let Some(wait) = self.session.recovery_wait() {
             ctx.request_repaint_after(wait);
         }
@@ -1997,6 +2031,9 @@ impl WordApp {
         } else {
             chrome::title_bar(self, ui);
             ribbon::show(self, ui);
+            if !self.session.view.focus_mode {
+                updates::bar(self, ui);
+            }
             chrome::status_bar(self, ui);
             panes::show(self, ui);
             egui::CentralPanel::default().frame(egui::Frame::NONE.fill(t.canvas)).show(ui, |ui| {

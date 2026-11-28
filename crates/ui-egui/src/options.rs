@@ -207,6 +207,20 @@ fn general(app: &mut WordApp, ui: &mut Ui) {
         let _ = app.run("view.textBoundaries", json!({"value": text_boundaries}));
     }
     default_app_button(app, ui);
+    if crate::updates::available(app) {
+        ui.add_space(8.0);
+        section(ui, "Start-up");
+        let mut check = app.ui.check_updates;
+        if ui
+            .checkbox(&mut check, tl!("Check for updates when Doc4Me starts"))
+            .on_hover_text(tl!(
+                "Once a day, Doc4Me asks GitHub whether a newer version has been released, then offers its download page. Only the request is sent."
+            ))
+            .changed()
+        {
+            let _ = app.run("ui.checkUpdates", json!({"value": check}));
+        }
+    }
     ui.add_space(8.0);
     section(ui, "Personalize");
     egui::Grid::new("options_user").num_columns(2).spacing(vec2(8.0, 6.0)).show(ui, |ui| {

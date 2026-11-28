@@ -3142,3 +3142,24 @@ spacing	Normal	ปกติ
 	Place the page number at a set distance from the edges of the paper.	วางหมายเลขหน้าห่างจากขอบกระดาษตามระยะที่กำหนด
 	Place in This Document	ตำแหน่งในเอกสารนี้
 	Top edge	ขอบบน
+	Check for Updates	ตรวจหาอัปเดต
+	Check for\nUpdates	ตรวจหา\nอัปเดต
+	Check for updates automatically?	ต้องการให้ตรวจหาอัปเดตอัตโนมัติหรือไม่
+	Check for updates when Doc4Me starts	ตรวจหาอัปเดตเมื่อเปิด Doc4Me
+	Check Automatically	ตรวจหาอัตโนมัติ
+	Checking for updates…	กำลังตรวจหาอัปเดต…
+	Couldn't check for updates	ตรวจหาอัปเดตไม่สำเร็จ
+	Doc4Me {version} is available.	มี Doc4Me รุ่น {version} แล้ว
+	Doc4Me {version} is the latest version.	Doc4Me รุ่น {version} เป็นรุ่นล่าสุด
+	Doc4Me can ask GitHub once a day when it starts whether a newer version has been released, then offer the download.	เมื่อเปิด Doc4Me โปรแกรมจะถาม GitHub วันละครั้งว่ามีรุ่นใหม่หรือไม่ แล้วเสนอหน้าให้ดาวน์โหลด
+	Don't Check	ไม่ตรวจหา
+	Download	ดาวน์โหลด
+	Later	ไว้ภายหลัง
+	Only the release request is sent. No document or personal information is included. Change this in File › Options › General.	ส่งเฉพาะคำขอตรวจรุ่น ไม่มีเอกสารหรือข้อมูลส่วนบุคคล สามารถเปลี่ยนได้ที่ ไฟล์ › ตัวเลือก › ทั่วไป
+	Skip this version	ข้ามรุ่นนี้
+	Start-up	เมื่อเริ่มต้น
+	Updates	อัปเดต
+	Update checks are unavailable in this build.	บิลด์นี้ไม่รองรับการตรวจหาอัปเดต
+	You're up to date	ใช้รุ่นล่าสุดแล้ว
+	You have {version}. The download page has what's new and how to install it.	คุณใช้รุ่น {version} ดูรายการที่เปลี่ยนแปลงและวิธีติดตั้งได้ที่หน้าดาวน์โหลด
+	Check the internet connection, then try again from Help › Check for Updates.	ตรวจสอบการเชื่อมต่ออินเทอร์เน็ต แล้วลองอีกครั้งที่ วิธีใช้ › ตรวจหาอัปเดต

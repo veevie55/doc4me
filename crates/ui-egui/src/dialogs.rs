@@ -371,6 +371,12 @@ pub enum Dialog {
     About {
         tab: u8,
     },
+    /// Help › Check for Updates: checking, then the answer or why the request failed.
+    UpdateStatus {
+        status: crate::updates::Status,
+    },
+    /// Asked once at first start: may Doc4Me check for a newer release each day?
+    UpdatePermission,
     /// "Do you want to save changes?" before a user's New, Open, Close, Envelopes, Labels or
     /// Finish & Merge replaces the document (see [`WordApp::run`]); `then` runs once it is
     /// answered (`ui.saveChanges`), and only while the document it asked about
@@ -955,6 +961,8 @@ impl Dialog {
             Dialog::Icons { .. } => "icons",
             Dialog::PasteSpecial { .. } => "pasteSpecial",
             Dialog::About { .. } => "about",
+            Dialog::UpdateStatus { .. } => "updateStatus",
+            Dialog::UpdatePermission => "updatePermission",
             Dialog::FontDownload { .. } => "fontDownload",
             Dialog::SaveChanges { .. } => "saveChanges",
             Dialog::DiscardRecovery { .. } => "discardRecovery",
@@ -1497,6 +1505,8 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
         Dialog::Icons { .. } => "Icons",
         Dialog::PasteSpecial { .. } => "Paste Special",
         Dialog::About { .. } => "About Doc4Me",
+        Dialog::UpdateStatus { .. } => "Check for Updates",
+        Dialog::UpdatePermission => "Updates",
         Dialog::FontDownload { .. } => "Get the Missing Fonts",
         Dialog::SaveChanges { .. } => "Doc4Me",
         Dialog::DiscardRecovery { .. } => "Discard recovery copy",
@@ -2950,6 +2960,8 @@ fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
             let (ok, cancel) = buttons(ui, tl!("Close"));
             ok || cancel
         }
+        Dialog::UpdateStatus { status } => crate::updates::status_box(app, ui, status),
+        Dialog::UpdatePermission => crate::updates::permission_box(app, ui),
         Dialog::SaveChanges { name, message, .. } => {
             ui.label(egui::RichText::new(crate::i18n::fmt(tl!("Do you want to save changes to {name}?"), &[("name", name)])).font(semibold(15.0)));
             ui.label(tl!("Your changes will be lost if you don't save them."));
