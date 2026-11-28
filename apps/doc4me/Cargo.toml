@@ -34,10 +34,12 @@ winresource = "0.1"
 # workspace forbids) behind a safe API. Pinned exactly: review the diff before bumping.
 fmv-macos-events = "=0.1.0"
 # The system's Reduce motion setting (System Settings › Accessibility › Display), read through
-# NSWorkspace: a safe call in these bindings. Already in the build through eframe, rfd and arboard,
-# at this version; this adds only the `NSAccessibility` bindings.
-objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSWorkspace", "NSAccessibility", "NSApplication"] }
+# NSWorkspace, and rich clipboard text through NSPasteboard. These are safe calls in the bindings;
+# AppKit is already in the build through eframe, rfd and arboard.
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSWorkspace", "NSAccessibility", "NSApplication", "NSPasteboard"] }
 objc2 = "0.6"
+# Read and add RTF (`public.rtf`) beside the HTML and plain text that arboard writes.
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSString", "NSData"] }
 # Closing the window must quit through NSApplication rather than by dropping the NSWindow
 # inside the AppKit run loop (see `schedule_macos_terminate`).
 dispatch2 = "0.3"

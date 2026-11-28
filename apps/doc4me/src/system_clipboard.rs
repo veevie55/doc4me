@@ -2,9 +2,9 @@
 //! Doc4Me windows, and the HTML and RTF Paste reads (see `doc4me_ui_egui::system_clipboard`).
 //!
 //! Windows takes every format in one go (text, HTML Format, Rich Text Format, PNG and a bitmap),
-//! through `clipboard-win`. macOS, Linux and the BSDs get HTML with the text beside it through
-//! `arboard`, which can't offer more formats at once; the HTML carries the pictures (`data:`
-//! URIs) and the lossless copy.
+//! through `clipboard-win`. macOS uses `arboard` for HTML and text and adds RTF through AppKit;
+//! Linux and the BSDs use `arboard` for HTML and text. The HTML carries pictures (`data:` URIs)
+//! and the lossless copy.
 
 use doc4me_engine::clip_transfer::{ExportOptions, SystemClip};
 use doc4me_ui_egui::system_clipboard::{RichClipboard, SystemClipboard};
@@ -12,7 +12,7 @@ use doc4me_ui_egui::system_clipboard::{RichClipboard, SystemClipboard};
 /// The service handed to the UI.
 pub fn service() -> SystemClipboard {
     SystemClipboard {
-        formats: ExportOptions { rtf: cfg!(target_os = "windows"), png: cfg!(target_os = "windows") },
+        formats: ExportOptions { rtf: cfg!(any(target_os = "windows", target_os = "macos")), png: cfg!(target_os = "windows") },
         set: Box::new(set),
         get: Box::new(get),
     }
@@ -37,15 +37,35 @@ fn with_clipboard<T>(f: impl FnOnce(&mut arboard::Clipboard) -> Result<T, arboar
     })
 }
 
-#[cfg(not(target_os = "windows"))]
+#[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
 fn set(clip: &SystemClip) -> Result<(), String> {
     with_clipboard(|c| c.set_html(clip.html.as_str(), Some(clip.text.as_str())))
 }
 
-#[cfg(not(target_os = "windows"))]
+#[cfg(target_os = "macos")]
+fn set(clip: &SystemClip) -> Result<(), String> {
+    with_clipboard(|c| c.set_html(clip.html.as_str(), Some(clip.text.as_str())))?;
+    if let Some(rtf) = clip.rtf.as_deref().filter(|rtf| !rtf.is_empty()) {
+        macos_rtf::write(rtf);
+    }
+    Ok(())
+}
+
+#[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
 fn get() -> RichClipboard {
     // Another program's clipboard may hold anything: arboard reads it as UTF-8 text or fails.
     RichClipboard { html: with_clipboard(|c| c.get().html()).ok(), rtf: None }
+}
+
+#[cfg(target_os = "macos")]
+fn get() -> RichClipboard {
+    // arboard reads HTML; AppKit provides the separate `public.rtf` pasteboard type.
+    let html = with_clipboard(|c| c.get().html()).ok();
+    let rtf = macos_rtf::read()
+        .filter(|bytes| bytes.len() <= doc4me_engine::cmd::paste::MAX_PASTE_BYTES)
+        .map(|bytes| String::from_utf8_lossy(&bytes).trim_end_matches('\0').to_string())
+        .filter(|s| s.trim_start().starts_with("{\\rtf"));
+    RichClipboard { html, rtf }
 }
 
 /// Largest clipboard format read (HTML may carry a Doc4Me copy).
@@ -101,4 +121,26 @@ fn get() -> RichClipboard {
         String::from_utf8(out).ok()
     });
     RichClipboard { html, rtf }
+}
+
+#[cfg(target_os = "macos")]
+mod macos_rtf {
+    use objc2_app_kit::NSPasteboard;
+    use objc2_foundation::{NSData, NSString};
+
+    const RTF_TYPE: &str = "public.rtf";
+
+    /// RTF from TextEdit, Pages, Word for Mac and other pasteboard clients.
+    pub fn read() -> Option<Vec<u8>> {
+        let data = NSPasteboard::generalPasteboard().dataForType(&NSString::from_str(RTF_TYPE))?;
+        Some(data.to_vec())
+    }
+
+    /// Add RTF beside the HTML and text arboard has just written. Failure leaves that copy usable.
+    pub fn write(rtf: &str) {
+        let pasteboard = NSPasteboard::generalPasteboard();
+        if !pasteboard.setData_forType(Some(&NSData::with_bytes(rtf.as_bytes())), &NSString::from_str(RTF_TYPE)) {
+            log::warn!("clipboard: the RTF couldn't be added");
+        }
+    }
 }
