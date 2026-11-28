@@ -220,7 +220,27 @@ pub fn title_bar(app: &mut WordApp, ui: &mut Ui) {
                     ui.painter().circle_filled(r.center(), control_h / 2.0 - 1.0, t.accent);
                     let initials: String = app.session.user_initials().chars().take(2).collect();
                     ui.painter().text(r.center(), Align2::CENTER_CENTER, initials, semibold(10.5), t.on_accent);
-                    resp.on_hover_text(format!("{} — set your name in File › Options", app.session.author));
+                    let resp = resp.on_hover_text(format!("{} — set your name in File › Options", app.session.author));
+                    egui::Popup::menu(&resp).show(|ui| {
+                        ui.label(tl!("Editing"));
+                        ui.separator();
+                        let view_only = app.session.view_only;
+                        let track = app.session.doc.settings.track_changes;
+                        if ui.selectable_label(!view_only && !track, tl!("Editing — edit the document directly")).clicked() {
+                            let _ = app.run("review.viewOnly", json!({"value": false}));
+                            let _ = app.run("review.trackChanges", json!({"value": false}));
+                            ui.close();
+                        }
+                        if ui.selectable_label(!view_only && track, tl!("Reviewing — edits become suggestions")).clicked() {
+                            let _ = app.run("review.viewOnly", json!({"value": false}));
+                            let _ = app.run("review.trackChanges", json!({"value": true}));
+                            ui.close();
+                        }
+                        if ui.selectable_label(view_only, tl!("View only — no changes or suggestions")).clicked() {
+                            let _ = app.run("review.viewOnly", json!({"value": true}));
+                            ui.close();
+                        }
+                    });
                     ui.add_space(8.0);
                     // Search ("Tell me").
                     let (r, resp) = ui.allocate_exact_size(vec2(260.0, control_h), Sense::click());

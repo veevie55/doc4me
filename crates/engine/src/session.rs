@@ -327,6 +327,8 @@ pub struct Session {
     pub doc: Document,
     pub sel: Selection,
     pub view: ViewState,
+    /// Session-only Editing menu mode that refuses document edits without changing protection.
+    pub view_only: bool,
     /// Formatting picked with a collapsed caret, applied to the next typed text.
     pub pending: Option<CharProps>,
     pub path: Option<std::path::PathBuf>,
@@ -627,6 +629,7 @@ impl Session {
             doc,
             sel: Selection::caret(start),
             view: ViewState::default(),
+            view_only: false,
             pending: None,
             path: None,
             dirty: false,
@@ -1119,6 +1122,7 @@ impl Session {
             doc,
             sel,
             view: _,
+            view_only: _,
             pending: _,
             path: _,
             dirty,
@@ -1247,6 +1251,13 @@ impl Session {
         }
     }
 
+    /// Does view-only mode refuse command `id`? Document edits, undo, redo and repeat are
+    /// blocked; file commands and commands that only read or move the caret still run.
+    pub fn view_blocks(&self, id: &str, mutates: bool) -> bool {
+        let edits = mutates || matches!(id, "edit.undo" | "edit.redo" | "edit.repeat");
+        self.view_only && edits && !id.starts_with("file.")
+    }
+
     /// Run a command by id with JSON params (the single entry point for the UI, CLI, MCP and
     /// control channel). Mutating commands are undoable; a failed command leaves the document as
     /// it was; a panic inside a command becomes an error.
@@ -1265,6 +1276,9 @@ impl Session {
         let Some(spec) = reg.get(id) else { return Err(CmdError::Unknown(id.to_string())) };
         if let Some(why) = (spec.enabled)(self) {
             return Err(CmdError::Disabled(format!("{id}: {why}")));
+        }
+        if self.view_blocks(id, spec.mutates) {
+            return Err(CmdError::Disabled(format!("{id}: the document is view only")));
         }
         // Restrict Editing: refused outright, or allowed as long as it only edits the exceptions.
         let guard = if spec.mutates { crate::cmd::protect::check_before(self, id, params)? } else { false };
