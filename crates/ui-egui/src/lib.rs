@@ -857,6 +857,7 @@ impl WordApp {
             return Ok(json!({"downloaded": name, "bytes": bytes.len()}));
         }
         let document = self.session.document_id();
+        let old_path = (id == "file.rename").then(|| self.session.path.clone()).flatten();
         let r = self.session.run(id, &params).map_err(|e| e.to_string());
         if r.is_ok() {
             table_pen::remember(self, id, &params);
@@ -877,6 +878,16 @@ impl WordApp {
             && v.get("path").and_then(Value::as_str).map(std::path::Path::new) == self.session.path.as_deref()
         {
             self.autosave_path = self.session.path.clone();
+        }
+        // A rename keeps the document and its AutoSave target; Recent keeps only the new path.
+        if r.is_ok()
+            && let Some(old) = old_path.filter(|old| self.session.path.as_ref() != Some(old))
+        {
+            if self.autosave_path.as_ref() == Some(&old) {
+                self.autosave_path = self.session.path.clone();
+            }
+            let old = old.to_string_lossy();
+            self.ui.recent.retain(|recent| recent != &old);
         }
         if let Ok(v) = &r {
             self.keep_web_font(id, &params, v);
@@ -1516,7 +1527,7 @@ impl WordApp {
     pub fn title_stem(&self) -> String {
         let mut title = match &self.session.path {
             Some(p) => p.file_stem().map(|s| s.to_string_lossy().to_string()).unwrap_or_default(),
-            None => self.session.doc.core.title.clone(),
+            None => self.session.file_name.clone().unwrap_or_else(|| self.session.doc.core.title.clone()),
         };
         // X11 turns window titles into C strings, which cannot hold NUL: a title from a file's
         // properties with one crashed the app on Linux (WordCraft #3634).
@@ -2006,6 +2017,7 @@ fn input_dialog(id: &str, params: &Value) -> Option<&'static str> {
     let has = |k: &str| params.get(k).is_some_and(|v| !v.is_null());
     let rule = params.get("rule").and_then(Value::as_str).map(str::to_ascii_uppercase);
     match id {
+        "file.rename" if !has("name") => Some("renameDocument"),
         "mailings.rules" if !has("field") => match rule.as_deref() {
             None | Some("IF") => Some("ruleIf"),
             Some("SKIPIF") => Some("ruleSkipIf"),

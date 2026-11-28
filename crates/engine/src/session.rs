@@ -340,6 +340,8 @@ pub struct Session {
     /// Formatting picked with a collapsed caret, applied to the next typed text.
     pub pending: Option<CharProps>,
     pub path: Option<std::path::PathBuf>,
+    /// Name chosen for a document not saved yet; a file name, not document metadata or undo state.
+    pub file_name: Option<String>,
     pub dirty: bool,
     pub clipboard: Option<Fragment>,
     /// The document the clipboard's content was copied from ([`Session::document_id`]).
@@ -642,6 +644,7 @@ impl Session {
             view_only: false,
             pending: None,
             path: None,
+            file_name: None,
             dirty: false,
             clipboard: None,
             clipboard_doc: None,
@@ -1105,6 +1108,7 @@ impl Session {
         self.doc = doc;
         self.doc.ensure_nonempty();
         self.password = None;
+        self.file_name = None;
         self.sel = Selection::caret(self.doc.start_of(StoryRef::Body));
         self.pending = None;
         self.also_selected.clear();
@@ -1147,6 +1151,7 @@ impl Session {
             view_only: _,
             pending: _,
             path: _,
+            file_name: _,
             dirty,
             clipboard: _,
             clipboard_doc: _,

@@ -355,6 +355,9 @@ fn save_as_page(app: &mut WordApp, ui: &mut Ui) {
 
 fn info_page(app: &mut WordApp, ui: &mut Ui) {
     heading(ui, "Info");
+    if ui.button(tl!("Rename…")).clicked() {
+        let _ = app.run("file.rename", json!({}));
+    }
     let info = app.session.run("file.info", &json!({})).unwrap_or_default();
     ui.columns(2, |cols| {
         let ui = &mut cols[0];

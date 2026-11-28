@@ -122,6 +122,11 @@ fn special_menu(ui: &mut Ui, extra: &FindExtra) -> Option<&'static str> {
 #[derive(Clone, Debug, Serialize)]
 #[serde(tag = "dialog", rename_all = "camelCase")]
 pub enum Dialog {
+    RenameDocument {
+        name: String,
+        message: String,
+        focus: bool,
+    },
     Font {
         /// The font (Latin text) and the Asian text font, as the font lists name them, and their
         /// values when the dialog opened: OK changes only the ones changed (#505).
@@ -908,6 +913,7 @@ pub(crate) fn color_field(ui: &mut Ui, theme: &[doc4me_doc::Rgb], value: &mut St
 impl Dialog {
     pub fn name(&self) -> &'static str {
         match self {
+            Dialog::RenameDocument { .. } => "renameDocument",
             Dialog::Font { .. } => "font",
             Dialog::Paragraph { .. } => "paragraph",
             Dialog::Tabs { .. } => "tabs",
@@ -992,6 +998,9 @@ impl Dialog {
     }
 
     pub fn open(name: &str, app: &mut WordApp) -> Option<Dialog> {
+        if name == "renameDocument" {
+            return Some(Dialog::RenameDocument { name: app.title_stem(), message: String::new(), focus: true });
+        }
         if name == "fontDownload" {
             return Some(crate::font_download::open(app));
         }
@@ -1444,6 +1453,7 @@ pub fn show(app: &mut WordApp, ctx: &egui::Context) {
     let mut open = true;
     let mut close = false;
     let title = match &d {
+        Dialog::RenameDocument { .. } => "Rename Document",
         Dialog::Font { .. } => "Font",
         Dialog::Paragraph { .. } => "Paragraph",
         Dialog::Tabs { .. } => "Tabs",
@@ -1695,6 +1705,31 @@ fn apply_font(app: &mut WordApp, d: &Dialog) {
 /// Returns true to close.
 fn body(app: &mut WordApp, ui: &mut Ui, d: &mut Dialog) -> bool {
     match d {
+        Dialog::RenameDocument { name, message, focus } => {
+            ui.label(tl!("Document name"));
+            let r = ui.add(egui::TextEdit::singleline(name).desired_width(320.0).char_limit(200));
+            if *focus {
+                r.request_focus();
+                *focus = false;
+            }
+            if !message.is_empty() {
+                ui.colored_label(ui.visuals().error_fg_color, message.as_str());
+            }
+            let (ok, cancel) = buttons(ui, tl!("Rename"));
+            if cancel {
+                return true;
+            }
+            if ok && name.trim() == app.title_stem() {
+                return true;
+            }
+            if ok {
+                match app.run("file.rename", json!({"name": name})) {
+                    Ok(_) => return true,
+                    Err(e) => *message = e,
+                }
+            }
+            false
+        }
         Dialog::Font {
             font,
             font_ea,
